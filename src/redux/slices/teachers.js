@@ -12,6 +12,8 @@ const initialState = {
   isLoading: false,
   error: null,
   products: [],
+  teachers: [],
+  teacher: null,
   product: null,
   sortBy: null,
   filters: {
@@ -33,7 +35,7 @@ const initialState = {
 };
 
 const slice = createSlice({
-  name: 'product',
+  name: 'teacher',
   initialState,
   reducers: {
     // START LOADING
@@ -53,11 +55,24 @@ const slice = createSlice({
       state.products = action.payload;
     },
 
+    // GET TEACHERS
+    getTeachersSuccess(state, action) {
+        state.isLoading = false;
+        state.teachers = action.payload;
+      },
+
     // GET PRODUCT
     getProductSuccess(state, action) {
       state.isLoading = false;
       state.product = action.payload;
     },
+
+    // GET TEACHER
+    getTeacherSuccess(state, action) {
+        state.isLoading = false;
+        console.log("action",action)
+        state.teacher = action.payload;
+      },
 
     //  SORT & FILTER PRODUCTS
     sortByProducts(state, action) {
@@ -229,7 +244,7 @@ export function getTeachers() {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.get('https://tomasbacigalupo.com.ar:9094/slash/api/users/teacher');
-      dispatch(slice.actions.getProductsSuccess(response.data));
+      dispatch(slice.actions.getTeachersSuccess(response.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }
@@ -253,3 +268,18 @@ export function getProduct(name) {
   };
 }
 
+// ----------------------------------------------------------------------
+
+export function getTeacher(name) {
+    return async () => {
+      dispatch(slice.actions.startLoading());
+      try {
+        const response = await axios.get(`https://tomasbacigalupo.com.ar:9094/slash/api/users/teacher/${name}`
+  );
+        dispatch(slice.actions.getTeacherSuccess(response.data));
+      } catch (error) {
+        console.error(error);
+        dispatch(slice.actions.hasError(error));
+      }
+    };
+  }

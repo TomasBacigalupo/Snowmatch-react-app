@@ -6,7 +6,7 @@ import { useForm } from 'react-hook-form';
 import { Container, Typography, Stack } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
-import { getProducts, filterProducts } from '../../redux/slices/product';
+import { getTeachers, filterProducts } from '../../redux/slices/teachers';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // hooks
@@ -19,7 +19,7 @@ import { FormProvider } from '../../components/hook-form';
 import {
   ShopTagFiltered,
   ShopProductSort,
-  ShopProductList,
+  ShopTeacherList,
   ShopFilterSidebar,
   ShopProductSearch,
 } from '../../sections/@dashboard/e-commerce/shop';
@@ -37,6 +37,8 @@ export default function EcommerceShop() {
   const { products, sortBy, filters } = useSelector((state) => state.product);
 
   const filteredProducts = applyFilter(products, sortBy, filters);
+
+  const  {teachers}  = useSelector((state) => state.teachers)
 
   const defaultValues = {
     gender: filters.gender,
@@ -62,7 +64,7 @@ export default function EcommerceShop() {
     values.category === 'All';
 
   useEffect(() => {
-    dispatch(getProducts());
+    dispatch(getTeachers());
   }, [dispatch]);
 
   useEffect(() => {
@@ -164,7 +166,8 @@ export default function EcommerceShop() {
           )}
         </Stack>
 
-        <ShopProductList products={filteredProducts} loading={!products.length && isDefault} />
+        {console.log("satate", teachers)}
+        <ShopTeacherList teachers={teachers} loading={!teachers.length && isDefault} />
         <CartWidget />
       </Container>
     </Page>

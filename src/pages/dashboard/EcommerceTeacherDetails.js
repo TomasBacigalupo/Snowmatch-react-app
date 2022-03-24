@@ -23,7 +23,8 @@ import {
   ProductDetailsSummary,
   ProductDetailsReview,
   ProductDetailsCarousel,
-} from '../../sections/@dashboard/e-commerce/product-details';
+  TeacherDetailsSummary
+} from '../../sections/@dashboard/e-commerce/teacher-details';
 import CartWidget from '../../sections/@dashboard/e-commerce/CartWidget';
 
 // ----------------------------------------------------------------------
@@ -61,12 +62,15 @@ const IconWrapperStyle = styled('div')(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-export default function EcommerceProductDetails() {
+export default function EcommerceTeacherDetails() {
   const { themeStretch } = useSettings();
   const dispatch = useDispatch();
   const [value, setValue] = useState('1');
   const { name = '' } = useParams();
   const { product, error, checkout } = useSelector((state) => state.product);
+  
+  const { teacher } = useSelector( (state) => state.teachers);
+  
 
   useEffect(() => {
     dispatch(getTeacher(name));
@@ -82,6 +86,7 @@ export default function EcommerceProductDetails() {
 
   return (
     <Page title="Ecommerce: Product Details">
+        {console.log("teacher", teacher)}
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <HeaderBreadcrumbs
           heading="Product Details"
@@ -101,15 +106,15 @@ export default function EcommerceProductDetails() {
 
         <CartWidget />
 
-        {product && (
+        {teacher && (
           <>
             <Card>
               <Grid container>
-                <Grid item xs={12} md={6} lg={7}>
+                {/* <Grid item xs={12} md={6} lg={7}>
                   <ProductDetailsCarousel product={product} />
-                </Grid>
+                </Grid> */}
                 <Grid item xs={12} md={6} lg={5}>
-                  <ProductDetailsSummary
+                  <TeacherDetailsSummary
                     product={product}
                     cart={checkout.cart}
                     onAddCart={handleAddCart}
@@ -140,12 +145,12 @@ export default function EcommerceProductDetails() {
                 <Box sx={{ px: 3, bgcolor: 'background.neutral' }}>
                   <TabList onChange={(e, value) => setValue(value)}>
                     <Tab disableRipple value="1" label="Description" />
-                    <Tab
+                    {/* <Tab
                       disableRipple
                       value="2"
                       label={`Review (${product.reviews.length})`}
                       sx={{ '& .MuiTab-wrapper': { whiteSpace: 'nowrap' } }}
-                    />
+                    /> */}
                   </TabList>
                 </Box>
 
@@ -153,18 +158,18 @@ export default function EcommerceProductDetails() {
 
                 <TabPanel value="1">
                   <Box sx={{ p: 3 }}>
-                    <Markdown children={product.description} />
+                    <Markdown children={teacher.information} />
                   </Box>
                 </TabPanel>
-                <TabPanel value="2">
+                {/* <TabPanel value="2">
                   <ProductDetailsReview product={product} />
-                </TabPanel>
+                </TabPanel> */}
               </TabContext>
             </Card>
           </>
         )}
 
-        {!product && <SkeletonProduct />}
+        {!teacher && <SkeletonProduct />}
 
         {error && <Typography variant="h6">404 Product not found</Typography>}
       </Container>

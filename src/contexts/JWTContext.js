@@ -108,10 +108,10 @@ function AuthProvider({ children }) {
     initialize();
   }, []);
 
-  const login = async (email, password) => {
-    const response = await axios.post('/api/account/login', {
-      email,
-      password,
+  const login = async (username, password) => {
+    const response = await axios.post('https://tomasbacigalupo.com.ar:9094/slash/api/login', {
+      "username": username,
+      "password": password,
     });
     const { accessToken, user } = response.data;
 

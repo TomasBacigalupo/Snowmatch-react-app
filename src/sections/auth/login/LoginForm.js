@@ -26,13 +26,14 @@ export default function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
 
   const LoginSchema = Yup.object().shape({
-    email: Yup.string().email('Email must be a valid email address').required('Email is required'),
+    //email: Yup.string().email('Email must be a valid email address').required('Email is required'),
+    username: Yup.string().required('User name is required'),
     password: Yup.string().required('Password is required'),
   });
 
   const defaultValues = {
-    email: 'demo@minimals.cc',
-    password: 'demo1234',
+    email: 'tete',
+    password: 'tete',
     remember: true,
   };
 
@@ -65,7 +66,7 @@ export default function LoginForm() {
       <Stack spacing={3}>
         {!!errors.afterSubmit && <Alert severity="error">{errors.afterSubmit.message}</Alert>}
 
-        <RHFTextField name="email" label="Email address" />
+        <RHFTextField name="username" label="User name" />
 
         <RHFTextField
           name="password"

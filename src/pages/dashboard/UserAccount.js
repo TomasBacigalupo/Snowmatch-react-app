@@ -35,9 +35,9 @@ export default function UserAccount() {
       component: <AccountGeneral />,
     },
     {
-      value: 'billing',
-      icon: <Iconify icon={'ic:round-receipt'} width={20} height={20} />,
-      component: <AccountBilling cards={_userPayment} addressBook={_userAddressBook} invoices={_userInvoices} />,
+      value: 'social_links',
+      icon: <Iconify icon={'eva:share-fill'} width={20} height={20} />,
+      component: <AccountSocialLinks myProfile={_userAbout} />,
     },
     {
       value: 'notifications',
@@ -45,14 +45,14 @@ export default function UserAccount() {
       component: <AccountNotifications />,
     },
     {
-      value: 'social_links',
-      icon: <Iconify icon={'eva:share-fill'} width={20} height={20} />,
-      component: <AccountSocialLinks myProfile={_userAbout} />,
-    },
-    {
       value: 'change_password',
       icon: <Iconify icon={'ic:round-vpn-key'} width={20} height={20} />,
       component: <AccountChangePassword />,
+    },
+    {
+      value: 'billing',
+      icon: <Iconify icon={'ic:round-receipt'} width={20} height={20} />,
+      component: <AccountBilling cards={_userPayment} addressBook={_userAddressBook} invoices={_userInvoices} />,
     },
   ];
 

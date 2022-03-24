@@ -28,6 +28,10 @@ const SOCIAL_LINKS = [
     value: 'twitterLink',
     icon: <Iconify icon={'eva:twitter-fill'} width={24} height={24} />,
   },
+  {
+    value: 'youtubeLink',
+    icon: <Iconify icon={'ant-design:youtube-filled'} width={24} height={24} />,
+  },
 ];
 
 // ----------------------------------------------------------------------
@@ -38,6 +42,7 @@ AccountSocialLinks.propTypes = {
     instagramLink: PropTypes.string,
     linkedinLink: PropTypes.string,
     twitterLink: PropTypes.string,
+    youtubeLink: PropTypes.string
   }),
 };
 
@@ -49,6 +54,7 @@ export default function AccountSocialLinks({ myProfile }) {
     instagramLink: myProfile.instagramLink,
     linkedinLink: myProfile.linkedinLink,
     twitterLink: myProfile.twitterLink,
+    youtubeLink: myProfile.youtubeLink
   };
 
   const methods = useForm({

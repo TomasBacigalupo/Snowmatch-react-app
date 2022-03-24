@@ -22,7 +22,7 @@ ProfileSocialInfo.propTypes = {
 };
 
 export default function ProfileSocialInfo({ profile }) {
-  const { facebookLink, instagramLink, linkedinLink, twitterLink } = profile;
+  const { facebookLink, instagramLink, linkedinLink, twitterLink, youtubeLink } = profile;
 
   const SOCIALS = [
     {
@@ -44,6 +44,11 @@ export default function ProfileSocialInfo({ profile }) {
       name: 'Facebook',
       icon: <IconStyle icon={'eva:facebook-fill'} color="#1877F2" />,
       href: facebookLink,
+    },
+    {
+      name: 'YouTube',
+      icon: <IconStyle icon={'logos:youtube-icon'} color="#1877F2" />,
+      href: youtubeLink,
     },
   ];
 

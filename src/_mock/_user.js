@@ -3,22 +3,49 @@ import { randomNumberRange, randomInArray } from './funcs';
 
 // ----------------------------------------------------------------------
 
+export const _userDto = {
+  birth: "1998-02-03",
+  cellphone: "+542235235123",
+  description: "Excelente, bajamos el teta. Esquiamos bastante rápido todo el día y frenamos a tomar un café. Épico!",
+  email: "lpagni+11@itba.edu.ar",
+  gender: "M",
+  id: 22,
+  imageLink: "https://tomasbacigalupo.com.ar:9094/slash/api/users/juanperez/image",
+  information: "Tengo 2 años de experiencia dando clases de grupos familiares. Tambien grupos jovenes!!!\n",
+  lastname: "Perez",
+  level: 2,
+  liked: false,
+  likes: 0,
+  name: "Juan",
+  role: "TEACHER",
+  stars: 0,
+  state: "UNAVAILABLE",
+  username: "juanperez"
+};
+
 export const _userAbout = {
   id: _mock.id(1),
   cover: _mock.image.cover(1),
-  position: 'UI Designer',
-  follower: randomNumberRange(999, 99999),
-  following: randomNumberRange(999, 99999),
+  position: 'Tete',
+  name:'Lucio',
+  lastname:'Pagni',
+  state: "AVAILABLE",
+  clients: 37,
+  level: 3,
   quote: 'Tart I love sugar plum I love oat cake. Sweet roll caramels I love jujubes. Topping cake wafer..',
+  information: 'Tengo 2 años de experiencia dando clases de grupos familiares. Tambien grupos jovenes!!!',
   country: _mock.address.country(1),
-  email: _mock.email(1),
+  email: 'rosario3110@gmail.com',
+  cellphone: '+542235235123',
   company: _mock.company(1),
   school: _mock.company(2),
+  birth: '1998-02-03',
   role: 'Manager',
   facebookLink: `https://www.facebook.com/caitlyn.kerluke`,
   instagramLink: `https://www.instagram.com/caitlyn.kerluke`,
   linkedinLink: `https://www.linkedin.com/in/caitlyn.kerluke`,
   twitterLink: `https://www.twitter.com/caitlyn.kerluke`,
+  youtubeLink: `https://www.youtube.com/caitlyn.kerluke`,
 };
 
 export const _userFollowers = [...Array(18)].map((_, index) => ({

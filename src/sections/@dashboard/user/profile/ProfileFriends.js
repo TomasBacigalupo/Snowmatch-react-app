@@ -23,14 +23,18 @@ export default function ProfileFriends({ friends, findFriends, onFindFriends }) 
   return (
     <Box sx={{ mt: 5 }}>
       <Typography variant="h4" sx={{ mb: 3 }}>
-        Friends
+        Clients
+      </Typography>
+
+      <Typography variant="h6" sx={{ mb: 3 }}>
+        Customer Relationship Management Panel
       </Typography>
 
       <InputStyle
         stretchStart={240}
         value={findFriends}
         onChange={(event) => onFindFriends(event.target.value)}
-        placeholder="Find friends..."
+        placeholder="Find clients..."
         InputProps={{
           startAdornment: (
             <InputAdornment position="start">

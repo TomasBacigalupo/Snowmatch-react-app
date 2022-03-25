@@ -13,17 +13,17 @@ const CARDS = [
     icon: 'https://minimal-assets-api.vercel.app/assets/icons/ic_design.svg',
     title: 'UI & UX Design',
     description:
-      'The set is built on the principles of the atomic design system. It helps you to create projects fastest and easily customized packages for your projects.',
+      'Contact the best instructors in the world from your phone.',
   },
   {
     icon: 'https://minimal-assets-api.vercel.app/assets/icons/ic_code.svg',
     title: 'Development',
-    description: 'Easy to customize and extend each component, saving you time and money.',
+    description: 'Connect with trustworthy instructors and students.',
   },
   {
     icon: '/logo/logo_single.svg',
     title: 'Branding',
-    description: 'Consistent design in colors, fonts ... makes brand recognition easy.',
+    description: 'Expand your the network of your connectedness.',
   },
 ];
 

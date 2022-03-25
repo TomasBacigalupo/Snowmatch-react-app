@@ -5,6 +5,8 @@ import { Button, Box, Container, Typography } from '@mui/material';
 // components
 import Image from '../../components/Image';
 import { MotionViewport, varFade } from '../../components/animate';
+// routes
+import { PATH_AUTH, PATH_DASHBOARD } from '../../routes/paths';
 
 // ----------------------------------------------------------------------
 
@@ -58,7 +60,7 @@ export default function HomeAdvertisement() {
           <Box component={m.div} variants={varFade().inDown} sx={{ color: 'common.white', mb: 5 }}>
             <Typography variant="h2">
               Get started with
-              <br /> minimal kit today
+              <br /> minimal today
             </Typography>
           </Box>
           <m.div variants={varFade().inDown}>
@@ -67,7 +69,7 @@ export default function HomeAdvertisement() {
               variant="contained"
               target="_blank"
               rel="noopener"
-              href="https://material-ui.com/store/items/minimal-dashboard/"
+              href={PATH_AUTH.register}
               sx={{
                 whiteSpace: 'nowrap',
                 boxShadow: (theme) => theme.customShadows.z8,

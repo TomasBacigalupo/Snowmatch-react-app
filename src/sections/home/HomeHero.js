@@ -86,8 +86,8 @@ export default function HomeHero() {
           <ContentStyle>
             <m.div variants={varFade().inRight}>
               <Typography variant="h1" sx={{ color: 'common.white' }}>
-                Start a <br />
-                new project <br /> with
+                Take your job to<br />
+                the next level <br /> with
                 <Typography component="span" variant="h1" sx={{ color: 'primary.main' }}>
                   &nbsp;Minimal
                 </Typography>
@@ -96,18 +96,17 @@ export default function HomeHero() {
 
             <m.div variants={varFade().inRight}>
               <Typography sx={{ color: 'common.white' }}>
-                The starting point for your next project based on easy-to-customize MUI helps you build apps faster and
-                better.
+                Handle all your customers on a centralized platform
               </Typography>
             </m.div>
 
-            <Stack spacing={2.5} alignItems="center" direction={{ xs: 'column', md: 'row' }}>
+            {/* <Stack spacing={2.5} alignItems="center" direction={{ xs: 'column', md: 'row' }}>
               <m.div variants={varFade().inRight}>
                 <TextIconLabel
                   icon={
                     <Image
-                      alt="sketch icon"
-                      src="https://minimal-assets-api.vercel.app/assets/images/home/ic_sketch_small.svg"
+                      alt="whatsApp icon"
+                      src="https://minimal-assets-api.vercel.app/assets/images/home/ic_facebook_small.svg"
                       sx={{ width: 20, height: 20, mr: 1 }}
                     />
                   }
@@ -147,7 +146,7 @@ export default function HomeHero() {
                   }
                 />
               </m.div>
-            </Stack>
+            </Stack> */}
 
             <m.div variants={varFade().inRight}>
               <Button
@@ -157,11 +156,11 @@ export default function HomeHero() {
                 to={PATH_DASHBOARD.root}
                 startIcon={<Iconify icon={'eva:flash-fill'} width={20} height={20} />}
               >
-                Live Preview
+                Let's go
               </Button>
             </m.div>
-
-            <Stack spacing={2.5}>
+            {/* TODO: ski center icons */}
+            {/* <Stack spacing={2.5}>
               <m.div variants={varFade().inRight}>
                 <Typography variant="overline" sx={{ color: 'primary.light' }}>
                   Available For
@@ -177,7 +176,7 @@ export default function HomeHero() {
                   />
                 ))}
               </Stack>
-            </Stack>
+            </Stack> */}
           </ContentStyle>
         </Container>
       </RootStyle>

@@ -4,14 +4,15 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { Stack, IconButton, InputAdornment, Alert } from '@mui/material';
+import { Stack, IconButton, InputAdornment, Alert, Typography, Box } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 // hooks
 import useAuth from '../../../hooks/useAuth';
 import useIsMountedRef from '../../../hooks/useIsMountedRef';
 // components
 import Iconify from '../../../components/Iconify';
-import { FormProvider, RHFTextField } from '../../../components/hook-form';
+import { FormProvider, RHFEditor, RHFTextField, RHFUploadSingleFile } from '../../../components/hook-form';
+
 
 // ----------------------------------------------------------------------
 
@@ -27,6 +28,8 @@ export default function RegisterForm() {
     lastName: Yup.string().required('Last name required'),
     email: Yup.string().email('Email must be a valid email address').required('Email is required'),
     password: Yup.string().required('Password is required'),
+    certificate: Yup.object().required('Certification File is required')
+
   });
 
   const defaultValues = {
@@ -87,6 +90,14 @@ export default function RegisterForm() {
             ),
           }}
         />
+ 
+        
+        <Typography variant="subtitle1">Instructor certification</Typography>
+        <RHFUploadSingleFile name="certificate" label="Ski Certificate" />
+        
+        
+        
+      
 
         <LoadingButton fullWidth size="large" type="submit" variant="contained" loading={isSubmitting}>
           Register

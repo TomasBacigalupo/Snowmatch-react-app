@@ -15,7 +15,7 @@ export default function ProfileFollowers({ followers }) {
   return (
     <Box sx={{ mt: 5 }}>
       <Typography variant="h4" sx={{ mb: 3 }}>
-        Likers
+        Likes
       </Typography>
       <Typography variant="h6" sx={{ mb: 3 }}>
         See all the students that liked your profile

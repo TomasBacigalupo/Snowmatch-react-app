@@ -64,7 +64,7 @@ export default function UserProfile() {
       component: <Profile myProfile={_userAbout} posts={_userFeeds} />,
     },
     {
-      value: 'likers',
+      value: 'likes',
       icon: <Iconify icon={'eva:heart-fill'} width={20} height={20} />,
       component: <ProfileFollowers followers={_userFollowers} />,
     },

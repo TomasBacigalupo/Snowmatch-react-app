@@ -5,3 +5,6 @@ export { default as ProductDetailsReviewForm } from './ProductDetailsReview';
 export { default as ProductDetailsReviewList } from './ProductDetailsReviewList';
 export { default as ProductDetailsReviewOverview } from './ProductDetailsReviewOverview';
 export { default as TeacherDetailsSummary } from './TeacherDetailsSummary';
+export { default as TeacherDetailsCarousel } from './TeacherDetailsCarousel';
+export { default as TeacherDetailsReview } from './TeacherDetailsReview';
+export { default as TeacherDetailsReviewOverview } from './TeacherDetailsReviewOverview';

@@ -32,12 +32,12 @@ TeacherDetailsSummary.propTypes = {
   cart: PropTypes.array,
   onAddCart: PropTypes.func,
   onGotoStep: PropTypes.func,
-  product: PropTypes.shape({
+  teacher: PropTypes.shape({
     available: PropTypes.number,
-    colors: PropTypes.arrayOf(PropTypes.string),
-    cover: PropTypes.string,
+    color: PropTypes.arrayOf(PropTypes.string),
+    imageLink: PropTypes.string,
     id: PropTypes.string,
-    inventoryType: PropTypes.string,
+    lastname: PropTypes.string,
     name: PropTypes.string,
     price: PropTypes.number,
     priceSale: PropTypes.number,
@@ -48,39 +48,48 @@ TeacherDetailsSummary.propTypes = {
   }),
 };
 
-export default function TeacherDetailsSummary({ cart, product, onAddCart, onGotoStep, ...other }) {
+export default function TeacherDetailsSummary({ cart, teacher, onAddCart, onGotoStep, ...other }) {
   const theme = useTheme();
 
   const navigate = useNavigate();
+  console.log("teacherHPÑA", teacher)
 
+  
   const {
+    birth,
+    cellphone,
+    description,    
+    email,   
+    gender,
     id,
+    imageLink,
+    information,
+    lastname,
+    level,
+    liked,
+    likes,
     name,
-    sizes,
-    price,
-    cover,
-    status,
-    colors,
-    available,
-    priceSale,
-    totalRating,
-    totalReview,
-    inventoryType,
-  } = product;
+    role,
+    stars,
+    state,
+    username,
+  } = teacher.teacher;
+
+  const rates = teacher.rates;
 
   const alreadyProduct = cart.map((item) => item.id).includes(id);
 
-  const isMaxQuantity = cart.filter((item) => item.id === id).map((item) => item.quantity)[0] >= available;
+  //const isMaxQuantity = cart.filter((item) => item.id === id).map((item) => item.quantity)[0] >= available;
 
   const defaultValues = {
     id,
     name,
-    cover,
-    available,
-    price,
-    color: colors[0],
-    size: sizes[4],
-    quantity: available < 1 ? 0 : 1,
+    imageLink,
+    state,
+    lastname,
+    //color: colors[0],
+    //size: sizes[4],
+    //quantity: available < 1 ? 0 : 1,
   };
 
   const methods = useForm({
@@ -120,13 +129,13 @@ export default function TeacherDetailsSummary({ cart, product, onAddCart, onGoto
   return (
     <RootStyle {...other}>
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-        <Label
+        {/* <Label
           variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
           color={inventoryType === 'in_stock' ? 'success' : 'error'}
           sx={{ textTransform: 'uppercase' }}
         >
           {sentenceCase(inventoryType || '')}
-        </Label>
+        </Label> */}
 
         <Typography
           variant="overline"
@@ -134,30 +143,30 @@ export default function TeacherDetailsSummary({ cart, product, onAddCart, onGoto
             mt: 2,
             mb: 1,
             display: 'block',
-            color: status === 'sale' ? 'error.main' : 'info.main',
+            //color: status === 'sale' ? 'error.main' : 'info.main',
           }}
         >
-          {status}
+          {state}
         </Typography>
 
         <Typography variant="h5" paragraph>
-          {name}
+          {name + " " + lastname}
         </Typography>
 
         <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 2 }}>
-          <Rating value={totalRating} precision={0.1} readOnly />
+          <Rating value={teacher.stars} precision={0.1} readOnly />
           <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-            ({fShortenNumber(totalReview)}
+            ({fShortenNumber(rates.length)}
             reviews)
           </Typography>
         </Stack>
 
-        <Typography variant="h4" sx={{ mb: 3 }}>
+        {/* <Typography variant="h4" sx={{ mb: 3 }}>
           <Box component="span" sx={{ color: 'text.disabled', textDecoration: 'line-through' }}>
             {priceSale && fCurrency(priceSale)}
           </Box>
           &nbsp;{fCurrency(price)}
-        </Typography>
+        </Typography> */}
 
         <Divider sx={{ borderStyle: 'dashed' }} />
 
@@ -166,7 +175,7 @@ export default function TeacherDetailsSummary({ cart, product, onAddCart, onGoto
             Color
           </Typography>
 
-          <Controller
+          {/* <Controller
             name="color"
             control={control}
             render={({ field }) => (
@@ -182,10 +191,10 @@ export default function TeacherDetailsSummary({ cart, product, onAddCart, onGoto
                 }}
               />
             )}
-          />
+          /> */}
         </Stack>
 
-        <Stack direction="row" justifyContent="space-between" sx={{ mb: 3 }}>
+        {/* <Stack direction="row" justifyContent="space-between" sx={{ mb: 3 }}>
           <Typography variant="subtitle1" sx={{ mt: 0.5 }}>
             Size
           </Typography>
@@ -209,14 +218,14 @@ export default function TeacherDetailsSummary({ cart, product, onAddCart, onGoto
               </option>
             ))}
           </RHFSelect>
-        </Stack>
+        </Stack> */}
 
         <Stack direction="row" justifyContent="space-between" sx={{ mb: 3 }}>
           <Typography variant="subtitle1" sx={{ mt: 0.5 }}>
             Quantity
           </Typography>
 
-          <div>
+          {/* <div>
             <Incrementer
               name="quantity"
               quantity={values.quantity}
@@ -227,7 +236,7 @@ export default function TeacherDetailsSummary({ cart, product, onAddCart, onGoto
             <Typography variant="caption" component="div" sx={{ mt: 1, textAlign: 'right', color: 'text.secondary' }}>
               Available: {available}
             </Typography>
-          </div>
+          </div> */}
         </Stack>
 
         <Divider sx={{ borderStyle: 'dashed' }} />
@@ -235,7 +244,7 @@ export default function TeacherDetailsSummary({ cart, product, onAddCart, onGoto
         <Stack direction="row" spacing={2} sx={{ mt: 5 }}>
           <Button
             fullWidth
-            disabled={isMaxQuantity}
+            // disabled={isMaxQuantity}
             size="large"
             color="warning"
             variant="contained"

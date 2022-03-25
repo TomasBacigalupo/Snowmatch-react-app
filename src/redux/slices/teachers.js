@@ -14,6 +14,7 @@ const initialState = {
   products: [],
   teachers: [],
   teacher: null,
+  rates: [],
   product: null,
   sortBy: null,
   filters: {
@@ -70,9 +71,23 @@ const slice = createSlice({
     // GET TEACHER
     getTeacherSuccess(state, action) {
         state.isLoading = false;
-        console.log("action",action)
         state.teacher = action.payload;
-      },
+    },
+
+    // GET TEACHER RATES
+    getTeacherRatesSuccess(state, action) {
+      state.isLoading = false;
+      console.log("action",action)
+      state.rates = action.payload;
+    },
+
+    // GET TEACHER WITH RATES
+    getTeacherWithRatesSuccess(state, action) {
+      state.isLoading = false;
+      console.log("action",action)
+      state.rates = action.payload.rates;
+      state.teacher = action.payload
+    },
 
     //  SORT & FILTER PRODUCTS
     sortByProducts(state, action) {
@@ -283,3 +298,47 @@ export function getTeacher(name) {
       }
     };
   }
+
+// ----------------------------------------------------------------------
+
+export function getTeacherWithRates(userName) {
+  return async () => {
+    const ratesRequest = `https://tomasbacigalupo.com.ar:9094/slash/api/rate/getRates/${userName}`;
+    const teacherRequest = `https://tomasbacigalupo.com.ar:9094/slash/api/users/teacher/${userName}`;
+    dispatch(slice.actions.startLoading());
+    try {
+      axios.get(teacherRequest).then(r=>{
+        const teacher = r.data;
+        axios.get(ratesRequest).then(rs =>{
+          const rates = rs.data;
+          const dto = {
+            "rates": rates,
+            "teacher": teacher
+          }
+          dispatch(slice.actions.getTeacherWithRatesSuccess(dto));
+        })
+      })
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}  
+
+export function getRates(userName, teacher) {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      console.log("estoy")
+      const ratesResponse = await axios.get(`https://tomasbacigalupo.com.ar:9094/slash/api/rate/getRates/${userName}`);
+      const dto = {
+        "rates": ratesResponse.data,
+        "teacher": teacher
+      }
+      dispatch(slice.actions.getTeacherWithRatesSuccess(dto));
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}  

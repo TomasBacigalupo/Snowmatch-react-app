@@ -7,7 +7,7 @@ import { Box, Tab, Card, Grid, Divider, Container, Typography } from '@mui/mater
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
-import { getTeacher, addCart, onGotoStep } from '../../redux/slices/teachers';
+import { getTeacherWithRates, addCart, onGotoStep } from '../../redux/slices/teachers';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // hooks
@@ -22,8 +22,9 @@ import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
 import {
   ProductDetailsSummary,
   ProductDetailsReview,
-  ProductDetailsCarousel,
-  TeacherDetailsSummary
+  TeacherDetailsCarousel,
+  TeacherDetailsSummary,
+  TeacherDetailsReview
 } from '../../sections/@dashboard/e-commerce/teacher-details';
 import CartWidget from '../../sections/@dashboard/e-commerce/CartWidget';
 
@@ -73,7 +74,7 @@ export default function EcommerceTeacherDetails() {
   
 
   useEffect(() => {
-    dispatch(getTeacher(name));
+    dispatch(getTeacherWithRates(name));
   }, [dispatch, name]);
 
   const handleAddCart = (product) => {
@@ -110,12 +111,12 @@ export default function EcommerceTeacherDetails() {
           <>
             <Card>
               <Grid container>
-                {/* <Grid item xs={12} md={6} lg={7}>
-                  <ProductDetailsCarousel product={product} />
-                </Grid> */}
+                <Grid item xs={12} md={6} lg={7}>
+                  <TeacherDetailsCarousel teacher={{images: [ teacher.teacher.imageLink]}} />
+                </Grid>
                 <Grid item xs={12} md={6} lg={5}>
                   <TeacherDetailsSummary
-                    product={product}
+                    teacher={teacher}
                     cart={checkout.cart}
                     onAddCart={handleAddCart}
                     onGotoStep={handleGotoStep}
@@ -145,12 +146,12 @@ export default function EcommerceTeacherDetails() {
                 <Box sx={{ px: 3, bgcolor: 'background.neutral' }}>
                   <TabList onChange={(e, value) => setValue(value)}>
                     <Tab disableRipple value="1" label="Description" />
-                    {/* <Tab
+                    <Tab
                       disableRipple
                       value="2"
-                      label={`Review (${product.reviews.length})`}
+                      label={`Review (${teacher.rates.length})`}
                       sx={{ '& .MuiTab-wrapper': { whiteSpace: 'nowrap' } }}
-                    /> */}
+                    />
                   </TabList>
                 </Box>
 
@@ -161,9 +162,9 @@ export default function EcommerceTeacherDetails() {
                     <Markdown children={teacher.information} />
                   </Box>
                 </TabPanel>
-                {/* <TabPanel value="2">
-                  <ProductDetailsReview product={product} />
-                </TabPanel> */}
+                <TabPanel value="2">
+                  <TeacherDetailsReview teacher={teacher} />
+                </TabPanel>
               </TabContext>
             </Card>
           </>

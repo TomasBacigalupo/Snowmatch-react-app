@@ -25,15 +25,23 @@ import Iconify from '../../../components/Iconify';
 import Scrollbar from '../../../components/Scrollbar';
 import MenuPopover from '../../../components/MenuPopover';
 import { IconButtonAnimate } from '../../../components/animate';
+// redux
+import { useDispatch, useSelector } from '../../../redux/store';
+import { getNotifications } from 'src/redux/slices/notifications';
+// hooks
+import useAuth from '../../../hooks/useAuth';
+import { useEffect } from 'react';
 
 // ----------------------------------------------------------------------
 
 export default function NotificationsPopover() {
   const [notifications, setNotifications] = useState(_notifications);
-
   const totalUnRead = notifications.filter((item) => item.isUnRead === true).length;
-
   const [open, setOpen] = useState(null);
+  const { user } = useAuth();
+  const dispatch = useDispatch();
+  const  wtf  = useSelector( (state) => state);
+  console.log("state wtafuck " , wtf);
 
   const handleOpen = (event) => {
     setOpen(event.currentTarget);
@@ -52,11 +60,19 @@ export default function NotificationsPopover() {
     );
   };
 
+  
+  useEffect(() => {
+    dispatch(getNotifications(user?.username));
+  }, [dispatch, user?.username]);
+
+  const N = wtf.notifications.notifications;
+
   return (
     <>
       <IconButtonAnimate color={open ? 'primary' : 'default'} onClick={handleOpen} sx={{ width: 40, height: 40 }}>
-        <Badge badgeContent={totalUnRead} color="error">
+        <Badge badgeContent={N.length} color="error">
           <Iconify icon="eva:bell-fill" width={20} height={20} />
+          {console.log("wtf2", wtf)}
         </Badge>
       </IconButtonAnimate>
 
@@ -70,7 +86,7 @@ export default function NotificationsPopover() {
           <Box sx={{ flexGrow: 1 }}>
             <Typography variant="subtitle1">Notifications</Typography>
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-              You have {totalUnRead} unread messages
+              You have {N.length} unread messages
             </Typography>
           </Box>
 

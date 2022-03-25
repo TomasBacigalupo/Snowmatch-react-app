@@ -44,7 +44,7 @@ function ReviewItem({ review }) {
     console.log("review1", review);
   const [isHelpful, setHelpfuls] = useState(false);
 
-  const { raterName, raterLastname, rating, rateDate, comment, helpful,  imageLink, isPurchased } = review;
+  const { raterName, raterLastname, rating, rateDate, comment, helpful,  imageLink, isPurchased, stars } = review;
 
   const handleClickHelpful = () => {
     setHelpfuls((prev) => !prev);
@@ -91,7 +91,7 @@ function ReviewItem({ review }) {
         </Box>
 
         <div>
-          <Rating size="small" value={rating} precision={0.1} readOnly />
+          <Rating size="small" value={stars} precision={0.1} readOnly />
 
           {isPurchased && (
             <Typography

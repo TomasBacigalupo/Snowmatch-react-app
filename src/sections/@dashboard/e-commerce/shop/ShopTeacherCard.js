@@ -19,7 +19,7 @@ ShopTeacherCard.propTypes = {
 };
 
 export default function ShopTeacherCard({ teacher }) {
-  const { name, lastname, imageLink, stars, level, information, username } = teacher;
+  const { name, lastname, imageLink, stars, level, information, username, state} = teacher;
   const status = 'sale';
   const priceSale = 10;
 
@@ -31,7 +31,7 @@ export default function ShopTeacherCard({ teacher }) {
         {status && (
           <Label
             variant="filled"
-            color={(status === 'sale' && 'error') || 'info'}
+            color={(state !== 'AVAILABLE' && 'error') || 'success'}
             sx={{
               top: 16,
               right: 16,
@@ -40,7 +40,7 @@ export default function ShopTeacherCard({ teacher }) {
               textTransform: 'uppercase',
             }}
           >
-            {status}
+            {state === "AVAILABLE" ? "Disponible" : "Solicitado"}
           </Label>
         )}
         <Image alt={name} src={imageLink} ratio="1/1" />

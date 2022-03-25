@@ -37,6 +37,8 @@ TeacherDetailsSummary.propTypes = {
     color: PropTypes.arrayOf(PropTypes.string),
     imageLink: PropTypes.string,
     information: PropTypes.string,
+    state: PropTypes.string,
+    stars: PropTypes.number,
     description: PropTypes.string,
     id: PropTypes.string,
     lastname: PropTypes.string,
@@ -131,25 +133,29 @@ export default function TeacherDetailsSummary({ cart, teacher, onAddCart, onGoto
   return (
     <RootStyle {...other}>
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-        {/* <Label
-          variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
-          color={inventoryType === 'in_stock' ? 'success' : 'error'}
-          sx={{ textTransform: 'uppercase' }}
-        >
-          {sentenceCase(inventoryType || '')}
-        </Label> */}
+        {state !== 'AVAILABLE' && (
+            <Label
+            variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
+            color={state !== 'AVAILABLE' ? 'success' : 'error'}
+            sx={{ textTransform: 'uppercase' }}
+            >
+            { sentenceCase(state || '')}
+            </Label>
+        )}
 
-        <Typography
-          variant="overline"
-          sx={{
-            mt: 2,
-            mb: 1,
-            display: 'block',
-            color: state !== 'AVAILABLE' ? 'error.main' : 'info.main',
-          }}
-        >
-          {state}
-        </Typography>
+        {state === 'AVAILABLE' && (
+            <Typography
+            variant="overline"
+            sx={{
+                mt: 2,
+                mb: 1,
+                display: 'block',
+                color: state !== 'AVAILABLE' ? 'error.main' : 'success.main',
+            }}
+            >
+            {state}
+            </Typography>
+        )}
 
         <Typography variant="h5" paragraph>
           {name + " " + lastname}

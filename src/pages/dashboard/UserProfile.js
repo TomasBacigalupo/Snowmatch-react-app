@@ -73,11 +73,11 @@ export default function UserProfile() {
       icon: <Iconify icon={'eva:people-fill'} width={20} height={20} />,
       component: <ProfileFriends friends={_userFriends} findFriends={findFriends} onFindFriends={handleFindFriends} />,
     },
-    // {
-    //   value: 'gallery',
-    //   icon: <Iconify icon={'ic:round-perm-media'} width={20} height={20} />,
-    //   component: <ProfileGallery gallery={_userGallery} />,
-    // },
+    {
+      value: 'gallery',
+      icon: <Iconify icon={'ic:round-perm-media'} width={20} height={20} />,
+      component: <ProfileGallery gallery={_userGallery} />,
+    },
   ];
 
   return (

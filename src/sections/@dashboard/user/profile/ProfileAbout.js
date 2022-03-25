@@ -4,6 +4,8 @@ import { styled } from '@mui/material/styles';
 import { Link, Card, Typography, CardHeader, Stack } from '@mui/material';
 // components
 import Iconify from '../../../../components/Iconify';
+// hooks
+import useAuth from '../../../../hooks/useAuth';
 
 // ----------------------------------------------------------------------
 
@@ -22,15 +24,17 @@ ProfileAbout.propTypes = {
 };
 
 export default function ProfileAbout({ profile }) {
-  const { quote , information, country, email, role, company, school, birth, cellphone } = profile;
+  const { quote, country, company, school } = profile;
+  const { user } = useAuth();
 
   return (
     <Card>
       <CardHeader title="About" />
 
       <Stack spacing={2} sx={{ p: 3 }}>
-        <Typography variant="body2">{quote}</Typography>
-        <Typography variant="body2">{information}</Typography>
+        {/* <Typography variant="body2">{quote}</Typography> */}
+        <Typography variant="body2">{user?.information}</Typography>
+        <Typography variant="body2">{user?.description}</Typography>
 
         <Stack direction="row">
           <IconStyle icon={'eva:pin-fill'} />
@@ -44,13 +48,13 @@ export default function ProfileAbout({ profile }) {
 
         <Stack direction="row">
           <IconStyle icon={'eva:email-fill'} />
-          <Typography variant="body2">{email}</Typography>
+          <Typography variant="body2">{user?.email}</Typography>
         </Stack>
 
         <Stack direction="row">
           <IconStyle icon={'ic:round-business-center'} />
           <Typography variant="body2">
-            {role} at &nbsp;
+            {user?.role} at &nbsp;
             <Link component="span" variant="subtitle2" color="text.primary">
               {company}
             </Link>
@@ -72,7 +76,7 @@ export default function ProfileAbout({ profile }) {
           <Typography variant="body2">
             Birthday &nbsp;
             <Link component="span" variant="subtitle2" color="text.primary">
-              {birth}
+              {user?.birth}
             </Link>
           </Typography>
         </Stack>
@@ -82,7 +86,7 @@ export default function ProfileAbout({ profile }) {
           <Typography variant="body2">
             Cellphone &nbsp;
             <Link component="span" variant="subtitle2" color="text.primary">
-              {cellphone}
+              {user?.cellphone}
             </Link>
           </Typography>
         </Stack>

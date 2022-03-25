@@ -28,17 +28,17 @@ export default function AccountGeneral() {
   });
 
   const defaultValues = {
-    displayName: user?.displayName || '',
+    displayName: user?.name || '',
     email: user?.email || '',
-    photoURL: user?.photoURL || '',
-    phoneNumber: user?.phoneNumber || '',
+    photoURL: user?.imageLink || '',
+    phoneNumber: user?.cellphone || '',
     country: user?.country || '',
     address: user?.address || '',
     state: user?.state || '',
     city: user?.city || '',
     zipCode: user?.zipCode || '',
-    about: user?.about || '',
-    isPublic: user?.isPublic || false,
+    about: user?.information || '',
+    isPublic: user?.state === "AVAILABLE" || false,
   };
 
   const methods = useForm({
@@ -104,7 +104,7 @@ export default function AccountGeneral() {
               }
             />
 
-            <RHFSwitch name="isPublic" labelPlacement="start" label="Public Profile" sx={{ mt: 5 }} />
+            <RHFSwitch name="isPublic" labelPlacement="start" label="Current state" sx={{ mt: 5 }} />
           </Card>
         </Grid>
 

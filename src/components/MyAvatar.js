@@ -14,18 +14,11 @@ export default function MyAvatar({ ...other }) {
   console.log("MYUSER", user);
   const [userData, setUserData ] = useState({imageLink:""})
 
-  useEffect(() =>{
-
-    axios.get(`https://tomasbacigalupo.com.ar:9094/slash/api/users/${user}`).then(r => {
-      setUserData(r.data);
-    });
-
-  },[user])
 
   return (
     <Avatar
-      src={userData?.imageLink}
-      alt={userData?.name}
+      src={user?.imageLink}
+      alt={user?.name}
       color={user?.photoURL ? 'default' : createAvatar(user?.displayName).color}
       {...other}
     >

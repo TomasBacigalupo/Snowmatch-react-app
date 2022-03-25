@@ -114,9 +114,10 @@ function AuthProvider({ children }) {
       "password": password,
     });
     const accessToken = response.data.password;
-    const user = response.data.username;
-    
-    console.log("lo que volvio", response.data)
+    const responseUser = await axios.get(`https://tomasbacigalupo.com.ar:9094/slash/api/users/${username}`)
+    const user = responseUser.data;
+
+    console.log("lo que volvio", responseUser.data)
 
     setSession(accessToken);
     dispatch({

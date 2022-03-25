@@ -24,7 +24,7 @@ const handlers = {
   },
   LOGIN: (state, action) => {
     const { user } = action.payload;
-
+    console.log("LOGGEDUSER", user)
     return {
       ...state,
       isAuthenticated: true,
@@ -74,7 +74,7 @@ function AuthProvider({ children }) {
         if (accessToken && isValidToken(accessToken)) {
           setSession(accessToken);
 
-          const response = await axios.get('/api/account/my-account');
+          const response = await axios.get('https://tomasbacigalupo.com.ar/slash/api/users/my');
           const { user } = response.data;
 
           dispatch({
@@ -113,7 +113,10 @@ function AuthProvider({ children }) {
       "username": username,
       "password": password,
     });
-    const { accessToken, user } = response.data;
+    const accessToken = response.data.password;
+    const user = response.data.username;
+    
+    console.log("lo que volvio", response.data)
 
     setSession(accessToken);
     dispatch({

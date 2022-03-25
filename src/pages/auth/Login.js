@@ -106,7 +106,7 @@ export default function Login() {
                 <Typography sx={{ color: 'text.secondary' }}>Enter your details below.</Typography>
               </Box>
 
-              <Tooltip title={capitalCase(method)} placement="right">
+              {/* <Tooltip title={capitalCase(method)} placement="right">
                 <>
                   <Image
                     disabledEffect
@@ -114,7 +114,7 @@ export default function Login() {
                     sx={{ width: 32, height: 32 }}
                   />
                 </>
-              </Tooltip>
+              </Tooltip> */}
             </Stack>
 
             {/* <Alert severity="info" sx={{ mb: 3 }}>

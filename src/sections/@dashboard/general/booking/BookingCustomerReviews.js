@@ -11,12 +11,15 @@ import { _bookingReview } from '../../../../_mock';
 // components
 import Iconify from '../../../../components/Iconify';
 import { CarouselArrows } from '../../../../components/carousel';
+import Label from '../../../../components/Label';
+import { sentenceCase } from 'change-case';
 
 // ----------------------------------------------------------------------
 
 export default function BookingCustomerReviews() {
   const theme = useTheme();
   const carouselRef = useRef(null);
+  const status = 'paid';
 
   const settings = {
     dots: false,
@@ -38,8 +41,8 @@ export default function BookingCustomerReviews() {
   return (
     <Card>
       <CardHeader
-        title="Customer Reviews"
-        subheader={`${_bookingReview.length} Reviews`}
+        title="Class Requests"
+        subheader={`You have ${_bookingReview.length} class requests`}
         action={
           <CarouselArrows
             customIcon={'ic:round-keyboard-arrow-right'}
@@ -87,7 +90,7 @@ function ReviewItem({ item }) {
         <div>
           <Typography variant="subtitle2">{name}</Typography>
           <Typography variant="caption" sx={{ color: 'text.secondary', mt: 0.5, display: 'block' }}>
-            Posted {fDateTime(postedAt)}
+            Requested {fDateTime(postedAt)}
           </Typography>
         </div>
       </Stack>

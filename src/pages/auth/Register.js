@@ -105,7 +105,7 @@ export default function Register() {
                 </Typography>
                 {/* <Typography sx={{ color: 'text.secondary' }}>Free forever. No credit card needed.</Typography> */}
               </Box>
-              <Tooltip title={capitalCase(method)}>
+              {/* <Tooltip title={capitalCase(method)}>
                 <>
                   <Image
                     disabledEffect
@@ -113,7 +113,7 @@ export default function Register() {
                     sx={{ width: 32, height: 32 }}
                   />
                 </>
-              </Tooltip>
+              </Tooltip> */}
             </Box>
 
             <RegisterForm />

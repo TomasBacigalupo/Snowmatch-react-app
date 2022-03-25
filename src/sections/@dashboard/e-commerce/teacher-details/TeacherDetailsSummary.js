@@ -36,6 +36,8 @@ TeacherDetailsSummary.propTypes = {
     available: PropTypes.number,
     color: PropTypes.arrayOf(PropTypes.string),
     imageLink: PropTypes.string,
+    information: PropTypes.string,
+    description: PropTypes.string,
     id: PropTypes.string,
     lastname: PropTypes.string,
     name: PropTypes.string,
@@ -143,7 +145,7 @@ export default function TeacherDetailsSummary({ cart, teacher, onAddCart, onGoto
             mt: 2,
             mb: 1,
             display: 'block',
-            //color: status === 'sale' ? 'error.main' : 'info.main',
+            color: state !== 'AVAILABLE' ? 'error.main' : 'info.main',
           }}
         >
           {state}
@@ -154,7 +156,7 @@ export default function TeacherDetailsSummary({ cart, teacher, onAddCart, onGoto
         </Typography>
 
         <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 2 }}>
-          <Rating value={teacher.stars} precision={0.1} readOnly />
+          <Rating value={stars} precision={0.1} readOnly />
           <Typography variant="body2" sx={{ color: 'text.secondary' }}>
             ({fShortenNumber(rates.length)}
             reviews)
@@ -172,27 +174,13 @@ export default function TeacherDetailsSummary({ cart, teacher, onAddCart, onGoto
 
         <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ my: 3 }}>
           <Typography variant="subtitle1" sx={{ mt: 0.5 }}>
-            Color
+            Information
           </Typography>
-
-          {/* <Controller
-            name="color"
-            control={control}
-            render={({ field }) => (
-              <ColorSinglePicker
-                colors={colors}
-                value={field.value}
-                onChange={field.onChange}
-                sx={{
-                  ...(colors.length > 4 && {
-                    maxWidth: 144,
-                    justifyContent: 'flex-end',
-                  }),
-                }}
-              />
-            )}
-          /> */}
         </Stack>
+        <Typography variant="body1" sx={{ mt: 0.5 }} paragraph>
+            {information}
+        </Typography>
+
 
         {/* <Stack direction="row" justifyContent="space-between" sx={{ mb: 3 }}>
           <Typography variant="subtitle1" sx={{ mt: 0.5 }}>
@@ -222,7 +210,7 @@ export default function TeacherDetailsSummary({ cart, teacher, onAddCart, onGoto
 
         <Stack direction="row" justifyContent="space-between" sx={{ mb: 3 }}>
           <Typography variant="subtitle1" sx={{ mt: 0.5 }}>
-            Quantity
+            Description
           </Typography>
 
           {/* <div>
@@ -238,6 +226,9 @@ export default function TeacherDetailsSummary({ cart, teacher, onAddCart, onGoto
             </Typography>
           </div> */}
         </Stack>
+        <Typography variant="body1" sx={{ mt: 0.5 }} paragraph>
+            {description}
+        </Typography>
 
         <Divider sx={{ borderStyle: 'dashed' }} />
 

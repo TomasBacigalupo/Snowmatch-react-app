@@ -1,3 +1,4 @@
+import { gridColumnLookupSelector } from '@mui/x-data-grid';
 import { createSlice } from '@reduxjs/toolkit';
 import sum from 'lodash/sum';
 import uniqBy from 'lodash/uniqBy';
@@ -309,6 +310,7 @@ export function getTeacherWithRates(userName) {
     try {
       axios.get(teacherRequest).then(r=>{
         const teacher = r.data;
+        console.log("fetchedDataTeacher", teacher)
         axios.get(ratesRequest).then(rs =>{
           const rates = rs.data;
           const dto = {

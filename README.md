@@ -40,3 +40,8 @@ Your app is ready to be deployed.
 ## User Guide
 
 You can find detailed instructions on using Create React App and many tips in [its documentation](https://facebook.github.io/create-react-app/).
+
+
+## Iconos
+
+https://icon-sets.iconify.design/bi/calendar-date/

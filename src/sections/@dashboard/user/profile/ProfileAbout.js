@@ -22,7 +22,7 @@ ProfileAbout.propTypes = {
 };
 
 export default function ProfileAbout({ profile }) {
-  const { quote, country, email, role, company, school } = profile;
+  const { quote , information, country, email, role, company, school, birth, cellphone } = profile;
 
   return (
     <Card>
@@ -30,6 +30,7 @@ export default function ProfileAbout({ profile }) {
 
       <Stack spacing={2} sx={{ p: 3 }}>
         <Typography variant="body2">{quote}</Typography>
+        <Typography variant="body2">{information}</Typography>
 
         <Stack direction="row">
           <IconStyle icon={'eva:pin-fill'} />
@@ -65,6 +66,27 @@ export default function ProfileAbout({ profile }) {
             </Link>
           </Typography>
         </Stack>
+
+        <Stack direction="row">
+          <IconStyle icon={'bi:calendar-date'} />
+          <Typography variant="body2">
+            Birthday &nbsp;
+            <Link component="span" variant="subtitle2" color="text.primary">
+              {birth}
+            </Link>
+          </Typography>
+        </Stack>
+
+        <Stack direction="row">
+          <IconStyle icon={'ep:cellphone'} />
+          <Typography variant="body2">
+            Cellphone &nbsp;
+            <Link component="span" variant="subtitle2" color="text.primary">
+              {cellphone}
+            </Link>
+          </Typography>
+        </Stack>
+
       </Stack>
     </Card>
   );

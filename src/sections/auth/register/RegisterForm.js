@@ -1,5 +1,6 @@
 import * as Yup from 'yup';
 import { useState } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -11,7 +12,7 @@ import useAuth from '../../../hooks/useAuth';
 import useIsMountedRef from '../../../hooks/useIsMountedRef';
 // components
 import Iconify from '../../../components/Iconify';
-import { FormProvider, RHFEditor, RHFTextField, RHFUploadSingleFile } from '../../../components/hook-form';
+import { FormProvider, RHFEditor, RHFTextField, RHFUploadMultiFile, RHFUploadSingleFile } from '../../../components/hook-form';
 
 
 // ----------------------------------------------------------------------
@@ -28,7 +29,7 @@ export default function RegisterForm() {
     lastName: Yup.string().required('Last name required'),
     email: Yup.string().email('Email must be a valid email address').required('Email is required'),
     password: Yup.string().required('Password is required'),
-    certificate: Yup.object().required('Certification File is required')
+    certificate: Yup.mixed().required('Certification File is required')
 
   });
 
@@ -37,6 +38,7 @@ export default function RegisterForm() {
     lastName: '',
     email: '',
     password: '',
+    certificate: null
   };
 
   const methods = useForm({
@@ -46,15 +48,34 @@ export default function RegisterForm() {
 
   const {
     reset,
-
+    watch,
+    setValue,
     setError,
     handleSubmit,
     formState: { errors, isSubmitting },
   } = methods;
 
+  const values = watch();
+
+  const handleDrop = useCallback(
+    (acceptedFiles) => {
+      const file = acceptedFiles[0];
+
+      if (file) {
+        setValue(
+          'certificate',
+          Object.assign(file, {
+            preview: URL.createObjectURL(file),
+          })
+        );
+      }
+    },
+    [setValue]
+  );
+
   const onSubmit = async (data) => {
     try {
-      await register(data.email, data.password, data.firstName, data.lastName);
+      await register(data.email, data.password, data.firstName, data.lastName, data.certificate);
     } catch (error) {
       console.error(error);
       reset();
@@ -93,8 +114,7 @@ export default function RegisterForm() {
  
         
         <Typography variant="subtitle1">Instructor certification</Typography>
-        <RHFUploadSingleFile name="certificate" label="Ski Certificate" />
-        
+        <RHFUploadSingleFile name="certificate" accept="image/*" maxSize={3145728} onDrop={handleDrop}/>
         
         
       

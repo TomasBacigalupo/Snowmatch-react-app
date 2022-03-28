@@ -73,9 +73,17 @@ export default function RegisterForm() {
     [setValue]
   );
 
+  const toBase64 = file => new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = error => reject(error);
+  });
+
   const onSubmit = async (data) => {
+    const image = await toBase64(data.certificate);
     try {
-      await register(data.email, data.password, data.firstName, data.lastName, data.certificate);
+      await register(data.email, data.password, data.firstName, data.lastName, image);
     } catch (error) {
       console.error(error);
       reset();

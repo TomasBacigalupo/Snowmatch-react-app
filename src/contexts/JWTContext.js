@@ -128,12 +128,14 @@ function AuthProvider({ children }) {
     });
   };
 
-  const register = async (email, password, firstName, lastName) => {
+  const register = async (email, password, firstName, lastName, certificate) => {
+    console.log("certificate", certificate);
     const response = await axios.post('/api/account/register', {
       email,
       password,
       firstName,
       lastName,
+      certificate
     });
     const { accessToken, user } = response.data;
 

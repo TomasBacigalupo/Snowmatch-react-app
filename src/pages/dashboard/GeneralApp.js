@@ -32,7 +32,7 @@ export default function GeneralApp() {
       <Container maxWidth={themeStretch ? false : 'xl'}>
         <Grid container spacing={3}>
           <Grid item xs={12} md={8}>
-            <AppWelcome displayName={user?.displayName} />
+            <AppWelcome displayName={user?.name} />
           </Grid>
 
           <Grid item xs={12} md={4}>
@@ -52,7 +52,7 @@ export default function GeneralApp() {
           <Grid item xs={12} md={4}>
             <AppWidgetSummary
               title="Total Installed"
-              percent={0.2}
+              percent={-0.2}
               total={4876}
               chartColor={theme.palette.chart.blue[0]}
               chartData={[20, 41, 63, 33, 28, 35, 50, 46, 11, 26]}

@@ -1,41 +1,13 @@
-import PropTypes from 'prop-types';
-import { Link as RouterLink } from 'react-router-dom';
-// @mui
-import { useTheme } from '@mui/material/styles';
-import { Box } from '@mui/material';
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20010904//EN"
+ "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+<svg version="1.0" xmlns="http://www.w3.org/2000/svg"
+ width="416.000000pt" height="221.000000pt" viewBox="0 0 416.000000 221.000000"
+ preserveAspectRatio="xMidYMid meet">
 
-// ----------------------------------------------------------------------
-
-Logo.propTypes = {
-  disabledLink: PropTypes.bool,
-  sx: PropTypes.object,
-};
-
-export default function Logo({ disabledLink = false, sx }) {
-  const theme = useTheme();
-  const PRIMARY_LIGHT = theme.palette.primary.light;
-  const PRIMARY_MAIN = theme.palette.primary.main;
-  const PRIMARY_DARK = theme.palette.primary.dark;
-
-  const logo = (
-    <Box sx={{ width: 40, height: 40, ...sx }}>
-      <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 512 512"preserveAspectRatio="xMidYMid meet">
-        <defs>
-          <linearGradient id="BG1" x1="100%" x2="50%" y1="9.946%" y2="50%">
-            <stop offset="0%" stopColor={PRIMARY_DARK} />
-            <stop offset="100%" stopColor={PRIMARY_MAIN} />
-          </linearGradient>
-          <linearGradient id="BG2" x1="50%" x2="50%" y1="0%" y2="100%">
-            <stop offset="0%" stopColor={PRIMARY_LIGHT} />
-            <stop offset="100%" stopColor={PRIMARY_MAIN} />
-          </linearGradient>
-          <linearGradient id="BG3" x1="50%" x2="50%" y1="0%" y2="100%">
-            <stop offset="0%" stopColor={PRIMARY_LIGHT} />
-            <stop offset="100%" stopColor={PRIMARY_MAIN} />
-          </linearGradient>
-        </defs>
-        <g fill={PRIMARY_MAIN}   stroke="none" strokeWidth="10" transform="translate(0.000000,350.000000) scale(0.12000000,-0.120000000)">
-        <path d="M1715 2194 c-16 -2 -84 -8 -150 -14 -405 -36 -857 -152 -1118 -287
+<g transform="translate(0.000000,221.000000) scale(0.100000,-0.100000)"
+fill="#000000" stroke="none">
+<path d="M1715 2194 c-16 -2 -84 -8 -150 -14 -405 -36 -857 -152 -1118 -287
 -88 -46 -174 -138 -222 -236 -19 -41 -35 -82 -35 -91 0 -11 -9 -16 -30 -16
 -19 0 -40 -9 -54 -23 -24 -25 -22 -9 -61 -392 -8 -77 -22 -206 -30 -287 -15
 -134 -15 -149 0 -178 10 -20 26 -33 45 -37 26 -5 30 -10 30 -37 0 -81 59 -204
@@ -68,14 +40,5 @@ export default function Logo({ disabledLink = false, sx }) {
 312 228 39 27 89 64 113 82 24 18 49 33 55 33 7 -1 84 -40 172 -89 l160 -87 5
 -235 c3 -129 7 -235 8 -236 1 -2 10 -3 20 -3 19 0 60 101 402 993 57 147 107
 267 111 267 4 0 64 -63 134 -140z"/>
-        </g>
-      </svg>
-    </Box>
-  );
-
-  if (disabledLink) {
-    return <>{logo}</>;
-  }
-
-  return <RouterLink to="/">{logo}</RouterLink>;
-}
+</g>
+</svg>

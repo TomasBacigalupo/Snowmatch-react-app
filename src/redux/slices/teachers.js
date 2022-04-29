@@ -259,7 +259,7 @@ export function getTeachers() {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get('https://tomasbacigalupo.com.ar:9094/slash/api/users/teacher');
+      const response = await axios.get('http://localhost:8082/api/users/teacher');
       dispatch(slice.actions.getTeachersSuccess(response.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
@@ -302,10 +302,10 @@ export function getTeacher(name) {
 
 // ----------------------------------------------------------------------
 
-export function getTeacherWithRates(userName) {
+export function getTeacherWithRates(email) {
   return async () => {
-    const ratesRequest = `https://tomasbacigalupo.com.ar:9094/slash/api/rate/getRates/${userName}`;
-    const teacherRequest = `https://tomasbacigalupo.com.ar:9094/slash/api/users/teacher/${userName}`;
+    const ratesRequest = `http://localhost:8082/api/rate/getRates/${email}`;
+    const teacherRequest = `http://localhost:8082/api/users/teacher/email/${email}`;
     dispatch(slice.actions.startLoading());
     try {
       axios.get(teacherRequest).then(r=>{
@@ -327,12 +327,12 @@ export function getTeacherWithRates(userName) {
   };
 }  
 
-export function getRates(userName, teacher) {
+export function getRates(email, teacher) {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
       console.log("estoy")
-      const ratesResponse = await axios.get(`https://tomasbacigalupo.com.ar:9094/slash/api/rate/getRates/${userName}`);
+      const ratesResponse = await axios.get(`https://tomasbacigalupo.com.ar:9094/slash/api/rate/getRates/${email}`);
       const dto = {
         "rates": ratesResponse.data,
         "teacher": teacher

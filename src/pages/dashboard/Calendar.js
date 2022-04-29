@@ -111,7 +111,7 @@ export default function Calendar() {
   };
 
   const handleSelectEvent = (arg) => {
-    dispatch(selectEvent(arg.event.id));
+    dispatch(selectEvent(arg.event.eventid));
   };
 
   const handleResizeEvent = async ({ event }) => {
@@ -178,6 +178,7 @@ export default function Calendar() {
               onToday={handleClickToday}
               onChangeView={handleChangeView}
             />
+            {console.log("Events", events)}
             <FullCalendar
               weekends
               editable

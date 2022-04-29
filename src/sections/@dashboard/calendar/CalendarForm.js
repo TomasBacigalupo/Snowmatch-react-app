@@ -15,7 +15,7 @@ import { createEvent, updateEvent, deleteEvent } from '../../../redux/slices/cal
 // components
 import Iconify from '../../../components/Iconify';
 import { ColorSinglePicker } from '../../../components/color-utils';
-import { FormProvider, RHFTextField, RHFSwitch } from '../../../components/hook-form';
+import { FormProvider, RHFTextField, RHFSwitch, RHFSelect } from '../../../components/hook-form';
 
 // ----------------------------------------------------------------------
 
@@ -30,13 +30,16 @@ const COLOR_OPTIONS = [
 ];
 
 const getInitialValues = (event, range) => {
+  console.log("EditEvent", event);
   const _event = {
+    type: 'App Class',
     title: '',
     description: '',
     textColor: '#1890FF',
     allDay: false,
     start: range ? new Date(range.start) : new Date(),
     end: range ? new Date(range.end) : new Date(),
+    price: 0
   };
 
   if (event || range) {
@@ -63,7 +66,9 @@ export default function CalendarForm({ event, range, onCancel }) {
 
   const EventSchema = Yup.object().shape({
     title: Yup.string().max(255).required('Title is required'),
+    type: Yup.string().max(255).required('Title is required'),
     description: Yup.string().max(5000),
+    price: Yup.number().min(1)
   });
 
   const methods = useForm({
@@ -88,6 +93,8 @@ export default function CalendarForm({ event, range, onCancel }) {
         allDay: data.allDay,
         start: data.start,
         end: data.end,
+        type: data.type,
+        price: data.price
       };
       if (event.id) {
         dispatch(updateEvent(event.id, newEvent));
@@ -118,12 +125,34 @@ export default function CalendarForm({ event, range, onCancel }) {
 
   const isDateError = isBefore(new Date(values.end), new Date(values.start));
 
+  const TYPE_OPTION = [
+    { group: 'Class', classify: ['App class', 'School class', 'Referred class', 'Own client class'] },
+    { group: 'Off', classify: ['Break', 'Training', 'Illness'] },
+  ];
+
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Stack spacing={3} sx={{ p: 3 }}>
+        <RHFSelect name="type" label="type">
+        {TYPE_OPTION.map((type) => (
+                    <optgroup key={type.group} label={type.group}>
+                      {type.classify.map((classify) => (
+                        <option key={classify} value={classify}>
+                          {classify}
+                        </option>
+                      ))}
+                    </optgroup>
+                  ))}
+        </RHFSelect>
+
         <RHFTextField name="title" label="Title" />
 
         <RHFTextField name="description" label="Description" multiline rows={4} />
+        
+        {console.log("valores", values)}
+        {values?.type  && !['Break', 'Training', 'Illness'].find(p => p === values.type) && (
+            <RHFTextField name="price" label="Price"/>
+        )}
 
         <RHFSwitch name="allDay" label="All day" />
 

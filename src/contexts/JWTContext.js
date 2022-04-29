@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 // utils
 import axios from '../utils/axios';
 import { isValidToken, setSession } from '../utils/jwt';
+import jwtDecode from 'jwt-decode';
 
 // ----------------------------------------------------------------------
 
@@ -15,6 +16,7 @@ const initialState = {
 const handlers = {
   INITIALIZE: (state, action) => {
     const { isAuthenticated, user } = action.payload;
+    console.log("INITIALIZEDUSER", user)
     return {
       ...state,
       isAuthenticated,
@@ -73,10 +75,11 @@ function AuthProvider({ children }) {
 
         if (accessToken && isValidToken(accessToken)) {
           setSession(accessToken);
-
-          const response = await axios.get('https://tomasbacigalupo.com.ar/slash/api/users/my');
-          const { user } = response.data;
-
+          //TODO get user just by token
+          const email = jwtDecode(accessToken).sub;
+          const response = await axios.get(`/api/users/${email}`);
+          const user  = response.data;
+          
           dispatch({
             type: 'INITIALIZE',
             payload: {
@@ -85,6 +88,7 @@ function AuthProvider({ children }) {
             },
           });
         } else {
+          console.log("FAILED")
           dispatch({
             type: 'INITIALIZE',
             payload: {
@@ -109,12 +113,12 @@ function AuthProvider({ children }) {
   }, []);
 
   const login = async (username, password) => {
-    const response = await axios.post('https://tomasbacigalupo.com.ar:9094/slash/api/login', {
+    const response = await axios.post('/api/login', {
       "username": username,
       "password": password,
     });
     const accessToken = response.data.password;
-    const responseUser = await axios.get(`https://tomasbacigalupo.com.ar:9094/slash/api/users/${username}`)
+    const responseUser = await axios.get(`/api/users/${username}`)
     const user = responseUser.data;
 
     console.log("lo que volvio", responseUser.data)
@@ -130,12 +134,13 @@ function AuthProvider({ children }) {
 
   const register = async (email, password, firstName, lastName, certificate) => {
     console.log("certificate", certificate);
-    const response = await axios.post('/api/account/register', {
-      email,
-      password,
-      firstName,
-      lastName,
-      certificate
+    const response = await axios.post('/api/users/create', {
+      "email": email,
+      "password": password,
+      "name": firstName,
+      "lastname": lastName,
+      "createImage": certificate,
+      "role": "TEACHER"
     });
     const { accessToken, user } = response.data;
 

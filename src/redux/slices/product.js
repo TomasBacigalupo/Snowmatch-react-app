@@ -228,7 +228,7 @@ export function getTeachers() {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get('https://tomasbacigalupo.com.ar:9094/slash/api/users/teacher');
+      const response = await axios.get('http://localhost:8082/api/users/teacher');
       dispatch(slice.actions.getProductsSuccess(response.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
@@ -252,4 +252,67 @@ export function getProduct(name) {
     }
   };
 }
+
+// ----------------------------------------------------------------------
+
+export function getTeacher(name) {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get(`https://tomasbacigalupo.com.ar:9094/slash/api/users/teacher/${name}`
+);
+      dispatch(slice.actions.getTeacherSuccess(response.data));
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+// ----------------------------------------------------------------------
+
+export function getTeacherWithRates(email) {
+return async () => {
+  const ratesRequest = `http://localhost:8082/api/rate/getRates/${email}`;
+  const teacherRequest = `http://localhost:8082/api/users/teacher/email/${email}`;
+  dispatch(slice.actions.startLoading());
+  try {
+    axios.get(teacherRequest).then(r=>{
+      const teacher = r.data;
+      console.log("fetchedDataTeacher", teacher)
+      axios.get(ratesRequest).then(rs =>{
+        const rates = rs.data;
+        const dto = {
+          "rates": rates,
+          "teacher": teacher
+        }
+        dispatch(slice.actions.getTeacherWithRatesSuccess(dto));
+      })
+    })
+  } catch (error) {
+    console.error(error);
+    dispatch(slice.actions.hasError(error));
+  }
+};
+}  
+
+export function getRates(email, teacher) {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      console.log("estoy")
+      const ratesResponse = await axios.get(`http://localhost:9090/api/rate/getRates/${email}`);
+      const dto = {
+        "rates": ratesResponse.data,
+        "teacher": teacher
+      }
+      dispatch(slice.actions.getTeacherWithRatesSuccess(dto));
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+
 

@@ -91,7 +91,7 @@ export default function Login() {
               visibleByDefault
               disabledEffect
               alt="login"
-              src="https://minimal-assets-api.vercel.app/assets/illustrations/illustration_login.png"
+              src="https://minimal.cc/assets/illustrations/illustration_login.png"
             />
           </SectionStyle>
         )}
@@ -101,7 +101,7 @@ export default function Login() {
             <Stack direction="row" alignItems="center" sx={{ mb: 5 }}>
               <Box sx={{ flexGrow: 1 }}>
                 <Typography variant="h4" gutterBottom>
-                  Sign in to Minimal
+                  Sign in to SnowMatch
                 </Typography>
                 <Typography sx={{ color: 'text.secondary' }}>Enter your details below.</Typography>
               </Box>

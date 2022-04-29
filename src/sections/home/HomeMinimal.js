@@ -5,25 +5,26 @@ import { Box, Card, Container, Typography } from '@mui/material';
 // components
 import Image from '../../components/Image';
 import { MotionViewport, varFade } from '../../components/animate';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 
 // ----------------------------------------------------------------------
 
 const CARDS = [
   {
-    icon: 'https://minimal-assets-api.vercel.app/assets/icons/ic_design.svg',
-    title: 'UI & UX Design',
+    icon: '/icons/ic_user.svg',
+    title: 'Clients data',
     description:
-      'Contact the best instructors in the world from your phone.',
+      'Manege private access important client data.',
   },
   {
-    icon: 'https://minimal-assets-api.vercel.app/assets/icons/ic_code.svg',
-    title: 'Development',
-    description: 'Connect with trustworthy instructors and students.',
+    icon: '/icons/ic_calendar.svg',
+    title: 'Calendar organization',
+    description: 'Set available times and manage yor classes.',
   },
   {
-    icon: '/logo/logo_single.svg',
-    title: 'Branding',
-    description: 'Expand your the network of your connectedness.',
+    icon: '/icons/ic_match.svg',
+    title: 'Match',
+    description: 'Expand your clients network, get hired when you are free.',
   },
 ];
 
@@ -100,11 +101,11 @@ export default function HomeMinimal() {
         >
           <m.div variants={varFade().inUp}>
             <Typography component="div" variant="overline" sx={{ mb: 2, color: 'text.disabled' }}>
-              Minimal
+              SnowMatch
             </Typography>
           </m.div>
           <m.div variants={varFade().inDown}>
-            <Typography variant="h2">What minimal helps you?</Typography>
+            <Typography variant="h2">What SnowMatch helps you?</Typography>
           </m.div>
         </Box>
 

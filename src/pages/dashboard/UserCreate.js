@@ -28,7 +28,7 @@ export default function UserCreate() {
   const currentUser = _userList.find((user) => paramCase(user.name) === name);
 
   return (
-    <Page title="User: Create a new user">
+    <Page title="User: Create a new client">
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <HeaderBreadcrumbs
           heading={!isEdit ? 'Create a new user' : 'Edit user'}

@@ -34,7 +34,7 @@ export default function AccountGeneral() {
     phoneNumber: user?.cellphone || '',
     country: user?.country || '',
     address: user?.address || '',
-    state: user?.state || '',
+    state: user?.origin || '',
     city: user?.city || '',
     zipCode: user?.zipCode || '',
     about: user?.information || '',
@@ -104,7 +104,7 @@ export default function AccountGeneral() {
               }
             />
 
-            <RHFSwitch name="isPublic" labelPlacement="start" label="Current state" sx={{ mt: 5 }} />
+            <RHFSwitch name="state" labelPlacement="start" label="Available" sx={{ mt: 5 }} />
           </Card>
         </Grid>
 

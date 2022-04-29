@@ -3,7 +3,7 @@ import { PATH_DASHBOARD } from './routes/paths';
 
 // API
 // ----------------------------------------------------------------------
-
+console.log("API", process.env)
 export const HOST_API = process.env.REACT_APP_HOST_API_KEY || '';
 
 export const FIREBASE_API = {

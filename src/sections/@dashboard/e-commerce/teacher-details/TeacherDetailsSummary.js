@@ -120,13 +120,12 @@ export default function TeacherDetailsSummary({ cart, teacher, onAddCart, onGoto
   };
 
   const handleAddCart = async () => {
+    console.log("add cart", teacher.teacher);
+    
     try {
-      onAddCart({
-        ...values,
-        subtotal: values.price * values.quantity,
-      });
+      onAddCart(teacher.teacher);
     } catch (error) {
-      console.error(error);
+      console.error("ERROR", error);
     }
   };
 
@@ -239,7 +238,7 @@ export default function TeacherDetailsSummary({ cart, teacher, onAddCart, onGoto
         <Divider sx={{ borderStyle: 'dashed' }} />
 
         <Stack direction="row" spacing={2} sx={{ mt: 5 }}>
-          <Button
+          {/* <Button
             fullWidth
             // disabled={isMaxQuantity}
             size="large"
@@ -250,10 +249,22 @@ export default function TeacherDetailsSummary({ cart, teacher, onAddCart, onGoto
             sx={{ whiteSpace: 'nowrap' }}
           >
             Add to Cart
-          </Button>
+          </Button> */}
 
+          <Button
+            fullWidth
+            // disabled={isMaxQuantity}
+            size="large"
+            color="warning"
+            variant="contained"
+            startIcon={<Iconify icon={'ic:round-add-shopping-cart'} />}
+            onClick={handleAddCart}
+            sx={{ whiteSpace: 'nowrap' }}
+          >
+            Just contact
+          </Button>
           <Button fullWidth size="large" type="submit" variant="contained">
-            Buy Now
+            Hire now
           </Button>
         </Stack>
 

@@ -26,14 +26,14 @@ export default function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
 
   const LoginSchema = Yup.object().shape({
-    //email: Yup.string().email('Email must be a valid email address').required('Email is required'),
-    username: Yup.string().required('User name is required'),
+    email: Yup.string().email('Email must be a valid email address').required('Email is required'),
+    //username: Yup.string().required('User name is required'),
     password: Yup.string().required('Password is required'),
   });
 
   const defaultValues = {
-    email: 'tete',
-    password: 'tete',
+    email: '',
+    password: '',
     remember: true,
   };
 
@@ -51,6 +51,7 @@ export default function LoginForm() {
 
   const onSubmit = async (data) => {
     try {
+      //TODO:Change to email when BE supports
       await login(data.email, data.password);
     } catch (error) {
       console.error(error);
@@ -66,7 +67,7 @@ export default function LoginForm() {
       <Stack spacing={3}>
         {!!errors.afterSubmit && <Alert severity="error">{errors.afterSubmit.message}</Alert>}
 
-        <RHFTextField name="username" label="User name" />
+        <RHFTextField name="email" label="Email" />
 
         <RHFTextField
           name="password"

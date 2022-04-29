@@ -57,19 +57,19 @@ export default function HomeDarkMode() {
             <ContentStyle>
               <m.div variants={varFade().inUp}>
                 <Typography component="div" variant="overline" sx={{ mb: 2, color: 'text.disabled' }}>
-                  Easy switch between styles.
+                  Easy switch between modes.
                 </Typography>
               </m.div>
 
               <m.div variants={varFade().inUp}>
                 <Typography variant="h2" sx={{ mb: 3, color: 'common.white' }}>
-                  Dark mode
+                  Ninja mode
                 </Typography>
               </m.div>
 
               <m.div variants={varFade().inUp}>
                 <Typography sx={{ color: 'common.white', mb: 5 }}>
-                  A dark theme that feels easier on the eyes.
+                  A Ninja mode with full ninja uses.
                 </Typography>
               </m.div>
             </ContentStyle>

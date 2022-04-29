@@ -89,7 +89,7 @@ export default function HomeHero() {
                 Take your job to<br />
                 the next level <br /> with
                 <Typography component="span" variant="h1" sx={{ color: 'primary.main' }}>
-                  &nbsp;Minimal
+                  &nbsp;SnowMatch
                 </Typography>
               </Typography>
             </m.div>

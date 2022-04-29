@@ -12,8 +12,10 @@ const isValidToken = (accessToken) => {
   // ----------------------------------------------------------------------
 
   const decoded = jwtDecode(accessToken);
+  console.log("Decoded", decoded)
   const currentTime = Date.now() / 1000;
 
+  console.log("Decoded Time", decoded.exp > currentTime)
   return decoded.exp > currentTime;
 };
 

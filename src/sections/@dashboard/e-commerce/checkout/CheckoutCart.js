@@ -30,7 +30,7 @@ export default function CheckoutCart() {
 
   const { cart, total, discount, subtotal } = checkout;
 
-  const totalItems = sum(cart.map((item) => item.quantity));
+  const totalItems = sum(cart.map((item) => 1));
 
   const isEmptyCart = cart.length === 0;
 

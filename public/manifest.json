@@ -1,6 +1,6 @@
 {
-  "name": "React Material Minimal UI",
-  "short_name": "Minimal-UI",
+  "name": "SnowMatch CRM-MP",
+  "short_name": "SnowMatch",
   "display": "standalone",
   "start_url": "/",
   "theme_color": "#000000",

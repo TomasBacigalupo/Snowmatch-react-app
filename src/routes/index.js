@@ -80,7 +80,7 @@ export default function Router() {
             { path: 'list', element: <EcommerceProductList /> },
             { path: 'product/new', element: <EcommerceProductCreate /> },
             { path: 'product/:name/edit', element: <EcommerceProductCreate /> },
-            { path: 'checkout', element: <EcommerceCheckout /> },
+            { path: 'checkout', element: <EcommerceCheckoutTeacher /> },
           ],
         },
         {
@@ -187,6 +187,9 @@ const EcommerceTeacherDetails = Loadable(lazy(() => import('../pages/dashboard/E
 const EcommerceProductList = Loadable(lazy(() => import('../pages/dashboard/EcommerceProductList')));
 const EcommerceProductCreate = Loadable(lazy(() => import('../pages/dashboard/EcommerceProductCreate')));
 const EcommerceCheckout = Loadable(lazy(() => import('../pages/dashboard/EcommerceCheckout')));
+
+// TEACHER ECOMMERCE
+const EcommerceCheckoutTeacher = Loadable(lazy(() => import('../pages/dashboard/EcommerceCheckout')));
 
 // INVOICE
 const InvoiceList = Loadable(lazy(() => import('../pages/dashboard/InvoiceList')));

@@ -33,6 +33,7 @@ const slice = createSlice({
     // GET EVENTS
     getEventsSuccess(state, action) {
       state.isLoading = false;
+      console.log("action.Payload", action.payload  )
       state.events = action.payload;
     },
 
@@ -104,8 +105,8 @@ export function getEvents() {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get('/api/calendar/events');
-      dispatch(slice.actions.getEventsSuccess(response.data.events));
+      const response = await axios.get('/api/events/');
+      dispatch(slice.actions.getEventsSuccess(response.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }
@@ -118,7 +119,7 @@ export function createEvent(newEvent) {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.post('/api/calendar/events/new', newEvent);
+      const response = await axios.post('/api/events/create', newEvent);
       dispatch(slice.actions.createEventSuccess(response.data.event));
     } catch (error) {
       dispatch(slice.actions.hasError(error));

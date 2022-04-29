@@ -18,6 +18,7 @@ import Iconify from '../../components/Iconify';
 import Markdown from '../../components/Markdown';
 import { SkeletonProduct } from '../../components/skeleton';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
+import useAuth from 'src/hooks/useAuth';
 // sections
 import {
   ProductDetailsSummary,
@@ -71,14 +72,16 @@ export default function EcommerceTeacherDetails() {
   const { product, error, checkout } = useSelector((state) => state.product);
   
   const { teacher } = useSelector( (state) => state.teachers);
+  const { user } = useAuth();
   
 
   useEffect(() => {
-    dispatch(getTeacherWithRates(name));
+    console.log("user.email", user?.email);
+    dispatch(getTeacherWithRates(user?.email));
   }, [dispatch, name]);
 
-  const handleAddCart = (product) => {
-    dispatch(addCart(product));
+  const handleAddCart = (teacher) => {
+    dispatch(addCart(teacher));
   };
 
   const handleGotoStep = (step) => {

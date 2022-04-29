@@ -90,9 +90,12 @@ export default function UserNewEditForm({ isEdit, currentUser }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isEdit, currentUser]);
 
-  const onSubmit = async () => {
+  const onSubmit = async (data) => {
+   
     try {
+      console.log("DATA", data);
       await new Promise((resolve) => setTimeout(resolve, 500));
+      console.log("DATA", data);
       reset();
       enqueueSnackbar(!isEdit ? 'Create success!' : 'Update success!');
       navigate(PATH_DASHBOARD.user.list);

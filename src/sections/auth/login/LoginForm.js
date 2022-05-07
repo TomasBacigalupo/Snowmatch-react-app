@@ -51,7 +51,6 @@ export default function LoginForm() {
 
   const onSubmit = async (data) => {
     try {
-      //TODO:Change to email when BE supports
       await login(data.email, data.password);
     } catch (error) {
       console.error(error);

@@ -10,43 +10,56 @@ import jwtDecode from 'jwt-decode';
 const initialState = {
   isAuthenticated: false,
   isInitialized: false,
+  isAuthorized: false,
   user: null,
 };
 
 const handlers = {
   INITIALIZE: (state, action) => {
-    const { isAuthenticated, user } = action.payload;
-    console.log("INITIALIZEDUSER", user)
+    const { isAuthenticated, user, isAuthorized } = action.payload;
     return {
       ...state,
       isAuthenticated,
       isInitialized: true,
+      isAuthorized,
       user,
     };
   },
   LOGIN: (state, action) => {
     const { user } = action.payload;
-    console.log("LOGGEDUSER", user)
     return {
       ...state,
       isAuthenticated: true,
       user,
+      isAuthorized: user.state != 'UNDER_REVIEW'
     };
   },
   LOGOUT: (state) => ({
     ...state,
     isAuthenticated: false,
     user: null,
+    isAuthorized: false
   }),
   REGISTER: (state, action) => {
+    const { user } = action.payload;
+    return {
+      ...state,
+      isAuthenticated: true,
+      user,
+      isAuthorized: user.state != 'UNDER_REVIEW'
+    };
+  },
+  VERIFY: (state, action) => {
     const { user } = action.payload;
 
     return {
       ...state,
       isAuthenticated: true,
       user,
+      isAuthorized: user.state != 'UNDER_REVIEW',
+      isInitialized: true,
     };
-  },
+  }
 };
 
 const reducer = (state, action) => (handlers[action.type] ? handlers[action.type](state, action) : state);
@@ -57,6 +70,7 @@ const AuthContext = createContext({
   login: () => Promise.resolve(),
   logout: () => Promise.resolve(),
   register: () => Promise.resolve(),
+  verify: () => Promise.resolve(),
 });
 
 // ----------------------------------------------------------------------
@@ -75,18 +89,30 @@ function AuthProvider({ children }) {
 
         if (accessToken && isValidToken(accessToken)) {
           setSession(accessToken);
-          //TODO get user just by token
           const email = jwtDecode(accessToken).sub;
           const response = await axios.get(`/api/users/${email}`);
           const user  = response.data;
-          
-          dispatch({
-            type: 'INITIALIZE',
-            payload: {
-              isAuthenticated: true,
-              user,
-            },
-          });
+          if(user?.state === "UNDER_REVIEW" ){
+            dispatch({
+              type: 'VERIFY',
+              payload: {
+                isAuthenticated: true,
+                user,
+                isAuthorized: false,
+                isInitialized: true,
+
+              },
+            });
+          }else{
+            dispatch({
+              type: 'INITIALIZE',
+              payload: {
+                isAuthenticated: true,
+                isAuthorized: true,
+                user,
+              },
+            });
+          }
         } else {
           console.log("FAILED")
           dispatch({
@@ -133,7 +159,6 @@ function AuthProvider({ children }) {
   };
 
   const register = async (email, password, firstName, lastName, certificate) => {
-    console.log("certificate", certificate);
     const response = await axios.post('/api/users/create', {
       "email": email,
       "password": password,
@@ -149,6 +174,7 @@ function AuthProvider({ children }) {
       type: 'REGISTER',
       payload: {
         user,
+        isAuthorized: false,
       },
     });
   };
@@ -158,6 +184,13 @@ function AuthProvider({ children }) {
     dispatch({ type: 'LOGOUT' });
   };
 
+  const verify = async (token) =>{
+    //TODO really verify token with BE
+    if(token === "123456"){
+      dispatch({type: 'VERIFY'})
+    }
+  }
+
   return (
     <AuthContext.Provider
       value={{
@@ -166,6 +199,7 @@ function AuthProvider({ children }) {
         login,
         logout,
         register,
+        verify,
       }}
     >
       {children}

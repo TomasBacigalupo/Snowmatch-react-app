@@ -53,7 +53,6 @@ const slice = createSlice({
     getNotificationsSuccess(state, action) {
         state.isLoading = false;
         state.notifications = action.payload;
-        console.log(action.payload);
       },
 
     //  SORT & FILTER NOTIFICATIONS

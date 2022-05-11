@@ -7,6 +7,7 @@ import useAuth from '../hooks/useAuth';
 import Login from '../pages/auth/Login';
 // components
 import LoadingScreen from '../components/LoadingScreen';
+import VerifyCode from 'src/pages/auth/VerifyCode';
 
 // ----------------------------------------------------------------------
 
@@ -15,12 +16,21 @@ AuthGuard.propTypes = {
 };
 
 export default function AuthGuard({ children }) {
-  const { isAuthenticated, isInitialized } = useAuth();
+  const { isAuthenticated, isInitialized, isAuthorized } = useAuth();
   const { pathname } = useLocation();
   const [requestedLocation, setRequestedLocation] = useState(null);
 
   if (!isInitialized) {
     return <LoadingScreen />;
+  }
+
+  if(isAuthenticated && !isAuthorized){
+    if (pathname !== requestedLocation) {
+     setRequestedLocation(pathname);
+    }
+    return <VerifyCode/>;
+    
+    
   }
 
   if (!isAuthenticated) {

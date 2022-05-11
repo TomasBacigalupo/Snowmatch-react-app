@@ -29,7 +29,7 @@ import { CalendarForm, CalendarStyle, CalendarToolbar } from '../../sections/@da
 const selectedEventSelector = (state) => {
   const { events, selectedEventId } = state.calendar;
   if (selectedEventId) {
-    return events.find((_event) => _event.id === selectedEventId);
+    return events.find((_event) => _event.id === parseInt(selectedEventId));
   }
   return null;
 };
@@ -111,7 +111,8 @@ export default function Calendar() {
   };
 
   const handleSelectEvent = (arg) => {
-    dispatch(selectEvent(arg.event.eventid));
+    const id = arg.event.id
+    dispatch(selectEvent(id));
   };
 
   const handleResizeEvent = async ({ event }) => {
@@ -178,7 +179,6 @@ export default function Calendar() {
               onToday={handleClickToday}
               onChangeView={handleChangeView}
             />
-            {console.log("Events", events)}
             <FullCalendar
               weekends
               editable
@@ -206,7 +206,6 @@ export default function Calendar() {
 
         <DialogAnimate open={isOpenModal} onClose={handleCloseModal}>
           <DialogTitle>{selectedEvent ? 'Edit Event' : 'Add Event'}</DialogTitle>
-
           <CalendarForm event={selectedEvent || {}} range={selectedRange} onCancel={handleCloseModal} />
         </DialogAnimate>
       </Container>

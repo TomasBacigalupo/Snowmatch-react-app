@@ -56,7 +56,6 @@ export default function TeacherDetailsSummary({ cart, teacher, onAddCart, onGoto
   const theme = useTheme();
 
   const navigate = useNavigate();
-  console.log("teacherHPÑA", teacher)
 
   
   const {
@@ -120,8 +119,6 @@ export default function TeacherDetailsSummary({ cart, teacher, onAddCart, onGoto
   };
 
   const handleAddCart = async () => {
-    console.log("add cart", teacher.teacher);
-    
     try {
       onAddCart(teacher.teacher);
     } catch (error) {

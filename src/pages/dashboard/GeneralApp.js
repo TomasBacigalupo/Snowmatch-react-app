@@ -23,9 +23,13 @@ import {
 // ----------------------------------------------------------------------
 
 export default function GeneralApp() {
-  const { user } = useAuth();
+  const { user, isAuthorized } = useAuth();
   const theme = useTheme();
   const { themeStretch } = useSettings();
+
+  if(!isAuthorized){
+    return <></>
+  }
 
   return (
     <Page title="General: App">

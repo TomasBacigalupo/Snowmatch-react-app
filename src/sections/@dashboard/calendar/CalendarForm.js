@@ -30,7 +30,6 @@ const COLOR_OPTIONS = [
 ];
 
 const getInitialValues = (event, range) => {
-  console.log("EditEvent", event);
   const _event = {
     type: 'App Class',
     title: '',
@@ -149,7 +148,6 @@ export default function CalendarForm({ event, range, onCancel }) {
 
         <RHFTextField name="description" label="Description" multiline rows={4} />
         
-        {console.log("valores", values)}
         {values?.type  && !['Break', 'Training', 'Illness'].find(p => p === values.type) && (
             <RHFTextField name="price" label="Price"/>
         )}

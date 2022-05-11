@@ -88,7 +88,18 @@ export default function RegisterForm() {
       console.error(error);
       reset();
       if (isMountedRef.current) {
-        setError('afterSubmit', { ...error, message: error.message });
+        //TODO: parse errors
+        let message = "";
+        error.messages.forEach(e => {
+          if(e === "email: USED_EMAIL"){
+            message = message + " " + "Email already associated to an account ";
+          }if(e === "password: Password must be between 8 and 100 letters long"){
+            message = message + " " + "Password must be between 8 and 100 letters long";
+          }else{
+            message = message + " " + e;
+          }
+        });
+        setError('afterSubmit', { ...error, message: message });
       }
     }
   };

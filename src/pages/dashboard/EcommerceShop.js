@@ -165,8 +165,6 @@ export default function EcommerceShop() {
             </>
           )}
         </Stack>
-
-        {console.log("satate", teachers)}
         <ShopTeacherList teachers={teachers} loading={!teachers.length && isDefault} />
         <CartWidget />
       </Container>

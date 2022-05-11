@@ -17,7 +17,6 @@ TeacherDetailsReviewList.propTypes = {
 export default function TeacherDetailsReviewList({ teacher }) {
     
     const  rates  = teacher.rates;
-    console.log("rates", rates);
   
 
   return (
@@ -41,7 +40,6 @@ ReviewItem.propTypes = {
 };
 
 function ReviewItem({ review }) {
-    console.log("review1", review);
   const [isHelpful, setHelpfuls] = useState(false);
 
   const { raterName, raterLastname, rating, rateDate, comment, helpful,  imageLink, isPurchased, stars } = review;

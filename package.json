@@ -7,6 +7,7 @@
   "scripts": {
     "start": "react-app-rewired start -f .env.dev",
     "build": "react-app-rewired build",
+    "deploy-pi": "react-app-rewired build -f .env.production",
     "eject": "react-scripts eject",
     "lint": "eslint --ext .js,.jsx ./src",
     "lint:fix": "eslint --fix --ext .js,.jsx ./src",

@@ -120,7 +120,7 @@ export function createEvent(newEvent) {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.post('/api/events/create', newEvent);
-      dispatch(slice.actions.createEventSuccess(response.data.event));
+      dispatch(slice.actions.createEventSuccess(newEvent));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }

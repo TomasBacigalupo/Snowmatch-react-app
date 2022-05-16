@@ -85,7 +85,7 @@ export function getNotifications(name) {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`https://tomasbacigalupo.com.ar:9094/slash/api/users/notifications/${name}`);
+      const response = await axios.get(`/api/users/notifications/${name}`);
       console.log("response " , response.data);
       dispatch(slice.actions.getNotificationsSuccess(response.data));
     } catch (error) {

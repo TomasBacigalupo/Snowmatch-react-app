@@ -19,11 +19,11 @@ ShopTeacherCard.propTypes = {
 };
 
 export default function ShopTeacherCard({ teacher }) {
-  const { name, lastname, imageLink, stars, level, information, username, state} = teacher;
+  const { name, lastname, imageLink, stars, level, information, email, state} = teacher;
   const status = 'sale';
   const priceSale = 10;
 
-  const linkTo = PATH_DASHBOARD.eCommerce.viewTeacher(paramCase(username));
+  const linkTo = PATH_DASHBOARD.eCommerce.viewTeacher(paramCase(email));
 
   return (
     <Card>

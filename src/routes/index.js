@@ -89,9 +89,9 @@ export default function Router() {
             { element: <Navigate to="/dashboard/user/profile" replace />, index: true },
             { path: 'profile', element: <UserProfile /> },
             { path: 'cards', element: <UserCards /> },
-            { path: 'list', element: <UserList /> },
+            { path: 'list', element: <ClientList /> },
             { path: 'new', element: <ClientCreate /> },
-            { path: ':name/edit', element: <UserCreate /> },
+            { path: ':name/edit', element: <ClientCreate /> },
             { path: 'account', element: <UserAccount /> },
           ],
         },
@@ -209,6 +209,7 @@ const UserList = Loadable(lazy(() => import('../pages/dashboard/UserList')));
 const UserAccount = Loadable(lazy(() => import('../pages/dashboard/UserAccount')));
 const UserCreate = Loadable(lazy(() => import('../pages/dashboard/UserCreate')));
 const ClientCreate = Loadable(lazy(() => import('../pages/dashboard/ClientCreate')));
+const ClientList = Loadable(lazy(() => import('../pages/dashboard/ClientList')));
 
 // APP
 const Chat = Loadable(lazy(() => import('../pages/dashboard/Chat')));

@@ -17,7 +17,13 @@ import { PATH_DASHBOARD } from '../../../routes/paths';
 import { countries } from '../../../_mock';
 // components
 import Label from '../../../components/Label';
+
 import { FormProvider, RHFSelect, RHFSwitch, RHFTextField, RHFUploadAvatar } from '../../../components/hook-form';
+// redux
+import { createClient, slice, editClient } from '../../../redux/slices/clients'
+import { useDispatch, useSelector } from '../../../redux/store';
+
+
 
 // ----------------------------------------------------------------------
 
@@ -27,41 +33,56 @@ ClientNewEditForm.propTypes = {
   };
   
   export default function ClientNewEditForm({ isEdit, currentUser }) {
+
+    const {client} = useSelector((state) =>{console.log(state);return state.clients});
+
+    const dispatch = useDispatch();
+
     const navigate = useNavigate();
   
     const { enqueueSnackbar } = useSnackbar();
   
     const NewUserSchema = Yup.object().shape({
       name: Yup.string().required('Name is required'),
-      lastName: Yup.string().required('Last name is required'),
+      lastname: Yup.string().required('Last name is required'),
       email: Yup.string().required('Email is required').email(),
-      phoneNumber: Yup.string().required('Phone number is required'),
+      cellphone: Yup.string().required('Phone number is required'),
       country: Yup.string().required('country is required'),
       avatarUrl: Yup.mixed().test('required', 'Avatar is required', (value) => value !== ''),
       notes: Yup.string().required('Notes is required'),
+      isTipper: Yup.bool(),
       tip: Yup.string().required('Tip is required'),
+      level: Yup.string(),
+      isRenting: Yup.bool(),
+      hobbies: Yup.string(),
+      family: Yup.string(),
+      work: Yup.string(),
+      staysAt:Yup.string(),
+      id:Yup.number(),
+
     });
   
     const defaultValues = useMemo(
       () => ({
-        name: currentUser?.name || '',
-        lastName: currentUser?.lastName || '',
-        email: currentUser?.email || '',
-        phoneNumber: currentUser?.phoneNumber || '',
-        address: currentUser?.address || '',
-        country: currentUser?.country || '',
-        state: currentUser?.state || '',
-        city: currentUser?.city || '',
-        zipCode: currentUser?.zipCode || '',
-        avatarUrl: currentUser?.avatarUrl || '',
-        isVerified: currentUser?.isVerified || true,
-        status: currentUser?.status,
-        company: currentUser?.company || '',
-        role: currentUser?.role || '',
-        tip: currentUser?.tip || '',
+        name: client?.name || '',
+        lastname: client?.lastname || '',
+        email: client?.email || '',
+        cellphone: client?.cellphone || '',
+        country: client?.country || '',
+        avatarUrl: client?.avatarUrl || '',
+        isTipper: client?.tipper || false,
+        notes: client?.notes || '',
+        tip: client?.tip || '',
+        level: client?.level || "",
+        isRenting:client?.renting || false,
+        family:client?.family || "",
+        hobbies:client?.hobbies || "",
+        work:client?.work || "",
+        staysAt:client?.staysAt || "",
+        id:client?.id || 0 
       }),
       // eslint-disable-next-line react-hooks/exhaustive-deps
-      [currentUser]
+      [client]
     );
   
     const methods = useForm({
@@ -90,10 +111,20 @@ ClientNewEditForm.propTypes = {
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isEdit, currentUser]);
   
-    const onSubmit = async () => {
+    const onSubmit = async (data) => {
+      var func;
+      if(isEdit){
+        func = editClient(data);
+      }
+      else{
+        func = createClient(data);
+      }
       try {
-        await new Promise((resolve) => setTimeout(resolve, 500));
+        //console.log(data)
+        const response = await dispatch(func);
         reset();
+        console.log(response)
+        console.log("SENT")
         enqueueSnackbar(!isEdit ? 'Create success!' : 'Update success!');
         navigate(PATH_DASHBOARD.user.list);
       } catch (error) {
@@ -121,15 +152,8 @@ ClientNewEditForm.propTypes = {
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <Grid container spacing={3}>
           <Grid item xs={12} md={4}>
-            <Card sx={{ py: 10, px: 3 }}>
-              {isEdit && (
-                <Label
-                  color={values.status !== 'active' ? 'error' : 'success'}
-                  sx={{ textTransform: 'uppercase', position: 'absolute', top: 24, right: 24 }}
-                >
-                  {values.status}
-                </Label>
-              )}
+            <Card sx={{ py: 25, px: 3 }}>
+             
   
               <Box sx={{ mb: 5 }}>
                 <RHFUploadAvatar
@@ -155,51 +179,8 @@ ClientNewEditForm.propTypes = {
                 />
               </Box>
   
-              {isEdit && (
-                <FormControlLabel
-                  labelPlacement="start"
-                  control={
-                    <Controller
-                      name="status"
-                      control={control}
-                      render={({ field }) => (
-                        <Switch
-                          {...field}
-                          checked={field.value !== 'active'}
-                          onChange={(event) => field.onChange(event.target.checked ? 'banned' : 'active')}
-                        />
-                      )}
-                    />
-                  }
-                  label={
-                    <>
-                      <Typography variant="subtitle2" sx={{ mb: 0.5 }}>
-                        Banned
-                      </Typography>
-                      <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                        Apply disable account
-                      </Typography>
-                    </>
-                  }
-                  sx={{ mx: 0, mb: 3, width: 1, justifyContent: 'space-between' }}
-                />
-              )}
-  
-              <RHFSwitch
-                name="isVerified"
-                labelPlacement="start"
-                label={
-                  <>
-                    <Typography variant="subtitle2" sx={{ mb: 0.5 }}>
-                      Email Verified
-                    </Typography>
-                    <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                      Disabling this will automatically send the user a verification email
-                    </Typography>
-                  </>
-                }
-                sx={{ mx: 0, width: 1, justifyContent: 'space-between' }}
-              />
+              
+
             </Card>
           </Grid>
   
@@ -217,9 +198,9 @@ ClientNewEditForm.propTypes = {
                             }}
                         >
                             <RHFTextField name="name" label="Name" />
-                            <RHFTextField name="lastName" label="Last Name" />
+                            <RHFTextField name="lastname" label="Last Name" />
                             <RHFTextField name="email" label="Email Address" />
-                            <RHFTextField name="phoneNumber" label="Phone Number" />
+                            <RHFTextField name="cellphone" label="Cellphone" />
     
                             <RHFSelect name="country" label="Country" placeholder="Country">
                             <option value="" />
@@ -229,20 +210,56 @@ ClientNewEditForm.propTypes = {
                                 </option>
                             ))}
                             </RHFSelect>
-                            <RHFTextField name="tip" label="Tip" />
-                        </Box>
-                    </Grid>
-                    <Divider/>
-                    <Grid item xs={12}>
-                        <Box> 
-                            <Grid container spacing={3}>
-                                <Grid item xs={12}>
-                                    <RHFTextField multiline name="notes" label="Notes"/>
-                                </Grid>
-                            </Grid> 
-                        </Box>
-                    </Grid>
+                            <RHFTextField name="staysAt" label="Stays at" />
+                            <RHFSwitch
+                              name="isRenting"
+                              labelPlacement="start"
+                              label={
+                                <>
+                                  <Typography variant="subtitle2" sx={{ mb: 0.5 }}>
+                                    Is the client renting equipment?
+                                  </Typography>
+                                </>
+                              }
+                              sx={{ mx: 0, width: 1, justifyContent: 'space-between' }}
+                              />
+                            <RHFSelect name="level" label="Level" placeholder="Level">
+                            <option value="" />
+                              <option key="GREEN" value="GREEN">
+                                GREEN
+                              </option>
+                              <option key="BLUE" value="BLUE">
+                                BLUE
+                              </option>
+                              <option key="RED" value="RED">
+                                RED
+                              </option>
+                              <option key="BLACK" value="BLACK">
+                                BLACK
+                              </option>                              
+                            ))}
+                            </RHFSelect>
+                            <RHFTextField name="work" label="Work" />
+                            <RHFTextField name="hobbies" label="Hobbies" />
 
+                            <RHFSwitch
+                              name="isTipper"
+                              labelPlacement="start"
+                              label={
+                                <>
+                                  <Typography variant="subtitle2" sx={{ mb: 0.5 }}>
+                                    Does the client tip?
+                                  </Typography>
+                                </>
+                              }
+                              sx={{ mx: 0, width: 1, justifyContent: 'space-between' }}
+                              />
+                            <RHFTextField name="tip" label="Usual tip" />
+                            <RHFTextField multiline name="notes" label="Notes"/>
+
+                            <RHFTextField multiline name="family" label="Family"/>
+                        </Box>
+                    </Grid>
                 </Grid>
                 
               <Stack alignItems="flex-end" sx={{ mt: 3 }}>

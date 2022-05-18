@@ -46,17 +46,19 @@ const STATUS_OPTIONS = ['all'];
 
 const LEVEL_OPTIONS = [
   'ALL',
-  'GREEN',
-  'RED',
-  'BLUE',
-  'BLACK'
+  'BEGINNER',
+  'INTERMEDIATE',
+  'ADVANCED',
+  'EXPERT'
 ];
+
+
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Name', align: 'left' },
   { id: 'lastname', label: 'Lastname', align: 'left' },
   { id: 'email', label: 'Email', align: 'left' },
-  { id: 'phone', label: 'Phone', align: 'center' },
+  { id: 'phone', label: 'Phone', align: 'left' },
   { id: 'level', label: 'Level', align: 'left' },
   { id: '' },
 ];

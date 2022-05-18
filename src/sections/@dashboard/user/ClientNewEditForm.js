@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useCallback, useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSnackbar } from 'notistack';
 import { useNavigate } from 'react-router-dom';
 // form
@@ -8,7 +8,7 @@ import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { LoadingButton } from '@mui/lab';
-import { Box, Card, Grid, Stack, Switch, Typography, FormControlLabel, Divider } from '@mui/material';
+import { Box, Card, Grid, Stack, Switch, Typography, FormControlLabel, Divider, MenuItem } from '@mui/material';
 // utils
 import { fData } from '../../../utils/formatNumber';
 // routes
@@ -18,7 +18,7 @@ import { countries } from '../../../_mock';
 // components
 import Label from '../../../components/Label';
 
-import { FormProvider, RHFSelect, RHFSwitch, RHFTextField, RHFUploadAvatar } from '../../../components/hook-form';
+import { FormProvider, RHFSelect, RHFSwitch, RHFTextField, RHFUploadAvatar, RHFMultipleSelect } from '../../../components/hook-form';
 // redux
 import { createClient, slice, editClient } from '../../../redux/slices/clients'
 import { useDispatch, useSelector } from '../../../redux/store';
@@ -27,6 +27,26 @@ import { useDispatch, useSelector } from '../../../redux/store';
 
 // ----------------------------------------------------------------------
 
+const SKI_RESORTS = [
+  "Aconcagua",
+  "Batea Mahuida",
+  "Calafate Mountain Park",
+  "Caviahue",
+  "Cerro Bayo",
+  "Cerro Castor",
+  "Cerro Catedral",
+  "Chapelco",
+  "La Hoya",
+  "Las Leñas",
+  "Las Pendientes",
+  "Los Penitentes",
+  "Los Puquios",
+  "Monte Bianco",
+  "Patagonia Heliski",
+  "Perito Moreno",
+  "Vallecitos"
+]
+
 ClientNewEditForm.propTypes = {
     isEdit: PropTypes.bool,
     currentUser: PropTypes.object,
@@ -34,11 +54,16 @@ ClientNewEditForm.propTypes = {
   
   export default function ClientNewEditForm({ isEdit, currentUser }) {
 
+
     const {client} = useSelector((state) =>{console.log(state);return state.clients});
 
     const dispatch = useDispatch();
 
     const navigate = useNavigate();
+
+
+
+
   
     const { enqueueSnackbar } = useSnackbar();
   
@@ -59,6 +84,7 @@ ClientNewEditForm.propTypes = {
       work: Yup.string(),
       staysAt:Yup.string(),
       id:Yup.number(),
+      resorts:Yup.array().of(Yup.string()),
 
     });
   
@@ -79,7 +105,8 @@ ClientNewEditForm.propTypes = {
         hobbies:client?.hobbies || "",
         work:client?.work || "",
         staysAt:client?.staysAt || "",
-        id:client?.id || 0 
+        id:client?.id || 0 ,
+        resorts:client?.resorts || [],
       }),
       // eslint-disable-next-line react-hooks/exhaustive-deps
       [client]
@@ -112,6 +139,7 @@ ClientNewEditForm.propTypes = {
     }, [isEdit, currentUser]);
   
     const onSubmit = async (data) => {
+      console.log(data)
       var func;
       if(isEdit){
         func = editClient(data);
@@ -152,7 +180,7 @@ ClientNewEditForm.propTypes = {
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <Grid container spacing={3}>
           <Grid item xs={12} md={4}>
-            <Card sx={{ py: 25, px: 3 }}>
+            <Card sx={{ py: 31, px: 3 }}>
              
   
               <Box sx={{ mb: 5 }}>
@@ -225,17 +253,17 @@ ClientNewEditForm.propTypes = {
                               />
                             <RHFSelect name="level" label="Level" placeholder="Level">
                             <option value="" />
-                              <option key="GREEN" value="GREEN">
-                                GREEN
+                              <option key="BEGINNER" value="BEGINNER">
+                                BEGINNER
                               </option>
-                              <option key="BLUE" value="BLUE">
-                                BLUE
+                              <option key="INTERMEDIATE" value="INTERMEDIATE">
+                                INTERMEDIATE
                               </option>
-                              <option key="RED" value="RED">
-                                RED
+                              <option key="ADVANCED" value="ADVANCED">
+                                ADVANCED
                               </option>
-                              <option key="BLACK" value="BLACK">
-                                BLACK
+                              <option key="EXPERT" value="EXPERT">
+                                EXPERT
                               </option>                              
                             ))}
                             </RHFSelect>
@@ -258,7 +286,15 @@ ClientNewEditForm.propTypes = {
                             <RHFTextField multiline name="notes" label="Notes"/>
 
                             <RHFTextField multiline name="family" label="Family"/>
+
+
+
+
                         </Box>
+                        <Stack alignItems="flex" sx={{ mt: 3 }}>
+
+                            <RHFMultipleSelect name="resorts" label="Resorts" list={SKI_RESORTS}/>
+              </Stack>
                     </Grid>
                 </Grid>
                 

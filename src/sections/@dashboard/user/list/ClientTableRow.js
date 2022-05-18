@@ -60,7 +60,7 @@ export default function ClientTableRow({ row, selected, onEditRow, onSelectRow, 
       <TableCell align="left">
         <Label
           variant={theme.palette.mode === 'light' ? 'ghost' : 'ghost'}
-          color={(level === 'RED' && 'error') || (level === 'GREEN' && 'success') || (level === 'BLUE' && 'secondary') || 'warning'}
+          color={(level === 'EXPERT' && 'error') || (level === 'BEGINNER' && 'success') || (level === 'INTERMEDIATE' && 'secondary') || 'warning'}
           sx={{ textTransform: 'capitalize' }}
         >
           {level}

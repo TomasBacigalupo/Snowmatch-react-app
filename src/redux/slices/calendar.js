@@ -33,7 +33,6 @@ const slice = createSlice({
     // GET EVENTS
     getEventsSuccess(state, action) {
       state.isLoading = false;
-      console.log("action.Payload", action.payload  )
       state.events = action.payload;
     },
 
@@ -68,6 +67,7 @@ const slice = createSlice({
     // SELECT EVENT
     selectEvent(state, action) {
       const eventId = action.payload;
+      state.selectedEventId = eventId;
       state.isOpenModal = true;
       state.selectedEventId = eventId;
     },
@@ -120,7 +120,7 @@ export function createEvent(newEvent) {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.post('/api/events/create', newEvent);
-      dispatch(slice.actions.createEventSuccess(response.data.event));
+      dispatch(slice.actions.createEventSuccess(newEvent));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }
@@ -133,10 +133,7 @@ export function updateEvent(eventId, updateEvent) {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.post('/api/calendar/events/update', {
-        eventId,
-        updateEvent,
-      });
+      const response = await axios.put(`/api/events/byId/${eventId}`, updateEvent);
       dispatch(slice.actions.updateEventSuccess(response.data.event));
     } catch (error) {
       dispatch(slice.actions.hasError(error));

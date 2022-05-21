@@ -41,7 +41,6 @@ export default function NotificationsPopover() {
   const { user } = useAuth();
   const dispatch = useDispatch();
   const  wtf  = useSelector( (state) => state);
-  console.log("state wtafuck " , wtf);
 
   const handleOpen = (event) => {
     setOpen(event.currentTarget);
@@ -72,7 +71,6 @@ export default function NotificationsPopover() {
       <IconButtonAnimate color={open ? 'primary' : 'default'} onClick={handleOpen} sx={{ width: 40, height: 40 }}>
         <Badge badgeContent={N.length} color="error">
           <Iconify icon="eva:bell-fill" width={20} height={20} />
-          {console.log("wtf2", wtf)}
         </Badge>
       </IconButtonAnimate>
 

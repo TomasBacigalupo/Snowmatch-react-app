@@ -91,7 +91,7 @@ export default function Login() {
               visibleByDefault
               disabledEffect
               alt="login"
-              src="https://minimal.cc/assets/illustrations/illustration_login.png"
+              src="https://minimals.cc/assets/illustrations/illustration_login.png"
             />
           </SectionStyle>
         )}

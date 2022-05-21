@@ -78,14 +78,12 @@ const slice = createSlice({
     // GET TEACHER RATES
     getTeacherRatesSuccess(state, action) {
       state.isLoading = false;
-      console.log("action",action)
       state.rates = action.payload;
     },
 
     // GET TEACHER WITH RATES
     getTeacherWithRatesSuccess(state, action) {
       state.isLoading = false;
-      console.log("action",action)
       state.rates = action.payload.rates;
       state.teacher = action.payload
     },
@@ -259,7 +257,7 @@ export function getTeachers() {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get('http://localhost:8082/api/users/teacher');
+      const response = await axios.get('/api/users/teacher');
       dispatch(slice.actions.getTeachersSuccess(response.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
@@ -290,7 +288,7 @@ export function getTeacher(name) {
     return async () => {
       dispatch(slice.actions.startLoading());
       try {
-        const response = await axios.get(`https://tomasbacigalupo.com.ar:9094/slash/api/users/teacher/${name}`
+        const response = await axios.get(`/api/users/teacher/${name}`
   );
         dispatch(slice.actions.getTeacherSuccess(response.data));
       } catch (error) {
@@ -304,13 +302,12 @@ export function getTeacher(name) {
 
 export function getTeacherWithRates(email) {
   return async () => {
-    const ratesRequest = `http://localhost:8082/api/rate/getRates/${email}`;
-    const teacherRequest = `http://localhost:8082/api/users/teacher/email/${email}`;
+    const ratesRequest = `/api/rate/getRates/${email}`;
+    const teacherRequest = `/api/users/teacher/email/${email}`;
     dispatch(slice.actions.startLoading());
     try {
       axios.get(teacherRequest).then(r=>{
         const teacher = r.data;
-        console.log("fetchedDataTeacher", teacher)
         axios.get(ratesRequest).then(rs =>{
           const rates = rs.data;
           const dto = {
@@ -331,8 +328,7 @@ export function getRates(email, teacher) {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      console.log("estoy")
-      const ratesResponse = await axios.get(`https://tomasbacigalupo.com.ar:9094/slash/api/rate/getRates/${email}`);
+      const ratesResponse = await axios.get(`/api/rate/getRates/${email}`);
       const dto = {
         "rates": ratesResponse.data,
         "teacher": teacher

@@ -3,7 +3,7 @@ import { Navigate } from 'react-router-dom';
 // hooks
 import useAuth from '../hooks/useAuth';
 // routes
-import { PATH_DASHBOARD } from '../routes/paths';
+import { PATH_DASHBOARD, PATH_AUTH } from '../routes/paths';
 
 // ----------------------------------------------------------------------
 
@@ -12,10 +12,13 @@ GuestGuard.propTypes = {
 };
 
 export default function GuestGuard({ children }) {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, isAuthorized } = useAuth();
 
-  if (isAuthenticated) {
+  if (isAuthenticated && isAuthorized ) {
     return <Navigate to={PATH_DASHBOARD.root} />;
+  }
+  if (isAuthenticated && !isAuthorized ) {
+    return <Navigate to={PATH_AUTH.verify} />;
   }
 
   return <>{children}</>;

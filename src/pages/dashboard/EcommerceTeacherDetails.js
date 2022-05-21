@@ -76,7 +76,6 @@ export default function EcommerceTeacherDetails() {
   
 
   useEffect(() => {
-    console.log("user.email", user?.email);
     dispatch(getTeacherWithRates(user?.email));
   }, [dispatch, name]);
 
@@ -90,7 +89,6 @@ export default function EcommerceTeacherDetails() {
 
   return (
     <Page title="Ecommerce: Instructor Details">
-        {console.log("teacher", teacher)}
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <HeaderBreadcrumbs
           heading="Instructor Details"

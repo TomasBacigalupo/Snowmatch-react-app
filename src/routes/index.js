@@ -134,6 +134,14 @@ export default function Router() {
         },
         { path: 'calendar', element: <Calendar /> },
         { path: 'kanban', element: <Kanban /> },
+        {
+          path: 'admin',
+          children: [
+            { element: <Navigate to="/dashboard/admin/reveiw" replace />, index: true },
+            { path: 'review', element: <AdminReview /> },
+            { path: ':name/confirm', element: <AdminConfirm /> },
+          ],
+        },
       ],
     },
 
@@ -209,6 +217,11 @@ const UserList = Loadable(lazy(() => import('../pages/dashboard/UserList')));
 const UserAccount = Loadable(lazy(() => import('../pages/dashboard/UserAccount')));
 const UserCreate = Loadable(lazy(() => import('../pages/dashboard/UserCreate')));
 const ClientCreate = Loadable(lazy(() => import('../pages/dashboard/ClientCreate')));
+
+// ADMIN
+const AdminReview = Loadable(lazy(() => import('../pages/dashboard/AdminReview')));
+const AdminConfirm = Loadable(lazy(() => import('../pages/dashboard/AdminConfirm')));
+
 
 // APP
 const Chat = Loadable(lazy(() => import('../pages/dashboard/Chat')));

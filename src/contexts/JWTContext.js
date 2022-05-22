@@ -71,6 +71,7 @@ const AuthContext = createContext({
   logout: () => Promise.resolve(),
   register: () => Promise.resolve(),
   verify: () => Promise.resolve(),
+  testVerification: () => Promise.resolve(),
 });
 
 // ----------------------------------------------------------------------
@@ -92,7 +93,7 @@ function AuthProvider({ children }) {
           const email = jwtDecode(accessToken).sub;
           const response = await axios.get(`/api/users/${email}`);
           const user  = response.data;
-          if(user?.state === "UNDER_REVIEW" ){
+          if(!user?.emailVerified){
             dispatch({
               type: 'VERIFY',
               payload: {
@@ -147,8 +148,6 @@ function AuthProvider({ children }) {
     const responseUser = await axios.get(`/api/users/${username}`)
     const user = responseUser.data;
 
-    console.log("lo que volvio", responseUser.data)
-
     setSession(accessToken);
     dispatch({
       type: 'LOGIN',
@@ -190,6 +189,32 @@ function AuthProvider({ children }) {
       dispatch({type: 'VERIFY'})
     }
   }
+  const testVerification = async () => {
+    const response = await axios.get(`/api/users/${state.user.email}`);
+    const user  = response.data;
+    if(user.emailVerified){
+      dispatch({
+        type: 'INITIALIZE',
+        payload: {
+          isAuthenticated: true,
+          isAuthorized: user.state != 'UNDER_REVIEW',
+          emailVerified: true,
+          user,
+        },
+      });
+    }else{
+      dispatch({
+        type: 'INITIALIZE',
+        payload: {
+          isAuthenticated: true,
+          isAuthorized: user.state != 'UNDER_REVIEW',
+          emailVerified: false,
+          user,
+        },
+      });
+    }
+  
+  };
 
   return (
     <AuthContext.Provider
@@ -200,6 +225,7 @@ function AuthProvider({ children }) {
         logout,
         register,
         verify,
+        testVerification,
       }}
     >
       {children}

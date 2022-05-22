@@ -7,7 +7,7 @@ import useAuth from '../hooks/useAuth';
 import Login from '../pages/auth/Login';
 // components
 import LoadingScreen from '../components/LoadingScreen';
-import VerifyCode from 'src/pages/auth/VerifyCode';
+import  PageVerify  from 'src/pages/PageVerify';
 
 // ----------------------------------------------------------------------
 
@@ -28,7 +28,7 @@ export default function AuthGuard({ children }) {
     if (pathname !== requestedLocation) {
      setRequestedLocation(pathname);
     }
-    return <VerifyCode/>;
+    return <PageVerify/>;
     
     
   }

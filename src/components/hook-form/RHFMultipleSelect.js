@@ -14,7 +14,7 @@ RHFMultipleSelect.propTypes = {
   name: PropTypes.string,
 };
 
-export default function RHFMultipleSelect({ name,label, list }) {
+export default function RHFMultipleSelect({ name,label, list, freeSolo }) {
   const { control } = useFormContext();
 
 
@@ -27,6 +27,7 @@ export default function RHFMultipleSelect({ name,label, list }) {
 
         <Autocomplete
           value={field?.value || []}
+          freeSolo={freeSolo}
           
           onChange={(event, newValue) => {field.onChange(newValue); console.log(field);}}
 

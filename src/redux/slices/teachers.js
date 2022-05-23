@@ -303,7 +303,7 @@ export function getTeacher(name) {
 export function getTeacherWithRates(email) {
   return async () => {
     const ratesRequest = `/api/rate/getRates/${email}`;
-    const teacherRequest = `/api/users/teacher/email/${email}`;
+    const teacherRequest = `/api/users/${email}`;
     dispatch(slice.actions.startLoading());
     try {
       axios.get(teacherRequest).then(r=>{
@@ -339,4 +339,24 @@ export function getRates(email, teacher) {
       dispatch(slice.actions.hasError(error));
     }
   };
+}
+
+export function updateTeacher(teacher){
+  return async () => {
+    try {
+      const resp = await axios.put(`/api/users/edit`, teacher)
+    }catch (error){
+      console.error(error);
+    }
+  }
 }  
+
+export function changeProfilePicture(picture){
+  return async () => {
+    try {
+      const resp = await axios.put(`/api/users/image`, {"editImage": picture});
+    } catch (error){
+      console.log(error)
+    }
+  }
+}

@@ -120,7 +120,7 @@ export function createEvent(newEvent) {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.post('/api/events/create', newEvent);
-      dispatch(slice.actions.createEventSuccess(newEvent));
+      dispatch(slice.actions.createEventSuccess(response.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }
@@ -134,7 +134,7 @@ export function updateEvent(eventId, updateEvent) {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.put(`/api/events/byId/${eventId}`, updateEvent);
-      dispatch(slice.actions.updateEventSuccess(response.data.event));
+      dispatch(slice.actions.updateEventSuccess(updateEvent));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }
@@ -147,7 +147,7 @@ export function deleteEvent(eventId) {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      await axios.post('/api/calendar/events/delete', { eventId });
+      await axios.delete(`/api/events/byId/${ eventId }`);
       dispatch(slice.actions.deleteEventSuccess({ eventId }));
     } catch (error) {
       dispatch(slice.actions.hasError(error));

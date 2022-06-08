@@ -92,8 +92,8 @@ function AuthProvider({ children }) {
           setSession(accessToken);
           const email = jwtDecode(accessToken).sub;
           const response = await axios.get(`/api/users/${email}`);
-          const user  = response.data;
-          if(!user?.emailVerified){
+          const user = response.data;
+          if (user?.emailVerified) {
             dispatch({
               type: 'VERIFY',
               payload: {
@@ -104,7 +104,7 @@ function AuthProvider({ children }) {
 
               },
             });
-          }else{
+          } else {
             dispatch({
               type: 'INITIALIZE',
               payload: {
@@ -166,9 +166,15 @@ function AuthProvider({ children }) {
       "createImage": certificate,
       "role": "TEACHER"
     });
-    const { accessToken, user } = response.data;
+    const { user } = response.data;
+    const logResp = axios.post('/api/login', {
+      "username": email,
+      "password": password,
+    });
+    const { accessToken } = logResp.data;
 
     window.localStorage.setItem('accessToken', accessToken);
+
     dispatch({
       type: 'REGISTER',
       payload: {
@@ -183,16 +189,16 @@ function AuthProvider({ children }) {
     dispatch({ type: 'LOGOUT' });
   };
 
-  const verify = async (token) =>{
+  const verify = async (token) => {
     //TODO really verify token with BE
-    if(token === "123456"){
-      dispatch({type: 'VERIFY'})
+    if (token === "123456") {
+      dispatch({ type: 'VERIFY' })
     }
   }
   const testVerification = async () => {
     const response = await axios.get(`/api/users/${state.user.email}`);
-    const user  = response.data;
-    if(user.emailVerified){
+    const user = response.data;
+    if (user.emailVerified) {
       dispatch({
         type: 'INITIALIZE',
         payload: {
@@ -202,7 +208,7 @@ function AuthProvider({ children }) {
           user,
         },
       });
-    }else{
+    } else {
       dispatch({
         type: 'INITIALIZE',
         payload: {
@@ -213,7 +219,7 @@ function AuthProvider({ children }) {
         },
       });
     }
-  
+
   };
 
   return (

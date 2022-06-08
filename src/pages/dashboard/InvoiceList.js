@@ -185,7 +185,6 @@ export default function InvoiceList() {
               startIcon={<Iconify icon={'eva:plus-fill'} />}
             >
               New Invoice
-              mierda
             </Button>
           }
         />

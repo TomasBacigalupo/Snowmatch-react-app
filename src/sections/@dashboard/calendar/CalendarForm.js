@@ -4,7 +4,7 @@ import merge from 'lodash/merge';
 import { isBefore } from 'date-fns';
 import { useSnackbar } from 'notistack';
 // form
-import { useForm, Controller } from 'react-hook-form';
+import { useForm, Controller, useWatch } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { Box, Stack, Button, Tooltip, TextField, IconButton, DialogActions } from '@mui/material';
@@ -16,6 +16,7 @@ import { createEvent, updateEvent, deleteEvent } from '../../../redux/slices/cal
 import Iconify from '../../../components/Iconify';
 import { ColorSinglePicker } from '../../../components/color-utils';
 import { FormProvider, RHFTextField, RHFSwitch, RHFSelect } from '../../../components/hook-form';
+import { useEffect } from 'react';
 
 // ----------------------------------------------------------------------
 
@@ -38,9 +39,10 @@ const getInitialValues = (event, range) => {
     allDay: false,
     start: range ? new Date(range.start) : new Date(),
     end: range ? new Date(range.end) : new Date(),
-    price: 0
+    price: null
   };
 
+  console.log("event", event);
   if (event || range) {
     return merge({}, _event, event);
   }
@@ -67,7 +69,19 @@ export default function CalendarForm({ event, range, onCancel }) {
     title: Yup.string().max(255).required('Title is required'),
     type: Yup.string().max(255).required('Title is required'),
     description: Yup.string().max(5000),
-    price: Yup.number().min(1)
+    price: Yup.number().when('type', {
+      is: type => {
+        ['Break', 'Training', 'Illness'].forEach(t =>{
+          console.log(type)
+          if(t === type){
+            console.log("soy break")
+            return true;
+          }
+        });
+        return false;
+      },
+      then: Yup.number().nullable().notRequired().min(0)
+    }).min(1)
   });
 
   const methods = useForm({
@@ -79,6 +93,7 @@ export default function CalendarForm({ event, range, onCancel }) {
     reset,
     watch,
     control,
+    setValue,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
@@ -119,9 +134,9 @@ export default function CalendarForm({ event, range, onCancel }) {
       console.error(error);
     }
   };
-
+  
   const values = watch();
-
+  
   const isDateError = isBefore(new Date(values.end), new Date(values.start));
 
   const TYPE_OPTION = [

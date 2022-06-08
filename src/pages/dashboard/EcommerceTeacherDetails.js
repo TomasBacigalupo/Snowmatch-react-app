@@ -106,7 +106,7 @@ export default function EcommerceTeacherDetails() {
           ]}
         />
 
-        <CartWidget />
+        {/* <CartWidget /> */}
 
         {teacher && (
           <>

@@ -2,6 +2,7 @@ import { gridColumnLookupSelector } from '@mui/x-data-grid';
 import { createSlice } from '@reduxjs/toolkit';
 import sum from 'lodash/sum';
 import uniqBy from 'lodash/uniqBy';
+import { func, number } from 'prop-types';
 // utils
 import axios from '../../utils/axios';
 //
@@ -34,6 +35,10 @@ const initialState = {
     shipping: 0,
     billing: null,
   },
+  cakeChart: [0, 0, 0, 0],
+  totalClasses: 0,
+  totalIncome: 0,
+  topClients: [],
 };
 
 const slice = createSlice({
@@ -59,9 +64,9 @@ const slice = createSlice({
 
     // GET TEACHERS
     getTeachersSuccess(state, action) {
-        state.isLoading = false;
-        state.teachers = action.payload;
-      },
+      state.isLoading = false;
+      state.teachers = action.payload;
+    },
 
     // GET PRODUCT
     getProductSuccess(state, action) {
@@ -71,8 +76,8 @@ const slice = createSlice({
 
     // GET TEACHER
     getTeacherSuccess(state, action) {
-        state.isLoading = false;
-        state.teacher = action.payload;
+      state.isLoading = false;
+      state.teacher = action.payload;
     },
 
     // GET TEACHER RATES
@@ -86,6 +91,26 @@ const slice = createSlice({
       state.isLoading = false;
       state.rates = action.payload.rates;
       state.teacher = action.payload
+    },
+
+    //GET TEACHER OVERVIEW
+    getTeacherOverviewSuccess(state, action) {
+      state.cakeChart = action.payload;
+    },
+
+    //GET TEACHER OVERVIEW TOTAL INCOME
+    getTeacherOverviewSuccessTotalIncome(state, action) {
+      state.totalIncome = action.payload;
+    },
+
+    //GET TEACHER OVERVIEW TOTAL CLASSES
+    getTeacherOverviewSuccessTotalClasses(state, action) {
+      state.totalClasses = action.payload;
+    },
+
+    //GET TEACHER OVERVIEW TOP CLIENTS
+    getTeacherOverviewSuccessTopClients(state, action) {
+      state.topClients = action.payload;
     },
 
     //  SORT & FILTER PRODUCTS
@@ -285,18 +310,18 @@ export function getProduct(name) {
 // ----------------------------------------------------------------------
 
 export function getTeacher(name) {
-    return async () => {
-      dispatch(slice.actions.startLoading());
-      try {
-        const response = await axios.get(`/api/users/teacher/${name}`
-  );
-        dispatch(slice.actions.getTeacherSuccess(response.data));
-      } catch (error) {
-        console.error(error);
-        dispatch(slice.actions.hasError(error));
-      }
-    };
-  }
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get(`/api/users/teacher/${name}`
+      );
+      dispatch(slice.actions.getTeacherSuccess(response.data));
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
 
 // ----------------------------------------------------------------------
 
@@ -306,9 +331,9 @@ export function getTeacherWithRates(email) {
     const teacherRequest = `/api/users/${email}`;
     dispatch(slice.actions.startLoading());
     try {
-      axios.get(teacherRequest).then(r=>{
+      axios.get(teacherRequest).then(r => {
         const teacher = r.data;
-        axios.get(ratesRequest).then(rs =>{
+        axios.get(ratesRequest).then(rs => {
           const rates = rs.data;
           const dto = {
             "rates": rates,
@@ -322,7 +347,9 @@ export function getTeacherWithRates(email) {
       dispatch(slice.actions.hasError(error));
     }
   };
-}  
+}
+
+// ----------------------------------------------------------------------
 
 export function getRates(email, teacher) {
   return async () => {
@@ -341,21 +368,78 @@ export function getRates(email, teacher) {
   };
 }
 
-export function updateTeacher(teacher){
+// ----------------------------------------------------------------------
+
+export function updateTeacher(teacher) {
   return async () => {
     try {
       const resp = await axios.put(`/api/users/edit`, teacher)
-    }catch (error){
+    } catch (error) {
       console.error(error);
     }
   }
-}  
+}
 
-export function changeProfilePicture(picture){
+// ----------------------------------------------------------------------
+
+export function changeProfilePicture(picture) {
   return async () => {
     try {
-      const resp = await axios.put(`/api/users/image`, {"editImage": picture});
-    } catch (error){
+      const resp = await axios.put(`/api/users/image`, { "editImage": picture })
+    } catch (error) {
+      console.log(error)
+    }
+  }
+}
+
+// ----------------------------------------------------------------------
+
+export function getOverview() {
+  return async () => {
+    try {
+      // [ app classes , referred classes , own client classes , school classes ]
+      const resp = await axios.get(`/api/overview/typeSummary`)
+      dispatch(slice.actions.getTeacherOverviewSuccess(resp.data.DATA));
+    } catch (error) {
+      console.log(error)
+    }
+  }
+}
+
+// ----------------------------------------------------------------------
+
+export function getTotalIncome() {
+  return async () => {
+    try {
+      // { VALUE: total}
+      const resp = await axios.get(`/api/overview/totalIncome`)
+      dispatch(slice.actions.getTeacherOverviewSuccessTotalIncome(resp.data.VALUE));
+    } catch (error) {
+      console.log(error)
+    }
+  }
+}
+
+// ----------------------------------------------------------------------
+
+export function getTotalClasses() {
+  return async () => {
+    try {
+      const resp = await axios.get(`/api/overview/totalClasses`)
+      dispatch(slice.actions.getTeacherOverviewSuccessTotalClasses(resp.data.VALUE));
+    } catch (error) {
+      console.log(error)
+    }
+  }
+}
+// ----------------------------------------------------------------------
+
+export function getTopClients() {
+  return async () => {
+    try {
+      const resp = await axios.get(`/api/overview/topClients`)
+      dispatch(slice.actions.getTeacherOverviewSuccessTopClients(resp.data));
+    } catch (error) {
       console.log(error)
     }
   }

@@ -36,17 +36,18 @@ export default function AccountGeneral() {
   const defaultValues = {
     name: user?.name || '',
     lastname: user?.lastname || '',
-    gender: user?.gender || '',
+    gender: user?.gender || 'M',
     email: user?.email || '',
     photoURL: user?.imageLink || '',
     cellphone: user?.cellphone || '',
     country: user?.country || '',
-    address: user?.address || '',
-    state: user?.origin || '',
-    city: user?.city || '',
-    zipCode: user?.zipCode || '',
-    about: user?.information || '',
+    information: user?.information || '',
+    description: user?.description || '',
+    information: user?.information || '',
     isPublic: user?.state === "AVAILABLE" || false,
+    languages: user?.speaks || [],
+    skills: user?.skills || [],
+    disciplines: user?.disciplines || []
   };
 
   const methods = useForm({
@@ -154,7 +155,8 @@ export default function AccountGeneral() {
                   </option>
               </RHFSelect>
               <RHFTextField name="email" label="Email Address" disabled/>
-              <RHFTextField name="cellphone" label="Phone Number" disabled={user?.cellphone != ''} />
+              {console.log("cellphone", user?.cellphone)}
+              <RHFTextField name="cellphone" label="Phone Number" disabled={user?.cellphone != undefined} />
               <RHFSelect name="country" label="Country" placeholder="Country">
                 <option value="" />
                 {countries.map((option) => (
@@ -163,12 +165,26 @@ export default function AccountGeneral() {
                   </option>
                 ))}
               </RHFSelect>
-              <RHFMultipleSelect name="discipline" label="Disciplines" list={["Ski", "SnowBoard"]}/>
+              <RHFMultipleSelect name="disciplines" label="Disciplines" list={["Ski", "SnowBoard"]}/>
               <RHFMultipleSelect name="languages" label="Languages" list={["Español", "English", "Portugues"]}/>
             </Box>
             <Stack sx={{ mt: 3 }}>
-            <RHFMultipleSelect name="bonus" freeSolo={true} label="Bonus" list={["Ski tunning", "Baby sitter", "Car rent"]}/>
-            
+              <RHFMultipleSelect name="skills" freeSolo={true} label="Skills" list={["Ski tunning", "Baby sitter", "Car rent"]}/>
+            </Stack>
+            <Stack sx={{ mt: 3 }}>
+              <RHFTextField multiline 
+                            rows={2}
+                            maxRows={2} 
+                            name="information" 
+                            label="Quick Information" />
+            </Stack>
+
+            <Stack sx={{ mt: 3 }}>
+              <RHFTextField multiline
+                            rows={4}
+                            maxRows={4}
+                            name="description" 
+                            label="Description" />
             </Stack>
             <Stack spacing={3} alignItems="flex-end" sx={{ mt: 3 }}>
               <LoadingButton type="submit" variant="contained" loading={isSubmitting}>

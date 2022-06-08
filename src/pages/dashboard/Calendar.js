@@ -119,6 +119,7 @@ export default function Calendar() {
     try {
       dispatch(
         updateEvent(event.id, {
+          ...event,
           allDay: event.allDay,
           start: event.start,
           end: event.end,

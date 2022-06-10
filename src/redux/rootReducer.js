@@ -10,6 +10,7 @@ import kanbanReducer from './slices/kanban';
 import teacherReducer from './slices/teachers';
 import notificationReducer from './slices/notifications';
 import clientReducer from './slices/clients';
+import contactReducer from './slices/contact'
 
 
 // ----------------------------------------------------------------------
@@ -36,7 +37,8 @@ const rootReducer = combineReducers({
   product: persistReducer(productPersistConfig, productReducer),
   teachers: teacherReducer,
   notifications: notificationReducer,
-  clients: clientReducer
+  clients: clientReducer,
+  contact:contactReducer,
 });
 
 export { rootPersistConfig, rootReducer };

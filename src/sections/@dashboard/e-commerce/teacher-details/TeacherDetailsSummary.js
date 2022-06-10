@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { Controller, useForm } from 'react-hook-form';
 // @mui
 import { useTheme, styled } from '@mui/material/styles';
-import { Box, Link, Stack, Button, Rating, Divider, IconButton, Typography } from '@mui/material';
+import { Box, Link, Stack, Button, Rating, Divider, IconButton, Typography, DialogTitle, Tooltip } from '@mui/material';
 // routes
 import { PATH_DASHBOARD } from '../../../../routes/paths';
 // utils
@@ -16,6 +16,16 @@ import Iconify from '../../../../components/Iconify';
 import SocialsButton from '../../../../components/SocialsButton';
 import { ColorSinglePicker } from '../../../../components/color-utils';
 import { FormProvider, RHFSelect } from '../../../../components/hook-form';
+import { DialogAnimate } from '../../../../components/animate';
+import { useDispatch, useSelector } from '../../../../redux/store';
+
+import { openModal, closeModal} from '../../../../redux/slices/contact';
+import { ContactForm } from '.';
+
+
+
+
+
 
 // ----------------------------------------------------------------------
 
@@ -25,6 +35,8 @@ const RootStyle = styled('div')(({ theme }) => ({
     padding: theme.spacing(5, 8),
   },
 }));
+
+
 
 // ----------------------------------------------------------------------
 
@@ -57,6 +69,13 @@ export default function TeacherDetailsSummary({ cart, teacher, onAddCart, onGoto
 
   const navigate = useNavigate();
 
+  const dispatch = useDispatch();
+
+  const { isOpenModal, error } = useSelector((state) => state.contact);
+
+  const handleContact = () => {
+    dispatch(openModal());
+  };
   
   const {
     birth,
@@ -99,6 +118,12 @@ export default function TeacherDetailsSummary({ cart, teacher, onAddCart, onGoto
     defaultValues,
   });
 
+  const handleCloseModal = () => {
+    if(error === null)
+      dispatch(closeModal());
+  };
+
+
   const { watch, control, setValue, handleSubmit } = methods;
 
   const values = watch();
@@ -126,9 +151,45 @@ export default function TeacherDetailsSummary({ cart, teacher, onAddCart, onGoto
     }
   };
 
+  const button = (disabled) =>{
+    if(disabled){
+      return (<Tooltip style={{width:'100%'}} title="The teacher's contact info is not available">
+        <div>
+              <Button
+                fullWidth
+                size="large"
+                color="warning"
+                variant="contained"
+                startIcon={<Iconify icon={'ic:round-add-shopping-cart'} />}
+                onClick={handleContact}
+                sx={{ whiteSpace: 'nowrap' }}
+                disabled={disabled}
+              >
+                Contact
+              </Button>
+              </div>
+          </Tooltip>)
+    }
+    else{
+      return(
+              <Button
+                fullWidth
+                size="large"
+                color="warning"
+                variant="contained"
+                startIcon={<Iconify icon={'ic:round-add-shopping-cart'} />}
+                onClick={handleContact}
+                sx={{ whiteSpace: 'nowrap' }}
+              >
+                Contact
+              </Button>
+  
+)
+    }
+  }
+
   return (
     <RootStyle {...other}>
-      <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         {state !== 'AVAILABLE' && (
             <Label
             variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
@@ -235,78 +296,24 @@ export default function TeacherDetailsSummary({ cart, teacher, onAddCart, onGoto
         <Divider sx={{ borderStyle: 'dashed' }} />
 
         <Stack direction="row" spacing={2} sx={{ mt: 5 }}>
-          {/* <Button
-            fullWidth
-            // disabled={isMaxQuantity}
-            size="large"
-            color="warning"
-            variant="contained"
-            startIcon={<Iconify icon={'ic:round-add-shopping-cart'} />}
-            onClick={handleAddCart}
-            sx={{ whiteSpace: 'nowrap' }}
-          >
-            Add to Cart
-          </Button> */}
 
-          <Button
-            fullWidth
-            // disabled={isMaxQuantity}
-            size="large"
-            color="warning"
-            variant="contained"
-            startIcon={<Iconify icon={'ic:round-add-shopping-cart'} />}
-            onClick={handleAddCart}
-            sx={{ whiteSpace: 'nowrap' }}
-          >
-            Just contact
-          </Button>
-          <Button fullWidth size="large" type="submit" variant="contained">
-            Hire now
-          </Button>
+
+
+          {button(cellphone==='')}
+
+        <DialogAnimate open={isOpenModal} onClose={handleCloseModal}>
+          <DialogTitle>Contact teacher</DialogTitle>
+          <ContactForm teacher={id} onCancel={handleCloseModal} />
+        </DialogAnimate>
+
         </Stack>
 
         <Stack alignItems="center" sx={{ mt: 3 }}>
           <SocialsButton initialColor />
         </Stack>
-      </FormProvider>
     </RootStyle>
   );
 }
 
 // ----------------------------------------------------------------------
 
-Incrementer.propTypes = {
-  available: PropTypes.number,
-  quantity: PropTypes.number,
-  onIncrementQuantity: PropTypes.func,
-  onDecrementQuantity: PropTypes.func,
-};
-
-function Incrementer({ available, quantity, onIncrementQuantity, onDecrementQuantity }) {
-  return (
-    <Box
-      sx={{
-        py: 0.5,
-        px: 0.75,
-        border: 1,
-        lineHeight: 0,
-        borderRadius: 1,
-        display: 'flex',
-        alignItems: 'center',
-        borderColor: 'grey.50032',
-      }}
-    >
-      <IconButton size="small" color="inherit" disabled={quantity <= 1} onClick={onDecrementQuantity}>
-        <Iconify icon={'eva:minus-fill'} width={14} height={14} />
-      </IconButton>
-
-      <Typography variant="body2" component="span" sx={{ width: 40, textAlign: 'center' }}>
-        {quantity}
-      </Typography>
-
-      <IconButton size="small" color="inherit" disabled={quantity >= available} onClick={onIncrementQuantity}>
-        <Iconify icon={'eva:plus-fill'} width={14} height={14} />
-      </IconButton>
-    </Box>
-  );
-}

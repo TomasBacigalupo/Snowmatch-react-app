@@ -84,28 +84,28 @@ export default function AccountSocialLinks({ myProfile }) {
               key={"twUrl"}
             name={"twUrl"}
               InputProps={{
-                startAdornment: <InputAdornment position="start">{link.icon}</InputAdornment>,
+                //startAdornment: <InputAdornment position="start">{link.icon}</InputAdornment>,
               }}
             />
           <RHFTextField
             key={"fbUrl"}
             name={"fbUrl"}
             InputProps={{
-              startAdornment: <InputAdornment position="start">{link.icon}</InputAdornment>,
+              //startAdornment: <InputAdornment position="start">{link.icon}</InputAdornment>,
             }}
           />
           <RHFTextField
             key={"ytUrl"}
             name={"ytUrl"}
             InputProps={{
-              startAdornment: <InputAdornment position="start">{link.icon}</InputAdornment>,
+              //startAdornment: <InputAdornment position="start">{link.icon}</InputAdornment>,
             }}
           />
           <RHFTextField
             key={"igUrl"}
             name={"igUrl"}
             InputProps={{
-              startAdornment: <InputAdornment position="start">{link.icon}</InputAdornment>,
+              //startAdornment: <InputAdornment position="start">{link.icon}</InputAdornment>,
             }}
           />
 

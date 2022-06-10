@@ -17,13 +17,14 @@ const initialState = {
 
 const handlers = {
   INITIALIZE: (state, action) => {
-    const { isAuthenticated, user, isAuthorized } = action.payload;
+    const { isAuthenticated, user, isAuthorized, emailVerified } = action.payload;
     return {
       ...state,
       isAuthenticated,
       isInitialized: true,
       isAuthorized,
       user,
+      emailVerified
     };
   },
   LOGIN: (state, action) => {

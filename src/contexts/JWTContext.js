@@ -11,6 +11,7 @@ const initialState = {
   isAuthenticated: false,
   isInitialized: false,
   isAuthorized: false,
+  emailVerified: false,
   user: null,
 };
 
@@ -31,7 +32,8 @@ const handlers = {
       ...state,
       isAuthenticated: true,
       user,
-      isAuthorized: user.state != 'UNDER_REVIEW'
+      isAuthorized: user.state != 'UNDER_REVIEW',
+      emailVerified: user.emailVerified
     };
   },
   LOGOUT: (state) => ({
@@ -42,11 +44,13 @@ const handlers = {
   }),
   REGISTER: (state, action) => {
     const { user } = action.payload;
+    debugger
     return {
       ...state,
       isAuthenticated: true,
       user,
-      isAuthorized: user.state != 'UNDER_REVIEW'
+      isAuthorized: user.state != 'UNDER_REVIEW', 
+      emailVerified: user.emailVerified
     };
   },
   VERIFY: (state, action) => {
@@ -87,13 +91,12 @@ function AuthProvider({ children }) {
     const initialize = async () => {
       try {
         const accessToken = window.localStorage.getItem('accessToken');
-
         if (accessToken && isValidToken(accessToken)) {
           setSession(accessToken);
           const email = jwtDecode(accessToken).sub;
           const response = await axios.get(`/api/users/${email}`);
           const user = response.data;
-          if (user?.emailVerified) {
+          if (!user?.emailVerified) {
             dispatch({
               type: 'VERIFY',
               payload: {
@@ -101,7 +104,6 @@ function AuthProvider({ children }) {
                 user,
                 isAuthorized: false,
                 isInitialized: true,
-
               },
             });
           } else {
@@ -166,20 +168,15 @@ function AuthProvider({ children }) {
       "createImage": certificate,
       "role": "TEACHER"
     });
-    const { user } = response.data;
-    const logResp = axios.post('/api/login', {
-      "username": email,
-      "password": password,
-    });
-    const { accessToken } = logResp.data;
-
+    const user = response.data;
+    const accessToken  = user.token;
     window.localStorage.setItem('accessToken', accessToken);
 
     dispatch({
       type: 'REGISTER',
       payload: {
         user,
-        isAuthorized: false,
+        isAuthenticated: true
       },
     });
   };
@@ -197,6 +194,7 @@ function AuthProvider({ children }) {
   }
   const testVerification = async () => {
     const response = await axios.get(`/api/users/${state.user.email}`);
+    debugger
     const user = response.data;
     if (user.emailVerified) {
       dispatch({

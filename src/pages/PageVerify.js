@@ -2,7 +2,7 @@ import { m } from 'framer-motion';
 import { Link as RouterLink } from 'react-router-dom';
 // @mui
 import { styled } from '@mui/material/styles';
-import { Box, Button, Typography, Container } from '@mui/material';
+import { Box, Button, Typography, Container, CircularProgress } from '@mui/material';
 // components
 import Page from '../components/Page';
 import { MotionContainer, varBounce } from '../components/animate';
@@ -10,6 +10,8 @@ import { MotionContainer, varBounce } from '../components/animate';
 import VerifyEmailIllustration from 'src/assets/illustration_email_verify';
 // hooks
 import useAuth from '../hooks/useAuth';
+import { useSnackbar } from 'notistack';
+import { useState } from 'react';
 
 // ----------------------------------------------------------------------
 
@@ -24,7 +26,18 @@ const RootStyle = styled('div')(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 export default function PageVerifyEmail() {
-  const { testVerification } = useAuth();  
+  const { testVerification } = useAuth();
+  const { enqueueSnackbar } = useSnackbar();
+  const [loading, setLoading] = useState(false)
+
+  const onReload = () => {
+    setLoading(true);
+    testVerification().then(r => {
+      enqueueSnackbar('Email not verified', { variant: 'warning'});
+      setLoading(false);
+    })
+  }
+
   return (
     <Page title="Email verification" sx={{ height: 1 }}>
       <RootStyle>
@@ -42,10 +55,13 @@ export default function PageVerifyEmail() {
             <m.div variants={varBounce().in}>
               <VerifyEmailIllustration sx={{ height: 260, my: { xs: 5, sm: 10 } }} />
             </m.div>
-
-            <Button onClick={() => testVerification()}>
+            {loading && (
+              <CircularProgress/>
+            )}
+            {!loading && <Button onClick={onReload} loading={loading}>
               Reload
-            </Button>
+            </Button>}
+            
           </Box>
         </Container>
       </RootStyle>

@@ -120,11 +120,11 @@ export default function Register() {
 
             <Typography variant="body2" align="center" sx={{ color: 'text.secondary', mt: 3 }}>
               By registering, I agree to SnowMatch&nbsp;
-              <Link underline="always" color="text.primary" href="#">
-                Terms of Service
+              <Link underline="always" color="text.primary" href="https://github.com/lpagn/snowmatchfiles/blob/main/Snow%20Match%20Terms%20of%20Service.pdf">
+                Terms of Service&nbsp;
               </Link>
-              and
-              <Link underline="always" color="text.primary" href="#">
+              and&nbsp;
+              <Link underline="always" color="text.primary" href="https://github.com/lpagn/snowmatchfiles/blob/main/Snow%20Match%20Privacy%20Policy.pdf">
                 Privacy Policy
               </Link>
               .

@@ -11,6 +11,7 @@ import teacherReducer from './slices/teachers';
 import notificationReducer from './slices/notifications';
 import adminReducer from './slices/admin'
 import clientReducer from './slices/clients';
+import contactReducer from './slices/contact'
 
 
 // ----------------------------------------------------------------------
@@ -38,7 +39,8 @@ const rootReducer = combineReducers({
   teachers: teacherReducer,
   notifications: notificationReducer,
   admin: adminReducer,
-  clients: clientReducer
+  clients: clientReducer,
+  contact:contactReducer,
 });
 
 export { rootPersistConfig, rootReducer };

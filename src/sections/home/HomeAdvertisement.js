@@ -60,7 +60,7 @@ export default function HomeAdvertisement() {
           <Box component={m.div} variants={varFade().inDown} sx={{ color: 'common.white', mb: 5 }}>
             <Typography variant="h2">
               Get started with
-              <br /> SnowMatch today
+              <br /> SnowMatch today!
             </Typography>
           </Box>
           <m.div variants={varFade().inDown}>
@@ -78,7 +78,7 @@ export default function HomeAdvertisement() {
                 '&:hover': { bgcolor: 'grey.300' },
               }}
             >
-              Purchase Now
+              SignUp Now
             </Button>
           </m.div>
         </Box>

@@ -7,6 +7,8 @@ import { Avatar, Checkbox, TableRow, TableCell, Typography, MenuItem } from '@mu
 import Label from '../../../../components/Label';
 import Iconify from '../../../../components/Iconify';
 import { TableMoreMenu } from '../../../../components/table';
+import { useMediaQuery } from 'react-responsive';
+
 
 // ----------------------------------------------------------------------
  
@@ -35,6 +37,71 @@ export default function ClientTableRow({ row, selected, onEditRow, onSelectRow, 
     setOpenMenuActions(null);
   };
 
+  const isMobile = useMediaQuery({ query: `(max-width: 760px)` });
+
+  if(isMobile){
+  return (
+    <TableRow hover selected={selected}>
+      <TableCell  sx={{  alignItems: 'center' }}>
+        <Checkbox checked={selected} onClick={onSelectRow} />
+
+      </TableCell>
+      <TableCell  sx={{  alignItems: 'center' }}>
+                <Avatar alt={name} src="" sx={{ mr: 1 }} />
+
+      </TableCell>
+
+      <TableCell align="left" >
+        <Typography variant="subtitle2" noWrap>
+          {name +" " +lastname}
+        </Typography>
+                <Label
+          variant={theme.palette.mode === 'light' ? 'ghost' : 'ghost'}
+          color={(level === 'EXPERT' && 'error') || (level === 'BEGINNER' && 'success') || (level === 'INTERMEDIATE' && 'secondary') || 'warning'}
+          sx={{ textTransform: 'capitalize' }}
+        >
+          {level}
+        </Label>
+        <br/>
+        {cellphone}
+      </TableCell>
+
+
+
+      <TableCell align="right">
+        <TableMoreMenu
+          open={openMenu}
+          onOpen={handleOpenMenu}
+          onClose={handleCloseMenu}
+          actions={
+            <>
+              <MenuItem
+                onClick={() => {
+                  onDeleteRow();
+                  handleCloseMenu();
+                }}
+                sx={{ color: 'error.main' }}
+              >
+                <Iconify icon={'eva:trash-2-outline'} />
+                Delete
+              </MenuItem>
+              <MenuItem
+                onClick={() => {
+                  onEditRow();
+                  handleCloseMenu();
+                }}
+              >
+                <Iconify icon={'eva:edit-fill'} />
+                Edit
+              </MenuItem>
+            </>
+          }
+        />
+      </TableCell>
+    </TableRow>
+  );
+}
+if(!isMobile){
   return (
     <TableRow hover selected={selected}>
       <TableCell padding="checkbox">
@@ -99,4 +166,5 @@ export default function ClientTableRow({ row, selected, onEditRow, onSelectRow, 
       </TableCell>
     </TableRow>
   );
+}
 }

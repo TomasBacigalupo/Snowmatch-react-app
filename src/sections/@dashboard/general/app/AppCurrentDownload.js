@@ -7,6 +7,10 @@ import { Card, CardHeader } from '@mui/material';
 import { fNumber } from '../../../../utils/formatNumber';
 //
 import { BaseOptionChart } from '../../../../components/chart';
+import { useEffect } from 'react';
+import { useDispatch } from 'src/redux/store';
+import { getOverview } from 'src/redux/slices/teachers';
+import { useSelector } from 'react-redux';
 
 // ----------------------------------------------------------------------
 
@@ -35,6 +39,8 @@ const CHART_DATA = [12244, 53345, 44313, 78343];
 
 export default function AppCurrentDownload() {
   const theme = useTheme();
+  const dispatch = useDispatch();
+  const { cakeChart } = useSelector((state) => state.teachers);
 
   const chartOptions = merge(BaseOptionChart(), {
     colors: [
@@ -43,7 +49,7 @@ export default function AppCurrentDownload() {
       theme.palette.primary.main,
       theme.palette.primary.dark,
     ],
-    labels: ['Mac', 'Window', 'iOS', 'Android'],
+    labels: ['App classes', 'Referred classes', 'Own client Classes', 'School Classes'],
     stroke: { colors: [theme.palette.background.paper] },
     legend: { floating: true, horizontalAlign: 'center' },
     tooltip: {
@@ -75,11 +81,15 @@ export default function AppCurrentDownload() {
     },
   });
 
+  useEffect(() => {
+    dispatch(getOverview())
+  }, [])
+
   return (
     <Card>
-      <CardHeader title="Current Download" />
+      <CardHeader title="Total lessons" />
       <ChartWrapperStyle dir="ltr">
-        <ReactApexChart type="donut" series={CHART_DATA} options={chartOptions} height={280} />
+        <ReactApexChart type="donut" series={cakeChart} options={chartOptions} height={280} />
       </ChartWrapperStyle>
     </Card>
   );

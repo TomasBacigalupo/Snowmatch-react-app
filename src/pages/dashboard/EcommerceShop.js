@@ -166,7 +166,7 @@ export default function EcommerceShop() {
           )}
         </Stack>
         <ShopTeacherList teachers={teachers} loading={!teachers.length && isDefault} />
-        <CartWidget />
+        {/* <CartWidget /> */}
       </Container>
     </Page>
   );

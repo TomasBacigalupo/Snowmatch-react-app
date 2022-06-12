@@ -9,7 +9,11 @@ import { fShortenNumber } from '../../../../utils/formatNumber';
 import { _appAuthors } from '../../../../_mock';
 // components
 import Iconify from '../../../../components/Iconify';
-
+import { useDispatch } from 'src/redux/store';
+import { useEffect } from 'react';
+import { getTopClients } from 'src/redux/slices/teachers';
+import { useSelector } from 'react-redux';
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 // ----------------------------------------------------------------------
 
 const IconWrapperStyle = styled('div')(({ theme }) => ({
@@ -27,13 +31,52 @@ const IconWrapperStyle = styled('div')(({ theme }) => ({
 
 export default function AppTopAuthors() {
   const displayAuthor = orderBy(_appAuthors, ['favourite'], ['desc']);
+  const dispatch = useDispatch()
+  const {topClients} = useSelector(state => state.teachers)
+  useEffect(()=>dispatch(getTopClients()),[])
+
+  const sample = [
+    {
+      "cellphone": "1234567891",
+      "email": "lpagni+client+7@itba.edu.ar",
+      "id": 4,
+      "lastname": "Pagni",
+      "level": "BEGINNER",
+      "name": "Lucio",
+      "renting": false,
+      "tip": 500.0,
+      "tipper": false
+    },
+    {
+      "cellphone": "1234567891",
+      "email": "lpagni+client+10@itba.edu.ar",
+      "id": 7,
+      "lastname": "Pagni",
+      "level": "BEGINNER",
+      "name": "Lucio",
+      "renting": false,
+      "tip": 400.0,
+      "tipper": false
+    },
+    {
+      "cellphone": "1234567891",
+      "email": "lpagni+client+9@itba.edu.ar",
+      "id": 6,
+      "lastname": "Pagni",
+      "level": "BEGINNER",
+      "name": "Lucio",
+      "renting": false,
+      "tip": 300.0,
+      "tipper": false
+    }
+  ];
 
   return (
     <Card>
-      <CardHeader title="Top Authors" />
+      <CardHeader title="Top Clients" />
       <Stack spacing={3} sx={{ p: 3 }}>
-        {displayAuthor.map((author, index) => (
-          <AuthorItem key={author.id} author={author} index={index} />
+        {sample.map((client, index) => (
+          <AuthorItem key={client.id} author={client} index={index} />
         ))}
       </Stack>
     </Card>
@@ -56,7 +99,7 @@ function AuthorItem({ author, index }) {
     <Stack direction="row" alignItems="center" spacing={2}>
       <Avatar alt={author.name} src={author.avatar} />
       <Box sx={{ flexGrow: 1 }}>
-        <Typography variant="subtitle2">{author.name}</Typography>
+        <Typography variant="subtitle2">{author.name + ' ' +author.lastname}</Typography>
         <Typography
           variant="caption"
           sx={{
@@ -66,8 +109,8 @@ function AuthorItem({ author, index }) {
             color: 'text.secondary',
           }}
         >
-          <Iconify icon={'eva:heart-fill'} sx={{ width: 16, height: 16, mr: 0.5 }} />
-          {fShortenNumber(author.favourite)}
+          <AttachMoneyIcon/>
+          {author.tip}
         </Typography>
       </Box>
 

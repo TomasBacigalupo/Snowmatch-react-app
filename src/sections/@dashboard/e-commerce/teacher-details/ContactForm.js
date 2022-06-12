@@ -1,0 +1,208 @@
+import PropTypes from 'prop-types';
+import * as Yup from 'yup';
+import merge from 'lodash/merge';
+import { isBefore } from 'date-fns';
+import { useSnackbar } from 'notistack';
+// form
+import { useForm, Controller, useWatch } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+// @mui
+import { Box, Stack, Button, Tooltip, TextField, IconButton, DialogActions } from '@mui/material';
+import { LoadingButton, MobileDatePicker } from '@mui/lab';
+// redux
+import { useDispatch } from '../../../../redux/store';
+import { contactTeacher } from '../../../../redux/slices/contact';
+// components
+import Iconify from '../../../../components/Iconify';
+import { ColorSinglePicker } from '../../../../components/color-utils';
+import { FormProvider, RHFTextField, RHFSwitch, RHFSelect } from '../../../../components/hook-form';
+import { useEffect } from 'react';
+
+import { countries } from '../../../../_mock';
+
+
+
+ContactForm.propTypes = {
+  onCancel: PropTypes.func,
+};
+
+export default function ContactForm({ teacher, onCancel,cellphone }) {
+  const { enqueueSnackbar } = useSnackbar();
+
+  const dispatch = useDispatch();
+
+  const ContactSchema = Yup.object().shape({
+    from: Yup.string(),
+    countryCode: Yup.string(),
+    age: Yup.number(),
+    firstname:Yup.string(),
+    lastname:Yup.string(),
+    level:Yup.string(),
+    activity:Yup.string(),
+    amount:Yup.number(),
+    duration:Yup.string(),
+    classDate:Yup.string(),
+  });
+
+  const today = new Date();
+  const defaultValues = {
+    from: "",
+    countryCode: "54",
+    age:"",
+    firstname:"",
+    lastname:"",
+    level:"BEGINNER",
+    activity:"",
+    amount:1,
+    duration:"",
+    classDate:today,
+  }
+
+  const methods = useForm({
+    resolver: yupResolver(ContactSchema),
+    defaultValues
+  });
+
+  const {
+    reset,
+    watch,
+    control,
+    setValue,
+    handleSubmit,
+    formState: { isSubmitting },
+  } = methods;
+
+  const onSubmit = async (data) => {
+    try {
+      const date = new Date(data.classDate)
+      const newContact = {
+        from: data.from,
+        countryCode: data.countryCode,
+        age: data.age,
+        firstname:data.firstname,
+        lastname:data.lastname,
+        level:data.level,
+        activity:data.activity,
+        amount:data.amount,
+        duration:data.duration,
+        classDate:date.getFullYear()+"-"+((date.getMonth()+1)<10?"0"+(date.getMonth()+1):(date.getMonth()+1))+"-"+(date.getDate()<10?"0"+date.getDate():date.getDate())
+      };
+      const resp = await dispatch(contactTeacher(teacher, newContact));
+
+
+      console.log(countries)
+      if(resp === "ERROR"){
+        enqueueSnackbar("Your phone number is not validated, check Whatsapp and try again", { 
+        variant: 'error',
+        autoHideDuration: 10000,
+        })
+      }
+      else{
+        enqueueSnackbar("Message sent, they will soon be in touch!", { 
+          variant: 'success',
+          autoHideDuration: 10000,
+        })
+        onCancel();
+        reset();
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  
+  
+
+  return (
+    <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+      <Stack spacing={3} sx={{ p: 3 }}>
+        <RHFTextField name="firstname" label="Name" />
+
+        <RHFTextField name="lastname" label="Last Name" />
+
+        <RHFTextField name="age" label="Age" />
+
+        <RHFSelect name="countryCode" label="Country Code" placeholder="Country Code">
+          <option value="" />
+          {countries.map((option) => (
+              <option key={option.code} value={option.phone}>
+              {option.label} (+{option.phone}) 
+              </option>
+          ))}
+        </RHFSelect>        
+        <RHFTextField name="from" label="Phone" />
+
+
+        <RHFSelect name="level" label="Level" placeholder="Level">
+          <option value="" />
+          <option key="BEGINNER" value="BEGINNER">
+            BEGINNER
+          </option>
+          <option key="INTERMEDIATE" value="INTERMEDIATE">
+            INTERMEDIATE
+          </option>
+          <option key="ADVANCED" value="ADVANCED">
+            ADVANCED
+          </option>
+          <option key="EXPERT" value="EXPERT">
+            EXPERT
+          </option>                              
+        </RHFSelect>
+
+        <RHFSelect name="activity" label="Activity" placeholder="Activity">
+          <option value="" />
+          <option key="SKI" value="SKI">
+            SKI
+          </option>
+          <option key="SNOWBOARD" value="SNOWBOARD">
+            SNOWBOARD
+          </option>                            
+        </RHFSelect>
+
+        <RHFTextField name="amount" label="Number of people" />
+
+        <RHFSelect name="duration" label="Duration" placeholder="Duration">
+          <option value="" />
+          <option key="HALFDAY (MORNING)" value="HALFDAY (MORNING)">
+            HALFDAY (MORNING)
+          </option>
+          <option key="HALFDAY (AFTERNOON)" value="HALFDAY (AFTERNOON)">
+            HALFDAY (AFTERNOON)
+          </option>
+          <option key="FULLDAY" value="FULLDAY">
+            FULLDAY
+          </option>                            
+        </RHFSelect>
+
+        <Controller
+          name="classDate"
+          control={control}
+          render={({ field }) => (
+            <MobileDatePicker
+              {...field}
+              label="Start date"
+              inputFormat="dd/MM/yyyy"
+              renderInput={(params) => <TextField {...params} fullWidth />}
+            />
+          )}
+        />
+
+
+      </Stack>
+
+      <DialogActions>
+
+        <Box sx={{ flexGrow: 1 }} />
+
+        <Button variant="outlined" color="inherit" onClick={onCancel}>
+          Cancel
+        </Button>
+
+        <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
+          Contact
+        </LoadingButton>
+
+      </DialogActions>
+    </FormProvider>
+  );
+}

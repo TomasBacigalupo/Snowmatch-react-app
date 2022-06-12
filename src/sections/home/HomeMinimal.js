@@ -127,13 +127,7 @@ export default function HomeMinimal() {
                     mx: 'auto',
                     width: 40,
                     height: 40,
-                    filter: (theme) => shadowIcon(theme.palette.primary.main),
-                    ...(index === 0 && {
-                      filter: (theme) => shadowIcon(theme.palette.info.main),
-                    }),
-                    ...(index === 1 && {
-                      filter: (theme) => shadowIcon(theme.palette.error.main),
-                    }),
+                    filter: 'invert(1)',
                   }}
                 />
                 <Typography variant="h5" paragraph>
@@ -144,6 +138,7 @@ export default function HomeMinimal() {
             </m.div>
           ))}
         </Box>
+        <br/><br/>
       </Container>
     </RootStyle>
   );

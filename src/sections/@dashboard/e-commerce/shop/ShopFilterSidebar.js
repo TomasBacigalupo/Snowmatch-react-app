@@ -39,9 +39,9 @@ export const FILTER_CATEGORY_OPTIONS = ['All', 'Ski', 'Snowboard'];
 export const FILTER_RATING_OPTIONS = ['up4Star', 'up3Star', 'up2Star', 'up1Star'];
 
 export const FILTER_PRICE_OPTIONS = [
-  { value: 'below', label: 'Freestyle' },
-  { value: 'between', label: 'Alpine' },
-  { value: 'above', label: 'Back Country' },
+  { value: 'FREESTYLE', label: 'Freestyle' },
+  { value: 'ALPINE', label: 'Alpine' },
+  { value: 'BACK_COUNTRY', label: 'Back Country' },
 ];
 
 export const FILTER_COLOR_OPTIONS = [
@@ -99,19 +99,19 @@ export default function ShopFilterSidebar({ isOpen, onResetAll, onOpen, onClose 
           <Stack spacing={3} sx={{ p: 3 }}>
             <Stack spacing={1}>
               <Typography variant="subtitle1">Gender</Typography>
-              <RHFMultiCheckbox name="gender" options={FILTER_GENDER_OPTIONS} sx={{ width: 1 }} />
+              <RHFRadioGroup name="gender" options={FILTER_GENDER_OPTIONS} sx={{ width: 1 }} />
             </Stack>
 
             <Stack spacing={1}>
               <Typography variant="subtitle1">Category</Typography>
-              <RHFRadioGroup name="category" options={FILTER_CATEGORY_OPTIONS} row={false} />
+              <RHFMultiCheckbox name="category" options={FILTER_CATEGORY_OPTIONS} />
             </Stack>
 
             <Stack spacing={1}>
               <Typography variant="subtitle1">Discipline</Typography>
-              <RHFRadioGroup
-                name="priceRange"
-                options={FILTER_PRICE_OPTIONS.map((item) => item.value)}
+              <RHFMultiCheckbox
+                name="discipline"
+                options={FILTER_PRICE_OPTIONS.map((item) => item.label)}
                 getOptionLabel={FILTER_PRICE_OPTIONS.map((item) => item.label)}
               />
             </Stack>

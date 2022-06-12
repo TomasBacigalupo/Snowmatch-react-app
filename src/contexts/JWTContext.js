@@ -11,18 +11,22 @@ const initialState = {
   isAuthenticated: false,
   isInitialized: false,
   isAuthorized: false,
+  emailVerified: false,
+  phoneVerified: false,
   user: null,
 };
 
 const handlers = {
   INITIALIZE: (state, action) => {
-    const { isAuthenticated, user, isAuthorized } = action.payload;
+    const { isAuthenticated, user, isAuthorized, emailVerified } = action.payload;
     return {
       ...state,
       isAuthenticated,
       isInitialized: true,
       isAuthorized,
       user,
+      emailVerified: user?.emailVerified,
+      phoneVerified: user?.cellphoneVerified
     };
   },
   LOGIN: (state, action) => {
@@ -31,7 +35,9 @@ const handlers = {
       ...state,
       isAuthenticated: true,
       user,
-      isAuthorized: user.state != 'UNDER_REVIEW'
+      isAuthorized: user.state != 'UNDER_REVIEW',
+      emailVerified: user.emailVerified,
+      phoneVerified: user?.cellphoneVerified
     };
   },
   LOGOUT: (state) => ({
@@ -42,11 +48,14 @@ const handlers = {
   }),
   REGISTER: (state, action) => {
     const { user } = action.payload;
+    debugger
     return {
       ...state,
       isAuthenticated: true,
       user,
-      isAuthorized: user.state != 'UNDER_REVIEW'
+      isAuthorized: user.state != 'UNDER_REVIEW', 
+      emailVerified: user.emailVerified,
+      phoneVerified: user?.cellphoneVerified
     };
   },
   VERIFY: (state, action) => {
@@ -58,6 +67,8 @@ const handlers = {
       user,
       isAuthorized: user.state != 'UNDER_REVIEW',
       isInitialized: true,
+      emailVerified: user.emailVerified,
+      phoneVerified: user?.cellphoneVerified
     };
   }
 };
@@ -71,6 +82,7 @@ const AuthContext = createContext({
   logout: () => Promise.resolve(),
   register: () => Promise.resolve(),
   verify: () => Promise.resolve(),
+  testVerification: () => Promise.resolve(),
 });
 
 // ----------------------------------------------------------------------
@@ -86,13 +98,12 @@ function AuthProvider({ children }) {
     const initialize = async () => {
       try {
         const accessToken = window.localStorage.getItem('accessToken');
-
         if (accessToken && isValidToken(accessToken)) {
           setSession(accessToken);
           const email = jwtDecode(accessToken).sub;
           const response = await axios.get(`/api/users/${email}`);
-          const user  = response.data;
-          if(user?.state === "UNDER_REVIEW" ){
+          const user = response.data;
+          if (!user?.emailVerified) {
             dispatch({
               type: 'VERIFY',
               payload: {
@@ -100,16 +111,18 @@ function AuthProvider({ children }) {
                 user,
                 isAuthorized: false,
                 isInitialized: true,
-
+                emailVerified: true,
+                phoneVerified: user?.cellphoneVerified
               },
             });
-          }else{
+          } else {
             dispatch({
               type: 'INITIALIZE',
               payload: {
                 isAuthenticated: true,
                 isAuthorized: true,
                 user,
+                phoneVerified: user?.cellphoneVerified
               },
             });
           }
@@ -147,8 +160,6 @@ function AuthProvider({ children }) {
     const responseUser = await axios.get(`/api/users/${username}`)
     const user = responseUser.data;
 
-    console.log("lo que volvio", responseUser.data)
-
     setSession(accessToken);
     dispatch({
       type: 'LOGIN',
@@ -158,23 +169,26 @@ function AuthProvider({ children }) {
     });
   };
 
-  const register = async (email, password, firstName, lastName, certificate) => {
+  const register = async (email, password, firstName, lastName,countryCode, phone, certificate) => {
     const response = await axios.post('/api/users/create', {
       "email": email,
       "password": password,
       "name": firstName,
       "lastname": lastName,
+      "countryCode": countryCode,
+      "cellphone": phone,
       "createImage": certificate,
       "role": "TEACHER"
     });
-    const { accessToken, user } = response.data;
-
+    const user = response.data;
+    const accessToken  = user.token;
     window.localStorage.setItem('accessToken', accessToken);
+
     dispatch({
       type: 'REGISTER',
       payload: {
         user,
-        isAuthorized: false,
+        isAuthenticated: true
       },
     });
   };
@@ -184,12 +198,40 @@ function AuthProvider({ children }) {
     dispatch({ type: 'LOGOUT' });
   };
 
-  const verify = async (token) =>{
+  const verify = async (token) => {
     //TODO really verify token with BE
-    if(token === "123456"){
-      dispatch({type: 'VERIFY'})
+    if (token === "123456") {
+      dispatch({ type: 'VERIFY' })
     }
   }
+  const testVerification = async (callBackFailed) => {
+    const response = await axios.get(`/api/users/${state.user.email}`);
+    const user = response.data;
+    if (user.emailVerified || user.cellphoneVerified) {
+
+      dispatch({
+        type: 'INITIALIZE',
+        payload: {
+          isAuthenticated: true,
+          isAuthorized: user.state != 'UNDER_REVIEW',
+          emailVerified: true,
+          user,
+        },
+      });
+    } else {
+      callBackFailed()
+      dispatch({
+        type: 'INITIALIZE',
+        payload: {
+          isAuthenticated: true,
+          isAuthorized: user.state != 'UNDER_REVIEW',
+          emailVerified: false,
+          user,
+        },
+      });
+    }
+
+  };
 
   return (
     <AuthContext.Provider
@@ -200,6 +242,7 @@ function AuthProvider({ children }) {
         logout,
         register,
         verify,
+        testVerification,
       }}
     >
       {children}

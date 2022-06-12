@@ -12,8 +12,10 @@ import useAuth from '../../../hooks/useAuth';
 import useIsMountedRef from '../../../hooks/useIsMountedRef';
 // components
 import Iconify from '../../../components/Iconify';
-import { FormProvider, RHFEditor, RHFTextField, RHFUploadMultiFile, RHFUploadSingleFile } from '../../../components/hook-form';
+import { FormProvider, RHFEditor, RHFSelect, RHFTextField, RHFUploadMultiFile, RHFUploadSingleFile } from '../../../components/hook-form';
 
+//mock
+import { countries } from "src/_mock"
 
 // ----------------------------------------------------------------------
 
@@ -28,8 +30,14 @@ export default function RegisterForm() {
     firstName: Yup.string().required('First name required'),
     lastName: Yup.string().required('Last name required'),
     email: Yup.string().email('Email must be a valid email address').required('Email is required'),
+    phone: Yup.string().required('Phone number required').matches(
+      "^[0-9]{10}$",
+      "Phone number is not valid"
+    ),
+    countryCode: Yup.string().required(),
     password: Yup.string().required('Password is required'),
     certificate: Yup.mixed().required('Certification File is required')
+
 
   });
 
@@ -38,6 +46,8 @@ export default function RegisterForm() {
     lastName: '',
     email: '',
     password: '',
+    countryCode: '54',
+    phone: '',
     certificate: null
   };
 
@@ -83,7 +93,7 @@ export default function RegisterForm() {
   const onSubmit = async (data) => {
     const image = await toBase64(data.certificate);
     try {
-      await register(data.email, data.password, data.firstName, data.lastName, image);
+      await register(data.email, data.password, data.firstName, data.lastName, data.countryCode, data.phone, image);
     } catch (error) {
       console.error(error);
       reset();
@@ -115,6 +125,18 @@ export default function RegisterForm() {
         </Stack>
 
         <RHFTextField name="email" label="Email address" />
+        <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
+          <RHFSelect name="countryCode" label="Country Code" placeholder="Country Code">
+            <option value="" />
+            {countries.map((option) => (
+              <option key={option.code} value={option.phone}>
+                {option.label} (+{option.phone})
+              </option>
+            ))}
+          </RHFSelect>
+          <RHFTextField name="phone" label="Phone" />
+        </Stack>
+        
 
         <RHFTextField
           name="password"
@@ -130,14 +152,8 @@ export default function RegisterForm() {
             ),
           }}
         />
- 
-        
         <Typography variant="subtitle1">Instructor certification</Typography>
         <RHFUploadSingleFile name="certificate" accept="image/*" maxSize={3145728} onDrop={handleDrop}/>
-        
-        
-      
-
         <LoadingButton fullWidth size="large" type="submit" variant="contained" loading={isSubmitting}>
           Register
         </LoadingButton>

@@ -40,6 +40,10 @@ import { ClientTableRow, ClientTableToolbar } from '../../sections/@dashboard/us
 import { getClients, selectClient, deleteClient } from '../../redux/slices/clients'
 import { useDispatch, useSelector } from '../../redux/store';
 
+import { useMediaQuery } from 'react-responsive';
+
+
+
 // ----------------------------------------------------------------------
 
 const STATUS_OPTIONS = ['all'];
@@ -63,6 +67,13 @@ const TABLE_HEAD = [
   { id: '' },
 ];
 
+const TABLE_HEAD_MOBILE = [
+  { id: '' },
+  { id: 'name', label: 'Info', align: 'left' },
+  { id: '' },
+
+];
+
 // ----------------------------------------------------------------------
 
 export default function UserList() {
@@ -84,6 +95,8 @@ export default function UserList() {
     onChangePage,
     onChangeRowsPerPage,
   } = useTable();
+
+
 
   const dispatch = useDispatch();
 
@@ -154,6 +167,9 @@ export default function UserList() {
     (!dataFiltered.length && !!filterLevel) ||
     (!dataFiltered.length && !!filterStatus);
 
+const isMobile = useMediaQuery({ query: `(max-width: 760px)` });
+
+
   return (
     <Page title="User: List">
       <Container maxWidth={themeStretch ? false : 'lg'}>
@@ -201,7 +217,7 @@ export default function UserList() {
           />
 
           <Scrollbar>
-            <TableContainer sx={{ minWidth: 800, position: 'relative' }}>
+            <TableContainer sx={{  position: 'relative' }}>
               {selected.length > 0 && (
                 <TableSelectedActions
                   dense={dense}
@@ -227,7 +243,7 @@ export default function UserList() {
                 <TableHeadCustom
                   order={order}
                   orderBy={orderBy}
-                  headLabel={TABLE_HEAD}
+                  headLabel={isMobile? TABLE_HEAD_MOBILE:TABLE_HEAD}
                   rowCount={tableData.length}
                   numSelected={selected.length}
                   onSort={onSort}

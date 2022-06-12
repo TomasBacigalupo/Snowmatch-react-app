@@ -7,7 +7,9 @@ import useAuth from '../hooks/useAuth';
 import Login from '../pages/auth/Login';
 // components
 import LoadingScreen from '../components/LoadingScreen';
-import VerifyCode from 'src/pages/auth/VerifyCode';
+import  PageVerify  from 'src/pages/PageVerify';
+import PageVerifyEmail from 'src/pages/PageVerifyWhatsApp';
+import PageVerifyWhatsApp from 'src/pages/PageVerifyWhatsApp';
 
 // ----------------------------------------------------------------------
 
@@ -16,7 +18,7 @@ AuthGuard.propTypes = {
 };
 
 export default function AuthGuard({ children }) {
-  const { isAuthenticated, isInitialized, isAuthorized } = useAuth();
+  const { isAuthenticated, isInitialized, emailVerified, phoneVerified } = useAuth();
   const { pathname } = useLocation();
   const [requestedLocation, setRequestedLocation] = useState(null);
 
@@ -24,13 +26,18 @@ export default function AuthGuard({ children }) {
     return <LoadingScreen />;
   }
 
-  if(isAuthenticated && !isAuthorized){
+  // if(isAuthenticated && !emailVerified){
+  //   if (pathname !== requestedLocation) {
+  //    setRequestedLocation(pathname);
+  //   }
+  //   return <PageVerify/>;
+  // }
+
+  if (isAuthenticated && !phoneVerified) {
     if (pathname !== requestedLocation) {
-     setRequestedLocation(pathname);
+      setRequestedLocation(pathname);
     }
-    return <VerifyCode/>;
-    
-    
+    return <PageVerifyWhatsApp />;
   }
 
   if (!isAuthenticated) {

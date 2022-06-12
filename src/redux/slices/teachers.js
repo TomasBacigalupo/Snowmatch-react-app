@@ -39,6 +39,7 @@ const initialState = {
   totalClasses: 0,
   totalIncome: 0,
   topClients: [],
+  totalClients: 0,
 };
 
 const slice = createSlice({
@@ -111,6 +112,11 @@ const slice = createSlice({
     //GET TEACHER OVERVIEW TOP CLIENTS
     getTeacherOverviewSuccessTopClients(state, action) {
       state.topClients = action.payload;
+    },
+
+    //GET TEACHER OVERVIEW TOTAL CLIENTS
+    getTeacherOverviewSuccessTotalClients(state, action) {
+      state.totalClients= action.payload;
     },
 
     //  SORT & FILTER PRODUCTS
@@ -432,6 +438,20 @@ export function getTotalClasses() {
     }
   }
 }
+
+// ----------------------------------------------------------------------
+
+export function getTotalClients() {
+  return async () => {
+    try {
+      const resp = await axios.get(`/api/overview/totalClients`)
+      dispatch(slice.actions.getTeacherOverviewSuccessTotalClients(resp.data.VALUE));
+    } catch (error) {
+      console.log(error)
+    }
+  }
+}
+
 // ----------------------------------------------------------------------
 
 export function getTopClients() {

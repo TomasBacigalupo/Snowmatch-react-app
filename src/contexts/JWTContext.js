@@ -12,6 +12,7 @@ const initialState = {
   isInitialized: false,
   isAuthorized: false,
   emailVerified: false,
+  phoneVerified: false,
   user: null,
 };
 
@@ -24,7 +25,8 @@ const handlers = {
       isInitialized: true,
       isAuthorized,
       user,
-      emailVerified
+      emailVerified: user?.emailVerified,
+      phoneVerified: user?.cellphoneVerified
     };
   },
   LOGIN: (state, action) => {
@@ -34,7 +36,8 @@ const handlers = {
       isAuthenticated: true,
       user,
       isAuthorized: user.state != 'UNDER_REVIEW',
-      emailVerified: user.emailVerified
+      emailVerified: user.emailVerified,
+      phoneVerified: user?.cellphoneVerified
     };
   },
   LOGOUT: (state) => ({
@@ -51,7 +54,8 @@ const handlers = {
       isAuthenticated: true,
       user,
       isAuthorized: user.state != 'UNDER_REVIEW', 
-      emailVerified: user.emailVerified
+      emailVerified: user.emailVerified,
+      phoneVerified: user?.cellphoneVerified
     };
   },
   VERIFY: (state, action) => {
@@ -63,6 +67,8 @@ const handlers = {
       user,
       isAuthorized: user.state != 'UNDER_REVIEW',
       isInitialized: true,
+      emailVerified: user.emailVerified,
+      phoneVerified: user?.cellphoneVerified
     };
   }
 };
@@ -105,6 +111,8 @@ function AuthProvider({ children }) {
                 user,
                 isAuthorized: false,
                 isInitialized: true,
+                emailVerified: true,
+                phoneVerified: user?.cellphoneVerified
               },
             });
           } else {
@@ -114,6 +122,7 @@ function AuthProvider({ children }) {
                 isAuthenticated: true,
                 isAuthorized: true,
                 user,
+                phoneVerified: user?.cellphoneVerified
               },
             });
           }
@@ -160,12 +169,14 @@ function AuthProvider({ children }) {
     });
   };
 
-  const register = async (email, password, firstName, lastName, certificate) => {
+  const register = async (email, password, firstName, lastName,countryCode, phone, certificate) => {
     const response = await axios.post('/api/users/create', {
       "email": email,
       "password": password,
       "name": firstName,
       "lastname": lastName,
+      "countryCode": countryCode,
+      "cellphone": phone,
       "createImage": certificate,
       "role": "TEACHER"
     });
@@ -193,11 +204,11 @@ function AuthProvider({ children }) {
       dispatch({ type: 'VERIFY' })
     }
   }
-  const testVerification = async () => {
+  const testVerification = async (callBackFailed) => {
     const response = await axios.get(`/api/users/${state.user.email}`);
-    debugger
     const user = response.data;
-    if (user.emailVerified) {
+    if (user.emailVerified || user.cellphoneVerified) {
+
       dispatch({
         type: 'INITIALIZE',
         payload: {
@@ -208,6 +219,7 @@ function AuthProvider({ children }) {
         },
       });
     } else {
+      callBackFailed()
       dispatch({
         type: 'INITIALIZE',
         payload: {

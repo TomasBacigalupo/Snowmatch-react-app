@@ -18,7 +18,7 @@ UserTableRow.propTypes = {
   onDeleteRow: PropTypes.func,
 };
 
-export default function UserTableRow({ row, selected, onEditRow, onSelectRow, onConfirmRow }) {
+export default function UserTableRow({ row, selected, onEditRow, onSelectRow, onConfirmRow, onDeclineRow }) {
   const theme = useTheme();
 
   const { name, imageLink, role, level, isVerified, state } = row;
@@ -91,7 +91,7 @@ export default function UserTableRow({ row, selected, onEditRow, onSelectRow, on
                 <Iconify icon={'eva:trash-2-outline'} />
                 Delete
               </MenuItem> */}
-              <MenuItem
+              {/* <MenuItem
                 onClick={() => {
                   onEditRow();
                   handleCloseMenu();
@@ -99,7 +99,7 @@ export default function UserTableRow({ row, selected, onEditRow, onSelectRow, on
               >
                 <Iconify icon={'eva:edit-fill'} />
                 Edit
-              </MenuItem>
+              </MenuItem> */}
               <MenuItem
                 onClick={() => {
                   onConfirmRow();
@@ -108,6 +108,16 @@ export default function UserTableRow({ row, selected, onEditRow, onSelectRow, on
               >
                 <Iconify icon={'eva:edit-fill'} />
                 Confirm
+              </MenuItem>
+              <MenuItem
+                onClick={() => {
+                  onDeclineRow();
+                  handleCloseMenu();
+                }}
+                sx={{ color: 'error.main' }}
+              >
+                <Iconify icon={'eva:trash-2-outline'} />
+                Decline
               </MenuItem>
             </>
           }

@@ -18,6 +18,7 @@ import {
   TableContainer,
   TablePagination,
   FormControlLabel,
+  DialogTitle
 } from '@mui/material';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
@@ -37,8 +38,11 @@ import { TableEmptyRows, TableHeadCustom, TableNoData, TableSelectedActions } fr
 import { AdminTableToolbar, AdminTableRow } from '../../sections/@dashboard/admin/list';
 //cosas de fede
 import { useDispatch, useSelector } from '../../redux/store';
-import { getTeachers } from '../../redux/slices/admin'
-// ----------------------------------------------------------------------
+import { getTeachers, openModal, closeModal } from '../../redux/slices/admin'
+import { DialogAnimate } from '../../components/animate';
+import DeclineForm from '../../sections/@dashboard/admin/DeclineForm';
+
+// ---------------------------------------------------------------------
 
 
 const STATUS_OPTIONS = ['all','UNDER_REVIEW'];
@@ -96,6 +100,14 @@ export default function UserList() {
     setPage(0);
   };
 
+  const handleDeclineOpenModal = (email) => {
+    dispatch(openModal(email));
+  };
+
+  const handleDeclineCloseModal = () => {
+    dispatch(closeModal());
+  };
+
   const handleFilterRole = (event) => {
     setFilterRole(event.target.value);
   };
@@ -137,7 +149,7 @@ export default function UserList() {
 
   const dispatch = useDispatch();
 
-  const { teachers } = useSelector((state) =>{console.log(state);return state.admin});
+  const { teachers, isOpenModal, selectedEmail } = useSelector((state) =>{console.log(state);return state.admin});
 
   useEffect(() => {
     setTableData(teachers);
@@ -243,6 +255,7 @@ export default function UserList() {
                       // onDeleteRow={() => handleDeleteRow(row.id)}
                       onEditRow={() => handleEditRow(row.name)}
                       onConfirmRow={() => handleConfirmRow(row.id)}
+                      onDeclineRow={() => handleDeclineOpenModal(row.email)}
                     />
                   ))}
 
@@ -272,6 +285,13 @@ export default function UserList() {
             />
           </Box>
         </Card>
+        <DialogAnimate open={isOpenModal} onClose={handleDeclineCloseModal}>
+          <DialogTitle>{'Seguro que queres declinar?'}</DialogTitle>
+          <DeclineForm
+          email={selectedEmail}
+          onCancel={handleDeclineCloseModal}
+          ></DeclineForm>
+        </DialogAnimate>
       </Container>
     </Page>
   );

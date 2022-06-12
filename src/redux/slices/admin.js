@@ -12,7 +12,10 @@ import { dispatch } from '../store';
 const initialState = {
   isLoading: false,
   error: null,
-  teachers: []
+  teachers: [],
+  teacher: [],
+  isOpenModal: false,
+  selectedEmail: '',
 };
 
 const slice = createSlice({
@@ -34,7 +37,22 @@ const slice = createSlice({
     getTeachersSuccess(state, action) {
         state.isLoading = false;
         state.teachers = action.payload;
-     }
+     },
+    
+    getTeacherSuccess(state, action) {
+      state.isLoading = false;
+      state.teacher = action.payload;
+   },
+    openModal(state, email) {
+      state.isOpenModal = true;
+      state.selectedEmail = email.payload;
+    },
+
+    // CLOSE MODAL
+    closeModal(state) {
+      state.isOpenModal = false;
+      state.selectedEmail = null;
+    },
   }
 });
 
@@ -44,6 +62,7 @@ export default slice.reducer;
 // Actions
 // export const {
 // } = slice.actions;
+export const { openModal, closeModal, getSelectedEmail } = slice.actions;
 
 // ----------------------------------------------------------------------
 
@@ -51,8 +70,46 @@ export function getTeachers() {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get('http://localhost:9090/gschool/api/admin/getTeachersUnderReview/');
+      const response = await axios.get('/api/admin/getTeachersUnderReview/');
       dispatch(slice.actions.getTeachersSuccess(response.data));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+export function declineTeacher(teacherData) {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.post('/api/admin/decline/' + teacherData.email);
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+export function confirmTeacher(teacherData){
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const teacher ={
+        email:teacherData.email, 
+        cellphone:teacherData.cellphone,
+        name:teacherData.name,
+        lastname:teacherData.lastname,
+        notes:teacherData.notes,
+        level:teacherData.level,
+        id:teacherData.id,
+        dni:teacherData.dni
+      }
+      console.log(teacherData);
+      console.log("###############");
+      console.log(teacher);
+      console.log('/api/admin/approve/'+teacher.mail+"?level=" + teacher.level+"&dni="+ teacher.dni + "&name=" + teacher.name + "&lastName=" + teacher.lastname)
+      const response = await axios.post('/api/admin/approve/'+teacher.email+"?level=" + teacher.level+"&dni="+ teacher.dni );
+      console.log(response)
+      dispatch(slice.actions.getTeacherSuccess(response.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }

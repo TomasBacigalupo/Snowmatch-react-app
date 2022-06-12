@@ -21,7 +21,7 @@ import {
 } from '../../sections/@dashboard/general/app';
 import { useDispatch, useSelector } from 'src/redux/store';
 import { useEffect } from 'react';
-import { getTotalClasses, getTotalIncome } from 'src/redux/slices/teachers';
+import { getTotalClasses, getTotalClients, getTotalIncome } from 'src/redux/slices/teachers';
 
 // ----------------------------------------------------------------------
 
@@ -30,11 +30,12 @@ export default function GeneralApp() {
   const theme = useTheme();
   const { themeStretch } = useSettings();
   const dispatch = useDispatch();
-  const { totalIncome, totalClasses } = useSelector(state => state.teachers)
+  const { totalIncome, totalClasses, totalClients } = useSelector(state => state.teachers)
 
   useEffect(() => {
     dispatch(getTotalClasses())
     dispatch(getTotalIncome())
+    dispatch(getTotalClients())
   }, [])
 
   if (!isAuthorized) {
@@ -75,9 +76,9 @@ export default function GeneralApp() {
 
           <Grid item xs={12} md={4}>
             <AppWidgetSummary
-              title="Total Downloads"
+              title="Total Clients"
               percent={-0.1}
-              total={678}
+              total={totalClients}
               chartColor={theme.palette.chart.red[0]}
               chartData={[8, 9, 31, 8, 16, 37, 8, 33, 46, 31]}
             />
@@ -87,32 +88,11 @@ export default function GeneralApp() {
             <AppCurrentDownload />
           </Grid>
 
-          <Grid item xs={12} md={6} lg={8}>
-            <AppAreaInstalled />
-          </Grid>
-
-          <Grid item xs={12} lg={8}>
-            <AppNewInvoice />
-          </Grid>
-
-          <Grid item xs={12} md={6} lg={4}>
-            <AppTopRelated />
-          </Grid>
-
-          <Grid item xs={12} md={6} lg={4}>
-            <AppTopInstalledCountries />
-          </Grid>
 
           <Grid item xs={12} md={6} lg={4}>
             <AppTopAuthors />
           </Grid>
 
-          <Grid item xs={12} md={6} lg={4}>
-            <Stack spacing={3}>
-              <AppWidget title="Conversion" total={38566} icon={'eva:person-fill'} chartData={48} />
-              <AppWidget title="Applications" total={55566} icon={'eva:email-fill'} color="warning" chartData={75} />
-            </Stack>
-          </Grid>
         </Grid>
       </Container>
     </Page>

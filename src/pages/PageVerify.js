@@ -32,7 +32,7 @@ export default function PageVerifyEmail() {
 
   const onReload = () => {
     setLoading(true);
-    testVerification().then(r => {
+    testVerification(() => {
       enqueueSnackbar('Email not verified', { variant: 'warning'});
       setLoading(false);
     })

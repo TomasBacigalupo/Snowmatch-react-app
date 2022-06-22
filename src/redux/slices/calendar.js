@@ -117,12 +117,14 @@ export function getEvents() {
 
 export function createEvent(newEvent) {
   return async () => {
-    dispatch(slice.actions.startLoading());
+    //dispatch(slice.actions.startLoading());
     try {
       const response = await axios.post('/api/events/create', newEvent);
       dispatch(slice.actions.createEventSuccess(response.data));
+      return response;
     } catch (error) {
-      dispatch(slice.actions.hasError(error));
+      //dispatch(slice.actions.hasError(error));
+      return error;
     }
   };
 }
@@ -131,12 +133,14 @@ export function createEvent(newEvent) {
 
 export function updateEvent(eventId, updateEvent) {
   return async () => {
-    dispatch(slice.actions.startLoading());
+    //dispatch(slice.actions.startLoading());
     try {
       const response = await axios.put(`/api/events/byId/${eventId}`, updateEvent);
       dispatch(slice.actions.updateEventSuccess(updateEvent));
+      return response;
     } catch (error) {
-      dispatch(slice.actions.hasError(error));
+      //dispatch(slice.actions.hasError(error));
+      return error;
     }
   };
 }

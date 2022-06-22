@@ -96,6 +96,7 @@ export default function CalendarForm({ event, range, onCancel }) {
     setValue,
     handleSubmit,
     formState: { isSubmitting },
+    setError,
   } = methods;
 
   const onSubmit = async (data) => {
@@ -110,15 +111,33 @@ export default function CalendarForm({ event, range, onCancel }) {
         type: data.type,
         price: data.price
       };
-      if (event.id) {
-        dispatch(updateEvent(event.id, newEvent));
-        enqueueSnackbar('Update success!');
-      } else {
-        enqueueSnackbar('Create success!');
-        dispatch(createEvent(newEvent));
+
+      var func;
+      var snackbar;
+      if(event.id){
+        func = updateEvent(event.id, newEvent);
+        snackbar = 'Update success!'
       }
-      onCancel();
-      reset();
+      else{
+        func = createEvent(newEvent);
+        snackbar = 'Create success!'
+      }
+      const response = await dispatch(func);
+
+      if(response.messages){
+        for (const entry of response.messages.entry) {
+          setError(entry.key, {
+            type: "server",
+            message: entry.value,
+          });
+        }
+      }
+      else{
+        console.log("SENT")
+        enqueueSnackbar(snackbar);
+        onCancel();
+        reset();
+      }
     } catch (error) {
       console.error(error);
     }

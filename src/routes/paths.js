@@ -6,6 +6,7 @@ function path(root, sublink) {
 
 const ROOTS_AUTH = '/auth';
 const ROOTS_DASHBOARD = '/dashboard';
+const ROOTS_FIND_A_PRO = '/match' ;
 
 // ----------------------------------------------------------------------
 
@@ -17,6 +18,10 @@ export const PATH_AUTH = {
   registerUnprotected: path(ROOTS_AUTH, '/register-unprotected'),
   verify: path(ROOTS_AUTH, '/verify'),
   resetPassword: path(ROOTS_AUTH, '/reset-password'),
+};
+
+export const PATH_GUEST = {
+  root: ROOTS_FIND_A_PRO,
 };
 
 export const PATH_PAGE = {

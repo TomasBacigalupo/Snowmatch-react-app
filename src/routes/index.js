@@ -18,7 +18,7 @@ import LoadingScreen from '../components/LoadingScreen';
 const Loadable = (Component) => (props) => {
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const { pathname } = useLocation();
-
+  debugger
   return (
     <Suspense fallback={<LoadingScreen isDashboard={pathname.includes('/dashboard')} />}>
       <Component {...props} />
@@ -52,6 +52,13 @@ export default function Router() {
         { path: 'reset-password', element: <ResetPassword /> },
         { path: 'verify', element: <VerifyCode /> },
       ],
+    },
+    {
+      path: 'match',
+      children: [
+        { element: <EcommerceShop />, index: true },
+        { path: 'teacher/:name', element: <EcommerceTeacherDetails /> },
+        ],
     },
 
     // Dashboard Routes

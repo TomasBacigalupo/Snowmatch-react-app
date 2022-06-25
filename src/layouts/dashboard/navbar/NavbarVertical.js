@@ -41,7 +41,7 @@ NavbarVertical.propTypes = {
 
 export default function NavbarVertical({ isOpenSidebar, onCloseSidebar }) {
   const theme = useTheme();
-
+  debugger
   const { pathname } = useLocation();
 
   const isDesktop = useResponsive('up', 'lg');
@@ -75,7 +75,6 @@ export default function NavbarVertical({ isOpenSidebar, onCloseSidebar }) {
       >
         <Stack direction="row" alignItems="center" justifyContent="space-between">
           <Logo />
-
           {isDesktop && !isCollapse && (
             <CollapseButton onToggleCollapse={onToggleCollapse} collapseClick={collapseClick} />
           )}

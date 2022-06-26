@@ -113,15 +113,6 @@ export default function Router() {
           ],
         },
         {
-          path: 'blog',
-          children: [
-            { element: <Navigate to="/dashboard/blog/posts" replace />, index: true },
-            { path: 'posts', element: <BlogPosts /> },
-            { path: 'post/:title', element: <BlogPost /> },
-            { path: 'new', element: <BlogNewPost /> },
-          ],
-        },
-        {
           path: 'mail',
           children: [
             { element: <Navigate to="/dashboard/mail/all" replace />, index: true },

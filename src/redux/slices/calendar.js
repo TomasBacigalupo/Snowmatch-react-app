@@ -51,8 +51,17 @@ const slice = createSlice({
     // CREATE EVENT
     createEventSuccess(state, action) {
       const newEvent = action.payload;
+      const start = new Date(newEvent.start)
+      const wrappedStart = new Date(start.getTime() - start.getTimezoneOffset() * 60000)
+      const end = new Date(newEvent.end)
+      const wrappedEnd = new Date(end.getTime() - end.getTimezoneOffset() * 60000)
       state.isLoading = false;
-      state.events = [...state.events, newEvent];
+      state.events = [...state.events, {
+        ...newEvent,
+        start: wrappedStart,
+        end: wrappedEnd
+
+      }];
     },
 
     // UPDATE EVENT

@@ -22,6 +22,7 @@ export const PATH_AUTH = {
 
 export const PATH_GUEST = {
   root: ROOTS_FIND_A_PRO,
+  viewTeacher: (name) => path(ROOTS_FIND_A_PRO, `/teacher/${name}`),
 };
 
 export const PATH_PAGE = {

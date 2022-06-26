@@ -75,7 +75,7 @@ export default function EcommerceTeacherDetails() {
   
 
   useEffect(() => {
-    dispatch(getTeacherWithRates(user?.email));
+    dispatch(getTeacherWithRates(name));
   }, [dispatch, name]);
 
   const handleAddCart = (teacher) => {

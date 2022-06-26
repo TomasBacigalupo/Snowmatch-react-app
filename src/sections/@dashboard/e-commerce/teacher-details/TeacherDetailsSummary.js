@@ -21,7 +21,7 @@ import { useDispatch, useSelector } from '../../../../redux/store';
 
 import { openModal, closeModal} from '../../../../redux/slices/contact';
 import { ContactForm } from '.';
-
+import ConnectWithoutContactIcon from '@mui/icons-material/ConnectWithoutContact';
 
 
 
@@ -160,7 +160,7 @@ export default function TeacherDetailsSummary({ cart, teacher, onAddCart, onGoto
                 size="large"
                 color="warning"
                 variant="contained"
-                startIcon={<Iconify icon={'ic:round-add-shopping-cart'} />}
+            startIcon={<ConnectWithoutContactIcon/>}
                 onClick={handleContact}
                 sx={{ whiteSpace: 'nowrap' }}
                 disabled={disabled}
@@ -175,9 +175,9 @@ export default function TeacherDetailsSummary({ cart, teacher, onAddCart, onGoto
               <Button
                 fullWidth
                 size="large"
-                color="warning"
+                color="primary"
                 variant="contained"
-                startIcon={<Iconify icon={'ic:round-add-shopping-cart'} />}
+          startIcon={<ConnectWithoutContactIcon />}
                 onClick={handleContact}
                 sx={{ whiteSpace: 'nowrap' }}
               >

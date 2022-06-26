@@ -21,8 +21,6 @@ import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
 import useAuth from 'src/hooks/useAuth';
 // sections
 import {
-  ProductDetailsSummary,
-  ProductDetailsReview,
   TeacherDetailsCarousel,
   TeacherDetailsSummary,
   TeacherDetailsReview
@@ -65,6 +63,7 @@ const IconWrapperStyle = styled('div')(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 export default function EcommerceTeacherDetails() {
+  
   const { themeStretch } = useSettings();
   const dispatch = useDispatch();
   const [value, setValue] = useState('1');
@@ -76,7 +75,7 @@ export default function EcommerceTeacherDetails() {
   
 
   useEffect(() => {
-    dispatch(getTeacherWithRates(user?.email));
+    dispatch(getTeacherWithRates(name));
   }, [dispatch, name]);
 
   const handleAddCart = (teacher) => {

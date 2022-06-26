@@ -87,9 +87,9 @@ export default function MainHeader() {
             variant="contained"
             target="_blank"
             rel="noopener"
-            href="https://material-ui.com/store/items/minimal-dashboard/"
+            href="/match"
           >
-            Purchase Now
+            Match a pro
           </Button>
 
           {!isDesktop && <MenuMobile isOffset={isOffset} isHome={isHome} navConfig={navConfig} />}

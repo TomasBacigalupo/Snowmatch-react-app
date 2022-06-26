@@ -4,13 +4,14 @@ import { Link as RouterLink } from 'react-router-dom';
 // @mui
 import { Box, Card, Link, Typography, Stack } from '@mui/material';
 // routes
-import { PATH_DASHBOARD } from '../../../../routes/paths';
+import { PATH_DASHBOARD, PATH_GUEST } from '../../../../routes/paths';
 // utils
 import { fCurrency } from '../../../../utils/formatNumber';
 // components
 import Label from '../../../../components/Label';
 import Image from '../../../../components/Image';
 import { ColorPreview } from '../../../../components/color-utils';
+import useAuth from 'src/hooks/useAuth';
 
 // ----------------------------------------------------------------------
 
@@ -23,7 +24,8 @@ export default function ShopTeacherCard({ teacher }) {
   const status = 'sale';
   const priceSale = 10;
 
-  const linkTo = PATH_DASHBOARD.eCommerce.viewTeacher(paramCase(email));
+  const { isAuthenticated} = useAuth()
+  const linkTo =  isAuthenticated ? PATH_DASHBOARD.eCommerce.viewTeacher(email) : PATH_GUEST.viewTeacher(email) ;
 
   return (
     <Card>

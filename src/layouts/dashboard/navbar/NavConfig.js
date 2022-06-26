@@ -60,6 +60,15 @@ const navConfig = [
       },
 
       // E-COMMERCE
+      
+    ],
+  },
+
+  // APP
+  // ----------------------------------------------------------------------
+  {
+    subheader: 'Tools',
+    items: [
       {
         title: 'match',
         path: PATH_DASHBOARD.eCommerce.root,
@@ -73,49 +82,6 @@ const navConfig = [
           // { title: 'checkout', path: PATH_DASHBOARD.eCommerce.checkout },
         ],
       },
-
-      // INVOICE
-      // {
-      //   title: 'invoice',
-      //   path: PATH_DASHBOARD.invoice.root,
-      //   icon: ICONS.invoice,
-      //   children: [
-      //     { title: 'list', path: PATH_DASHBOARD.invoice.list },
-      //     { title: 'details', path: PATH_DASHBOARD.invoice.demoView },
-      //     { title: 'create', path: PATH_DASHBOARD.invoice.new },
-      //     { title: 'edit', path: PATH_DASHBOARD.invoice.demoEdit },
-      //   ],
-      // },
-
-      // BLOG
-      {
-        title: 'blog',
-        path: PATH_DASHBOARD.blog.root,
-        icon: ICONS.blog,
-        children: [
-          { title: 'posts', path: PATH_DASHBOARD.blog.posts },
-          { title: 'post', path: PATH_DASHBOARD.blog.demoView },
-          { title: 'create', path: PATH_DASHBOARD.blog.new },
-        ],
-      },
-    ],
-  },
-
-  // APP
-  // ----------------------------------------------------------------------
-  {
-    subheader: 'app',
-    items: [
-      // {
-      //   title: 'mail',
-      //   path: PATH_DASHBOARD.mail.root,
-      //   icon: ICONS.mail,
-      //   info: (
-      //     <Label variant="outlined" color="error">
-      //       +32
-      //     </Label>
-      //   ),
-      // },
       // { title: 'chat', path: PATH_DASHBOARD.chat.root, icon: ICONS.chat },
       { title: 'calendar', path: PATH_DASHBOARD.calendar, icon: ICONS.calendar },
       // { title: 'kanban', path: PATH_DASHBOARD.kanban, icon: ICONS.kanban },

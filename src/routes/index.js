@@ -18,7 +18,7 @@ import LoadingScreen from '../components/LoadingScreen';
 const Loadable = (Component) => (props) => {
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const { pathname } = useLocation();
-
+  
   return (
     <Suspense fallback={<LoadingScreen isDashboard={pathname.includes('/dashboard')} />}>
       <Component {...props} />
@@ -52,6 +52,13 @@ export default function Router() {
         { path: 'reset-password', element: <ResetPassword /> },
         { path: 'verify', element: <VerifyCode /> },
       ],
+    },
+    {
+      path: 'match',
+      children: [
+        { element: <EcommerceShop />, index: true },
+        { path: 'teacher/:name', element: <EcommerceTeacherDetails /> },
+        ],
     },
 
     // Dashboard Routes
@@ -103,15 +110,6 @@ export default function Router() {
             { path: ':id', element: <InvoiceDetails /> },
             { path: ':id/edit', element: <InvoiceEdit /> },
             { path: 'new', element: <InvoiceCreate /> },
-          ],
-        },
-        {
-          path: 'blog',
-          children: [
-            { element: <Navigate to="/dashboard/blog/posts" replace />, index: true },
-            { path: 'posts', element: <BlogPosts /> },
-            { path: 'post/:title', element: <BlogPost /> },
-            { path: 'new', element: <BlogNewPost /> },
           ],
         },
         {

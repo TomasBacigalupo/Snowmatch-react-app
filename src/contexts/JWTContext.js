@@ -48,7 +48,7 @@ const handlers = {
   }),
   REGISTER: (state, action) => {
     const { user } = action.payload;
-    debugger
+    
     return {
       ...state,
       isAuthenticated: true,

@@ -101,6 +101,7 @@ export default function CalendarForm({ event, range, onCancel }) {
 
   const onSubmit = async (data) => {
     try {
+      
       const newEvent = {
         title: data.title,
         description: data.description,
@@ -133,7 +134,6 @@ export default function CalendarForm({ event, range, onCancel }) {
         }
       }
       else{
-        console.log("SENT")
         enqueueSnackbar(snackbar);
         onCancel();
         reset();

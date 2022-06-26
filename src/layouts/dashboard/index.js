@@ -41,7 +41,6 @@ const MainStyle = styled('main', {
 
 export default function DashboardLayout() {
   const { collapseClick, isCollapse } = useCollapseDrawer();
-  debugger
   const { themeLayout } = useSettings();
 
   const isDesktop = useResponsive('up', 'lg');

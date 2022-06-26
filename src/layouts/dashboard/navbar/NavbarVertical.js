@@ -41,7 +41,7 @@ NavbarVertical.propTypes = {
 
 export default function NavbarVertical({ isOpenSidebar, onCloseSidebar }) {
   const theme = useTheme();
-  debugger
+  
   const { pathname } = useLocation();
 
   const isDesktop = useResponsive('up', 'lg');

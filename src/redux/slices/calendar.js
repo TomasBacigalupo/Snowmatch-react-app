@@ -33,7 +33,19 @@ const slice = createSlice({
     // GET EVENTS
     getEventsSuccess(state, action) {
       state.isLoading = false;
-      state.events = action.payload;
+      state.events = action.payload.map( e => {
+        debugger
+        const start = new Date(e.start)
+        const wrappedStart = new Date(start.getTime() - start.getTimezoneOffset() * 60000)
+        const end = new Date(e.end)
+        const wrappedEnd = new Date(end.getTime() - end.getTimezoneOffset() * 60000)
+        
+        return {
+          ...e,
+          start: wrappedStart.toISOString(),
+          end: wrappedEnd.toISOString()
+        };
+      });
     },
 
     // CREATE EVENT
@@ -119,6 +131,7 @@ export function createEvent(newEvent) {
   return async () => {
     //dispatch(slice.actions.startLoading());
     try {
+      console.log("Evento enviado ", newEvent)
       const response = await axios.post('/api/events/create', newEvent);
       dispatch(slice.actions.createEventSuccess(response.data));
       return response;

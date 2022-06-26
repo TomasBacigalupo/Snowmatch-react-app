@@ -33,7 +33,7 @@ import CartWidget from '../../sections/@dashboard/e-commerce/CartWidget';
 // ----------------------------------------------------------------------
 
 export default function EcommerceShop() {
-  debugger
+  
   const { themeStretch } = useSettings();
 
   const dispatch = useDispatch();

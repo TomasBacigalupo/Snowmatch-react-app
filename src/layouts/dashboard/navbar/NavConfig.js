@@ -74,13 +74,9 @@ const navConfig = [
         icon: ICONS.match,
         children: [
           { title: 'instructors', path: PATH_DASHBOARD.eCommerce.shop },
-          // { title: 'product', path: PATH_DASHBOARD.eCommerce.demoView },
-          // { title: 'list', path: PATH_DASHBOARD.eCommerce.list },
-          // { title: 'create', path: PATH_DASHBOARD.eCommerce.new },
-          // { title: 'edit', path: PATH_DASHBOARD.eCommerce.demoEdit },
-          // { title: 'checkout', path: PATH_DASHBOARD.eCommerce.checkout },
         ],
       },
+      { title: 'calendar', path: PATH_DASHBOARD.calendar, icon: ICONS.calendar },
       {
         title: 'school',
         path: PATH_DASHBOARD.user.root,
@@ -91,7 +87,7 @@ const navConfig = [
         ],
       },
       // { title: 'chat', path: PATH_DASHBOARD.chat.root, icon: ICONS.chat },
-      { title: 'calendar', path: PATH_DASHBOARD.calendar, icon: ICONS.calendar },
+     
       // { title: 'kanban', path: PATH_DASHBOARD.kanban, icon: ICONS.kanban },
     ],
   },

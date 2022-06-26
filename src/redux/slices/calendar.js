@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { utcToLocalDate } from 'src/utils/dateUtils';
 // utils
 import axios from '../../utils/axios';
 //
@@ -34,16 +35,10 @@ const slice = createSlice({
     getEventsSuccess(state, action) {
       state.isLoading = false;
       state.events = action.payload.map( e => {
-        debugger
-        const start = new Date(e.start)
-        const wrappedStart = new Date(start.getTime() - start.getTimezoneOffset() * 60000)
-        const end = new Date(e.end)
-        const wrappedEnd = new Date(end.getTime() - end.getTimezoneOffset() * 60000)
-        
         return {
           ...e,
-          start: wrappedStart.toISOString(),
-          end: wrappedEnd.toISOString()
+          start: utcToLocalDate(e.start),
+          end: utcToLocalDate(e.end)
         };
       });
     },
@@ -51,15 +46,11 @@ const slice = createSlice({
     // CREATE EVENT
     createEventSuccess(state, action) {
       const newEvent = action.payload;
-      const start = new Date(newEvent.start)
-      const wrappedStart = new Date(start.getTime() - start.getTimezoneOffset() * 60000)
-      const end = new Date(newEvent.end)
-      const wrappedEnd = new Date(end.getTime() - end.getTimezoneOffset() * 60000)
       state.isLoading = false;
       state.events = [...state.events, {
         ...newEvent,
-        start: wrappedStart,
-        end: wrappedEnd
+        start: utcToLocalDate(newEvent.start),
+        end: utcToLocalDate(newEvent.end)
 
       }];
     },

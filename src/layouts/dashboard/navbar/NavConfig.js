@@ -66,7 +66,7 @@ const navConfig = [
   // APP
   // ----------------------------------------------------------------------
   {
-    subheader: 'Tools',
+    subheader: 'snowMatch',
     items: [
       {
         title: 'match',

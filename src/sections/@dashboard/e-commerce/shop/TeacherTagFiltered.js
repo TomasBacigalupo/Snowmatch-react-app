@@ -47,6 +47,7 @@ TeacherTagFiltered.propTypes = {
   onRemoveDiscipline: PropTypes.func,
   onRemoveRating: PropTypes.func,
   onRemoveLanguage: PropTypes.func,
+  onRemoveRange: PropTypes.func,
   onResetAll: PropTypes.func,
 };
 
@@ -58,11 +59,12 @@ export default function TeacherTagFiltered({
   onRemoveDiscipline,
   onRemoveRating,
   onRemoveLanguage,
+  onRemoveRange,
   onResetAll
 }) {
   const theme = useTheme();
 
-  const { gender, category, discipline, rating, language } = filters;
+  const { gender, category, discipline, rating, language, from, to } = filters;
 
   return (
     <RootStyle>
@@ -141,6 +143,16 @@ export default function TeacherTagFiltered({
           </Stack>
         </WrapperStyle>
       )}
+
+      {from && to && (
+        <WrapperStyle>
+          <LabelStyle>Range:</LabelStyle>
+          <Stack direction="row" flexWrap="wrap" sx={{ p: 0.75 }}>
+            <Chip size="small" label={from.getDate()+"/"+(from.getMonth()+1)+"/"+from.getFullYear()+"-"+to.getDate()+"/"+(to.getMonth()+1)+"/"+to.getFullYear()} onDelete={onRemoveRange} sx={{ m: 0.5 }} />
+          </Stack>
+        </WrapperStyle>
+      )}
+
 
       {isShowReset && (
         <Button color="error" size="small" onClick={onResetAll} startIcon={<Iconify icon={'ic:round-clear-all'} />}>

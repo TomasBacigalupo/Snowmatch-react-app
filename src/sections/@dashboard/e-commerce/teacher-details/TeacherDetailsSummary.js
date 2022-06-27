@@ -23,6 +23,17 @@ import { openModal, closeModal} from '../../../../redux/slices/contact';
 import { ContactForm } from '.';
 import ConnectWithoutContactIcon from '@mui/icons-material/ConnectWithoutContact';
 
+import FullCalendar from '@fullcalendar/react'; // => request placed at the top
+import { CalendarStyle } from '../../calendar';
+
+import listPlugin from '@fullcalendar/list';
+import dayGridPlugin from '@fullcalendar/daygrid';
+import timeGridPlugin from '@fullcalendar/timegrid';
+import timelinePlugin from '@fullcalendar/timeline';
+import interactionPlugin from '@fullcalendar/interaction';
+
+import { useState } from 'react';
+
 
 
 
@@ -61,6 +72,7 @@ TeacherDetailsSummary.propTypes = {
     status: PropTypes.string,
     totalRating: PropTypes.number,
     totalReview: PropTypes.number,
+    events: PropTypes.array,
   }),
 };
 
@@ -70,6 +82,9 @@ export default function TeacherDetailsSummary({ cart, teacher, onAddCart, onGoto
   const navigate = useNavigate();
 
   const dispatch = useDispatch();
+
+  const [view, setView] = useState('dayGridMonth');
+
 
   const { isOpenModal, error } = useSelector((state) => state.contact);
 
@@ -95,6 +110,7 @@ export default function TeacherDetailsSummary({ cart, teacher, onAddCart, onGoto
     stars,
     state,
     username,
+    events,
   } = teacher.teacher;
 
   const rates = teacher.rates;
@@ -276,6 +292,7 @@ export default function TeacherDetailsSummary({ cart, teacher, onAddCart, onGoto
             Description
           </Typography>
 
+
           {/* <div>
             <Incrementer
               name="quantity"
@@ -292,6 +309,14 @@ export default function TeacherDetailsSummary({ cart, teacher, onAddCart, onGoto
         <Typography variant="body1" sx={{ mt: 0.5 }} paragraph>
             {description}
         </Typography>
+
+
+        <Stack direction="row" spacing={2} sx={{ mt: 5 }}>
+        <Typography variant="body1" sx={{ mt: 0.5 }} paragraph>
+
+          
+        </Typography>
+        </Stack>
 
         <Divider sx={{ borderStyle: 'dashed' }} />
 

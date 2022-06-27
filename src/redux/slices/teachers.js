@@ -25,6 +25,8 @@ const initialState = {
     category: [],
     discipline: [],
     language: [],
+    from: undefined,
+    to:undefined
   },
   checkout: {
     activeStep: 0,
@@ -129,6 +131,8 @@ const slice = createSlice({
       state.filters.category = action.payload.category;
       state.filters.discipline = action.payload.discipline;
       state.filters.rating = action.payload.rating;
+      state.filters.from = action.payload.from;
+      state.filters.to = action.payload.to;
     },
 
     // CHECKOUT

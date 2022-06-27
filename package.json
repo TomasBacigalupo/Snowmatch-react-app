@@ -40,6 +40,7 @@
   },
   "dependencies": {
     "@auth0/auth0-spa-js": "^1.20.1",
+    "@date-io/moment": "^2.14.0",
     "@emotion/cache": "^11.7.1",
     "@emotion/react": "^11.8.2",
     "@emotion/styled": "^11.8.1",
@@ -55,6 +56,7 @@
     "@mui/lab": "^5.0.0-alpha.72",
     "@mui/material": "^5.5.0",
     "@mui/x-data-grid": "^5.6.1",
+    "@mui/x-date-pickers": "^5.0.0-alpha.7",
     "@react-pdf/renderer": "^2.1.1",
     "@reduxjs/toolkit": "^1.8.0",
     "@turf/bbox": "^6.5.0",

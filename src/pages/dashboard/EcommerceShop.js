@@ -52,6 +52,8 @@ export default function EcommerceShop() {
     category: filters.category,
     discipline: filters.discipline,
     language: filters.language,
+    from: filters.from,
+    to: filters.to,
   };
 
   const methods = useForm({
@@ -67,7 +69,11 @@ export default function EcommerceShop() {
     values.gender.length == 0 &&
     values.category.length == 0 &&
     values.discipline.length == 0 &&
-    values.language.length == 0;
+    values.language.length == 0 &&
+    (!values.from ||
+    !values.to);
+
+
 
   useEffect(() => {
     dispatch(getTeachers());
@@ -114,6 +120,14 @@ export default function EcommerceShop() {
     setValue('language', newValue);
   };
 
+  const handleRemoveRange = () => {
+    setValue('from', undefined);
+        setValue('to', undefined);
+
+  };
+
+
+
   return (
     <Page title="Match">
       <Container maxWidth={themeStretch ? false : 'lg'}>
@@ -135,6 +149,8 @@ export default function EcommerceShop() {
           sx={{ mb: 2 }}
         >
          {/*<ShopProductSearch />*/} 
+
+
 
           <Stack direction="row" spacing={1} flexShrink={0} sx={{ my: 1 }}>
             <FormProvider methods={methods}>
@@ -167,6 +183,7 @@ export default function EcommerceShop() {
                 onRemoveCategory={handleRemoveCategory}
                 onRemoveDiscipline={handleRemoveDiscipline}
                 onRemoveLanguage={handleRemoveLanguage}
+                onRemoveRange={handleRemoveRange}
                 onResetAll={handleResetFilter}
               />
             </>
@@ -180,6 +197,26 @@ export default function EcommerceShop() {
 }
 
 // ----------------------------------------------------------------------
+
+function checkOverlap(event,filter){
+  const filterFrom = filter.from.getDate()+"/"+(filter.from.getMonth()>=10?filter.from.getMonth()+1:"0"+(filter.from.getMonth()+1))+"/"+filter.from.getFullYear();
+  const filterTo = filter.to.getDate()+"/"+(filter.to.getMonth()>=10?filter.to.getMonth()+1:"0"+(filter.to.getMonth()+1))+"/"+filter.to.getFullYear();
+  const temp1 = event.start.split("-")
+  const eventFrom = temp1[2].split("T")[0]+"/"+temp1[1]+"/"+temp1[0];
+  const temp2 = event.end.split("-")
+  const eventTo = temp2[2].split("T")[0]+"/"+temp2[1]+"/"+temp2[0];
+
+
+  console.log(filterFrom)
+  console.log(filterTo)
+  console.log(eventFrom)
+  console.log(eventTo)
+  if(filterFrom <= eventTo && filterTo >= eventTo){
+    console.log("AAAA")
+    return true;
+  }
+  return false;
+}
 
 function applyFilter(teachers, sortBy, filters) {
 
@@ -197,8 +234,13 @@ function applyFilter(teachers, sortBy, filters) {
   //   teachers = orderBy(teachers, ['price'], ['asc']);
   // }
   // FILTER teacherS
+
+  if(filters.from && filters.to){
+    teachers = teachers.filter((teacher) => !teacher.events?.some((event) => checkOverlap(event,filters)));
+  }
+
   if (filters.gender.length > 0) {
-    teachers = teachers.filter((teacher) => filters.gender.includes(teacher.gender == 'M'?'Male':'Female'));
+    teachers = teachers.filter((teacher) => filters.gender.includes(teacher.gender == 'M'?'Male': teacher.gender == 'F'? 'Female':''));
   }
 
   if (filters.category.length > 0) {
@@ -222,3 +264,4 @@ function applyFilter(teachers, sortBy, filters) {
   }
   return teachers;
 }
+

@@ -14,6 +14,7 @@ import {
   Typography,
   RadioGroup,
   FormControlLabel,
+  TextField,
 } from '@mui/material';
 // config
 import { NAVBAR } from '../../../../config';
@@ -21,7 +22,10 @@ import { NAVBAR } from '../../../../config';
 import Iconify from '../../../../components/Iconify';
 import Scrollbar from '../../../../components/Scrollbar';
 import { ColorManyPicker } from '../../../../components/color-utils';
-import { RHFMultiCheckbox, RHFRadioGroup } from '../../../../components/hook-form';
+import { RHFMultiCheckbox, RHFRadioGroup, RHFTextField} from '../../../../components/hook-form';
+import { MobileDatePicker } from '@mui/lab';
+
+
 
 // ----------------------------------------------------------------------
 
@@ -101,6 +105,40 @@ export default function ShopFilterSidebar({ isOpen, onResetAll, onOpen, onClose 
               <Typography variant="subtitle1">Languages</Typography>
               <RHFMultiCheckbox name="language" options={FILTER_LANGUAGE_OPTIONS} sx={{ width: 1 }} />
             </Stack>
+
+            <Stack spacing={1}>
+              <Typography variant="subtitle1">Range</Typography>
+              <Controller
+                  name="from"
+                  control={control}
+                  render={({ field }) => (
+                    <MobileDatePicker
+                      {...field}
+                      label="Start date"
+                      inputFormat="dd/MM/yyyy"
+                      renderInput={(params) => <TextField {...params} fullWidth />}
+                    />
+                  )}
+                />
+
+                <Controller
+                  name="to"
+                  control={control}
+                  render={({ field }) => (
+                    <MobileDatePicker
+                      {...field}
+                      label="End date"
+                      inputFormat="dd/MM/yyyy"
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          fullWidth
+                        />
+                      )}
+                    />
+                  )}
+                />
+                </Stack>
 
             <Stack spacing={1}>
               <Typography variant="subtitle1">Rating</Typography>

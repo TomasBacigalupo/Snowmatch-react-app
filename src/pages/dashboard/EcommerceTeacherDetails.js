@@ -23,7 +23,8 @@ import useAuth from 'src/hooks/useAuth';
 import {
   TeacherDetailsCarousel,
   TeacherDetailsSummary,
-  TeacherDetailsReview
+  TeacherDetailsReview,
+  TeacherDetailsCalendar
 } from '../../sections/@dashboard/e-commerce/teacher-details';
 import CartWidget from '../../sections/@dashboard/e-commerce/CartWidget';
 
@@ -125,6 +126,42 @@ export default function EcommerceTeacherDetails() {
               </Grid>
             </Card>
 
+          <Grid container sx={{ my: 1 }}>
+
+            </Grid>
+
+            <Card>
+              <TabContext value={value}>
+                <Box sx={{ px: 3, bgcolor: 'background.neutral' }}>
+                  <TabList onChange={(e, value) => setValue(value)}>
+                    <Tab disableRipple value="1" label="Description" />
+                    <Tab
+                      disableRipple
+                      value="2"
+                      label={`Review (${teacher.rates.length})`}
+                      sx={{ '& .MuiTab-wrapper': { whiteSpace: 'nowrap' } }}
+                    />
+                    <Tab disableRipple value="3" label="Calendar" />
+
+                  </TabList>
+                </Box>
+
+                <Divider />
+
+                <TabPanel value="1">
+                  <Box sx={{ p: 3 }}>
+                    <Markdown children={teacher.information} />
+                  </Box>
+                </TabPanel>
+                <TabPanel value="2">
+                  <TeacherDetailsReview teacher={teacher} />
+                </TabPanel>
+                <TabPanel value="3">
+                  <TeacherDetailsCalendar teacher={teacher} />
+                </TabPanel>
+              </TabContext>
+            </Card>
+
             <Grid container sx={{ my: 8 }}>
               {PRODUCT_DESCRIPTION.map((item) => (
                 <Grid item xs={12} md={4} key={item.title}>
@@ -141,32 +178,7 @@ export default function EcommerceTeacherDetails() {
               ))}
             </Grid>
 
-            <Card>
-              <TabContext value={value}>
-                <Box sx={{ px: 3, bgcolor: 'background.neutral' }}>
-                  <TabList onChange={(e, value) => setValue(value)}>
-                    <Tab disableRipple value="1" label="Description" />
-                    <Tab
-                      disableRipple
-                      value="2"
-                      label={`Review (${teacher.rates.length})`}
-                      sx={{ '& .MuiTab-wrapper': { whiteSpace: 'nowrap' } }}
-                    />
-                  </TabList>
-                </Box>
 
-                <Divider />
-
-                <TabPanel value="1">
-                  <Box sx={{ p: 3 }}>
-                    <Markdown children={teacher.information} />
-                  </Box>
-                </TabPanel>
-                <TabPanel value="2">
-                  <TeacherDetailsReview teacher={teacher} />
-                </TabPanel>
-              </TabContext>
-            </Card>
           </>
         )}
 

@@ -180,7 +180,7 @@ export default function CalendarForm({ event, range, onCancel }) {
 
         <RHFTextField name="title" label="Title" />
 
-        <RHFTextField name="description" label="Description" multiline rows={4} />
+        <RHFTextField name="description" label="Description" multiline rows={2} />
         
         {values?.type  && !['Break', 'Training', 'Illness'].find(p => p === values.type) && (
             <RHFTextField name="price" label="Price"/>

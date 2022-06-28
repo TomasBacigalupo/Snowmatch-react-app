@@ -79,11 +79,11 @@ const navConfig = [
       { title: 'calendar', path: PATH_DASHBOARD.calendar, icon: ICONS.calendar },
       {
         title: 'school',
-        path: PATH_DASHBOARD.user.root,
+        path: PATH_DASHBOARD.school.root,
         icon: <SchoolIcon/>,
         children: [
-          { title: 'clients', path: PATH_DASHBOARD.user.list },
-          { title: 'new client', path: PATH_DASHBOARD.user.new },
+          { title: 'clients', path: PATH_DASHBOARD.school.list },
+          { title: 'new client', path: PATH_DASHBOARD.school.new },
         ],
       },
       // { title: 'chat', path: PATH_DASHBOARD.chat.root, icon: ICONS.chat },

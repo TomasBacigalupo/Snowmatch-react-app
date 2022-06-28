@@ -140,7 +140,7 @@ export default function UserList() {
 
   const handleEditRow = (id) => {
     dispatch(selectClient(id));
-    navigate(PATH_DASHBOARD.user.edit("client"));
+    navigate(PATH_DASHBOARD.school.edit("client"));
   };
 
 
@@ -184,7 +184,7 @@ const isMobile = useMediaQuery({ query: `(max-width: 760px)` });
             <Button
               variant="contained"
               component={RouterLink}
-              to={PATH_DASHBOARD.user.new}
+              to={PATH_DASHBOARD.school.new}
               startIcon={<Iconify icon={'eva:plus-fill'} />}
             >
               New Client

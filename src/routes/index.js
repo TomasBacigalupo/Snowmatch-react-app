@@ -103,6 +103,15 @@ export default function Router() {
           ],
         },
         {
+          path: 'school',
+          children: [
+            { element: <Navigate to="/dashboard/school/list" replace />, index: true },
+            { path: 'list', element: <ClientList /> },
+            { path: 'new', element: <ClientCreate /> },
+            { path: ':name/edit', element: <ClientCreate /> },
+          ],
+        },
+        {
           path: 'invoice',
           children: [
             { element: <Navigate to="/dashboard/invoice/list" replace />, index: true },

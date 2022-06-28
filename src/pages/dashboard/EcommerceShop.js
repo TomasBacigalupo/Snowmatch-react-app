@@ -93,6 +93,7 @@ export default function EcommerceShop() {
 
   const handleResetFilter = () => {
     reset();
+    handleRemoveRange();
     handleCloseFilter();
   };
 
@@ -122,7 +123,7 @@ export default function EcommerceShop() {
 
   const handleRemoveRange = () => {
     setValue('from', undefined);
-        setValue('to', undefined);
+    setValue('to', undefined);
 
   };
 
@@ -199,8 +200,8 @@ export default function EcommerceShop() {
 // ----------------------------------------------------------------------
 
 function checkOverlap(event,filter){
-  const filterFrom = filter.from.getDate()+"/"+(filter.from.getMonth()>=10?filter.from.getMonth()+1:"0"+(filter.from.getMonth()+1))+"/"+filter.from.getFullYear();
-  const filterTo = filter.to.getDate()+"/"+(filter.to.getMonth()>=10?filter.to.getMonth()+1:"0"+(filter.to.getMonth()+1))+"/"+filter.to.getFullYear();
+  const filterFrom = (filter.from.getDate()>=10?filter.from.getDate():"0"+(filter.from.getDate()))+"/"+((filter.from.getMonth()+1)>=10?filter.from.getMonth()+1:"0"+(filter.from.getMonth()+1))+"/"+filter.from.getFullYear();
+  const filterTo = (filter.to.getDate()>=10?filter.to.getDate():"0"+(filter.to.getDate()))+"/"+((filter.to.getMonth()+1)>=10?filter.to.getMonth()+1:"0"+(filter.to.getMonth()+1))+"/"+filter.to.getFullYear();
   const temp1 = event.start.split("-")
   const eventFrom = temp1[2].split("T")[0]+"/"+temp1[1]+"/"+temp1[0];
   const temp2 = event.end.split("-")
@@ -234,7 +235,7 @@ function applyFilter(teachers, sortBy, filters) {
   //   teachers = orderBy(teachers, ['price'], ['asc']);
   // }
   // FILTER teacherS
-
+  console.log(filters)
   if(filters.from && filters.to){
     teachers = teachers.filter((teacher) => !teacher.events?.some((event) => checkOverlap(event,filters)));
   }

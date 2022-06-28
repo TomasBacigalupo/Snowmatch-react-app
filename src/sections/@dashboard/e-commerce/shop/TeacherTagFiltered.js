@@ -120,7 +120,7 @@ export default function TeacherTagFiltered({
       )}
       {language.length > 0 && (
         <WrapperStyle>
-          <LabelStyle>Category:</LabelStyle>
+          <LabelStyle>Language:</LabelStyle>
           <Stack direction="row" flexWrap="wrap" sx={{ p: 0.75 }}>
             {language.map((_language) => (
               <Chip

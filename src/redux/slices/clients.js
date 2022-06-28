@@ -107,10 +107,11 @@ export function createClient(clientData){
       console.log("###############");
       console.log(client);
       const response = await axios.post('/api/clients/',client);
-
       dispatch(slice.actions.getClientSuccess(response.data));
+      return response;
     } catch (error) {
       dispatch(slice.actions.hasError(error));
+      return error;
     }
   };
 }
@@ -143,8 +144,10 @@ export function editClient(clientData){
       const response = await axios.put('/api/clients/'+clientData.id,client);
 
       dispatch(slice.actions.getClientSuccess(response.data));
+      return response;
     } catch (error) {
       dispatch(slice.actions.hasError(error));
+      return error;
     }
   };
 }

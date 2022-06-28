@@ -14,46 +14,34 @@ import {
   Typography,
   RadioGroup,
   FormControlLabel,
+  TextField,
 } from '@mui/material';
-// @types
+// config
 import { NAVBAR } from '../../../../config';
 // components
 import Iconify from '../../../../components/Iconify';
 import Scrollbar from '../../../../components/Scrollbar';
 import { ColorManyPicker } from '../../../../components/color-utils';
-import { RHFMultiCheckbox, RHFRadioGroup } from '../../../../components/hook-form';
+import { RHFMultiCheckbox, RHFRadioGroup, RHFTextField} from '../../../../components/hook-form';
+import { MobileDatePicker } from '@mui/lab';
+
+
 
 // ----------------------------------------------------------------------
 
-export const SORT_BY_OPTIONS = [
-  { value: 'featured', label: 'Featured' },
-  { value: 'newest', label: 'Newest' },
-  { value: 'priceDesc', label: 'Price: High-Low' },
-  { value: 'priceAsc', label: 'Price: Low-High' },
-];
 
-export const FILTER_GENDER_OPTIONS = ['Men', 'Women', 'Other'];
+export const FILTER_GENDER_OPTIONS = ['Male', 'Female'];
 
-export const FILTER_CATEGORY_OPTIONS = ['All', 'Ski', 'Snowboard'];
+export const FILTER_CATEGORY_OPTIONS = ['SnowBoard', 'Ski'];
+
+export const FILTER_DISCIPLINE_OPTIONS = ['Freestyle', 'Alpine', 'Back Country'];
 
 export const FILTER_RATING_OPTIONS = ['up4Star', 'up3Star', 'up2Star', 'up1Star'];
 
-export const FILTER_PRICE_OPTIONS = [
-  { value: 'FREESTYLE', label: 'Freestyle' },
-  { value: 'ALPINE', label: 'Alpine' },
-  { value: 'BACK_COUNTRY', label: 'Back Country' },
-];
+export const FILTER_LANGUAGE_OPTIONS = ['Español', 'English', 'Portugues']
 
-export const FILTER_COLOR_OPTIONS = [
-  '#00AB55',
-  '#000000',
-  '#FFFFFF',
-  '#FFC0CB',
-  '#FF4842',
-  '#1890FF',
-  '#94D82D',
-  '#FFC107',
-];
+
+
 
 // ----------------------------------------------------------------------
 
@@ -99,22 +87,58 @@ export default function ShopFilterSidebar({ isOpen, onResetAll, onOpen, onClose 
           <Stack spacing={3} sx={{ p: 3 }}>
             <Stack spacing={1}>
               <Typography variant="subtitle1">Gender</Typography>
-              <RHFRadioGroup name="gender" options={FILTER_GENDER_OPTIONS} sx={{ width: 1 }} />
+              <RHFMultiCheckbox name="gender" options={FILTER_GENDER_OPTIONS} sx={{ width: 1 }} />
             </Stack>
 
             <Stack spacing={1}>
               <Typography variant="subtitle1">Category</Typography>
-              <RHFMultiCheckbox name="category" options={FILTER_CATEGORY_OPTIONS} />
+              <RHFMultiCheckbox name="category" options={FILTER_CATEGORY_OPTIONS} sx={{ width: 1 }} />
             </Stack>
+
 
             <Stack spacing={1}>
               <Typography variant="subtitle1">Discipline</Typography>
-              <RHFMultiCheckbox
-                name="discipline"
-                options={FILTER_PRICE_OPTIONS.map((item) => item.label)}
-                getOptionLabel={FILTER_PRICE_OPTIONS.map((item) => item.label)}
-              />
+              <RHFMultiCheckbox name="discipline" options={FILTER_DISCIPLINE_OPTIONS} sx={{ width: 1 }} />
             </Stack>
+
+            <Stack spacing={1}>
+              <Typography variant="subtitle1">Languages</Typography>
+              <RHFMultiCheckbox name="language" options={FILTER_LANGUAGE_OPTIONS} sx={{ width: 1 }} />
+            </Stack>
+
+            <Stack spacing={1}>
+              <Typography variant="subtitle1">Range</Typography>
+              <Controller
+                  name="from"
+                  control={control}
+                  render={({ field }) => (
+                    <MobileDatePicker
+                      {...field}
+                      label="Start date"
+                      inputFormat="dd/MM/yyyy"
+                      renderInput={(params) => <TextField {...params} fullWidth />}
+                    />
+                  )}
+                />
+
+                <Controller
+                  name="to"
+                  control={control}
+                  render={({ field }) => (
+                    <MobileDatePicker
+                      {...field}
+                      label="End date"
+                      inputFormat="dd/MM/yyyy"
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          fullWidth
+                        />
+                      )}
+                    />
+                  )}
+                />
+                </Stack>
 
             <Stack spacing={1}>
               <Typography variant="subtitle1">Rating</Typography>

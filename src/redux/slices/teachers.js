@@ -20,11 +20,13 @@ const initialState = {
   product: null,
   sortBy: null,
   filters: {
-    gender: [],
-    category: 'All',
-    colors: [],
-    priceRange: '',
     rating: '',
+    gender: [],
+    category: [],
+    discipline: [],
+    language: [],
+    from: undefined,
+    to:undefined
   },
   checkout: {
     activeStep: 0,
@@ -124,12 +126,13 @@ const slice = createSlice({
       state.sortBy = action.payload;
     },
 
-    filterProducts(state, action) {
+    filterTeachers(state, action) {
       state.filters.gender = action.payload.gender;
       state.filters.category = action.payload.category;
-      state.filters.colors = action.payload.colors;
-      state.filters.priceRange = action.payload.priceRange;
+      state.filters.discipline = action.payload.discipline;
       state.filters.rating = action.payload.rating;
+      state.filters.from = action.payload.from;
+      state.filters.to = action.payload.to;
     },
 
     // CHECKOUT
@@ -265,7 +268,7 @@ export const {
   increaseQuantity,
   decreaseQuantity,
   sortByProducts,
-  filterProducts,
+  filterTeachers,
 } = slice.actions;
 
 // ----------------------------------------------------------------------

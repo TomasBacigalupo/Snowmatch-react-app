@@ -48,14 +48,14 @@ const handlers = {
   }),
   REGISTER: (state, action) => {
     const { user } = action.payload;
-    debugger
+    
     return {
       ...state,
       isAuthenticated: true,
       user,
       isAuthorized: user.state != 'UNDER_REVIEW', 
       emailVerified: user.emailVerified,
-      phoneVerified: user?.cellphoneVerified
+      phoneVerified: user.cellphoneVerified
     };
   },
   VERIFY: (state, action) => {
@@ -182,8 +182,10 @@ function AuthProvider({ children }) {
     });
     const user = response.data;
     const accessToken  = user.token;
-    window.localStorage.setItem('accessToken', accessToken);
+    setSession(accessToken);
 
+    window.localStorage.setItem('accessToken', accessToken);
+    console.log(accessToken)
     dispatch({
       type: 'REGISTER',
       payload: {

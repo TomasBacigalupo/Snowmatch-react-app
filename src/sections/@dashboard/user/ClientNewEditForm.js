@@ -55,7 +55,7 @@ ClientNewEditForm.propTypes = {
   export default function ClientNewEditForm({ isEdit, currentUser }) {
 
 
-    const {client} = useSelector((state) =>{console.log(state);return state.clients});
+    const {client,clients, error,isLoading} = useSelector((state) =>{console.log(state);return state.clients});
 
     const dispatch = useDispatch();
 
@@ -72,17 +72,17 @@ ClientNewEditForm.propTypes = {
       lastname: Yup.string().required('Last name is required'),
       email: Yup.string().required('Email is required').email(),
       cellphone: Yup.string().required('Phone number is required'),
-      country: Yup.string().required('country is required'),
+      country: Yup.string(),
       avatarUrl: Yup.mixed().test('required', 'Avatar is required', (value) => value !== ''),
-      notes: Yup.string().required('Notes is required'),
+      notes: Yup.string().nullable(),
       isTipper: Yup.bool(),
-      tip: Yup.string().required('Tip is required'),
+      tip: Yup.string().nullable(),
       level: Yup.string(),
       isRenting: Yup.bool(),
-      hobbies: Yup.string(),
-      family: Yup.string(),
-      work: Yup.string(),
-      staysAt:Yup.string(),
+      hobbies: Yup.string().nullable(),
+      family: Yup.string().nullable(),
+      work: Yup.string().nullable(),
+      staysAt:Yup.string().nullable(),
       id:Yup.number(),
       resorts:Yup.array().of(Yup.string()),
 
@@ -94,17 +94,17 @@ ClientNewEditForm.propTypes = {
         lastname: client?.lastname || '',
         email: client?.email || '',
         cellphone: client?.cellphone || '',
-        country: client?.country || '',
+        country: client?.country || 'Argentina',
         avatarUrl: client?.avatarUrl || '',
         isTipper: client?.tipper || false,
-        notes: client?.notes || '',
-        tip: client?.tip || '',
-        level: client?.level || "",
+        notes: client?.notes || undefined,
+        tip: client?.tip || undefined,
+        level: client?.level || "BEGINNER",
         isRenting:client?.renting || false,
-        family:client?.family || "",
-        hobbies:client?.hobbies || "",
-        work:client?.work || "",
-        staysAt:client?.staysAt || "",
+        family:client?.family || undefined,
+        hobbies:client?.hobbies || undefined,
+        work:client?.work || undefined,
+        staysAt:client?.staysAt || undefined,
         id:client?.id || 0 ,
         resorts:client?.resorts || [],
       }),
@@ -124,6 +124,7 @@ ClientNewEditForm.propTypes = {
       setValue,
       handleSubmit,
       formState: { isSubmitting },
+      setError
     } = methods;
   
     const values = watch();
@@ -150,13 +151,24 @@ ClientNewEditForm.propTypes = {
       try {
         //console.log(data)
         const response = await dispatch(func);
-        reset();
-        console.log(response)
-        console.log("SENT")
-        enqueueSnackbar(!isEdit ? 'Create success!' : 'Update success!');
-        navigate(PATH_DASHBOARD.user.list);
-      } catch (error) {
-        console.error(error);
+
+        if(response.messages){
+          for (const entry of response.messages.entry) {
+            setError(entry.key, {
+              type: "server",
+              message: entry.value,
+            });          
+          }
+        }
+        else{
+          console.log("SENT")
+          reset();
+          enqueueSnackbar(!isEdit ? 'Create success!' : 'Update success!');
+          navigate(PATH_DASHBOARD.user.list);
+        }
+
+      } catch (e) {
+        console.error(e);
       }
     };
   

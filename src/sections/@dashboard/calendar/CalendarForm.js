@@ -96,10 +96,12 @@ export default function CalendarForm({ event, range, onCancel }) {
     setValue,
     handleSubmit,
     formState: { isSubmitting },
+    setError,
   } = methods;
 
   const onSubmit = async (data) => {
     try {
+      
       const newEvent = {
         title: data.title,
         description: data.description,
@@ -110,15 +112,32 @@ export default function CalendarForm({ event, range, onCancel }) {
         type: data.type,
         price: data.price
       };
-      if (event.id) {
-        dispatch(updateEvent(event.id, newEvent));
-        enqueueSnackbar('Update success!');
-      } else {
-        enqueueSnackbar('Create success!');
-        dispatch(createEvent(newEvent));
+
+      var func;
+      var snackbar;
+      if(event.id){
+        func = updateEvent(event.id, newEvent);
+        snackbar = 'Update success!'
       }
-      onCancel();
-      reset();
+      else{
+        func = createEvent(newEvent);
+        snackbar = 'Create success!'
+      }
+      const response = await dispatch(func);
+
+      if(response.messages){
+        for (const entry of response.messages.entry) {
+          setError(entry.key, {
+            type: "server",
+            message: entry.value,
+          });
+        }
+      }
+      else{
+        enqueueSnackbar(snackbar);
+        onCancel();
+        reset();
+      }
     } catch (error) {
       console.error(error);
     }
@@ -161,7 +180,7 @@ export default function CalendarForm({ event, range, onCancel }) {
 
         <RHFTextField name="title" label="Title" />
 
-        <RHFTextField name="description" label="Description" multiline rows={4} />
+        <RHFTextField name="description" label="Description" multiline rows={2} />
         
         {values?.type  && !['Break', 'Training', 'Illness'].find(p => p === values.type) && (
             <RHFTextField name="price" label="Price"/>

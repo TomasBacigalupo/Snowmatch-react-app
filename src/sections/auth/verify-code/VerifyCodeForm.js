@@ -1,7 +1,7 @@
 import * as Yup from 'yup';
 import { useSnackbar } from 'notistack';
 import { useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 // form
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -10,6 +10,8 @@ import { OutlinedInput, Stack } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
+import axios from '../../../utils/axios';
+
 
 // ----------------------------------------------------------------------
 
@@ -55,14 +57,25 @@ export default function VerifyCodeForm() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const onSubmit = async (data) => {
+
+
+  const handleBlur = async (attributes, event) => {
     try {
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      console.log('code:', Object.values(data).join(''));
+      const code = Object.values(attributes).join(''); 
 
-      enqueueSnackbar('Verify success!');
+      const response = await axios.put('http://localhost:9090/gschool/api/userPersonalDataVerification/registrationNumericCode/'+code);
 
-      navigate(PATH_DASHBOARD.root, { replace: true });
+      if(response.status == 200){
+        enqueueSnackbar('Verify success!');
+      }
+      else{
+        enqueueSnackbar("Something went wrong, please try again!", { 
+        variant: 'error',
+        autoHideDuration: 5000,
+        })
+      }
+
+
     } catch (error) {
       console.error(error);
     }
@@ -80,27 +93,37 @@ export default function VerifyCodeForm() {
     });
   };
 
+
   const handleChangeWithNextField = (event, handleChange) => {
     const { maxLength, value, name } = event.target;
     const fieldIndex = name.replace('code', '');
-
     const fieldIntIndex = Number(fieldIndex);
 
     if (value.length >= maxLength) {
       if (fieldIntIndex < 6) {
+        handleChange(event)
+
         const nextfield = document.querySelector(`input[name=code${fieldIntIndex + 1}]`);
 
         if (nextfield !== null) {
           nextfield.focus();
         }
       }
+      else{
+        handleChange(event)
+
+        const field = document.querySelector(`input[name=code${fieldIntIndex}]`);
+        field.blur();
+      }
+
     }
 
-    handleChange(event);
   };
 
+
+
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form onBlur={handleSubmit(handleBlur)}>
       <Stack direction="row" spacing={2} justifyContent="center">
         {Object.keys(values).map((name, index) => (
           <Controller
@@ -129,17 +152,6 @@ export default function VerifyCodeForm() {
         ))}
       </Stack>
 
-      <LoadingButton
-        fullWidth
-        size="large"
-        type="submit"
-        variant="contained"
-        loading={isSubmitting}
-        disabled={!isValid}
-        sx={{ mt: 3 }}
-      >
-        Verify
-      </LoadingButton>
     </form>
   );
 }

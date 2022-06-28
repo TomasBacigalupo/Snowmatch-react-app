@@ -9,6 +9,8 @@ import { LoadingButton } from '@mui/lab';
 import Iconify from '../../../../components/Iconify';
 import { FormProvider, RHFTextField } from '../../../../components/hook-form';
 import useAuth from 'src/hooks/useAuth';
+import { useDispatch } from 'react-redux';
+import { updateTeacher } from 'src/redux/slices/teachers';
 
 // ----------------------------------------------------------------------
 
@@ -50,6 +52,7 @@ AccountSocialLinks.propTypes = {
 export default function AccountSocialLinks({ myProfile }) {
   const { enqueueSnackbar } = useSnackbar();
   const { user } = useAuth();
+  const dispatch = useDispatch();
 
   const defaultValues = {
     fbUrl: user?.fbUrl || '',
@@ -67,11 +70,20 @@ export default function AccountSocialLinks({ myProfile }) {
     formState: { isSubmitting },
   } = methods;
 
-  const onSubmit = async () => {
+  const onSubmit = async (data) => {
+    console.log(data)
+    const newUser = { 
+      ...user,
+      ...data
+    }
+    
     try {
+      dispatch(updateTeacher(newUser))
+      //TODO: react to updateTeacher response
       await new Promise((resolve) => setTimeout(resolve, 500));
       enqueueSnackbar('Update success!');
     } catch (error) {
+      enqueueSnackbar('error', 'Review Links');
       console.error(error);
     }
   };
@@ -84,28 +96,28 @@ export default function AccountSocialLinks({ myProfile }) {
               key={"twUrl"}
             name={"twUrl"}
               InputProps={{
-                //startAdornment: <InputAdornment position="start">{link.icon}</InputAdornment>,
+                startAdornment: <InputAdornment position="start">{SOCIAL_LINKS[3].icon}</InputAdornment>,
               }}
             />
           <RHFTextField
             key={"fbUrl"}
             name={"fbUrl"}
             InputProps={{
-              //startAdornment: <InputAdornment position="start">{link.icon}</InputAdornment>,
+              startAdornment: <InputAdornment position="start">{SOCIAL_LINKS[0].icon}</InputAdornment>,
             }}
           />
           <RHFTextField
             key={"ytUrl"}
             name={"ytUrl"}
             InputProps={{
-              //startAdornment: <InputAdornment position="start">{link.icon}</InputAdornment>,
+              startAdornment: <InputAdornment position="start">{SOCIAL_LINKS[4].icon}</InputAdornment>,
             }}
           />
           <RHFTextField
             key={"igUrl"}
             name={"igUrl"}
             InputProps={{
-              //startAdornment: <InputAdornment position="start">{link.icon}</InputAdornment>,
+              startAdornment: <InputAdornment position="start">{SOCIAL_LINKS[1].icon}</InputAdornment>,
             }}
           />
 

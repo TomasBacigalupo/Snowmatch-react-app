@@ -54,11 +54,12 @@ export default function Router() {
       ],
     },
     {
-      path: 'match',
+      path: '*',
+      element: <MainLayout />,
       children: [
-        { element: <EcommerceShop />, index: true },
-        { path: 'teacher/:name', element: <EcommerceTeacherDetails /> },
-        ],
+        { path: 'match', element: <EcommerceShop /> },
+        { path: 'match/teacher/:name', element: <EcommerceTeacherDetails /> }
+      ]
     },
 
     // Dashboard Routes

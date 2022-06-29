@@ -22,7 +22,7 @@ import { NAVBAR } from '../../../../config';
 import Iconify from '../../../../components/Iconify';
 import Scrollbar from '../../../../components/Scrollbar';
 import { ColorManyPicker } from '../../../../components/color-utils';
-import { RHFMultiCheckbox, RHFRadioGroup, RHFTextField} from '../../../../components/hook-form';
+import { RHFMultiCheckbox, RHFRadioGroup, RHFTextField, RHFSelect} from '../../../../components/hook-form';
 import { MobileDatePicker } from '@mui/lab';
 
 
@@ -39,6 +39,8 @@ export const FILTER_DISCIPLINE_OPTIONS = ['Freestyle', 'Alpine', 'Back Country']
 export const FILTER_RATING_OPTIONS = ['up4Star', 'up3Star', 'up2Star', 'up1Star'];
 
 export const FILTER_LANGUAGE_OPTIONS = ['Español', 'English', 'Portugues']
+
+export const FILTER_RESORT_OPTIONS = ['Aconcagua', 'Batea Mahuida', 'Calafate Mountain Park', 'Caviahue', 'Cerro Bayo', 'Cerro Castor', 'Cerro Catedral', 'Chapelco', 'La Hoya', 'Las Leñas', 'Las Pendientes', 'Los Penitentes', 'Los Puquios', 'Monte Bianco', 'Patagonia Heliski', 'Perito Moreno', 'Vallecitos']
 
 
 
@@ -139,6 +141,19 @@ export default function ShopFilterSidebar({ isOpen, onResetAll, onOpen, onClose 
                   )}
                 />
                 </Stack>
+
+            <Stack spacing={1}>
+              <Typography variant="subtitle1">Resort</Typography>
+
+              <RHFSelect name="resort" label="Resort" placeholder="Resort">
+                <option value="" />
+                {FILTER_RESORT_OPTIONS.map((option) => (
+                    <option key={option} value={option}>
+                    {option}
+                    </option>
+                ))}
+              </RHFSelect>
+            </Stack>
 
             <Stack spacing={1}>
               <Typography variant="subtitle1">Rating</Typography>

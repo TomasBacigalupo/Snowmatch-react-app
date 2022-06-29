@@ -57,6 +57,7 @@ export default function EcommerceShop() {
     language: filters.language,
     from: filters.from,
     to: filters.to,
+    resort: filters.resort,
   };
 
   const methods = useForm({
@@ -73,8 +74,9 @@ export default function EcommerceShop() {
     values.category.length == 0 &&
     values.discipline.length == 0 &&
     values.language.length == 0 &&
-    (!values.from ||
-      !values.to);
+    (!values.from || !values.to) &&
+    !values.resort;
+
 
 
 
@@ -97,6 +99,7 @@ export default function EcommerceShop() {
   const handleResetFilter = () => {
     reset();
     handleRemoveRange();
+    //handleRemoveResort();
     handleCloseFilter();
   };
 
@@ -130,6 +133,10 @@ export default function EcommerceShop() {
 
   };
 
+
+  const handleRemoveResort = () => {
+    setValue('resort', '');
+  };
 
 
   return (
@@ -189,6 +196,7 @@ export default function EcommerceShop() {
                 onRemoveDiscipline={handleRemoveDiscipline}
                 onRemoveLanguage={handleRemoveLanguage}
                 onRemoveRange={handleRemoveRange}
+                onRemoveResort={handleRemoveResort}
                 onResetAll={handleResetFilter}
               />
             </>
@@ -249,11 +257,15 @@ function applyFilter(teachers, sortBy, filters) {
   }
 
   if (filters.category.length > 0) {
-    teachers = teachers.filter((teacher) => teacher.discipline?.some((discipline) => filters.category.includes(discipline)));
+    teachers = teachers.filter((teacher) => teacher.disciplines?.some((discipline) => filters.category.includes(discipline)));
   }
 
   if (filters.language.length > 0) {
     teachers = teachers.filter((teacher) => teacher.speaks?.some((language) => filters.language.includes(language)));
+  }
+
+  if (filters.resort) {
+    teachers = teachers.filter((teacher) => teacher.resorts?.includes(filters.resort));
   }
 
   if (filters.rating) {

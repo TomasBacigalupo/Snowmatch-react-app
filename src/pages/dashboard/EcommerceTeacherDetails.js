@@ -32,18 +32,18 @@ import CartWidget from '../../sections/@dashboard/e-commerce/CartWidget';
 
 const PRODUCT_DESCRIPTION = [
   {
-    title: '100% Original',
-    description: 'Chocolate bar candy canes ice cream toffee cookie halvah.',
+    title: 'Verified',
+    description: 'Verified and approved teacher',
     icon: 'ic:round-verified',
   },
   {
-    title: '10 Day Replacement',
-    description: 'Marshmallow biscuit donut dragée fruitcake wafer.',
+    title: '1 Day Reply',
+    description: 'This teachers reply\'s messages in the same day' ,
     icon: 'eva:clock-fill',
   },
   {
-    title: 'Year Warranty',
-    description: 'Cotton candy gingerbread cake I love sugar sweet.',
+    title: 'SnowMatch Warranty',
+    description: 'SnowMatch trusts this teacher',
     icon: 'ic:round-verified-user',
   },
 ];

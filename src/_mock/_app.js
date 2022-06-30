@@ -38,9 +38,9 @@ export const _appInvoices = [...Array(5)].map((_, index) => ({
   status: randomInArray(['paid', 'out_of_date', 'in_progress']),
 }));
 
-export const _appFeatured = [...Array(3)].map((_, index) => ({
-  id: _mock.id(index),
-  title: ['Berlina', 'Pizza Cala'][index],
-  description: _mock.text.title(index),
-  image: _mock.image.feed(index),
-}));
+export const _appFeatured = [{
+  id: 1,
+  title: "Protected Information",
+  description: "With SnowMatch all your clients and classes are private",
+  image: "https://i.imgur.com/JndUpOn.png",
+}];

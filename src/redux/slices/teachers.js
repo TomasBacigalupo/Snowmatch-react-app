@@ -386,8 +386,10 @@ export function updateTeacher(teacher) {
   return async () => {
     try {
       const resp = await axios.put(`/api/users/edit`, teacher)
+      return resp;
     } catch (error) {
       console.error(error);
+      return error;
     }
   }
 }

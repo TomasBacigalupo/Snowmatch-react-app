@@ -20,6 +20,26 @@ import { countries } from '../../../../_mock';
 import { FormProvider, RHFSwitch, RHFSelect, RHFTextField, RHFUploadAvatar, RHFMultipleSelect } from '../../../../components/hook-form';
 import axios from 'axios';
 
+const SKI_RESORTS = [
+  "Aconcagua",
+  "Batea Mahuida",
+  "Calafate Mountain Park",
+  "Caviahue",
+  "Cerro Bayo",
+  "Cerro Castor",
+  "Cerro Catedral",
+  "Chapelco",
+  "La Hoya",
+  "Las Leñas",
+  "Las Pendientes",
+  "Los Penitentes",
+  "Los Puquios",
+  "Monte Bianco",
+  "Patagonia Heliski",
+  "Perito Moreno",
+  "Vallecitos"
+]
+
 // ----------------------------------------------------------------------
 
 export default function AccountGeneral() {
@@ -31,6 +51,19 @@ export default function AccountGeneral() {
 
   const UpdateUserSchema = Yup.object().shape({
     name: Yup.string().required('Name is required'),
+    lastname: Yup.string().required('Lastname is required'),
+    gender: Yup.string().required('Gender is required'),
+    email: Yup.string().required('Email is required').email(),
+    photoURL:Yup.mixed().test('required', 'Avatar is required', (value) => value !== ''),
+    cellphone: Yup.string().required("Phone number is required"),
+    country: Yup.string(),
+    information: Yup.string().nullable(),
+    description: Yup.string().nullable(),
+    state: Yup.bool().required("Your availability is required"),
+    speaks: Yup.array().of(Yup.string()),
+    skills: Yup.array().of(Yup.string()),
+    disciplines: Yup.array().of(Yup.string()),
+    resorts: Yup.array().of(Yup.string()),
   });
 
   const defaultValues = {
@@ -40,14 +73,14 @@ export default function AccountGeneral() {
     email: user?.email || '',
     photoURL: user?.imageLink || '',
     cellphone: user?.cellphone || '',
-    country: user?.country || '',
-    information: user?.information || '',
-    description: user?.description || '',
-    information: user?.information || '',
-    isPublic: user?.state === "AVAILABLE" || false,
-    languages: user?.speaks || [],
+    country: user?.country || '',  // FALTA EN EDITUSERDTO
+    information: user?.information || undefined,
+    description: user?.description || undefined,
+    state: user?.state === "AVAILABLE" || false, //FALTA EN EDITUSERDTO
+    speaks: user?.speaks || [],
     skills: user?.skills || [],
-    disciplines: user?.disciplines || []
+    disciplines: user?.disciplines || [],
+    resorts: user?.resorts || []
   };
 
   const methods = useForm({
@@ -59,6 +92,7 @@ export default function AccountGeneral() {
     setValue,
     handleSubmit,
     formState: { isSubmitting },
+    setError
   } = methods;
 
   const toBase64 = file => new Promise((resolve, reject) => {
@@ -78,10 +112,24 @@ export default function AccountGeneral() {
 
     
 
-    dispatch(updateTeacher(value))
+
+
     try {
-      await axios.post();
-      enqueueSnackbar('Update success!');
+      //await axios.post();
+      const response = await dispatch(updateTeacher(value));
+
+      if(response.messages){
+          for (const entry of response.messages.entry) {
+            setError(entry.key, {
+              type: "server",
+              message: entry.value,
+            });          
+          }
+        }
+        else{
+          console.log("SENT")
+          enqueueSnackbar( 'Update success!');
+        }
     } catch (error) {
       console.error(error);
     }
@@ -107,7 +155,7 @@ export default function AccountGeneral() {
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Grid container spacing={3}>
         <Grid item xs={12} md={4}>
-          <Card sx={{ py: 13, px: 3, textAlign: 'center' }}>
+          <Card sx={{ py: 34, px: 3, textAlign: 'center' }}>
             <RHFUploadAvatar
               name="photoURL"
               accept="image/*"
@@ -166,15 +214,18 @@ export default function AccountGeneral() {
                 ))}
               </RHFSelect>
               <RHFMultipleSelect name="disciplines" label="Disciplines" list={["Ski", "SnowBoard"]}/>
-              <RHFMultipleSelect name="languages" label="Languages" list={["Español", "English", "Portugues"]}/>
+              <RHFMultipleSelect name="speaks" label="Languages" list={["Español", "English", "Portugues"]}/>
             </Box>
+            <Stack sx={{ mt: 3 }}>
+              <RHFMultipleSelect name="resorts" label="Resorts" list={SKI_RESORTS}/>            
+            </Stack>                        
+
             <Stack sx={{ mt: 3 }}>
               <RHFMultipleSelect name="skills" freeSolo={true} label="Skills" list={["Ski tunning", "Baby sitter", "Car rent"]}/>
             </Stack>
             <Stack sx={{ mt: 3 }}>
               <RHFTextField multiline 
                             rows={2}
-                            maxRows={2} 
                             name="information" 
                             label="Quick Information" />
             </Stack>
@@ -182,7 +233,6 @@ export default function AccountGeneral() {
             <Stack sx={{ mt: 3 }}>
               <RHFTextField multiline
                             rows={4}
-                            maxRows={4}
                             name="description" 
                             label="Description" />
             </Stack>

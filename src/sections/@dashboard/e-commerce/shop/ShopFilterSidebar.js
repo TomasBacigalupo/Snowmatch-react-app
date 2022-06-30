@@ -91,7 +91,7 @@ export default function ShopFilterSidebar({ isOpen, onResetAll, onOpen, onClose 
               <Typography variant="subtitle1">Resort</Typography>
 
               <RHFSelect name="resort" label="Resort" placeholder="Resort">
-                <option value="Cerro Catedral" />
+                <option value="" />
                 {FILTER_RESORT_OPTIONS.map((option) => (
                   <option key={option} value={option}>
                     {option}

@@ -16,6 +16,7 @@ import Label from '../../components/Label';
 import MenuDesktop from './MenuDesktop';
 import MenuMobile from './MenuMobile';
 import navConfig from './MenuConfig';
+import { Link as RouterLink } from 'react-router-dom';
 
 // ----------------------------------------------------------------------
 
@@ -84,10 +85,10 @@ export default function MainHeader() {
           {isDesktop && <MenuDesktop isOffset={isOffset} isHome={isHome} navConfig={navConfig} />}
 
           <Button
+            component={RouterLink}
+            to={"/match"}
             variant="contained"
-            target="_blank"
-            rel="noopener"
-            href="/match"
+            
           >
             Match a pro
           </Button>

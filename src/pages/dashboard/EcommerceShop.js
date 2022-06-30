@@ -134,10 +134,9 @@ export default function EcommerceShop() {
         <HeaderBreadcrumbs
           heading="Match"
           links={[
-            { name: 'Match' },
-            {
-              name: 'Pro',
-            }
+            { name: 'Dashboard', href: PATH_DASHBOARD.root},
+            { name: 'Match', href: PATH_DASHBOARD.eCommerce.root },
+            { name: 'Pro',}
           ]}
         />
 

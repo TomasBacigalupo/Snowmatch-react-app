@@ -277,7 +277,6 @@ ClientNewEditForm.propTypes = {
                               <option key="EXPERT" value="EXPERT">
                                 EXPERT
                               </option>                              
-                            ))}
                             </RHFSelect>
                             <RHFTextField name="work" label="Work" />
                             <RHFTextField name="hobbies" label="Hobbies" />

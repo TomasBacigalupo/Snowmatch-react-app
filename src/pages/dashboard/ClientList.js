@@ -177,7 +177,7 @@ const isMobile = useMediaQuery({ query: `(max-width: 760px)` });
           heading="Clients List"
           links={[
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
-            { name: 'User', href: PATH_DASHBOARD.user.root },
+            { name: 'School', href: PATH_DASHBOARD.school.root },
             { name: 'List' },
           ]}
           action={

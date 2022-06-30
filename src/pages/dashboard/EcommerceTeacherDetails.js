@@ -32,18 +32,18 @@ import CartWidget from '../../sections/@dashboard/e-commerce/CartWidget';
 
 const PRODUCT_DESCRIPTION = [
   {
-    title: '100% Original',
-    description: 'Chocolate bar candy canes ice cream toffee cookie halvah.',
+    title: 'Verified',
+    description: 'Verified and approved teacher',
     icon: 'ic:round-verified',
   },
   {
-    title: '10 Day Replacement',
-    description: 'Marshmallow biscuit donut dragée fruitcake wafer.',
+    title: '1 Day Reply',
+    description: 'This teachers reply\'s messages in the same day' ,
     icon: 'eva:clock-fill',
   },
   {
-    title: 'Year Warranty',
-    description: 'Cotton candy gingerbread cake I love sugar sweet.',
+    title: 'SnowMatch Warranty',
+    description: 'SnowMatch trusts this teacher',
     icon: 'ic:round-verified-user',
   },
 ];
@@ -108,7 +108,7 @@ export default function EcommerceTeacherDetails({isGuest = false}) {
             <Card>
               <Grid container>
                 <Grid item xs={12} md={6} lg={7}>
-                  <TeacherDetailsCarousel teacher={{images: [ teacher.teacher.imageLink]}} />
+                  <TeacherDetailsCarousel teacher={{ images: ["https://api.snowmatch.pro/api" + teacher.teacher.imageLink.split('api')[1]]}} />
                 </Grid>
                 <Grid item xs={12} md={6} lg={5}>
                   <TeacherDetailsSummary
@@ -120,22 +120,19 @@ export default function EcommerceTeacherDetails({isGuest = false}) {
                 </Grid>
               </Grid>
             </Card>
-
           <Grid container sx={{ my: 1 }}>
-
             </Grid>
-
             <Card>
               <TabContext value={value}>
                 <Box sx={{ px: 3, bgcolor: 'background.neutral' }}>
                   <TabList onChange={(e, value) => setValue(value)}>
-                    <Tab disableRipple value="1" label="Description" />
-                    <Tab
+                    {/* <Tab disableRipple value="1" label="Description" /> */}
+                    {/* <Tab
                       disableRipple
                       value="2"
                       label={`Review (${teacher.rates.length})`}
                       sx={{ '& .MuiTab-wrapper': { whiteSpace: 'nowrap' } }}
-                    />
+                    /> */}
                     <Tab disableRipple value="3" label="Calendar" />
 
                   </TabList>
@@ -143,15 +140,15 @@ export default function EcommerceTeacherDetails({isGuest = false}) {
 
                 <Divider />
 
-                <TabPanel value="1">
+                {/* <TabPanel value="1">
                   <Box sx={{ p: 3 }}>
                     <Markdown children={teacher.information} />
                   </Box>
                 </TabPanel>
                 <TabPanel value="2">
                   <TeacherDetailsReview teacher={teacher} />
-                </TabPanel>
-                <TabPanel value="3">
+                </TabPanel> */}
+                <TabPanel value="1">
                   <TeacherDetailsCalendar teacher={teacher} />
                 </TabPanel>
               </TabContext>

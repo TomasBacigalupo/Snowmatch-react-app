@@ -95,20 +95,19 @@ export const _contacts = [...Array(20)].map((_, index) => ({
 
 // ----------------------------------------------------------------------
 
-export const _notifications = [...Array(5)].map((_, index) => ({
+export const _notifications = [...Array(4)].map((_, index) => ({
   id: _mock.id(index),
-  title: ['Your order is placed', 'Sylvan King', 'You have new message', 'You have new mail', 'Delivery processing'][
+  title: ['Start Matching', 'Manage your Calendar', 'Create your Clients', 'Complete your profile', ][
     index
   ],
   description: [
-    'waiting for shipping',
-    'answered to your comment on the Minimal',
-    '5 unread messages',
-    'sent from Guido Padberg',
-    'Your order is being shipped',
+    'Snow Match advice',
+    'Create your calendar events to be ready for a Match',
+    'Create clients to receive notifications and keep their data in one place (School -> Clients)',
+    'Complete your info to get clients (User -> Account)',
   ][index],
   avatar: [null, _mock.image.avatar(2), null, null, null][index],
-  type: ['order_placed', 'friend_interactive', 'chat_message', 'mail', 'order_shipped'][index],
+  type: ['snowMatch', 'snowMatch', 'snowMatch', 'snowMatch', 'snowMatch'][index],
   createdAt: _mock.time(index),
   isUnRead: [true, true, false, false, false][index],
 }));

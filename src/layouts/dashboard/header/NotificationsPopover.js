@@ -31,6 +31,8 @@ import { getNotifications } from 'src/redux/slices/notifications';
 // hooks
 import useAuth from '../../../hooks/useAuth';
 import { useEffect } from 'react';
+import Logo from 'src/components/Logo';
+
 
 // ----------------------------------------------------------------------
 
@@ -84,7 +86,7 @@ export default function NotificationsPopover() {
           <Box sx={{ flexGrow: 1 }}>
             <Typography variant="subtitle1">Notifications</Typography>
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-              You have {N.length} unread messages
+              You don't have notifications
             </Typography>
           </Box>
 
@@ -127,13 +129,13 @@ export default function NotificationsPopover() {
           </List>
         </Scrollbar>
 
-        <Divider sx={{ borderStyle: 'dashed' }} />
+        {/* <Divider sx={{ borderStyle: 'dashed' }} />
 
         <Box sx={{ p: 1 }}>
           <Button fullWidth disableRipple>
             View All
           </Button>
-        </Box>
+        </Box> */}
       </MenuPopover>
     </>
   );
@@ -236,13 +238,10 @@ function renderContent(notification) {
       title,
     };
   }
-  if (notification.type === 'chat_message') {
+  if (notification.type === 'snowMatch') {
     return {
       avatar: (
-        <img
-          alt={notification.title}
-          src="https://minimal-assets-api.vercel.app/assets/icons/ic_notification_chat.svg"
-        />
+        <Logo sx={{height:'30px'}}/>
       ),
       title,
     };

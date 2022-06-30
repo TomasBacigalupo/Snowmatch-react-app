@@ -88,6 +88,18 @@ export default function ShopFilterSidebar({ isOpen, onResetAll, onOpen, onClose 
         <Scrollbar>
           <Stack spacing={3} sx={{ p: 3 }}>
             <Stack spacing={1}>
+              <Typography variant="subtitle1">Resort</Typography>
+
+              <RHFSelect name="resort" label="Resort" placeholder="Resort">
+                <option value="Cerro Catedral" />
+                {FILTER_RESORT_OPTIONS.map((option) => (
+                  <option key={option} value={option}>
+                    {option}
+                  </option>
+                ))}
+              </RHFSelect>
+            </Stack>
+            <Stack spacing={1}>
               <Typography variant="subtitle1">Gender</Typography>
               <RHFMultiCheckbox name="gender" options={FILTER_GENDER_OPTIONS} sx={{ width: 1 }} />
             </Stack>
@@ -141,19 +153,6 @@ export default function ShopFilterSidebar({ isOpen, onResetAll, onOpen, onClose 
                   )}
                 />
                 </Stack>
-
-            <Stack spacing={1}>
-              <Typography variant="subtitle1">Resort</Typography>
-
-              <RHFSelect name="resort" label="Resort" placeholder="Resort">
-                <option value="" />
-                {FILTER_RESORT_OPTIONS.map((option) => (
-                    <option key={option} value={option}>
-                    {option}
-                    </option>
-                ))}
-              </RHFSelect>
-            </Stack>
 
             <Stack spacing={1}>
               <Typography variant="subtitle1">Rating</Typography>

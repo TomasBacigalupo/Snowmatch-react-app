@@ -33,6 +33,7 @@ import timelinePlugin from '@fullcalendar/timeline';
 import interactionPlugin from '@fullcalendar/interaction';
 
 import { useState } from 'react';
+import TeacherSkills from './TeacherSkills';
 
 
 
@@ -95,7 +96,8 @@ export default function TeacherDetailsSummary({ cart, teacher, onAddCart, onGoto
   const {
     birth,
     cellphone,
-    description,    
+    description,
+    skills,    
     email,   
     gender,
     id,
@@ -254,6 +256,10 @@ export default function TeacherDetailsSummary({ cart, teacher, onAddCart, onGoto
         </Typography> */}
 
         <Divider sx={{ borderStyle: 'dashed' }} />
+
+      <Stack direction="row" sx={{ my: 3 }}>
+        <TeacherSkills skills={skills} />
+      </Stack>
 
         <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ my: 3 }}>
           <Typography variant="subtitle1" sx={{ mt: 0.5 }}>

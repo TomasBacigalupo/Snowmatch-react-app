@@ -23,16 +23,15 @@ export default function Profile({ myProfile, posts }) {
           <ProfileFollowInfo profile={myProfile} />
         </Stack>
       </Grid>
-      <Grid item xs={12} md={4}>
+      <Grid item xs={12} >
         <Stack spacing={3}>
           <ProfileAbout profile={myProfile} />
         </Stack>
       </Grid>
 
-      <Grid item xs={12} md={8}>
-        
+      {/* <Grid item xs={12} md={8}>
         <ProfileSocialInfo profile={myProfile} />
-      </Grid>
+      </Grid> */}
     </Grid>
   );
 }

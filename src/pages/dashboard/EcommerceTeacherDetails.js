@@ -126,11 +126,8 @@ export default function EcommerceTeacherDetails() {
                 </Grid>
               </Grid>
             </Card>
-
           <Grid container sx={{ my: 1 }}>
-
             </Grid>
-
             <Card>
               <TabContext value={value}>
                 <Box sx={{ px: 3, bgcolor: 'background.neutral' }}>

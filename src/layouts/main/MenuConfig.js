@@ -12,12 +12,6 @@ const ICON_SIZE = {
   height: 22,
 };
 
-const menuConfig = [
-  {
-    title: 'Home',
-    icon: <Iconify icon={'eva:home-fill'} {...ICON_SIZE} />,
-    path: '/',
-  },
-];
+const menuConfig = [];
 
 export default menuConfig;

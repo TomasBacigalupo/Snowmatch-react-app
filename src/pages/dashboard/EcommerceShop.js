@@ -6,13 +6,14 @@ import { useForm } from 'react-hook-form';
 import { Container, Typography, Stack } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
-import { getTeachers,filterTeachers } from '../../redux/slices/teachers';
+import { getTeachers, filterTeachers } from '../../redux/slices/teachers';
 
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // hooks
 import useSettings from '../../hooks/useSettings';
 // layouts
+import MainHeader from 'src/layouts/main/MainHeader';
 // components
 import Page from '../../components/Page';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
@@ -26,6 +27,7 @@ import {
   ShopProductSearch,
 } from '../../sections/@dashboard/e-commerce/shop';
 import CartWidget from '../../sections/@dashboard/e-commerce/CartWidget';
+import useAuth from 'src/hooks/useAuth';
 
 // ----------------------------------------------------------------------
 
@@ -33,14 +35,15 @@ import CartWidget from '../../sections/@dashboard/e-commerce/CartWidget';
 // ----------------------------------------------------------------------
 
 export default function EcommerceShop() {
-  
+
   const { themeStretch } = useSettings();
 
   const dispatch = useDispatch();
+  const { user } = useAuth();
 
   const [openFilter, setOpenFilter] = useState(false);
 
-  const { teachers, sortBy, filters } = useSelector((state) => {console.log(state);return state.teachers})
+  const { teachers, sortBy, filters } = useSelector((state) => { console.log(state); return state.teachers })
 
   //const { products, sortBy } = useSelector((state) => state.product);
 
@@ -54,6 +57,7 @@ export default function EcommerceShop() {
     language: filters.language,
     from: filters.from,
     to: filters.to,
+    resort: filters.resort,
   };
 
   const methods = useForm({
@@ -70,8 +74,9 @@ export default function EcommerceShop() {
     values.category.length == 0 &&
     values.discipline.length == 0 &&
     values.language.length == 0 &&
-    (!values.from ||
-    !values.to);
+    (!values.from || !values.to) &&
+    !values.resort;
+
 
 
 
@@ -93,6 +98,8 @@ export default function EcommerceShop() {
 
   const handleResetFilter = () => {
     reset();
+    handleRemoveRange();
+    //handleRemoveResort();
     handleCloseFilter();
   };
 
@@ -122,14 +129,19 @@ export default function EcommerceShop() {
 
   const handleRemoveRange = () => {
     setValue('from', undefined);
-        setValue('to', undefined);
+    setValue('to', undefined);
 
   };
 
 
+  const handleRemoveResort = () => {
+    setValue('resort', '');
+  };
+
 
   return (
     <Page title="Match">
+      {user === null && (<><br /><br /><br/></>) }
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <HeaderBreadcrumbs
           heading="Match"
@@ -147,7 +159,7 @@ export default function EcommerceShop() {
           justifyContent="space-between"
           sx={{ mb: 2 }}
         >
-         {/*<ShopProductSearch />*/} 
+          {/*<ShopProductSearch />*/}
 
 
 
@@ -162,7 +174,7 @@ export default function EcommerceShop() {
             </FormProvider>
 
             {/*<ShopProductSort />*/}
-            
+
           </Stack>
         </Stack>
 
@@ -183,6 +195,7 @@ export default function EcommerceShop() {
                 onRemoveDiscipline={handleRemoveDiscipline}
                 onRemoveLanguage={handleRemoveLanguage}
                 onRemoveRange={handleRemoveRange}
+                onRemoveResort={handleRemoveResort}
                 onResetAll={handleResetFilter}
               />
             </>
@@ -198,19 +211,19 @@ export default function EcommerceShop() {
 // ----------------------------------------------------------------------
 
 function checkOverlap(event,filter){
-  const filterFrom = filter.from.getDate()+"/"+(filter.from.getMonth()>=10?filter.from.getMonth()+1:"0"+(filter.from.getMonth()+1))+"/"+filter.from.getFullYear();
-  const filterTo = filter.to.getDate()+"/"+(filter.to.getMonth()>=10?filter.to.getMonth()+1:"0"+(filter.to.getMonth()+1))+"/"+filter.to.getFullYear();
+  const filterFrom = (filter.from.getDate()>=10?filter.from.getDate():"0"+(filter.from.getDate()))+"/"+((filter.from.getMonth()+1)>=10?filter.from.getMonth()+1:"0"+(filter.from.getMonth()+1))+"/"+filter.from.getFullYear();
+  const filterTo = (filter.to.getDate()>=10?filter.to.getDate():"0"+(filter.to.getDate()))+"/"+((filter.to.getMonth()+1)>=10?filter.to.getMonth()+1:"0"+(filter.to.getMonth()+1))+"/"+filter.to.getFullYear();
   const temp1 = event.start.split("-")
-  const eventFrom = temp1[2].split("T")[0]+"/"+temp1[1]+"/"+temp1[0];
+  const eventFrom = temp1[2].split("T")[0] + "/" + temp1[1] + "/" + temp1[0];
   const temp2 = event.end.split("-")
-  const eventTo = temp2[2].split("T")[0]+"/"+temp2[1]+"/"+temp2[0];
+  const eventTo = temp2[2].split("T")[0] + "/" + temp2[1] + "/" + temp2[0];
 
 
   console.log(filterFrom)
   console.log(filterTo)
   console.log(eventFrom)
   console.log(eventTo)
-  if(filterFrom <= eventTo && filterTo >= eventTo){
+  if (filterFrom <= eventTo && filterTo >= eventTo) {
     console.log("AAAA")
     return true;
   }
@@ -233,21 +246,25 @@ function applyFilter(teachers, sortBy, filters) {
   //   teachers = orderBy(teachers, ['price'], ['asc']);
   // }
   // FILTER teacherS
-
+  console.log(filters)
   if(filters.from && filters.to){
     teachers = teachers.filter((teacher) => !teacher.events?.some((event) => checkOverlap(event,filters)));
   }
 
   if (filters.gender.length > 0) {
-    teachers = teachers.filter((teacher) => filters.gender.includes(teacher.gender == 'M'?'Male': teacher.gender == 'F'? 'Female':''));
+    teachers = teachers.filter((teacher) => filters.gender.includes(teacher.gender == 'M' ? 'Male' : teacher.gender == 'F' ? 'Female' : ''));
   }
 
   if (filters.category.length > 0) {
-    teachers = teachers.filter((teacher) => teacher.discipline?.some((discipline) => filters.category.includes(discipline)));
+    teachers = teachers.filter((teacher) => teacher.disciplines?.some((discipline) => filters.category.includes(discipline)));
   }
 
   if (filters.language.length > 0) {
     teachers = teachers.filter((teacher) => teacher.speaks?.some((language) => filters.language.includes(language)));
+  }
+
+  if (filters.resort) {
+    teachers = teachers.filter((teacher) => teacher.resorts?.includes(filters.resort));
   }
 
   if (filters.rating) {

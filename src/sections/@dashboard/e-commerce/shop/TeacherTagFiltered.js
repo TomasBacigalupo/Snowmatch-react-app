@@ -48,6 +48,7 @@ TeacherTagFiltered.propTypes = {
   onRemoveRating: PropTypes.func,
   onRemoveLanguage: PropTypes.func,
   onRemoveRange: PropTypes.func,
+  onRemoveResort: PropTypes.func,
   onResetAll: PropTypes.func,
 };
 
@@ -60,11 +61,12 @@ export default function TeacherTagFiltered({
   onRemoveRating,
   onRemoveLanguage,
   onRemoveRange,
+  onRemoveResort,
   onResetAll
 }) {
   const theme = useTheme();
 
-  const { gender, category, discipline, rating, language, from, to } = filters;
+  const { gender, category, discipline, rating, language, from, to, resort } = filters;
 
   return (
     <RootStyle>
@@ -120,7 +122,7 @@ export default function TeacherTagFiltered({
       )}
       {language.length > 0 && (
         <WrapperStyle>
-          <LabelStyle>Category:</LabelStyle>
+          <LabelStyle>Language:</LabelStyle>
           <Stack direction="row" flexWrap="wrap" sx={{ p: 0.75 }}>
             {language.map((_language) => (
               <Chip
@@ -149,6 +151,15 @@ export default function TeacherTagFiltered({
           <LabelStyle>Range:</LabelStyle>
           <Stack direction="row" flexWrap="wrap" sx={{ p: 0.75 }}>
             <Chip size="small" label={from.getDate()+"/"+(from.getMonth()+1)+"/"+from.getFullYear()+"-"+to.getDate()+"/"+(to.getMonth()+1)+"/"+to.getFullYear()} onDelete={onRemoveRange} sx={{ m: 0.5 }} />
+          </Stack>
+        </WrapperStyle>
+      )}
+
+      {resort && (
+        <WrapperStyle>
+          <LabelStyle>Resort:</LabelStyle>
+          <Stack direction="row" flexWrap="wrap" sx={{ p: 0.75 }}>
+            <Chip size="small" label={resort} onDelete={onRemoveResort} sx={{ m: 0.5 }} />
           </Stack>
         </WrapperStyle>
       )}

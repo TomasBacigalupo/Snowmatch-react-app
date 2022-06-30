@@ -89,6 +89,7 @@ export default function EcommerceTeacherDetails() {
 
   return (
     <Page title="Ecommerce: Instructor Details">
+      {user === null && (<><br /><br /><br /></>)}
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <HeaderBreadcrumbs
           heading="Instructor Details"

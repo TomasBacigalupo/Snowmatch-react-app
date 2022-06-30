@@ -11,26 +11,26 @@ import SocialsButton from '../../components/SocialsButton';
 // ----------------------------------------------------------------------
 
 const LINKS = [
-  {
-    headline: 'SnowMatch',
-    children: [
-      { name: 'About us', href: PATH_PAGE.about },
-      { name: 'Contact us', href: PATH_PAGE.contact },
-      { name: 'FAQs', href: PATH_PAGE.faqs },
-    ],
-  },
-  {
-    headline: 'Legal',
-    children: [
-      { name: 'Terms and Condition', href: '#' },
-      { name: 'Privacy Policy', href: '#' },
-    ],
-  },
+  // {
+  //   headline: 'SnowMatch',
+  //   children: [
+  //     { name: 'About us', href: PATH_PAGE.about },
+  //     { name: 'Contact us', href: PATH_PAGE.contact },
+  //     { name: 'FAQs', href: PATH_PAGE.faqs },
+  //   ],
+  // },
+  // {
+  //   headline: 'Legal',
+  //   children: [
+  //     { name: 'Terms and Condition', href: '#' },
+  //     { name: 'Privacy Policy', href: '#' },
+  //   ],
+  // },
   {
     headline: 'Contact',
     children: [
-      { name: 'support@minimals.cc', href: '#' },
-      { name: 'Los Angeles, 359  Hidden Valley Road', href: '#' },
+      { name: 'snowmatch.office@gmail.com', href: '#' },
+      { name: 'San Martin de los Andes, Patagonia Argentina', href: '#' },
     ],
   },
 ];
@@ -57,8 +57,7 @@ export default function MainFooter() {
           </Grid>
           <Grid item xs={8} md={3}>
             <Typography variant="body2" sx={{ pr: { md: 5 } }}>
-              The starting point for your next project with Minimal UI Kit, built on the newest
-              version of Material-UI ©, ready to be customized to your style.
+              Take your job to the next level with SnowMatch
             </Typography>
 
             <Stack
@@ -66,7 +65,7 @@ export default function MainFooter() {
               justifyContent={{ xs: 'center', md: 'flex-start' }}
               sx={{ mt: 5, mb: { xs: 5, md: 0 } }}
             >
-              <SocialsButton sx={{ mx: 0.5 }} />
+              <SocialsButton sx={{ mx: 0.5 }} links={{instagram:"https://www.instagram.com/snow.match"}} />
             </Stack>
           </Grid>
 

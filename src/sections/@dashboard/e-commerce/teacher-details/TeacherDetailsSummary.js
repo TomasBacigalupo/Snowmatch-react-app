@@ -111,6 +111,10 @@ export default function TeacherDetailsSummary({ cart, teacher, onAddCart, onGoto
     state,
     username,
     events,
+    igUrl,
+    ytUrl,
+    fbUrl,
+    twUrl
   } = teacher.teacher;
 
   const rates = teacher.rates;
@@ -334,7 +338,7 @@ export default function TeacherDetailsSummary({ cart, teacher, onAddCart, onGoto
         </Stack>
 
         <Stack alignItems="center" sx={{ mt: 3 }}>
-          <SocialsButton initialColor />
+          <SocialsButton initialColor links={{"igUrl":igUrl,"twUrl":twUrl,"fbUrl":fbUrl,"ytUrl":ytUrl,}}/>
         </Stack>
     </RootStyle>
   );

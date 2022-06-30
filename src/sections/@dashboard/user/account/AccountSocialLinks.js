@@ -41,11 +41,10 @@ const SOCIAL_LINKS = [
 
 AccountSocialLinks.propTypes = {
   myProfile: PropTypes.shape({
-    facebookLink: PropTypes.string,
-    instagramLink: PropTypes.string,
-    linkedinLink: PropTypes.string,
-    twitterLink: PropTypes.string,
-    youtubeLink: PropTypes.string
+    fbUrl: PropTypes.string,
+    igUrl: PropTypes.string,
+    twUrl: PropTypes.string,
+    ytUrl: PropTypes.string
   }),
 };
 
@@ -68,6 +67,7 @@ export default function AccountSocialLinks({ myProfile }) {
   const {
     handleSubmit,
     formState: { isSubmitting },
+    setError
   } = methods;
 
   const onSubmit = async (data) => {
@@ -78,10 +78,19 @@ export default function AccountSocialLinks({ myProfile }) {
     }
     
     try {
-      dispatch(updateTeacher(newUser))
-      //TODO: react to updateTeacher response
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      enqueueSnackbar('Update success!');
+      const response = await dispatch(updateTeacher(newUser))
+      if(response.messages){
+          for (const entry of response.messages.entry) {
+            setError(entry.key, {
+              type: "server",
+              message: entry.value,
+            });          
+          }
+        }
+        else{
+          console.log("SENT")
+          enqueueSnackbar( 'Update success!');
+        }
     } catch (error) {
       enqueueSnackbar('error', 'Review Links');
       console.error(error);
@@ -92,34 +101,39 @@ export default function AccountSocialLinks({ myProfile }) {
     <Card sx={{ p: 3 }}>
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <Stack spacing={3} alignItems="flex-end">
+          <RHFTextField
+            key={"igUrl"}
+            name={"igUrl"}
+            placeholder="Instagram username"
+            InputProps={{
+              startAdornment: <InputAdornment position="start">{SOCIAL_LINKS[1].icon} {"\u00a0\u00a0instagram.com/"}</InputAdornment>,
+            }}
+          />
             <RHFTextField
               key={"twUrl"}
-            name={"twUrl"}
+              name={"twUrl"}
+              placeholder="Twitter username"
               InputProps={{
-                startAdornment: <InputAdornment position="start">{SOCIAL_LINKS[3].icon}</InputAdornment>,
+                startAdornment: <InputAdornment position="start">{SOCIAL_LINKS[3].icon} {"\u00a0\u00a0twitter.com/"}</InputAdornment>,
               }}
             />
           <RHFTextField
             key={"fbUrl"}
             name={"fbUrl"}
+            placeholder="Facebook username"
             InputProps={{
-              startAdornment: <InputAdornment position="start">{SOCIAL_LINKS[0].icon}</InputAdornment>,
+              startAdornment: <InputAdornment position="start">{SOCIAL_LINKS[0].icon} {"\u00a0\u00a0facebook.com/"}</InputAdornment>,
             }}
           />
           <RHFTextField
             key={"ytUrl"}
             name={"ytUrl"}
+            placeholder="YouTube channel id"
             InputProps={{
-              startAdornment: <InputAdornment position="start">{SOCIAL_LINKS[4].icon}</InputAdornment>,
+              startAdornment: <InputAdornment position="start">{SOCIAL_LINKS[4].icon} {"\u00a0\u00a0youtube.com/channel/"}</InputAdornment>,
             }}
           />
-          <RHFTextField
-            key={"igUrl"}
-            name={"igUrl"}
-            InputProps={{
-              startAdornment: <InputAdornment position="start">{SOCIAL_LINKS[1].icon}</InputAdornment>,
-            }}
-          />
+
 
           <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
             Save Changes

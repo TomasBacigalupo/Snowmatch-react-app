@@ -114,7 +114,7 @@ export default function EcommerceTeacherDetails() {
             <Card>
               <Grid container>
                 <Grid item xs={12} md={6} lg={7}>
-                  <TeacherDetailsCarousel teacher={{images: [ teacher.teacher.imageLink]}} />
+                  <TeacherDetailsCarousel teacher={{ images: ["https://api.snowmatch.pro/api" + teacher.teacher.imageLink.split('api')[1]]}} />
                 </Grid>
                 <Grid item xs={12} md={6} lg={5}>
                   <TeacherDetailsSummary
@@ -135,13 +135,13 @@ export default function EcommerceTeacherDetails() {
               <TabContext value={value}>
                 <Box sx={{ px: 3, bgcolor: 'background.neutral' }}>
                   <TabList onChange={(e, value) => setValue(value)}>
-                    <Tab disableRipple value="1" label="Description" />
-                    <Tab
+                    {/* <Tab disableRipple value="1" label="Description" /> */}
+                    {/* <Tab
                       disableRipple
                       value="2"
                       label={`Review (${teacher.rates.length})`}
                       sx={{ '& .MuiTab-wrapper': { whiteSpace: 'nowrap' } }}
-                    />
+                    /> */}
                     <Tab disableRipple value="3" label="Calendar" />
 
                   </TabList>
@@ -149,15 +149,15 @@ export default function EcommerceTeacherDetails() {
 
                 <Divider />
 
-                <TabPanel value="1">
+                {/* <TabPanel value="1">
                   <Box sx={{ p: 3 }}>
                     <Markdown children={teacher.information} />
                   </Box>
                 </TabPanel>
                 <TabPanel value="2">
                   <TeacherDetailsReview teacher={teacher} />
-                </TabPanel>
-                <TabPanel value="3">
+                </TabPanel> */}
+                <TabPanel value="1">
                   <TeacherDetailsCalendar teacher={teacher} />
                 </TabPanel>
               </TabContext>

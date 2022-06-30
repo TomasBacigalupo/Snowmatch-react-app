@@ -9,7 +9,7 @@ import { TabContext, TabList, TabPanel } from '@mui/lab';
 import { useDispatch, useSelector } from '../../redux/store';
 import { getTeacherWithRates, addCart, onGotoStep } from '../../redux/slices/teachers';
 // routes
-import { PATH_DASHBOARD } from '../../routes/paths';
+import { PATH_DASHBOARD, PATH_GUEST } from '../../routes/paths';
 // hooks
 import useSettings from '../../hooks/useSettings';
 // components
@@ -63,7 +63,7 @@ const IconWrapperStyle = styled('div')(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-export default function EcommerceTeacherDetails() {
+export default function EcommerceTeacherDetails({isGuest = false}) {
   
   const { themeStretch } = useSettings();
   const dispatch = useDispatch();
@@ -89,22 +89,16 @@ export default function EcommerceTeacherDetails() {
 
   return (
     <Page title="Ecommerce: Instructor Details">
-      {user === null && (<><br /><br /><br /></>)}
+      {isGuest && (<><br /><br /><br /></>)}
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <HeaderBreadcrumbs
           heading="Instructor Details"
           links={[
-            { name: 'Dashboard', href: PATH_DASHBOARD.root },
-            // {
-            //   name: 'E-Commerce',
-            //   href: PATH_DASHBOARD.eCommerce.root,
-            // },
-            {
-              name: 'Instructors',
-              href: PATH_DASHBOARD.eCommerce.shop,
-            },
+            !isGuest? { name: 'Dashboard', href: PATH_DASHBOARD.root} : {name: 'Home', href: '/'},
+            !isGuest? { name: 'Instructors', href: PATH_DASHBOARD.eCommerce.shop,} : { name: 'Match', href: PATH_GUEST.root},
             { name: sentenceCase(name) },
-          ]}
+          ]
+        }
         />
 
         {/* <CartWidget /> */}
@@ -182,7 +176,6 @@ export default function EcommerceTeacherDetails() {
 
           </>
         )}
-
         {!teacher && <SkeletonProduct />}
 
         {error && <Typography variant="h6">404 Product not found</Typography>}

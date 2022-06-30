@@ -57,8 +57,8 @@ export default function Router() {
       path: '*',
       element: <MainLayout />,
       children: [
-        { path: 'match', element: <EcommerceShop /> },
-        { path: 'match/teacher/:name', element: <EcommerceTeacherDetails /> }
+        { path: 'match', element: <EcommerceShop isGuest={true}/> },
+        { path: 'match/teacher/:name', element: <EcommerceTeacherDetails isGuest={true}/> }
       ]
     },
 

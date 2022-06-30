@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from '../../redux/store';
 import { getTeachers, filterTeachers } from '../../redux/slices/teachers';
 
 // routes
-import { PATH_DASHBOARD } from '../../routes/paths';
+import { PATH_DASHBOARD, PATH_GUEST } from '../../routes/paths';
 // hooks
 import useSettings from '../../hooks/useSettings';
 // layouts
@@ -34,7 +34,7 @@ import useAuth from 'src/hooks/useAuth';
 
 // ----------------------------------------------------------------------
 
-export default function EcommerceShop() {
+export default function EcommerceShop({isGuest=false}) {
 
   const { themeStretch } = useSettings();
 
@@ -141,17 +141,17 @@ export default function EcommerceShop() {
 
   return (
     <Page title="Match">
-      {user === null && (<><br /><br /><br/></>) }
+      {isGuest && (<><br /><br /><br/></>) }
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <HeaderBreadcrumbs
           heading="Match"
           links={[
-            { name: 'Dashboard', href: PATH_DASHBOARD.root},
-            { name: 'Match', href: PATH_DASHBOARD.eCommerce.root },
+            !isGuest? { name: 'Dashboard', href: PATH_DASHBOARD.root} : {name: 'Home', href: '/'},
+            !isGuest? { name: 'Match', href: PATH_DASHBOARD.eCommerce.root} : { name: 'Match', href: PATH_GUEST.root},
             { name: 'Pro',}
           ]}
         />
-
+        {isGuest}
         <Stack
           spacing={2}
           direction={{ xs: 'column', sm: 'row' }}
@@ -204,6 +204,8 @@ export default function EcommerceShop() {
 
         <ShopTeacherList teachers={filteredTeachers} loading={!filteredTeachers.length && isDefault} />
       </Container>
+      <><br /></>
+
     </Page>
   );
 }

@@ -63,7 +63,7 @@ export default function VerifyCodeForm() {
     try {
       const code = Object.values(attributes).join(''); 
 
-      const response = await axios.put('http://localhost:9090/gschool/api/userPersonalDataVerification/registrationNumericCode/'+code);
+      const response = await axios.put('/api/userPersonalDataVerification/registrationNumericCode/'+code);
 
       if(response.status == 200){
         enqueueSnackbar('Verify success!');

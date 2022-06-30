@@ -73,7 +73,7 @@ export default function PageVerifyWhatsApp() {
 
     const handleResend = async () =>{
         console.log("RESEND")
-        const response = axios.post('http://localhost:9090/gschool/api/userPersonalDataVerification/registrationNumericCode');
+        const response = axios.post('/api/userPersonalDataVerification/registrationNumericCode');
         
         setRunTimer(true)
     }

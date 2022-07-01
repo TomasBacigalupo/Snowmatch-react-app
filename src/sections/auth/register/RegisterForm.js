@@ -36,9 +36,7 @@ export default function RegisterForm() {
     ),
     countryCode: Yup.string().required(),
     password: Yup.string().required('Password is required'),
-    certificate: Yup.mixed().required('Certification File is required')
-
-
+    certificate: Yup.mixed().required('Certification File is required',(value) => value !== '')
   });
 
   const [defaultValues, setDefaultValues] = useState({
@@ -144,7 +142,7 @@ export default function RegisterForm() {
           }}
         />
         <Typography variant="subtitle1">Instructor certification</Typography>
-        <RHFUploadSingleFile name="certificate" accept="image/*" maxSize={3145728} onDrop={handleDrop}/>
+        <RHFUploadSingleFile name="certificate" accept="image/*" maxSize={16000000} onDrop={handleDrop}/>
         <LoadingButton fullWidth size="large" type="submit" variant="contained" loading={isSubmitting}>
           Register
         </LoadingButton>

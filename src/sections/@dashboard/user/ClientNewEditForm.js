@@ -199,7 +199,7 @@ ClientNewEditForm.propTypes = {
                 <RHFUploadAvatar
                   name="avatarUrl"
                   accept="image/*"
-                  maxSize={3145728}
+                  maxSize={16000000}
                   onDrop={handleDrop}
                   helperText={
                     <Typography
@@ -213,7 +213,7 @@ ClientNewEditForm.propTypes = {
                       }}
                     >
                       Allowed *.jpeg, *.jpg, *.png, *.gif
-                      <br /> max size of {fData(3145728)}
+                      <br /> max size of {fData(16000000)}
                     </Typography>
                   }
                 />

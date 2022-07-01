@@ -20,13 +20,13 @@ export default function SocialsButton({ initialColor = false, simple = true, lin
       name: 'FaceBook',
       icon: 'eva:facebook-fill',
       socialColor: '#1877F2',
-      path: links.fbUrl?"https://www.facebook.com/"+links.fbUrl : undefined,
+      path: links.fbUrl ? "https://www.facebook.com/" + links.fbUrl : "https://www.facebook.com/snowmatch.fb",
     },
     {
       name: 'Instagram',
       icon: 'ant-design:instagram-filled',
       socialColor: '#E02D69',
-      path: links.igUrl?"https://www.instagram.com/"+links.igUrl : undefined,
+      path: links.igUrl?"https://www.instagram.com/"+links.igUrl : "https://instagram.com/snow.match",
     },
     {
       name: 'YouTube',

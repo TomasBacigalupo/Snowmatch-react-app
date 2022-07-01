@@ -75,7 +75,7 @@ export default function AppTopAuthors() {
     <Card>
       <CardHeader title="Top Clients" />
       <Stack spacing={3} sx={{ p: 3 }}>
-        {sample.map((client, index) => (
+        {topClients.map((client, index) => (
           <AuthorItem key={client.id} author={client} index={index} />
         ))}
       </Stack>

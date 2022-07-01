@@ -70,10 +70,10 @@ ClientNewEditForm.propTypes = {
     const NewUserSchema = Yup.object().shape({
       name: Yup.string().required('Name is required'),
       lastname: Yup.string().required('Last name is required'),
-      email: Yup.string().required('Email is required').email(),
-      cellphone: Yup.string().required('Phone number is required'),
+      email: Yup.string().email(),
+      cellphone: Yup.string(),
       country: Yup.string(),
-      avatarUrl: Yup.mixed().test('required', 'Avatar is required', (value) => value !== ''),
+      avatarUrl: Yup.mixed(),
       notes: Yup.string().nullable(),
       isTipper: Yup.bool(),
       tip: Yup.string().nullable(),
@@ -111,6 +111,30 @@ ClientNewEditForm.propTypes = {
       // eslint-disable-next-line react-hooks/exhaustive-deps
       [client]
     );
+
+    const defaultValuesNew = useMemo(
+      () => ({
+        name: '',
+        lastname: '',
+        email:  '',
+        cellphone:  '',
+        country:  'Argentina',
+        avatarUrl: '',
+        isTipper:false,
+        notes:  '',
+        tip: '',
+        level:  "BEGINNER",
+        isRenting: false,
+        family:  '',
+        hobbies:'',
+        work:  '',
+        staysAt: '',
+        id:  0,
+        resorts: [],
+      }),
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      [client]
+    );
   
     const methods = useForm({
       resolver: yupResolver(NewUserSchema),
@@ -134,7 +158,7 @@ ClientNewEditForm.propTypes = {
         reset(defaultValues);
       }
       if (!isEdit) {
-        reset(defaultValues);
+        reset(defaultValuesNew);
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isEdit, currentUser]);

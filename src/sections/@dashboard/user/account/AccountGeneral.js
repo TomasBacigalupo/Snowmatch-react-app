@@ -45,9 +45,9 @@ const SKI_RESORTS = [
 export default function AccountGeneral() {
   const { enqueueSnackbar } = useSnackbar();
 
-  const { user } = useAuth();
+  const { user, updateUser } = useAuth();
   const dispatch = useDispatch();
-  const { teachers } = useSelector((state) => state);
+  const { teachers } = useSelector((state) => {console.log(state.teachers); return state});
 
   const UpdateUserSchema = Yup.object().shape({
     name: Yup.string().required('Name is required'),
@@ -64,6 +64,7 @@ export default function AccountGeneral() {
     skills: Yup.array().of(Yup.string()),
     disciplines: Yup.array().of(Yup.string()),
     resorts: Yup.array().of(Yup.string()),
+    school: Yup.string(),
   });
 
   const defaultValues = {
@@ -80,7 +81,8 @@ export default function AccountGeneral() {
     speaks: user?.speaks || [],
     skills: user?.skills || [],
     disciplines: user?.disciplines || [],
-    resorts: user?.resorts || []
+    resorts: user?.resorts || [],
+    school: user?.school || '',
   };
 
   const methods = useForm({
@@ -102,17 +104,26 @@ export default function AccountGeneral() {
     reader.onerror = error => reject(error);
   });
 
-  const onSubmit = async (value) => {
-    console.log("values", value);
+  const onSubmit = async (data) => {
+    console.log("values", data);
+
+    const value = { 
+      ...user,
+      ...data
+    }
+    
+
+    if(value.state){
+      value.state = 'AVAILABLE'
+    }
+    else{
+      value.state = 'UNAVAILABLE'
+    }
 
     toBase64(value.photoURL).then(image => {
       //TODO: only change image if it was changed
       dispatch(changeProfilePicture(image));
     } );
-
-    
-
-
 
     try {
       //await axios.post();
@@ -128,6 +139,7 @@ export default function AccountGeneral() {
         }
         else{
           console.log("SENT")
+          updateUser(value)
           enqueueSnackbar( 'Update success!');
         }
     } catch (error) {
@@ -155,7 +167,7 @@ export default function AccountGeneral() {
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Grid container spacing={3}>
         <Grid item xs={12} md={4}>
-          <Card sx={{ py: 34, px: 3, textAlign: 'center' }}>
+          <Card sx={{ py: 39, px: 3, textAlign: 'center' }}>
             <RHFUploadAvatar
               name="photoURL"
               accept="image/*"
@@ -194,7 +206,11 @@ export default function AccountGeneral() {
             >
               <RHFTextField name="name" label="Name" disabled={user?.name != ''}/>
               <RHFTextField name="lastname" label="Last Name" disabled={user?.lastname != ''}/>
-              <RHFSelect name="gender" label="Gender" placeholder="Gender" disabled={user?.gender != ''}>
+              <RHFTextField name="cellphone" label="Phone Number" disabled={user?.cellphone != undefined} />
+              
+              <RHFTextField name="email" label="Email Address" disabled/>
+              {console.log("cellphone", user?.cellphone)}
+              <RHFSelect name="gender" label="Gender" placeholder="Gender">
                   <option key={1} value={"M"}>
                     Male
                   </option>
@@ -202,9 +218,6 @@ export default function AccountGeneral() {
                     Female
                   </option>
               </RHFSelect>
-              <RHFTextField name="email" label="Email Address" disabled/>
-              {console.log("cellphone", user?.cellphone)}
-              <RHFTextField name="cellphone" label="Phone Number" disabled={user?.cellphone != undefined} />
               <RHFSelect name="country" label="Country" placeholder="Country">
                 <option value="" />
                 {countries.map((option) => (
@@ -213,9 +226,15 @@ export default function AccountGeneral() {
                   </option>
                 ))}
               </RHFSelect>
+
               <RHFMultipleSelect name="disciplines" label="Disciplines" list={["Ski", "SnowBoard"]}/>
               <RHFMultipleSelect name="speaks" label="Languages" list={["Español", "English", "Portugues"]}/>
             </Box>
+
+            <Stack sx={{ mt: 3 }}>
+              <RHFTextField name="school" label="School"/>
+            </Stack>              
+
             <Stack sx={{ mt: 3 }}>
               <RHFMultipleSelect name="resorts" label="Resorts" list={SKI_RESORTS}/>            
             </Stack>                        

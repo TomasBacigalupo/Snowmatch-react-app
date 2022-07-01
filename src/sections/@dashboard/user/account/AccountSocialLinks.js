@@ -50,7 +50,7 @@ AccountSocialLinks.propTypes = {
 
 export default function AccountSocialLinks({ myProfile }) {
   const { enqueueSnackbar } = useSnackbar();
-  const { user } = useAuth();
+  const { user, updateUser } = useAuth();
   const dispatch = useDispatch();
 
   const defaultValues = {
@@ -89,6 +89,7 @@ export default function AccountSocialLinks({ myProfile }) {
         }
         else{
           console.log("SENT")
+          updateUser(newUser)
           enqueueSnackbar( 'Update success!');
         }
     } catch (error) {

@@ -8,6 +8,11 @@ import Label from '../../../../components/Label';
 import Iconify from '../../../../components/Iconify';
 import { TableMoreMenu } from '../../../../components/table';
 import { useMediaQuery } from 'react-responsive';
+import { useDispatch } from '../../../../redux/store';
+import { selectClient } from '../../../../redux/slices/clients'
+import { PATH_DASHBOARD } from '../../../../routes/paths';
+import { useNavigate } from 'react-router-dom';
+
 
 
 // ----------------------------------------------------------------------
@@ -24,8 +29,9 @@ ClientTableRow.propTypes = {
 
 export default function ClientTableRow({ row, selected, onEditRow, onSelectRow, onDeleteRow }) {
   const theme = useTheme();
-
-  const { name, lastname, email, cellphone, level } = row;
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const {id, name, lastname, email, cellphone, level } = row;
 
   const [openMenu, setOpenMenuActions] = useState(null);
 
@@ -41,17 +47,17 @@ export default function ClientTableRow({ row, selected, onEditRow, onSelectRow, 
 
   if(isMobile){
   return (
-    <TableRow hover selected={selected}>
-      <TableCell  sx={{  alignItems: 'center' }}>
+    <TableRow hover selected={selected} onClick={() => console.log("CLICK")}>
+      <TableCell  sx={{  alignItems: 'center' }} >
         <Checkbox checked={selected} onClick={onSelectRow} />
 
       </TableCell>
-      <TableCell  sx={{  alignItems: 'center' }}>
+      <TableCell  sx={{  alignItems: 'center' }} onClick={() => {dispatch(selectClient(id)); navigate(PATH_DASHBOARD.user.edit("client"));}}>
                 <Avatar alt={name} src="" sx={{ mr: 1 }} />
 
       </TableCell>
 
-      <TableCell align="left" >
+      <TableCell align="left" onClick={() => {dispatch(selectClient(id)); navigate(PATH_DASHBOARD.user.edit("client"));}}>
         <Typography variant="subtitle2" noWrap>
           {name +" " +lastname}
         </Typography>
@@ -103,28 +109,28 @@ export default function ClientTableRow({ row, selected, onEditRow, onSelectRow, 
 }
 if(!isMobile){
   return (
-    <TableRow hover selected={selected}>
+    <TableRow hover selected={selected} >
       <TableCell padding="checkbox">
         <Checkbox checked={selected} onClick={onSelectRow} />
       </TableCell>
 
-      <TableCell sx={{ display: 'flex', alignItems: 'center' }}>
+      <TableCell sx={{ display: 'flex', alignItems: 'center' }} onClick={() => {dispatch(selectClient(id)); navigate(PATH_DASHBOARD.user.edit("client"));}}>
         <Avatar alt={name} src="" sx={{ mr: 2 }} />
         <Typography variant="subtitle2" noWrap>
           {name}
         </Typography>
       </TableCell>
 
-      <TableCell align="left">{lastname}</TableCell>
+      <TableCell align="left" onClick={() => {dispatch(selectClient(id)); navigate(PATH_DASHBOARD.user.edit("client"));}}>{lastname}</TableCell>
 
-      <TableCell align="left">{email}</TableCell>
+      <TableCell align="left" onClick={() => {dispatch(selectClient(id)); navigate(PATH_DASHBOARD.user.edit("client"));}}>{email}</TableCell>
 
 
-      <TableCell align="left" sx={{ textTransform: 'capitalize' }}>
+      <TableCell align="left" sx={{ textTransform: 'capitalize' }} onClick={() => {dispatch(selectClient(id)); navigate(PATH_DASHBOARD.user.edit("client"));}}>
         {cellphone}
       </TableCell>
 
-      <TableCell align="left">
+      <TableCell align="left" onClick={() => {dispatch(selectClient(id)); navigate(PATH_DASHBOARD.user.edit("client"));}}>
         <Label
           variant={theme.palette.mode === 'light' ? 'ghost' : 'ghost'}
           color={(level === 'EXPERT' && 'error') || (level === 'BEGINNER' && 'success') || (level === 'INTERMEDIATE' && 'secondary') || 'warning'}

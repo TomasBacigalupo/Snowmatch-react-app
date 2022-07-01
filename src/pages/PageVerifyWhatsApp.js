@@ -111,7 +111,7 @@ export default function PageVerifyWhatsApp() {
                         <Grid container>
                             <Grid item xs={12}>
                                 {!loading && <Button onClick={onReload} loading={loading}>
-                                    Reload
+                                    Verify!
                                 </Button>}
                             </Grid>
                             <Grid item xs={12}>
@@ -122,6 +122,11 @@ export default function PageVerifyWhatsApp() {
                             <Grid item xs={12}>
                                 {!loading && (
                                 <Typography disabled variant='caption'>Phone:{' ' + user.cellphone}</Typography>
+                                )}
+                            </Grid>
+                            <Grid item xs={12}>
+                                {!loading && (
+                                    <Typography disabled variant='caption'>Not your phone? Contact snowmatch@soluciones-moviles.com</Typography>
                                 )}
                             </Grid>
                         </Grid>

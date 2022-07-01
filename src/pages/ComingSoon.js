@@ -35,7 +35,7 @@ const SeparatorStyle = styled(Typography)(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 export default function ComingSoon() {
-  const countdown = useCountdown(new Date('07/07/2022 21:30'));
+  const countdown = useCountdown(new Date('07/01/2022 19:00'));
 
   return (
     <Page title="Coming Soon" sx={{ height: 1 }}>
@@ -47,6 +47,7 @@ export default function ComingSoon() {
             </Typography>
             <Typography sx={{ color: 'text.secondary' }}>We are currently working hard on this page!</Typography>
 
+            
             <ComingSoonIllustration sx={{ my: 10, height: 240 }} />
 
             <CountdownStyle>

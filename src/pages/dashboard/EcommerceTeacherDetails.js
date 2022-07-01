@@ -133,7 +133,7 @@ export default function EcommerceTeacherDetails({isGuest = false}) {
                       label={`Review (${teacher.rates.length})`}
                       sx={{ '& .MuiTab-wrapper': { whiteSpace: 'nowrap' } }}
                     /> */}
-                    <Tab disableRipple value="3" label="Calendar" />
+                    <Tab disableRipple value="1" label="Calendar" />
 
                   </TabList>
                 </Box>

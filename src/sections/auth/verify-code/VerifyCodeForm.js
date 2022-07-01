@@ -101,7 +101,6 @@ export default function VerifyCodeForm() {
 
     if (value.length >= maxLength) {
       if (fieldIntIndex < 6) {
-        handleChange(event)
 
         const nextfield = document.querySelector(`input[name=code${fieldIntIndex + 1}]`);
 
@@ -114,9 +113,11 @@ export default function VerifyCodeForm() {
 
         const field = document.querySelector(`input[name=code${fieldIntIndex}]`);
         field.blur();
+        return;
       }
 
     }
+    handleChange(event)
 
   };
 

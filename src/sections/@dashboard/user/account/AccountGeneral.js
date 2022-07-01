@@ -18,7 +18,7 @@ import { fData } from '../../../../utils/formatNumber';
 import { countries } from '../../../../_mock';
 // components
 import { FormProvider, RHFSwitch, RHFSelect, RHFTextField, RHFUploadAvatar, RHFMultipleSelect } from '../../../../components/hook-form';
-import axios from 'axios';
+import axios from '../../../../utils/axios';
 
 const SKI_RESORTS = [
   "Aconcagua",
@@ -112,12 +112,14 @@ export default function AccountGeneral() {
       ...data
     }
     
-
+    var endpoint = "";
     if(value.state){
       value.state = 'AVAILABLE'
+      endpoint = 'available'
     }
     else{
       value.state = 'UNAVAILABLE'
+      endpoint = 'unavailable'
     }
 
     toBase64(value.photoURL).then(image => {
@@ -128,7 +130,7 @@ export default function AccountGeneral() {
     try {
       //await axios.post();
       const response = await dispatch(updateTeacher(value));
-
+      const r = await axios.post("/api/users/teacher/"+endpoint);
       if(response.messages){
           for (const entry of response.messages.entry) {
             setError(entry.key, {

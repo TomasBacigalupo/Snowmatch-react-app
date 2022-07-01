@@ -213,19 +213,29 @@ export default function EcommerceShop({isGuest=false}) {
 // ----------------------------------------------------------------------
 
 function checkOverlap(event,filter){
-  const filterFrom = (filter.from.getDate()>=10?filter.from.getDate():"0"+(filter.from.getDate()))+"/"+((filter.from.getMonth()+1)>=10?filter.from.getMonth()+1:"0"+(filter.from.getMonth()+1))+"/"+filter.from.getFullYear();
-  const filterTo = (filter.to.getDate()>=10?filter.to.getDate():"0"+(filter.to.getDate()))+"/"+((filter.to.getMonth()+1)>=10?filter.to.getMonth()+1:"0"+(filter.to.getMonth()+1))+"/"+filter.to.getFullYear();
+
+  const filterFrom = new Date(filter.from.getFullYear(), filter.from.getMonth(), filter.from.getDate())
+  const filterTo = new Date(filter.to.getFullYear(), filter.to.getMonth(), filter.to.getDate())
+
+  //const filterFrom = (filter.from.getDate()>=10?filter.from.getDate():"0"+(filter.from.getDate()))+"/"+((filter.from.getMonth()+1)>=10?filter.from.getMonth()+1:"0"+(filter.from.getMonth()+1))+"/"+filter.from.getFullYear();
+  //const filterTo = (filter.to.getDate()>=10?filter.to.getDate():"0"+(filter.to.getDate()))+"/"+((filter.to.getMonth()+1)>=10?filter.to.getMonth()+1:"0"+(filter.to.getMonth()+1))+"/"+filter.to.getFullYear();
   const temp1 = event.start.split("-")
-  const eventFrom = temp1[2].split("T")[0] + "/" + temp1[1] + "/" + temp1[0];
+  //const eventFrom = temp1[2].split("T")[0] + "/" + temp1[1] + "/" + temp1[0];
+  const eventFrom = new Date(temp1[0], temp1[1],temp1[2].split("T")[0])
+  eventFrom.setMonth(eventFrom.getMonth()-1)
   const temp2 = event.end.split("-")
-  const eventTo = temp2[2].split("T")[0] + "/" + temp2[1] + "/" + temp2[0];
+  //const eventTo = temp2[2].split("T")[0] + "/" + temp2[1] + "/" + temp2[0];
+  const eventTo = new Date(temp2[0], temp2[1],temp2[2].split("T")[0])
+  eventTo.setMonth(eventTo.getMonth()-1)
+
+
 
 
   console.log(filterFrom)
   console.log(filterTo)
   console.log(eventFrom)
   console.log(eventTo)
-  if (filterFrom <= eventTo && filterTo >= eventTo) {
+  if (filterFrom >= eventFrom && filterTo <= eventTo) {
     console.log("AAAA")
     return true;
   }

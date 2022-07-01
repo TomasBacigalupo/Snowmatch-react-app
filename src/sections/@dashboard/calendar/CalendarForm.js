@@ -69,19 +69,6 @@ export default function CalendarForm({ event, range, onCancel }) {
     title: Yup.string().max(255).required('Title is required'),
     type: Yup.string().max(255).required('Title is required'),
     description: Yup.string().max(5000),
-    price: Yup.number().when('type', {
-      is: type => {
-        ['Break', 'Training', 'Illness'].forEach(t =>{
-          console.log(type)
-          if(t === type){
-            console.log("soy break")
-            return true;
-          }
-        });
-        return false;
-      },
-      then: Yup.number().nullable().notRequired().min(0)
-    }).min(1)
   });
 
   const methods = useForm({

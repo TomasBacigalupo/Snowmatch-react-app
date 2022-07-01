@@ -1,5 +1,5 @@
 import { m } from 'framer-motion';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useNavigate} from 'react-router-dom';
 // @mui
 import { styled } from '@mui/material/styles';
 import { Box, Button, Typography, Container, CircularProgress, Grid } from '@mui/material';
@@ -16,6 +16,7 @@ import { set } from 'lodash';
 
 import { VerifyCodeForm } from '../sections/auth/verify-code';
 import axios from '../utils/axios';
+import { PATH_DASHBOARD, PATH_AUTH } from '../routes/paths';
 
 
 
@@ -34,13 +35,12 @@ const RootStyle = styled('div')(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 export default function PageVerifyWhatsApp() {
-    const { testVerification, user } = useAuth();
+    const { testVerification, user, logout } = useAuth();
     const { enqueueSnackbar } = useSnackbar();
     const [loading, setLoading] = useState(false);
     const [countDown, setCountDown] = useState(0);
     const [runTimer, setRunTimer] = useState(true);
-
-
+    const navigate = useNavigate();
 
     useEffect(() => {
         let timerId;
@@ -86,6 +86,16 @@ export default function PageVerifyWhatsApp() {
         })
     }
 
+    const onLogout = async () => {
+        try {
+          await logout();
+          navigate(PATH_AUTH.login, { replace: true });
+        } catch (error) {
+          console.error(error);
+          enqueueSnackbar('Unable to logout!', { variant: 'error' });
+        }
+      };
+
     return (
         <Page title="WhatsApp verification" sx={{ height: 1 }}>
             <RootStyle>
@@ -112,6 +122,11 @@ export default function PageVerifyWhatsApp() {
                             <Grid item xs={12}>
                                 {!loading && <Button onClick={onReload} loading={loading}>
                                     Reload
+                                </Button>}
+                            </Grid>
+                            <Grid item xs={12}>
+                                {!loading && <Button onClick={onLogout} loading={loading}>
+                                    Logout
                                 </Button>}
                             </Grid>
                             <Grid item xs={12}>

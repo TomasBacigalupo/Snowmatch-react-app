@@ -289,13 +289,30 @@ export function getProducts() {
 }
 
 // ----------------------------------------------------------------------
+function merge(ranges) {
+    var result = [], last;
+
+    ranges.forEach(function (r) {
+        if (!last || r.start > last.end){
+            result.push(r);
+            last = r;
+        }
+        else if (r.end > last.end)
+            last.end = r.end;
+    });
+    console.log("AAAAAAAAAAAAAAAA")
+    console.log(result)
+    return result;
+}
 
 export function getTeachers() {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.get('/api/users/teacher');
-      dispatch(slice.actions.getTeachersSuccess(response.data));
+      const teachers = response.data;
+
+      dispatch(slice.actions.getTeachersSuccess(teachers));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }
@@ -351,6 +368,9 @@ export function getTeacherWithRates(email) {
             "rates": rates,
             "teacher": teacher
           }
+            if(dto.teacher.events){
+              dto.teacher.events = merge(dto.teacher.events.sort(function(a, b) { return new Date(a.start)-new Date(b.start) })) 
+      }
           dispatch(slice.actions.getTeacherWithRatesSuccess(dto));
         })
       })

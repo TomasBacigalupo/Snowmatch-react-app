@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import { paramCase } from 'change-case';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, Router, useNavigate } from 'react-router-dom';
 // @mui
 import { Box, Card, Link, Typography, Stack } from '@mui/material';
 // routes
@@ -23,12 +23,13 @@ export default function ShopTeacherCard({ teacher }) {
   const { name, lastname, imageLink, stars, level, information, email, state} = teacher;
   const status = 'sale';
   const priceSale = 10;
+  const navigate = useNavigate();
 
   const { isAuthenticated} = useAuth()
   const linkTo =  isAuthenticated ? PATH_DASHBOARD.eCommerce.viewTeacher(email) : PATH_GUEST.viewTeacher(email) ;
 
   return (
-    <Card>
+    <Card onClick={()=>navigate(linkTo)}>
       <Box sx={{ position: 'relative' }}>
         {status && (
           <Label

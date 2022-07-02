@@ -70,7 +70,7 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
   const NewProductSchema = Yup.object().shape({
     name: Yup.string().required('Name is required'),
     description: Yup.string().required('Description is required'),
-    images: Yup.array().min(1, 'Images is required'),
+    images: Yup.array().min(1, 'Images is required',(value) => value !== ''),
     price: Yup.number().moreThan(0, 'Price should not be $0.00'),
   });
 
@@ -173,7 +173,7 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
                   name="images"
                   showPreview
                   accept="image/*"
-                  maxSize={3145728}
+                  maxSize={16000000}
                   onDrop={handleDrop}
                   onRemove={handleRemove}
                   onRemoveAll={handleRemoveAll}

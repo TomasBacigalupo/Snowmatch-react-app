@@ -136,7 +136,7 @@ export default function UserNewEditForm({ isEdit, currentUser }) {
               <RHFUploadAvatar
                 name="avatarUrl"
                 accept="image/*"
-                maxSize={3145728}
+                maxSize={16000000}
                 onDrop={handleDrop}
                 helperText={
                   <Typography
@@ -150,7 +150,7 @@ export default function UserNewEditForm({ isEdit, currentUser }) {
                     }}
                   >
                     Allowed *.jpeg, *.jpg, *.png, *.gif
-                    <br /> max size of {fData(3145728)}
+                    <br /> max size of {fData(16000000)}
                   </Typography>
                 }
               />

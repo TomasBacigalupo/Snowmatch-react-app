@@ -244,7 +244,7 @@ export default function TeacherDetailsSummary({ cart, teacher, onAddCart, onGoto
           <Rating value={stars} precision={0.1} readOnly />
           <Typography variant="body2" sx={{ color: 'text.secondary' }}>
             ({fShortenNumber(rates.length)}
-            reviews)
+          {' '}reviews)
           </Typography>
         </Stack>
 

@@ -156,7 +156,7 @@ export default function HomeHero() {
                 to={PATH_DASHBOARD.root}
                 startIcon={<Iconify icon={'eva:flash-fill'} width={20} height={20} />}
               >
-                PRO Account
+                PRO account
               </Button>
             </m.div>
             {/* TODO: ski center icons */}

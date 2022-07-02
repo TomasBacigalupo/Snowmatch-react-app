@@ -68,6 +68,20 @@ const navConfig = [
   {
     subheader: 'snowMatch',
     items: [
+      // ADMIN
+      {
+        title: 'admin',
+        path: PATH_DASHBOARD.admin.root,
+        icon: ICONS.user,
+        children: [
+          { title: 'review teachers', path: PATH_DASHBOARD.admin.review },
+          // { title: 'cards', path: PATH_DASHBOARD.user.cards },
+          // { title: 'clients', path: PATH_DASHBOARD.user.list },
+          // { title: 'new client', path: PATH_DASHBOARD.user.new },
+          // { title: 'edit', path: PATH_DASHBOARD.user.demoEdit },
+          // { title: 'account', path: PATH_DASHBOARD.user.account },
+        ],
+      },
       {
         title: 'match',
         path: PATH_DASHBOARD.eCommerce.root,
@@ -86,42 +100,6 @@ const navConfig = [
           { title: 'new client', path: PATH_DASHBOARD.school.new },
         ],
       },
-
-      // ADMIN
-      {
-        title: 'admin',
-        path: PATH_DASHBOARD.admin.root,
-        icon: ICONS.user,
-        children: [
-          { title: 'review teachers', path: PATH_DASHBOARD.admin.review },
-          // { title: 'cards', path: PATH_DASHBOARD.user.cards },
-          // { title: 'clients', path: PATH_DASHBOARD.user.list },
-          // { title: 'new client', path: PATH_DASHBOARD.user.new },
-          // { title: 'edit', path: PATH_DASHBOARD.user.demoEdit },
-          // { title: 'account', path: PATH_DASHBOARD.user.account },
-        ],
-      },
-    ],
-  },
-
-  // APP
-  // ----------------------------------------------------------------------
-  {
-    subheader: 'app',
-    items: [
-      // {
-      //   title: 'mail',
-      //   path: PATH_DASHBOARD.mail.root,
-      //   icon: ICONS.mail,
-      //   info: (
-      //     <Label variant="outlined" color="error">
-      //       +32
-      //     </Label>
-      //   ),
-      // },
-      // { title: 'chat', path: PATH_DASHBOARD.chat.root, icon: ICONS.chat },
-     
-      // { title: 'kanban', path: PATH_DASHBOARD.kanban, icon: ICONS.kanban },
     ],
   },
 ];

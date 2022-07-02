@@ -3,6 +3,7 @@ import { PATH_DASHBOARD } from '../../../routes/paths';
 // components
 import Label from '../../../components/Label';
 import SvgIconStyle from '../../../components/SvgIconStyle';
+import SchoolIcon from '@mui/icons-material/School';
 
 // ----------------------------------------------------------------------
 
@@ -52,50 +53,37 @@ const navConfig = [
         children: [
           { title: 'profile', path: PATH_DASHBOARD.user.profile },
           // { title: 'cards', path: PATH_DASHBOARD.user.cards },
-          { title: 'clients', path: PATH_DASHBOARD.user.list },
-          { title: 'new client', path: PATH_DASHBOARD.user.new },
           // { title: 'edit', path: PATH_DASHBOARD.user.demoEdit },
           { title: 'account', path: PATH_DASHBOARD.user.account },
         ],
       },
 
       // E-COMMERCE
+      
+    ],
+  },
+
+  // APP
+  // ----------------------------------------------------------------------
+  {
+    subheader: 'snowMatch',
+    items: [
       {
         title: 'match',
         path: PATH_DASHBOARD.eCommerce.root,
         icon: ICONS.match,
         children: [
           { title: 'instructors', path: PATH_DASHBOARD.eCommerce.shop },
-          // { title: 'product', path: PATH_DASHBOARD.eCommerce.demoView },
-          // { title: 'list', path: PATH_DASHBOARD.eCommerce.list },
-          // { title: 'create', path: PATH_DASHBOARD.eCommerce.new },
-          // { title: 'edit', path: PATH_DASHBOARD.eCommerce.demoEdit },
-          // { title: 'checkout', path: PATH_DASHBOARD.eCommerce.checkout },
         ],
       },
-
-      // INVOICE
-      // {
-      //   title: 'invoice',
-      //   path: PATH_DASHBOARD.invoice.root,
-      //   icon: ICONS.invoice,
-      //   children: [
-      //     { title: 'list', path: PATH_DASHBOARD.invoice.list },
-      //     { title: 'details', path: PATH_DASHBOARD.invoice.demoView },
-      //     { title: 'create', path: PATH_DASHBOARD.invoice.new },
-      //     { title: 'edit', path: PATH_DASHBOARD.invoice.demoEdit },
-      //   ],
-      // },
-
-      // BLOG
+      { title: 'calendar', path: PATH_DASHBOARD.calendar, icon: ICONS.calendar },
       {
-        title: 'blog',
-        path: PATH_DASHBOARD.blog.root,
-        icon: ICONS.blog,
+        title: 'school',
+        path: PATH_DASHBOARD.school.root,
+        icon: <SchoolIcon/>,
         children: [
-          { title: 'posts', path: PATH_DASHBOARD.blog.posts },
-          { title: 'post', path: PATH_DASHBOARD.blog.demoView },
-          { title: 'create', path: PATH_DASHBOARD.blog.new },
+          { title: 'clients', path: PATH_DASHBOARD.school.list },
+          { title: 'new client', path: PATH_DASHBOARD.school.new },
         ],
       },
 
@@ -132,7 +120,7 @@ const navConfig = [
       //   ),
       // },
       // { title: 'chat', path: PATH_DASHBOARD.chat.root, icon: ICONS.chat },
-      { title: 'calendar', path: PATH_DASHBOARD.calendar, icon: ICONS.calendar },
+     
       // { title: 'kanban', path: PATH_DASHBOARD.kanban, icon: ICONS.kanban },
     ],
   },

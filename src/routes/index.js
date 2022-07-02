@@ -18,7 +18,7 @@ import LoadingScreen from '../components/LoadingScreen';
 const Loadable = (Component) => (props) => {
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const { pathname } = useLocation();
-
+  
   return (
     <Suspense fallback={<LoadingScreen isDashboard={pathname.includes('/dashboard')} />}>
       <Component {...props} />
@@ -52,6 +52,14 @@ export default function Router() {
         { path: 'reset-password', element: <ResetPassword /> },
         { path: 'verify', element: <VerifyCode /> },
       ],
+    },
+    {
+      path: '*',
+      element: <MainLayout />,
+      children: [
+        { path: 'match', element: <EcommerceShop isGuest={true}/> },
+        { path: 'match/teacher/:name', element: <EcommerceTeacherDetails isGuest={true}/> }
+      ]
     },
 
     // Dashboard Routes
@@ -96,6 +104,15 @@ export default function Router() {
           ],
         },
         {
+          path: 'school',
+          children: [
+            { element: <Navigate to="/dashboard/school/list" replace />, index: true },
+            { path: 'list', element: <ClientList /> },
+            { path: 'new', element: <ClientCreate /> },
+            { path: ':name/edit', element: <ClientCreate /> },
+          ],
+        },
+        {
           path: 'invoice',
           children: [
             { element: <Navigate to="/dashboard/invoice/list" replace />, index: true },
@@ -103,15 +120,6 @@ export default function Router() {
             { path: ':id', element: <InvoiceDetails /> },
             { path: ':id/edit', element: <InvoiceEdit /> },
             { path: 'new', element: <InvoiceCreate /> },
-          ],
-        },
-        {
-          path: 'blog',
-          children: [
-            { element: <Navigate to="/dashboard/blog/posts" replace />, index: true },
-            { path: 'posts', element: <BlogPosts /> },
-            { path: 'post/:title', element: <BlogPost /> },
-            { path: 'new', element: <BlogNewPost /> },
           ],
         },
         {

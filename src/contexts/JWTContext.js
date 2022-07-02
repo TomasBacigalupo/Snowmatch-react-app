@@ -48,14 +48,14 @@ const handlers = {
   }),
   REGISTER: (state, action) => {
     const { user } = action.payload;
-    debugger
+    
     return {
       ...state,
       isAuthenticated: true,
       user,
       isAuthorized: user.state != 'UNDER_REVIEW', 
       emailVerified: user.emailVerified,
-      phoneVerified: user?.cellphoneVerified
+      phoneVerified: user.cellphoneVerified
     };
   },
   VERIFY: (state, action) => {
@@ -70,6 +70,14 @@ const handlers = {
       emailVerified: user.emailVerified,
       phoneVerified: user?.cellphoneVerified
     };
+  },
+  UPDATE: (state, action) => {
+    const { user } = action.payload;
+
+    return {
+      ...state,
+      user,
+    };
   }
 };
 
@@ -83,6 +91,7 @@ const AuthContext = createContext({
   register: () => Promise.resolve(),
   verify: () => Promise.resolve(),
   testVerification: () => Promise.resolve(),
+  updateUser: () => Promise.resolve(),
 });
 
 // ----------------------------------------------------------------------
@@ -182,8 +191,10 @@ function AuthProvider({ children }) {
     });
     const user = response.data;
     const accessToken  = user.token;
-    window.localStorage.setItem('accessToken', accessToken);
+    setSession(accessToken);
 
+    window.localStorage.setItem('accessToken', accessToken);
+    console.log(accessToken)
     dispatch({
       type: 'REGISTER',
       payload: {
@@ -204,6 +215,12 @@ function AuthProvider({ children }) {
       dispatch({ type: 'VERIFY' })
     }
   }
+
+  const updateUser = async (values) => {
+    const user = values;
+    dispatch({type:'UPDATE',payload:{user}})
+  };
+
   const testVerification = async (callBackFailed) => {
     const response = await axios.get(`/api/users/${state.user.email}`);
     const user = response.data;
@@ -243,6 +260,7 @@ function AuthProvider({ children }) {
         register,
         verify,
         testVerification,
+        updateUser,
       }}
     >
       {children}

@@ -69,19 +69,6 @@ export default function CalendarForm({ event, range, onCancel }) {
     title: Yup.string().max(255).required('Title is required'),
     type: Yup.string().max(255).required('Title is required'),
     description: Yup.string().max(5000),
-    price: Yup.number().when('type', {
-      is: type => {
-        ['Break', 'Training', 'Illness'].forEach(t =>{
-          console.log(type)
-          if(t === type){
-            console.log("soy break")
-            return true;
-          }
-        });
-        return false;
-      },
-      then: Yup.number().nullable().notRequired().min(0)
-    }).min(1)
   });
 
   const methods = useForm({
@@ -96,29 +83,66 @@ export default function CalendarForm({ event, range, onCancel }) {
     setValue,
     handleSubmit,
     formState: { isSubmitting },
+    setError,
   } = methods;
 
   const onSubmit = async (data) => {
     try {
-      const newEvent = {
-        title: data.title,
-        description: data.description,
-        textColor: data.textColor,
-        allDay: data.allDay,
-        start: data.start,
-        end: data.end,
-        type: data.type,
-        price: data.price
-      };
-      if (event.id) {
-        dispatch(updateEvent(event.id, newEvent));
-        enqueueSnackbar('Update success!');
-      } else {
-        enqueueSnackbar('Create success!');
-        dispatch(createEvent(newEvent));
+      let newEvent
+      debugger
+      switch (data.type){
+        case 'Break':
+        case 'Training':
+        case 'Illness':
+          newEvent = {
+            title: data.title,
+            description: data.description,
+            textColor: data.textColor,
+            allDay: data.allDay,
+            start: data.start,
+            end: data.end,
+            type: data.type,
+          };
+          break
+        default:
+          newEvent = {
+            title: data.title,
+            description: data.description,
+            textColor: data.textColor,
+            allDay: data.allDay,
+            start: data.start,
+            end: data.end,
+            type: data.type,
+            price: data.price
+          };
       }
-      onCancel();
-      reset();
+      
+
+      var func;
+      var snackbar;
+      if(event.id){
+        func = updateEvent(event.id, newEvent);
+        snackbar = 'Update success!'
+      }
+      else{
+        func = createEvent(newEvent);
+        snackbar = 'Create success!'
+      }
+      const response = await dispatch(func);
+
+      if(response.messages){
+        for (const entry of response.messages.entry) {
+          setError(entry.key, {
+            type: "server",
+            message: entry.value,
+          });
+        }
+      }
+      else{
+        enqueueSnackbar(snackbar);
+        onCancel();
+        reset();
+      }
     } catch (error) {
       console.error(error);
     }
@@ -161,7 +185,7 @@ export default function CalendarForm({ event, range, onCancel }) {
 
         <RHFTextField name="title" label="Title" />
 
-        <RHFTextField name="description" label="Description" multiline rows={4} />
+        <RHFTextField name="description" label="Description" multiline rows={2} />
         
         {values?.type  && !['Break', 'Training', 'Illness'].find(p => p === values.type) && (
             <RHFTextField name="price" label="Price"/>

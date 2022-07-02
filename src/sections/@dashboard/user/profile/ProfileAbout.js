@@ -1,11 +1,13 @@
 import PropTypes from 'prop-types';
 // @mui
 import { styled } from '@mui/material/styles';
-import { Link, Card, Typography, CardHeader, Stack } from '@mui/material';
+import { Link, Card, Typography, CardHeader, Stack, Chip } from '@mui/material';
 // components
 import Iconify from '../../../../components/Iconify';
 // hooks
 import useAuth from '../../../../hooks/useAuth';
+import { map } from 'lodash';
+import TeacherSkills from '../../e-commerce/teacher-details/TeacherSkills';
 
 // ----------------------------------------------------------------------
 
@@ -33,18 +35,15 @@ export default function ProfileAbout({ profile }) {
 
       <Stack spacing={2} sx={{ p: 3 }}>
         {/* <Typography variant="body2">{quote}</Typography> */}
-        <Typography variant="body2">{user?.information}</Typography>
-        <Typography variant="body2">{user?.description}</Typography>
-
-        <Stack direction="row">
+        {/* <Stack direction="row">
           <IconStyle icon={'eva:pin-fill'} />
           <Typography variant="body2">
-            Live at &nbsp;
+            Form &nbsp;
             <Link component="span" variant="subtitle2" color="text.primary">
-              {country}
+              {user?.country}
             </Link>
           </Typography>
-        </Stack>
+        </Stack> */}
 
         <Stack direction="row">
           <IconStyle icon={'eva:email-fill'} />
@@ -54,43 +53,20 @@ export default function ProfileAbout({ profile }) {
         <Stack direction="row">
           <IconStyle icon={'ic:round-business-center'} />
           <Typography variant="body2">
-            {user?.role} at &nbsp;
+            Pro at &nbsp;
             <Link component="span" variant="subtitle2" color="text.primary">
-              {company}
+              {user?.resorts?.map(r=> r+" ")}
             </Link>
           </Typography>
         </Stack>
-
         <Stack direction="row">
-          <IconStyle icon={'ic:round-business-center'} />
-          <Typography variant="body2">
-            Studied at &nbsp;
-            <Link component="span" variant="subtitle2" color="text.primary">
-              {school}
-            </Link>
-          </Typography>
+          <TeacherSkills skills={user?.skills}/>
         </Stack>
-
-        <Stack direction="row">
-          <IconStyle icon={'bi:calendar-date'} />
-          <Typography variant="body2">
-            Birthday &nbsp;
-            <Link component="span" variant="subtitle2" color="text.primary">
-              {user?.birth}
-            </Link>
-          </Typography>
-        </Stack>
-
-        <Stack direction="row">
-          <IconStyle icon={'ep:cellphone'} />
-          <Typography variant="body2">
-            Cellphone &nbsp;
-            <Link component="span" variant="subtitle2" color="text.primary">
-              {user?.cellphone}
-            </Link>
-          </Typography>
-        </Stack>
-
+        
+        <Typography variant="subtitle1">Information</Typography>
+        <Typography variant="body2">{user?.information}</Typography>
+        <Typography variant="subtitle1">Description</Typography>
+        <Typography variant="body2">{user?.description}</Typography>
       </Stack>
     </Card>
   );

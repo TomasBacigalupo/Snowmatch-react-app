@@ -16,6 +16,7 @@ import Label from '../../components/Label';
 import MenuDesktop from './MenuDesktop';
 import MenuMobile from './MenuMobile';
 import navConfig from './MenuConfig';
+import { Link as RouterLink } from 'react-router-dom';
 
 // ----------------------------------------------------------------------
 
@@ -76,23 +77,23 @@ export default function MainHeader() {
         >
           <Logo />
 
-          <Label color="info" sx={{ ml: 1 }}>
+          {/* <Label color="info" sx={{ ml: 1 }}>
             v3.3.0
-          </Label>
+          </Label> */}
           <Box sx={{ flexGrow: 1 }} />
 
           {isDesktop && <MenuDesktop isOffset={isOffset} isHome={isHome} navConfig={navConfig} />}
 
           <Button
+            component={RouterLink}
+            to={"/match"}
             variant="contained"
-            target="_blank"
-            rel="noopener"
-            href="https://material-ui.com/store/items/minimal-dashboard/"
+            
           >
-            Purchase Now
+            Match a pro
           </Button>
 
-          {!isDesktop && <MenuMobile isOffset={isOffset} isHome={isHome} navConfig={navConfig} />}
+          {/* {!isDesktop && <MenuMobile isOffset={isOffset} isHome={isHome} navConfig={navConfig} />} */}
         </Container>
       </ToolbarStyle>
 

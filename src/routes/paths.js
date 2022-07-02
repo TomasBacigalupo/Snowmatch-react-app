@@ -6,6 +6,7 @@ function path(root, sublink) {
 
 const ROOTS_AUTH = '/auth';
 const ROOTS_DASHBOARD = '/dashboard';
+const ROOTS_FIND_A_PRO = '/match' ;
 
 // ----------------------------------------------------------------------
 
@@ -17,6 +18,11 @@ export const PATH_AUTH = {
   registerUnprotected: path(ROOTS_AUTH, '/register-unprotected'),
   verify: path(ROOTS_AUTH, '/verify'),
   resetPassword: path(ROOTS_AUTH, '/reset-password'),
+};
+
+export const PATH_GUEST = {
+  root: ROOTS_FIND_A_PRO,
+  viewTeacher: (name) => path(ROOTS_FIND_A_PRO, `/teacher/${name}`),
 };
 
 export const PATH_PAGE = {
@@ -55,6 +61,7 @@ export const PATH_DASHBOARD = {
   kanban: path(ROOTS_DASHBOARD, '/kanban'),
   user: {
     root: path(ROOTS_DASHBOARD, '/user'),
+    school: path(ROOTS_DASHBOARD, '/user/school'),
     new: path(ROOTS_DASHBOARD, '/user/new'),
     list: path(ROOTS_DASHBOARD, '/user/list'),
     cards: path(ROOTS_DASHBOARD, '/user/cards'),
@@ -62,6 +69,13 @@ export const PATH_DASHBOARD = {
     account: path(ROOTS_DASHBOARD, '/user/account'),
     edit: (name) => path(ROOTS_DASHBOARD, `/user/${name}/edit`),
     demoEdit: path(ROOTS_DASHBOARD, `/user/reece-chung/edit`),
+  },
+  school:{
+    root: path(ROOTS_DASHBOARD, '/school'),
+    list: path(ROOTS_DASHBOARD, '/school/list'),
+    new: path(ROOTS_DASHBOARD, '/school/new'),
+    edit: (name) => path(ROOTS_DASHBOARD, `/school/${name}/edit`),
+
   },
   eCommerce: {
     root: path(ROOTS_DASHBOARD, '/e-commerce'),

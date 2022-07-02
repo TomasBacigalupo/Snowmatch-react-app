@@ -10,6 +10,7 @@ import LoadingScreen from '../components/LoadingScreen';
 import  PageVerify  from 'src/pages/PageVerify';
 import PageVerifyEmail from 'src/pages/PageVerifyWhatsApp';
 import PageVerifyWhatsApp from 'src/pages/PageVerifyWhatsApp';
+import { PATH_DASHBOARD } from 'src/routes/paths';
 
 // ----------------------------------------------------------------------
 
@@ -41,6 +42,7 @@ export default function AuthGuard({ children }) {
   }
 
   if (!isAuthenticated) {
+    
     if (pathname !== requestedLocation) {
       setRequestedLocation(pathname);
     }

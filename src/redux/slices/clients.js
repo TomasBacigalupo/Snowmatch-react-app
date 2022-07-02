@@ -70,7 +70,7 @@ export function getClients() {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get('http://localhost:9090/gschool/api/clients/');
+      const response = await axios.get('/api/clients/');
       dispatch(slice.actions.getClientsSuccess(response.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
@@ -106,11 +106,12 @@ export function createClient(clientData){
       console.log(clientData);
       console.log("###############");
       console.log(client);
-      const response = await axios.post('http://localhost:9090/gschool/api/clients/',client);
-
+      const response = await axios.post('/api/clients/',client);
       dispatch(slice.actions.getClientSuccess(response.data));
+      return response;
     } catch (error) {
       dispatch(slice.actions.hasError(error));
+      return error;
     }
   };
 }
@@ -140,11 +141,13 @@ export function editClient(clientData){
       console.log(clientData);
       console.log("###############");
       console.log(client);
-      const response = await axios.put('http://localhost:9090/gschool/api/clients/'+clientData.id,client);
+      const response = await axios.put('/api/clients/'+clientData.id,client);
 
       dispatch(slice.actions.getClientSuccess(response.data));
+      return response;
     } catch (error) {
       dispatch(slice.actions.hasError(error));
+      return error;
     }
   };
 }
@@ -153,7 +156,7 @@ export function deleteClient(email){
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.delete('http://localhost:9090/gschool/api/clients/byEmail/'+email);
+      const response = await axios.delete('/api/clients/byEmail/'+email);
       dispatch(slice.actions.deleteClientSuccess(email));
     } catch (error) {
       dispatch(slice.actions.hasError(error));

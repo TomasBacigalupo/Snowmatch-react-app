@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { utcToLocalDate } from 'src/utils/dateUtils';
 // utils
 import axios from '../../utils/axios';
 //
@@ -33,14 +34,25 @@ const slice = createSlice({
     // GET EVENTS
     getEventsSuccess(state, action) {
       state.isLoading = false;
-      state.events = action.payload;
+      state.events = action.payload.map( e => {
+        return {
+          ...e,
+          start: utcToLocalDate(e.start),
+          end: utcToLocalDate(e.end)
+        };
+      });
     },
 
     // CREATE EVENT
     createEventSuccess(state, action) {
       const newEvent = action.payload;
       state.isLoading = false;
-      state.events = [...state.events, newEvent];
+      state.events = [...state.events, {
+        ...newEvent,
+        start: utcToLocalDate(newEvent.start),
+        end: utcToLocalDate(newEvent.end)
+
+      }];
     },
 
     // UPDATE EVENT
@@ -117,12 +129,15 @@ export function getEvents() {
 
 export function createEvent(newEvent) {
   return async () => {
-    dispatch(slice.actions.startLoading());
+    //dispatch(slice.actions.startLoading());
     try {
+      console.log("Evento enviado ", newEvent)
       const response = await axios.post('/api/events/create', newEvent);
       dispatch(slice.actions.createEventSuccess(response.data));
+      return response;
     } catch (error) {
-      dispatch(slice.actions.hasError(error));
+      //dispatch(slice.actions.hasError(error));
+      return error;
     }
   };
 }
@@ -131,12 +146,14 @@ export function createEvent(newEvent) {
 
 export function updateEvent(eventId, updateEvent) {
   return async () => {
-    dispatch(slice.actions.startLoading());
+    //dispatch(slice.actions.startLoading());
     try {
       const response = await axios.put(`/api/events/byId/${eventId}`, updateEvent);
       dispatch(slice.actions.updateEventSuccess(updateEvent));
+      return response;
     } catch (error) {
-      dispatch(slice.actions.hasError(error));
+      //dispatch(slice.actions.hasError(error));
+      return error;
     }
   };
 }

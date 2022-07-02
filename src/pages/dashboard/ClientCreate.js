@@ -34,7 +34,7 @@ export default function ClientCreate() {
           heading={!isEdit ? 'Create a new client' : 'Edit client'}
           links={[
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
-            { name: 'Client', href: PATH_DASHBOARD.user.list },
+            { name: 'School', href: PATH_DASHBOARD.school.root },
             { name: !isEdit ? 'New client' : capitalCase(name) },
           ]}
         />

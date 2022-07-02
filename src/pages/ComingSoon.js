@@ -9,6 +9,7 @@ import InputStyle from '../components/InputStyle';
 import SocialsButton from '../components/SocialsButton';
 // assets
 import { ComingSoonIllustration } from '../assets';
+import Logo from 'src/components/Logo';
 
 // ----------------------------------------------------------------------
 
@@ -35,7 +36,7 @@ const SeparatorStyle = styled(Typography)(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 export default function ComingSoon() {
-  const countdown = useCountdown(new Date('07/07/2022 21:30'));
+  const countdown = useCountdown(new Date('07/01/2022 19:00'));
 
   return (
     <Page title="Coming Soon" sx={{ height: 1 }}>
@@ -45,10 +46,11 @@ export default function ComingSoon() {
             <Typography variant="h3" paragraph>
               Coming Soon!
             </Typography>
-            <Typography sx={{ color: 'text.secondary' }}>We are currently working hard on this page!</Typography>
+            <Typography sx={{ color: 'text.secondary' }}></Typography>
 
-            <ComingSoonIllustration sx={{ my: 10, height: 240 }} />
-
+            
+            {/* <ComingSoonIllustration sx={{ my: 10, height: 240 }} /> */}
+            <Logo sx={{ my: 10, height: 240 }}/>
             <CountdownStyle>
               <div>
                 <Typography variant="h2">{countdown.days}</Typography>
@@ -77,7 +79,7 @@ export default function ComingSoon() {
               </div>
             </CountdownStyle>
 
-            <InputStyle
+            {/* <InputStyle
               fullWidth
               placeholder="Enter your email"
               InputProps={{
@@ -90,7 +92,7 @@ export default function ComingSoon() {
                 ),
               }}
               sx={{ my: 5, '& .MuiOutlinedInput-root': { pr: 0.5 } }}
-            />
+            /> */}
 
             <Stack alignItems="center">
               <SocialsButton size="large" initialColor />

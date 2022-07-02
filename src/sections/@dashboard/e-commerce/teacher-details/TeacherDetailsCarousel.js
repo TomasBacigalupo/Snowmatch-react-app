@@ -93,7 +93,7 @@ export default function TeacherDetailsCarousel({ teacher }) {
     <RootStyle>
       <Box sx={{ p: 1 }}>
         <Box sx={{ zIndex: 0, borderRadius: 2, overflow: 'hidden', position: 'relative' }}>
-          <Slider {...settings1} asNavFor={nav2} ref={slider1}>
+          {/* <Slider {...settings1} asNavFor={nav2} ref={slider1}> */}
             {teacher.images.map((img) => (
               <Image
                 key={img}
@@ -104,17 +104,17 @@ export default function TeacherDetailsCarousel({ teacher }) {
                 sx={{ cursor: 'zoom-in' }}
               />
             ))}
-          </Slider>
-          <CarouselArrowIndex
+          {/* </Slider> */}
+          {/* <CarouselArrowIndex
             index={currentIndex}
             total={teacher.images.length}
             onNext={handleNext}
             onPrevious={handlePrevious}
-          />
+          /> */}
         </Box>
       </Box>
 
-      <Box
+      {/* <Box
         sx={{
           my: 3,
           mx: 'auto',
@@ -142,7 +142,7 @@ export default function TeacherDetailsCarousel({ teacher }) {
           }),
         }}
       >
-        <Slider {...settings2} asNavFor={nav1} ref={slider2}>
+        // {/* <Slider {...settings2} asNavFor={nav1} ref={slider2}> 
           {teacher.images.map((img, index) => (
             <Box key={img} sx={{ px: 0.75 }}>
               <Image
@@ -162,7 +162,7 @@ export default function TeacherDetailsCarousel({ teacher }) {
             </Box>
           ))}
         </Slider>
-      </Box>
+      </Box> */}
 
       <LightboxModal
         images={imagesLightbox}

@@ -55,7 +55,7 @@ ClientNewEditForm.propTypes = {
   export default function ClientNewEditForm({ isEdit, currentUser }) {
 
 
-    const {client} = useSelector((state) =>{console.log(state);return state.clients});
+    const {client,clients, error,isLoading} = useSelector((state) =>{console.log(state);return state.clients});
 
     const dispatch = useDispatch();
 
@@ -70,19 +70,19 @@ ClientNewEditForm.propTypes = {
     const NewUserSchema = Yup.object().shape({
       name: Yup.string().required('Name is required'),
       lastname: Yup.string().required('Last name is required'),
-      email: Yup.string().required('Email is required').email(),
-      cellphone: Yup.string().required('Phone number is required'),
-      country: Yup.string().required('country is required'),
-      avatarUrl: Yup.mixed().test('required', 'Avatar is required', (value) => value !== ''),
-      notes: Yup.string().required('Notes is required'),
+      email: Yup.string().email(),
+      cellphone: Yup.string(),
+      country: Yup.string(),
+      avatarUrl: Yup.mixed(),
+      notes: Yup.string().nullable(),
       isTipper: Yup.bool(),
-      tip: Yup.string().required('Tip is required'),
+      tip: Yup.string().nullable(),
       level: Yup.string(),
       isRenting: Yup.bool(),
-      hobbies: Yup.string(),
-      family: Yup.string(),
-      work: Yup.string(),
-      staysAt:Yup.string(),
+      hobbies: Yup.string().nullable(),
+      family: Yup.string().nullable(),
+      work: Yup.string().nullable(),
+      staysAt:Yup.string().nullable(),
       id:Yup.number(),
       resorts:Yup.array().of(Yup.string()),
 
@@ -94,19 +94,43 @@ ClientNewEditForm.propTypes = {
         lastname: client?.lastname || '',
         email: client?.email || '',
         cellphone: client?.cellphone || '',
-        country: client?.country || '',
+        country: client?.country || 'Argentina',
         avatarUrl: client?.avatarUrl || '',
         isTipper: client?.tipper || false,
-        notes: client?.notes || '',
-        tip: client?.tip || '',
-        level: client?.level || "",
+        notes: client?.notes || undefined,
+        tip: client?.tip || undefined,
+        level: client?.level || "BEGINNER",
         isRenting:client?.renting || false,
-        family:client?.family || "",
-        hobbies:client?.hobbies || "",
-        work:client?.work || "",
-        staysAt:client?.staysAt || "",
+        family:client?.family || undefined,
+        hobbies:client?.hobbies || undefined,
+        work:client?.work || undefined,
+        staysAt:client?.staysAt || undefined,
         id:client?.id || 0 ,
         resorts:client?.resorts || [],
+      }),
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      [client]
+    );
+
+    const defaultValuesNew = useMemo(
+      () => ({
+        name: '',
+        lastname: '',
+        email:  '',
+        cellphone:  '',
+        country:  'Argentina',
+        avatarUrl: '',
+        isTipper:false,
+        notes:  '',
+        tip: '',
+        level:  "BEGINNER",
+        isRenting: false,
+        family:  '',
+        hobbies:'',
+        work:  '',
+        staysAt: '',
+        id:  0,
+        resorts: [],
       }),
       // eslint-disable-next-line react-hooks/exhaustive-deps
       [client]
@@ -124,6 +148,7 @@ ClientNewEditForm.propTypes = {
       setValue,
       handleSubmit,
       formState: { isSubmitting },
+      setError
     } = methods;
   
     const values = watch();
@@ -133,7 +158,7 @@ ClientNewEditForm.propTypes = {
         reset(defaultValues);
       }
       if (!isEdit) {
-        reset(defaultValues);
+        reset(defaultValuesNew);
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isEdit, currentUser]);
@@ -150,13 +175,24 @@ ClientNewEditForm.propTypes = {
       try {
         //console.log(data)
         const response = await dispatch(func);
-        reset();
-        console.log(response)
-        console.log("SENT")
-        enqueueSnackbar(!isEdit ? 'Create success!' : 'Update success!');
-        navigate(PATH_DASHBOARD.user.list);
-      } catch (error) {
-        console.error(error);
+
+        if(response.messages){
+          for (const entry of response.messages.entry) {
+            setError(entry.key, {
+              type: "server",
+              message: entry.value,
+            });          
+          }
+        }
+        else{
+          console.log("SENT")
+          reset();
+          enqueueSnackbar(!isEdit ? 'Create success!' : 'Update success!');
+          navigate(PATH_DASHBOARD.user.list);
+        }
+
+      } catch (e) {
+        console.error(e);
       }
     };
   
@@ -265,7 +301,6 @@ ClientNewEditForm.propTypes = {
                               <option key="EXPERT" value="EXPERT">
                                 EXPERT
                               </option>                              
-                            ))}
                             </RHFSelect>
                             <RHFTextField name="work" label="Work" />
                             <RHFTextField name="hobbies" label="Hobbies" />

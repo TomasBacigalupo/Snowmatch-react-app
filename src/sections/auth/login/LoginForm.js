@@ -53,10 +53,13 @@ export default function LoginForm() {
     try {
       await login(data.email, data.password);
     } catch (error) {
-      console.error(error);
-      reset();
-      if (isMountedRef.current) {
-        setError('afterSubmit', { ...error, message: error.message });
+      if (error.messages && error.messages.entry) {
+        error.messages.entry.forEach(e => {
+          setError(e.key, { type: "server", message: e.value });
+        })
+      } else {
+        console.log("Unexpected error: ", error)
+        setError('afterSubmit', { ...error, message: "Incorrect user or password" });
       }
     }
   };

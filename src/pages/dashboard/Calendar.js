@@ -149,6 +149,7 @@ export default function Calendar() {
   };
 
   const handleCloseModal = () => {
+    console.log("CLOSE MODAL")
     dispatch(closeModal());
   };
 

@@ -20,11 +20,14 @@ const initialState = {
   product: null,
   sortBy: null,
   filters: {
-    gender: [],
-    category: 'All',
-    colors: [],
-    priceRange: '',
     rating: '',
+    gender: [],
+    category: [],
+    discipline: [],
+    language: [],
+    from: undefined,
+    to:undefined,
+    resort:'',
   },
   checkout: {
     activeStep: 0,
@@ -124,12 +127,15 @@ const slice = createSlice({
       state.sortBy = action.payload;
     },
 
-    filterProducts(state, action) {
+    filterTeachers(state, action) {
       state.filters.gender = action.payload.gender;
       state.filters.category = action.payload.category;
-      state.filters.colors = action.payload.colors;
-      state.filters.priceRange = action.payload.priceRange;
+      state.filters.discipline = action.payload.discipline;
       state.filters.rating = action.payload.rating;
+      state.filters.language = action.payload.language;
+      state.filters.from = action.payload.from;
+      state.filters.to = action.payload.to;
+      state.filters.resort = action.payload.resort;
     },
 
     // CHECKOUT
@@ -265,7 +271,7 @@ export const {
   increaseQuantity,
   decreaseQuantity,
   sortByProducts,
-  filterProducts,
+  filterTeachers,
 } = slice.actions;
 
 // ----------------------------------------------------------------------
@@ -283,13 +289,30 @@ export function getProducts() {
 }
 
 // ----------------------------------------------------------------------
+function merge(ranges) {
+    var result = [], last;
+
+    ranges.forEach(function (r) {
+        if (!last || r.start > last.end){
+            result.push(r);
+            last = r;
+        }
+        else if (r.end > last.end)
+            last.end = r.end;
+    });
+    console.log("AAAAAAAAAAAAAAAA")
+    console.log(result)
+    return result;
+}
 
 export function getTeachers() {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.get('/api/users/teacher');
-      dispatch(slice.actions.getTeachersSuccess(response.data));
+      const teachers = response.data;
+
+      dispatch(slice.actions.getTeachersSuccess(teachers));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }
@@ -345,6 +368,9 @@ export function getTeacherWithRates(email) {
             "rates": rates,
             "teacher": teacher
           }
+            if(dto.teacher.events){
+              dto.teacher.events = merge(dto.teacher.events.sort(function(a, b) { return new Date(a.start)-new Date(b.start) })) 
+      }
           dispatch(slice.actions.getTeacherWithRatesSuccess(dto));
         })
       })
@@ -380,8 +406,10 @@ export function updateTeacher(teacher) {
   return async () => {
     try {
       const resp = await axios.put(`/api/users/edit`, teacher)
+      return resp;
     } catch (error) {
       console.error(error);
+      return error;
     }
   }
 }

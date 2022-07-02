@@ -78,7 +78,6 @@ const TABLE_HEAD_MOBILE = [
 
 export default function UserList() {
   const {
-    dense,
     page,
     order,
     orderBy,
@@ -91,7 +90,6 @@ export default function UserList() {
     onSelectAllRows,
     //
     onSort,
-    onChangeDense,
     onChangePage,
     onChangeRowsPerPage,
   } = useTable();
@@ -140,7 +138,7 @@ export default function UserList() {
 
   const handleEditRow = (id) => {
     dispatch(selectClient(id));
-    navigate(PATH_DASHBOARD.user.edit("client"));
+    navigate(PATH_DASHBOARD.school.edit("client"));
   };
 
 
@@ -160,7 +158,6 @@ export default function UserList() {
     filterStatus
   });
 
-  const denseHeight = dense ? 52 : 72;
 
   const isNotFound =
     (!dataFiltered.length && !!filterName) ||
@@ -177,14 +174,14 @@ const isMobile = useMediaQuery({ query: `(max-width: 760px)` });
           heading="Clients List"
           links={[
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
-            { name: 'User', href: PATH_DASHBOARD.user.root },
+            { name: 'School', href: PATH_DASHBOARD.school.root },
             { name: 'List' },
           ]}
           action={
             <Button
               variant="contained"
               component={RouterLink}
-              to={PATH_DASHBOARD.user.new}
+              to={PATH_DASHBOARD.school.new}
               startIcon={<Iconify icon={'eva:plus-fill'} />}
             >
               New Client
@@ -220,7 +217,6 @@ const isMobile = useMediaQuery({ query: `(max-width: 760px)` });
             <TableContainer sx={{  position: 'relative' }}>
               {selected.length > 0 && (
                 <TableSelectedActions
-                  dense={dense}
                   numSelected={selected.length}
                   rowCount={tableData.length}
                   onSelectAllRows={(checked) =>
@@ -239,7 +235,7 @@ const isMobile = useMediaQuery({ query: `(max-width: 760px)` });
                 />
               )}
 
-              <Table size={dense ? 'small' : 'medium'}>
+              <Table size={'medium'}>
                 <TableHeadCustom
                   order={order}
                   orderBy={orderBy}
@@ -267,7 +263,7 @@ const isMobile = useMediaQuery({ query: `(max-width: 760px)` });
                     />
                   ))}
 
-                  <TableEmptyRows height={denseHeight} emptyRows={emptyRows(page, rowsPerPage, tableData.length)} />
+                  <TableEmptyRows height={72} emptyRows={emptyRows(page, rowsPerPage, tableData.length)} />
 
                   <TableNoData isNotFound={isNotFound} />
                 </TableBody>
@@ -286,11 +282,7 @@ const isMobile = useMediaQuery({ query: `(max-width: 760px)` });
               onRowsPerPageChange={onChangeRowsPerPage}
             />
 
-            <FormControlLabel
-              control={<Switch checked={dense} onChange={onChangeDense} />}
-              label="Dense"
-              sx={{ px: 3, py: 1.5, top: 0, position: { md: 'absolute' } }}
-            />
+
           </Box>
         </Card>
       </Container>

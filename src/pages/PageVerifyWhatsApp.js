@@ -14,6 +14,13 @@ import { useSnackbar } from 'notistack';
 import { useEffect, useState } from 'react';
 import { set } from 'lodash';
 
+import { VerifyCodeForm } from '../sections/auth/verify-code';
+import axios from '../utils/axios';
+
+
+
+
+
 // ----------------------------------------------------------------------
 
 const RootStyle = styled('div')(({ theme }) => ({
@@ -33,10 +40,12 @@ export default function PageVerifyWhatsApp() {
     const [countDown, setCountDown] = useState(0);
     const [runTimer, setRunTimer] = useState(true);
 
+
+
     useEffect(() => {
         let timerId;
         if (runTimer) {
-            setCountDown(60 * 5);
+            setCountDown(60 * 3);
             timerId = setInterval(() => {
                 setCountDown((countDown) => countDown - 1);
             }, 1000);
@@ -53,6 +62,8 @@ export default function PageVerifyWhatsApp() {
             setRunTimer(false);
             setCountDown(0);
         }
+
+
     }, [countDown, runTimer]);
 
     const togglerTimer = () => setRunTimer((t) => !t);
@@ -60,7 +71,10 @@ export default function PageVerifyWhatsApp() {
     const seconds = String(countDown % 60).padStart(2, 0);
     const minutes = String(Math.floor(countDown / 60)).padStart(2, 0);
 
-    const handleResend = () =>{
+    const handleResend = async () =>{
+        console.log("RESEND")
+        const response = axios.post('/api/userPersonalDataVerification/registrationNumericCode');
+        
         setRunTimer(true)
     }
 
@@ -89,13 +103,15 @@ export default function PageVerifyWhatsApp() {
                         <m.div variants={varBounce().in}>
                             <VerifyWappIllustration sx={{ height: 260, my: { xs: 5, sm: 10 } }} />
                         </m.div>
+                        <VerifyCodeForm/>
                         {loading && (
                             <CircularProgress />
                         )}
+
                         <Grid container>
                             <Grid item xs={12}>
                                 {!loading && <Button onClick={onReload} loading={loading}>
-                                    Reload
+                                    Verify!
                                 </Button>}
                             </Grid>
                             <Grid item xs={12}>
@@ -106,6 +122,11 @@ export default function PageVerifyWhatsApp() {
                             <Grid item xs={12}>
                                 {!loading && (
                                 <Typography disabled variant='caption'>Phone:{' ' + user.cellphone}</Typography>
+                                )}
+                            </Grid>
+                            <Grid item xs={12}>
+                                {!loading && (
+                                    <Typography disabled variant='caption'>Not your phone? Contact snowmatch@soluciones-moviles.com</Typography>
                                 )}
                             </Grid>
                         </Grid>

@@ -11,7 +11,6 @@ import Avatar from './Avatar';
 
 export default function MyAvatar({ ...other }) {
   const { user } = useAuth();
-  console.log("MYUSER", user);
   const [userData, setUserData ] = useState({imageLink:""})
 
 

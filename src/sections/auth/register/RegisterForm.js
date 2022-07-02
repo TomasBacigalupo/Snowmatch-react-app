@@ -30,7 +30,7 @@ export default function RegisterForm() {
     firstName: Yup.string().required('First name required'),
     lastName: Yup.string().required('Last name required'),
     email: Yup.string().email('Email must be a valid email address').required('Email is required'),
-    phone: Yup.string().required('Phone number required').matches(
+    cellphone: Yup.string().required('Phone number required').matches(
       "^[0-9]{10}$",
       "Phone number is not valid"
     ),
@@ -41,15 +41,15 @@ export default function RegisterForm() {
 
   });
 
-  const defaultValues = {
+  const [defaultValues, setDefaultValues] = useState({
     firstName: '',
     lastName: '',
     email: '',
     password: '',
     countryCode: '54',
-    phone: '',
+    cellphone: '',
     certificate: null
-  };
+  });
 
   const methods = useForm({
     resolver: yupResolver(RegisterSchema),
@@ -93,23 +93,14 @@ export default function RegisterForm() {
   const onSubmit = async (data) => {
     const image = await toBase64(data.certificate);
     try {
-      await register(data.email, data.password, data.firstName, data.lastName, data.countryCode, data.phone, image);
+      await register(data.email, data.password, data.firstName, data.lastName, data.countryCode, data.cellphone, image);
     } catch (error) {
-      console.error(error);
-      reset();
-      if (isMountedRef.current) {
-        //TODO: parse errors
-        let message = "";
-        error.messages.forEach(e => {
-          if(e === "email: USED_EMAIL"){
-            message = message + " " + "Email already associated to an account ";
-          }if(e === "password: Password must be between 8 and 100 letters long"){
-            message = message + " " + "Password must be between 8 and 100 letters long";
-          }else{
-            message = message + " " + e;
-          }
-        });
-        setError('afterSubmit', { ...error, message: message });
+      if (error.messages && error.messages.entry){
+        error.messages.entry.forEach(e => {
+          setError(e.key, { type: "server", message: e.value });
+        })
+      } else{
+        console.log("Unexpected Error:", error)
       }
     }
   };
@@ -134,7 +125,7 @@ export default function RegisterForm() {
               </option>
             ))}
           </RHFSelect>
-          <RHFTextField name="phone" label="Phone" />
+          <RHFTextField name="cellphone" label="Phone" />
         </Stack>
         
 

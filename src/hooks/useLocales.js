@@ -11,19 +11,19 @@ const LANGS = [
     systemValue: enUS,
     icon: 'https://minimal-assets-api.vercel.app/assets/icons/ic_flag_en.svg',
   },
-  {
-    label: 'German',
-    value: 'de',
-    systemValue: deDE,
+  // {
+  //   label: 'German',
+  //   value: 'de',
+  //   systemValue: deDE,
 
-    icon: 'https://minimal-assets-api.vercel.app/assets/icons/ic_flag_de.svg',
-  },
-  {
-    label: 'French',
-    value: 'fr',
-    systemValue: frFR,
-    icon: 'https://minimal-assets-api.vercel.app/assets/icons/ic_flag_fr.svg',
-  },
+  //   icon: 'https://minimal-assets-api.vercel.app/assets/icons/ic_flag_de.svg',
+  // },
+  // {
+  //   label: 'French',
+  //   value: 'fr',
+  //   systemValue: frFR,
+  //   icon: 'https://minimal-assets-api.vercel.app/assets/icons/ic_flag_fr.svg',
+  // },
 ];
 
 export default function useLocales() {

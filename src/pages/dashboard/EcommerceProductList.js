@@ -127,7 +127,7 @@ export default function EcommerceProductList() {
   const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
 
   return (
-    <Page title="Ecommerce: Product List">
+    <Page title="Match">
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <HeaderBreadcrumbs
           heading="Product List"

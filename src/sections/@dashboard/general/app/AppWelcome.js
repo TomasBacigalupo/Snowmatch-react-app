@@ -45,7 +45,7 @@ export default function AppWelcome({ displayName }) {
           Looking for the best teacher for your client?
         </Typography>
 
-        <Button variant="contained" to="#" component={RouterLink}>
+        <Button variant="contained" to="/dashboard/user/new" component={RouterLink}>
           Go Now
         </Button>
       </CardContent>

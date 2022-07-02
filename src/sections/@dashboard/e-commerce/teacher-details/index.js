@@ -9,3 +9,4 @@ export { default as TeacherDetailsCarousel } from './TeacherDetailsCarousel';
 export { default as TeacherDetailsReview } from './TeacherDetailsReview';
 export { default as TeacherDetailsReviewOverview } from './TeacherDetailsReviewOverview';
 export { default as ContactForm } from './ContactForm'
+export { default as TeacherDetailsCalendar } from './TeacherDetailsCalendar'

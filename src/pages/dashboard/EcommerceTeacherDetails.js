@@ -96,7 +96,7 @@ export default function EcommerceTeacherDetails({isGuest = false}) {
           links={[
             !isGuest? { name: 'Dashboard', href: PATH_DASHBOARD.root} : {name: 'Home', href: '/'},
             !isGuest? { name: 'Instructors', href: PATH_DASHBOARD.eCommerce.shop,} : { name: 'Match', href: PATH_GUEST.root},
-            { name: sentenceCase(name) },
+            { name: teacher?.teacher?.name + ' ' + teacher?.teacher?.lastname },
           ]
         }
         />

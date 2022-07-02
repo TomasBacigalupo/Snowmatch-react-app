@@ -88,17 +88,35 @@ export default function CalendarForm({ event, range, onCancel }) {
 
   const onSubmit = async (data) => {
     try {
+      let newEvent
+      debugger
+      switch (data.type){
+        case 'Break':
+        case 'Training':
+        case 'Illness':
+          newEvent = {
+            title: data.title,
+            description: data.description,
+            textColor: data.textColor,
+            allDay: data.allDay,
+            start: data.start,
+            end: data.end,
+            type: data.type,
+          };
+          break
+        default:
+          newEvent = {
+            title: data.title,
+            description: data.description,
+            textColor: data.textColor,
+            allDay: data.allDay,
+            start: data.start,
+            end: data.end,
+            type: data.type,
+            price: data.price
+          };
+      }
       
-      const newEvent = {
-        title: data.title,
-        description: data.description,
-        textColor: data.textColor,
-        allDay: data.allDay,
-        start: data.start,
-        end: data.end,
-        type: data.type,
-        price: data.price
-      };
 
       var func;
       var snackbar;

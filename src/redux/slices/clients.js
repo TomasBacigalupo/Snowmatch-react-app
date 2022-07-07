@@ -49,7 +49,7 @@ const slice = createSlice({
     // DELETE CLIENT
     deleteClientSuccess(state, action) {
       state.isLoading = false;
-      state.clients = state.clients.filter(c => c.email !== action.payload);
+      state.clients = state.clients.filter(c => c.id !== action.payload);
     },
   }
 });
@@ -152,14 +152,13 @@ export function editClient(clientData){
   };
 }
 
-export function deleteClient(email){
+export function deleteClient(clientId){
   return async () => {
-    dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.delete('/api/clients/byEmail/'+email);
-      dispatch(slice.actions.deleteClientSuccess(email));
+      const response = await axios.delete(`/api/clients/${clientId}`);
+      dispatch(slice.actions.deleteClientSuccess(clientId));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }
   };
-}
+};

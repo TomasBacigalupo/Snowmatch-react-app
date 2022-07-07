@@ -13,6 +13,7 @@ import useIsMountedRef from '../../../hooks/useIsMountedRef';
 import MyAvatar from '../../../components/MyAvatar';
 import MenuPopover from '../../../components/MenuPopover';
 import { IconButtonAnimate } from '../../../components/animate';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
 // ----------------------------------------------------------------------
 
@@ -27,12 +28,23 @@ const MENU_OPTIONS = [
   },
 ];
 
+const GUEST_MENU_OPTIONS = [
+  {
+    label: 'SignUp as a PRO',
+    linkTo: '/auth/register',
+  },
+  {
+    label: 'LogIn',
+    linkTo: '/auth/login',
+  },
+];
+
 // ----------------------------------------------------------------------
 
 export default function AccountPopover() {
   const navigate = useNavigate();
 
-  const { user, logout } = useAuth();
+  const { user, logout, isAuthenticated } = useAuth();
 
   const isMountedRef = useIsMountedRef();
 
@@ -81,7 +93,8 @@ export default function AccountPopover() {
           }),
         }}
       >
-        <MyAvatar />
+        {!isAuthenticated && <AccountCircleIcon sx={{ fontSize: 40 }}/>}
+        {isAuthenticated &&<MyAvatar />}
       </IconButtonAnimate>
 
       <MenuPopover
@@ -98,7 +111,7 @@ export default function AccountPopover() {
           },
         }}
       >
-        <Box sx={{ my: 1.5, px: 2.5 }}>
+        {isAuthenticated &&(<><Box sx={{ my: 1.5, px: 2.5 }}>
           <Typography variant="subtitle2" noWrap>
             {user?.displayName}
           </Typography>
@@ -107,21 +120,37 @@ export default function AccountPopover() {
           </Typography>
         </Box>
 
-        <Divider sx={{ borderStyle: 'dashed' }} />
+        <Divider sx={{ borderStyle: 'dashed' }} /></>)}
 
-        <Stack sx={{ p: 1 }}>
+        {isAuthenticated && <Stack sx={{ p: 1 }}>
           {MENU_OPTIONS.map((option) => (
             <MenuItem key={option.label} to={option.linkTo} component={RouterLink} onClick={handleClose}>
               {option.label}
             </MenuItem>
           ))}
-        </Stack>
+        </Stack>}
+        {!isAuthenticated && <Stack sx={{ p: 1 }}>
+          {GUEST_MENU_OPTIONS.map((option) => (
+            <MenuItem key={option.label} to={option.linkTo} component={RouterLink} onClick={handleClose}>
+              {option.label}
+            </MenuItem>
+          ))}
+        </Stack>}
 
         <Divider sx={{ borderStyle: 'dashed' }} />
 
-        <MenuItem onClick={handleLogout} sx={{ m: 1 }}>
-          Logout
-        </MenuItem>
+        {isAuthenticated &&
+          <MenuItem onClick={handleLogout} sx={{ m: 1 }}>
+            Logout
+          </MenuItem>
+        }
+        {!isAuthenticated &&
+          <MenuItem  sx={{ m: 1 }} onClick={()=>{
+            window.location.href = 'https://instagram.com/snow.match'
+          }}>
+            Help
+          </MenuItem>
+        }
       </MenuPopover>
     </>
   );

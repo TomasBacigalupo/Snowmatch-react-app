@@ -17,6 +17,7 @@ import MenuDesktop from './MenuDesktop';
 import MenuMobile from './MenuMobile';
 import navConfig from './MenuConfig';
 import { Link as RouterLink } from 'react-router-dom';
+import AccountPopover from '../dashboard/header/AccountPopover';
 
 // ----------------------------------------------------------------------
 
@@ -83,15 +84,17 @@ export default function MainHeader() {
           <Box sx={{ flexGrow: 1 }} />
 
           {isDesktop && <MenuDesktop isOffset={isOffset} isHome={isHome} navConfig={navConfig} />}
-
+          {pathname === '/' && (
           <Button
             component={RouterLink}
             to={"/match"}
             variant="contained"
-            
+            sx={{ marginRight: '15px' }}
           >
-            Match a pro
-          </Button>
+            Match PRO
+          </Button>)}
+
+          <AccountPopover/>
 
           {/* {!isDesktop && <MenuMobile isOffset={isOffset} isHome={isHome} navConfig={navConfig} />} */}
         </Container>

@@ -16,7 +16,9 @@ import { createEvent, updateEvent, deleteEvent } from '../../../redux/slices/cal
 import Iconify from '../../../components/Iconify';
 import { ColorSinglePicker } from '../../../components/color-utils';
 import { FormProvider, RHFTextField, RHFSwitch, RHFSelect } from '../../../components/hook-form';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { Avatar } from '@mui/material';
+import { Autocomplete } from '@mui/material';
 
 // ----------------------------------------------------------------------
 
@@ -58,8 +60,9 @@ CalendarForm.propTypes = {
   onCancel: PropTypes.func,
 };
 
-export default function CalendarForm({ event, range, onCancel }) {
+export default function CalendarForm({ event, range, onCancel, clients }) {
   const { enqueueSnackbar } = useSnackbar();
+  const [client, setClient] = useState(clients.find(c =>event?.clientId ===c.id))
 
   const dispatch = useDispatch();
 
@@ -87,10 +90,11 @@ export default function CalendarForm({ event, range, onCancel }) {
   } = methods;
 
   const onSubmit = async (data) => {
+    console.log("ENTRWE")
     try {
       let newEvent
       debugger
-      switch (data.type){
+      switch (data.type) {
         case 'Break':
         case 'Training':
         case 'Illness':
@@ -113,24 +117,31 @@ export default function CalendarForm({ event, range, onCancel }) {
             start: data.start,
             end: data.end,
             type: data.type,
-            price: data.price
+            price: data.price,
           };
+          if(client !== null && client !== undefined){
+            newEvent = {
+              ...newEvent,
+              clientId: client.id
+            }
+          }
       }
-      
+
 
       var func;
       var snackbar;
-      if(event.id){
+      if (event.id) {
+        debugger
         func = updateEvent(event.id, newEvent);
         snackbar = 'Update success!'
       }
-      else{
+      else {
         func = createEvent(newEvent);
         snackbar = 'Create success!'
       }
       const response = await dispatch(func);
 
-      if(response.messages){
+      if (response.messages) {
         for (const entry of response.messages.entry) {
           setError(entry.key, {
             type: "server",
@@ -138,7 +149,7 @@ export default function CalendarForm({ event, range, onCancel }) {
           });
         }
       }
-      else{
+      else {
         enqueueSnackbar(snackbar);
         onCancel();
         reset();
@@ -158,9 +169,9 @@ export default function CalendarForm({ event, range, onCancel }) {
       console.error(error);
     }
   };
-  
+
   const values = watch();
-  
+
   const isDateError = isBefore(new Date(values.end), new Date(values.start));
 
   const TYPE_OPTION = [
@@ -170,25 +181,63 @@ export default function CalendarForm({ event, range, onCancel }) {
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+      {console.log(clients)}
       <Stack spacing={3} sx={{ p: 3 }}>
-        <RHFSelect name="type" label="type">
-        {TYPE_OPTION.map((type) => (
-                    <optgroup key={type.group} label={type.group}>
-                      {type.classify.map((classify) => (
-                        <option key={classify} value={classify}>
-                          {classify}
-                        </option>
-                      ))}
-                    </optgroup>
-                  ))}
-        </RHFSelect>
+        {clients?.length > 0 && <Autocomplete
+          name="clientId" label="Client"
+          value={client}
+          options={clients}
+          onChange={(event,value)=>{
+            if (value !== null){
+              setClient(value)
+            }else{
+              setClient(null)
+            }
 
+            }
+            
+          }
+          autoHighlight
+          getOptionLabel={(c) => c.name}
+          renderOption={(props, client) => (
+            <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+              <Avatar sx={{marginRight:'10px'}}>{client.name[0]}</Avatar>
+              {client.name}
+            </Box>
+          )}
+
+          renderInput={(params) => (
+            <RHFTextField {...params}
+              name="clientid" label="Client" />
+            // <TextField
+            //   {...params}
+            //   label="Client"
+            //   inputProps={{
+            //     ...params.inputProps,
+            //     autoComplete: 'new-password', // disable autocomplete and autofill
+            //   }}
+            // />
+          )}
+        />}
+        
+
+        <RHFSelect name="type" label="Type">
+          {TYPE_OPTION.map((type) => (
+            <optgroup key={type.group} label={type.group}>
+              {type.classify.map((classify) => (
+                <option key={classify} value={classify}>
+                  {classify}
+                </option>
+              ))}
+            </optgroup>
+          ))}
+        </RHFSelect>
         <RHFTextField name="title" label="Title" />
 
         <RHFTextField name="description" label="Description" multiline rows={2} />
-        
-        {values?.type  && !['Break', 'Training', 'Illness'].find(p => p === values.type) && (
-            <RHFTextField name="price" label="Price"/>
+
+        {values?.type && !['Break', 'Training', 'Illness'].find(p => p === values.type) && (
+          <RHFTextField name="price" label="Price" />
         )}
 
         <RHFSwitch name="allDay" label="All day" />

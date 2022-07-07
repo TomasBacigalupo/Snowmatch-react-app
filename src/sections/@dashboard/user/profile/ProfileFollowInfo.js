@@ -36,9 +36,9 @@ export default function ProfileFollowInfo({ profile }) {
         </Stack>
 
         <Stack width={1} textAlign="center">
-          <Typography variant="h4">{fNumber(user.level)}</Typography>
+          <Typography variant="h4">{fNumber(user.level) > 0 ? fNumber(user.level):'Under Review'}</Typography>
           <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-            Nivel de Adides
+            Instructor level
           </Typography>
         </Stack>
       </Stack>

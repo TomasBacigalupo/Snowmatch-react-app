@@ -416,13 +416,15 @@ export function updateTeacher(teacher) {
 
 // ----------------------------------------------------------------------
 
-export function changeProfilePicture(picture) {
+export function changeProfilePicture(picture, callBack) {
   return async () => {
     try {
       const resp = await axios.put(`/api/users/image`, { "editImage": picture })
     } catch (error) {
       console.log(error)
+      callBack(false)
     }
+    callBack(true)
   }
 }
 

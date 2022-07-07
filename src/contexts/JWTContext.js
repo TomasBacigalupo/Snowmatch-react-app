@@ -73,12 +73,18 @@ const handlers = {
   },
   UPDATE: (state, action) => {
     const { user } = action.payload;
-
     return {
       ...state,
       user,
     };
-  }
+  },
+  REFRESH: (state, action) => {
+    const { user } = action.payload;
+    return {
+      ...state,
+      user,
+    };
+  },
 };
 
 const reducer = (state, action) => (handlers[action.type] ? handlers[action.type](state, action) : state);
@@ -92,6 +98,7 @@ const AuthContext = createContext({
   verify: () => Promise.resolve(),
   testVerification: () => Promise.resolve(),
   updateUser: () => Promise.resolve(),
+  refreshUser: () => {}
 });
 
 // ----------------------------------------------------------------------
@@ -221,6 +228,10 @@ function AuthProvider({ children }) {
     dispatch({type:'UPDATE',payload:{user}})
   };
 
+  const refreshUser = (user) =>{
+    dispatch({type:'REFRESH', payload:{user}})
+  }
+
   const testVerification = async (callBackFailed) => {
     const response = await axios.get(`/api/users/${state.user.email}`);
     const user = response.data;
@@ -261,6 +272,7 @@ function AuthProvider({ children }) {
         verify,
         testVerification,
         updateUser,
+        refreshUser
       }}
     >
       {children}

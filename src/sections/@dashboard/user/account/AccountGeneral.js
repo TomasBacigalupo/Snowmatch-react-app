@@ -45,7 +45,7 @@ const SKI_RESORTS = [
 export default function AccountGeneral() {
   const { enqueueSnackbar } = useSnackbar();
 
-  const { user, updateUser } = useAuth();
+  const { user, updateUser, refreshUser } = useAuth();
   const dispatch = useDispatch();
   const { teachers } = useSelector((state) => {console.log(state.teachers); return state});
 
@@ -124,7 +124,14 @@ export default function AccountGeneral() {
 
     toBase64(value.photoURL).then(image => {
       //TODO: only change image if it was changed
-      dispatch(changeProfilePicture(image));
+      dispatch(changeProfilePicture(image, (succeed) => {
+        if(succeed){
+          refreshUser({
+            ...user,
+            imageLink: value.photoURL.preview
+          })
+        }
+      }));
     } );
 
     try {

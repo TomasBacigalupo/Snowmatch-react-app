@@ -2,7 +2,7 @@ import { m } from 'framer-motion';
 import { Link as RouterLink } from 'react-router-dom';
 // @mui
 import { styled } from '@mui/material/styles';
-import { Button, Box, Link, Container, Typography, Stack } from '@mui/material';
+import { Button, Box, Link, Container, Typography, Stack, Grid } from '@mui/material';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // components
@@ -10,6 +10,8 @@ import Image from '../../components/Image';
 import Iconify from '../../components/Iconify';
 import TextIconLabel from '../../components/TextIconLabel';
 import { MotionContainer, varFade } from '../../components/animate';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import LoginIcon from '@mui/icons-material/Login';
 
 // ----------------------------------------------------------------------
 
@@ -95,9 +97,17 @@ export default function HomeHero() {
             </m.div>
 
             <m.div variants={varFade().inRight}>
+              
               <Typography sx={{ color: 'common.white' }}>
-                Handle all your customers on a centralized platform
+                Handle all your customers on a centralized platform.
               </Typography>
+              <Typography sx={{ color: 'common.white' }}>
+                Get in touch with new clients.
+              </Typography>
+              <Typography sx={{ color: 'common.white' }}>
+                Manage you earnings.
+              </Typography>
+              
             </m.div>
 
             {/* <Stack spacing={2.5} alignItems="center" direction={{ xs: 'column', md: 'row' }}>
@@ -149,15 +159,21 @@ export default function HomeHero() {
             </Stack> */}
 
             <m.div variants={varFade().inRight}>
-              <Button
-                size="large"
-                variant="contained"
-                component={RouterLink}
-                to={PATH_DASHBOARD.root}
-                startIcon={<Iconify icon={'eva:flash-fill'} width={20} height={20} />}
-              >
-                PRO account
-              </Button>
+              
+                  <Button
+                    size="large"
+                    variant="contained"
+                    component={RouterLink}
+                    to={"/auth/register"}
+                    sx={{marginBottom:'10px'}}
+                    startIcon={<Iconify icon={'eva:flash-fill'} width={20} height={20} />}
+                  >
+                    Get Started
+                  </Button>
+                
+              
+              
+              
             </m.div>
             {/* TODO: ski center icons */}
             {/* <Stack spacing={2.5}>

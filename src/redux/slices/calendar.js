@@ -58,15 +58,14 @@ const slice = createSlice({
     // UPDATE EVENT
     updateEventSuccess(state, action) {
       const event = action.payload;
-      const updateEvent = state.events.map((_event) => {
+      const updateEvents = state.events.map((_event, i) => {
         if (_event.id === event.id) {
           return event;
         }
         return _event;
       });
-
       state.isLoading = false;
-      state.events = updateEvent;
+      state.events = updateEvents;
     },
 
     // DELETE EVENT
@@ -149,7 +148,7 @@ export function updateEvent(eventId, updateEvent) {
     //dispatch(slice.actions.startLoading());
     try {
       const response = await axios.put(`/api/events/byId/${eventId}`, updateEvent);
-      dispatch(slice.actions.updateEventSuccess(updateEvent));
+      dispatch(slice.actions.updateEventSuccess({...updateEvent, id: eventId}));
       return response;
     } catch (error) {
       //dispatch(slice.actions.hasError(error));

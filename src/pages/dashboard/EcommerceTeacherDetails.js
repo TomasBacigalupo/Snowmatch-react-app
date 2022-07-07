@@ -71,10 +71,10 @@ export default function EcommerceTeacherDetails({isGuest = false}) {
   const { name = '' } = useParams();
   const { product, error, checkout } = useSelector((state) => state.product);
   
-  const { teacher } = useSelector( (state) => state.teachers);
+  const { teacher, isLoading } = useSelector( (state) => state.teachers);
   const { user } = useAuth();
   
-
+  
   useEffect(() => {
     dispatch(getTeacherWithRates(name));
   }, [dispatch, name]);
@@ -103,7 +103,7 @@ export default function EcommerceTeacherDetails({isGuest = false}) {
 
         {/* <CartWidget /> */}
 
-        {teacher && (
+        {!isLoading && teacher?.teacher?.email === name && (
           <>
             <Card>
               <Grid container>
@@ -173,7 +173,7 @@ export default function EcommerceTeacherDetails({isGuest = false}) {
 
           </>
         )}
-        {!teacher && <SkeletonProduct />}
+        {isLoading && <SkeletonProduct />}
 
         {error && <Typography variant="h6">404 Product not found</Typography>}
       </Container>

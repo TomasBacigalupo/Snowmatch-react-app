@@ -67,6 +67,9 @@ export function contactTeacher(teacherId, contactData) {
       return response;
     } catch (error) {
       //dispatch(slice.actions.hasError(error));
+      if(error.messages){
+        return error;
+      }
       return "ERROR";
     }
   };

@@ -7,16 +7,18 @@ import { useSnackbar } from 'notistack';
 import { useForm, Controller, useWatch } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { Box, Stack, Button, Tooltip, TextField, IconButton, DialogActions } from '@mui/material';
+import { Box, Stack, Button, Tooltip, TextField, IconButton, DialogActions, Modal, DialogTitle } from '@mui/material';
 import { LoadingButton, MobileDatePicker } from '@mui/lab';
 // redux
 import { useDispatch } from '../../../../redux/store';
 import { contactTeacher } from '../../../../redux/slices/contact';
 // components
 import Iconify from '../../../../components/Iconify';
+import { DialogAnimate } from '../../../../components/animate';
+
 import { ColorSinglePicker } from '../../../../components/color-utils';
 import { FormProvider, RHFTextField, RHFSwitch, RHFSelect } from '../../../../components/hook-form';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 import { countries } from '../../../../_mock';
 
@@ -28,6 +30,14 @@ ContactForm.propTypes = {
 
 export default function ContactForm({ teacher, onCancel,cellphone }) {
   const { enqueueSnackbar } = useSnackbar();
+
+    const [open, setOpen] = useState(false);
+  const handleOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   const dispatch = useDispatch();
 
@@ -70,6 +80,7 @@ export default function ContactForm({ teacher, onCancel,cellphone }) {
     setValue,
     handleSubmit,
     formState: { isSubmitting },
+    setError
   } = methods;
 
   const onSubmit = async (data) => {
@@ -92,10 +103,19 @@ export default function ContactForm({ teacher, onCancel,cellphone }) {
 
       console.log(countries)
       if(resp === "ERROR"){
+        setOpen(true)
         enqueueSnackbar("Your phone number is not validated, check Whatsapp and try again", { 
         variant: 'error',
         autoHideDuration: 10000,
         })
+      }
+      else if(resp.messages){
+        for (const entry of resp.messages.entry) {
+          setError(entry.key, {
+            type: "server",
+            message: entry.value,
+          });
+        }
       }
       else{
         enqueueSnackbar("Message sent, they will soon be in touch!", { 
@@ -203,6 +223,21 @@ export default function ContactForm({ teacher, onCancel,cellphone }) {
         </LoadingButton>
 
       </DialogActions>
+
+        <DialogAnimate open={open} onClose={handleClose}>
+          <DialogTitle>Validation required!</DialogTitle>
+
+          <Box spacing={3} sx={{ p: 3 }}>
+          <p id="validation-modal-description">
+            Check your Whatsapp for a validation message. It may take a while. If you didn't get a message, check your number and try again!
+          </p>
+          <Button onClick={handleClose}>Close</Button>
+        </Box>        
+        </DialogAnimate>
+
+
     </FormProvider>
+
+
   );
 }

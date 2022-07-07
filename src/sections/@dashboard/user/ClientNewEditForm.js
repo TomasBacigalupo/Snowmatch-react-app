@@ -85,6 +85,7 @@ ClientNewEditForm.propTypes = {
       staysAt:Yup.string().nullable(),
       id:Yup.number(),
       resorts:Yup.array().of(Yup.string()),
+      countryCode:Yup.string(),
 
     });
   
@@ -107,6 +108,7 @@ ClientNewEditForm.propTypes = {
         staysAt:client?.staysAt || undefined,
         id:client?.id || 0 ,
         resorts:client?.resorts || [],
+        countryCode:client?.countryCode || ''
       }),
       // eslint-disable-next-line react-hooks/exhaustive-deps
       [client]
@@ -131,6 +133,7 @@ ClientNewEditForm.propTypes = {
         staysAt: '',
         id:  0,
         resorts: [],
+        countryCode:'',
       }),
       // eslint-disable-next-line react-hooks/exhaustive-deps
       [client]
@@ -216,7 +219,7 @@ ClientNewEditForm.propTypes = {
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <Grid container spacing={3}>
           <Grid item xs={12} md={4}>
-            <Card sx={{ py: 31, px: 3 }}>
+            <Card sx={{ py: 38, px: 3 }}>
              
   
               <Box sx={{ mb: 5 }}>
@@ -264,17 +267,39 @@ ClientNewEditForm.propTypes = {
                             <RHFTextField name="name" label="Name" />
                             <RHFTextField name="lastname" label="Last Name" />
                             <RHFTextField name="email" label="Email Address" />
+                            <RHFSelect name="country" label="Country" placeholder="Country">
+                              <option value="" />
+                              {countries.map((option) => (
+                                  <option key={option.code} value={option.label}>
+                                  {option.label}
+                                  </option>
+                              ))}
+                            </RHFSelect>
+                            <RHFSelect name="countryCode" label="Country Code" placeholder="Country Code">
+                              <option value="" />
+                              {countries.map((option) => (
+                                  <option key={option.code} value={option.phone}>
+                                  {option.label} (+{option.phone}) 
+                                  </option>
+                              ))}
+                            </RHFSelect> 
                             <RHFTextField name="cellphone" label="Cellphone" />
     
-                            <RHFSelect name="country" label="Country" placeholder="Country">
-                            <option value="" />
-                            {countries.map((option) => (
-                                <option key={option.code} value={option.label}>
-                                {option.label}
+                            <RHFSelect name="level" label="Level" placeholder="Level">
+                              <option value="" />
+                                <option key="BEGINNER" value="BEGINNER">
+                                  BEGINNER
                                 </option>
-                            ))}
+                                <option key="INTERMEDIATE" value="INTERMEDIATE">
+                                  INTERMEDIATE
+                                </option>
+                                <option key="ADVANCED" value="ADVANCED">
+                                  ADVANCED
+                                </option>
+                                <option key="EXPERT" value="EXPERT">
+                                  EXPERT
+                                </option>                              
                             </RHFSelect>
-                            <RHFTextField name="staysAt" label="Stays at" />
                             <RHFSwitch
                               name="isRenting"
                               labelPlacement="start"
@@ -287,25 +312,7 @@ ClientNewEditForm.propTypes = {
                               }
                               sx={{ mx: 0, width: 1, justifyContent: 'space-between' }}
                               />
-                            <RHFSelect name="level" label="Level" placeholder="Level">
-                            <option value="" />
-                              <option key="BEGINNER" value="BEGINNER">
-                                BEGINNER
-                              </option>
-                              <option key="INTERMEDIATE" value="INTERMEDIATE">
-                                INTERMEDIATE
-                              </option>
-                              <option key="ADVANCED" value="ADVANCED">
-                                ADVANCED
-                              </option>
-                              <option key="EXPERT" value="EXPERT">
-                                EXPERT
-                              </option>                              
-                            </RHFSelect>
-                            <RHFTextField name="work" label="Work" />
-                            <RHFTextField name="hobbies" label="Hobbies" />
-
-                            <RHFSwitch
+                              <RHFSwitch
                               name="isTipper"
                               labelPlacement="start"
                               label={
@@ -318,17 +325,34 @@ ClientNewEditForm.propTypes = {
                               sx={{ mx: 0, width: 1, justifyContent: 'space-between' }}
                               />
                             <RHFTextField name="tip" label="Usual tip" />
-                            <RHFTextField multiline name="notes" label="Notes"/>
+
+                            
+                            <RHFTextField name="work" label="Work" />
+                            <RHFTextField name="hobbies" label="Hobbies" />
+
+                            <RHFTextField name="staysAt" label="Stays at" />
 
                             <RHFTextField multiline name="family" label="Family"/>
 
 
 
 
+
+
                         </Box>
                         <Stack alignItems="flex" sx={{ mt: 3 }}>
+                                                <Box
+                            sx={{
+                            display: 'grid',
+                            columnGap: 2,
+                            rowGap: 3,
+                            gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)' },
+                            }}
+                        >
+                        <RHFMultipleSelect name="resorts" label="Resorts" list={SKI_RESORTS}/>
 
-                            <RHFMultipleSelect name="resorts" label="Resorts" list={SKI_RESORTS}/>
+                            <RHFTextField multiline name="notes" label="Notes" rows={3} />
+                            </Box>
               </Stack>
                     </Grid>
                 </Grid>

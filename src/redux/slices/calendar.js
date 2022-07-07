@@ -14,6 +14,7 @@ const initialState = {
   isOpenModal: false,
   selectedEventId: null,
   selectedRange: null,
+  upcomingEvents: []
 };
 
 const slice = createSlice({
@@ -42,6 +43,13 @@ const slice = createSlice({
         };
       });
     },
+
+        // GET UPCOMING EVENTS
+    getUpcomingEventsSuccess(state, action) {
+      state.isLoading = false;
+      state.upcomingEvents = action.payload;
+    },
+
 
     // CREATE EVENT
     createEventSuccess(state, action) {
@@ -181,5 +189,42 @@ export function selectRange(start, end) {
         end: end.getTime(),
       })
     );
+  };
+}
+
+export function getUpcomingEvents() {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get('/api/events/');
+
+      const events = response.data.map( e => {
+        return {
+          ...e,
+          start: utcToLocalDate(e.start),
+          end: utcToLocalDate(e.end)
+        };
+      });
+
+      const today = new Date()
+      const tomorrow = new Date(today)
+      tomorrow.setDate(tomorrow.getDate() + 1)
+      const totomorrow = new Date(today)
+      totomorrow.setDate(totomorrow.getDate() + 2)
+
+      console.log(tomorrow)
+
+      const a1 = events.filter(e => e.start.toDateString() === today.toDateString() || (e.start<=today && today<=e.end) || e.end.toDateString() === today.toDateString());
+      const a2 = events.filter(e => e.start.toDateString() === tomorrow.toDateString() || (e.start<=tomorrow && tomorrow<=e.end) || e.end.toDateString() === tomorrow.toDateString());
+      const a3 = events.filter(e => e.start.toDateString() === totomorrow.toDateString() || (e.start<=totomorrow && totomorrow<=e.end) || e.end.toDateString() === totomorrow.toDateString());
+      console.log(a1)
+      console.log(a2)
+      console.log(a3)
+      console.log(events)  
+
+      dispatch(slice.actions.getUpcomingEventsSuccess([a1,a2,a3]));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
   };
 }

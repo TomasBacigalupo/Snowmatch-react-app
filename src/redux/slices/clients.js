@@ -100,7 +100,8 @@ export function createClient(clientData){
         tip:clientData.tip,
         staysAt:clientData.staysAt,
         country:clientData.country,
-        resorts:clientData.resorts
+        resorts:clientData.resorts,
+        countryCode:clientData.countryCode
 
       }
       console.log(clientData);
@@ -136,7 +137,8 @@ export function editClient(clientData){
         tip:clientData.tip,
         staysAt:clientData.staysAt,
         country:clientData.country,
-        resorts:clientData.resorts
+        resorts:clientData.resorts,
+        countryCode:clientData.countryCode
       }
       console.log(clientData);
       console.log("###############");

@@ -115,7 +115,7 @@ if(!isMobile){
       </TableCell>
 
       <TableCell sx={{ display: 'flex', alignItems: 'center' }} onClick={() => {dispatch(selectClient(id)); navigate(PATH_DASHBOARD.user.edit("client"));}}>
-        <Avatar alt={name} src="" sx={{ mr: 2 }} />
+        <Avatar alt={name} sx={{ mr: 2 }}> {name[0] + lastname[0]}</Avatar>
         <Typography variant="subtitle2" noWrap>
           {name}
         </Typography>

@@ -18,10 +18,11 @@ import { countries } from '../../../_mock';
 // components
 import Label from '../../../components/Label';
 
-import { FormProvider, RHFSelect, RHFSwitch, RHFTextField, RHFUploadAvatar, RHFMultipleSelect } from '../../../components/hook-form';
+import { FormProvider, RHFSelect, RHFSwitch, RHFTextField, RHFMultipleSelect } from '../../../components/hook-form';
 // redux
 import { createClient, slice, editClient } from '../../../redux/slices/clients'
 import { useDispatch, useSelector } from '../../../redux/store';
+import { useMediaQuery } from 'react-responsive';
 
 
 
@@ -60,6 +61,8 @@ ClientNewEditForm.propTypes = {
     const dispatch = useDispatch();
 
     const navigate = useNavigate();
+    const isMobile = useMediaQuery({ query: `(max-width: 760px)` });
+    const imageSize = isMobile?10:38;
 
 
 
@@ -73,7 +76,6 @@ ClientNewEditForm.propTypes = {
       email: Yup.string().email(),
       cellphone: Yup.string(),
       country: Yup.string(),
-      avatarUrl: Yup.mixed(),
       notes: Yup.string().nullable(),
       isTipper: Yup.bool(),
       tip: Yup.string().nullable(),
@@ -96,7 +98,6 @@ ClientNewEditForm.propTypes = {
         email: client?.email || '',
         cellphone: client?.cellphone || '',
         country: client?.country || 'Argentina',
-        avatarUrl: client?.avatarUrl || '',
         isTipper: client?.tipper || false,
         notes: client?.notes || undefined,
         tip: client?.tip || undefined,
@@ -121,7 +122,6 @@ ClientNewEditForm.propTypes = {
         email:  '',
         cellphone:  '',
         country:  'Argentina',
-        avatarUrl: '',
         isTipper:false,
         notes:  '',
         tip: '',
@@ -196,59 +196,14 @@ ClientNewEditForm.propTypes = {
       }
     };
   
-    const handleDrop = useCallback(
-      (acceptedFiles) => {
-        const file = acceptedFiles[0];
-  
-        if (file) {
-          setValue(
-            'avatarUrl',
-            Object.assign(file, {
-              preview: URL.createObjectURL(file),
-            })
-          );
-        }
-      },
-      [setValue]
-    );
+
   
     return (
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <Grid container spacing={3}>
-          <Grid item xs={12} md={4}>
-            <Card sx={{ py: 38, px: 3 }}>
-             
-  
-              <Box sx={{ mb: 5 }}>
-                <RHFUploadAvatar
-                  name="avatarUrl"
-                  accept="image/*"
-                  maxSize={16000000}
-                  onDrop={handleDrop}
-                  helperText={
-                    <Typography
-                      variant="caption"
-                      sx={{
-                        mt: 2,
-                        mx: 'auto',
-                        display: 'block',
-                        textAlign: 'center',
-                        color: 'text.secondary',
-                      }}
-                    >
-                      Allowed *.jpeg, *.jpg, *.png, *.gif
-                      <br /> max size of {fData(16000000)}
-                    </Typography>
-                  }
-                />
-              </Box>
-  
-              
 
-            </Card>
-          </Grid>
   
-          <Grid item xs={12} md={8}>
+          <Grid item xs={12} md={20}>
             <Card sx={{ p: 3 }}>
                 <Grid container spacing={3}>
 

@@ -19,6 +19,8 @@ import { countries } from '../../../../_mock';
 // components
 import { FormProvider, RHFSwitch, RHFSelect, RHFTextField, RHFUploadAvatar, RHFMultipleSelect } from '../../../../components/hook-form';
 import axios from '../../../../utils/axios';
+import { useMediaQuery } from 'react-responsive';
+
 
 const SKI_RESORTS = [
   "Aconcagua",
@@ -48,6 +50,8 @@ export default function AccountGeneral() {
   const { user, updateUser, refreshUser } = useAuth();
   const dispatch = useDispatch();
   const { teachers } = useSelector((state) => { return state});
+  const isMobile = useMediaQuery({ query: `(max-width: 760px)` });
+  const imageSize = isMobile?10:39;
 
   const UpdateUserSchema = Yup.object().shape({
     name: Yup.string().required('Name is required'),
@@ -174,7 +178,7 @@ export default function AccountGeneral() {
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Grid container spacing={3}>
         <Grid item xs={12} md={4}>
-          <Card sx={{ py: 39, px: 3, textAlign: 'center' }}>
+          <Card sx={{ py: imageSize, px: 3, textAlign: 'center' }}>
             <RHFUploadAvatar
               name="photoURL"
               accept="image/*"

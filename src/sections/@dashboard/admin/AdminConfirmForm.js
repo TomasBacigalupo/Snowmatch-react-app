@@ -23,6 +23,11 @@ import Image from '../../../components/Image';
 import { confirmTeacher } from '../../../redux/slices/admin.js'
 import { useDispatch, useSelector } from '../../../redux/store';
 
+import {
+  TeacherDetailsCarousel
+} from '../e-commerce/teacher-details';
+// } from '../../sections/@dashboard/e-commerce/teacher-details';
+
 // ----------------------------------------------------------------------
 
 AdminConfirmForm.propTypes = {
@@ -72,7 +77,7 @@ export default function AdminConfirmForm({ isEdit, currentTeacher }) {
       // isVerified: currentTeacher?.isVerified || true,
       // status: currentTeacher?.status,
       // role: currentTeacher?.role || '',
-      imageLink: currentTeacher?.imageLink || '',
+      certificateImageLink: currentTeacher?.certificateImageLink || '',
       lastname: currentTeacher?.lastname || '',
       // birth: currentTeacher?.birth || '',
       dni: currentTeacher?.dni || '',
@@ -164,7 +169,8 @@ export default function AdminConfirmForm({ isEdit, currentTeacher }) {
                 }
               /> */}
               {/* <Avatar alt={currentTeacher?.name || ""} src={currentTeacher?.imageLink || ""} sx={{ mr: 2 }} /> */}
-              <Image alt={currentTeacher?.name || ""} src={currentTeacher?.imageLink || ""} onClick={()=> window.open((currentTeacher?.imageLink || ""), "_blank")} sx={{ borderRadius: 1 }} />
+              <TeacherDetailsCarousel teacher={{ images: [currentTeacher?.certificateImageLink]}} />
+              {/* <Image alt={currentTeacher?.name || ""} src={currentTeacher?.certificateImageLink || ""} onClick={()=> window.open((currentTeacher?.certificateImageLink || ""), "_blank")} sx={{ borderRadius: 1 }} /> */}
               <Typography variant="subtitle2" noWrap>
                 {currentTeacher?.name}
               </Typography>

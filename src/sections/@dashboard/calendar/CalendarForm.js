@@ -112,7 +112,7 @@ export default function CalendarForm({ event, range, onCancel, clients }) {
             start: data.start,
             end: data.end,
             type: data.type,
-            price: data.price,
+            price: data.price === null ? undefined : data.price,
           };
           if(client !== null && client !== undefined){
             newEvent = {

@@ -123,7 +123,6 @@ export default function Calendar() {
       dispatch(
         updateEvent(event.id, {
           ...event,
-          allDay: event.allDay,
           start: event.start,
           end: event.end,
         })
@@ -137,7 +136,6 @@ export default function Calendar() {
     try {
       dispatch(
         updateEvent(event.id, {
-          allDay: event.allDay,
           start: event.start,
           end: event.end,
         })

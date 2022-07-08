@@ -117,7 +117,7 @@ function AuthProvider({ children }) {
         if (accessToken && isValidToken(accessToken)) {
           setSession(accessToken);
           const email = jwtDecode(accessToken).sub;
-          const response = await axios.get(`/api/users/${email}`);
+          const response = await axios.get(`/api/users/auth/${email}`);
           const user = response.data;
           if (!user?.emailVerified) {
             dispatch({
@@ -173,7 +173,7 @@ function AuthProvider({ children }) {
       "password": password,
     });
     const accessToken = response.data.password;
-    const responseUser = await axios.get(`/api/users/${username}`)
+    const responseUser = await axios.get(`/api/users/auth/${username}`)
     const user = responseUser.data;
 
     setSession(accessToken);
@@ -233,7 +233,7 @@ function AuthProvider({ children }) {
   }
 
   const testVerification = async (callBackFailed) => {
-    const response = await axios.get(`/api/users/${state.user.email}`);
+    const response = await axios.get(`/api/users/auth/${state.user.email}`);
     const user = response.data;
     if (user.emailVerified || user.cellphoneVerified) {
 

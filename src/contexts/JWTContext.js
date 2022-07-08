@@ -73,12 +73,18 @@ const handlers = {
   },
   UPDATE: (state, action) => {
     const { user } = action.payload;
-
     return {
       ...state,
       user,
     };
-  }
+  },
+  REFRESH: (state, action) => {
+    const { user } = action.payload;
+    return {
+      ...state,
+      user,
+    };
+  },
 };
 
 const reducer = (state, action) => (handlers[action.type] ? handlers[action.type](state, action) : state);
@@ -92,6 +98,7 @@ const AuthContext = createContext({
   verify: () => Promise.resolve(),
   testVerification: () => Promise.resolve(),
   updateUser: () => Promise.resolve(),
+  refreshUser: () => {}
 });
 
 // ----------------------------------------------------------------------
@@ -110,7 +117,7 @@ function AuthProvider({ children }) {
         if (accessToken && isValidToken(accessToken)) {
           setSession(accessToken);
           const email = jwtDecode(accessToken).sub;
-          const response = await axios.get(`/api/users/${email}`);
+          const response = await axios.get(`/api/users/auth/${email}`);
           const user = response.data;
           if (!user?.emailVerified) {
             dispatch({
@@ -136,7 +143,6 @@ function AuthProvider({ children }) {
             });
           }
         } else {
-          console.log("FAILED")
           dispatch({
             type: 'INITIALIZE',
             payload: {
@@ -166,7 +172,7 @@ function AuthProvider({ children }) {
       "password": password,
     });
     const accessToken = response.data.password;
-    const responseUser = await axios.get(`/api/users/${username}`)
+    const responseUser = await axios.get(`/api/users/auth/${username}`)
     const user = responseUser.data;
 
     setSession(accessToken);
@@ -194,7 +200,6 @@ function AuthProvider({ children }) {
     setSession(accessToken);
 
     window.localStorage.setItem('accessToken', accessToken);
-    console.log(accessToken)
     dispatch({
       type: 'REGISTER',
       payload: {
@@ -221,8 +226,12 @@ function AuthProvider({ children }) {
     dispatch({type:'UPDATE',payload:{user}})
   };
 
+  const refreshUser = (user) =>{
+    dispatch({type:'REFRESH', payload:{user}})
+  }
+
   const testVerification = async (callBackFailed) => {
-    const response = await axios.get(`/api/users/${state.user.email}`);
+    const response = await axios.get(`/api/users/auth/${state.user.email}`);
     const user = response.data;
     if (user.emailVerified || user.cellphoneVerified) {
 
@@ -261,6 +270,7 @@ function AuthProvider({ children }) {
         verify,
         testVerification,
         updateUser,
+        refreshUser
       }}
     >
       {children}

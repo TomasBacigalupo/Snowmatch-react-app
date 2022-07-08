@@ -94,7 +94,7 @@ export default function InvoiceNewEditForm({ isEdit, currentInvoice }) {
       reset();
       setLoadingSave(true);
       navigate(PATH_DASHBOARD.invoice.list);
-      console.log(JSON.stringify(newInvoice, null, 2));
+      //console.log(JSON.stringify(newInvoice, null, 2));
     } catch (error) {
       console.error(error);
     }
@@ -108,7 +108,7 @@ export default function InvoiceNewEditForm({ isEdit, currentInvoice }) {
       reset();
       setLoadingSend(false);
       navigate(PATH_DASHBOARD.invoice.list);
-      console.log(JSON.stringify(newInvoice, null, 2));
+      //console.log(JSON.stringify(newInvoice, null, 2));
     } catch (error) {
       console.error(error);
     }

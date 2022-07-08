@@ -113,7 +113,6 @@ export default function TeacherDetailsCalendar({ teacher }) {
               plugins={[listPlugin, dayGridPlugin, timelinePlugin, timeGridPlugin, interactionPlugin]}
             />
           </CalendarStyle>
-        {console.log(events)}
     </>
   );
 }

@@ -71,7 +71,6 @@ export default function AccountSocialLinks({ myProfile }) {
   } = methods;
 
   const onSubmit = async (data) => {
-    console.log(data)
     const newUser = { 
       ...user,
       ...data
@@ -88,7 +87,6 @@ export default function AccountSocialLinks({ myProfile }) {
           }
         }
         else{
-          console.log("SENT")
           updateUser(newUser)
           enqueueSnackbar( 'Update success!');
         }

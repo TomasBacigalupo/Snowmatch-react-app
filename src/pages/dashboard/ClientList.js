@@ -110,7 +110,7 @@ export default function UserList() {
 
   const { currentTab: filterStatus, onChangeTab: onChangeFilterStatus } = useTabs('all');
 
-  const { clients } = useSelector((state) =>{console.log(state);return state.clients});
+  const { clients } = useSelector((state) =>{return state.clients});
 
 
   const handleFilterName = (filterName) => {
@@ -122,10 +122,9 @@ export default function UserList() {
     setFilterLevel(event.target.value);
   };
 
-  const handleDeleteRow = (email) => {
-    dispatch(deleteClient(email));
-    const deleteRow = tableData.filter((row) => row.email.localeCompare(email) != 0);
-    console.log(deleteRow)
+  const handleDeleteRow = (id) => {
+    dispatch(deleteClient(id));
+    const deleteRow = tableData.filter((row) => row.id === id);
     setSelected([]);
     setTableData(deleteRow);
   };
@@ -258,7 +257,7 @@ const isMobile = useMediaQuery({ query: `(max-width: 760px)` });
                       row={row}
                       selected={selected.includes(row.id)}
                       onSelectRow={() => onSelectRow(row.id)}
-                      onDeleteRow={() => handleDeleteRow(row.email)}
+                      onDeleteRow={() => handleDeleteRow(row.id)}
                       onEditRow={() => handleEditRow(row.id)}
                     />
                   ))}

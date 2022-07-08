@@ -14,7 +14,6 @@ TeacherDetailsReview.propTypes = {
 };
 
 export default function TeacherDetailsReview({ teacher }) {
-  console.log("review", teacher);  
   const [reviewBox, setReviewBox] = useState(false);
   const { rates } = teacher.rates;
 

@@ -58,7 +58,7 @@ export default function LoginForm() {
           setError(e.key, { type: "server", message: e.value });
         })
       } else {
-        console.log("Unexpected error: ", error)
+        console.error("Unexpected error: ", error)
         setError('afterSubmit', { ...error, message: "Incorrect user or password" });
       }
     }

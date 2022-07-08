@@ -49,7 +49,7 @@ const slice = createSlice({
     // DELETE CLIENT
     deleteClientSuccess(state, action) {
       state.isLoading = false;
-      state.clients = state.clients.filter(c => c.email !== action.payload);
+      state.clients = state.clients.filter(c => c.id !== action.payload);
     },
   }
 });
@@ -91,7 +91,6 @@ export function createClient(clientData){
         lastname:clientData.lastname,
         notes:clientData.notes,
         level:clientData.level,
-        image:null,
         hobbies:clientData.hobbies,
         family:clientData.family,
         work:clientData.work,
@@ -100,12 +99,11 @@ export function createClient(clientData){
         tip:clientData.tip,
         staysAt:clientData.staysAt,
         country:clientData.country,
-        resorts:clientData.resorts
+        resorts:clientData.resorts,
+        countryCode:clientData.countryCode
 
       }
-      console.log(clientData);
-      console.log("###############");
-      console.log(client);
+
       const response = await axios.post('/api/clients/',client);
       dispatch(slice.actions.getClientSuccess(response.data));
       return response;
@@ -127,7 +125,6 @@ export function editClient(clientData){
         lastname:clientData.lastname,
         notes:clientData.notes,
         level:clientData.level,
-        image:null,
         hobbies:clientData.hobbies,
         family:clientData.family,
         work:clientData.work,
@@ -136,11 +133,10 @@ export function editClient(clientData){
         tip:clientData.tip,
         staysAt:clientData.staysAt,
         country:clientData.country,
-        resorts:clientData.resorts
+        resorts:clientData.resorts,
+        countryCode:clientData.countryCode
       }
-      console.log(clientData);
-      console.log("###############");
-      console.log(client);
+
       const response = await axios.put('/api/clients/'+clientData.id,client);
 
       dispatch(slice.actions.getClientSuccess(response.data));
@@ -152,14 +148,13 @@ export function editClient(clientData){
   };
 }
 
-export function deleteClient(email){
+export function deleteClient(clientId){
   return async () => {
-    dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.delete('/api/clients/byEmail/'+email);
-      dispatch(slice.actions.deleteClientSuccess(email));
+      const response = await axios.delete(`/api/clients/${clientId}`);
+      dispatch(slice.actions.deleteClientSuccess(clientId));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }
   };
-}
+};

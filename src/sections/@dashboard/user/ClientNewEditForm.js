@@ -18,10 +18,11 @@ import { countries } from '../../../_mock';
 // components
 import Label from '../../../components/Label';
 
-import { FormProvider, RHFSelect, RHFSwitch, RHFTextField, RHFUploadAvatar, RHFMultipleSelect } from '../../../components/hook-form';
+import { FormProvider, RHFSelect, RHFSwitch, RHFTextField, RHFMultipleSelect } from '../../../components/hook-form';
 // redux
 import { createClient, slice, editClient } from '../../../redux/slices/clients'
 import { useDispatch, useSelector } from '../../../redux/store';
+import { useMediaQuery } from 'react-responsive';
 
 
 
@@ -55,11 +56,13 @@ ClientNewEditForm.propTypes = {
   export default function ClientNewEditForm({ isEdit, currentUser }) {
 
 
-    const {client,clients, error,isLoading} = useSelector((state) =>{console.log(state);return state.clients});
+    const {client,clients, error,isLoading} = useSelector((state) =>{return state.clients});
 
     const dispatch = useDispatch();
 
     const navigate = useNavigate();
+    const isMobile = useMediaQuery({ query: `(max-width: 760px)` });
+    const imageSize = isMobile?10:38;
 
 
 
@@ -73,7 +76,6 @@ ClientNewEditForm.propTypes = {
       email: Yup.string().email(),
       cellphone: Yup.string(),
       country: Yup.string(),
-      avatarUrl: Yup.mixed(),
       notes: Yup.string().nullable(),
       isTipper: Yup.bool(),
       tip: Yup.string().nullable(),
@@ -85,6 +87,7 @@ ClientNewEditForm.propTypes = {
       staysAt:Yup.string().nullable(),
       id:Yup.number(),
       resorts:Yup.array().of(Yup.string()),
+      countryCode:Yup.string(),
 
     });
   
@@ -95,7 +98,6 @@ ClientNewEditForm.propTypes = {
         email: client?.email || '',
         cellphone: client?.cellphone || '',
         country: client?.country || 'Argentina',
-        avatarUrl: client?.avatarUrl || '',
         isTipper: client?.tipper || false,
         notes: client?.notes || undefined,
         tip: client?.tip || undefined,
@@ -107,6 +109,7 @@ ClientNewEditForm.propTypes = {
         staysAt:client?.staysAt || undefined,
         id:client?.id || 0 ,
         resorts:client?.resorts || [],
+        countryCode:client?.countryCode || ''
       }),
       // eslint-disable-next-line react-hooks/exhaustive-deps
       [client]
@@ -119,7 +122,6 @@ ClientNewEditForm.propTypes = {
         email:  '',
         cellphone:  '',
         country:  'Argentina',
-        avatarUrl: '',
         isTipper:false,
         notes:  '',
         tip: '',
@@ -131,6 +133,7 @@ ClientNewEditForm.propTypes = {
         staysAt: '',
         id:  0,
         resorts: [],
+        countryCode:'',
       }),
       // eslint-disable-next-line react-hooks/exhaustive-deps
       [client]
@@ -164,7 +167,6 @@ ClientNewEditForm.propTypes = {
     }, [isEdit, currentUser]);
   
     const onSubmit = async (data) => {
-      console.log(data)
       var func;
       if(isEdit){
         func = editClient(data);
@@ -173,7 +175,6 @@ ClientNewEditForm.propTypes = {
         func = createClient(data);
       }
       try {
-        //console.log(data)
         const response = await dispatch(func);
 
         if(response.messages){
@@ -185,7 +186,6 @@ ClientNewEditForm.propTypes = {
           }
         }
         else{
-          console.log("SENT")
           reset();
           enqueueSnackbar(!isEdit ? 'Create success!' : 'Update success!');
           navigate(PATH_DASHBOARD.user.list);
@@ -196,59 +196,14 @@ ClientNewEditForm.propTypes = {
       }
     };
   
-    const handleDrop = useCallback(
-      (acceptedFiles) => {
-        const file = acceptedFiles[0];
-  
-        if (file) {
-          setValue(
-            'avatarUrl',
-            Object.assign(file, {
-              preview: URL.createObjectURL(file),
-            })
-          );
-        }
-      },
-      [setValue]
-    );
+
   
     return (
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <Grid container spacing={3}>
-          <Grid item xs={12} md={4}>
-            <Card sx={{ py: 31, px: 3 }}>
-             
-  
-              <Box sx={{ mb: 5 }}>
-                <RHFUploadAvatar
-                  name="avatarUrl"
-                  accept="image/*"
-                  maxSize={16000000}
-                  onDrop={handleDrop}
-                  helperText={
-                    <Typography
-                      variant="caption"
-                      sx={{
-                        mt: 2,
-                        mx: 'auto',
-                        display: 'block',
-                        textAlign: 'center',
-                        color: 'text.secondary',
-                      }}
-                    >
-                      Allowed *.jpeg, *.jpg, *.png, *.gif
-                      <br /> max size of {fData(16000000)}
-                    </Typography>
-                  }
-                />
-              </Box>
-  
-              
 
-            </Card>
-          </Grid>
   
-          <Grid item xs={12} md={8}>
+          <Grid item xs={12} md={20}>
             <Card sx={{ p: 3 }}>
                 <Grid container spacing={3}>
 
@@ -264,17 +219,39 @@ ClientNewEditForm.propTypes = {
                             <RHFTextField name="name" label="Name" />
                             <RHFTextField name="lastname" label="Last Name" />
                             <RHFTextField name="email" label="Email Address" />
+                            <RHFSelect name="country" label="Country" placeholder="Country">
+                              <option value="" />
+                              {countries.map((option) => (
+                                  <option key={option.code} value={option.label}>
+                                  {option.label}
+                                  </option>
+                              ))}
+                            </RHFSelect>
+                            <RHFSelect name="countryCode" label="Country Code" placeholder="Country Code">
+                              <option value="" />
+                              {countries.map((option) => (
+                                  <option key={option.code} value={option.phone}>
+                                  {option.label} (+{option.phone}) 
+                                  </option>
+                              ))}
+                            </RHFSelect> 
                             <RHFTextField name="cellphone" label="Cellphone" />
     
-                            <RHFSelect name="country" label="Country" placeholder="Country">
-                            <option value="" />
-                            {countries.map((option) => (
-                                <option key={option.code} value={option.label}>
-                                {option.label}
+                            <RHFSelect name="level" label="Level" placeholder="Level">
+                              <option value="" />
+                                <option key="BEGINNER" value="BEGINNER">
+                                  BEGINNER
                                 </option>
-                            ))}
+                                <option key="INTERMEDIATE" value="INTERMEDIATE">
+                                  INTERMEDIATE
+                                </option>
+                                <option key="ADVANCED" value="ADVANCED">
+                                  ADVANCED
+                                </option>
+                                <option key="EXPERT" value="EXPERT">
+                                  EXPERT
+                                </option>                              
                             </RHFSelect>
-                            <RHFTextField name="staysAt" label="Stays at" />
                             <RHFSwitch
                               name="isRenting"
                               labelPlacement="start"
@@ -287,25 +264,7 @@ ClientNewEditForm.propTypes = {
                               }
                               sx={{ mx: 0, width: 1, justifyContent: 'space-between' }}
                               />
-                            <RHFSelect name="level" label="Level" placeholder="Level">
-                            <option value="" />
-                              <option key="BEGINNER" value="BEGINNER">
-                                BEGINNER
-                              </option>
-                              <option key="INTERMEDIATE" value="INTERMEDIATE">
-                                INTERMEDIATE
-                              </option>
-                              <option key="ADVANCED" value="ADVANCED">
-                                ADVANCED
-                              </option>
-                              <option key="EXPERT" value="EXPERT">
-                                EXPERT
-                              </option>                              
-                            </RHFSelect>
-                            <RHFTextField name="work" label="Work" />
-                            <RHFTextField name="hobbies" label="Hobbies" />
-
-                            <RHFSwitch
+                              <RHFSwitch
                               name="isTipper"
                               labelPlacement="start"
                               label={
@@ -318,17 +277,34 @@ ClientNewEditForm.propTypes = {
                               sx={{ mx: 0, width: 1, justifyContent: 'space-between' }}
                               />
                             <RHFTextField name="tip" label="Usual tip" />
-                            <RHFTextField multiline name="notes" label="Notes"/>
+
+                            
+                            <RHFTextField name="work" label="Work" />
+                            <RHFTextField name="hobbies" label="Hobbies" />
+
+                            <RHFTextField name="staysAt" label="Stays at" />
 
                             <RHFTextField multiline name="family" label="Family"/>
 
 
 
 
+
+
                         </Box>
                         <Stack alignItems="flex" sx={{ mt: 3 }}>
+                                                <Box
+                            sx={{
+                            display: 'grid',
+                            columnGap: 2,
+                            rowGap: 3,
+                            gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)' },
+                            }}
+                        >
+                        <RHFMultipleSelect name="resorts" label="Resorts" list={SKI_RESORTS}/>
 
-                            <RHFMultipleSelect name="resorts" label="Resorts" list={SKI_RESORTS}/>
+                            <RHFTextField multiline name="notes" label="Notes" rows={3} />
+                            </Box>
               </Stack>
                     </Grid>
                 </Grid>

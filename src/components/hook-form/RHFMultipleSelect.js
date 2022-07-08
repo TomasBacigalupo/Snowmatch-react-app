@@ -29,7 +29,7 @@ export default function RHFMultipleSelect({ name,label, list, freeSolo }) {
           value={field?.value || []}
           freeSolo={freeSolo}
           
-          onChange={(event, newValue) => {field.onChange(newValue); console.log(field);}}
+          onChange={(event, newValue) => {field.onChange(newValue);}}
 
           options = {[...list]}
           id={name}

@@ -18,10 +18,13 @@ import {
   AppWidgetSummary,
   AppCurrentDownload,
   AppTopInstalledCountries,
+  UpcomingEvents
 } from '../../sections/@dashboard/general/app';
 import { useDispatch, useSelector } from 'src/redux/store';
 import { useEffect } from 'react';
+import { getEvents } from 'src/redux/slices/calendar';
 import { getTotalClasses, getTotalClients, getTotalIncome } from 'src/redux/slices/teachers';
+
 
 // ----------------------------------------------------------------------
 
@@ -31,11 +34,13 @@ export default function GeneralApp() {
   const { themeStretch } = useSettings();
   const dispatch = useDispatch();
   const { totalIncome, totalClasses, totalClients } = useSelector(state => state.teachers)
+  const { events } = useSelector(state => state.calendar)
 
   useEffect(() => {
     dispatch(getTotalClasses())
     dispatch(getTotalIncome())
     dispatch(getTotalClients())
+    dispatch(getEvents())
   }, [])
 
   if (!isAuthorized) {
@@ -51,7 +56,7 @@ export default function GeneralApp() {
           </Grid>
 
           <Grid item xs={12} md={4}>
-            <AppFeatured />
+            <UpcomingEvents/>
           </Grid>
 
           <Grid item xs={12} md={4}>

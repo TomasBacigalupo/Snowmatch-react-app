@@ -14,6 +14,7 @@ const initialState = {
   isOpenModal: false,
   selectedEventId: null,
   selectedRange: null,
+  upcomingEvents: []
 };
 
 const slice = createSlice({
@@ -43,6 +44,13 @@ const slice = createSlice({
       });
     },
 
+        // GET UPCOMING EVENTS
+    getUpcomingEventsSuccess(state, action) {
+      state.isLoading = false;
+      state.upcomingEvents = action.payload;
+    },
+
+
     // CREATE EVENT
     createEventSuccess(state, action) {
       const newEvent = action.payload;
@@ -58,15 +66,14 @@ const slice = createSlice({
     // UPDATE EVENT
     updateEventSuccess(state, action) {
       const event = action.payload;
-      const updateEvent = state.events.map((_event) => {
+      const updateEvents = state.events.map((_event, i) => {
         if (_event.id === event.id) {
           return event;
         }
         return _event;
       });
-
       state.isLoading = false;
-      state.events = updateEvent;
+      state.events = updateEvents;
     },
 
     // DELETE EVENT
@@ -131,7 +138,6 @@ export function createEvent(newEvent) {
   return async () => {
     //dispatch(slice.actions.startLoading());
     try {
-      console.log("Evento enviado ", newEvent)
       const response = await axios.post('/api/events/create', newEvent);
       dispatch(slice.actions.createEventSuccess(response.data));
       return response;
@@ -149,7 +155,7 @@ export function updateEvent(eventId, updateEvent) {
     //dispatch(slice.actions.startLoading());
     try {
       const response = await axios.put(`/api/events/byId/${eventId}`, updateEvent);
-      dispatch(slice.actions.updateEventSuccess(updateEvent));
+      dispatch(slice.actions.updateEventSuccess({...updateEvent, id: eventId}));
       return response;
     } catch (error) {
       //dispatch(slice.actions.hasError(error));
@@ -182,5 +188,38 @@ export function selectRange(start, end) {
         end: end.getTime(),
       })
     );
+  };
+}
+
+export function getUpcomingEvents() {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get('/api/events/');
+
+      const events = response.data.map( e => {
+        return {
+          ...e,
+          start: utcToLocalDate(e.start),
+          end: utcToLocalDate(e.end)
+        };
+      });
+
+      const today = new Date()
+      const tomorrow = new Date(today)
+      tomorrow.setDate(tomorrow.getDate() + 1)
+      const totomorrow = new Date(today)
+      totomorrow.setDate(totomorrow.getDate() + 2)
+
+
+      const a1 = events.filter(e => e.start.toDateString() === today.toDateString() || (e.start<=today && today<=e.end) || e.end.toDateString() === today.toDateString());
+      const a2 = events.filter(e => e.start.toDateString() === tomorrow.toDateString() || (e.start<=tomorrow && tomorrow<=e.end) || e.end.toDateString() === tomorrow.toDateString());
+      const a3 = events.filter(e => e.start.toDateString() === totomorrow.toDateString() || (e.start<=totomorrow && totomorrow<=e.end) || e.end.toDateString() === totomorrow.toDateString());
+
+
+      dispatch(slice.actions.getUpcomingEventsSuccess([a1,a2,a3]));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
   };
 }

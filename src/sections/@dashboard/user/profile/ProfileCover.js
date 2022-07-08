@@ -10,6 +10,9 @@ import useAuth from '../../../../hooks/useAuth';
 import MyAvatar from '../../../../components/MyAvatar';
 import Image from '../../../../components/Image';
 
+import { useMediaQuery } from 'react-responsive';
+
+
 // ----------------------------------------------------------------------
 
 const RootStyle = styled('div')(({ theme }) => ({
@@ -50,6 +53,18 @@ export default function ProfileCover({ myProfile }) {
 
   const { cover } = myProfile;
 
+  const isMobile = useMediaQuery({ query: `(max-width: 760px)` });
+
+  const imageSize = () =>{
+    if(isMobile){
+      return (<Image alt="profile cover"  src="https://i.imgur.com/0jvxtlU.png" sx={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }} />)
+    }
+    else{
+      return(<Image alt="profile cover"  src="https://i.imgur.com/WwFJcYy.png" sx={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }} />)
+    }
+  }
+
+
   return (
     <RootStyle>
       <InfoStyle>
@@ -76,7 +91,7 @@ export default function ProfileCover({ myProfile }) {
           <Typography sx={{ opacity: 0.72 }}>{user?.state}</Typography>
         </Box>
       </InfoStyle>
-      <Image alt="profile cover" src={cover} sx={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }} />
+      {imageSize()}
     </RootStyle>
   );
 }

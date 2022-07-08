@@ -23,6 +23,7 @@ import { DialogAnimate } from '../../components/animate';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
 // sections
 import { CalendarForm, CalendarStyle, CalendarToolbar } from '../../sections/@dashboard/calendar';
+import { getClients } from 'src/redux/slices/clients';
 
 // ----------------------------------------------------------------------
 
@@ -50,9 +51,11 @@ export default function Calendar() {
   const selectedEvent = useSelector(selectedEventSelector);
 
   const { events, isOpenModal, selectedRange } = useSelector((state) => state.calendar);
+  const { clients } = useSelector((state) => state.clients);
 
   useEffect(() => {
     dispatch(getEvents());
+    dispatch(getClients())
   }, [dispatch]);
 
   useEffect(() => {
@@ -149,7 +152,6 @@ export default function Calendar() {
   };
 
   const handleCloseModal = () => {
-    console.log("CLOSE MODAL")
     dispatch(closeModal());
   };
 
@@ -207,7 +209,7 @@ export default function Calendar() {
 
         <DialogAnimate open={isOpenModal} onClose={handleCloseModal}>
           <DialogTitle>{selectedEvent ? 'Edit Event' : 'Add Event'}</DialogTitle>
-          <CalendarForm event={selectedEvent || {}} range={selectedRange} onCancel={handleCloseModal} />
+          <CalendarForm event={selectedEvent || {}} range={selectedRange} onCancel={handleCloseModal} clients={clients}/>
         </DialogAnimate>
       </Container>
     </Page>

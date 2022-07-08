@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import { paramCase } from 'change-case';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, Router, useNavigate } from 'react-router-dom';
 // @mui
 import { Box, Card, Link, Typography, Stack } from '@mui/material';
 // routes
@@ -20,20 +20,21 @@ ShopTeacherCard.propTypes = {
 };
 
 export default function ShopTeacherCard({ teacher }) {
-  const { name, lastname, imageLink, stars, level, information, email, state} = teacher;
+  const { name, lastname, imageLink, stars, level, information, email, state, resorts} = teacher;
   const status = 'sale';
   const priceSale = 10;
+  const navigate = useNavigate();
 
   const { isAuthenticated} = useAuth()
   const linkTo =  isAuthenticated ? PATH_DASHBOARD.eCommerce.viewTeacher(email) : PATH_GUEST.viewTeacher(email) ;
 
   return (
-    <Card>
+    <Card onClick={()=>navigate(linkTo)}>
       <Box sx={{ position: 'relative' }}>
-        {status && (
+        {resorts && (
           <Label
             variant="filled"
-            color={(state !== 'AVAILABLE' && 'error') || 'success'}
+            color={'success'}
             sx={{
               top: 16,
               right: 16,
@@ -42,7 +43,7 @@ export default function ShopTeacherCard({ teacher }) {
               textTransform: 'uppercase',
             }}
           >
-            {state === "AVAILABLE" ? "Disponible" : "Solicitado"}
+            {resorts[0]}
           </Label>
         )}
         <Image alt={name} src={imageLink} ratio="1/1" />

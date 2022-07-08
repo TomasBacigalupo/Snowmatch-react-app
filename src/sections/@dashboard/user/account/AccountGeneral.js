@@ -19,6 +19,8 @@ import { countries } from '../../../../_mock';
 // components
 import { FormProvider, RHFSwitch, RHFSelect, RHFTextField, RHFUploadAvatar, RHFMultipleSelect } from '../../../../components/hook-form';
 import axios from '../../../../utils/axios';
+import { useMediaQuery } from 'react-responsive';
+
 
 const SKI_RESORTS = [
   "Aconcagua",
@@ -45,9 +47,11 @@ const SKI_RESORTS = [
 export default function AccountGeneral() {
   const { enqueueSnackbar } = useSnackbar();
 
-  const { user, updateUser } = useAuth();
+  const { user, updateUser, refreshUser } = useAuth();
   const dispatch = useDispatch();
-  const { teachers } = useSelector((state) => {console.log(state.teachers); return state});
+  const { teachers } = useSelector((state) => { return state});
+  const isMobile = useMediaQuery({ query: `(max-width: 760px)` });
+  const imageSize = isMobile?10:39;
 
   const UpdateUserSchema = Yup.object().shape({
     name: Yup.string().required('Name is required'),
@@ -105,7 +109,6 @@ export default function AccountGeneral() {
   });
 
   const onSubmit = async (data) => {
-    console.log("values", data);
 
     const value = { 
       ...user,
@@ -124,7 +127,14 @@ export default function AccountGeneral() {
 
     toBase64(value.photoURL).then(image => {
       //TODO: only change image if it was changed
-      dispatch(changeProfilePicture(image));
+      dispatch(changeProfilePicture(image, (succeed) => {
+        if(succeed){
+          refreshUser({
+            ...user,
+            imageLink: value.photoURL.preview
+          })
+        }
+      }));
     } );
 
     try {
@@ -140,7 +150,6 @@ export default function AccountGeneral() {
           }
         }
         else{
-          console.log("SENT")
           updateUser(value)
           enqueueSnackbar( 'Update success!');
         }
@@ -169,7 +178,7 @@ export default function AccountGeneral() {
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Grid container spacing={3}>
         <Grid item xs={12} md={4}>
-          <Card sx={{ py: 39, px: 3, textAlign: 'center' }}>
+          <Card sx={{ py: imageSize, px: 3, textAlign: 'center' }}>
             <RHFUploadAvatar
               name="photoURL"
               accept="image/*"
@@ -211,7 +220,6 @@ export default function AccountGeneral() {
               <RHFTextField name="cellphone" label="Phone Number" disabled={user?.cellphone != undefined} />
               
               <RHFTextField name="email" label="Email Address" disabled/>
-              {console.log("cellphone", user?.cellphone)}
               <RHFSelect name="gender" label="Gender" placeholder="Gender">
                   <option key={1} value={"M"}>
                     Male

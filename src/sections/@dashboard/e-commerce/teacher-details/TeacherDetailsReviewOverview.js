@@ -38,8 +38,7 @@ TeacherDetailsReviewOverview.propTypes = {
 
 export default function TeacherDetailsReviewOverview({ teacher, onOpen }) {
   const { rates } = teacher;
-  console.log("teacher", teacher);
-  console.log("rates", rates);
+
   
 
   //const total = sumBy(rates, (stars) => stars.starCount);

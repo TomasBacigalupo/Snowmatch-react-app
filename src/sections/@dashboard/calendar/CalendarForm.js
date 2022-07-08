@@ -38,7 +38,6 @@ const getInitialValues = (event, range) => {
     title: '',
     description: '',
     textColor: '#1890FF',
-    allDay: false,
     start: range ? new Date(range.start) : new Date(),
     end: range ? new Date(range.end) : new Date(),
     price: null
@@ -100,7 +99,6 @@ export default function CalendarForm({ event, range, onCancel, clients }) {
             title: data.title,
             description: data.description,
             textColor: data.textColor,
-            allDay: data.allDay,
             start: data.start,
             end: data.end,
             type: data.type,
@@ -111,7 +109,6 @@ export default function CalendarForm({ event, range, onCancel, clients }) {
             title: data.title,
             description: data.description,
             textColor: data.textColor,
-            allDay: data.allDay,
             start: data.start,
             end: data.end,
             type: data.type,
@@ -195,11 +192,11 @@ export default function CalendarForm({ event, range, onCancel, clients }) {
             
           }
           autoHighlight
-          getOptionLabel={(c) => c.name}
+          getOptionLabel={(c) => `${client?.name} ${client?.lastname}`}
           renderOption={(props, client) => (
             <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-              <Avatar sx={{marginRight:'10px'}}>{client.name[0]}</Avatar>
-              {client.name}
+              <Avatar sx={{ marginRight: '10px' }}>{`${client?.name[0]}${client?.lastname[0]}`}</Avatar>
+              {`${client.name} ${client.lastname}`}
             </Box>
           )}
 
@@ -236,8 +233,6 @@ export default function CalendarForm({ event, range, onCancel, clients }) {
         {values?.type && !['Break', 'Training', 'Illness'].find(p => p === values.type) && (
           <RHFTextField name="price" label="Price" />
         )}
-
-        <RHFSwitch name="allDay" label="All day" />
 
         <Controller
           name="start"

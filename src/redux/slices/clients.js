@@ -104,9 +104,7 @@ export function createClient(clientData){
         countryCode:clientData.countryCode
 
       }
-      console.log(clientData);
-      console.log("###############");
-      console.log(client);
+
       const response = await axios.post('/api/clients/',client);
       dispatch(slice.actions.getClientSuccess(response.data));
       return response;
@@ -140,9 +138,7 @@ export function editClient(clientData){
         resorts:clientData.resorts,
         countryCode:clientData.countryCode
       }
-      console.log(clientData);
-      console.log("###############");
-      console.log(client);
+
       const response = await axios.put('/api/clients/'+clientData.id,client);
 
       dispatch(slice.actions.getClientSuccess(response.data));

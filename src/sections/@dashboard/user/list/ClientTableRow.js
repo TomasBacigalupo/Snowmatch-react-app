@@ -47,7 +47,7 @@ export default function ClientTableRow({ row, selected, onEditRow, onSelectRow, 
 
   if(isMobile){
   return (
-    <TableRow hover selected={selected} onClick={() => console.log("CLICK")}>
+    <TableRow hover selected={selected}>
       <TableCell  sx={{  alignItems: 'center' }} >
         <Checkbox checked={selected} onClick={onSelectRow} />
 

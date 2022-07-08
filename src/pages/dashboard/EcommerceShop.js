@@ -43,7 +43,7 @@ export default function EcommerceShop({isGuest=false}) {
 
   const [openFilter, setOpenFilter] = useState(false);
 
-  const { teachers, sortBy, filters } = useSelector((state) => { console.log(state); return state.teachers })
+  const { teachers, sortBy, filters } = useSelector((state) => { return state.teachers })
 
   //const { products, sortBy } = useSelector((state) => state.product);
 
@@ -231,12 +231,7 @@ function checkOverlap(event,filter){
 
 
 
-  console.log(filterFrom)
-  console.log(filterTo)
-  console.log(eventFrom)
-  console.log(eventTo)
   if (filterFrom >= eventFrom && filterTo <= eventTo) {
-    console.log("AAAA")
     return true;
   }
   return false;
@@ -258,7 +253,6 @@ function applyFilter(teachers, sortBy, filters) {
   //   teachers = orderBy(teachers, ['price'], ['asc']);
   // }
   // FILTER teacherS
-  console.log(filters)
   if(filters.from && filters.to){
     teachers = teachers.filter((teacher) => !teacher.events?.some((event) => checkOverlap(event,filters)));
   }

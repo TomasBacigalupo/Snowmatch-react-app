@@ -55,7 +55,7 @@ ClientNewEditForm.propTypes = {
   export default function ClientNewEditForm({ isEdit, currentUser }) {
 
 
-    const {client,clients, error,isLoading} = useSelector((state) =>{console.log(state);return state.clients});
+    const {client,clients, error,isLoading} = useSelector((state) =>{return state.clients});
 
     const dispatch = useDispatch();
 
@@ -167,7 +167,6 @@ ClientNewEditForm.propTypes = {
     }, [isEdit, currentUser]);
   
     const onSubmit = async (data) => {
-      console.log(data)
       var func;
       if(isEdit){
         func = editClient(data);
@@ -176,7 +175,6 @@ ClientNewEditForm.propTypes = {
         func = createClient(data);
       }
       try {
-        //console.log(data)
         const response = await dispatch(func);
 
         if(response.messages){
@@ -188,7 +186,6 @@ ClientNewEditForm.propTypes = {
           }
         }
         else{
-          console.log("SENT")
           reset();
           enqueueSnackbar(!isEdit ? 'Create success!' : 'Update success!');
           navigate(PATH_DASHBOARD.user.list);

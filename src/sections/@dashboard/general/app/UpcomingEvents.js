@@ -108,7 +108,6 @@ CarouselItem.propTypes = {
 };
 
 function handleEventClick(e, event, dispatch){
-  console.log(dispatch)
   dispatch(openModal())
   dispatch(selectEvent(event.id));
 

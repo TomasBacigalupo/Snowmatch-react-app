@@ -86,7 +86,6 @@ export function getNotifications(name) {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.get(`/api/users/notifications/${name}`);
-      console.log("response " , response.data);
       dispatch(slice.actions.getNotificationsSuccess(response.data));
     } catch (error) {
       console.error(error);

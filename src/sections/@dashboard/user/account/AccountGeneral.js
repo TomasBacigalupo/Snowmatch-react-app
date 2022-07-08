@@ -47,7 +47,7 @@ export default function AccountGeneral() {
 
   const { user, updateUser, refreshUser } = useAuth();
   const dispatch = useDispatch();
-  const { teachers } = useSelector((state) => {console.log(state.teachers); return state});
+  const { teachers } = useSelector((state) => { return state});
 
   const UpdateUserSchema = Yup.object().shape({
     name: Yup.string().required('Name is required'),
@@ -105,7 +105,6 @@ export default function AccountGeneral() {
   });
 
   const onSubmit = async (data) => {
-    console.log("values", data);
 
     const value = { 
       ...user,
@@ -147,7 +146,6 @@ export default function AccountGeneral() {
           }
         }
         else{
-          console.log("SENT")
           updateUser(value)
           enqueueSnackbar( 'Update success!');
         }
@@ -218,7 +216,6 @@ export default function AccountGeneral() {
               <RHFTextField name="cellphone" label="Phone Number" disabled={user?.cellphone != undefined} />
               
               <RHFTextField name="email" label="Email Address" disabled/>
-              {console.log("cellphone", user?.cellphone)}
               <RHFSelect name="gender" label="Gender" placeholder="Gender">
                   <option key={1} value={"M"}>
                     Male

@@ -300,8 +300,7 @@ function merge(ranges) {
         else if (r.end > last.end)
             last.end = r.end;
     });
-    console.log("AAAAAAAAAAAAAAAA")
-    console.log(result)
+
     return result;
 }
 
@@ -421,7 +420,7 @@ export function changeProfilePicture(picture, callBack) {
     try {
       const resp = await axios.put(`/api/users/image`, { "editImage": picture })
     } catch (error) {
-      console.log(error)
+      console.error(error)
       callBack(false)
     }
     callBack(true)
@@ -437,7 +436,7 @@ export function getOverview() {
       const resp = await axios.get(`/api/overview/typeSummary`)
       dispatch(slice.actions.getTeacherOverviewSuccess(resp.data.DATA));
     } catch (error) {
-      console.log(error)
+      console.error(error)
     }
   }
 }
@@ -451,7 +450,7 @@ export function getTotalIncome() {
       const resp = await axios.get(`/api/overview/totalIncome`)
       dispatch(slice.actions.getTeacherOverviewSuccessTotalIncome(resp.data.VALUE));
     } catch (error) {
-      console.log(error)
+      console.error(error)
     }
   }
 }
@@ -464,7 +463,7 @@ export function getTotalClasses() {
       const resp = await axios.get(`/api/overview/totalClasses`)
       dispatch(slice.actions.getTeacherOverviewSuccessTotalClasses(resp.data.VALUE));
     } catch (error) {
-      console.log(error)
+      console.error(error)
     }
   }
 }
@@ -477,7 +476,7 @@ export function getTotalClients() {
       const resp = await axios.get(`/api/overview/totalClients`)
       dispatch(slice.actions.getTeacherOverviewSuccessTotalClients(resp.data.VALUE));
     } catch (error) {
-      console.log(error)
+      console.error(error)
     }
   }
 }
@@ -490,7 +489,7 @@ export function getTopClients() {
       const resp = await axios.get(`/api/overview/topClients`)
       dispatch(slice.actions.getTeacherOverviewSuccessTopClients(resp.data));
     } catch (error) {
-      console.log(error)
+      console.error(error)
     }
   }
 }

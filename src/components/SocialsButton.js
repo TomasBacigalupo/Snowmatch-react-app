@@ -44,7 +44,7 @@ export default function SocialsButton({ initialColor = false, simple = true, lin
 
   return (
     <Stack direction="row" flexWrap="wrap" alignItems="center">
-      {SOCIALS.map((social) => { console.log(social);if(social.path != null){
+      {SOCIALS.map((social) => {if(social.path != null){
         const { name, icon, path, socialColor } = social;
         return simple ? (
           <Link key={name} href={path} target="_blank">

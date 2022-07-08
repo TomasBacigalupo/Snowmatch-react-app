@@ -62,7 +62,6 @@ export function contactTeacher(teacherId, contactData) {
   return async () => {
     //dispatch(slice.actions.startLoading());
     try {
-      console.log(contactData);
       const response = await axios.post(`/api/conversation/contact/${teacherId}`, contactData);
       return response;
     } catch (error) {

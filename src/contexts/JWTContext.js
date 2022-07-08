@@ -143,7 +143,6 @@ function AuthProvider({ children }) {
             });
           }
         } else {
-          console.log("FAILED")
           dispatch({
             type: 'INITIALIZE',
             payload: {
@@ -201,7 +200,6 @@ function AuthProvider({ children }) {
     setSession(accessToken);
 
     window.localStorage.setItem('accessToken', accessToken);
-    console.log(accessToken)
     dispatch({
       type: 'REGISTER',
       payload: {

@@ -101,7 +101,6 @@ export default function ContactForm({ teacher, onCancel,cellphone }) {
       const resp = await dispatch(contactTeacher(teacher, newContact));
 
 
-      console.log(countries)
       if(resp === "ERROR"){
         setOpen(true)
         enqueueSnackbar("Your phone number is not validated, check Whatsapp and try again", { 

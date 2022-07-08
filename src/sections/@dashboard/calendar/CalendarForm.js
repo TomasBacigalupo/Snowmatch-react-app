@@ -44,7 +44,6 @@ const getInitialValues = (event, range) => {
     price: null
   };
 
-  console.log("event", event);
   if (event || range) {
     return merge({}, _event, event);
   }
@@ -90,7 +89,6 @@ export default function CalendarForm({ event, range, onCancel, clients }) {
   } = methods;
 
   const onSubmit = async (data) => {
-    console.log("ENTRWE")
     try {
       let newEvent
       debugger
@@ -181,7 +179,6 @@ export default function CalendarForm({ event, range, onCancel, clients }) {
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-      {console.log(clients)}
       <Stack spacing={3} sx={{ p: 3 }}>
         {clients?.length > 0 && <Autocomplete
           name="clientId" label="Client"

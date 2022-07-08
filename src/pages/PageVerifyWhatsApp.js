@@ -58,7 +58,6 @@ export default function PageVerifyWhatsApp() {
 
     useEffect(() => {
         if (countDown < 0 && runTimer) {
-            console.log("expired");
             setRunTimer(false);
             setCountDown(0);
         }
@@ -72,7 +71,6 @@ export default function PageVerifyWhatsApp() {
     const minutes = String(Math.floor(countDown / 60)).padStart(2, 0);
 
     const handleResend = async () =>{
-        console.log("RESEND")
         const response = axios.post('/api/userPersonalDataVerification/registrationNumericCode');
         
         setRunTimer(true)

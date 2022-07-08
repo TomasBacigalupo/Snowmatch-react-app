@@ -110,7 +110,7 @@ export default function UserList() {
 
   const { currentTab: filterStatus, onChangeTab: onChangeFilterStatus } = useTabs('all');
 
-  const { clients } = useSelector((state) =>{console.log(state);return state.clients});
+  const { clients } = useSelector((state) =>{return state.clients});
 
 
   const handleFilterName = (filterName) => {
@@ -125,7 +125,6 @@ export default function UserList() {
   const handleDeleteRow = (id) => {
     dispatch(deleteClient(id));
     const deleteRow = tableData.filter((row) => row.id === id);
-    console.log(deleteRow)
     setSelected([]);
     setTableData(deleteRow);
   };

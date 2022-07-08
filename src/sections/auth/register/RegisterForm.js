@@ -98,7 +98,7 @@ export default function RegisterForm() {
           setError(e.key, { type: "server", message: e.value });
         })
       } else{
-        console.log("Unexpected Error:", error)
+        console.error("Unexpected Error:", error)
       }
     }
   };

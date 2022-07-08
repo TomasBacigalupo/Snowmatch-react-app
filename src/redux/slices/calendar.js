@@ -138,7 +138,6 @@ export function createEvent(newEvent) {
   return async () => {
     //dispatch(slice.actions.startLoading());
     try {
-      console.log("Evento enviado ", newEvent)
       const response = await axios.post('/api/events/create', newEvent);
       dispatch(slice.actions.createEventSuccess(response.data));
       return response;
@@ -212,15 +211,11 @@ export function getUpcomingEvents() {
       const totomorrow = new Date(today)
       totomorrow.setDate(totomorrow.getDate() + 2)
 
-      console.log(tomorrow)
 
       const a1 = events.filter(e => e.start.toDateString() === today.toDateString() || (e.start<=today && today<=e.end) || e.end.toDateString() === today.toDateString());
       const a2 = events.filter(e => e.start.toDateString() === tomorrow.toDateString() || (e.start<=tomorrow && tomorrow<=e.end) || e.end.toDateString() === tomorrow.toDateString());
       const a3 = events.filter(e => e.start.toDateString() === totomorrow.toDateString() || (e.start<=totomorrow && totomorrow<=e.end) || e.end.toDateString() === totomorrow.toDateString());
-      console.log(a1)
-      console.log(a2)
-      console.log(a3)
-      console.log(events)  
+
 
       dispatch(slice.actions.getUpcomingEventsSuccess([a1,a2,a3]));
     } catch (error) {

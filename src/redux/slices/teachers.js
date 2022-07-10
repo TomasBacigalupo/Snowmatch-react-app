@@ -418,7 +418,16 @@ export function updateTeacher(teacher) {
 export function changeProfilePicture(picture, callBack) {
   return async () => {
     try {
-      const resp = await axios.put(`/api/users/image`, { "editImage": picture })
+      const signedUrl = await axios.get(`/api/images/preSignedUrlImage`)
+      // Upload at URL
+      await fetch(signedUrl.data, {
+        method: 'PUT',
+        headers: {
+          "Content-Type": picture.type,
+        },
+        body: picture
+      });
+
     } catch (error) {
       console.error(error)
       callBack(false)

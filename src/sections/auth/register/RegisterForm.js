@@ -90,9 +90,9 @@ export default function RegisterForm() {
 
   const onSubmit = async (data) => {
 
-    const image = await toBase64(data.certificate);
     try {
-      await register(data.email, data.password, data.firstName, data.lastName, data.countryCode, data.cellphone, image, data.certificate);
+      await register(data.email, data.password, data.firstName, data.lastName, data.countryCode, data.cellphone, data.certificate);
+
     } catch (error) {
       if (error.messages && error.messages.entry){
         error.messages.entry.forEach(e => {

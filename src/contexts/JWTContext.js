@@ -184,7 +184,7 @@ function AuthProvider({ children }) {
     });
   };
 
-  const register = async (email, password, firstName, lastName,countryCode, phone, certificate, file) => {
+  const register = async (email, password, firstName, lastName,countryCode, phone, file) => {
     const response = await axios.post('/api/users/create', {
       "email": email,
       "password": password,
@@ -192,7 +192,6 @@ function AuthProvider({ children }) {
       "lastname": lastName,
       "countryCode": countryCode,
       "cellphone": phone,
-      "createImage": certificate,
       "role": "TEACHER"
     });
     const user = response.data;

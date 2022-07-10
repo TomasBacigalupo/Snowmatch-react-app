@@ -40,7 +40,7 @@ export default function UserTableRow({ row, selected, onEditRow, onSelectRow, on
       </TableCell>
 
       <TableCell sx={{ display: 'flex', alignItems: 'center' }}>
-        <Avatar alt={name} src={imageLink} sx={{ mr: 2 }} />
+        <Avatar alt={name} src={"imageLink"} sx={{ mr: 2 }} />
         <Typography variant="subtitle2" noWrap>
           {name}
         </Typography>

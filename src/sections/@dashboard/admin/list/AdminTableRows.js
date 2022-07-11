@@ -21,7 +21,7 @@ UserTableRow.propTypes = {
 export default function UserTableRow({ row, selected, onEditRow, onSelectRow, onConfirmRow, onDeclineRow }) {
   const theme = useTheme();
 
-  const { name, imageLink, role, level, isVerified, state } = row;
+  const { name,lastname, imageLink, role, level, isVerified, state } = row;
 
   const [openMenu, setOpenMenuActions] = useState(null);
 
@@ -42,7 +42,7 @@ export default function UserTableRow({ row, selected, onEditRow, onSelectRow, on
       <TableCell sx={{ display: 'flex', alignItems: 'center' }}>
         <Avatar alt={name} src={"imageLink"} sx={{ mr: 2 }} />
         <Typography variant="subtitle2" noWrap>
-          {name}
+          {name + " " + lastname}
         </Typography>
       </TableCell>
 

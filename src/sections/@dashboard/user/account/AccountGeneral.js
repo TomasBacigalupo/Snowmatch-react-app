@@ -125,17 +125,15 @@ export default function AccountGeneral() {
       endpoint = 'unavailable'
     }
 
-    toBase64(value.photoURL).then(image => {
-      //TODO: only change image if it was changed
-      dispatch(changeProfilePicture(image, (succeed) => {
-        if(succeed){
-          refreshUser({
-            ...user,
-            imageLink: value.photoURL.preview
-          })
-        }
-      }));
-    } );
+    dispatch(changeProfilePicture(data.photoURL, (succeed) => {
+      if (succeed) {
+        refreshUser({
+          ...user,
+          imageLink: value.photoURL.preview
+        })
+      }
+    }));
+    
 
     try {
       //await axios.post();

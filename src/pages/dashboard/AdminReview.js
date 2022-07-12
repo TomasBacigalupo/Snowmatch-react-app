@@ -151,12 +151,20 @@ export default function UserList() {
 
   const { teachers, isOpenModal, selectedEmail } = useSelector((state) =>{console.log(state);return state.admin});
 
+  const [reqPage, setReqPage] = useState(1);
+
+  const onChangePage2 = async () =>{
+    dispatch(getTeachers(reqPage+1));
+    setReqPage(reqPage+1)
+    setTableData(teachers);
+  }
+
   useEffect(() => {
     setTableData(teachers);
   }, [teachers]);
 
   useEffect(() => {
-    dispatch(getTeachers());
+    dispatch(getTeachers(1));
     //setTableData(teachers);
   }, [dispatch]);
   
@@ -246,7 +254,7 @@ export default function UserList() {
                 />
 
                 <TableBody>
-                  {dataFiltered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
+                  {tableData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
                     <AdminTableRow
                       key={row.id}
                       row={row}
@@ -271,10 +279,10 @@ export default function UserList() {
             <TablePagination
               rowsPerPageOptions={[5, 10, 25]}
               component="div"
-              count={dataFiltered.length}
+              count={dataFiltered.length+5}
               rowsPerPage={rowsPerPage}
               page={page}
-              onPageChange={onChangePage}
+              onPageChange={onChangePage2}
               onRowsPerPageChange={onChangeRowsPerPage}
             />
 

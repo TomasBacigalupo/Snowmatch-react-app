@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useCallback, useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSnackbar } from 'notistack';
 import { useNavigate } from 'react-router-dom';
 // form
@@ -22,6 +22,7 @@ import Image from '../../../components/Image';
 
 import { confirmTeacher } from '../../../redux/slices/admin.js'
 import { useDispatch, useSelector } from '../../../redux/store';
+import axios from 'src/utils/axios'
 
 import {
   TeacherDetailsCarousel
@@ -48,12 +49,12 @@ export default function AdminConfirmForm({ isEdit, currentTeacher }) {
     // todo chequear codes
 
   const levels = [
-    { code: '0', label: 'Muy malo' },
-    { code: '1', label: 'Malo' },
-    { code: '2', label: 'Regular' },
-    { code: '3', label: 'Bueno' },
-    { code: '4', label: 'Muy Bueno' },
-    { code: '5', label: 'Experto' }]
+    { code: '0', label: '0' },
+    { code: '1', label: '1' },
+    { code: '2', label: '2' },
+    { code: '3', label: '3' },
+    { code: '4', label: '4' },
+    { code: '5', label: '5' }]
 
   const NewTeacherSchema = Yup.object().shape({
     name: Yup.string().required('Name is required'),
@@ -82,7 +83,7 @@ export default function AdminConfirmForm({ isEdit, currentTeacher }) {
       // birth: currentTeacher?.birth || '',
       dni: currentTeacher?.dni || '',
       // gender: currentTeacher?.gender || '',
-      level: currentTeacher?.level || '',
+      level: currentTeacher?.level.toString() || '',
       id: currentTeacher?.id || '',
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -132,6 +133,18 @@ export default function AdminConfirmForm({ isEdit, currentTeacher }) {
     }
   };
 
+  const [imageSrc,setImageSrc] = useState('');
+
+  // useEffect(()=>{
+  // const accessToken = window.localStorage.getItem('accessToken');
+  // axios.get(currentTeacher?.certificateImageLink)
+  // .then((response ) => {
+  //   let data = `data:${response.headers['content-type']};base64, ${new Buffer(response.data).toString('base64')}`;;
+  //   setImageSrc(data)
+  // },[])
+  // }
+  // )
+
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Grid container spacing={3}>
@@ -171,6 +184,10 @@ export default function AdminConfirmForm({ isEdit, currentTeacher }) {
               {/* <Avatar alt={currentTeacher?.name || ""} src={currentTeacher?.imageLink || ""} sx={{ mr: 2 }} /> */}
               <TeacherDetailsCarousel teacher={{ images: [currentTeacher?.certificateImageLink]}} />
               {/* <Image alt={currentTeacher?.name || ""} src={currentTeacher?.certificateImageLink || ""} onClick={()=> window.open((currentTeacher?.certificateImageLink || ""), "_blank")} sx={{ borderRadius: 1 }} /> */}
+              {/* <TeacherDetailsCarousel teacher={{ images: [imageSrc]}} /> */}
+              {/* <Image alt={currentTeacher?.name || ""} src={imageSrc || ""}  sx={{ borderRadius: 1 }} /> */}
+              {/* <img src={imageSrc || ""}></img> */}
+              
               <Typography variant="subtitle2" noWrap>
                 {currentTeacher?.name}
               </Typography>
@@ -251,7 +268,6 @@ export default function AdminConfirmForm({ isEdit, currentTeacher }) {
               </RHFSelect> */}
 
               <RHFSelect name="level" label="Level" placeholder="Level">
-                <option value={currentTeacher?.level || ""} />
                 {levels.map((option) => (
                   <option key={option.code} value={option.code}>
                     {option.label}

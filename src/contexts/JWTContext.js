@@ -184,7 +184,7 @@ function AuthProvider({ children }) {
     });
   };
 
-  const register = async (email, password, firstName, lastName,countryCode, phone, certificate) => {
+  const register = async (email, password, firstName, lastName,countryCode, phone, file) => {
     const response = await axios.post('/api/users/create', {
       "email": email,
       "password": password,
@@ -192,14 +192,20 @@ function AuthProvider({ children }) {
       "lastname": lastName,
       "countryCode": countryCode,
       "cellphone": phone,
-      "createImage": certificate,
       "role": "TEACHER"
     });
     const user = response.data;
     const accessToken  = user.token;
     setSession(accessToken);
-
     window.localStorage.setItem('accessToken', accessToken);
+    const signedUrl = await axios.get('/api/images/preSignedUrlCertificateImage')
+    await fetch(signedUrl.data, {
+      method: 'PUT',
+      headers: {
+        "Content-Type": file.type,
+      },
+      body: file
+    });
     dispatch({
       type: 'REGISTER',
       payload: {

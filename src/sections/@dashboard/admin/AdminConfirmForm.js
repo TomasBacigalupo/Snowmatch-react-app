@@ -83,7 +83,7 @@ export default function AdminConfirmForm({ isEdit, currentTeacher }) {
       // birth: currentTeacher?.birth || '',
       dni: currentTeacher?.dni || '',
       // gender: currentTeacher?.gender || '',
-      level: currentTeacher?.level || 0,
+      level: currentTeacher?.level.toString() || '',
       id: currentTeacher?.id || '',
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -268,7 +268,6 @@ export default function AdminConfirmForm({ isEdit, currentTeacher }) {
               </RHFSelect> */}
 
               <RHFSelect name="level" label="Level" placeholder="Level">
-                <option value={currentTeacher?.level || 0} />
                 {levels.map((option) => (
                   <option key={option.code} value={option.code}>
                     {option.label}

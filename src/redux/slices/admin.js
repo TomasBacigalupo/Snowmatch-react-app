@@ -70,7 +70,7 @@ export function getTeachers(page) {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get('/api/admin/getTeachers/?page=5');
+      const response = await axios.get('/api/admin/getTeachers/?page='+page);
       dispatch(slice.actions.getTeachersSuccess(response.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));

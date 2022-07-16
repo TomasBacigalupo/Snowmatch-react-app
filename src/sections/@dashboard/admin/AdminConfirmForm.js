@@ -49,12 +49,12 @@ export default function AdminConfirmForm({ isEdit, currentTeacher }) {
     // todo chequear codes
 
   const levels = [
-    { code: '0', label: 'Muy malo' },
-    { code: '1', label: 'Malo' },
-    { code: '2', label: 'Regular' },
-    { code: '3', label: 'Bueno' },
-    { code: '4', label: 'Muy Bueno' },
-    { code: '5', label: 'Experto' }]
+    { code: '0', label: '0' },
+    { code: '1', label: '1' },
+    { code: '2', label: '2' },
+    { code: '3', label: '3' },
+    { code: '4', label: '4' },
+    { code: '5', label: '5' }]
 
   const NewTeacherSchema = Yup.object().shape({
     name: Yup.string().required('Name is required'),
@@ -83,7 +83,7 @@ export default function AdminConfirmForm({ isEdit, currentTeacher }) {
       // birth: currentTeacher?.birth || '',
       dni: currentTeacher?.dni || '',
       // gender: currentTeacher?.gender || '',
-      level: currentTeacher?.level || '',
+      level: currentTeacher?.level || 0,
       id: currentTeacher?.id || '',
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -268,7 +268,7 @@ export default function AdminConfirmForm({ isEdit, currentTeacher }) {
               </RHFSelect> */}
 
               <RHFSelect name="level" label="Level" placeholder="Level">
-                <option value={currentTeacher?.level || ""} />
+                <option value={currentTeacher?.level || 0} />
                 {levels.map((option) => (
                   <option key={option.code} value={option.code}>
                     {option.label}

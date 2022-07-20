@@ -43,7 +43,9 @@
     "calendarOrg": "Calendar organization",
     "calendarOrgSec": "Set available times and manage yor classes.",
     "match": "Match",
-    "matchDesc": "Expand your clients network, get hired when you are free."
+    "matchDesc": "Expand your clients network, get hired when you are free.",
+    "independent": "Independent",
+    "school": "Schools"
   },
   "menu": {
     "general": "General",

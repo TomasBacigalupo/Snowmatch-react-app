@@ -41,11 +41,12 @@
     "clientData": "Client Data",
     "clientDataDesc": "Manege private access important client data.",
     "calendarOrg": "Calendar organization",
-    "calendarOrgSec": "Set available times and manage yor classes.",
+    "calendarOrgDesc": "Set available times and manage yor classes.",
     "match": "Match",
     "matchDesc": "Expand your clients network, get hired when you are free.",
     "independent": "Independent",
-    "school": "Schools"
+    "school": "Schools",
+    "getStartedToday": "Get started with SnowMatch!"
   },
   "menu": {
     "general": "General",

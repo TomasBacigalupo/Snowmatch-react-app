@@ -40,12 +40,13 @@
         "useCases": "¿Por qué SnowMatch?",
         "clientData": "Agenda de Clientes",
         "clientDataDesc": "Todos tus datos son privados y estan protegidos por SnowMatch",
-        "calendarOrg": "Calendar organization",
-        "calendarOrgSec": "Establece tus horarios disponibles y maneja tus clases.",
+        "calendarOrg": "Organizá tus Clases",
+        "calendarOrgDesc": "Establecé tus horarios disponibles y maneja tus clases.",
         "match": "Match",
         "matchDesc": "Matchea con nuevos clientes y consegui clases cuando estas libre.",
         "independent": "Independientes",
-        "school": "Escuelas"
+        "school": "Escuelas",
+        "getStartedToday": "¡Formá parte de SnowMatch!"
     },
     "menu": {
         "general": "General",

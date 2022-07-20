@@ -7,6 +7,7 @@ import Image from '../../components/Image';
 import { MotionViewport, varFade } from '../../components/animate';
 // routes
 import { PATH_AUTH, PATH_DASHBOARD } from '../../routes/paths';
+import useLocales from 'src/hooks/useLocales';
 
 // ----------------------------------------------------------------------
 
@@ -30,6 +31,7 @@ const ContentStyle = styled('div')(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 export default function HomeAdvertisement() {
+  const {translate} = useLocales()
   return (
     <Container component={MotionViewport}>
       <ContentStyle>
@@ -59,8 +61,7 @@ export default function HomeAdvertisement() {
         >
           <Box component={m.div} variants={varFade().inDown} sx={{ color: 'common.white', mb: 5 }}>
             <Typography variant="h2">
-              Get started with
-              <br /> SnowMatch today!
+              {translate("landingPRO.getStartedToday")}
             </Typography>
           </Box>
           <m.div variants={varFade().inDown}>
@@ -78,7 +79,7 @@ export default function HomeAdvertisement() {
                 '&:hover': { bgcolor: 'grey.300' },
               }}
             >
-              SignUp Now
+              SignUp
             </Button>
           </m.div>
         </Box>

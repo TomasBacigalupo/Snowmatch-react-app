@@ -13,19 +13,19 @@ import useLocales from 'src/hooks/useLocales';
 const CARDS = [
   {
     icon: '/icons/ic_user.svg',
-    title: 'Clients data',
+    title: 'clientData',
     description:
-      'Manege private access important client data.',
+      'clientDataDesc',
   },
   {
     icon: '/icons/ic_calendar.svg',
-    title: 'Calendar organization',
-    description: 'Set available times and manage yor classes.',
+    title: 'calendarOrg',
+    description: 'calendarOrgDesc',
   },
   {
     icon: '/icons/ic_match.svg',
-    title: 'Match',
-    description: 'Expand your clients network, get hired when you are free.',
+    title: 'match',
+    description: 'matchDesc',
   },
 ];
 
@@ -132,9 +132,9 @@ export default function HomeMinimal() {
                   }}
                 />
                 <Typography variant="h5" paragraph>
-                  {card.title}
+                  {translate("landingPRO."+card.title)}
                 </Typography>
-                <Typography sx={{ color: isLight ? 'text.secondary' : 'common.white' }}>{card.description}</Typography>
+                <Typography sx={{ color: isLight ? 'text.secondary' : 'common.white' }}>{translate("landingPRO."+card.description)}</Typography>
               </CardStyle>
             </m.div>
           ))}

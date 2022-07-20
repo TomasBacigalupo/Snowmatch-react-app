@@ -125,14 +125,19 @@ export default function AccountGeneral() {
       endpoint = 'unavailable'
     }
 
-    dispatch(changeProfilePicture(data.photoURL, (succeed) => {
-      if (succeed) {
-        refreshUser({
-          ...user,
-          imageLink: value.photoURL.preview
-        })
-      }
-    }));
+    if(typeof data.photoURL === "object" && data.photoURL.path){
+      console.log(data.photoURL)
+      //console.log("EDIT IMAGE")
+      dispatch(changeProfilePicture(data.photoURL, (succeed) => {
+        if (succeed) {
+          refreshUser({
+            ...user,
+            imageLink: value.photoURL.preview
+          })
+        }
+      }));
+    }
+
     
 
     try {

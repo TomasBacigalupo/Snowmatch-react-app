@@ -22,6 +22,8 @@ export const PATH_AUTH = {
 
 export const PATH_GUEST = {
   root: ROOTS_FIND_A_PRO,
+  school: path(ROOTS_FIND_A_PRO, `/school`),
+  independent: path(ROOTS_FIND_A_PRO, `/independent`),
   viewTeacher: (name) => path(ROOTS_FIND_A_PRO, `/teacher/${name}`),
 };
 
@@ -80,6 +82,8 @@ export const PATH_DASHBOARD = {
   eCommerce: {
     root: path(ROOTS_DASHBOARD, '/e-commerce'),
     shop: path(ROOTS_DASHBOARD, '/e-commerce/shop'),
+    shopInd: path(ROOTS_DASHBOARD, '/e-commerce/shop/independent'),
+    shopSchool: path(ROOTS_DASHBOARD, '/e-commerce/shop/school'),
     list: path(ROOTS_DASHBOARD, '/e-commerce/list'),
     checkout: path(ROOTS_DASHBOARD, '/e-commerce/checkout'),
     new: path(ROOTS_DASHBOARD, '/e-commerce/product/new'),

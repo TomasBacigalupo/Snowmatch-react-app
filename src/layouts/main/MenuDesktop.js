@@ -129,8 +129,7 @@ function MenuDesktopItem({ item, isHome, isOpen, isOffset, onOpen, onClose }) {
             display: 'flex',
             cursor: 'pointer',
             alignItems: 'center',
-            ...(isHome && { color: 'common.white' }),
-            ...(isOffset && { color: 'text.primary' }),
+            color: 'primary.main',
             ...(isOpen && { opacity: 0.48 }),
           }}
         >
@@ -144,18 +143,18 @@ function MenuDesktopItem({ item, isHome, isOpen, isOffset, onOpen, onClose }) {
         <Popover
           open={isOpen}
           anchorReference="anchorPosition"
-          anchorPosition={{ top: 80, left: 0 }}
-          anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-          transformOrigin={{ vertical: 'top', horizontal: 'center' }}
+          anchorPosition={{ top: 70, left: 820 }}
+
           onClose={onClose}
           PaperProps={{
             sx: {
               px: 3,
-              pt: 5,
-              pb: 3,
-              right: 16,
+              pt: 3,
+              pb: 2,
+              right: 1,
               m: 'auto',
               borderRadius: 2,
+              width:'10%',
               maxWidth: (theme) => theme.breakpoints.values.lg,
               boxShadow: (theme) => theme.customShadows.z24,
             },
@@ -166,7 +165,7 @@ function MenuDesktopItem({ item, isHome, isOpen, isOffset, onOpen, onClose }) {
               const { subheader, items } = list;
 
               return (
-                <Grid key={subheader} item xs={12} md={subheader === 'Dashboard' ? 6 : 2}>
+                <Grid key={subheader} item xs={3} md={ 10 }>
                   <List disablePadding>
                     <ListSubheader
                       disableSticky
@@ -195,33 +194,12 @@ function MenuDesktopItem({ item, isHome, isOpen, isOffset, onOpen, onClose }) {
                           },
                         }}
                       >
-                        {item.title === 'Dashboard' ? (
-                          <CardActionArea
-                            sx={{
-                              py: 5,
-                              px: 10,
-                              borderRadius: 2,
-                              color: 'primary.main',
-                              bgcolor: 'background.neutral',
-                            }}
-                          >
-                            <Box
-                              component={m.img}
-                              whileTap="tap"
-                              whileHover="hover"
-                              variants={{
-                                hover: { scale: 1.02 },
-                                tap: { scale: 0.98 },
-                              }}
-                              src="https://minimal-assets-api.vercel.app/assets/illustrations/illustration_dashboard.png"
-                            />
-                          </CardActionArea>
-                        ) : (
+                        { 
                           <>
                             <IconBullet />
                             {item.title}
                           </>
-                        )}
+                        }
                       </ListItemStyle>
                     ))}
                   </List>

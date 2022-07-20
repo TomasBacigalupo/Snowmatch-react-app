@@ -83,8 +83,10 @@ export default function MainHeader() {
           </Label> */}
           <Box sx={{ flexGrow: 1 }} />
 
-          {isDesktop && <MenuDesktop isOffset={isOffset} isHome={isHome} navConfig={navConfig} />}
-          {pathname === '/' && (
+          {pathname === '/' && isDesktop && <MenuDesktop isOffset={isOffset} isHome={isHome} navConfig={navConfig} />}
+           { pathname === '/' && !isDesktop && <MenuMobile isOffset={isOffset} isHome={isHome} navConfig={navConfig} />} 
+
+          {/* {pathname === '/' && (
           <Button
             component={RouterLink}
             to={"/match"}
@@ -92,7 +94,7 @@ export default function MainHeader() {
             sx={{ marginRight: '15px' }}
           >
             Match PRO
-          </Button>)}
+          </Button>)} */}
 
           <AccountPopover/>
 

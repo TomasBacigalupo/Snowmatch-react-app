@@ -110,7 +110,13 @@ function MenuMobileItem({ item, isOpen, onOpen }) {
       <>
         <ListItemStyle onClick={onOpen}>
           <ListItemIcon>{icon}</ListItemIcon>
-          <ListItemText disableTypography primary={title} />
+          <ListItemText disableTypography primary={title} sx={{
+            display: 'flex',
+            cursor: 'pointer',
+            alignItems: 'center',
+            color: 'primary.main',
+            ...(isOpen && { opacity: 0.48 }),
+          }} />
           <Iconify
             icon={isOpen ? 'eva:arrow-ios-downward-fill' : 'eva:arrow-ios-forward-fill'}
             sx={{ width: 16, height: 16, ml: 1 }}
@@ -121,18 +127,7 @@ function MenuMobileItem({ item, isOpen, onOpen }) {
           <Box sx={{ display: 'flex', flexDirection: 'column-reverse' }}>
             <NavSectionVertical
               navConfig={children}
-              sx={{
-                '& .MuiList-root:last-of-type .MuiListItemButton-root': {
-                  height: 200,
-                  backgroundSize: 'cover',
-                  backgroundPosition: 'center',
-                  bgcolor: 'background.neutral',
-                  backgroundRepeat: 'no-repeat',
-                  backgroundImage:
-                    'url(https://minimal-assets-api.vercel.app/assets/illustrations/illustration_dashboard.png)',
-                  '& > *:not(.MuiTouchRipple-root)': { display: 'none' },
-                },
-              }}
+              
             />
           </Box>
         </Collapse>
@@ -140,14 +135,6 @@ function MenuMobileItem({ item, isOpen, onOpen }) {
     );
   }
 
-  if (title === 'Documentation') {
-    return (
-      <ListItemStyle href={path} target="_blank" rel="noopener" component={Link}>
-        <ListItemIcon>{icon}</ListItemIcon>
-        <ListItemText disableTypography primary={title} />
-      </ListItemStyle>
-    );
-  }
 
   return (
     <ListItemStyle

@@ -2,7 +2,8 @@ import { Suspense, lazy } from 'react';
 import { Navigate, useRoutes, useLocation } from 'react-router-dom';
 // layouts
 import MainLayout from '../layouts/main';
-import DashboardLayout from '../layouts/dashboard';
+import {DashboardLayout,GuestLayout} from '../layouts/dashboard';
+
 import LogoOnlyLayout from '../layouts/LogoOnlyLayout';
 // guards
 import GuestGuard from '../guards/GuestGuard';
@@ -55,12 +56,20 @@ export default function Router() {
     },
     {
       path: '*',
-      element: <MainLayout />,
+      element: <MainLayout />
+    },
+    {
+      path: 'match',
+      element: (<GuestLayout/>),
       children: [
-        { path: 'match', element: <EcommerceShop isGuest={true}/> },
-        { path: 'match/teacher/:name', element: <EcommerceTeacherDetails isGuest={true}/> }
+        { element: <Navigate to={'/match/school'} replace />, index: true },
+        { path: '*', element: <EcommerceShop isGuest={true} teacherType="school"/> },
+        { path: 'independent', element: <EcommerceShop isGuest={true} teacherType="independent"/> },
+        { path: 'school', element: <EcommerceShop isGuest={true} teacherType="school"/> },
+        { path: 'teacher/:name', element: <EcommerceTeacherDetails isGuest={true}/> }
       ]
     },
+    
 
     // Dashboard Routes
     {
@@ -83,6 +92,9 @@ export default function Router() {
           children: [
             { element: <Navigate to="/dashboard/e-commerce/shop" replace />, index: true },
             { path: 'shop', element: <EcommerceShop /> },
+            { path: 'shop/independent', element: <EcommerceShop teacherType="independent" /> },
+            { path: 'shop/school', element: <EcommerceShop teacherType="school"/> },
+
             { path: 'teacher/:name', element: <EcommerceTeacherDetails /> },
             { path: 'product/:name', element: <EcommerceProductDetails /> },
             { path: 'list', element: <EcommerceProductList /> },

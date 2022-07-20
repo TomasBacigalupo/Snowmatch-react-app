@@ -34,7 +34,7 @@ import useAuth from 'src/hooks/useAuth';
 
 // ----------------------------------------------------------------------
 
-export default function EcommerceShop({isGuest=false}) {
+export default function EcommerceShop({isGuest=false, teacherType="school"}) {
 
   const { themeStretch } = useSettings();
 
@@ -47,7 +47,7 @@ export default function EcommerceShop({isGuest=false}) {
 
   //const { products, sortBy } = useSelector((state) => state.product);
 
-  const filteredTeachers = applyFilter(teachers, sortBy, filters);
+  const filteredTeachers = applyFilter(teachers, sortBy, filters,teacherType);
 
   const defaultValues = {
     rating: filters.rating,
@@ -237,7 +237,7 @@ function checkOverlap(event,filter){
   return false;
 }
 
-function applyFilter(teachers, sortBy, filters) {
+function applyFilter(teachers, sortBy, filters, teacherType) {
 
   // SORT BY
   // if (sortBy === 'featured') {
@@ -283,6 +283,11 @@ function applyFilter(teachers, sortBy, filters) {
       };
       return teacher.stars >= convertRating(filters.rating);
     });
+  }
+  if(teacherType=="independent"){
+    teachers = teachers.filter(t=>!t.school && t.level>=3 && t.resorts?.includes("Cerro Catedral"))
+  } else if(teacherType=="school"){
+    teachers = teachers.filter(t=>t.school || t.level<3 || !t.resorts?.includes("Cerro Catedral") )
   }
   return teachers;
 }

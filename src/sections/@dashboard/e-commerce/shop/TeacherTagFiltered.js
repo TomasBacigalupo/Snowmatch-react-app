@@ -7,6 +7,7 @@ import { Chip, Typography, Stack, Button } from '@mui/material';
 import getColorName from '../../../../utils/getColorName';
 // components
 import Iconify from '../../../../components/Iconify';
+import useLocales from 'src/hooks/useLocales';
 
 // ----------------------------------------------------------------------
 
@@ -65,14 +66,15 @@ export default function TeacherTagFiltered({
   onResetAll
 }) {
   const theme = useTheme();
+  const {translate} = useLocales()
 
   const { gender, category, discipline, rating, language, from, to, resort } = filters;
 
   return (
     <RootStyle>
-      {gender.length > 0 && (
+      {gender?.length > 0 && (
         <WrapperStyle>
-          <LabelStyle>Gender:</LabelStyle>
+          <LabelStyle>{translate("filter.gender")}:</LabelStyle>
           <Stack direction="row" flexWrap="wrap" sx={{ p: 0.75 }}>
             {gender.map((_gender) => (
               <Chip
@@ -88,9 +90,9 @@ export default function TeacherTagFiltered({
       )}
 
       
-    {discipline.length > 0 && (
+    {discipline?.length > 0 && (
         <WrapperStyle>
-          <LabelStyle>Discipline:</LabelStyle>
+          <LabelStyle>{translate("filter.discipline")}:</LabelStyle>
           <Stack direction="row" flexWrap="wrap" sx={{ p: 0.75 }}>
             {discipline.map((_discipline) => (
               <Chip
@@ -104,9 +106,9 @@ export default function TeacherTagFiltered({
           </Stack>
         </WrapperStyle>
       )}
-      {category.length > 0 && (
+      {category?.length > 0 && (
         <WrapperStyle>
-          <LabelStyle>Category:</LabelStyle>
+          <LabelStyle>{translate("filter.category")}:</LabelStyle>
           <Stack direction="row" flexWrap="wrap" sx={{ p: 0.75 }}>
             {category.map((_category) => (
               <Chip
@@ -120,9 +122,9 @@ export default function TeacherTagFiltered({
           </Stack>
         </WrapperStyle>
       )}
-      {language.length > 0 && (
+      {language?.length > 0 && (
         <WrapperStyle>
-          <LabelStyle>Language:</LabelStyle>
+          <LabelStyle>{translate("filter.language")}:</LabelStyle>
           <Stack direction="row" flexWrap="wrap" sx={{ p: 0.75 }}>
             {language.map((_language) => (
               <Chip
@@ -139,7 +141,7 @@ export default function TeacherTagFiltered({
 
       {rating && (
         <WrapperStyle>
-          <LabelStyle>Rating:</LabelStyle>
+          <LabelStyle>{translate("filter.rating")}:</LabelStyle>
           <Stack direction="row" flexWrap="wrap" sx={{ p: 0.75 }}>
             <Chip size="small" label={sentenceCase(rating)} onDelete={onRemoveRating} sx={{ m: 0.5 }} />
           </Stack>
@@ -148,7 +150,7 @@ export default function TeacherTagFiltered({
 
       {from && to && (
         <WrapperStyle>
-          <LabelStyle>Range:</LabelStyle>
+          <LabelStyle>{translate("filter.range")}:</LabelStyle>
           <Stack direction="row" flexWrap="wrap" sx={{ p: 0.75 }}>
             <Chip size="small" label={from.getDate()+"/"+(from.getMonth()+1)+"/"+from.getFullYear()+"-"+to.getDate()+"/"+(to.getMonth()+1)+"/"+to.getFullYear()} onDelete={onRemoveRange} sx={{ m: 0.5 }} />
           </Stack>
@@ -157,7 +159,7 @@ export default function TeacherTagFiltered({
 
       {resort && (
         <WrapperStyle>
-          <LabelStyle>Resort:</LabelStyle>
+          <LabelStyle>{translate("filter.resort")}:</LabelStyle>
           <Stack direction="row" flexWrap="wrap" sx={{ p: 0.75 }}>
             <Chip size="small" label={resort} onDelete={onRemoveResort} sx={{ m: 0.5 }} />
           </Stack>
@@ -167,7 +169,7 @@ export default function TeacherTagFiltered({
 
       {isShowReset && (
         <Button color="error" size="small" onClick={onResetAll} startIcon={<Iconify icon={'ic:round-clear-all'} />}>
-          Clear All
+          {translate("filter.clearAll")}
         </Button>
       )}
     </RootStyle>

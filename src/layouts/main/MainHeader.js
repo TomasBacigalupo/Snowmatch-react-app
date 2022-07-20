@@ -18,6 +18,7 @@ import MenuMobile from './MenuMobile';
 import navConfig from './MenuConfig';
 import { Link as RouterLink } from 'react-router-dom';
 import AccountPopover from '../dashboard/header/AccountPopover';
+import LanguagePopover from '../dashboard/header/LanguagePopover';
 
 // ----------------------------------------------------------------------
 
@@ -82,20 +83,36 @@ export default function MainHeader() {
             v3.3.0
           </Label> */}
           <Box sx={{ flexGrow: 1 }} />
+          
+          {/* {pathname === '/' && isDesktop && <MenuDesktop isOffset={isOffset} isHome={isHome} navConfig={navConfig} />} */}
+          {pathname === '/' && !isDesktop && <MenuMobile isOffset={isOffset} isHome={isHome} navConfig={navConfig} />} 
 
-          {pathname === '/' && isDesktop && <MenuDesktop isOffset={isOffset} isHome={isHome} navConfig={navConfig} />}
-           { pathname === '/' && !isDesktop && <MenuMobile isOffset={isOffset} isHome={isHome} navConfig={navConfig} />} 
-
-          {/* {pathname === '/' && (
+          {pathname === '/' && isDesktop && (
           <Button
             component={RouterLink}
             to={"/match"}
             variant="contained"
-            sx={{ marginRight: '15px' }}
+            sx={{ 
+              marginRight: '15px',
+              marginLeft: '15px'
+           }}
           >
-            Match PRO
-          </Button>)} */}
+            PROs Independientes
+          </Button>)} 
 
+          {pathname === '/' && isDesktop && (
+            <Button
+              component={RouterLink}
+              to={"/match"}
+              variant="contained"
+              sx={{
+                marginRight: '15px',
+                marginLeft: '15px'
+              }}
+            >
+              PROs de Escuela
+            </Button>)}
+          <LanguagePopover />
           <AccountPopover/>
 
           {/* {!isDesktop && <MenuMobile isOffset={isOffset} isHome={isHome} navConfig={navConfig} />} */}

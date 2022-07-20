@@ -24,17 +24,20 @@ import { useDispatch, useSelector } from 'src/redux/store';
 import { useEffect } from 'react';
 import { getEvents } from 'src/redux/slices/calendar';
 import { getTotalClasses, getTotalClients, getTotalIncome } from 'src/redux/slices/teachers';
+import useLocales from 'src/hooks/useLocales';
 
 
 // ----------------------------------------------------------------------
 
 export default function GeneralApp() {
+  
   const { user, isAuthorized } = useAuth();
   const theme = useTheme();
   const { themeStretch } = useSettings();
   const dispatch = useDispatch();
   const { totalIncome, totalClasses, totalClients } = useSelector(state => state.teachers)
   const { events } = useSelector(state => state.calendar)
+  const { translate } = useLocales()
 
   useEffect(() => {
     dispatch(getTotalClasses())
@@ -61,7 +64,7 @@ export default function GeneralApp() {
 
           <Grid item xs={12} md={4}>
             <AppWidgetSummary
-              title="Total Classes"
+              title={translate('generalApp.totalLessons')}
               percent={2.6}
               total={totalClasses}
               chartColor={theme.palette.primary.main}
@@ -71,8 +74,8 @@ export default function GeneralApp() {
 
           <Grid item xs={12} md={4}>
             <AppWidgetSummary
-              title="Total Income"
-              percent={-0.2}
+              title={translate('generalApp.totalIncome')}
+              percent={+2.2}
               total={totalIncome}
               chartColor={theme.palette.chart.blue[0]}
               chartData={[20, 41, 63, 33, 28, 35, 50, 46, 11, 26]}
@@ -81,8 +84,8 @@ export default function GeneralApp() {
 
           <Grid item xs={12} md={4}>
             <AppWidgetSummary
-              title="Total Clients"
-              percent={-0.1}
+              title={translate('generalApp.totalClients')}
+              percent={0.1}
               total={totalClients}
               chartColor={theme.palette.chart.red[0]}
               chartData={[8, 9, 31, 8, 16, 37, 8, 33, 46, 31]}

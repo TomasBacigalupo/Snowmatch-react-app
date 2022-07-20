@@ -8,6 +8,7 @@ import Iconify from '../../../../components/Iconify';
 import useAuth from '../../../../hooks/useAuth';
 import { map } from 'lodash';
 import TeacherSkills from '../../e-commerce/teacher-details/TeacherSkills';
+import useLocales from 'src/hooks/useLocales';
 
 // ----------------------------------------------------------------------
 
@@ -28,10 +29,11 @@ ProfileAbout.propTypes = {
 export default function ProfileAbout({ profile }) {
   const { quote, country, company, school } = profile;
   const { user } = useAuth();
+  const {translate} = useLocales()
 
   return (
     <Card>
-      <CardHeader title="About" />
+      <CardHeader title={translate("profile.about")} />
 
       <Stack spacing={2} sx={{ p: 3 }}>
         {/* <Typography variant="body2">{quote}</Typography> */}
@@ -53,7 +55,7 @@ export default function ProfileAbout({ profile }) {
         <Stack direction="row">
           <IconStyle icon={'ic:round-business-center'} />
           <Typography variant="body2">
-            Pro at &nbsp;
+            {translate('profile.proAt')} &nbsp;
             <Link component="span" variant="subtitle2" color="text.primary">
               {user?.resorts?.map(r=> r+" ")}
             </Link>
@@ -63,9 +65,9 @@ export default function ProfileAbout({ profile }) {
           <TeacherSkills skills={user?.skills}/>
         </Stack>
         
-        <Typography variant="subtitle1">Information</Typography>
+        <Typography variant="subtitle1">{translate("profile.information")}</Typography>
         <Typography variant="body2">{user?.information}</Typography>
-        <Typography variant="subtitle1">Description</Typography>
+        <Typography variant="subtitle1">{translate("profile.description")}</Typography>
         <Typography variant="body2">{user?.description}</Typography>
       </Stack>
     </Card>

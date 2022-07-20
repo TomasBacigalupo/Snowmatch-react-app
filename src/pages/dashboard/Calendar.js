@@ -24,6 +24,7 @@ import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
 // sections
 import { CalendarForm, CalendarStyle, CalendarToolbar } from '../../sections/@dashboard/calendar';
 import { getClients } from 'src/redux/slices/clients';
+import useLocales from 'src/hooks/useLocales';
 
 // ----------------------------------------------------------------------
 
@@ -36,6 +37,7 @@ const selectedEventSelector = (state) => {
 };
 
 export default function Calendar() {
+  const {translate} = useLocales()
   const { themeStretch } = useSettings();
 
   const dispatch = useDispatch();
@@ -165,7 +167,7 @@ export default function Calendar() {
               startIcon={<Iconify icon={'eva:plus-fill'} width={20} height={20} />}
               onClick={handleAddEvent}
             >
-              New Event
+              {translate('calendar.newEvent')}
             </Button>
           }
         />
@@ -206,7 +208,7 @@ export default function Calendar() {
         </Card>
 
         <DialogAnimate open={isOpenModal} onClose={handleCloseModal}>
-          <DialogTitle>{selectedEvent ? 'Edit Event' : 'Add Event'}</DialogTitle>
+          <DialogTitle>{selectedEvent ? translate('calendar.editEvent') : translate('calendar.addEvent')}</DialogTitle>
           <CalendarForm event={selectedEvent || {}} range={selectedRange} onCancel={handleCloseModal} clients={clients}/>
         </DialogAnimate>
       </Container>

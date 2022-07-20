@@ -30,6 +30,7 @@ export default function LanguagePopover() {
         sx={{
           width: 40,
           height: 40,
+          marginRight:'10px',
           ...(open && { bgcolor: 'action.selected' }),
         }}
       >

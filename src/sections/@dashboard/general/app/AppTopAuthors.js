@@ -14,6 +14,7 @@ import { useEffect } from 'react';
 import { getTopClients } from 'src/redux/slices/teachers';
 import { useSelector } from 'react-redux';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+import useLocales from 'src/hooks/useLocales';
 // ----------------------------------------------------------------------
 
 const IconWrapperStyle = styled('div')(({ theme }) => ({
@@ -32,6 +33,7 @@ const IconWrapperStyle = styled('div')(({ theme }) => ({
 export default function AppTopAuthors() {
   const displayAuthor = orderBy(_appAuthors, ['favourite'], ['desc']);
   const dispatch = useDispatch()
+  const {translate} = useLocales()
   const {topClients} = useSelector(state => state.teachers)
   useEffect(()=>dispatch(getTopClients()),[])
 
@@ -73,7 +75,7 @@ export default function AppTopAuthors() {
 
   return (
     <Card>
-      <CardHeader title="Top Clients" />
+      <CardHeader title={translate("generalApp.topClients")} />
       <Stack spacing={3} sx={{ p: 3 }}>
         {topClients.map((client, index) => (
           <AuthorItem key={client.id} author={client} index={index} />

@@ -11,6 +11,7 @@ import MyAvatar from '../../../../components/MyAvatar';
 import Image from '../../../../components/Image';
 
 import { useMediaQuery } from 'react-responsive';
+import useLocales from 'src/hooks/useLocales';
 
 
 // ----------------------------------------------------------------------
@@ -52,7 +53,7 @@ export default function ProfileCover({ myProfile }) {
   const { user } = useAuth();
 
   const { cover } = myProfile;
-
+  const { translate } = useLocales() 
   const isMobile = useMediaQuery({ query: `(max-width: 760px)` });
 
   const imageSize = () =>{
@@ -88,7 +89,7 @@ export default function ProfileCover({ myProfile }) {
         >
           <Typography variant="h4">{user?.displayName}</Typography>
           <Typography sx={{ opacity: 0.72 }}>{user?.name} {user?.lastname}</Typography>
-          <Typography sx={{ opacity: 0.72 }}>{user?.state}</Typography>
+          <Typography sx={{ opacity: 0.72 }}>{translate('general.'+user?.state)}</Typography>
         </Box>
       </InfoStyle>
       {imageSize()}

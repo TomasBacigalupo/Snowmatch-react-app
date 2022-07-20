@@ -2,7 +2,7 @@ import { m } from 'framer-motion';
 import { Link as RouterLink } from 'react-router-dom';
 // @mui
 import { styled } from '@mui/material/styles';
-import { Button, Box, Link, Container, Typography, Stack, Grid } from '@mui/material';
+import { Button, Box, Link, Container, Typography, Stack, Grid, Select } from '@mui/material';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // components
@@ -12,6 +12,12 @@ import TextIconLabel from '../../components/TextIconLabel';
 import { MotionContainer, varFade } from '../../components/animate';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import LoginIcon from '@mui/icons-material/Login';
+import useLocales from 'src/hooks/useLocales';
+import { useMemo, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { FormProvider, RHFSelect } from 'src/components/hook-form';
+import HomeFilterTeachers from './HomeFilterTeachers';
 
 // ----------------------------------------------------------------------
 
@@ -31,7 +37,6 @@ const RootStyle = styled(m.div)(({ theme }) => ({
 
 const ContentStyle = styled((props) => <Stack spacing={5} {...props} />)(({ theme }) => ({
   zIndex: 10,
-  maxWidth: 520,
   margin: 'auto',
   textAlign: 'center',
   position: 'relative',
@@ -51,11 +56,11 @@ const HeroOverlayStyle = styled(m.img)({
   position: 'absolute',
 });
 
-const HeroImgStyle = styled(m.img)(({ theme }) => ({
+const HeroImgStyle = styled(m.div)(({ theme }) => ({
   top: 0,
   right: 0,
   bottom: 0,
-  zIndex: 8,
+  zIndex: 10,
   width: '100%',
   margin: 'auto',
   position: 'absolute',
@@ -69,6 +74,54 @@ const HeroImgStyle = styled(m.img)(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 export default function HomeHero() {
+  const {translate} = useLocales()
+  const [value, setValue] = useState(0);
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
+
+  const SKI_RESORTS = [
+    "Aconcagua",
+    "Batea Mahuida",
+    "Calafate Mountain Park",
+    "Caviahue",
+    "Cerro Bayo",
+    "Cerro Castor",
+    "Cerro Catedral",
+    "Chapelco",
+    "La Hoya",
+    "Las Leñas",
+    "Las Pendientes",
+    "Los Penitentes",
+    "Los Puquios",
+    "Monte Bianco",
+    "Patagonia Heliski",
+    "Perito Moreno",
+    "Vallecitos"
+  ]
+
+  const defaultValues = {
+      resort: "Catedral",
+    }
+
+  const methods = useForm({
+    resolver: yupResolver({}),
+    defaultValues,
+  });
+
+  const {
+    reset,
+    watch,
+    control,
+    handleSubmit,
+    formState: { isSubmitting },
+    setError
+  } = methods;
+
+  const onSubmit = async (data) => {
+    console.log(data)
+  }
   return (
     <MotionContainer>
       <RootStyle>
@@ -78,38 +131,56 @@ export default function HomeHero() {
           variants={varFade().in}
         />
 
-        <HeroImgStyle
-          alt="hero"
-          src="https://minimal-assets-api.vercel.app/assets/images/home/hero.png"
-          variants={varFade().inUp}
-        />
-
         <Container>
           <ContentStyle>
-            <m.div variants={varFade().inRight}>
-              <Typography variant="h1" sx={{ color: 'common.white' }}>
-                Take your job to<br />
-                the next level <br /> with
-                <Typography component="span" variant="h1" sx={{ color: 'primary.main' }}>
-                  &nbsp;SnowMatch
-                </Typography>
-              </Typography>
-            </m.div>
+            <Grid container spacing={5}>
+              <Grid item xs={12} md={6}>
+                <HomeFilterTeachers />
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <m.div variants={varFade().inRight}>
+                  <Typography variant="h1" sx={{ color: 'common.white' }}>
+                    {translate('landingPRO.heroTitle1')}<br />
+                    {translate('landingPRO.heroTitle2')}
+                    <Typography component="span" variant="h1" sx={{ color: 'primary.main' }}>
+                      &nbsp;SnowMatch
+                    </Typography>
+                  </Typography>
+                </m.div>
 
-            <m.div variants={varFade().inRight}>
-              
-              <Typography sx={{ color: 'common.white' }}>
-                Handle all your customers on a centralized platform.
-              </Typography>
-              <Typography sx={{ color: 'common.white' }}>
-                Get in touch with new clients.
-              </Typography>
-              <Typography sx={{ color: 'common.white' }}>
-                Manage you earnings.
-              </Typography>
-              
-            </m.div>
+                <m.div variants={varFade().inRight}>
 
+                  <Typography sx={{ color: 'common.white' }}>
+                    {translate('landingPRO.desc1')}
+                  </Typography>
+                  <Typography sx={{ color: 'common.white' }}>
+                    {translate('landingPRO.desc2')}
+                  </Typography>
+                  <Typography sx={{ color: 'common.white' }}>
+                    {translate('landingPRO.desc3')}
+                  </Typography>
+
+                </m.div>
+                <br/>
+                <m.div variants={varFade().inRight}>
+                  <Button
+                    size="large"
+                    variant="contained"
+                    component={RouterLink}
+                    to={"/auth/register"}
+                    sx={{ marginBottom: '10px' }}
+                    startIcon={<Iconify icon={'eva:flash-fill'} width={20} height={20} />}
+                  >
+                    {translate('landingPRO.getStarted')}
+                  </Button>
+                </m.div>
+              </Grid>
+              
+
+            </Grid>
+            
+
+            
             {/* <Stack spacing={2.5} alignItems="center" direction={{ xs: 'column', md: 'row' }}>
               <m.div variants={varFade().inRight}>
                 <TextIconLabel
@@ -158,23 +229,6 @@ export default function HomeHero() {
               </m.div>
             </Stack> */}
 
-            <m.div variants={varFade().inRight}>
-              
-                  <Button
-                    size="large"
-                    variant="contained"
-                    component={RouterLink}
-                    to={"/auth/register"}
-                    sx={{marginBottom:'10px'}}
-                    startIcon={<Iconify icon={'eva:flash-fill'} width={20} height={20} />}
-                  >
-                    Get Started
-                  </Button>
-                
-              
-              
-              
-            </m.div>
             {/* TODO: ski center icons */}
             {/* <Stack spacing={2.5}>
               <m.div variants={varFade().inRight}>

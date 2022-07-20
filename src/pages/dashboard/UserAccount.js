@@ -20,14 +20,14 @@ import {
   AccountNotifications,
   AccountChangePassword,
 } from '../../sections/@dashboard/user/account';
+import useLocales from 'src/hooks/useLocales';
 
 // ----------------------------------------------------------------------
 
 export default function UserAccount() {
   const { themeStretch } = useSettings();
-
   const { currentTab, onChangeTab } = useTabs('general');
-
+  const {translate} = useLocales()
   const ACCOUNT_TABS = [
     {
       value: 'general',
@@ -45,11 +45,11 @@ export default function UserAccount() {
     <Page title="User: Account Settings">
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <HeaderBreadcrumbs
-          heading="Account"
+          heading={translate("breadcrumb.account")}
           links={[
-            { name: 'Dashboard', href: PATH_DASHBOARD.root },
-            { name: 'User', href: PATH_DASHBOARD.user.root },
-            { name: 'Account Settings' },
+            { name: translate("breadcrumb.dashboard"), href: PATH_DASHBOARD.root },
+            { name: translate("breadcrumb.profile"), href: PATH_DASHBOARD.user.root },
+            { name: translate("breadcrumb.editProfile") },
           ]}
         />
 
@@ -61,7 +61,7 @@ export default function UserAccount() {
           onChange={onChangeTab}
         >
           {ACCOUNT_TABS.map((tab) => (
-            <Tab disableRipple key={tab.value} label={capitalCase(tab.value)} icon={tab.icon} value={tab.value} />
+            <Tab disableRipple key={tab.value} label={translate("account.tabs." + tab.value)} icon={tab.icon} value={tab.value} />
           ))}
         </Tabs>
 

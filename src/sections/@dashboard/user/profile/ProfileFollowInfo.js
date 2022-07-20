@@ -8,6 +8,7 @@ import { useContext, useEffect } from 'react';
 import useAuth from 'src/hooks/useAuth';
 import { getClients } from 'src/redux/slices/clients';
 import { getTotalClients } from 'src/redux/slices/teachers';
+import useLocales from 'src/hooks/useLocales';
 
 // ----------------------------------------------------------------------
 
@@ -21,6 +22,7 @@ ProfileFollowInfo.propTypes = {
 export default function ProfileFollowInfo({ profile }) {
   const {user} = useAuth()
   const { totalClients } = useSelector((state) => state.teachers);
+  const {translate} = useLocales()
   const dispatch = useDispatch()
   useEffect(()=>{
     dispatch(getTotalClients())
@@ -31,14 +33,14 @@ export default function ProfileFollowInfo({ profile }) {
         <Stack width={1} textAlign="center">
           <Typography variant="h4">{fNumber(totalClients)}</Typography>
           <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-            Clients
+            {translate("profile.clients")}
           </Typography>
         </Stack>
 
         <Stack width={1} textAlign="center">
-          <Typography variant="h4">{fNumber(user.level) > 0 ? fNumber(user.level):'Under Review'}</Typography>
+          <Typography variant="h4">{fNumber(user.level) > 0 ? fNumber(user.level): translate("profile.underReview")}</Typography>
           <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-            Instructor level
+            {translate("profile.level")}
           </Typography>
         </Stack>
       </Stack>

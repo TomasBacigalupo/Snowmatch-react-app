@@ -27,23 +27,24 @@ import {
   TeacherDetailsCalendar
 } from '../../sections/@dashboard/e-commerce/teacher-details';
 import CartWidget from '../../sections/@dashboard/e-commerce/CartWidget';
+import useLocales from 'src/hooks/useLocales';
 
 // ----------------------------------------------------------------------
 
 const PRODUCT_DESCRIPTION = [
   {
-    title: 'Verified',
-    description: 'Verified and approved teacher',
+    title: 'verified',
+    description: 'verifiedDescription',
     icon: 'ic:round-verified',
   },
   {
-    title: '1 Day Reply',
-    description: 'This teachers reply\'s messages in the same day' ,
+    title: 'reply',
+    description: 'replyDescription' ,
     icon: 'eva:clock-fill',
   },
   {
-    title: 'SnowMatch Warranty',
-    description: 'SnowMatch trusts this teacher',
+    title: 'warranty',
+    description: 'warrantyDescription',
     icon: 'ic:round-verified-user',
   },
 ];
@@ -70,7 +71,7 @@ export default function EcommerceTeacherDetails({isGuest = false}) {
   const [value, setValue] = useState('1');
   const { name = '' } = useParams();
   const { product, error, checkout } = useSelector((state) => state.product);
-  
+  const {translate} = useLocales()
   const { teacher, isLoading } = useSelector( (state) => state.teachers);
   const { user } = useAuth();
   
@@ -88,14 +89,14 @@ export default function EcommerceTeacherDetails({isGuest = false}) {
   };
 
   return (
-    <Page title="Ecommerce: Instructor Details">
+    <Page title={translate('teacherDetails.title')}>
       {isGuest && (<><br /><br /><br /></>)}
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <HeaderBreadcrumbs
-          heading="Instructor Details"
+          heading={translate('teacherDetails.title')}
           links={[
-            !isGuest? { name: 'Dashboard', href: PATH_DASHBOARD.root} : {name: 'Home', href: '/'},
-            !isGuest? { name: 'Instructors', href: PATH_DASHBOARD.eCommerce.shop,} : { name: 'Match', href: PATH_GUEST.root},
+            // !isGuest? { name: translate("breadcrumb.dashboard', href: PATH_DASHBOARD.root} : {name: 'Home', href: '/'},
+            !isGuest? { name: 'Match', href: PATH_DASHBOARD.eCommerce.shop,} : { name: 'Match', href: PATH_GUEST.root},
             { name: teacher?.teacher?.name + ' ' + teacher?.teacher?.lastname },
           ]
         }
@@ -133,7 +134,7 @@ export default function EcommerceTeacherDetails({isGuest = false}) {
                       label={`Review (${teacher.rates.length})`}
                       sx={{ '& .MuiTab-wrapper': { whiteSpace: 'nowrap' } }}
                     /> */}
-                    <Tab disableRipple value="1" label="Calendar" />
+                    <Tab disableRipple value="1" label={translate('teacherDetails.calendar')} />
 
                   </TabList>
                 </Box>
@@ -162,9 +163,9 @@ export default function EcommerceTeacherDetails({isGuest = false}) {
                       <Iconify icon={item.icon} width={36} height={36} />
                     </IconWrapperStyle>
                     <Typography variant="subtitle1" gutterBottom>
-                      {item.title}
+                      {translate("teacherDetails." + item.title)}
                     </Typography>
-                    <Typography sx={{ color: 'text.secondary' }}>{item.description}</Typography>
+                    <Typography sx={{ color: 'text.secondary' }}>{translate('teacherDetails.'+ item.description)}</Typography>
                   </Box>
                 </Grid>
               ))}

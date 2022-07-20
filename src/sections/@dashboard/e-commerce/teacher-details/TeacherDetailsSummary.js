@@ -34,6 +34,7 @@ import interactionPlugin from '@fullcalendar/interaction';
 
 import { useState } from 'react';
 import TeacherSkills from './TeacherSkills';
+import useLocales from 'src/hooks/useLocales';
 
 
 
@@ -79,7 +80,7 @@ TeacherDetailsSummary.propTypes = {
 
 export default function TeacherDetailsSummary({ cart, teacher, onAddCart, onGotoStep, ...other }) {
   const theme = useTheme();
-
+  const {translate} = useLocales();
   const navigate = useNavigate();
 
   const dispatch = useDispatch();
@@ -187,7 +188,7 @@ export default function TeacherDetailsSummary({ cart, teacher, onAddCart, onGoto
                 sx={{ whiteSpace: 'nowrap' }}
                 disabled={disabled}
               >
-                Contact
+                Match
               </Button>
               </div>
           </Tooltip>)
@@ -203,7 +204,7 @@ export default function TeacherDetailsSummary({ cart, teacher, onAddCart, onGoto
                 onClick={handleContact}
                 sx={{ whiteSpace: 'nowrap' }}
               >
-                Contact
+                Match
               </Button>
   
 )
@@ -232,7 +233,7 @@ export default function TeacherDetailsSummary({ cart, teacher, onAddCart, onGoto
                 color: state !== 'AVAILABLE' ? 'error.main' : 'success.main',
             }}
             >
-            {state}
+            {translate('general.' + state)}
             </Typography>
         )}
 
@@ -242,10 +243,10 @@ export default function TeacherDetailsSummary({ cart, teacher, onAddCart, onGoto
 
         <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 2 }}>
           <Rating value={stars} precision={0.1} readOnly />
-          <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+          {/* <Typography variant="body2" sx={{ color: 'text.secondary' }}>
             ({fShortenNumber(rates.length)}
           {' '}reviews)
-          </Typography>
+          </Typography> */}
         </Stack>
 
         {/* <Typography variant="h4" sx={{ mb: 3 }}>
@@ -263,7 +264,7 @@ export default function TeacherDetailsSummary({ cart, teacher, onAddCart, onGoto
 
         <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ my: 3 }}>
           <Typography variant="subtitle1" sx={{ mt: 0.5 }}>
-            Information
+          {translate('teacherDetails.information')}
           </Typography>
         </Stack>
         <Typography variant="body1" sx={{ mt: 0.5 }} paragraph>
@@ -299,7 +300,7 @@ export default function TeacherDetailsSummary({ cart, teacher, onAddCart, onGoto
 
         <Stack direction="row" justifyContent="space-between" sx={{ mb: 3 }}>
           <Typography variant="subtitle1" sx={{ mt: 0.5 }}>
-            Description
+          {translate('teacherDetails.description')}
           </Typography>
 
 

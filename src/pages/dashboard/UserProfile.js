@@ -23,6 +23,7 @@ import {
   ProfileGallery,
   ProfileFollowers,
 } from '../../sections/@dashboard/user/profile';
+import useLocales from 'src/hooks/useLocales';
 
 // ----------------------------------------------------------------------
 
@@ -49,6 +50,8 @@ export default function UserProfile() {
 
   const { user } = useAuth();
 
+  const { translate } = useLocales()
+
   const { currentTab, onChangeTab } = useTabs('profile');
 
   const [findFriends, setFindFriends] = useState('');
@@ -69,11 +72,10 @@ export default function UserProfile() {
     <Page title="User: Profile">
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <HeaderBreadcrumbs
-          heading="Profile"
+          heading={translate("breadcrumb.profile")}
           links={[
-            { name: 'Dashboard', href: PATH_DASHBOARD.root },
-            { name: 'User', href: PATH_DASHBOARD.user.root },
-            { name: user?.displayName || 'Profile' },
+            { name: translate("breadcrumb.dashboard"), href: PATH_DASHBOARD.root },
+            { name: user?.name || 'Profile' },
           ]}
         />
         <Card
@@ -94,7 +96,7 @@ export default function UserProfile() {
               onChange={onChangeTab}
             >
               {PROFILE_TABS.map((tab) => (
-                <Tab disableRipple key={tab.value} value={tab.value} icon={tab.icon} label={capitalCase(tab.value)} />
+                <Tab disableRipple key={tab.value} value={tab.value} icon={tab.icon} label={translate("profile.tabs."+tab.value)} />
               ))}
             </Tabs>
           </TabsWrapperStyle>

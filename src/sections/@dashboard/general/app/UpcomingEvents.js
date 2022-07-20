@@ -131,7 +131,7 @@ function hasEvents(events, dispatch){
     return(
       <m.div variants={varFade().inRight}>
           <Typography variant="overline" component="span" sx={{ mb: 1, opacity: 0.48 }}>
-            No sheduled events
+            No tiene eventos agendados
           </Typography>
         </m.div>
       )
@@ -146,7 +146,7 @@ function getDate(index){
   return (
         <m.div variants={varFade().inRight}>
           <Typography variant="overline" component="span" sx={{ mb: 1, opacity: 0.48 }}>
-            {date.toLocaleDateString("en",{weekday:"long"})}
+            {date.toLocaleDateString("es",{weekday:"long"})}
           </Typography>
           <Typography variant="h3" component="div" sx={{ mb: 1, opacity: 0.48 }}>
           {date.getDate()}

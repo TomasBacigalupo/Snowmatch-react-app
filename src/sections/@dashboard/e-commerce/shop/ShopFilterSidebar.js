@@ -24,6 +24,8 @@ import Scrollbar from '../../../../components/Scrollbar';
 import { ColorManyPicker } from '../../../../components/color-utils';
 import { RHFMultiCheckbox, RHFRadioGroup, RHFTextField, RHFSelect} from '../../../../components/hook-form';
 import { MobileDatePicker } from '@mui/lab';
+import useLocales from 'src/hooks/useLocales';
+import { FilterSharp } from '@mui/icons-material';
 
 
 
@@ -59,11 +61,11 @@ ShopFilterSidebar.propTypes = {
 
 export default function ShopFilterSidebar({ isOpen, onResetAll, onOpen, onClose }) {
   const { control } = useFormContext();
-
+  const { translate } = useLocales()
   return (
     <>
       <Button disableRipple color="inherit" endIcon={<Iconify icon={'ic:round-filter-list'} />} onClick={onOpen}>
-        Filters
+        {translate('filter.filters')}
       </Button>
 
       <Drawer
@@ -76,7 +78,7 @@ export default function ShopFilterSidebar({ isOpen, onResetAll, onOpen, onClose 
       >
         <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ px: 1, py: 2 }}>
           <Typography variant="subtitle1" sx={{ ml: 1 }}>
-            Filters
+            {translate('filter.filters')}
           </Typography>
           <IconButton onClick={onClose}>
             <Iconify icon={'eva:close-fill'} width={20} height={20} />
@@ -88,7 +90,7 @@ export default function ShopFilterSidebar({ isOpen, onResetAll, onOpen, onClose 
         <Scrollbar>
           <Stack spacing={3} sx={{ p: 3 }}>
             <Stack spacing={1}>
-              <Typography variant="subtitle1">Resort</Typography>
+              <Typography variant="subtitle1">{translate('filter.resort')}</Typography>
 
               <RHFSelect name="resort" label="Resort" placeholder="Resort">
                 <option value="" />
@@ -100,28 +102,28 @@ export default function ShopFilterSidebar({ isOpen, onResetAll, onOpen, onClose 
               </RHFSelect>
             </Stack>
             <Stack spacing={1}>
-              <Typography variant="subtitle1">Gender</Typography>
+              <Typography variant="subtitle1">{translate('filter.gender')}</Typography>
               <RHFMultiCheckbox name="gender" options={FILTER_GENDER_OPTIONS} sx={{ width: 1 }} />
             </Stack>
 
             <Stack spacing={1}>
-              <Typography variant="subtitle1">Category</Typography>
+              <Typography variant="subtitle1">{translate('filter.category')}</Typography>
               <RHFMultiCheckbox name="category" options={FILTER_CATEGORY_OPTIONS} sx={{ width: 1 }} />
             </Stack>
 
 
             <Stack spacing={1}>
-              <Typography variant="subtitle1">Discipline</Typography>
+              <Typography variant="subtitle1">{translate('filter.discipline')}</Typography>
               <RHFMultiCheckbox name="discipline" options={FILTER_DISCIPLINE_OPTIONS} sx={{ width: 1 }} />
             </Stack>
 
             <Stack spacing={1}>
-              <Typography variant="subtitle1">Languages</Typography>
+              <Typography variant="subtitle1">{translate('filter.languages')}</Typography>
               <RHFMultiCheckbox name="language" options={FILTER_LANGUAGE_OPTIONS} sx={{ width: 1 }} />
             </Stack>
 
             <Stack spacing={1}>
-              <Typography variant="subtitle1">Range</Typography>
+              <Typography variant="subtitle1">{translate('filter.range')}</Typography>
               <Controller
                   name="from"
                   control={control}
@@ -155,7 +157,7 @@ export default function ShopFilterSidebar({ isOpen, onResetAll, onOpen, onClose 
                 </Stack>
 
             <Stack spacing={1}>
-              <Typography variant="subtitle1">Rating</Typography>
+              <Typography variant="subtitle1">{translate('filter.rating')}</Typography>
 
               <Controller
                 name="rating"
@@ -182,7 +184,7 @@ export default function ShopFilterSidebar({ isOpen, onResetAll, onOpen, onClose 
                           my: 0.5,
                           borderRadius: 1,
                           '&:hover': { opacity: 0.48 },
-                          ...(field.value.includes(item) && {
+                          ...(field?.value?.includes(item) && {
                             bgcolor: 'action.selected',
                           }),
                         }}
@@ -205,7 +207,7 @@ export default function ShopFilterSidebar({ isOpen, onResetAll, onOpen, onClose 
             onClick={onResetAll}
             startIcon={<Iconify icon={'ic:round-clear-all'} />}
           >
-            Clear All
+            {translate('filter.clearAll')}
           </Button>
         </Box>
       </Drawer>

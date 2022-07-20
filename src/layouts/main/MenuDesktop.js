@@ -7,6 +7,7 @@ import { styled } from '@mui/material/styles';
 import { Box, Link, Grid, List, Stack, Popover, ListItem, ListSubheader, CardActionArea } from '@mui/material';
 // components
 import Iconify from '../../components/Iconify';
+import useLocales from 'src/hooks/useLocales';
 
 // ----------------------------------------------------------------------
 
@@ -45,6 +46,7 @@ MenuDesktop.propTypes = {
 export default function MenuDesktop({ isOffset, isHome, navConfig }) {
   const { pathname } = useLocation();
   const [open, setOpen] = useState(false);
+  const {translate} = useLocales();
 
   useEffect(() => {
     if (open) {
@@ -65,7 +67,7 @@ export default function MenuDesktop({ isOffset, isHome, navConfig }) {
     <Stack direction="row">
       {navConfig.map((link) => (
         <MenuDesktopItem
-          key={link.title}
+          key={translate("menu."+link.title)}
           item={link}
           isOpen={open}
           onOpen={handleOpen}
@@ -119,7 +121,7 @@ MenuDesktopItem.propTypes = {
 
 function MenuDesktopItem({ item, isHome, isOpen, isOffset, onOpen, onClose }) {
   const { title, path, children } = item;
-
+  const {translate} = useLocales()
   if (children) {
     return (
       <>
@@ -197,7 +199,7 @@ function MenuDesktopItem({ item, isHome, isOpen, isOffset, onOpen, onClose }) {
                         { 
                           <>
                             <IconBullet />
-                            {item.title}
+                            {translate("menu."+item.title)}
                           </>
                         }
                       </ListItemStyle>

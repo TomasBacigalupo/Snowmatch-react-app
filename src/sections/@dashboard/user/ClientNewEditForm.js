@@ -52,6 +52,8 @@ ClientNewEditForm.propTypes = {
     isEdit: PropTypes.bool,
     currentUser: PropTypes.object,
   };
+
+
   
   export default function ClientNewEditForm({ isEdit, currentUser }) {
 
@@ -74,7 +76,7 @@ ClientNewEditForm.propTypes = {
       name: Yup.string().required('Name is required'),
       lastname: Yup.string().required('Last name is required'),
       email: Yup.string().email(),
-      cellphone: Yup.string(),
+      cellphone: Yup.string().matches(/^\d+$/,"Cellphone can only contain numbers"),
       country: Yup.string(),
       notes: Yup.string().nullable(),
       isTipper: Yup.bool(),
@@ -165,6 +167,25 @@ ClientNewEditForm.propTypes = {
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isEdit, currentUser]);
+
+    useEffect(() => {
+      document.addEventListener('paste', handlePasteClipboard);
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    const handlePasteClipboard = (event) => {
+
+      if(event.path[0].name === "cellphone"){
+        let data = event?.clipboardData?.getData('Text') || '';
+  
+        data = data.replace(/\D/g, '');
+        console.log(event)
+        setValue("cellphone",data)
+        event.preventDefault()
+        
+      }
+
+    };
   
     const onSubmit = async (data) => {
       var func;

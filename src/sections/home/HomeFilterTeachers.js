@@ -1,7 +1,7 @@
 import { Controller, useForm } from 'react-hook-form';
 // @mui
 import { MobileDatePicker } from '@mui/lab';
-import { Grid, Card, Stack, Button, TextField } from '@mui/material';
+import { Grid, Card, Stack, Button, TextField, Typography } from '@mui/material';
 //
 import { FormProvider, RHFMultiCheckbox, RHFSelect } from 'src/components/hook-form';
 import { FILTER_CATEGORY_OPTIONS, FILTER_DISCIPLINE_OPTIONS, FILTER_RESORT_OPTIONS } from '../@dashboard/e-commerce/shop/ShopFilterSidebar';
@@ -81,6 +81,9 @@ export default function HomeFilterTeachers() {
         <>
             <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
                 <Grid container spacing={2}>
+                    <Grid item xs={12} md={9} justifyContent='center'>
+                        <Typography variant="h5" sx={{ color: 'common.white' }}> {translate("landingPRO.find")} </Typography>
+                    </Grid>
                     <Grid item xs={12} md={9}>
                         <Card sx={{ p: 3 }}>
                             <Grid container spacing={2} alignItems='center'>

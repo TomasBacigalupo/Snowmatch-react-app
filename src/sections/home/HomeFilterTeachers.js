@@ -27,7 +27,7 @@ export default function HomeFilterTeachers() {
     const defaultValues = {
         resort: '',
         from: new Date(),
-        to: new Date(),
+        to: new Date().getMonth() == 11 ? new Date(new Date().getFullYear() + 1, 0, 1) : new Date(new Date().getFullYear(), new Date().getMonth() + 1, 1),
         gender: [],
         category: [],
         language: [],

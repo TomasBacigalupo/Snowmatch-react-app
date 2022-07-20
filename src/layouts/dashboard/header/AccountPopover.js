@@ -31,7 +31,7 @@ const MENU_OPTIONS = [
 
 const GUEST_MENU_OPTIONS = [
   {
-    label: 'SignUp as a PRO',
+    label: 'SignUpAsAPRO',
     linkTo: '/auth/register',
   },
   {

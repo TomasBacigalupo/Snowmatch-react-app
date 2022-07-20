@@ -159,9 +159,7 @@ export default function EcommerceShop({isGuest=false, teacherType="school"}) {
           justifyContent="space-between"
           sx={{ mb: 2 }}
         >
-          {/*<ShopProductSearch />*/}
-
-
+          <ShopProductSearch teachers={filteredTeachers} />
 
           <Stack direction="row" spacing={1} flexShrink={0} sx={{ my: 1 }}>
             <FormProvider methods={methods}>

@@ -19,8 +19,8 @@ import { FormProvider, RHFSelect } from '../../../../components/hook-form';
 import { DialogAnimate } from '../../../../components/animate';
 import { useDispatch, useSelector } from '../../../../redux/store';
 
-import { openModal, closeModal} from '../../../../redux/slices/contact';
-import { ContactForm } from '.';
+import { openContactModal, closeContactModal, openReferModal, closeReferModal} from '../../../../redux/slices/contact';
+import { ContactForm, ReferForm } from '.';
 import ConnectWithoutContactIcon from '@mui/icons-material/ConnectWithoutContact';
 
 import FullCalendar from '@fullcalendar/react'; // => request placed at the top
@@ -36,7 +36,7 @@ import { useState } from 'react';
 import TeacherSkills from './TeacherSkills';
 import useLocales from 'src/hooks/useLocales';
 
-
+import useAuth from 'src/hooks/useAuth';
 
 
 
@@ -85,13 +85,20 @@ export default function TeacherDetailsSummary({ cart, teacher, onAddCart, onGoto
 
   const dispatch = useDispatch();
 
+  const user = useAuth();
+
   const [view, setView] = useState('dayGridMonth');
 
 
-  const { isOpenModal, error } = useSelector((state) => state.contact);
+  const { isOpenReferModal, isOpenContactModal, error } = useSelector((state) => state.contact);
 
   const handleContact = () => {
-    dispatch(openModal());
+    dispatch(openContactModal());
+  };
+
+  const handleRefer = () => {
+    console.log(user)
+    dispatch(openReferModal());
   };
   
   const {
@@ -117,7 +124,9 @@ export default function TeacherDetailsSummary({ cart, teacher, onAddCart, onGoto
     igUrl,
     ytUrl,
     fbUrl,
-    twUrl
+    twUrl,
+    resorts,
+    school
   } = teacher.teacher;
 
   const rates = teacher.rates;
@@ -141,9 +150,13 @@ export default function TeacherDetailsSummary({ cart, teacher, onAddCart, onGoto
     defaultValues,
   });
 
-  const handleCloseModal = () => {
+  const handleCloseContactModal = () => {
     if(error === null)
-      dispatch(closeModal());
+      dispatch(closeContactModal());
+  };
+  const handleCloseReferModal = () => {
+    if(error === null)
+      dispatch(closeReferModal());
   };
 
 
@@ -174,24 +187,23 @@ export default function TeacherDetailsSummary({ cart, teacher, onAddCart, onGoto
     }
   };
 
-  const button = (disabled) =>{
-    if(disabled){
-      return (<Tooltip style={{width:'100%'}} title="The teacher's contact info is not available">
-        <div>
+  const button = (user, isIndependent) =>{
+    console.log(user)
+    if(user.isAuthenticated){
+      return (
               <Button
                 fullWidth
                 size="large"
-                color="warning"
+                color="primary"
                 variant="contained"
             startIcon={<ConnectWithoutContactIcon/>}
-                onClick={handleContact}
+                onClick={handleRefer}
                 sx={{ whiteSpace: 'nowrap' }}
-                disabled={disabled}
               >
-                Match
-              </Button>
-              </div>
-          </Tooltip>)
+                {isIndependent?translate("conversation.refer_class"):translate("conversation.contact_pro")}              
+                </Button>
+)
+
     }
     else{
       return(
@@ -204,7 +216,8 @@ export default function TeacherDetailsSummary({ cart, teacher, onAddCart, onGoto
                 onClick={handleContact}
                 sx={{ whiteSpace: 'nowrap' }}
               >
-                Match
+                {translate("conversation.contact_pro")}
+
               </Button>
   
 )
@@ -335,11 +348,16 @@ export default function TeacherDetailsSummary({ cart, teacher, onAddCart, onGoto
 
 
 
-          {button(cellphone==='')}
+          {button(user, !school &&level>=3 && resorts?.includes("Cerro Catedral"))}
 
-        <DialogAnimate open={isOpenModal} onClose={handleCloseModal}>
-          <DialogTitle>Contact teacher</DialogTitle>
-          <ContactForm teacher={id} onCancel={handleCloseModal} />
+        <DialogAnimate open={isOpenContactModal} onClose={handleCloseContactModal}>
+          <DialogTitle>{translate("conversation.contact_pro")}</DialogTitle>
+          <ContactForm teacher={id} onCancel={handleCloseContactModal} />
+        </DialogAnimate>
+
+        <DialogAnimate open={isOpenReferModal} onClose={handleCloseReferModal}>
+          <DialogTitle>{(!school && level>=3 && resorts?.includes("Cerro Catedral"))?translate("conversation.refer_class"):translate("conversation.contact_pro")}</DialogTitle>
+          <ReferForm teacher={id} onCancel={handleCloseContactModal} isIndependent={(!school &&level>=3 && resorts?.includes('Cerro Catedral'))} />
         </DialogAnimate>
 
         </Stack>

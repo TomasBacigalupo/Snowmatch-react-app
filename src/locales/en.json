@@ -187,5 +187,27 @@
     "information": "Information",
     "description": "Description",
     "skills": "Skills"
+  },
+
+  "conversation":{
+    "not_valid":"Your phone number is not validated, check Whatsapp and try again",
+    "message_sent":"Message sent, they will soon be in touch!",
+    "age":"Client Age",
+    "age2":"Age",
+    "level":"Client Level",
+    "tips":"Does the client tip?",
+    "commission":"Commission",
+    "activity":"Activity",
+    "amount":"Number of people",
+    "duration":"Duration",
+    "classdate":"Class date",
+    "days":"Number of days",
+    "cancel":"Cancel",
+    "contact":"Contact",
+    "refer_class":"Refer Class",
+    "contact_pro":"Contact PRO",
+    "validation_required":"Validation required!",
+    "validation_required_body":"Check your Whatsapp for a validation message. It may take a while. If you didn't get a message, check your number and try again!",
+    "close":"Close"
   }
 }

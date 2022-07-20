@@ -136,11 +136,10 @@ export default function AccountGeneral() {
             ...user,
             imageLink: value.photoURL.preview
           })
+          axios.put("/api/images/image")
         }
       }));
     }
-
-    
 
     try {
       //await axios.post();

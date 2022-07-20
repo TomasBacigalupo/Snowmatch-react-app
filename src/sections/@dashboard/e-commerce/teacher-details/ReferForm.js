@@ -11,7 +11,7 @@ import { Box, Stack, Button, Tooltip, TextField, IconButton, DialogActions, Moda
 import { LoadingButton, MobileDatePicker } from '@mui/lab';
 // redux
 import { useDispatch } from '../../../../redux/store';
-import { contactTeacher } from '../../../../redux/slices/contact';
+import { referClass } from '../../../../redux/slices/contact';
 // components
 import Iconify from '../../../../components/Iconify';
 import { DialogAnimate } from '../../../../components/animate';
@@ -24,15 +24,14 @@ import { countries } from '../../../../_mock';
 import useLocales from 'src/hooks/useLocales';
 
 
+const COMMISSION_OPTIONS = [0,5,10,15,20];
 
-ContactForm.propTypes = {
+ReferForm.propTypes = {
   onCancel: PropTypes.func,
 };
 
-export default function ContactForm({ teacher, onCancel,cellphone }) {
+export default function ReferForm({ teacher, onCancel,cellphone, isIndependent }) {
   const { enqueueSnackbar } = useSnackbar();
-  const { translate } = useLocales();
-
 
     const [open, setOpen] = useState(false);
   const handleOpen = () => {
@@ -42,33 +41,33 @@ export default function ContactForm({ teacher, onCancel,cellphone }) {
     setOpen(false);
   };
 
+  const { translate } = useLocales();
+
   const dispatch = useDispatch();
 
   const ContactSchema = Yup.object().shape({
-    from: Yup.string(),
-    countryCode: Yup.string(),
+    tip: Yup.bool(),
+    commission: Yup.string(),
     age: Yup.number(),
-    firstname:Yup.string(),
-    lastname:Yup.string(),
     level:Yup.string(),
     activity:Yup.string(),
     amount:Yup.number(),
     duration:Yup.string(),
     classDate:Yup.string(),
+    days:Yup.number(),
   });
 
   const today = new Date();
   const defaultValues = {
-    from: "",
-    countryCode: "54",
     age:"",
-    firstname:"",
-    lastname:"",
     level:"BEGINNER",
     activity:"",
     amount:1,
     duration:"",
     classDate:today,
+    commission:isIndependent?0:-1,
+    tip:false,
+    days:1
   }
 
   const methods = useForm({
@@ -90,23 +89,22 @@ export default function ContactForm({ teacher, onCancel,cellphone }) {
     try {
       const date = new Date(data.classDate)
       const newContact = {
-        from: data.from,
-        countryCode: data.countryCode,
+        commission: data.commission,
+        tip: data.tip,
         age: data.age,
-        firstname:data.firstname,
-        lastname:data.lastname,
         level:data.level,
         activity:data.activity,
         amount:data.amount,
         duration:data.duration,
-        classDate:date.getFullYear()+"-"+((date.getMonth()+1)<10?"0"+(date.getMonth()+1):(date.getMonth()+1))+"-"+(date.getDate()<10?"0"+date.getDate():date.getDate())
+        classDate:date.getFullYear()+"-"+((date.getMonth()+1)<10?"0"+(date.getMonth()+1):(date.getMonth()+1))+"-"+(date.getDate()<10?"0"+date.getDate():date.getDate()),
+        days:data.days,
       };
-      const resp = await dispatch(contactTeacher(teacher, newContact));
+      const resp = await dispatch(referClass(teacher, newContact));
 
 
       if(resp === "ERROR"){
         setOpen(true)
-        enqueueSnackbar(translate("conversation.not_valid"), { 
+        enqueueSnackbar("Your phone number is not validated, check Whatsapp and try again", { 
         variant: 'error',
         autoHideDuration: 10000,
         })
@@ -120,7 +118,7 @@ export default function ContactForm({ teacher, onCancel,cellphone }) {
         }
       }
       else{
-        enqueueSnackbar(translate("conversation.message_sent"), { 
+        enqueueSnackbar("Message sent, they will soon be in touch!", { 
           variant: 'success',
           autoHideDuration: 10000,
         })
@@ -138,25 +136,11 @@ export default function ContactForm({ teacher, onCancel,cellphone }) {
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Stack spacing={3} sx={{ p: 3 }}>
-        <RHFTextField name="firstname" label={translate("general.form.name")} />
 
-        <RHFTextField name="lastname" label={translate("general.form.lastName")} />
+        <RHFTextField name="age" label={translate("conversation.age")} />
 
-        <RHFTextField name="age" label={translate("conversation.age2")} />
-
-        <RHFSelect name="countryCode" label={translate("general.form.countryCode")} placeholder={translate("general.form.countryCode")}>
+        <RHFSelect name="level" label={translate("conversation.level")} placeholder={translate("conversation.level")}>
           <option value="" />
-          {countries.map((option) => (
-              <option key={option.code} value={option.phone}>
-              {option.label} (+{option.phone}) 
-              </option>
-          ))}
-        </RHFSelect>        
-        <RHFTextField name="from" label={translate("general.form.cellphone")} />
-
-
-        <RHFSelect name="level" label={translate("school.clients.form.level")} placeholder={translate("school.clients.form.level")}>
-        <option value="" />
           <option key="BEGINNER" value="BEGINNER">
           {translate("school.clients.form.BEGINNER")}
           </option>
@@ -168,8 +152,21 @@ export default function ContactForm({ teacher, onCancel,cellphone }) {
           </option>
           <option key="EXPERT" value="EXPERT">
           {translate("school.clients.form.EXPERT")}
-          </option>                         
+          </option>                              
         </RHFSelect>
+
+        <RHFSwitch name="tip" labelPlacement="end" label={translate("conversation.tips")} sx={{ mt: 5 }} />
+
+        {isIndependent && 
+        <RHFSelect name="commission" label={translate("conversation.commission")} placeholder={translate("conversation.commission")}>
+                {COMMISSION_OPTIONS.map((option) => (
+                    <option key={option} value={option}>
+                    {option}{'%'}
+                    </option>
+                ))}                        
+        </RHFSelect>
+        }
+
 
         <RHFSelect name="activity" label={translate("conversation.activity")} placeholder={translate("conversation.activity")}>
           <option value="" />
@@ -209,6 +206,8 @@ export default function ContactForm({ teacher, onCancel,cellphone }) {
           )}
         />
 
+        <RHFTextField name="days" label={translate("conversation.days")} />
+
 
       </Stack>
 
@@ -227,13 +226,13 @@ export default function ContactForm({ teacher, onCancel,cellphone }) {
       </DialogActions>
 
         <DialogAnimate open={open} onClose={handleClose}>
-          <DialogTitle>{translate("conversation.validation_required")}</DialogTitle>
+          <DialogTitle>Validation required!</DialogTitle>
 
           <Box spacing={3} sx={{ p: 3 }}>
           <p id="validation-modal-description">
-          {translate("conversation.validation_required_body")}   
-                 </p>
-          <Button onClick={handleClose}>{translate("conversation.close")}</Button>
+            Check your Whatsapp for a validation message. It may take a while. If you didn't get a message, check your number and try again!
+          </p>
+          <Button onClick={handleClose}>Close</Button>
         </Box>        
         </DialogAnimate>
 

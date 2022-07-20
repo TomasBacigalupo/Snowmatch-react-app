@@ -187,5 +187,23 @@
         "information": "Información",
         "description": "Descripción",
         "skills": "Skills"
-    }
+    },
+
+    "conversation":{
+        "message_sent":"Mensaje enviado, pronto se contactarán contigo!",
+        "age":"Edad del cliente",
+        "age2":"Edad",
+        "level":"Nivel del cliente",
+        "tips":"Suele dejar propina?",
+        "commission":"Comisión",
+        "activity":"Actividad",
+        "amount":"Cantidad de personas",
+        "duration":"Duración",
+        "classdate":"Fecha",
+        "days":"Cantidad de días",
+        "cancel":"Cancelar",
+        "contact":"Contactar",
+        "refer_class":"Referir Clase",
+        "contact_pro":"Contactar PRO"
+      }
 }

@@ -271,9 +271,8 @@ export default function TeacherDetailsSummary({ cart, teacher, onAddCart, onGoto
 
         <Divider sx={{ borderStyle: 'dashed' }} />
 
-      <Stack direction="row" sx={{ my: 3 }}>
         <TeacherSkills skills={skills} />
-      </Stack>
+
 
         <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ my: 3 }}>
           <Typography variant="subtitle1" sx={{ mt: 0.5 }}>
@@ -357,7 +356,7 @@ export default function TeacherDetailsSummary({ cart, teacher, onAddCart, onGoto
 
         <DialogAnimate open={isOpenReferModal} onClose={handleCloseReferModal}>
           <DialogTitle>{(!school && level>=3 && resorts?.includes("Cerro Catedral"))?translate("conversation.refer_class"):translate("conversation.contact_pro")}</DialogTitle>
-          <ReferForm teacher={id} onCancel={handleCloseContactModal} isIndependent={(!school &&level>=3 && resorts?.includes('Cerro Catedral'))} />
+          <ReferForm teacher={id} onCancel={handleCloseReferModal} isIndependent={(!school &&level>=3 && resorts?.includes('Cerro Catedral'))} />
         </DialogAnimate>
 
         </Stack>

@@ -42,17 +42,19 @@
         "clientDataDesc": "Todos tus datos son privados y estan protegidos por SnowMatch",
         "calendarOrg": "Organizá tus Clases",
         "calendarOrgDesc": "Establecé tus horarios disponibles y maneja tus clases.",
-        "match": "Match",
+        "match": "Match PROs",
         "matchDesc": "Matchea con nuevos clientes y consegui clases cuando estas libre.",
-        "independent": "Independientes",
-        "school": "Escuelas",
+        "independent": "PROs Independientes",
+        "school": "PROs de Escuelas",
         "getStartedToday": "¡Formá parte de SnowMatch!",
-        "find": "Matchea con el PRO que te hace falta..."
+        "find": "Matchea con el PRO que te hace falta...",
+        "start_date":"Desde",
+        "end_date":"Hasta"
     },
     "menu": {
         "general": "General",
         "management": "Management",
-        "match": "Match",
+        "match": "Match PROs",
         "instructors": "Instructores",
         "calendar": "Calendario",
         "School": "Mi Escuela",
@@ -190,6 +192,7 @@
     },
 
     "conversation":{
+        "not_valid":"Tu numero de telefono no esta validado, revisa WhatsApp y probá de nuevo!",
         "message_sent":"Mensaje enviado, pronto se contactarán contigo!",
         "age":"Edad del cliente",
         "age2":"Edad",
@@ -204,6 +207,9 @@
         "cancel":"Cancelar",
         "contact":"Contactar",
         "refer_class":"Referir Clase",
-        "contact_pro":"Contactar PRO"
+        "contact_pro":"Contactar PRO",
+        "validation_required":"Validation required!",
+        "validation_required_body":"Vas a recibir un mensaje de validación por WhatsApp, puede tardar unos minutos. Si no te llega el mensaje, revisa tu número y proba de nuevo!",
+        "close":"Cerrar"
       }
 }

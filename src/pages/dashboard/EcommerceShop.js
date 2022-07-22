@@ -141,7 +141,7 @@ export default function EcommerceShop({isGuest=false, teacherType="school"}) {
 
   return (
     <Page title="Match">
-      {isGuest && (<><br /><br /><br/></>) }
+      
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <HeaderBreadcrumbs
           heading="Match"

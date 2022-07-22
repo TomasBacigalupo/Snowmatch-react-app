@@ -73,8 +73,8 @@ const navConfig = [
         path: PATH_DASHBOARD.eCommerce.root,
         icon: ICONS.match,
         children: [
-          { title: 'Schools', path: PATH_DASHBOARD.eCommerce.shopSchool },
-          { title: 'Independent', path: PATH_DASHBOARD.eCommerce.shopInd },
+          { title: 'School PROs', path: PATH_DASHBOARD.eCommerce.shopSchool },
+          { title: 'Independent PROs', path: PATH_DASHBOARD.eCommerce.shopInd },
         ],
       },
       { title: 'calendar', path: PATH_DASHBOARD.calendar, icon: ICONS.calendar },

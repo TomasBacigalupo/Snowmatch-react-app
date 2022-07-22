@@ -242,7 +242,7 @@ export default function AccountGeneral() {
               </RHFSelect>
 
               <RHFMultipleSelect name="disciplines" label={translate("general.form.disciplines")} list={["Ski", "SnowBoard"]}/>
-              <RHFMultipleSelect name="speaks" label={translate("general.form.languages")} list={["Español", "English", "Portugues"]}/>
+              <RHFMultipleSelect name="speaks" label={translate("general.form.languages")} list={["Español", "English", "Portugues", "Italiano"]}/>
             </Box>
 
             <Stack sx={{ mt: 3 }}>

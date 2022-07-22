@@ -127,17 +127,17 @@ export default function HomeHero() {
       <RootStyle>
         <HeroOverlayStyle
           alt="overlay"
-          src="https://minimals.cc/assets/overlay.svg"
+          src="/assets/overlay.svg"
           variants={varFade().in}
         />
 
         <Container>
           <ContentStyle>
-            <Grid container spacing={5}>
-              <Grid item xs={12} md={6}>
+            <Grid container spacing={0}>
+              <Grid item xs={12} md={6.5}>
                 <HomeFilterTeachers />
               </Grid>
-              <Grid item xs={12} md={6}>
+              <Grid item xs={12} md={5.5}>
                 <m.div variants={varFade().inRight}>
                   <Typography variant="h1" sx={{ color: 'common.white' }}>
                     {translate('landingPRO.heroTitle1')}<br />

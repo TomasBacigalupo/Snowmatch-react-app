@@ -19,6 +19,8 @@ import navConfig from './MenuConfig';
 import { Link as RouterLink } from 'react-router-dom';
 import AccountPopover from '../dashboard/header/AccountPopover';
 import LanguagePopover from '../dashboard/header/LanguagePopover';
+import useLocales from 'src/hooks/useLocales';
+
 
 // ----------------------------------------------------------------------
 
@@ -55,6 +57,8 @@ export default function MainHeader() {
 
   const { pathname } = useLocation();
 
+  const {translate} = useLocales()
+
   const isDesktop = useResponsive('up', 'md');
 
   const isHome = pathname === '/';
@@ -90,14 +94,14 @@ export default function MainHeader() {
           {pathname === '/' && isDesktop && (
           <Button
             component={RouterLink}
-            to={"/match"}
+            to={"/match/independent"}
             variant="contained"
             sx={{ 
               marginRight: '15px',
               marginLeft: '15px'
            }}
           >
-            PROs Independientes
+            {translate("landingPRO.independent")}
           </Button>)} 
 
           {pathname === '/' && isDesktop && (
@@ -110,7 +114,7 @@ export default function MainHeader() {
                 marginLeft: '15px'
               }}
             >
-              PROs de Escuela
+              {translate("landingPRO.school")}
             </Button>)}
           <LanguagePopover />
           <AccountPopover/>

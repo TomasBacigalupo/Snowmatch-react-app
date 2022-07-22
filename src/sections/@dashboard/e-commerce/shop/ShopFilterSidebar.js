@@ -40,7 +40,7 @@ export const FILTER_DISCIPLINE_OPTIONS = ['Freestyle', 'Alpine', 'Back Country']
 
 export const FILTER_RATING_OPTIONS = ['up4Star', 'up3Star', 'up2Star', 'up1Star'];
 
-export const FILTER_LANGUAGE_OPTIONS = ['Español', 'English', 'Portugues']
+export const FILTER_LANGUAGE_OPTIONS = ['Español', 'English', 'Portugues', 'Italiano']
 
 export const FILTER_RESORT_OPTIONS = ['Aconcagua', 'Batea Mahuida', 'Calafate Mountain Park', 'Caviahue', 'Cerro Bayo', 'Cerro Castor', 'Cerro Catedral', 'Chapelco', 'La Hoya', 'Las Leñas', 'Las Pendientes', 'Los Penitentes', 'Los Puquios', 'Monte Bianco', 'Patagonia Heliski', 'Perito Moreno', 'Vallecitos']
 

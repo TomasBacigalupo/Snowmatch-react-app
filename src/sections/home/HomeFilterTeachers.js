@@ -104,7 +104,7 @@ export default function HomeFilterTeachers() {
                                         render={({ field }) => (
                                             <MobileDatePicker
                                                 {...field}
-                                                label="Start date"
+                                                label={translate("landingPRO.start_date")}
                                                 inputFormat="dd/MM/yyyy"
                                                 renderInput={(params) => <TextField {...params} fullWidth />}
                                             />
@@ -119,7 +119,7 @@ export default function HomeFilterTeachers() {
                                         render={({ field }) => (
                                             <MobileDatePicker
                                                 {...field}
-                                                label="End date"
+                                                label={translate("landingPRO.end_date")}
                                                 inputFormat="dd/MM/yyyy"
                                                 renderInput={(params) => (
                                                     <TextField
@@ -136,7 +136,7 @@ export default function HomeFilterTeachers() {
                                 </Grid>
                                 <Grid item xs={6}>
                                     <Button fullWidth type="submit" variant="contained" size="large" startIcon={<Iconify icon={'eva:flash-fill'} width={20} height={20} />}>
-                                        Match
+                                    {translate("landingPRO.match")}
                                     </Button>
                                 </Grid>
 

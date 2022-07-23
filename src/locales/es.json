@@ -141,7 +141,7 @@
     },
     "account":{
         "tabs":{
-            "general": "Mi informacón",
+            "general": "Mi información",
             "social_links": "Mis redes sociales"
         }
     },
@@ -182,7 +182,7 @@
         "calendar": "Calendario",
         "verified": "Profesor Verificado y Aprobado",
         "reply": "Activo a Match",
-        "replyDescription": "Este PRO contesta responde a SnowMatch en menos de un día",
+        "replyDescription": "Este PRO responde a SnowMatch en menos de un día",
         "verifiedDescription": "Este profesor esta validado por SnowMatch ",
         "warranty": "Garantia SnowMatch",
         "warrantyDescription": "SnowMatch asegura que cumple con la reglamentación para dar clases",

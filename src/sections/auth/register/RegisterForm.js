@@ -144,7 +144,7 @@ export default function RegisterForm() {
         />
         <Typography variant="subtitle1">Instructor certification</Typography>
         <RHFUploadSingleFile name="certificate" accept="image/*" maxSize={16000000} onDrop={handleDrop}/>
-        <LoadingButton fullWidth size="large" type="submit" variant="contained" loading={isSubmitting}>
+        <LoadingButton fullWidth size="large" type="submit" variant="contained" loading={isSubmitting} sx={{':hover':{color:'#3399FF'}}}>
           Register
         </LoadingButton>
       </Stack>

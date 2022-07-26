@@ -136,7 +136,7 @@ export default function AccountSocialLinks({ myProfile }) {
           />
 
 
-          <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
+          <LoadingButton type="submit" variant="contained" loading={isSubmitting} sx={{':hover':{color:'#3399FF'}}}>
             {translate("accountSocialLinks.saveChanges")}
           </LoadingButton>
         </Stack>

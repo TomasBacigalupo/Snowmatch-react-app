@@ -270,7 +270,7 @@ export default function AccountGeneral() {
                 label={translate("general.form.description")}  />
             </Stack>
             <Stack spacing={3} alignItems="flex-end" sx={{ mt: 3 }}>
-              <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
+              <LoadingButton type="submit" variant="contained" loading={isSubmitting} sx={{':hover':{color:'#3399FF'}}}>
                 {translate("general.form.saveChanges")}
               </LoadingButton>
             </Stack>

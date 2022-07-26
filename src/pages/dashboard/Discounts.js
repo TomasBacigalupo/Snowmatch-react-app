@@ -26,6 +26,7 @@ import { _userCards, _userFriends } from '../../_mock';
 // components
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
 import HoverButton from "src/components/HoverButton";
+import useLocales from "src/hooks/useLocales";
 
 
 function applyFilter(array, query) {
@@ -42,9 +43,10 @@ export default function Discounts(){
     const [discount, setDiscount] = useState(null)
     const { themeStretch } = useSettings();
     const [findBrand, setFindBrand] = useState("");
-
+    const {translate} = useLocales()
     const { discounts } = useSelector((state) => state.discounts);
     const dispatch = useDispatch();
+
 
     
     const friendFiltered = applyFilter([{
@@ -73,10 +75,10 @@ export default function Discounts(){
 
 
     const handleGetBoucher = () =>{
+        setOpen(false)
         // send WAPP
         dispatch(sendDiscount(discount.id))
-
-        enqueueSnackbar('Estamos tramitando tu codigo de descuento \n Si aplicas al codigo te va a estar llegando mediante whats app! ', { variant: 'success', persist: true });
+        enqueueSnackbar(translate('discounts.sendNoti'), { variant: 'success', persist: true });
     }
 
     useEffect(() => {
@@ -89,8 +91,7 @@ export default function Discounts(){
                 <HeaderBreadcrumbs
                     heading="PRO Deal"
                     links={[
-                        { name: 'Dashboard', href: PATH_DASHBOARD.root },
-                        { name: 'User', href: PATH_DASHBOARD.user.root },
+                        { name: translate('breadcrumb.dashboard'), href: PATH_DASHBOARD.root },
                         { name: 'Deals' },
                     ]}
                 />
@@ -99,7 +100,7 @@ export default function Discounts(){
                         stretchStart={240}
                         value={findBrand}
                         onChange={(event) => setFindBrand(event.target.value)}
-                        placeholder="Find Brand..."
+                        placeholder={translate('discounts.findBrands')}
                         InputProps={{
                             startAdornment: (
                                 <InputAdornment position="start">
@@ -130,18 +131,18 @@ export default function Discounts(){
                     )}
 
                     <DialogAnimate open={open} onClose={() => setOpen(false)}>
-                        <DialogTitle>Discount Details</DialogTitle>
+                        <DialogTitle>{translate('discounts.details')}</DialogTitle>
                         <DialogContent>
                             <br></br>
                             <Grid container spacing={2}>
                                 <Grid item xs={12}>
-                                   {discount?.description}
+                                   {discount?.discountDescription}
                                 </Grid>
                             </Grid>
                         </DialogContent>
                         <DialogActions>
-                            <Button variant="outlined" onClick={() => setOpen(false)}>Cancel</Button>
-                            <HoverButton variant="contained" onClick={handleGetBoucher}>Get Cupon</HoverButton>
+                            <Button variant="outlined" onClick={() => setOpen(false)}>{translate('general.cancel')}</Button>
+                            <HoverButton variant="contained" onClick={handleGetBoucher}>{translate('discounts.getCupon')}</HoverButton>
                         </DialogActions>
                     </DialogAnimate>
 

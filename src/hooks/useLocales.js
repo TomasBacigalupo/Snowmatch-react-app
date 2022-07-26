@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 // '@mui
-import { enUS, deDE, frFR, esES } from '@mui/material/locale';
+import { enUS, deDE, frFR, esES, ptBR, ptPT } from '@mui/material/locale';
 
 // ----------------------------------------------------------------------
 
@@ -16,6 +16,12 @@ const LANGS = [
     value: 'en',
     systemValue: enUS,
     icon: '/assets/i18n/ic_flag_en.svg',
+  },
+  {
+    label: 'Português',
+    value: 'pt',
+    systemValue: ptPT,
+    icon: '/assets/i18n/ic_flag_pt.svg',
   },
   // {
   //   label: 'German',

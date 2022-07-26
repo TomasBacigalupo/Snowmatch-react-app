@@ -7,6 +7,7 @@
         "clientList": "Agenda de clientes"
     },
     "general":{
+        "cancel":"Cancelar",
         "AVAILABLE": "Disponible",
         "UNAVAILABLE": "Ocupado",
         "form":{
@@ -214,5 +215,11 @@
         "validation_required":"Validation required!",
         "validation_required_body":"Vas a recibir un mensaje de validación por WhatsApp, puede tardar unos minutos. Si no te llega el mensaje, revisa tu número y proba de nuevo!",
         "close":"Cerrar"
+      },
+      "discounts":{
+          "getCupon":"Conseguir Cupon",
+          "details": "Detalles del Descuento",
+          "findBrands":"Buscar Marcas...",
+          "sendNoti": "¡Listo! Estamos tramitando tu código de descuento. Si aplicás al código te va a estar llegando por Whats App"
       }
 }

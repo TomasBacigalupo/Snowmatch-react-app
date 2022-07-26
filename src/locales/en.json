@@ -214,5 +214,11 @@
     "validation_required":"Validation required!",
     "validation_required_body":"Check your Whatsapp for a validation message. It may take a while. If you didn't get a message, check your number and try again!",
     "close":"Close"
+  },
+  "discounts": {
+    "getCupon": "Get Voucher",
+    "details": "Discount details",
+    "findBrands": "Find Brands...",
+    "sendNoti": "Done! If you are in conditions to get the voucher you will receive it via Whats App"
   }
 }

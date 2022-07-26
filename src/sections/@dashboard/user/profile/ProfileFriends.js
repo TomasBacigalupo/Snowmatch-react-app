@@ -1,11 +1,18 @@
 import PropTypes from 'prop-types';
 // @mui
-import { Box, Grid, Card, Link, Avatar, IconButton, Typography, InputAdornment } from '@mui/material';
+import { Box, Button, Grid, Card, Link, Avatar, IconButton, Typography, InputAdornment, Modal, DialogActions, DialogTitle, DialogContent } from '@mui/material';
 // components
 import Iconify from '../../../../components/Iconify';
 import InputStyle from '../../../../components/InputStyle';
 import SocialsButton from '../../../../components/SocialsButton';
 import SearchNotFound from '../../../../components/SearchNotFound';
+import Label from 'src/components/Label';
+import { useState } from 'react';
+import LightboxModal from 'src/components/LightboxModal';
+import { DialogAnimate } from 'src/components/animate';
+import ThemeColorPresets from 'src/components/ThemeColorPresets';
+import { Theme } from '@fullcalendar/react';
+import SocialButtonsDiscounts from 'src/components/SocialButtonsDiscounts';
 
 // ----------------------------------------------------------------------
 
@@ -17,19 +24,12 @@ ProfileFriends.propTypes = {
 
 export default function ProfileFriends({ friends, findFriends, onFindFriends }) {
   const friendFiltered = applyFilter(friends, findFriends);
-
+  const [open, setOpen] = useState(false)
+  const [discount, setDiscount] = useState(null)
   const isNotFound = friendFiltered.length === 0;
 
   return (
     <Box sx={{ mt: 5 }}>
-      <Typography variant="h4" sx={{ mb: 3 }}>
-        Clients
-      </Typography>
-
-      <Typography variant="h6" sx={{ mb: 3 }}>
-        Customer Relationship Management Panel
-      </Typography>
-
       <InputStyle
         stretchStart={240}
         value={findFriends}
@@ -48,7 +48,12 @@ export default function ProfileFriends({ friends, findFriends, onFindFriends }) 
       <Grid container spacing={3}>
         {friendFiltered.map((friend) => (
           <Grid key={friend.id} item xs={12} md={4}>
-            <FriendCard friend={friend} />
+            <FriendCard
+              friend={friend}
+              onClick={() => {
+                setDiscount(friend)
+                setOpen(true)
+              }} />
           </Grid>
         ))}
       </Grid>
@@ -58,6 +63,24 @@ export default function ProfileFriends({ friends, findFriends, onFindFriends }) 
           <SearchNotFound searchQuery={findFriends} />
         </Box>
       )}
+
+      <DialogAnimate open={open} onClose={() => setOpen(false)}>
+        <DialogTitle>Discount Details</DialogTitle>
+        <DialogContent>
+          <br></br>
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              Salpa brinda un 40% de descuento en tu compra mediante su plataforma web con cualquier medio de pago.
+              El codigo de descuento se puede usar por una sola vez, no lo compartas!
+            </Grid>
+          </Grid>
+        </DialogContent>
+        <DialogActions>
+          <Button variant="outlined" onClick={() => setOpen(false)}>Cancel</Button>
+          <Button variant="contained" onClick={() => setOpen(false)}>Get Cupon</Button>
+        </DialogActions>
+      </DialogAnimate>
+
     </Box>
   );
 }
@@ -68,11 +91,11 @@ FriendCard.propTypes = {
   friend: PropTypes.object,
 };
 
-function FriendCard({ friend }) {
+function FriendCard({ friend, onClick }) {
   const { name, role, avatarUrl } = friend;
-
   return (
     <Card
+      onClick={onClick}
       sx={{
         py: 5,
         display: 'flex',
@@ -81,7 +104,20 @@ function FriendCard({ friend }) {
         flexDirection: 'column',
       }}
     >
-      <Avatar alt={name} src={avatarUrl} sx={{ width: 64, height: 64, mb: 3 }} />
+      <Label
+        variant="filled"
+        color='error'
+        sx={{
+          top: 16,
+          right: 16,
+          zIndex: 9,
+          position: 'absolute',
+          textTransform: 'uppercase',
+        }}
+      >
+        40% OFF
+      </Label>
+      <Avatar alt={name} src={'/assets/salpa.png'} sx={{ width: 90, height: 90, mb: 3, color: 'white' }} />
       <Link variant="subtitle1" color="text.primary">
         {name}
       </Link>
@@ -90,7 +126,7 @@ function FriendCard({ friend }) {
         {role}
       </Typography>
 
-      <SocialsButton initialColor />
+      <SocialButtonsDiscounts initialColor />
 
       <IconButton sx={{ top: 8, right: 8, position: 'absolute' }}>
         <Iconify icon={'eva:more-vertical-fill'} width={20} height={20} />

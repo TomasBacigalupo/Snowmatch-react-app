@@ -69,7 +69,8 @@
         "Schools": "Escuelas",
         "Independent": "Independentes",
         "School PROs": "PROs de Escuelas",
-        "Independent PROs": "PROs Independientes"
+        "Independent PROs": "PROs Independientes",
+        "discounts": "PRO Deal"
     },
     "calendar": {
         "newEvent": "Crear Evento",

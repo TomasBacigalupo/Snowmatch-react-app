@@ -69,7 +69,15 @@ export default function Router() {
         { path: 'teacher/:name', element: <EcommerceTeacherDetails isGuest={true}/> }
       ]
     },
-    
+
+    {
+      path: 'shops',
+      children: [
+        { path: 'trown', element:<RedirectToShop url={"https://www.trown.com.ar"}/>},
+        { path: 'salpa', element:<RedirectToShop url={"https://www.salpa.com.ar"}/>},
+
+      ]
+    },
 
     // Dashboard Routes
     {
@@ -249,4 +257,10 @@ const Pricing = Loadable(lazy(() => import('../pages/Pricing')));
 const Payment = Loadable(lazy(() => import('../pages/Payment')));
 const Page500 = Loadable(lazy(() => import('../pages/Page500')));
 const NotFound = Loadable(lazy(() => import('../pages/Page404')));
-const PageVerify = Loadable(lazy(() => import('../pages/PageVerify')))
+const PageVerify = Loadable(lazy(() => import('../pages/PageVerify')));
+
+function RedirectToShop({url}) {
+  window.location.replace(url);
+
+  return null;
+}

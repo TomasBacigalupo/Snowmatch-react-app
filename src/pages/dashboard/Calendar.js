@@ -25,6 +25,7 @@ import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
 import { CalendarForm, CalendarStyle, CalendarToolbar } from '../../sections/@dashboard/calendar';
 import { getClients } from 'src/redux/slices/clients';
 import useLocales from 'src/hooks/useLocales';
+import HoverButton from 'src/components/HoverButton';
 
 // ----------------------------------------------------------------------
 
@@ -162,13 +163,13 @@ export default function Calendar() {
           heading="Calendar"
           links={[{ name: 'Dashboard', href: PATH_DASHBOARD.root }, { name: 'Calendar' }]}
           action={
-            <Button
+            <HoverButton
               variant="contained"
               startIcon={<Iconify icon={'eva:plus-fill'} width={20} height={20} />}
               onClick={handleAddEvent}
             >
               {translate('calendar.newEvent')}
-            </Button>
+            </HoverButton>
           }
         />
 

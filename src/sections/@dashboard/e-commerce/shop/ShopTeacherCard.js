@@ -12,6 +12,7 @@ import Label from '../../../../components/Label';
 import Image from '../../../../components/Image';
 import { ColorPreview } from '../../../../components/color-utils';
 import useAuth from 'src/hooks/useAuth';
+import { useTheme } from '@mui/material/styles';
 
 // ----------------------------------------------------------------------
 
@@ -23,6 +24,8 @@ export default function ShopTeacherCard({ teacher }) {
   const { name, lastname, imageLink, stars, level, information, email, state, resorts} = teacher;
   const status = 'sale';
   const priceSale = 10;
+  const theme = useTheme();
+
   const navigate = useNavigate();
 
   const { isAuthenticated} = useAuth()
@@ -34,13 +37,13 @@ export default function ShopTeacherCard({ teacher }) {
         {resorts && (
           <Label
             variant="filled"
-            color={'success'}
             sx={{
               top: 16,
               right: 16,
               zIndex: 9,
               position: 'absolute',
               textTransform: 'uppercase',
+              bgcolor:'#99FFFF'
             }}
           >
             {resorts[0]}

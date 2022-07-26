@@ -106,7 +106,9 @@
                 "staysAt": "Se hospeda en...",
                 "resorts": "Centros de esqui",
                 "notes": "Notas",
-                "isRenting":"Alquila equipo?"
+                "isRenting":"Alquila equipo?",
+                "createClient":"Crear cliente",
+                "saveChanges":"Guardar Cambios"
             }
         }
     },

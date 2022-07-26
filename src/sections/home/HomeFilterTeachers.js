@@ -12,6 +12,8 @@ import Iconify from 'src/components/Iconify';
 import SchoolIcon from '@mui/icons-material/School';
 import PersonIcon from '@mui/icons-material/Person';
 import useLocales from 'src/hooks/useLocales';
+import StylesButton from 'src/components/StylesButton';
+import HoverButton from 'src/components/HoverButton';
 
 
 export default function HomeFilterTeachers() {
@@ -135,9 +137,9 @@ export default function HomeFilterTeachers() {
                                     <RHFMultiCheckbox name="category" options={FILTER_CATEGORY_OPTIONS} sx={{ width: 1 }} />
                                 </Grid>
                                 <Grid item xs={6}>
-                                    <Button fullWidth type="submit" variant="contained" size="large" startIcon={<Iconify icon={'eva:flash-fill'} width={20} height={20} />}>
+                                    <HoverButton fullWidth type="submit" variant="contained" size="large" startIcon={<Iconify icon={'eva:flash-fill'} width={20} height={20} />}>
                                     {translate("landingPRO.match")}
-                                    </Button>
+                                    </HoverButton>
                                 </Grid>
 
                             </Grid>

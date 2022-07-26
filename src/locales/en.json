@@ -106,7 +106,10 @@
         "staysAt": "Stays at",
         "resorts": "Resorts",
         "notes": "Notes",
-        "isRenting": "Is Renting"
+        "isRenting": "Is Renting",
+        "createClient":"Create client",
+        "saveChanges":"Save changes"
+
       }
     }
   },

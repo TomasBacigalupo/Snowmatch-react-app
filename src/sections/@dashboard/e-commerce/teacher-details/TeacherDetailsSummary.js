@@ -37,6 +37,7 @@ import TeacherSkills from './TeacherSkills';
 import useLocales from 'src/hooks/useLocales';
 
 import useAuth from 'src/hooks/useAuth';
+import HoverButton from 'src/components/HoverButton';
 
 
 
@@ -191,7 +192,7 @@ export default function TeacherDetailsSummary({ cart, teacher, onAddCart, onGoto
     console.log(user)
     if(user.isAuthenticated){
       return (
-              <Button
+              <HoverButton
                 fullWidth
                 size="large"
                 color="primary"
@@ -201,13 +202,13 @@ export default function TeacherDetailsSummary({ cart, teacher, onAddCart, onGoto
                 sx={{ whiteSpace: 'nowrap' }}
               >
                 {isIndependent?translate("conversation.refer_class"):translate("conversation.contact_pro")}              
-                </Button>
+                </HoverButton>
 )
 
     }
     else{
       return(
-              <Button
+              <HoverButton
                 fullWidth
                 size="large"
                 color="primary"
@@ -218,7 +219,7 @@ export default function TeacherDetailsSummary({ cart, teacher, onAddCart, onGoto
               >
                 {translate("conversation.contact_pro")}
 
-              </Button>
+              </HoverButton>
   
 )
     }

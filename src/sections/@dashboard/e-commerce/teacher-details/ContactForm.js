@@ -220,7 +220,7 @@ export default function ContactForm({ teacher, onCancel,cellphone }) {
         {translate("conversation.cancel")}
         </Button>
 
-        <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
+        <LoadingButton type="submit" variant="contained" loading={isSubmitting} sx={{':hover':{color:'#3399FF'}}}>
         {translate("conversation.contact")}
         </LoadingButton>
 

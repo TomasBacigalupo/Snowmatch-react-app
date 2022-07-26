@@ -18,6 +18,7 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { FormProvider, RHFSelect } from 'src/components/hook-form';
 import HomeFilterTeachers from './HomeFilterTeachers';
+import HoverButton from 'src/components/HoverButton';
 
 // ----------------------------------------------------------------------
 
@@ -163,7 +164,7 @@ export default function HomeHero() {
                 </m.div>
                 <br/>
                 <m.div variants={varFade().inRight}>
-                  <Button
+                  <HoverButton
                     size="large"
                     variant="contained"
                     component={RouterLink}
@@ -172,7 +173,7 @@ export default function HomeHero() {
                     startIcon={<Iconify icon={'eva:flash-fill'} width={20} height={20} />}
                   >
                     {translate('landingPRO.getStarted')}
-                  </Button>
+                  </HoverButton>
                 </m.div>
               </Grid>
               

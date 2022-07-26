@@ -219,7 +219,7 @@ export default function ReferForm({ teacher, onCancel,cellphone, isIndependent }
         {translate("conversation.cancel")}
         </Button>
 
-        <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
+        <LoadingButton type="submit" variant="contained" loading={isSubmitting} sx={{':hover':{color:'#3399FF'}}}>
         {translate("conversation.contact")}
         </LoadingButton>
 

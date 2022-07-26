@@ -20,6 +20,7 @@ import { Link as RouterLink } from 'react-router-dom';
 import AccountPopover from '../dashboard/header/AccountPopover';
 import LanguagePopover from '../dashboard/header/LanguagePopover';
 import useLocales from 'src/hooks/useLocales';
+import HoverButton from 'src/components/HoverButton';
 
 
 // ----------------------------------------------------------------------
@@ -92,7 +93,7 @@ export default function MainHeader() {
           {pathname === '/' && !isDesktop && <MenuMobile isOffset={isOffset} isHome={isHome} navConfig={navConfig} />} 
 
           {pathname === '/' && isDesktop && (
-          <Button
+          <HoverButton
             component={RouterLink}
             to={"/match/independent"}
             variant="contained"
@@ -102,10 +103,10 @@ export default function MainHeader() {
            }}
           >
             {translate("landingPRO.independent")}
-          </Button>)} 
+          </HoverButton>)} 
 
           {pathname === '/' && isDesktop && (
-            <Button
+            <HoverButton
               component={RouterLink}
               to={"/match"}
               variant="contained"
@@ -115,7 +116,7 @@ export default function MainHeader() {
               }}
             >
               {translate("landingPRO.school")}
-            </Button>)}
+            </HoverButton>)}
           <LanguagePopover />
           <AccountPopover/>
 

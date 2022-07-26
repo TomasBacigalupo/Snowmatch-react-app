@@ -292,7 +292,7 @@ export default function CalendarForm({ event, range, onCancel, clients }) {
           {translate('calendar.form.cancel')}
         </Button>
 
-        <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
+        <LoadingButton type="submit" variant="contained" loading={isSubmitting} sx={{':hover':{color:'#3399FF'}}}>
           {translate('calendar.form.add')}
         </LoadingButton>
       </DialogActions>

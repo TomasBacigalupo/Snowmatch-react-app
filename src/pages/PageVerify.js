@@ -12,6 +12,7 @@ import VerifyEmailIllustration from 'src/assets/illustration_email_verify';
 import useAuth from '../hooks/useAuth';
 import { useSnackbar } from 'notistack';
 import { useState } from 'react';
+import HoverButton from 'src/components/HoverButton';
 
 // ----------------------------------------------------------------------
 
@@ -58,9 +59,9 @@ export default function PageVerifyEmail() {
             {loading && (
               <CircularProgress/>
             )}
-            {!loading && <Button onClick={onReload} loading={loading}>
+            {!loading && <HoverButton onClick={onReload} loading={loading}>
               Reload
-            </Button>}
+            </HoverButton>}
             
           </Box>
         </Container>

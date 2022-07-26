@@ -59,6 +59,16 @@ export const colorPresets = [
     darker: '#7A0930',
     contrastText: '#fff',
   },
+
+  {
+    name: 'designer',
+    lighter: '#99ffff',
+    light: '#99ffff',
+    main: '#3399ff',
+    dark: '#003366',
+    darker: '#003366',
+    contrastText: '#212B36',
+  },
 ];
 
 export const defaultPreset = colorPresets[0];
@@ -67,6 +77,7 @@ export const cyanPreset = colorPresets[2];
 export const bluePreset = colorPresets[3];
 export const orangePreset = colorPresets[4];
 export const redPreset = colorPresets[5];
+export const designerPreset = colorPresets[6];
 
 export default function getColorPresets(presetsKey) {
   return {
@@ -76,5 +87,6 @@ export default function getColorPresets(presetsKey) {
     orange: orangePreset,
     red: redPreset,
     default: defaultPreset,
+    designer: designerPreset,
   }[presetsKey];
 }

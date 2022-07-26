@@ -42,6 +42,7 @@ import { useDispatch, useSelector } from '../../redux/store';
 
 import { useMediaQuery } from 'react-responsive';
 import useLocales from 'src/hooks/useLocales';
+import HoverButton from 'src/components/HoverButton';
 
 
 
@@ -179,14 +180,14 @@ const isMobile = useMediaQuery({ query: `(max-width: 760px)` });
             { name: translate("breadcrumb.agenda") },
           ]}
           action={
-            <Button
+            <HoverButton
               variant="contained"
               component={RouterLink}
               to={PATH_DASHBOARD.school.new}
               startIcon={<Iconify icon={'eva:plus-fill'} />}
             >
               {translate('school.clients.newClient')}
-            </Button>
+            </HoverButton>
           }
         />
 

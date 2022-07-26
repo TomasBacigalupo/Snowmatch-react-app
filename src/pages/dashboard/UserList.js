@@ -35,6 +35,7 @@ import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
 import { TableEmptyRows, TableHeadCustom, TableNoData, TableSelectedActions } from '../../components/table';
 // sections
 import { UserTableToolbar, UserTableRow } from '../../sections/@dashboard/user/list';
+import HoverButton from 'src/components/HoverButton';
 
 // ----------------------------------------------------------------------
 
@@ -147,14 +148,14 @@ export default function UserList() {
             { name: 'List' },
           ]}
           action={
-            <Button
+            <HoverButton
               variant="contained"
               component={RouterLink}
               to={PATH_DASHBOARD.user.new}
               startIcon={<Iconify icon={'eva:plus-fill'} />}
             >
               New Client
-            </Button>
+            </HoverButton>
           }
         />
 

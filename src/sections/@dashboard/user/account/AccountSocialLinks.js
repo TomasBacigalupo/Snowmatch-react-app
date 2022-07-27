@@ -11,6 +11,7 @@ import { FormProvider, RHFTextField } from '../../../../components/hook-form';
 import useAuth from 'src/hooks/useAuth';
 import { useDispatch } from 'react-redux';
 import { updateTeacher } from 'src/redux/slices/teachers';
+import useLocales from 'src/hooks/useLocales';
 
 // ----------------------------------------------------------------------
 
@@ -52,6 +53,7 @@ export default function AccountSocialLinks({ myProfile }) {
   const { enqueueSnackbar } = useSnackbar();
   const { user, updateUser } = useAuth();
   const dispatch = useDispatch();
+  const { translate } = useLocales()
 
   const defaultValues = {
     fbUrl: user?.fbUrl || '',
@@ -103,7 +105,7 @@ export default function AccountSocialLinks({ myProfile }) {
           <RHFTextField
             key={"igUrl"}
             name={"igUrl"}
-            placeholder="Instagram username"
+            placeholder={translate("accountSocialLinks.igUserName")}
             InputProps={{
               startAdornment: <InputAdornment position="start">{SOCIAL_LINKS[1].icon} {"\u00a0\u00a0instagram.com/"}</InputAdornment>,
             }}
@@ -111,7 +113,7 @@ export default function AccountSocialLinks({ myProfile }) {
             <RHFTextField
               key={"twUrl"}
               name={"twUrl"}
-              placeholder="Twitter username"
+            placeholder={translate("accountSocialLinks.twUserName")}
               InputProps={{
                 startAdornment: <InputAdornment position="start">{SOCIAL_LINKS[3].icon} {"\u00a0\u00a0twitter.com/"}</InputAdornment>,
               }}
@@ -119,7 +121,7 @@ export default function AccountSocialLinks({ myProfile }) {
           <RHFTextField
             key={"fbUrl"}
             name={"fbUrl"}
-            placeholder="Facebook username"
+            placeholder={translate("accountSocialLinks.fbUserName")}
             InputProps={{
               startAdornment: <InputAdornment position="start">{SOCIAL_LINKS[0].icon} {"\u00a0\u00a0facebook.com/"}</InputAdornment>,
             }}
@@ -127,15 +129,15 @@ export default function AccountSocialLinks({ myProfile }) {
           <RHFTextField
             key={"ytUrl"}
             name={"ytUrl"}
-            placeholder="YouTube channel id"
+            placeholder={translate("accountSocialLinks.ytUserName")}
             InputProps={{
               startAdornment: <InputAdornment position="start">{SOCIAL_LINKS[4].icon} {"\u00a0\u00a0youtube.com/channel/"}</InputAdornment>,
             }}
           />
 
 
-          <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-            Save Changes
+          <LoadingButton type="submit" variant="contained" loading={isSubmitting} sx={{':hover':{color:'#3399FF'}}}>
+            {translate("accountSocialLinks.saveChanges")}
           </LoadingButton>
         </Stack>
       </FormProvider>

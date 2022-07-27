@@ -39,7 +39,7 @@ const MainStyle = styled('main', {
 
 // ----------------------------------------------------------------------
 
-export default function DashboardLayout() {
+function DashboardLayout() {
   const { collapseClick, isCollapse } = useCollapseDrawer();
   const { themeLayout } = useSettings();
 
@@ -89,7 +89,7 @@ export default function DashboardLayout() {
     >
       <DashboardHeader isCollapse={isCollapse} onOpenSidebar={() => setOpen(true)} />
 
-      <NavbarVertical isOpenSidebar={open} onCloseSidebar={() => setOpen(false)} />
+      <NavbarVertical isOpenSidebar={open} onCloseSidebar={() => setOpen(false)} isGuest={false} />
 
       <MainStyle collapseClick={collapseClick}>
         <Outlet />
@@ -97,3 +97,65 @@ export default function DashboardLayout() {
     </Box>
   );
 }
+
+function GuestLayout() {
+  const { collapseClick, isCollapse } = useCollapseDrawer();
+  const { themeLayout } = useSettings();
+
+  const isDesktop = useResponsive('up', 'lg');
+
+  const [open, setOpen] = useState(false);
+
+  const verticalLayout = themeLayout === 'vertical';
+
+  if (verticalLayout) {
+    return (
+      <>
+        <DashboardHeader onOpenSidebar={() => setOpen(true)} verticalLayout={verticalLayout} />
+
+        {isDesktop ? (
+          <NavbarHorizontal />
+        ) : (
+          <NavbarVertical isOpenSidebar={open} onCloseSidebar={() => setOpen(false)} />
+        )}
+
+        <Box
+          component="main"
+          sx={{
+            px: { lg: 2 },
+            pt: {
+              xs: `${HEADER.MOBILE_HEIGHT + 24}px`,
+              lg: `${HEADER.DASHBOARD_DESKTOP_HEIGHT + 80}px`,
+            },
+            pb: {
+              xs: `${HEADER.MOBILE_HEIGHT + 24}px`,
+              lg: `${HEADER.DASHBOARD_DESKTOP_HEIGHT + 24}px`,
+            },
+          }}
+        >
+          <Outlet />
+        </Box>
+      </>
+    );
+  }
+
+  return (
+    <Box
+      sx={{
+        display: { lg: 'flex' },
+        minHeight: { lg: 1 },
+      }}
+    >        
+    
+    <DashboardHeader onOpenSidebar={() => setOpen(true)} verticalLayout={verticalLayout} />
+
+      <NavbarVertical isOpenSidebar={open} onCloseSidebar={() => setOpen(false)} isGuest={true} />
+
+      <MainStyle collapseClick={collapseClick}>
+        <Outlet />
+      </MainStyle>
+    </Box>
+  );
+}
+
+export {DashboardLayout, GuestLayout}

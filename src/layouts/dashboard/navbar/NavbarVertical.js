@@ -17,6 +17,7 @@ import Scrollbar from '../../../components/Scrollbar';
 import { NavSectionVertical } from '../../../components/nav-section';
 //
 import navConfig from './NavConfig';
+import navConfigGuest from './NavConfigGuest';
 import NavbarDocs from './NavbarDocs';
 import NavbarAccount from './NavbarAccount';
 import CollapseButton from './CollapseButton';
@@ -59,17 +60,21 @@ const ICONS = {
 NavbarVertical.propTypes = {
   isOpenSidebar: PropTypes.bool,
   onCloseSidebar: PropTypes.func,
+  isGuest: PropTypes.bool,
 };
 
-export default function NavbarVertical({ isOpenSidebar, onCloseSidebar }) {
+export default function NavbarVertical({ isOpenSidebar, onCloseSidebar,isGuest }) {
   const theme = useTheme();
   
   const { pathname } = useLocation();
 
   const isDesktop = useResponsive('up', 'lg');
 
+
   const { isCollapse, collapseClick, collapseHover, onToggleCollapse, onHoverEnter, onHoverLeave } =
     useCollapseDrawer();
+
+  const config = isGuest?navConfigGuest:navConfig;
 
   useEffect(() => {
     if (isOpenSidebar) {
@@ -105,7 +110,7 @@ export default function NavbarVertical({ isOpenSidebar, onCloseSidebar }) {
         <NavbarAccount isCollapse={isCollapse} />
       </Stack>
 
-      <NavSectionVertical navConfig={navConfig} isCollapse={isCollapse} />
+      <NavSectionVertical navConfig={config} isCollapse={isCollapse} />
 
       <Box sx={{ flexGrow: 1 }} />
 

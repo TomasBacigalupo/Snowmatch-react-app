@@ -22,6 +22,8 @@ export const PATH_AUTH = {
 
 export const PATH_GUEST = {
   root: ROOTS_FIND_A_PRO,
+  school: path(ROOTS_FIND_A_PRO, `/school`),
+  independent: path(ROOTS_FIND_A_PRO, `/independent`),
   viewTeacher: (name) => path(ROOTS_FIND_A_PRO, `/teacher/${name}`),
 };
 
@@ -44,6 +46,7 @@ export const PATH_DASHBOARD = {
   general: {
     app: path(ROOTS_DASHBOARD, '/app'),
     ecommerce: path(ROOTS_DASHBOARD, '/ecommerce'),
+    discounts: path(ROOTS_DASHBOARD,'/discounts'),
     analytics: path(ROOTS_DASHBOARD, '/analytics'),
     banking: path(ROOTS_DASHBOARD, '/banking'),
     booking: path(ROOTS_DASHBOARD, '/booking'),
@@ -80,6 +83,8 @@ export const PATH_DASHBOARD = {
   eCommerce: {
     root: path(ROOTS_DASHBOARD, '/e-commerce'),
     shop: path(ROOTS_DASHBOARD, '/e-commerce/shop'),
+    shopInd: path(ROOTS_DASHBOARD, '/e-commerce/shop/independent'),
+    shopSchool: path(ROOTS_DASHBOARD, '/e-commerce/shop/school'),
     list: path(ROOTS_DASHBOARD, '/e-commerce/list'),
     checkout: path(ROOTS_DASHBOARD, '/e-commerce/checkout'),
     new: path(ROOTS_DASHBOARD, '/e-commerce/product/new'),

@@ -4,6 +4,7 @@ import { PATH_DASHBOARD } from '../../../routes/paths';
 import Label from '../../../components/Label';
 import SvgIconStyle from '../../../components/SvgIconStyle';
 import SchoolIcon from '@mui/icons-material/School';
+import DiscountIcon from '@mui/icons-material/Discount';
 
 // ----------------------------------------------------------------------
 
@@ -87,7 +88,8 @@ const navConfig = [
         path: PATH_DASHBOARD.eCommerce.root,
         icon: ICONS.match,
         children: [
-          { title: 'instructors', path: PATH_DASHBOARD.eCommerce.shop },
+          { title: 'School PROs', path: PATH_DASHBOARD.eCommerce.shopSchool },
+          { title: 'Independent PROs', path: PATH_DASHBOARD.eCommerce.shopInd },
         ],
       },
       { title: 'calendar', path: PATH_DASHBOARD.calendar, icon: ICONS.calendar },
@@ -100,6 +102,13 @@ const navConfig = [
           { title: 'new client', path: PATH_DASHBOARD.school.new },
         ],
       },
+<<<<<<< HEAD
+=======
+      { title: 'discounts', path: PATH_DASHBOARD.general.discounts, icon: <DiscountIcon/> }
+      // { title: 'chat', path: PATH_DASHBOARD.chat.root, icon: ICONS.chat },
+     
+      // { title: 'kanban', path: PATH_DASHBOARD.kanban, icon: ICONS.kanban },
+>>>>>>> main
     ],
   },
 ];

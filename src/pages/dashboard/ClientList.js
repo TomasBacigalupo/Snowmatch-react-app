@@ -41,6 +41,8 @@ import { getClients, selectClient, deleteClient } from '../../redux/slices/clien
 import { useDispatch, useSelector } from '../../redux/store';
 
 import { useMediaQuery } from 'react-responsive';
+import useLocales from 'src/hooks/useLocales';
+import HoverButton from 'src/components/HoverButton';
 
 
 
@@ -112,6 +114,7 @@ export default function UserList() {
 
   const { clients } = useSelector((state) =>{return state.clients});
 
+  const { translate } = useLocales()
 
   const handleFilterName = (filterName) => {
     setFilterName(filterName);
@@ -170,21 +173,21 @@ const isMobile = useMediaQuery({ query: `(max-width: 760px)` });
     <Page title="User: List">
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <HeaderBreadcrumbs
-          heading="Clients List"
+          heading={translate("heading.clientList")}
           links={[
-            { name: 'Dashboard', href: PATH_DASHBOARD.root },
-            { name: 'School', href: PATH_DASHBOARD.school.root },
-            { name: 'List' },
+            { name: translate('breadcrumb.dashboard'), href: PATH_DASHBOARD.root },
+            { name: translate("breadcrumb.school"), href: PATH_DASHBOARD.school.root },
+            { name: translate("breadcrumb.agenda") },
           ]}
           action={
-            <Button
+            <HoverButton
               variant="contained"
               component={RouterLink}
               to={PATH_DASHBOARD.school.new}
               startIcon={<Iconify icon={'eva:plus-fill'} />}
             >
-              New Client
-            </Button>
+              {translate('school.clients.newClient')}
+            </HoverButton>
           }
         />
 

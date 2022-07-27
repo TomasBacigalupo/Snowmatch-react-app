@@ -4,6 +4,7 @@ import { Link as RouterLink } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 import { Typography, Button, Card, CardContent } from '@mui/material';
 import { SeoIllustration } from '../../../../assets';
+import useLocales from 'src/hooks/useLocales';
 
 // ----------------------------------------------------------------------
 
@@ -27,6 +28,7 @@ AppWelcome.propTypes = {
 };
 
 export default function AppWelcome({ displayName }) {
+  const { translate } = useLocales()
   return (
     <RootStyle>
       <CardContent
@@ -37,17 +39,18 @@ export default function AppWelcome({ displayName }) {
         }}
       >
         <Typography gutterBottom variant="h4">
-          Welcome back,
-          <br /> {!displayName ? '...' : displayName}!
+          {translate('generalApp.welcomeBack')}
+          {!displayName ? '...' : displayName}!
         </Typography>
 
         <Typography variant="body2" sx={{ pb: { xs: 3, xl: 5 }, maxWidth: 480, mx: 'auto' }}>
-          Looking for the best teacher for your client?
+          {translate('generalApp.lookingBestTeacher')}
         </Typography>
 
         <Button variant="contained" to="/dashboard/user/new" component={RouterLink}>
-          Go Now
+          Match
         </Button>
+        
       </CardContent>
 
       <SeoIllustration

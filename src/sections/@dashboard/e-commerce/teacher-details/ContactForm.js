@@ -21,6 +21,7 @@ import { FormProvider, RHFTextField, RHFSwitch, RHFSelect } from '../../../../co
 import { useEffect, useState } from 'react';
 
 import { countries } from '../../../../_mock';
+import useLocales from 'src/hooks/useLocales';
 
 
 
@@ -30,6 +31,8 @@ ContactForm.propTypes = {
 
 export default function ContactForm({ teacher, onCancel,cellphone }) {
   const { enqueueSnackbar } = useSnackbar();
+  const { translate } = useLocales();
+
 
     const [open, setOpen] = useState(false);
   const handleOpen = () => {
@@ -103,7 +106,7 @@ export default function ContactForm({ teacher, onCancel,cellphone }) {
 
       if(resp === "ERROR"){
         setOpen(true)
-        enqueueSnackbar("Your phone number is not validated, check Whatsapp and try again", { 
+        enqueueSnackbar(translate("conversation.not_valid"), { 
         variant: 'error',
         autoHideDuration: 10000,
         })
@@ -117,7 +120,7 @@ export default function ContactForm({ teacher, onCancel,cellphone }) {
         }
       }
       else{
-        enqueueSnackbar("Message sent, they will soon be in touch!", { 
+        enqueueSnackbar(translate("conversation.message_sent"), { 
           variant: 'success',
           autoHideDuration: 10000,
         })
@@ -135,13 +138,13 @@ export default function ContactForm({ teacher, onCancel,cellphone }) {
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Stack spacing={3} sx={{ p: 3 }}>
-        <RHFTextField name="firstname" label="Name" />
+        <RHFTextField name="firstname" label={translate("general.form.name")} />
 
-        <RHFTextField name="lastname" label="Last Name" />
+        <RHFTextField name="lastname" label={translate("general.form.lastName")} />
 
-        <RHFTextField name="age" label="Age" />
+        <RHFTextField name="age" label={translate("conversation.age2")} />
 
-        <RHFSelect name="countryCode" label="Country Code" placeholder="Country Code">
+        <RHFSelect name="countryCode" label={translate("general.form.countryCode")} placeholder={translate("general.form.countryCode")}>
           <option value="" />
           {countries.map((option) => (
               <option key={option.code} value={option.phone}>
@@ -149,26 +152,26 @@ export default function ContactForm({ teacher, onCancel,cellphone }) {
               </option>
           ))}
         </RHFSelect>        
-        <RHFTextField name="from" label="Phone" />
+        <RHFTextField name="from" label={translate("general.form.cellphone")} />
 
 
-        <RHFSelect name="level" label="Level" placeholder="Level">
-          <option value="" />
+        <RHFSelect name="level" label={translate("school.clients.form.level")} placeholder={translate("school.clients.form.level")}>
+        <option value="" />
           <option key="BEGINNER" value="BEGINNER">
-            BEGINNER
+          {translate("school.clients.form.BEGINNER")}
           </option>
           <option key="INTERMEDIATE" value="INTERMEDIATE">
-            INTERMEDIATE
+          {translate("school.clients.form.INTERMEDIATE")}
           </option>
           <option key="ADVANCED" value="ADVANCED">
-            ADVANCED
+          {translate("school.clients.form.ADVANCED")}
           </option>
           <option key="EXPERT" value="EXPERT">
-            EXPERT
-          </option>                              
+          {translate("school.clients.form.EXPERT")}
+          </option>                         
         </RHFSelect>
 
-        <RHFSelect name="activity" label="Activity" placeholder="Activity">
+        <RHFSelect name="activity" label={translate("conversation.activity")} placeholder={translate("conversation.activity")}>
           <option value="" />
           <option key="SKI" value="SKI">
             SKI
@@ -178,9 +181,9 @@ export default function ContactForm({ teacher, onCancel,cellphone }) {
           </option>                            
         </RHFSelect>
 
-        <RHFTextField name="amount" label="Number of people" />
+        <RHFTextField name="amount" label={translate("conversation.amount")} />
 
-        <RHFSelect name="duration" label="Duration" placeholder="Duration">
+        <RHFSelect name="duration" label={translate("conversation.duration")} placeholder={translate("conversation.duration")}>
           <option value="" />
           <option key="HALFDAY (MORNING)" value="HALFDAY (MORNING)">
             HALFDAY (MORNING)
@@ -199,7 +202,7 @@ export default function ContactForm({ teacher, onCancel,cellphone }) {
           render={({ field }) => (
             <MobileDatePicker
               {...field}
-              label="Start date"
+              label={translate("conversation.classdate")}
               inputFormat="dd/MM/yyyy"
               renderInput={(params) => <TextField {...params} fullWidth />}
             />
@@ -214,23 +217,23 @@ export default function ContactForm({ teacher, onCancel,cellphone }) {
         <Box sx={{ flexGrow: 1 }} />
 
         <Button variant="outlined" color="inherit" onClick={onCancel}>
-          Cancel
+        {translate("conversation.cancel")}
         </Button>
 
-        <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-          Contact
+        <LoadingButton type="submit" variant="contained" loading={isSubmitting} sx={{':hover':{color:'#3399FF'}}}>
+        {translate("conversation.contact")}
         </LoadingButton>
 
       </DialogActions>
 
         <DialogAnimate open={open} onClose={handleClose}>
-          <DialogTitle>Validation required!</DialogTitle>
+          <DialogTitle>{translate("conversation.validation_required")}</DialogTitle>
 
           <Box spacing={3} sx={{ p: 3 }}>
           <p id="validation-modal-description">
-            Check your Whatsapp for a validation message. It may take a while. If you didn't get a message, check your number and try again!
-          </p>
-          <Button onClick={handleClose}>Close</Button>
+          {translate("conversation.validation_required_body")}   
+                 </p>
+          <Button onClick={handleClose}>{translate("conversation.close")}</Button>
         </Box>        
         </DialogAnimate>
 

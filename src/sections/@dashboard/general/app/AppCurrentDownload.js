@@ -11,6 +11,7 @@ import { useEffect } from 'react';
 import { useDispatch } from 'src/redux/store';
 import { getOverview } from 'src/redux/slices/teachers';
 import { useSelector } from 'react-redux';
+import useLocales from 'src/hooks/useLocales';
 
 // ----------------------------------------------------------------------
 
@@ -40,6 +41,7 @@ const CHART_DATA = [12244, 53345, 44313, 78343];
 export default function AppCurrentDownload() {
   const theme = useTheme();
   const dispatch = useDispatch();
+  const { translate } = useLocales();
   const { cakeChart } = useSelector((state) => state.teachers);
 
   const chartOptions = merge(BaseOptionChart(), {
@@ -87,7 +89,7 @@ export default function AppCurrentDownload() {
 
   return (
     <Card>
-      <CardHeader title="Total lessons" />
+      <CardHeader title={translate('generalApp.lessonsAnalytics')} />
       <ChartWrapperStyle dir="ltr">
         <ReactApexChart type="donut" series={cakeChart} options={chartOptions} height={280} />
       </ChartWrapperStyle>

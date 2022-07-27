@@ -14,6 +14,7 @@ import MyAvatar from '../../../components/MyAvatar';
 import MenuPopover from '../../../components/MenuPopover';
 import { IconButtonAnimate } from '../../../components/animate';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import useLocales from 'src/hooks/useLocales';
 
 // ----------------------------------------------------------------------
 
@@ -30,7 +31,7 @@ const MENU_OPTIONS = [
 
 const GUEST_MENU_OPTIONS = [
   {
-    label: 'SignUp as a PRO',
+    label: 'SignUpAsAPRO',
     linkTo: '/auth/register',
   },
   {
@@ -51,6 +52,7 @@ export default function AccountPopover() {
   const { enqueueSnackbar } = useSnackbar();
 
   const [open, setOpen] = useState(null);
+  const {translate} = useLocales()
 
   const handleOpen = (event) => {
     setOpen(event.currentTarget);
@@ -125,14 +127,14 @@ export default function AccountPopover() {
         {isAuthenticated && <Stack sx={{ p: 1 }}>
           {MENU_OPTIONS.map((option) => (
             <MenuItem key={option.label} to={option.linkTo} component={RouterLink} onClick={handleClose}>
-              {option.label}
+              {translate("accountPopover." + option.label)}
             </MenuItem>
           ))}
         </Stack>}
         {!isAuthenticated && <Stack sx={{ p: 1 }}>
           {GUEST_MENU_OPTIONS.map((option) => (
             <MenuItem key={option.label} to={option.linkTo} component={RouterLink} onClick={handleClose}>
-              {option.label}
+              { translate("accountPopover." + option.label)}
             </MenuItem>
           ))}
         </Stack>}
@@ -141,14 +143,14 @@ export default function AccountPopover() {
 
         {isAuthenticated &&
           <MenuItem onClick={handleLogout} sx={{ m: 1 }}>
-            Logout
+          { translate("accountPopover.logOut")}
           </MenuItem>
         }
         {!isAuthenticated &&
           <MenuItem  sx={{ m: 1 }} onClick={()=>{
             window.location.href = 'https://instagram.com/snow.match'
           }}>
-            Help
+          {translate("accountPopover.help")}
           </MenuItem>
         }
       </MenuPopover>

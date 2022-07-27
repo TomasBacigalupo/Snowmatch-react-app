@@ -2,7 +2,8 @@ import { Suspense, lazy } from 'react';
 import { Navigate, useRoutes, useLocation } from 'react-router-dom';
 // layouts
 import MainLayout from '../layouts/main';
-import DashboardLayout from '../layouts/dashboard';
+import {DashboardLayout,GuestLayout} from '../layouts/dashboard';
+
 import LogoOnlyLayout from '../layouts/LogoOnlyLayout';
 // guards
 import GuestGuard from '../guards/GuestGuard';
@@ -12,6 +13,7 @@ import AuthGuard from '../guards/AuthGuard';
 import { PATH_AFTER_LOGIN } from '../config';
 // components
 import LoadingScreen from '../components/LoadingScreen';
+import Discounts from 'src/pages/dashboard/Discounts';
 
 // ----------------------------------------------------------------------
 
@@ -55,10 +57,26 @@ export default function Router() {
     },
     {
       path: '*',
-      element: <MainLayout />,
+      element: <MainLayout />
+    },
+    {
+      path: 'match',
+      element: (<GuestLayout/>),
       children: [
-        { path: 'match', element: <EcommerceShop isGuest={true}/> },
-        { path: 'match/teacher/:name', element: <EcommerceTeacherDetails isGuest={true}/> }
+        { element: <Navigate to={'/match/school'} replace />, index: true },
+        { path: '*', element: <EcommerceShop isGuest={true} teacherType="school"/> },
+        { path: 'independent', element: <EcommerceShop isGuest={true} teacherType="independent"/> },
+        { path: 'school', element: <EcommerceShop isGuest={true} teacherType="school"/> },
+        { path: 'teacher/:name', element: <EcommerceTeacherDetails isGuest={true}/> }
+      ]
+    },
+
+    {
+      path: 'shops',
+      children: [
+        { path: 'trown', element:<RedirectToShop url={"https://www.trown.com.ar"}/>},
+        { path: 'salpa', element:<RedirectToShop url={"https://www.salpa.com.ar"}/>},
+
       ]
     },
 
@@ -74,6 +92,7 @@ export default function Router() {
         { element: <Navigate to={PATH_AFTER_LOGIN} replace />, index: true },
         { path: 'app', element: <GeneralApp /> },
         { path: 'ecommerce', element: <GeneralEcommerce /> },
+        { path: 'discounts', element: <Discounts/>},
         { path: 'analytics', element: <GeneralAnalytics /> },
         { path: 'banking', element: <GeneralBanking /> },
         { path: 'booking', element: <GeneralBooking /> },
@@ -83,6 +102,9 @@ export default function Router() {
           children: [
             { element: <Navigate to="/dashboard/e-commerce/shop" replace />, index: true },
             { path: 'shop', element: <EcommerceShop /> },
+            { path: 'shop/independent', element: <EcommerceShop teacherType="independent" /> },
+            { path: 'shop/school', element: <EcommerceShop teacherType="school"/> },
+
             { path: 'teacher/:name', element: <EcommerceTeacherDetails /> },
             { path: 'product/:name', element: <EcommerceProductDetails /> },
             { path: 'list', element: <EcommerceProductList /> },
@@ -250,4 +272,10 @@ const Pricing = Loadable(lazy(() => import('../pages/Pricing')));
 const Payment = Loadable(lazy(() => import('../pages/Payment')));
 const Page500 = Loadable(lazy(() => import('../pages/Page500')));
 const NotFound = Loadable(lazy(() => import('../pages/Page404')));
-const PageVerify = Loadable(lazy(() => import('../pages/PageVerify')))
+const PageVerify = Loadable(lazy(() => import('../pages/PageVerify')));
+
+function RedirectToShop({url}) {
+  window.location.replace(url);
+
+  return null;
+}

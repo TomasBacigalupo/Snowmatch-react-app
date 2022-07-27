@@ -23,6 +23,7 @@ import { FormProvider, RHFSelect, RHFSwitch, RHFTextField, RHFMultipleSelect } f
 import { createClient, slice, editClient } from '../../../redux/slices/clients'
 import { useDispatch, useSelector } from '../../../redux/store';
 import { useMediaQuery } from 'react-responsive';
+import useLocales from 'src/hooks/useLocales';
 
 
 
@@ -52,6 +53,8 @@ ClientNewEditForm.propTypes = {
     isEdit: PropTypes.bool,
     currentUser: PropTypes.object,
   };
+
+
   
   export default function ClientNewEditForm({ isEdit, currentUser }) {
 
@@ -63,18 +66,14 @@ ClientNewEditForm.propTypes = {
     const navigate = useNavigate();
     const isMobile = useMediaQuery({ query: `(max-width: 760px)` });
     const imageSize = isMobile?10:38;
-
-
-
-
-  
+    const {translate} = useLocales()
     const { enqueueSnackbar } = useSnackbar();
   
     const NewUserSchema = Yup.object().shape({
       name: Yup.string().required('Name is required'),
       lastname: Yup.string().required('Last name is required'),
       email: Yup.string().email(),
-      cellphone: Yup.string(),
+      cellphone: Yup.string().matches(/^\d+$/,"Cellphone can only contain numbers"),
       country: Yup.string(),
       notes: Yup.string().nullable(),
       isTipper: Yup.bool(),
@@ -165,6 +164,25 @@ ClientNewEditForm.propTypes = {
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isEdit, currentUser]);
+
+    useEffect(() => {
+      document.addEventListener('paste', handlePasteClipboard);
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    const handlePasteClipboard = (event) => {
+
+      if(event.path[0].name === "cellphone"){
+        let data = event?.clipboardData?.getData('Text') || '';
+  
+        data = data.replace(/\D/g, '');
+        console.log(event)
+        setValue("cellphone",data)
+        event.preventDefault()
+        
+      }
+
+    };
   
     const onSubmit = async (data) => {
       var func;
@@ -216,10 +234,10 @@ ClientNewEditForm.propTypes = {
                             gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
                             }}
                         >
-                            <RHFTextField name="name" label="Name" />
-                            <RHFTextField name="lastname" label="Last Name" />
-                            <RHFTextField name="email" label="Email Address" />
-                            <RHFSelect name="country" label="Country" placeholder="Country">
+                    <RHFTextField name="name" label={translate("general.form.name")} />
+                    <RHFTextField name="lastname" label={translate("general.form.lastName")}  />
+                    <RHFTextField name="email" label={translate("general.form.email")}  />
+                    <RHFSelect name="country" label={translate("general.form.country")} placeholder={translate("general.form.country")} >
                               <option value="" />
                               {countries.map((option) => (
                                   <option key={option.code} value={option.label}>
@@ -227,7 +245,7 @@ ClientNewEditForm.propTypes = {
                                   </option>
                               ))}
                             </RHFSelect>
-                            <RHFSelect name="countryCode" label="Country Code" placeholder="Country Code">
+                    <RHFSelect name="countryCode" label={translate("general.form.countryCode")} placeholder={translate("general.form.countryCode")} >
                               <option value="" />
                               {countries.map((option) => (
                                   <option key={option.code} value={option.phone}>
@@ -235,21 +253,21 @@ ClientNewEditForm.propTypes = {
                                   </option>
                               ))}
                             </RHFSelect> 
-                            <RHFTextField name="cellphone" label="Cellphone" />
+                    <RHFTextField name="cellphone" label={translate("general.form.cellphone")}  />
     
-                            <RHFSelect name="level" label="Level" placeholder="Level">
+                            <RHFSelect name="level" label={translate("school.clients.form.level")} placeholder="Level">
                               <option value="" />
                                 <option key="BEGINNER" value="BEGINNER">
-                                  BEGINNER
+                                  {translate("school.clients.form.BEGINNER")}
                                 </option>
                                 <option key="INTERMEDIATE" value="INTERMEDIATE">
-                                  INTERMEDIATE
+                                  {translate("school.clients.form.INTERMEDIATE")}
                                 </option>
                                 <option key="ADVANCED" value="ADVANCED">
-                                  ADVANCED
+                        {translate("school.clients.form.ADVANCED")}
                                 </option>
                                 <option key="EXPERT" value="EXPERT">
-                                  EXPERT
+                        {translate("school.clients.form.EXPERT")}
                                 </option>                              
                             </RHFSelect>
                             <RHFSwitch
@@ -258,7 +276,7 @@ ClientNewEditForm.propTypes = {
                               label={
                                 <>
                                   <Typography variant="subtitle2" sx={{ mb: 0.5 }}>
-                                    Is the client renting equipment?
+                                    {translate("school.clients.form.isRenting")}
                                   </Typography>
                                 </>
                               }
@@ -270,27 +288,21 @@ ClientNewEditForm.propTypes = {
                               label={
                                 <>
                                   <Typography variant="subtitle2" sx={{ mb: 0.5 }}>
-                                    Does the client tip?
+                                    {translate("school.clients.form.doesTip")}
                                   </Typography>
                                 </>
                               }
                               sx={{ mx: 0, width: 1, justifyContent: 'space-between' }}
                               />
-                            <RHFTextField name="tip" label="Usual tip" />
+                    <RHFTextField name="tip" label={translate("school.clients.form.usualTip")} />
 
                             
-                            <RHFTextField name="work" label="Work" />
-                            <RHFTextField name="hobbies" label="Hobbies" />
+                    <RHFTextField name="work" label={translate("school.clients.form.work")} />
+                    <RHFTextField name="hobbies" label={translate("school.clients.form.hobbies")} />
 
-                            <RHFTextField name="staysAt" label="Stays at" />
+                    <RHFTextField name="staysAt" label={translate("school.clients.form.staysAt")} />
 
-                            <RHFTextField multiline name="family" label="Family"/>
-
-
-
-
-
-
+                    <RHFTextField multiline name="family" label={translate("school.clients.form.family")}/>
                         </Box>
                         <Stack alignItems="flex" sx={{ mt: 3 }}>
                                                 <Box
@@ -301,17 +313,17 @@ ClientNewEditForm.propTypes = {
                             gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)' },
                             }}
                         >
-                        <RHFMultipleSelect name="resorts" label="Resorts" list={SKI_RESORTS}/>
+                      <RHFMultipleSelect name="resorts" label={translate("school.clients.form.resorts")} list={SKI_RESORTS}/>
 
-                            <RHFTextField multiline name="notes" label="Notes" rows={3} />
+                      <RHFTextField multiline name="notes" label={translate("school.clients.form.notes")} rows={3} />
                             </Box>
               </Stack>
                     </Grid>
                 </Grid>
                 
               <Stack alignItems="flex-end" sx={{ mt: 3 }}>
-                <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-                  {!isEdit ? 'Create Client' : 'Save Changes'}
+                <LoadingButton type="submit" variant="contained" loading={isSubmitting} sx={{':hover':{color:'#3399FF'}}}>
+                  {!isEdit ? translate("school.clients.form.createClient") : translate("school.clients.form.saveChanges")}
                 </LoadingButton>
               </Stack>
             </Card>

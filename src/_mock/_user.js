@@ -56,11 +56,11 @@ export const _userFollowers = [...Array(18)].map((_, index) => ({
   isFollowed: _mock.boolean(index),
 }));
 
-export const _userFriends = [...Array(18)].map((_, index) => ({
+export const _userFriends = [...Array(1)].map((_, index) => ({
   id: _mock.id(index),
-  avatarUrl: _mock.image.avatar(index),
-  name: _mock.name.fullName(index),
-  role: _mock.role(index),
+  avatarUrl: "https://www.salpa.com.ar/img/salpa-la-vida-es-afuera-logo-1593720973.jpg",
+  name: "Salpa",
+  role: "La vida es afuera",
 }));
 
 export const _userGallery = [...Array(12)].map((_, index) => ({

@@ -1,0 +1,225 @@
+{
+    "demo": {
+        "title": "English",
+        "introduction": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
+    },
+    "heading":{
+        "clientList": "Agenda de clientes"
+    },
+    "general":{
+        "cancel":"Cancelar",
+        "AVAILABLE": "Disponible",
+        "UNAVAILABLE": "Ocupado",
+        "form":{
+            "name": "Nombre",
+            "lastName": "Apellido",
+            "cellphone":"Teléfono",
+            "country":"Nacionalidad",
+            "countryCode": "Codigo País",
+            "email": "Email",
+            "gender": "Genero",
+            "male": "Masculino",
+            "female": "Femenino",
+            "disciplines": "Disciplinas",
+            "languages":"Idiomas",
+            "school": "Escuela",
+            "resorts": "Centro de esquí en el que da clases",
+            "skills": "Extras",
+            "quickInformation": "Breve descripción",
+            "description":"Descripción",
+            "available": "Estoy disponible",
+            "saveChanges": "Guardar Cambios"
+        }
+    },
+    "landingPRO": {
+        "heroTitle1": "Potencia",
+        "heroTitle2": "tu trabajo con",
+        "desc1": "Manejá a tus clientes en un solo lugar.",
+        "desc2": "Ponete en contacto con nuevos clientes.",
+        "desc3": "Manejá tus ingresos.",
+        "getStarted": "Empeza ahora",
+        "useCases": "¿Por qué SnowMatch?",
+        "clientData": "Agenda de Clientes",
+        "clientDataDesc": "Todos tus datos son privados y estan protegidos por SnowMatch",
+        "calendarOrg": "Organizá tus Clases",
+        "calendarOrgDesc": "Establecé tus horarios disponibles y maneja tus clases.",
+        "match": "Match PROs",
+        "matchDesc": "Matchea con nuevos clientes y consegui clases cuando estas libre.",
+        "independent": "PROs Independientes",
+        "school": "PROs de Escuelas",
+        "getStartedToday": "¡Formá parte de SnowMatch!",
+        "find": "Matchea con el PRO que te hace falta...",
+        "start_date":"Desde",
+        "end_date":"Hasta"
+    },
+    "menu": {
+        "general": "General",
+        "management": "Management",
+        "match": "Match PROs",
+        "instructors": "Instructores",
+        "calendar": "Calendario",
+        "School": "Mi Escuela",
+        "clients": "Clientes",
+        "newClient": "New Client",
+        "profile": "ver perfil",
+        "account": "Editar perfil",
+        "new client": "Agregar cliente",
+        "user": "Mi perfil",
+        "overview":"Estadísticas",
+        "school": "mi escuela",
+        "Schools": "Escuelas",
+        "Independent": "Independentes",
+        "School PROs": "PROs de Escuelas",
+        "Independent PROs": "PROs Independientes",
+        "discounts": "PRO Deal"
+    },
+    "calendar": {
+        "newEvent": "Crear Evento",
+        "editEvent": "Editar Evento",
+        "addEvent": "Crear Evento",
+        "form":{
+            "startDate": "Desde",
+            "endDate": "Hasta",
+            "description": "Descripción",
+            "client":"Cliente",
+            "type": "Motivo",
+            "title": "Título",
+            "price": "Precio",
+            "cancel": "Cancelar",
+            "add": "Crear"
+        }
+    },
+    "school":{
+        "clients":{
+            "newClient": "Agregar cliente",
+            "form":{
+                "createANewClient": "Agregar Cliente",
+                "editClient": "Editar Cliente",
+                "level": "Nivel",
+                "BEGINNER": "Principiante",
+                "INTERMEDIATE": "Intermedio",
+                "ADVANCED": "Avanzado",
+                "EXPERT": "Experto",
+                "doesTip":"¿Deja propina?",
+                "usualTip": "Propina habitual",
+                "hobbies": "Hobbies",
+                "work":"Trabaja en...",
+                "family":"Familia",
+                "staysAt": "Se hospeda en...",
+                "resorts": "Centros de esqui",
+                "notes": "Notas",
+                "isRenting":"Alquila equipo?",
+                "createClient":"Crear cliente",
+                "saveChanges":"Guardar Cambios"
+            }
+        }
+    },
+    "breadcrumb":{
+        "dashboard": "Estadísticas",
+        "profile": "Mi Perfil",
+        "account": "Mi información",
+        "accountSettings": "Ajustes de cuenta",
+        "editProfile": "Editar Mi Perfil",
+        "school":"Escuela",
+        "agenda": "Agenda"
+    },
+    "profile":{
+        "tabs":{
+            "profile": "Mi información"
+        },
+        "clients": "Clientes",
+        "level": "Nivel de Instructor",
+        "information": "Informacion",
+        "description":"Descripción",
+        "skills": "Habilidades",
+        "about": "Acerca de mi",
+        "underReview": "Bajo revisión",
+        "proAt":"PRO en "
+    },
+    "accountSocialLinks": {
+        "igUserName": "Nombre de usuario de instagram",
+        "twUserName": "Nombre de usuario de twitter",
+        "fbUserName": "Nombre de usuario de Facebook",
+        "ytUserName": "ID de canal de YouTube",
+        "saveChanges": "Guardar Cambios"
+    },
+    "account":{
+        "tabs":{
+            "general": "Mi información",
+            "social_links": "Mis redes sociales"
+        }
+    },
+    "filter":{
+        "gender":"Genero",
+        "resort": "Cerro",
+        "category": "Categoría",
+        "discipline": "Disciplina",
+        "freeStyle": "FreeStyle",
+        "alpine": "Alpino",
+        "backCountry": "Travesía",
+        "languages": "Lenguajes",
+        "range": "Fechas",
+        "rating": "Puntuación",
+        "filters": "Filtros",
+        "clearAll": "Limpiar filtros"
+    },
+    "accountPopover":{
+        "Profile": "Mi Perfíl",
+        "Settings": "Ajustes",
+        "SignUpAsAPRO": "Quiero ser PRO",
+        "LogIn": "LogIn",
+        "logOut":"LogOut",
+        "help": "Ayuda"
+    },
+    "generalApp":{
+        "totalLessons": "Clases",
+        "totalIncome": "Ingresos",
+        "totalClients": "Clientes",
+        "lessonsAnalytics": "Estadistica de Clases",
+        "noScheduledEvents": "No tiene eventos agendados",
+        "welcomeBack": "Bienvenido, ",
+        "lookingBestTeacher":"¿Estás buscando al mejor PRO para tu cliente?",
+        "topClients": "Ranking de Clientes"
+    },
+    "teacherDetails":{
+        "title": "Detalles PRO",
+        "calendar": "Calendario",
+        "verified": "Profesor Verificado y Aprobado",
+        "reply": "Activo a Match",
+        "replyDescription": "Este PRO responde a SnowMatch en menos de un día",
+        "verifiedDescription": "Este profesor esta validado por SnowMatch ",
+        "warranty": "Garantia SnowMatch",
+        "warrantyDescription": "SnowMatch asegura que cumple con la reglamentación para dar clases",
+        "information": "Información",
+        "description": "Descripción",
+        "skills": "Skills"
+    },
+
+    "conversation":{
+        "not_valid":"Tu numero de telefono no esta validado, revisa WhatsApp y probá de nuevo!",
+        "message_sent":"Mensaje enviado, pronto se contactarán contigo!",
+        "age":"Edad del cliente",
+        "age2":"Edad",
+        "level":"Nivel del cliente",
+        "tips":"Suele dejar propina?",
+        "commission":"Comisión",
+        "activity":"Actividad",
+        "amount":"Cantidad de personas",
+        "duration":"Duración",
+        "classdate":"Fecha",
+        "days":"Cantidad de días",
+        "cancel":"Cancelar",
+        "contact":"Contactar",
+        "refer_class":"Referir Clase",
+        "contact_pro":"Contactar PRO",
+        "validation_required":"Validation required!",
+        "validation_required_body":"Vas a recibir un mensaje de validación por WhatsApp, puede tardar unos minutos. Si no te llega el mensaje, revisa tu número y proba de nuevo!",
+        "close":"Cerrar"
+      },
+      "discounts":{
+          "getCupon":"Conseguir Cupon",
+          "details": "Detalles del Descuento",
+          "findBrands":"Buscar Marcas...",
+          "sendNoti": "¡Listo! Estamos tramitando tu código de descuento. Si aplicás al código te va a estar llegando por Whats App"
+      }
+}

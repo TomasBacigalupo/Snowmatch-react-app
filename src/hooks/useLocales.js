@@ -1,15 +1,27 @@
 import { useTranslation } from 'react-i18next';
 // '@mui
-import { enUS, deDE, frFR } from '@mui/material/locale';
+import { enUS, deDE, frFR, esES, ptBR, ptPT } from '@mui/material/locale';
 
 // ----------------------------------------------------------------------
 
 const LANGS = [
   {
+    label: 'Español',
+    value: 'es',
+    systemValue: esES,
+    icon: '/assets/i18n/ic_flag_es.svg',
+  },
+  {
     label: 'English',
     value: 'en',
     systemValue: enUS,
-    icon: 'https://minimal-assets-api.vercel.app/assets/icons/ic_flag_en.svg',
+    icon: '/assets/i18n/ic_flag_en.svg',
+  },
+  {
+    label: 'Português',
+    value: 'pt',
+    systemValue: ptPT,
+    icon: '/assets/i18n/ic_flag_pt.svg',
   },
   // {
   //   label: 'German',

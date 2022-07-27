@@ -6,25 +6,26 @@ import { Box, Card, Container, Typography } from '@mui/material';
 import Image from '../../components/Image';
 import { MotionViewport, varFade } from '../../components/animate';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import useLocales from 'src/hooks/useLocales';
 
 // ----------------------------------------------------------------------
 
 const CARDS = [
   {
     icon: '/icons/ic_user.svg',
-    title: 'Clients data',
+    title: 'clientData',
     description:
-      'Manege private access important client data.',
+      'clientDataDesc',
   },
   {
     icon: '/icons/ic_calendar.svg',
-    title: 'Calendar organization',
-    description: 'Set available times and manage yor classes.',
+    title: 'calendarOrg',
+    description: 'calendarOrgDesc',
   },
   {
     icon: '/icons/ic_match.svg',
-    title: 'Match',
-    description: 'Expand your clients network, get hired when you are free.',
+    title: 'match',
+    description: 'matchDesc',
   },
 ];
 
@@ -87,7 +88,7 @@ const CardStyle = styled(Card)(({ theme }) => {
 
 export default function HomeMinimal() {
   const theme = useTheme();
-
+  const { translate } = useLocales()
   const isLight = theme.palette.mode === 'light';
 
   return (
@@ -105,7 +106,7 @@ export default function HomeMinimal() {
             </Typography>
           </m.div>
           <m.div variants={varFade().inDown}>
-            <Typography variant="h2">What SnowMatch helps you?</Typography>
+            <Typography variant="h2">{translate('landingPRO.useCases')}</Typography>
           </m.div>
         </Box>
 
@@ -131,9 +132,9 @@ export default function HomeMinimal() {
                   }}
                 />
                 <Typography variant="h5" paragraph>
-                  {card.title}
+                  {translate("landingPRO."+card.title)}
                 </Typography>
-                <Typography sx={{ color: isLight ? 'text.secondary' : 'common.white' }}>{card.description}</Typography>
+                <Typography sx={{ color: isLight ? 'text.secondary' : 'common.white' }}>{translate("landingPRO."+card.description)}</Typography>
               </CardStyle>
             </m.div>
           ))}

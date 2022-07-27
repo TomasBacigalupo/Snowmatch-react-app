@@ -19,6 +19,7 @@ import { FormProvider, RHFTextField, RHFSwitch, RHFSelect } from '../../../compo
 import { useEffect, useState } from 'react';
 import { Avatar } from '@mui/material';
 import { Autocomplete } from '@mui/material';
+import useLocales from 'src/hooks/useLocales';
 
 // ----------------------------------------------------------------------
 
@@ -60,6 +61,7 @@ CalendarForm.propTypes = {
 
 export default function CalendarForm({ event, range, onCancel, clients }) {
   const { enqueueSnackbar } = useSnackbar();
+  const {translate} = useLocales()
   const [client, setClient] = useState(clients.find(c =>event?.clientId ===c.id))
 
   const dispatch = useDispatch();
@@ -178,7 +180,7 @@ export default function CalendarForm({ event, range, onCancel, clients }) {
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Stack spacing={3} sx={{ p: 3 }}>
         {clients?.length > 0 && <Autocomplete
-          name="clientId" label="Client"
+          name="clientId" label={translate('calendar.form.client')}
           value={client}
           options={clients}
           onChange={(event,value)=>{
@@ -215,7 +217,7 @@ export default function CalendarForm({ event, range, onCancel, clients }) {
         />}
         
 
-        <RHFSelect name="type" label="Type">
+        <RHFSelect name="type" label={translate('calendar.form.type')}>
           {TYPE_OPTION.map((type) => (
             <optgroup key={type.group} label={type.group}>
               {type.classify.map((classify) => (
@@ -226,12 +228,12 @@ export default function CalendarForm({ event, range, onCancel, clients }) {
             </optgroup>
           ))}
         </RHFSelect>
-        <RHFTextField name="title" label="Title" />
+        <RHFTextField name="title" label={translate('calendar.form.title')} />
 
-        <RHFTextField name="description" label="Description" multiline rows={2} />
+        <RHFTextField name="description" label={translate('calendar.form.description')} multiline rows={2} />
 
         {values?.type && !['Break', 'Training', 'Illness'].find(p => p === values.type) && (
-          <RHFTextField name="price" label="Price" />
+          <RHFTextField name="price" label={translate('calendar.form.price')} />
         )}
 
         <Controller
@@ -240,7 +242,7 @@ export default function CalendarForm({ event, range, onCancel, clients }) {
           render={({ field }) => (
             <MobileDateTimePicker
               {...field}
-              label="Start date"
+              label={translate('calendar.form.startDate')}
               inputFormat="dd/MM/yyyy hh:mm a"
               renderInput={(params) => <TextField {...params} fullWidth />}
             />
@@ -253,7 +255,7 @@ export default function CalendarForm({ event, range, onCancel, clients }) {
           render={({ field }) => (
             <MobileDateTimePicker
               {...field}
-              label="End date"
+              label={translate('calendar.form.endDate')}
               inputFormat="dd/MM/yyyy hh:mm a"
               renderInput={(params) => (
                 <TextField
@@ -287,11 +289,11 @@ export default function CalendarForm({ event, range, onCancel, clients }) {
         <Box sx={{ flexGrow: 1 }} />
 
         <Button variant="outlined" color="inherit" onClick={onCancel}>
-          Cancel
+          {translate('calendar.form.cancel')}
         </Button>
 
-        <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-          Add
+        <LoadingButton type="submit" variant="contained" loading={isSubmitting} sx={{':hover':{color:'#3399FF'}}}>
+          {translate('calendar.form.add')}
         </LoadingButton>
       </DialogActions>
     </FormProvider>

@@ -18,6 +18,10 @@ import MenuMobile from './MenuMobile';
 import navConfig from './MenuConfig';
 import { Link as RouterLink } from 'react-router-dom';
 import AccountPopover from '../dashboard/header/AccountPopover';
+import LanguagePopover from '../dashboard/header/LanguagePopover';
+import useLocales from 'src/hooks/useLocales';
+import HoverButton from 'src/components/HoverButton';
+
 
 // ----------------------------------------------------------------------
 
@@ -54,6 +58,8 @@ export default function MainHeader() {
 
   const { pathname } = useLocation();
 
+  const {translate} = useLocales()
+
   const isDesktop = useResponsive('up', 'md');
 
   const isHome = pathname === '/';
@@ -82,18 +88,36 @@ export default function MainHeader() {
             v3.3.0
           </Label> */}
           <Box sx={{ flexGrow: 1 }} />
+          
+          {/* {pathname === '/' && isDesktop && <MenuDesktop isOffset={isOffset} isHome={isHome} navConfig={navConfig} />} */}
+          {pathname === '/' && !isDesktop && <MenuMobile isOffset={isOffset} isHome={isHome} navConfig={navConfig} />} 
 
-          {isDesktop && <MenuDesktop isOffset={isOffset} isHome={isHome} navConfig={navConfig} />}
-          {pathname === '/' && (
-          <Button
+          {pathname === '/' && isDesktop && (
+          <HoverButton
             component={RouterLink}
-            to={"/match"}
+            to={"/match/independent"}
             variant="contained"
-            sx={{ marginRight: '15px' }}
+            sx={{ 
+              marginRight: '15px',
+              marginLeft: '15px'
+           }}
           >
-            Match PRO
-          </Button>)}
+            {translate("landingPRO.independent")}
+          </HoverButton>)} 
 
+          {pathname === '/' && isDesktop && (
+            <HoverButton
+              component={RouterLink}
+              to={"/match"}
+              variant="contained"
+              sx={{
+                marginRight: '15px',
+                marginLeft: '15px'
+              }}
+            >
+              {translate("landingPRO.school")}
+            </HoverButton>)}
+          <LanguagePopover />
           <AccountPopover/>
 
           {/* {!isDesktop && <MenuMobile isOffset={isOffset} isHome={isHome} navConfig={navConfig} />} */}

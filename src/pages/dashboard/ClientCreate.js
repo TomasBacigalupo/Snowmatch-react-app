@@ -13,6 +13,7 @@ import Page from '../../components/Page';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
 // sections
 import ClientNewEditForm from '../../sections/@dashboard/user/ClientNewEditForm';
+import useLocales from 'src/hooks/useLocales';
 
 // ----------------------------------------------------------------------
 
@@ -27,11 +28,13 @@ export default function ClientCreate() {
 
   const currentUser = _userList.find((user) => paramCase(user.name) === name);
 
+  const {translate} = useLocales()
+
   return (
     <Page title="Create a new client">
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <HeaderBreadcrumbs
-          heading={!isEdit ? 'Create a new client' : 'Edit client'}
+          heading={!isEdit ? translate("school.clients.form.createANewClient") : translate("school.clients.form.editClient")}
           links={[
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
             { name: 'School', href: PATH_DASHBOARD.school.root },

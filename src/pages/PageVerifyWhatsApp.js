@@ -17,6 +17,7 @@ import { set } from 'lodash';
 import { VerifyCodeForm } from '../sections/auth/verify-code';
 import axios from '../utils/axios';
 import { PATH_DASHBOARD, PATH_AUTH } from '../routes/paths';
+import HoverButton from 'src/components/HoverButton';
 
 
 
@@ -118,19 +119,19 @@ export default function PageVerifyWhatsApp() {
 
                         <Grid container>
                             <Grid item xs={12}>
-                                {!loading && <Button onClick={onReload} loading={loading}>
+                                {!loading && <HoverButton onClick={onReload} loading={loading}>
                                     Verify!
-                                </Button>}
+                                </HoverButton>}
                             </Grid>
                             <Grid item xs={12}>
-                                {!loading && <Button onClick={onLogout} loading={loading}>
+                                {!loading && <HoverButton onClick={onLogout} loading={loading}>
                                     Logout
-                                </Button>}
+                                </HoverButton>}
                             </Grid>
                             <Grid item xs={12}>
-                                {!loading && <Button onClick={handleResend} disabled={runTimer} loading={loading}>
+                                {!loading && <HoverButton onClick={handleResend} disabled={runTimer} loading={loading}>
                                     Resend{runTimer && <Typography style={{ marginLeft: '5px' }}>{' ' + minutes}:{seconds}</Typography>}
-                                </Button>}
+                                </HoverButton>}
                             </Grid>
                             <Grid item xs={12}>
                                 {!loading && (

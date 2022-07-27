@@ -30,7 +30,9 @@ export default function LanguagePopover() {
         sx={{
           width: 40,
           height: 40,
+          marginRight:'10px',
           ...(open && { bgcolor: 'action.selected' }),
+          bgcolor:'#212B36'
         }}
       >
         <Image disabledEffect src={currentLang.icon} alt={currentLang.label} />

@@ -20,6 +20,7 @@ import { countries } from '../../../../_mock';
 import { FormProvider, RHFSwitch, RHFSelect, RHFTextField, RHFUploadAvatar, RHFMultipleSelect } from '../../../../components/hook-form';
 import axios from '../../../../utils/axios';
 import { useMediaQuery } from 'react-responsive';
+import useLocales from 'src/hooks/useLocales';
 
 
 const SKI_RESORTS = [
@@ -52,6 +53,7 @@ export default function AccountGeneral() {
   const { teachers } = useSelector((state) => { return state});
   const isMobile = useMediaQuery({ query: `(max-width: 760px)` });
   const imageSize = isMobile?10:39;
+  const { translate } = useLocales()
 
   const UpdateUserSchema = Yup.object().shape({
     name: Yup.string().required('Name is required'),
@@ -125,15 +127,19 @@ export default function AccountGeneral() {
       endpoint = 'unavailable'
     }
 
-    dispatch(changeProfilePicture(data.photoURL, (succeed) => {
-      if (succeed) {
-        refreshUser({
-          ...user,
-          imageLink: value.photoURL.preview
-        })
-      }
-    }));
-    
+    if(typeof data.photoURL === "object" && data.photoURL.path){
+      console.log(data.photoURL)
+      //console.log("EDIT IMAGE")
+      dispatch(changeProfilePicture(data.photoURL, (succeed) => {
+        if (succeed) {
+          refreshUser({
+            ...user,
+            imageLink: value.photoURL.preview
+          })
+          axios.put("/api/images/image")
+        }
+      }));
+    }
 
     try {
       //await axios.post();
@@ -199,7 +205,7 @@ export default function AccountGeneral() {
               }
             />
 
-            <RHFSwitch name="state" labelPlacement="start" label="Available" sx={{ mt: 5 }} />
+            <RHFSwitch name="state" labelPlacement="start" label={translate("general.form.available")} sx={{ mt: 5 }} />
           </Card>
         </Grid>
 
@@ -213,20 +219,20 @@ export default function AccountGeneral() {
                 gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
               }}
             >
-              <RHFTextField name="name" label="Name" disabled={user?.name != ''}/>
-              <RHFTextField name="lastname" label="Last Name" disabled={user?.lastname != ''}/>
-              <RHFTextField name="cellphone" label="Phone Number" disabled={user?.cellphone != undefined} />
+              <RHFTextField name="name" label={translate("general.form.name")} disabled={user?.name != ''}/>
+              <RHFTextField name="lastname" label={translate("general.form.lastName")} disabled={user?.lastname != ''}/>
+              <RHFTextField name="cellphone" label={translate("general.form.cellphone")} disabled={user?.cellphone != undefined} />
               
-              <RHFTextField name="email" label="Email Address" disabled/>
-              <RHFSelect name="gender" label="Gender" placeholder="Gender">
+              <RHFTextField name="email" label={translate("general.form.email")} disabled/>
+              <RHFSelect name="gender" label={translate("general.form.gender")} placeholder={translate("general.form.gender")}>
                   <option key={1} value={"M"}>
-                    Male
+                    {translate("general.form.male")}
                   </option>
                   <option key={2} value={"F"}>
-                    Female
+                  {translate("general.form.female")}
                   </option>
               </RHFSelect>
-              <RHFSelect name="country" label="Country" placeholder="Country">
+              <RHFSelect name="country" label={translate("general.form.country")} placeholder={translate("general.form.country")}>
                 <option value="" />
                 {countries.map((option) => (
                   <option key={option.code} value={option.label}>
@@ -235,37 +241,37 @@ export default function AccountGeneral() {
                 ))}
               </RHFSelect>
 
-              <RHFMultipleSelect name="disciplines" label="Disciplines" list={["Ski", "SnowBoard"]}/>
-              <RHFMultipleSelect name="speaks" label="Languages" list={["Español", "English", "Portugues"]}/>
+              <RHFMultipleSelect name="disciplines" label={translate("general.form.disciplines")} list={["Ski", "SnowBoard"]}/>
+              <RHFMultipleSelect name="speaks" label={translate("general.form.languages")} list={["Español", "English", "Portugues", "Italiano"]}/>
             </Box>
 
             <Stack sx={{ mt: 3 }}>
-              <RHFTextField name="school" label="School"/>
+              <RHFTextField name="school" label={translate("general.form.school")} />
             </Stack>              
 
             <Stack sx={{ mt: 3 }}>
-              <RHFMultipleSelect name="resorts" label="Resorts" list={SKI_RESORTS}/>            
+              <RHFMultipleSelect name="resorts" label={translate("general.form.resorts")}  list={SKI_RESORTS}/>
             </Stack>                        
 
             <Stack sx={{ mt: 3 }}>
-              <RHFMultipleSelect name="skills" freeSolo={true} label="Skills" list={["Ski tunning", "Baby sitter", "Car rent"]}/>
+              <RHFMultipleSelect name="skills" freeSolo={true} label={translate("general.form.skills")}  list={["Ski tunning", "Baby sitter", "Car rent"]}/>
             </Stack>
             <Stack sx={{ mt: 3 }}>
               <RHFTextField multiline 
                             rows={2}
                             name="information" 
-                            label="Quick Information" />
+                label={translate("general.form.quickInformation")} />
             </Stack>
 
             <Stack sx={{ mt: 3 }}>
               <RHFTextField multiline
                             rows={4}
                             name="description" 
-                            label="Description" />
+                label={translate("general.form.description")}  />
             </Stack>
             <Stack spacing={3} alignItems="flex-end" sx={{ mt: 3 }}>
-              <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-                Save Changes
+              <LoadingButton type="submit" variant="contained" loading={isSubmitting} sx={{':hover':{color:'#3399FF'}}}>
+                {translate("general.form.saveChanges")}
               </LoadingButton>
             </Stack>
           

@@ -2,5 +2,223 @@
   "demo": {
     "title": "English",
     "introduction": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
+  },
+  "heading": {
+    "clientList": "Agenda of clients"
+  },
+  "general": {
+    "AVAILABLE": "Available",
+    "UNAVAILABLE": "Unavailable",
+    "form": {
+      "name": "Name",
+      "lastName": "Last name",
+      "cellphone": "Phone",
+      "country": "Country",
+      "countryCode": "Country Code",
+      "email": "Email",
+      "gender": "Gender",
+      "male": "Male",
+      "female": "Female",
+      "disciplines": "Disciplines",
+      "languages": "languages",
+      "school": "School",
+      "resorts": "Resorts",
+      "skills": "Skills",
+      "quickInformation": "Quick information",
+      "description": "Description",
+      "available": "I'm available",
+      "saveChanges": "Save Changes"
+    }
+  },
+  "landingPRO": {
+    "heroTitle1": "Take your job to",
+    "heroTitle2": "the next level with",
+    "desc1": "Handle all your customers on a centralized platform.",
+    "desc2": "Get in touch with new clients.",
+    "desc3": "Manage your earnings.",
+    "getStarted": "Get Started",
+    "useCases": "What SnowMatch helps you ?",
+    "clientData": "Client Data",
+    "clientDataDesc": "Manege private access important client data.",
+    "calendarOrg": "Calendar organization",
+    "calendarOrgDesc": "Set available times and manage yor classes.",
+    "match": "Match PROs",
+    "matchDesc": "Expand your clients network, get hired when you are free.",
+    "independent": "Independent PROs",
+    "school": "School PROs",
+    "getStartedToday": "Get started with SnowMatch!",
+    "find": "Match with the PRO you need...",
+    "start_date":"Start date",
+    "end_date":"End date"
+  },
+  "menu": {
+    "general": "General",
+    "management": "Management",
+    "match": "Match PROs",
+    "instructors": "Instructors",
+    "calendar": "Calendar",
+    "School": "School",
+    "clients": "Clients",
+    "newClient": "New Client",
+    "profile": "profile",
+    "account": "account",
+    "new client": "New client",
+    "user": "My Profile",
+    "overview": "Overview",
+    "school": "My School",
+    "Schools": "Schools",
+    "Independent": "Independent",
+    "School PROs": "School PROs",
+    "Independent PROs": "Independent PROs"
+  },
+  "calendar": {
+    "newEvent": "Create Event",
+    "editEvent": "Edit Event",
+    "addEvent": "Add Event",
+    "form": {
+      "startDate": "Start Date",
+      "endDate": "End Date",
+      "description": "Description",
+      "client": "Client",
+      "type": "Type",
+      "title": "Title",
+      "price": "Price",
+      "cancel": "Cancel",
+      "add": "Add"
+    }
+  },
+  "school": {
+    "clients": {
+      "newClient": "New Client",
+      "form": {
+        "createANewClient": "Create a new Client",
+        "editClient": "Edit Client",
+        "level": "Level",
+        "BEGINNER": "Beginner",
+        "INTERMEDIATE": "Intermediate",
+        "ADVANCED": "Advanced",
+        "EXPERT": "Expert",
+        "doesTip": "Does Tip?",
+        "usualTip": "Usual Tip",
+        "hobbies": "Hobbies",
+        "work": "Works at...",
+        "family": "Family",
+        "staysAt": "Stays at",
+        "resorts": "Resorts",
+        "notes": "Notes",
+        "isRenting": "Is Renting",
+        "createClient":"Create client",
+        "saveChanges":"Save changes"
+
+      }
+    }
+  },
+  "breadcrumb": {
+    "dashboard": "Overview",
+    "profile": "Profile",
+    "account": "Account",
+    "accountSettings": "Account Settings",
+    "editProfile": "Edit Profile",
+    "school": "School",
+    "agenda": "Agenda"
+  },
+  "profile": {
+    "tabs": {
+      "profile": "My information"
+    },
+    "clients": "Clients",
+    "level": "Instructor Level",
+    "information": "Information",
+    "description": "Description",
+    "skills": "Skills",
+    "about": "About",
+    "underReview": "Under Review",
+    "proAt": "PRO at "
+  },
+  "accountSocialLinks": {
+    "igUserName": "Instagram username",
+    "twUserName": "Twitter username",
+    "fbUserName": "Facebook username",
+    "ytUserName": "YouTube channel id",
+    "saveChanges": "Save Changes"
+  },
+  "account": {
+    "tabs": {
+      "general": "My information",
+      "social_links": "My Social Links"
+    }
+  },
+  "filter": {
+    "gender": "Gender",
+    "resort": "Resorts",
+    "category": "Category",
+    "discipline": "Discipline",
+    "freeStyle": "FreeStyle",
+    "alpine": "Alpine",
+    "backCountry": "Back Country",
+    "languages": "Languages",
+    "range": "Range",
+    "rating": "Rating",
+    "filters": "Filters",
+    "clearAll": "Clear All"
+  },
+  "accountPopover": {
+    "Profile": "My Profile",
+    "Settings": "Settings",
+    "SignUpAsAPRO": "I want to be a PRO",
+    "LogIn": "LogIn",
+    "logOut": "LogOut",
+    "help": "Help"
+  },
+  "generalApp": {
+    "totalLessons": "Total Lessons",
+    "totalIncome": "Total Income",
+    "totalClients": "Total Clients",
+    "lessonsAnalytics": "Lessons Analytics",
+    "noScheduledEvents": "No Scheduled Events",
+    "welcomeBack": "Welcome back, ",
+    "lookingBestTeacher": "Are you looking for the best PRO for your client?",
+    "topClients": "Top Clients"
+  },
+  "teacherDetails": {
+    "title": "PRO Details",
+    "calendar": "Calendar",
+    "verified": "Verified PRO",
+    "reply": "Ready to Match",
+    "replyDescription": "Replies in less than one day",
+    "verifiedDescription": "Validated by SnowMatch ",
+    "warranty": "Warranty SnowMatch",
+    "warrantyDescription": "SnowMatch verified that it's a good teacher",
+    "information": "Information",
+    "description": "Description",
+    "skills": "Skills"
+  },
+
+  "conversation":{
+    "not_valid":"Your phone number is not validated, check Whatsapp and try again",
+    "message_sent":"Message sent, they will soon be in touch!",
+    "age":"Client Age",
+    "age2":"Age",
+    "level":"Client Level",
+    "tips":"Does the client tip?",
+    "commission":"Commission",
+    "activity":"Activity",
+    "amount":"Number of people",
+    "duration":"Duration",
+    "classdate":"Class date",
+    "days":"Number of days",
+    "cancel":"Cancel",
+    "contact":"Contact",
+    "refer_class":"Refer Class",
+    "contact_pro":"Contact PRO",
+    "validation_required":"Validation required!",
+    "validation_required_body":"Check your Whatsapp for a validation message. It may take a while. If you didn't get a message, check your number and try again!",
+    "close":"Close"
+  },
+  "discounts": {
+    "getCupon": "Get Voucher",
+    "details": "Discount details",
+    "findBrands": "Find Brands...",
+    "sendNoti": "Done! If you are in conditions to get the voucher you will receive it via Whats App"
   }
 }

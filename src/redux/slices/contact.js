@@ -9,7 +9,8 @@ import { dispatch } from '../store';
 const initialState = {
   isLoading: false,
   error: null,
-  isOpenModal: false,
+  isOpenReferModal: false,
+  isOpenContactModal: false,
   selectedTeacher:null,
 };
 
@@ -37,13 +38,22 @@ const slice = createSlice({
 
 
     // OPEN MODAL
-    openModal(state) {
-      state.isOpenModal = true;
+    openContactModal(state) {
+      state.isOpenContactModal = true;
     },
 
     // CLOSE MODAL
-    closeModal(state) {
-      state.isOpenModal = false;
+    closeContactModal(state) {
+      state.isOpenContactModal = false;
+      state.selectedTeacher = null;
+    },
+    openReferModal(state) {
+      state.isOpenReferModal = true;
+    },
+
+    // CLOSE MODAL
+    closeReferModal(state) {
+      state.isOpenReferModal = false;
       state.selectedTeacher = null;
     },
   },
@@ -53,7 +63,7 @@ const slice = createSlice({
 export default slice.reducer;
 
 // Actions
-export const { openModal, closeModal, selectTeacher } = slice.actions;
+export const { openContactModal, closeContactModal,openReferModal,closeReferModal, selectTeacher } = slice.actions;
 
 
 // ----------------------------------------------------------------------
@@ -74,3 +84,19 @@ export function contactTeacher(teacherId, contactData) {
   };
 }
 
+export function referClass(teacherId, contactData) {
+  return async () => {
+    //dispatch(slice.actions.startLoading());
+    try {
+      console.log(contactData)
+      const response = await axios.post(`/api/conversation/refer/${teacherId}`, contactData);
+      return response;
+    } catch (error) {
+      //dispatch(slice.actions.hasError(error));
+      if(error.messages){
+        return error;
+      }
+      return "ERROR";
+    }
+  };
+}

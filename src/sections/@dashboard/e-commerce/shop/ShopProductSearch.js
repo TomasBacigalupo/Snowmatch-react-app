@@ -11,12 +11,14 @@ import useIsMountedRef from '../../../../hooks/useIsMountedRef';
 // utils
 import axios from '../../../../utils/axios';
 // routes
-import { PATH_DASHBOARD } from '../../../../routes/paths';
+import { PATH_DASHBOARD, PATH_GUEST } from '../../../../routes/paths';
 // components
 import Image from '../../../../components/Image';
 import Iconify from '../../../../components/Iconify';
 import InputStyle from '../../../../components/InputStyle';
 import SearchNotFound from '../../../../components/SearchNotFound';
+
+import useAuth from 'src/hooks/useAuth';
 
 // ----------------------------------------------------------------------
 
@@ -26,7 +28,7 @@ const PopperStyle = styled((props) => <Popper placement="bottom-start" {...props
 
 // ----------------------------------------------------------------------
 
-export default function ShopProductSearch() {
+export default function ShopProductSearch({teachers}) {
   const navigate = useNavigate();
 
   const isMountedRef = useIsMountedRef();
@@ -35,32 +37,22 @@ export default function ShopProductSearch() {
 
   const [searchResults, setSearchResults] = useState([]);
 
-  const handleChangeSearch = async (value) => {
-    try {
-      setSearchQuery(value);
-      if (value) {
-        const response = await axios.get('/api/products/search', {
-          params: { query: value },
-        });
+  const { isAuthenticated} = useAuth()
 
-        if (isMountedRef.current) {
-          setSearchResults(response.data.results);
-        }
-      }
-    } catch (error) {
-      console.error(error);
+
+  const handleChangeSearch = async () => {
+    setSearchResults(teachers)
+  };
+
+  const handleClick = (email) => {
+    if(isAuthenticated){
+      navigate(PATH_DASHBOARD.eCommerce.viewTeacher(email))
+    }
+    else{
+      navigate(PATH_GUEST.viewTeacher(email));
     }
   };
 
-  const handleClick = (name) => {
-    navigate(PATH_DASHBOARD.eCommerce.view(paramCase(name)));
-  };
-
-  const handleKeyUp = (event) => {
-    if (event.key === 'Enter') {
-      handleClick(searchQuery);
-    }
-  };
 
   return (
     <Autocomplete
@@ -70,7 +62,7 @@ export default function ShopProductSearch() {
       PopperComponent={PopperStyle}
       options={searchResults}
       onInputChange={(event, value) => handleChangeSearch(value)}
-      getOptionLabel={(product) => product.name}
+      getOptionLabel={(product) => product.name+" "+product.lastname}
       noOptionsText={<SearchNotFound searchQuery={searchQuery} />}
       isOptionEqualToValue={(option, value) => option.id === value.id}
       renderInput={(params) => (
@@ -78,7 +70,6 @@ export default function ShopProductSearch() {
           {...params}
           stretchStart={200}
           placeholder="Search instructors..."
-          onKeyUp={handleKeyUp}
           InputProps={{
             ...params.InputProps,
             startAdornment: (
@@ -90,14 +81,14 @@ export default function ShopProductSearch() {
         />
       )}
       renderOption={(props, product, { inputValue }) => {
-        const { name, cover } = product;
-        const matches = match(name, inputValue);
-        const parts = parse(name, matches);
+        const { name,lastname,email, imageLink } = product;
+        const matches = match(name+" "+lastname, inputValue);
+        const parts = parse(name+" "+lastname, matches);
 
         return (
           <li {...props}>
-            <Image alt={cover} src={cover} sx={{ width: 48, height: 48, borderRadius: 1, flexShrink: 0, mr: 1.5 }} />
-            <Link underline="none" onClick={() => handleClick(name)}>
+            <Image alt={name} src={imageLink} sx={{ width: 48, height: 48, borderRadius: 1, flexShrink: 0, mr: 1.5 }} />
+            <Link underline="none" onClick={() => handleClick(email)}>
               {parts.map((part, index) => (
                 <Typography
                   key={index}

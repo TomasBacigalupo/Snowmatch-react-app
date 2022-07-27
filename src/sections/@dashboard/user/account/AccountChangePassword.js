@@ -57,7 +57,7 @@ export default function AccountChangePassword() {
 
           <RHFTextField name="confirmNewPassword" type="password" label="Confirm New Password" />
 
-          <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
+          <LoadingButton type="submit" variant="contained" loading={isSubmitting} sx={{':hover':{color:'#3399FF'}}}>
             Save Changes
           </LoadingButton>
         </Stack>

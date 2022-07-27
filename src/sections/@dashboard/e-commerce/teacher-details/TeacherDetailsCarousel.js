@@ -35,6 +35,8 @@ export default function TeacherDetailsCarousel({ teacher }) {
 
   const [currentIndex, setCurrentIndex] = useState(0);
 
+  const [source, setSource] = useState(teacher.images[0])
+
   const [nav1, setNav1] = useState();
 
   const [nav2, setNav2] = useState();
@@ -96,11 +98,12 @@ export default function TeacherDetailsCarousel({ teacher }) {
           {/* <Slider {...settings1} asNavFor={nav2} ref={slider1}> */}
             {teacher.images.map((img) => (
               <Image
-                key={img}
+                onError={()=>setSource('/assets/notFound.jpeg')}
+                key={source}
                 alt="large image"
-                src={img}
+                src={source}
                 ratio="1/1"
-                onClick={() => handleOpenLightbox(img)}
+                onClick={() => handleOpenLightbox(source)}
                 sx={{ cursor: 'zoom-in' }}
               />
             ))}

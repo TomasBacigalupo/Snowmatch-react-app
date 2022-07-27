@@ -24,6 +24,8 @@ import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
 // sections
 import { CalendarForm, CalendarStyle, CalendarToolbar } from '../../sections/@dashboard/calendar';
 import { getClients } from 'src/redux/slices/clients';
+import useLocales from 'src/hooks/useLocales';
+import HoverButton from 'src/components/HoverButton';
 
 // ----------------------------------------------------------------------
 
@@ -36,6 +38,7 @@ const selectedEventSelector = (state) => {
 };
 
 export default function Calendar() {
+  const {translate} = useLocales()
   const { themeStretch } = useSettings();
 
   const dispatch = useDispatch();
@@ -160,13 +163,13 @@ export default function Calendar() {
           heading="Calendar"
           links={[{ name: 'Dashboard', href: PATH_DASHBOARD.root }, { name: 'Calendar' }]}
           action={
-            <Button
+            <HoverButton
               variant="contained"
               startIcon={<Iconify icon={'eva:plus-fill'} width={20} height={20} />}
               onClick={handleAddEvent}
             >
-              New Event
-            </Button>
+              {translate('calendar.newEvent')}
+            </HoverButton>
           }
         />
 
@@ -206,7 +209,7 @@ export default function Calendar() {
         </Card>
 
         <DialogAnimate open={isOpenModal} onClose={handleCloseModal}>
-          <DialogTitle>{selectedEvent ? 'Edit Event' : 'Add Event'}</DialogTitle>
+          <DialogTitle>{selectedEvent ? translate('calendar.editEvent') : translate('calendar.addEvent')}</DialogTitle>
           <CalendarForm event={selectedEvent || {}} range={selectedRange} onCancel={handleCloseModal} clients={clients}/>
         </DialogAnimate>
       </Container>

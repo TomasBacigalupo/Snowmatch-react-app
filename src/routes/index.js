@@ -76,6 +76,7 @@ export default function Router() {
       children: [
         { path: 'trown', element:<RedirectToShop url={"https://www.trown.com.ar"}/>},
         { path: 'salpa', element:<RedirectToShop url={"https://www.salpa.com.ar"}/>},
+        { path: 'dignos', element: <RedirectToShop url={"https://dignosofficial.com"} /> },
 
       ]
     },

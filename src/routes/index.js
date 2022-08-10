@@ -60,6 +60,13 @@ export default function Router() {
       element: <MainLayout />
     },
     {
+      path: 'rental',
+      element: (<GuestLayout />),
+      children: [
+        { path: 'calculate', element: <Rental isGuest={true} /> }
+      ]
+    },
+    {
       path: 'match',
       element: (<GuestLayout/>),
       children: [
@@ -261,6 +268,9 @@ const Payment = Loadable(lazy(() => import('../pages/Payment')));
 const Page500 = Loadable(lazy(() => import('../pages/Page500')));
 const NotFound = Loadable(lazy(() => import('../pages/Page404')));
 const PageVerify = Loadable(lazy(() => import('../pages/PageVerify')));
+
+//RENTAL
+const Rental = Loadable(lazy(() => import('../pages/rental/UserRentalData')))
 
 function RedirectToShop({url}) {
   window.location.replace(url);

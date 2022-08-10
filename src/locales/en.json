@@ -220,5 +220,35 @@
     "details": "Discount details",
     "findBrands": "Find Brands...",
     "sendNoti": "Done! If you are in conditions to get the voucher you will receive it via Whats App"
+  },
+
+  "rental": {
+    "Personal Data": "Personal Data",
+    "Equipment": "Equipment",
+    "Result": "Results PRO",
+    "height": "Height",
+    "heightHelper": "Height in centimeters",
+    "weight": "Weight",
+    "weightHelper": "Weight in KG",
+    "size": "Shoes Size",
+    "sizeHelper": "Size EU ex: 37, 38, 39, 40...",
+    "showResult": "Show this result to the rental",
+    "prev": "Prev",
+    "next": "Next",
+    "ski": "Skis",
+    "boots": "Boots",
+    "poles": "Poles",
+    "googles": "Googles",
+    "gloves": "Gloves",
+    "table": "Snowboard",
+    "helmet": "Helmet",
+    "BEGINNER": "Beginner",
+    "INTERMEDIATE": "Intermediate",
+    "EXPERT": "Expert",
+    "needsGloves": "Necesita guantes",
+    "needsGoogles": "Necesita antiparras",
+    "needsHelmet": "Necesita Cazco",
+    "discipline": "Discipline"
   }
+
 }

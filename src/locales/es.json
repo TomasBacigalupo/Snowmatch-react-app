@@ -221,5 +221,36 @@
           "details": "Detalles del Descuento",
           "findBrands":"Buscar Marcas...",
           "sendNoti": "¡Listo! Estamos tramitando tu código de descuento. Si aplicás al código te va a estar llegando por Whats App"
-      }
+      },
+
+    "rental":{
+        "Personal Data": "Datos Personales",
+        "Equipment": "Equipamiento",
+        "Result": "Resultados PRO",
+        "height": "Altura",
+        "heightHelper": "Altura en centímeros",
+        "weight": "Peso",
+        "weightHelper": "Peso en KG",
+        "size": "Talle de zapatos",
+        "sizeHelper": "Talle en EU ej: 37, 38, 39, 40...",
+        "showResult": "Mostra este resultado en el rental",
+        "prev": "Atras",
+        "next": "Continuar",
+        "ski": "Esquies",
+        "boots": "Botas",
+        "poles": "Bastones",
+        "googles": "Antiparras",
+        "gloves": "Guantes",
+        "table": "Tabla de snowboard",
+        "helmet": "Cazco",
+        "BEGINNER": "Principiante",
+        "INTERMEDIATE":"Intermedio",
+        "EXPERT":"Experto",
+        "needsGloves": "Necesita guantes",
+        "needsGoogles": "Necesita antiparras",
+        "needsHelmet": "Necesita Cazco",
+        "discipline": "Disciplina"
+
+        
+    }
 }

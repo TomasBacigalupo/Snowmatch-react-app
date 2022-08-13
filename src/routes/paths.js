@@ -7,6 +7,7 @@ function path(root, sublink) {
 const ROOTS_AUTH = '/auth';
 const ROOTS_DASHBOARD = '/dashboard';
 const ROOTS_FIND_A_PRO = '/match' ;
+const ROOTS_RENTAL = '/rental';
 
 // ----------------------------------------------------------------------
 
@@ -25,6 +26,8 @@ export const PATH_GUEST = {
   school: path(ROOTS_FIND_A_PRO, `/school`),
   independent: path(ROOTS_FIND_A_PRO, `/independent`),
   viewTeacher: (name) => path(ROOTS_FIND_A_PRO, `/teacher/${name}`),
+  rental: ROOTS_RENTAL,
+  calculate: path(ROOTS_RENTAL, `/calculate`)
 };
 
 export const PATH_PAGE = {

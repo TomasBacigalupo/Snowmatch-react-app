@@ -60,7 +60,7 @@ const initialData = {
     level: 'BEGINNER',
     height: 170,
     wight: 80,
-    footSize: 48,
+    footSize: 40,
     desireEquipment: {
         ski: true,
         poles: true,
@@ -216,6 +216,7 @@ export default function UserRentalData({isGuest=false}){
                         <Grid item xs={12} textAlign='center' sx={{ width: '100%', height: '400px' }}>
                             <Typography variant='h5'>{translate('rental.showResult')}</Typography>
                             <Typography>{`${translate('rental.discipline')}: ${formData.discipline}`}</Typography>
+                            <Typography>{`${translate('rental.level')}: ${translate('rental.'+formData.level)}`}</Typography>
                             <Typography>{`${translate('rental.height')}: ${formData.height}`}</Typography>
                             <Typography>{`${translate('rental.weight')}: ${formData.wight}`}</Typography>
                             <Typography>{`${translate('rental.size')} EU: ${formData.footSize}`}</Typography>
@@ -226,7 +227,10 @@ export default function UserRentalData({isGuest=false}){
                                 <Typography>{translate('rental.poles')}: {Math.ceil(Number(formData.height) * 0.7)}cm</Typography>
                             }
                             {formData.desireEquipment.ski &&
-                                <Typography>{translate('rental.ski')}: {Math.ceil(Number(formData.height) - 17)}cm</Typography>
+                                <Typography>{translate('rental.ski', {
+                                    from: Math.ceil(Number(formData.height) - 17),
+                                    to: Number(formData.height)
+                                })}</Typography>
                             }
                             {formData.desireEquipment.table &&
                                 <Typography>Snowboard: {Math.ceil(Number(formData.height) - 17)}cm</Typography>

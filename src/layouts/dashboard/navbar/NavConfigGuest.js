@@ -23,7 +23,8 @@ const ICONS = {
   ecommerce: getIcon('ic_ecommerce'),
   analytics: getIcon('ic_analytics'),
   dashboard: getIcon('ic_dashboard'),
-  match: getIcon('ic_match')
+  match: getIcon('ic_match'),
+  rental: getIcon('ic_rental')
 };
 
 const navConfigGuest = [
@@ -48,6 +49,23 @@ const navConfigGuest = [
       }
       // { title: 'chat', path: PATH_DASHBOARD.chat.root, icon: ICONS.chat },
      
+      // { title: 'kanban', path: PATH_DASHBOARD.kanban, icon: ICONS.kanban },
+    ],
+  },
+  // Rental
+  {
+    subheader: 'rental',
+    items: [
+      {
+        title: 'rental',
+        path: PATH_GUEST.rental,
+        icon: ICONS.rental,
+        children: [
+          { title: 'calculate', path: PATH_GUEST.calculate },
+        ],
+      }
+      // { title: 'chat', path: PATH_DASHBOARD.chat.root, icon: ICONS.chat },
+
       // { title: 'kanban', path: PATH_DASHBOARD.kanban, icon: ICONS.kanban },
     ],
   },

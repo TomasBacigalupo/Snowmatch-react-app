@@ -35,6 +35,7 @@ const SKI_RESORTS = [
   "La Hoya",
   "Las Leñas",
   "Las Pendientes",
+  "Lago Hermoso",
   "Los Penitentes",
   "Los Puquios",
   "Monte Bianco",

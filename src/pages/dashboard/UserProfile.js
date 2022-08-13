@@ -113,7 +113,7 @@ export default function UserProfile() {
         
       </Container>
       <Button 
-        onClick={() => { console.log('hola', PATH_DASHBOARD.user.edit);navigate(PATH_DASHBOARD.user.edit(user.id), {replace: true})}}
+        onClick={() => { navigate(PATH_DASHBOARD.user.account, {replace: true})}}
       variant='contained' 
       sx={{ position: 'fixed', right: '15px', bottom: '15px', borderRadius:'100%', height:'60px', width:'60px' }}>
         <EditIcon backgroundColor='red'/>

@@ -71,7 +71,9 @@
         "Independent": "Independentes",
         "School PROs": "PROs de Escuelas",
         "Independent PROs": "PROs Independientes",
-        "discounts": "PRO Deal"
+        "discounts": "PRO Deal",
+        "rental": "Rental",
+        "calculate": "Calcular Talles"
     },
     "calendar": {
         "newEvent": "Crear Evento",
@@ -236,13 +238,14 @@
         "showResult": "Mostra este resultado en el rental",
         "prev": "Atras",
         "next": "Continuar",
-        "ski": "Esquies",
+        "ski": "Esquies desde {{from}}cm hasta {{to}}cm",
         "boots": "Botas",
         "poles": "Bastones",
         "googles": "Antiparras",
         "gloves": "Guantes",
         "table": "Tabla de snowboard",
         "helmet": "Cazco",
+        "level": "Nivel",
         "BEGINNER": "Principiante",
         "INTERMEDIATE":"Intermedio",
         "EXPERT":"Experto",

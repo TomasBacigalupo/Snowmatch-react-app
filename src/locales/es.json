@@ -238,7 +238,8 @@
         "showResult": "Mostra este resultado en el rental",
         "prev": "Atras",
         "next": "Continuar",
-        "ski": "Esquies desde {{from}}cm hasta {{to}}cm",
+        "ski": "Esquies",
+        "skiResult": "Esquies desde {{from}}cm hasta {{to}}cm",
         "boots": "Botas",
         "poles": "Bastones",
         "googles": "Antiparras",
@@ -253,7 +254,5 @@
         "needsGoogles": "Necesita antiparras",
         "needsHelmet": "Necesita Cazco",
         "discipline": "Disciplina"
-
-        
     }
 }

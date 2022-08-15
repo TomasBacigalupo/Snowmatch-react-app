@@ -5,6 +5,7 @@ import Iconify from "src/components/Iconify";
 import Page from "src/components/Page";
 import useLocales from "src/hooks/useLocales";
 import PropTypes from 'prop-types';
+import { useNavigate } from 'react-router';
 
 function QontoStepIcon({ active, completed }) {
     return (
@@ -87,6 +88,7 @@ export default function UserRentalData({isGuest=false}){
     const STEPS = ['Personal Data', 'Equipment', 'Result'];
     const [activeStep, setActiveStep] = useState(0)
     const [formData, setFormData] = useState(initialData)
+    const navigate = useNavigate()
     return (
         <Page title={translate('rental.pageTitle')}>
             <Box sx={{width:'100%', padding:'15px'}}>
@@ -227,7 +229,7 @@ export default function UserRentalData({isGuest=false}){
                                 <Typography>{translate('rental.poles')}: {Math.ceil(Number(formData.height) * 0.7)}cm</Typography>
                             }
                             {formData.desireEquipment.ski &&
-                                <Typography>{translate('rental.ski', {
+                                <Typography>{translate('rental.skiResult', {
                                     from: Math.ceil(Number(formData.height) - 17),
                                     to: Number(formData.height)
                                 })}</Typography>
@@ -244,7 +246,6 @@ export default function UserRentalData({isGuest=false}){
                             {formData.desireEquipment.helmet &&
                                 <Typography>{translate('rental.needsHelmet')}</Typography>
                             }
-                            
                     </Grid>
                 )}
                 <Grid item xs={6} >
@@ -258,6 +259,7 @@ export default function UserRentalData({isGuest=false}){
                     </Button>
                 </Grid>
                 <Grid item xs={6} >
+                        {activeStep !== 2 && (
                     <Button 
                     fullWidth
                     disabled={activeStep === 2}
@@ -265,7 +267,16 @@ export default function UserRentalData({isGuest=false}){
                     onClick={() => setActiveStep(activeStep+1)}
                     >
                             {translate('rental.next')}
-                        </Button>
+                    </Button>)}
+                    {activeStep === 2 && (
+                            <Button
+                                fullWidth
+                                variant='contained'
+                                onClick={() => navigate('/')}
+                            >
+                                FIND YOUR PRO
+                            </Button>
+                    )}
                 </Grid>
             </Grid>
             </Box>

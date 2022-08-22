@@ -144,16 +144,6 @@ export default function HomeFilterTeachers() {
 
                             </Grid>
                         </Card>
-
-                        <Stack direction="row" spacing={1.5} sx={{ mt: 3 }}>
-                            <Button onClick={onSubmitIndependent}
-                            fullWidth type="submit" variant="outlined" size="large" startIcon={<PersonIcon/>}>
-                                {translate("landingPRO.independent")}
-                            </Button>
-                            <Button onClick={onSubmitSchools} fullWidth type="submit" variant="outlined" size="large" startIcon={<SchoolIcon/>} >
-                                {translate("landingPRO.school")}
-                            </Button>
-                        </Stack>
                     </Grid>
                 </Grid>
             </FormProvider>

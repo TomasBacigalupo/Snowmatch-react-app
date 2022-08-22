@@ -32,12 +32,13 @@
         }
     },
     "landingPRO": {
-        "heroTitle1": "Potencia",
+        "heroTitle0": "¿Sos profesor?",
+        "heroTitle1": "Potenciá ",
         "heroTitle2": "tu trabajo con",
         "desc1": "Manejá a tus clientes en un solo lugar.",
-        "desc2": "Ponete en contacto con nuevos clientes.",
+        "desc2": "Ponéte en contacto con nuevos clientes.",
         "desc3": "Manejá tus ingresos.",
-        "getStarted": "Empeza ahora",
+        "getStarted": "Quiero ser PRO",
         "useCases": "¿Por qué SnowMatch?",
         "clientData": "Agenda de Clientes",
         "clientDataDesc": "Todos tus datos son privados y estan protegidos por SnowMatch",

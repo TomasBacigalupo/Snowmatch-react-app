@@ -352,6 +352,7 @@ export default function TeacherDetailsSummary({ cart, teacher, onAddCart, onGoto
 
         <DialogAnimate open={isOpenContactModal} onClose={handleCloseContactModal}>
           <DialogTitle>{translate("conversation.contact_pro")}</DialogTitle>
+          {console.log("aca")}
           <ContactForm teacher={id} onCancel={handleCloseContactModal} />
         </DialogAnimate>
 

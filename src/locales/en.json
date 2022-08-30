@@ -179,7 +179,12 @@
     "noScheduledEvents": "No Scheduled Events",
     "welcomeBack": "Welcome back, ",
     "lookingBestTeacher": "Are you looking for the best PRO for your client?",
-    "topClients": "Top Clients"
+    "topClients": "Top Clients",
+    "bookedLessons": "Booked Lessons",
+    "Cancel": "Rejected",
+    "Pending": "Pending",
+    "Accepted": "Accepted",
+    "thanLastMonth": "than last month"
   },
   "teacherDetails": {
     "title": "PRO Details",

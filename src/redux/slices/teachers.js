@@ -12,6 +12,7 @@ import { dispatch } from '../store';
 
 const initialState = {
   isLoading: false,
+  openClinicModal: true,
   error: null,
   products: [],
   teachers: [],
@@ -43,12 +44,19 @@ const initialState = {
   totalIncome: 0,
   topClients: [],
   totalClients: 0,
+  conversations: []
 };
 
 const slice = createSlice({
   name: 'teacher',
   initialState,
   reducers: {
+
+    // CLOSE CLINIC MODAL
+    closeClinicModal(state){
+      state.openClinicModal = false;
+    },
+
     // START LOADING
     startLoading(state) {
       state.isLoading = true;
@@ -120,6 +128,11 @@ const slice = createSlice({
     //GET TEACHER OVERVIEW TOTAL CLIENTS
     getTeacherOverviewSuccessTotalClients(state, action) {
       state.totalClients= action.payload;
+    },
+    
+    //GET TEACHER CONVERSATIONS
+    getTeacherOverviewSuccessConversations(state, action){
+      state.conversations = action.payload
     },
 
     //  SORT & FILTER PRODUCTS
@@ -272,6 +285,7 @@ export const {
   decreaseQuantity,
   sortByProducts,
   filterTeachers,
+  closeClinicModal
 } = slice.actions;
 
 // ----------------------------------------------------------------------
@@ -497,6 +511,19 @@ export function getTopClients() {
     try {
       const resp = await axios.get(`/api/overview/topClients`)
       dispatch(slice.actions.getTeacherOverviewSuccessTopClients(resp.data));
+    } catch (error) {
+      console.error(error)
+    }
+  }
+}
+
+// ----------------------------------------------------------------------
+
+export function getConversations() {
+  return async () => {
+    try {
+      const resp = await axios.get(`/api/conversation/conversations`)
+      dispatch(slice.actions.getTeacherOverviewSuccessConversations(resp.data));
     } catch (error) {
       console.error(error)
     }

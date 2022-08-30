@@ -182,7 +182,12 @@
         "noScheduledEvents": "No tiene eventos agendados",
         "welcomeBack": "Bienvenido, ",
         "lookingBestTeacher":"¿Estás buscando al mejor PRO para tu cliente?",
-        "topClients": "Ranking de Clientes"
+        "topClients": "Ranking de Clientes",
+        "bookedLessons": "Clases Reservadas",
+        "Cancel": "Rechazadas",
+        "Pending": "Pendientes",
+        "Accepted": "Aceptadas",
+        "thanLastMonth": "respecto mes anterior"
     },
     "teacherDetails":{
         "title": "Detalles PRO",

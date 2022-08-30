@@ -1,5 +1,6 @@
 // @mui
 import { Card, CardHeader, Typography, Stack, LinearProgress, Box } from '@mui/material';
+import useLocales from 'src/hooks/useLocales';
 // utils
 import { fShortenNumber } from '../../../../utils/formatNumber';
 // _mock_
@@ -7,17 +8,19 @@ import { _bookingsOverview } from '../../../../_mock';
 
 // ----------------------------------------------------------------------
 
-export default function BookingBookedRoom() {
+export default function BookingBookedRoom({overview}) {
+  const {translate} = useLocales()
+
   return (
     <Card>
-      <CardHeader title="Booked Room" />
+      <CardHeader title={translate('generalApp.bookedLessons')} />
       <Stack spacing={3} sx={{ px: 3, my: 5 }}>
-        {_bookingsOverview.map((progress) => (
+        {overview.map((progress) => (
           <LinearProgress
             variant="determinate"
             key={progress.status}
             value={progress.value}
-            color={
+            color={ 
               (progress.status === 'Pending' && 'warning') ||
               (progress.status === 'Cancel' && 'error') ||
               'success'
@@ -28,7 +31,7 @@ export default function BookingBookedRoom() {
       </Stack>
 
       <Stack direction="row" justifyContent="space-between" sx={{ px: 3, pb: 3 }}>
-        {_bookingsOverview.map((progress) => (
+        {overview.map((progress) => (
           <Stack key={progress.status} alignItems="center">
             <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 1 }}>
               <Box
@@ -42,7 +45,7 @@ export default function BookingBookedRoom() {
                 }}
               />
               <Typography variant="subtitle2" sx={{ color: 'text.secondary' }}>
-                {progress.status}
+                {translate('generalApp.' + progress.status)}
               </Typography>
             </Stack>
 

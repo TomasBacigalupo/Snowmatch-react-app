@@ -20,9 +20,11 @@ import KanbanColumnToolBar from './KanbanColumnToolBar';
 KanbanColumn.propTypes = {
   column: PropTypes.object,
   index: PropTypes.number,
+  canRename: PropTypes.bool,
+  hasOptions: PropTypes.bool
 };
 
-export default function KanbanColumn({ column, index }) {
+export default function KanbanColumn({ column, index, canRename, hasOptions }) {
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
   const { board } = useSelector((state) => state.kanban);
@@ -105,7 +107,7 @@ export default function KanbanColumn({ column, index }) {
                 onClick={handleOpenAddTask}
                 sx={{ fontSize: 14 }}
               >
-                Add Task
+                Agregar Clase
               </Button>
             </Stack>
           </Stack>

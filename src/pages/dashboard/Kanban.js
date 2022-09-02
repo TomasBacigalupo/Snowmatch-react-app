@@ -19,11 +19,12 @@ import { KanbanColumn, KanbanColumnAdd } from '../../sections/@dashboard/kanban'
 export default function Kanban() {
   const dispatch = useDispatch();
 
+
   const { board } = useSelector((state) => state.kanban);
 
-  useEffect(() => {
-    dispatch(getBoard());
-  }, [dispatch]);
+  // useEffect(() => {
+  //   dispatch(getBoard());
+  // }, [dispatch]);
 
   const onDragEnd = (result) => {
     // Reorder card
@@ -115,12 +116,12 @@ export default function Kanban() {
                   <SkeletonKanbanColumn />
                 ) : (
                   board.columnOrder.map((columnId, index) => (
-                    <KanbanColumn index={index} key={columnId} column={board.columns[columnId]} />
+                    <KanbanColumn index={index} key={columnId} column={board.columns[index]} />
                   ))
                 )}
 
                 {provided.placeholder}
-                <KanbanColumnAdd />
+                {/*  <KanbanColumnAdd /> */}
               </Stack>
             )}
           </Droppable>

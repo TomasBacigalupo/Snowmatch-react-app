@@ -56,6 +56,7 @@ export default function KanbanColumnToolBar({ columnName, onDelete, onUpdate }) 
     <>
       <Stack direction="row" justifyContent="space-between" alignItems="center" spacing={1} sx={{ pt: 3 }}>
         <OutlinedInput
+          disabled={true}
           size="small"
           placeholder="Section name"
           value={value}
@@ -71,9 +72,9 @@ export default function KanbanColumnToolBar({ columnName, onDelete, onUpdate }) 
           }}
         />
 
-        <IconButton size="small" onClick={handleOpen} color={open ? 'inherit' : 'default'}>
+        {/* <IconButton size="small" onClick={handleOpen} color={open ? 'inherit' : 'default'}>
           <Iconify icon={'eva:more-horizontal-fill'} width={20} height={20} />
-        </IconButton>
+        </IconButton> */}
       </Stack>
 
       <MenuPopover

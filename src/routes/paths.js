@@ -65,6 +65,7 @@ export const PATH_DASHBOARD = {
   },
   calendar: path(ROOTS_DASHBOARD, '/calendar'),
   kanban: path(ROOTS_DASHBOARD, '/kanban'),
+  products: path(ROOTS_DASHBOARD, '/products'),
   user: {
     root: path(ROOTS_DASHBOARD, '/user'),
     school: path(ROOTS_DASHBOARD, '/user/school'),

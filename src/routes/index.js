@@ -70,7 +70,7 @@ export default function Router() {
       path: 'match',
       element: (<GuestLayout/>),
       children: [
-        { element: <Navigate to={'/match/school'} replace />, index: true },
+        { element: <Navigate to={'/match/school/:resort'} replace />, index: true },
         { path: '*', element: <EcommerceShop isGuest={true} teacherType="school"/> },
         { path: 'independent', element: <EcommerceShop isGuest={true} teacherType="independent"/> },
         { path: 'school', element: <EcommerceShop isGuest={true} teacherType="school"/> },
@@ -81,8 +81,8 @@ export default function Router() {
     {
       path: 'shops',
       children: [
-        { path: 'trown', element:<RedirectToShop url={"https://www.trown.com.ar"}/>},
-        { path: 'salpa', element:<RedirectToShop url={"https://www.salpa.com.ar"}/>},
+        { path: 'trown', element: <RedirectToShop url={"https://www.trown.com.ar"}/>},
+        { path: 'salpa', element: <RedirectToShop url={"https://www.salpa.com.ar"}/>},
         { path: 'dignos', element: <RedirectToShop url={"https://dignosofficial.com"} /> },
 
       ]
@@ -104,7 +104,7 @@ export default function Router() {
         { path: 'analytics', element: <GeneralAnalytics /> },
         { path: 'banking', element: <GeneralBanking /> },
         { path: 'booking', element: <GeneralBooking /> },
-
+        { path: 'products', element:<Products/>},
         {
           path: 'e-commerce',
           children: [
@@ -268,6 +268,9 @@ const Payment = Loadable(lazy(() => import('../pages/Payment')));
 const Page500 = Loadable(lazy(() => import('../pages/Page500')));
 const NotFound = Loadable(lazy(() => import('../pages/Page404')));
 const PageVerify = Loadable(lazy(() => import('../pages/PageVerify')));
+
+//School
+const Products = Loadable(lazy(() => import('../pages/dashboard/Products')))
 
 //RENTAL
 const Rental = Loadable(lazy(() => import('../pages/rental/UserRentalData')))

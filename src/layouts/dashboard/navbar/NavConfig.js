@@ -69,6 +69,20 @@ const navConfig = [
   {
     subheader: 'snowMatch',
     items: [
+      // ADMIN
+      // {
+      //   title: 'admin',
+      //   path: PATH_DASHBOARD.admin.root,
+      //   icon: ICONS.user,
+      //   children: [
+      //     { title: 'review teachers', path: PATH_DASHBOARD.admin.review },
+      //     // { title: 'cards', path: PATH_DASHBOARD.user.cards },
+      //     // { title: 'clients', path: PATH_DASHBOARD.user.list },
+      //     // { title: 'new client', path: PATH_DASHBOARD.user.new },
+      //     // { title: 'edit', path: PATH_DASHBOARD.user.demoEdit },
+      //     // { title: 'account', path: PATH_DASHBOARD.user.account },
+      //   ],
+      // },
       {
         title: 'match',
         path: PATH_DASHBOARD.eCommerce.root,

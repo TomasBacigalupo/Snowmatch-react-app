@@ -1,4 +1,4 @@
-import { memo } from 'react';
+import { memo, useEffect } from 'react';
 // @mui
 import { styled } from '@mui/material/styles';
 import { Container, AppBar } from '@mui/material';
@@ -9,7 +9,9 @@ import { NavSectionHorizontal } from '../../../components/nav-section';
 //
 import navConfig from './NavConfig';
 
+
 // ----------------------------------------------------------------------
+
 
 const RootStyle = styled(AppBar)(({ theme }) => ({
   transition: theme.transitions.create('top', {
@@ -28,6 +30,7 @@ const RootStyle = styled(AppBar)(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 function NavbarHorizontal() {
+
   return (
     <RootStyle>
       <Container maxWidth={false}>

@@ -21,7 +21,10 @@ import navConfigGuest from './NavConfigGuest';
 import NavbarDocs from './NavbarDocs';
 import NavbarAccount from './NavbarAccount';
 import CollapseButton from './CollapseButton';
-
+import useAuth from 'src/hooks/useAuth';
+import { PATH_DASHBOARD } from '../../../routes/paths';
+import SvgIconStyle from '../../../components/SvgIconStyle';
+import SchoolIcon from '@mui/icons-material/School';
 // ----------------------------------------------------------------------
 
 const RootStyle = styled('div')(({ theme }) => ({
@@ -34,6 +37,25 @@ const RootStyle = styled('div')(({ theme }) => ({
 }));
 
 // ----------------------------------------------------------------------
+
+const getIcon = (name) => <SvgIconStyle src={`/icons/${name}.svg`} sx={{ width: 1, height: 1 }} />;
+
+const ICONS = {
+  blog: getIcon('ic_blog'),
+  cart: getIcon('ic_cart'),
+  chat: getIcon('ic_chat'),
+  mail: getIcon('ic_mail'),
+  user: getIcon('ic_user'),
+  kanban: getIcon('ic_kanban'),
+  banking: getIcon('ic_banking'),
+  booking: getIcon('ic_booking'),
+  invoice: getIcon('ic_invoice'),
+  calendar: getIcon('ic_calendar'),
+  ecommerce: getIcon('ic_ecommerce'),
+  analytics: getIcon('ic_analytics'),
+  dashboard: getIcon('ic_dashboard'),
+  match: getIcon('ic_match')
+};
 
 NavbarVertical.propTypes = {
   isOpenSidebar: PropTypes.bool,
@@ -95,6 +117,26 @@ export default function NavbarVertical({ isOpenSidebar, onCloseSidebar,isGuest }
       {/* {!isCollapse && <NavbarDocs />} */}
     </Scrollbar>
   );
+
+  const user = useAuth()
+
+  useEffect(()=>{
+    console.log(navConfig[2].items)
+    if(user?.user?.role=='ADMIN'){
+      if (!navConfig[2].items.some(e => e.title === 'admin')){
+        navConfig[2].items .push(
+            {
+              title: 'admin',
+              path: PATH_DASHBOARD.admin.root,
+              icon: ICONS.user,
+              children: [
+                { title: 'review teachers', path: PATH_DASHBOARD.admin.review },
+              ],
+            })
+      }
+    }
+
+  },[])
 
   return (
     <RootStyle

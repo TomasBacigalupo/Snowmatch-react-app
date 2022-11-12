@@ -114,6 +114,11 @@ export const PATH_DASHBOARD = {
     view: (title) => path(ROOTS_DASHBOARD, `/blog/post/${title}`),
     demoView: path(ROOTS_DASHBOARD, '/blog/post/apply-these-7-secret-techniques-to-improve-event'),
   },
+  admin: {
+    root: path(ROOTS_DASHBOARD, '/admin'),
+    review: path(ROOTS_DASHBOARD, '/admin/review'),
+    confirm: (id) => path(ROOTS_DASHBOARD, `/admin/${id}/confirm`)
+  }
 };
 
 export const PATH_DOCS = 'https://docs-minimals.vercel.app/introduction';

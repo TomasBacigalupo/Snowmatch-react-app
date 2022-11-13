@@ -60,7 +60,7 @@ const navConfig = [
       },
 
       // E-COMMERCE
-      
+
     ],
   },
 
@@ -96,15 +96,26 @@ const navConfig = [
       {
         title: 'school',
         path: PATH_DASHBOARD.school.root,
-        icon: <SchoolIcon/>,
+        icon: <SchoolIcon />,
         children: [
           { title: 'clients', path: PATH_DASHBOARD.school.list },
           { title: 'new client', path: PATH_DASHBOARD.school.new },
+          {
+            title: 'kanban', path: PATH_DASHBOARD.kanban, children: [
+              { title: 'currentWeek', path: PATH_DASHBOARD.kanban, },
+            ]
+          },
+          {
+            title: 'products', path: PATH_DASHBOARD.eCommerce.new, children: [
+              { title: 'myLessons', path: PATH_DASHBOARD.eCommerce.new, },
+              { title: 'newProduct', path: PATH_DASHBOARD.eCommerce.new, },
+            ]
+          }
         ],
       },
-      { title: 'discounts', path: PATH_DASHBOARD.general.discounts, icon: <DiscountIcon/> }
+      { title: 'discounts', path: PATH_DASHBOARD.general.discounts, icon: <DiscountIcon /> }
       // { title: 'chat', path: PATH_DASHBOARD.chat.root, icon: ICONS.chat },
-     
+
       // { title: 'kanban', path: PATH_DASHBOARD.kanban, icon: ICONS.kanban },
     ],
   },

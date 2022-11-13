@@ -74,7 +74,12 @@
         "Independent PROs": "PROs Independientes",
         "discounts": "PRO Deal",
         "rental": "Rental",
-        "calculate": "Calcular Talles"
+        "calculate": "Calcular Talles",
+        "currentWeek": "Semana actual",
+        "kanban": "Tableros",
+        "products": "Grupales",
+        "myLessons": "Mis Clases",
+        "newProduct": "Nueva Clase"
     },
     "calendar": {
         "newEvent": "Crear Evento",

@@ -43,19 +43,9 @@ const CATEGORY_OPTION = [
 ];
 
 const TAGS_OPTION = [
-  'Toy Story 3',
-  'Logan',
-  'Full Metal Jacket',
-  'Dangal',
-  'The Sting',
-  '2001: A Space Odyssey',
-  "Singin' in the Rain",
-  'Toy Story',
-  'Bicycle Thieves',
-  'The Kid',
-  'Inglourious Basterds',
-  'Snatch',
-  '3 Idiots',
+  'Escuela',
+  'Jardin de Nieve',
+  'Bloques Junior',
 ];
 
 const LabelStyle = styled(Typography)(({ theme }) => ({
@@ -340,28 +330,6 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
               <Stack spacing={3} mt={2}>
                 <RHFTextField name="code" label="Cupo Máximo" />
                 <RHFTextField name="sku" label="Duración de la clase" />
-                <div>
-                  <LabelStyle>Gender</LabelStyle>
-                  <RHFRadioGroup
-                    name="gender"
-                    options={GENDER_OPTION}
-                    sx={{
-                      '& .MuiFormControlLabel-root': { mr: 4 },
-                    }}
-                  />
-                </div>
-
-                <RHFSelect name="category" label="Category">
-                  {CATEGORY_OPTION.map((category) => (
-                    <optgroup key={category.group} label={category.group}>
-                      {category.classify.map((classify) => (
-                        <option key={classify} value={classify}>
-                          {classify}
-                        </option>
-                      ))}
-                    </optgroup>
-                  ))}
-                </RHFSelect>
 
                 <Controller
                   name="tags"
@@ -386,51 +354,41 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
             </Card>
 
             <Card sx={{ p: 3 }}>
+              
               <Stack spacing={3} mb={2}>
+                <RHFSwitch name="inStock" label="Mayores" />
                 <RHFTextField
-                  name="price"
-                  label="Baja"
-                  placeholder="0.00"
+                  name="from"
+                  label="Desde"
+                  placeholder="10"
                   value={getValues('price') === 0 ? '' : getValues('price')}
                   onChange={(event) => setValue('price', Number(event.target.value))}
                   InputLabelProps={{ shrink: true }}
                   InputProps={{
-                    startAdornment: <InputAdornment position="start">$</InputAdornment>,
                     type: 'number',
                   }}
                 />
-
                 <RHFTextField
-                  name="priceSale"
-                  label="Media"
-                  placeholder="0.00"
-                  value={getValues('priceSale') === 0 ? '' : getValues('priceSale')}
+                  name="to"
+                  label="Hasta"
+                  placeholder="15"
+                  value={getValues('price') === 0 ? '' : getValues('price')}
                   onChange={(event) => setValue('price', Number(event.target.value))}
                   InputLabelProps={{ shrink: true }}
                   InputProps={{
-                    startAdornment: <InputAdornment position="start">$</InputAdornment>,
                     type: 'number',
                   }}
                 />
+              </Stack>
+            </Card>
 
+            <Card sx={{ p: 3 }}>
+              <Stack spacing={3} mb={2}>
                 <RHFTextField
-                  name="priceSale"
-                  label="Alta"
+                  name="price"
+                  label="Precio"
                   placeholder="0.00"
-                  value={getValues('priceSale') === 0 ? '' : getValues('priceSale')}
-                  onChange={(event) => setValue('price', Number(event.target.value))}
-                  InputLabelProps={{ shrink: true }}
-                  InputProps={{
-                    startAdornment: <InputAdornment position="start">$</InputAdornment>,
-                    type: 'number',
-                  }}
-                />
-
-                <RHFTextField
-                  name="priceSale"
-                  label="Sale"
-                  placeholder="0.00"
-                  value={getValues('priceSale') === 0 ? '' : getValues('priceSale')}
+                  value={getValues('price') === 0 ? '' : getValues('price')}
                   onChange={(event) => setValue('price', Number(event.target.value))}
                   InputLabelProps={{ shrink: true }}
                   InputProps={{

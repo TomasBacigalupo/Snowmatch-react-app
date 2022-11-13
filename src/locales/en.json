@@ -70,7 +70,12 @@
     "Schools": "Schools",
     "Independent": "Independent",
     "School PROs": "School PROs",
-    "Independent PROs": "Independent PROs"
+    "Independent PROs": "Independent PROs",
+    "currentWeek": "Current week",
+    "kanban": "Boards",
+    "products": "Lessons",
+    "newProduct": "Create Lesson",
+    "myLessons": "My lessons"
   },
   "calendar": {
     "newEvent": "Create Event",

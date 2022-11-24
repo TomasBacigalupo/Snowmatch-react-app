@@ -92,10 +92,14 @@ export default function HomeFilterTeachers() {
                                 <Grid item xs={12}>
                                     <RHFSelect name="resort" label={translate("filter.resort")} placeholder="Resort">
                                         <option value="" />
-                                        {FILTER_RESORT_OPTIONS.map((option) => (
-                                            <option key={option} value={option}>
-                                                {option}
-                                            </option>
+                                        {FILTER_RESORT_OPTIONS.map((country) => (
+                                            <optgroup label={country.category}>
+                                                {country.resorts.map(r => (
+                                                    <option key={r} value={r}>
+                                                        {r}
+                                                    </option>
+                                                ))}
+                                            </optgroup>
                                         ))}
                                     </RHFSelect>
                                 </Grid>

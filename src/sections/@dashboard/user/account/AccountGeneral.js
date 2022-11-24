@@ -24,24 +24,35 @@ import useLocales from 'src/hooks/useLocales';
 
 
 const SKI_RESORTS = [
-  "Aconcagua",
-  "Batea Mahuida",
-  "Calafate Mountain Park",
-  "Caviahue",
-  "Cerro Bayo",
-  "Cerro Castor",
-  "Cerro Catedral",
-  "Chapelco",
-  "La Hoya",
-  "Las Leñas",
-  "Las Pendientes",
-  "Lago Hermoso",
-  "Los Penitentes",
-  "Los Puquios",
-  "Monte Bianco",
-  "Patagonia Heliski",
-  "Perito Moreno",
-  "Vallecitos"
+  { title: "Aconcagua", category: "Argentina" },
+  { title: "Batea Mahuida", category: "Argentina" },
+  { title: "Calafate Mountain Park", category: "Argentina" },
+  { title: "Caviahue", category: "Argentina" },
+  { title: "Cerro Bayo", category: "Argentina" },
+  { title: "Cerro Castor", category: "Argentina" },
+  { title: "Cerro Catedral", category: "Argentina" },
+  { title: "Chapelco", category: "Argentina" },
+  { title: "La Hoya", category: "Argentina" },
+  { title: "Las Leñas", category: "Argentina" },
+  { title: "Las Pendientes", category: "Argentina" },
+  { title: "Lago Hermoso", category: "Argentina" },
+  { title: "Los Penitentes", category: "Argentina" },
+  { title: "Los Puquios", category: "Argentina" },
+  { title: "Monte Bianco", category: "Argentina" },
+  { title: "Patagonia Heliski", category: "Argentina" },
+  { title: "Perito Moreno", category: "Argentina" },
+  { title: "Vallecitos", category: "Argentina" },
+  { title: "Buttermilk", category: "Aspen" },
+  { title: "Highlands", category: "Aspen" },
+  { title: "Snowmass", category: "Aspen" },
+  { title: "Vail", category: "Vail" },
+  { title: "Beaver Creek", category: "Vail" },
+  { title: "Breckenridge", category: "Vail" },
+  { title: "Keystone", category: "Vail" },
+  { title: "Park City", category: "Vail" },
+  { title: "Heavenly", category: "Vail" },
+  { title: "Northstar", category: "Vail" },
+  { title: "Kirkwood", category: "Vail" },
 ]
 
 // ----------------------------------------------------------------------
@@ -51,9 +62,9 @@ export default function AccountGeneral() {
 
   const { user, updateUser, refreshUser } = useAuth();
   const dispatch = useDispatch();
-  const { teachers } = useSelector((state) => { return state});
+  const { teachers } = useSelector((state) => { return state });
   const isMobile = useMediaQuery({ query: `(max-width: 760px)` });
-  const imageSize = isMobile?10:39;
+  const imageSize = isMobile ? 10 : 39;
   const { translate } = useLocales()
 
   const UpdateUserSchema = Yup.object().shape({
@@ -61,7 +72,7 @@ export default function AccountGeneral() {
     lastname: Yup.string().required('Lastname is required'),
     gender: Yup.string().required('Gender is required'),
     email: Yup.string().required('Email is required').email(),
-    photoURL:Yup.mixed().test('required', 'Avatar is required', (value) => value !== ''),
+    photoURL: Yup.mixed().test('required', 'Avatar is required', (value) => value !== ''),
     cellphone: Yup.string().required("Phone number is required"),
     country: Yup.string(),
     information: Yup.string().nullable(),
@@ -113,22 +124,24 @@ export default function AccountGeneral() {
 
   const onSubmit = async (data) => {
 
-    const value = { 
+    const value = {
       ...user,
       ...data
     }
-    
+
+    console.log({ data })
+
     var endpoint = "";
-    if(value.state){
+    if (value.state) {
       value.state = 'AVAILABLE'
       endpoint = 'available'
     }
-    else{
+    else {
       value.state = 'UNAVAILABLE'
       endpoint = 'unavailable'
     }
 
-    if(typeof data.photoURL === "object" && data.photoURL.path){
+    if (typeof data.photoURL === "object" && data.photoURL.path) {
       console.log(data.photoURL)
       //console.log("EDIT IMAGE")
       dispatch(changeProfilePicture(data.photoURL, (succeed) => {
@@ -145,19 +158,19 @@ export default function AccountGeneral() {
     try {
       //await axios.post();
       const response = await dispatch(updateTeacher(value));
-      const r = await axios.post("/api/users/teacher/"+endpoint);
-      if(response.messages){
-          for (const entry of response.messages.entry) {
-            setError(entry.key, {
-              type: "server",
-              message: entry.value,
-            });          
-          }
+      const r = await axios.post("/api/users/teacher/" + endpoint);
+      if (response.messages) {
+        for (const entry of response.messages.entry) {
+          setError(entry.key, {
+            type: "server",
+            message: entry.value,
+          });
         }
-        else{
-          updateUser(value)
-          enqueueSnackbar( 'Update success!');
-        }
+      }
+      else {
+        updateUser(value)
+        enqueueSnackbar('Update success!');
+      }
     } catch (error) {
       console.error(error);
     }
@@ -220,18 +233,18 @@ export default function AccountGeneral() {
                 gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
               }}
             >
-              <RHFTextField name="name" label={translate("general.form.name")} disabled={user?.name != ''}/>
-              <RHFTextField name="lastname" label={translate("general.form.lastName")} disabled={user?.lastname != ''}/>
+              <RHFTextField name="name" label={translate("general.form.name")} disabled={user?.name != ''} />
+              <RHFTextField name="lastname" label={translate("general.form.lastName")} disabled={user?.lastname != ''} />
               <RHFTextField name="cellphone" label={translate("general.form.cellphone")} disabled={user?.cellphone != undefined} />
-              
-              <RHFTextField name="email" label={translate("general.form.email")} disabled/>
+
+              <RHFTextField name="email" label={translate("general.form.email")} disabled />
               <RHFSelect name="gender" label={translate("general.form.gender")} placeholder={translate("general.form.gender")}>
-                  <option key={1} value={"M"}>
-                    {translate("general.form.male")}
-                  </option>
-                  <option key={2} value={"F"}>
+                <option key={1} value={"M"}>
+                  {translate("general.form.male")}
+                </option>
+                <option key={2} value={"F"}>
                   {translate("general.form.female")}
-                  </option>
+                </option>
               </RHFSelect>
               <RHFSelect name="country" label={translate("general.form.country")} placeholder={translate("general.form.country")}>
                 <option value="" />
@@ -242,40 +255,40 @@ export default function AccountGeneral() {
                 ))}
               </RHFSelect>
 
-              <RHFMultipleSelect name="disciplines" label={translate("general.form.disciplines")} list={["Ski", "SnowBoard"]}/>
-              <RHFMultipleSelect name="speaks" label={translate("general.form.languages")} list={["Español", "English", "Portugues", "Italiano"]}/>
+              <RHFMultipleSelect name="disciplines" label={translate("general.form.disciplines")} list={["Ski", "SnowBoard"]} />
+              <RHFMultipleSelect name="speaks" label={translate("general.form.languages")} list={["Español", "English", "Portugues", "Italiano"]} />
             </Box>
 
             <Stack sx={{ mt: 3 }}>
               <RHFTextField name="school" label={translate("general.form.school")} />
-            </Stack>              
+            </Stack>
 
             <Stack sx={{ mt: 3 }}>
-              <RHFMultipleSelect name="resorts" label={translate("general.form.resorts")}  list={SKI_RESORTS}/>
-            </Stack>                        
+              <RHFMultipleSelect name="resorts" label={translate("general.form.resorts")} freeSolo={true} grouped={true} list={SKI_RESORTS} />
+            </Stack>
 
             <Stack sx={{ mt: 3 }}>
-              <RHFMultipleSelect name="skills" freeSolo={true} label={translate("general.form.skills")}  list={["Ski tunning", "Baby sitter", "Car rent"]}/>
+              <RHFMultipleSelect name="skills" freeSolo={true} label={translate("general.form.skills")} list={["Ski tunning", "Baby sitter", "Car rent"]} />
             </Stack>
             <Stack sx={{ mt: 3 }}>
-              <RHFTextField multiline 
-                            rows={2}
-                            name="information" 
+              <RHFTextField multiline
+                rows={2}
+                name="information"
                 label={translate("general.form.quickInformation")} />
             </Stack>
 
             <Stack sx={{ mt: 3 }}>
               <RHFTextField multiline
-                            rows={4}
-                            name="description" 
-                label={translate("general.form.description")}  />
+                rows={4}
+                name="description"
+                label={translate("general.form.description")} />
             </Stack>
             <Stack spacing={3} alignItems="flex-end" sx={{ mt: 3 }}>
-              <LoadingButton type="submit" variant="contained" loading={isSubmitting} sx={{':hover':{color:'#3399FF'}}}>
+              <LoadingButton type="submit" variant="contained" loading={isSubmitting} sx={{ ':hover': { color: '#3399FF' } }}>
                 {translate("general.form.saveChanges")}
               </LoadingButton>
             </Stack>
-          
+
           </Card>
         </Grid>
       </Grid>

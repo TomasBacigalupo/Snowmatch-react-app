@@ -450,6 +450,27 @@ export function changeProfilePicture(picture, callBack) {
   }
 }
 
+export function uploadCertificatePicture(picture, certificate, callBack) {
+  return async () => {
+    try {
+      const signedUrl = await axios.get(`/api/images/preSignedUrlImage/${certificate}`)
+      // Upload at URL
+      await fetch(signedUrl.data, {
+        method: 'PUT',
+        headers: {
+          "Content-Type": picture.type,
+        },
+        body: picture
+      });
+
+    } catch (error) {
+      console.error(error)
+      callBack(false)
+    }
+    callBack(true)
+  }
+}
+
 // ----------------------------------------------------------------------
 
 export function getOverview() {

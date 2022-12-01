@@ -94,7 +94,7 @@ export default function HomeFilterTeachers() {
                                         <option value="" />
                                         {FILTER_RESORT_OPTIONS.map((country) => (
                                             <optgroup label={country.category}>
-                                                {country.resorts.map(r => (
+                                                {country.resorts.sort().map(r => (
                                                     <option key={r} value={r}>
                                                         {r}
                                                     </option>

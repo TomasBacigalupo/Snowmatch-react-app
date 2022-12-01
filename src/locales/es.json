@@ -154,7 +154,8 @@
     "account":{
         "tabs":{
             "general": "Mi información",
-            "social_links": "Mis redes sociales"
+            "social_links": "Mis redes sociales",
+            "documents": "Mis Documentos"
         }
     },
     "filter":{

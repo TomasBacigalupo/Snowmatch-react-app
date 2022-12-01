@@ -42,17 +42,36 @@ const SKI_RESORTS = [
   { title: "Patagonia Heliski", category: "Argentina" },
   { title: "Perito Moreno", category: "Argentina" },
   { title: "Vallecitos", category: "Argentina" },
-  { title: "Buttermilk", category: "Aspen" },
-  { title: "Highlands", category: "Aspen" },
-  { title: "Snowmass", category: "Aspen" },
-  { title: "Vail", category: "Vail" },
-  { title: "Beaver Creek", category: "Vail" },
-  { title: "Breckenridge", category: "Vail" },
-  { title: "Keystone", category: "Vail" },
-  { title: "Park City", category: "Vail" },
-  { title: "Heavenly", category: "Vail" },
-  { title: "Northstar", category: "Vail" },
-  { title: "Kirkwood", category: "Vail" },
+  {title: "Aspen", category: "United States"},
+  {title: "Aspen Highlands", category: "United States"},
+  {title: "Beaver Creek", category: "United States"},
+  {title: "Breckenridge", category: "United States"},
+  {title: "Buttermilk", category: "United States"},
+  {title: "Copper Mountain", category: "United States"},
+  {title: "Crested Butte", category: "United States"},
+  {title: "Cuchara Mountain", category: "United States"},
+  {title: "Durango Mountain Resort", category: "United States"},
+  {title: "Echo Mountain", category: "United States"},
+  {title: "Eldora Mountain Resort", category: "United States"},
+  {title: "Hesperus", category: "United States"},
+  {title: "Howelsen Hill", category: "United States"},
+  {title: "Irwin Catskiing by Eleven", category: "United States"},
+  {title: "Kendall Mountain", category: "United States"},
+  {title: "Keystone", category: "United States"},
+  {title: "Loveland", category: "United States"},
+  {title: "Monarch Ski Area", category: "United States"},
+  {title: "Powderhorn", category: "United States"},
+  {title: "Purgatory", category: "United States"},
+  {title: "Silverton Mountain", category: "United States"},
+  {title: "Ski Cooper", category: "United States"},
+  {title: "Snowmass", category: "United States"},
+  {title: "SolVista Golf and Ski Ranch (Silver Creek)", category: "United States"},
+  {title: "Steamboat", category: "United States"},
+  {title: "Sunlight Mountain Resort", category: "United States"},
+  {title: "Telluride", category: "United States"},
+  {title: "Vail", category: "United States"},
+  {title: "Winter Park", category: "United States"},
+  {title: "Wolf Creek Ski Area", category: "United States"},
 ]
 
 // ----------------------------------------------------------------------
@@ -77,7 +96,7 @@ export default function AccountGeneral() {
     country: Yup.string(),
     information: Yup.string().nullable(),
     description: Yup.string().nullable(),
-    state: Yup.bool().required("Your availability is required"),
+    state: Yup.bool().required("Your aUnited Statesability is required"),
     speaks: Yup.array().of(Yup.string()),
     skills: Yup.array().of(Yup.string()),
     disciplines: Yup.array().of(Yup.string()),
@@ -95,7 +114,7 @@ export default function AccountGeneral() {
     country: user?.country || '',  // FALTA EN EDITUSERDTO
     information: user?.information || undefined,
     description: user?.description || undefined,
-    state: user?.state === "AVAILABLE" || false, //FALTA EN EDITUSERDTO
+    state: user?.state === "AUnited StatesABLE" || false, //FALTA EN EDITUSERDTO
     speaks: user?.speaks || [],
     skills: user?.skills || [],
     disciplines: user?.disciplines || [],
@@ -133,12 +152,12 @@ export default function AccountGeneral() {
 
     var endpoint = "";
     if (value.state) {
-      value.state = 'AVAILABLE'
-      endpoint = 'available'
+      value.state = 'AUnited StatesABLE'
+      endpoint = 'aUnited Statesable'
     }
     else {
-      value.state = 'UNAVAILABLE'
-      endpoint = 'unavailable'
+      value.state = 'UNAUnited StatesABLE'
+      endpoint = 'unaUnited Statesable'
     }
 
     if (typeof data.photoURL === "object" && data.photoURL.path) {
@@ -219,7 +238,7 @@ export default function AccountGeneral() {
               }
             />
 
-            <RHFSwitch name="state" labelPlacement="start" label={translate("general.form.available")} sx={{ mt: 5 }} />
+            <RHFSwitch name="state" labelPlacement="start" label={translate("general.form.aUnited Statesable")} sx={{ mt: 5 }} />
           </Card>
         </Grid>
 

@@ -26,6 +26,7 @@ import {
 } from '../../sections/@dashboard/user/profile';
 import useLocales from 'src/hooks/useLocales';
 import { useNavigate } from 'react-router';
+import CertificateItem from 'src/sections/@dashboard/user/account/CertificateItem';
 
 // ----------------------------------------------------------------------
 
@@ -112,6 +113,12 @@ export default function UserProfile() {
         })}
         
       </Container>
+      <Box>
+        {console.log({user})}
+        <CertificateItem title="AADIDESS" imageLink='/assets/certs/logoADIDDESS.png' status='VERIFIED' certificateImageLink={user.certificateImageLink} />
+        <CertificateItem title="AADIDESS" imageLink='/assets/certs/logoADIDDESS.png' status='VERIFIED' />
+      </Box>
+      
       <Button 
         onClick={() => { navigate(PATH_DASHBOARD.user.account, {replace: true})}}
       variant='contained' 

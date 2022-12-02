@@ -10,10 +10,9 @@ CertificateItem.prototype = {
     imageLink: PropTypes.string,
     status: PropTypes.string,
     certificateImageLink: PropTypes.string,
-    onUpload: PropTypes.func
 }
 
-export default function CertificateItem({ title, imageLink, status, certificateImageLink, onUpload }) {
+export default function CertificateItem({ title, imageLink, status, certificateImageLink }) {
     
     const [open, setOpen] = useState(false)
     const [infoOpen, setInfoOpen] = useState(false)
@@ -25,7 +24,6 @@ export default function CertificateItem({ title, imageLink, status, certificateI
             <UploadDocumentModal
                 isOpen={open}
                 onCancel={() => setOpen(false)}
-                onSubmit={onUpload}
                 name={title}
             />
             <DocumentInfoModal

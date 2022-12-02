@@ -17,6 +17,7 @@ import { LoadingButton } from '@mui/lab';
 // redux
 import { uploadCertificatePicture } from 'src/redux/slices/teachers';
 import { useDispatch} from 'src/redux/store'
+import useAuth from 'src/hooks/useAuth';
 
 UploadDocumentModal.propTypes = {
     isOpen: PropTypes.bool,
@@ -28,15 +29,18 @@ export default function UploadDocumentModal({ isOpen, onCancel, name }) {
 
     const methods = useForm();
     const [loading, setLoading] = useState(false)
+    const {updateUser} = useAuth()
     const dispatch = useDispatch()
     const onSubmit = data => {
         setLoading(true)
-        dispatch(uploadCertificatePicture(data.certificate, name, ()=> setLoading(false)))
-        console.log(data);
+        dispatch(uploadCertificatePicture(data.certificate, name, () => {
+            setLoading(false)
+            // updateUser() not working but should!
+            onCancel()
+        }))
     }
     const {
         setValue,
-        control,
         handleSubmit
     } = methods
     
@@ -60,8 +64,6 @@ export default function UploadDocumentModal({ isOpen, onCancel, name }) {
     return (
             <Dialog open={isOpen}>
             <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-
-                
                 <Box
                     sx={{
                         padding: 3,
@@ -88,7 +90,5 @@ export default function UploadDocumentModal({ isOpen, onCancel, name }) {
                 </Box>
             </FormProvider>
         </Dialog>
-        
     )
-
 }

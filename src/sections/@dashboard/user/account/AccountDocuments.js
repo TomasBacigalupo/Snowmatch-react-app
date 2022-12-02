@@ -25,11 +25,21 @@ export default function AccountSocialLinks() {
             <Grid item xs={12}>
                 <Typography variant='h3'>Certificates</Typography>
             </Grid>
-            <CertificateItem title="AADIDESS" imageLink='/assets/certs/logoADIDDESS.png' status={user.documents?.find(document => document.name === "AADIDESS").state} />
+            <CertificateItem title="AADIDESS" imageLink='/assets/certs/logoADIDDESS.png' 
+                certificateImageLink={user?.documents.find(document => document.name === "PSIA")?.link} 
+                status={user?.documents?.find(document => document.name === "AADIDESS")?.state} />
             <CertificateItem
                 title="PSIA"
                 imageLink='/assets/certs/logoPSIA.png'
-                status={user.documents.find(document => document.name === "PSIA").state}
+                status={user?.documents.find(document => document.name === "PSIA")?.state}
+                certificateImageLink={user?.documents.find(document => document.name === "PSIA")?.link}
+                onUpload={handleUpload}
+            />
+            <CertificateItem
+                title="MUNI"
+                imageLink='/assets/certs/logoPSIA.png'
+                status={user?.documents.find(document => document.name === "MUNI")?.state}
+                certificateImageLink={user?.documents.find(document => document.name === "MUNI")?.link}
                 onUpload={handleUpload}
             />
         </Grid>

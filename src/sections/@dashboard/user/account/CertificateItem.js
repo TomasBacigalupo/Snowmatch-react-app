@@ -10,9 +10,10 @@ CertificateItem.prototype = {
     imageLink: PropTypes.string,
     status: PropTypes.string,
     certificateImageLink: PropTypes.string,
+    description: PropTypes.string
 }
 
-export default function CertificateItem({ title, imageLink, status, certificateImageLink }) {
+export default function CertificateItem({ title, imageLink, status, certificateImageLink, description }) {
     
     const [open, setOpen] = useState(false)
     const [infoOpen, setInfoOpen] = useState(false)
@@ -30,6 +31,8 @@ export default function CertificateItem({ title, imageLink, status, certificateI
                 isOpen={infoOpen}
                 certificateImageLink={certificateImageLink}
                 onClose={() => { setInfoOpen(false) }}
+                description={description}
+                status={status}
             />
             <Box style={mobile ? styles.certContainerMobile : styles.certContainer}>
                 <Card sx={styles.card}>
@@ -41,8 +44,13 @@ export default function CertificateItem({ title, imageLink, status, certificateI
                             <Typography style={styles.title} variant="h4">{title}</Typography>
                         </Grid>
                         <Grid item xs={mobile ?? 4}>
-                            {status === 'VERIFIED' || status === 'NEEDS_VERIFICATION' && (
+                            {status === 'VERIFIED' && (
                                 <Button style={styles.button} color='success' size="small" startIcon={<Iconify icon={'material-symbols:cloud-done'} />} onClick={() => setInfoOpen(true)}>
+                                    Info
+                                </Button>
+                            )}
+                            {status === 'NEEDS_VERIFICATION' && (
+                                <Button style={styles.button} color='warning' size="small" startIcon={<Iconify icon={'material-symbols:cloud-done'} />} onClick={() => setInfoOpen(true)}>
                                     Info
                                 </Button>
                             )}

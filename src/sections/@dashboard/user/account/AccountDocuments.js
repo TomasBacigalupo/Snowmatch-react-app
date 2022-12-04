@@ -14,32 +14,27 @@ export default function AccountSocialLinks() {
     const { user } = useAuth()
     const dispatch = useDispatch()
     const handleUpload = (name, image) => {
-        dispatch(uploadCertificatePicture(image,name, ()=>{
+        dispatch(uploadCertificatePicture(image, name, () => {
             console.log('callBack')
         }))
     }
 
     return (
         <Grid container >
-            {console.log({ user})}
+            {console.log({ user })}
             <Grid item xs={12}>
                 <Typography variant='h3'>Certificates</Typography>
             </Grid>
-            <CertificateItem title="AADIDESS" imageLink='/assets/certs/logoADIDDESS.png' 
-                certificateImageLink={user?.documents.find(document => document.name === "PSIA")?.link} 
+            <CertificateItem
+                title="AADIDESS"
+                imageLink='/assets/certs/logoADIDDESS.png'
+                certificateImageLink={user?.documents?.find(document => document.name === "PSIA")?.link}
                 status={user?.documents?.find(document => document.name === "AADIDESS")?.state} />
             <CertificateItem
                 title="PSIA"
                 imageLink='/assets/certs/logoPSIA.png'
-                status={user?.documents.find(document => document.name === "PSIA")?.state}
-                certificateImageLink={user?.documents.find(document => document.name === "PSIA")?.link}
-                onUpload={handleUpload}
-            />
-            <CertificateItem
-                title="MUNI"
-                imageLink='/assets/certs/logoPSIA.png'
-                status={user?.documents.find(document => document.name === "MUNI")?.state}
-                certificateImageLink={user?.documents.find(document => document.name === "MUNI")?.link}
+                status={user?.documents?.find(document => document.name === "PSIA")?.state}
+                certificateImageLink={user?.documents?.find(document => document.name === "PSIA")?.link}
                 onUpload={handleUpload}
             />
         </Grid>

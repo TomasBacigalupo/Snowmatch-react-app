@@ -15,7 +15,7 @@ import { Box, Collapse, Stack, Button, TextField, Typography, IconButton, Dialog
 import { LoadingButton } from '@mui/lab';
 
 // redux
-import { uploadCertificatePicture } from 'src/redux/slices/teachers';
+import { updateLoggedUser, uploadCertificatePicture } from 'src/redux/slices/teachers';
 import { useDispatch} from 'src/redux/store'
 import useAuth from 'src/hooks/useAuth';
 
@@ -29,13 +29,21 @@ export default function UploadDocumentModal({ isOpen, onCancel, name }) {
 
     const methods = useForm();
     const [loading, setLoading] = useState(false)
-    const {updateUser} = useAuth()
+    const {updateUser, user} = useAuth()
     const dispatch = useDispatch()
     const onSubmit = data => {
         setLoading(true)
-        dispatch(uploadCertificatePicture(data.certificate, name, () => {
+        dispatch(uploadCertificatePicture(data.certificate, name, (uploaded) => {
+            if(uploaded){
+                const document = {
+                    name: name,
+                    state: 'NEEDS_VERIFICATION'
+                }   
+                user.documents = [...user.documents,document]
+                updateUser(user)
+            }
+            dispatch(updateLoggedUser((updatedUser) => updateUser(updatedUser)))
             setLoading(false)
-            // updateUser() not working but should!
             onCancel()
         }))
     }

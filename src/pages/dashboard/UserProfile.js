@@ -113,12 +113,6 @@ export default function UserProfile() {
         })}
         
       </Container>
-      <Box>
-        {console.log({user})}
-        <CertificateItem title="AADIDESS" imageLink='/assets/certs/logoADIDDESS.png' status='VERIFIED' certificateImageLink={user.certificateImageLink} />
-        <CertificateItem title="AADIDESS" imageLink='/assets/certs/logoADIDDESS.png' status='VERIFIED' />
-      </Box>
-      
       <Button 
         onClick={() => { navigate(PATH_DASHBOARD.user.account, {replace: true})}}
       variant='contained' 

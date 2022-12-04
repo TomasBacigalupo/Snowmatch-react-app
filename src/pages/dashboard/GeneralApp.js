@@ -1,6 +1,6 @@
 // @mui
 import { useTheme } from '@mui/material/styles';
-import { Container, Grid, Dialog, DialogTitle, DialogContent, Typography, Divider, ListItemText, List, DialogActions, Button } from '@mui/material';
+import { Container, Grid } from '@mui/material';
 // hooks
 import useAuth from '../../hooks/useAuth';
 import useSettings from '../../hooks/useSettings';
@@ -9,25 +9,17 @@ import Page from '../../components/Page';
 import { BookingTotalIncomes, BookingBookedRoom } from 'src/sections/@dashboard/general/booking';
 // sections
 import {
-  AppWidget,
-  AppWelcome,
-  AppFeatured,
-  AppNewInvoice,
   AppTopAuthors,
-  AppTopRelated,
-  AppAreaInstalled,
   AppWidgetSummary,
   AppCurrentDownload,
-  AppTopInstalledCountries,
   UpcomingEvents
 } from '../../sections/@dashboard/general/app';
 import { useDispatch, useSelector } from 'src/redux/store';
 import { useEffect, useState } from 'react';
 import { getEvents } from 'src/redux/slices/calendar';
-import { getTotalClasses, getTotalClients, getTotalIncome, getConversations, closeClinicModal } from 'src/redux/slices/teachers';
+import { getTotalClasses, getTotalClients, getTotalIncome, getConversations } from 'src/redux/slices/teachers';
 import useLocales from 'src/hooks/useLocales';
 import { date } from 'yup/lib/locale';
-import CalendarMonth from '@mui/icons-material/CalendarMonth';
 
 
 // ----------------------------------------------------------------------
@@ -108,44 +100,6 @@ export default function GeneralApp() {
   return (
     <Page title="General: App">
       <Container maxWidth={themeStretch ? false : 'xl'}>
-        <Dialog open={openClinicModal} onClose={() => { dispatch(closeClinicModal()) }}>
-          <DialogTitle> Clínica de Carrera</DialogTitle>
-          <DialogContent>
-            <Grid container spacing={2} marginTop='5px' justifyContent='center'>
-              <Grid item xs={12} container spacing={1} justifyContent='center'>
-                <Grid item>
-                  <CalendarMonth />
-                </Grid>
-                <Grid item>
-                  <Typography>11 - 12 - 13 de Septiembre</Typography>
-                </Grid>
-              </Grid>
-              <Grid item xs={12} justifyContent='center' style={{ textAlign: 'center' }}>
-
-                <Typography>Técnica en pista con esquíes de GS</Typography>
-
-                <Typography>Entrenamiento en trazado de GS</Typography>
-
-
-              </Grid>
-              <br />
-              <Grid xs={12} alignSelf='center'>
-                <img src='/assets/clinicaCOCO.png' style={{ width: '60%', padding: '10px', marginLeft: '22%', marginTop:'10px' }} />
-              </Grid>
-
-            </Grid>
-
-
-          </DialogContent>
-          <DialogActions>
-            <Button variant='outlined' onClick={() => { dispatch(closeClinicModal()) }} sx={{ marginRight: '15px' }}>
-              Cerrar
-            </Button>
-            <Button variant='contained' href='https://www.instagram.com/cocoevia/' >
-              Mas Info
-            </Button>
-          </DialogActions>
-        </Dialog>
         <Grid container spacing={3}>
 
           <Grid item xs={12} md={4}>

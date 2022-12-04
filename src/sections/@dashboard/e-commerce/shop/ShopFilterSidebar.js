@@ -44,11 +44,41 @@ export const FILTER_LANGUAGE_OPTIONS = ['Español', 'English', 'Portugues', 'Ita
 
 export const FILTER_RESORT_OPTIONS = [
   { category: "Argentina", resorts: ['Aconcagua', 'Batea Mahuida', 'Calafate Mountain Park', 'Caviahue', 'Cerro Bayo', 'Cerro Castor', 'Cerro Catedral', 'Chapelco', 'La Hoya', 'Las Leñas', 'Las Pendientes', 'Los Penitentes', 'Los Puquios', 'Monte Bianco', 'Patagonia Heliski', 'Perito Moreno', 'Vallecitos'] },
-  { category: "Aspen", resorts: ["Buttermilk", "Highlands", "Snowmass"]},
-  { category: "Vail", resorts: ["Vail", "Beaver Creek", "Breckenridge", "Keystone", "Park City", "Heavenly", "Northstar", "Kirkwood"] }
+  {
+    category: "United States", resorts: [
+      "Aspen",
+      "Aspen Highlands",
+      "Beaver Creek",
+      "Breckenridge",
+      "Buttermilk",
+      "Copper Mountain",
+      "Crested Butte",
+      "Cuchara Mountain",
+      "Durango Mountain Resort",
+      "Echo Mountain",
+      "Eldora Mountain Resort",
+      "Hesperus",
+      "Howelsen Hill",
+      "Irwin Catskiing by Eleven",
+      "Kendall Mountain",
+      "Keystone",
+      "Loveland",
+      "Monarch Ski Area",
+      "Powderhorn",
+      "Purgatory",
+      "Silverton Mountain",
+      "Ski Cooper",
+      "Snowmass",
+      "SolVista Golf and Ski Ranch (Silver Creek)",
+      "Steamboat",
+      "Sunlight Mountain Resort",
+      "Telluride",
+      "Vail",
+      "Winter Park",
+      "Wolf Creek Ski Area"
+    ]
+  },
 ]
-
-
 
 
 // ----------------------------------------------------------------------
@@ -98,16 +128,16 @@ export default function ShopFilterSidebar({ isOpen, onResetAll, onOpen, onClose 
 
               <RHFSelect name="resort" label="Resort" placeholder="Resort">
                 <option value="test" />
-                
+
                 {FILTER_RESORT_OPTIONS.map((country) => (
                   <optgroup label={country.category}>
-                    {country.resorts.map( r => (
+                    {country.resorts.sort().map(r => (
                       <option key={r} value={r}>
                         {r}
                       </option>
                     ))}
                   </optgroup>
-                ))} 
+                ))}
               </RHFSelect>
             </Stack>
             <Stack spacing={1}>

@@ -48,12 +48,12 @@ const handlers = {
   }),
   REGISTER: (state, action) => {
     const { user } = action.payload;
-    
+
     return {
       ...state,
       isAuthenticated: true,
       user,
-      isAuthorized: user.state != 'UNDER_REVIEW', 
+      isAuthorized: user.state != 'UNDER_REVIEW',
       emailVerified: user.emailVerified,
       phoneVerified: user.cellphoneVerified
     };
@@ -98,7 +98,7 @@ const AuthContext = createContext({
   verify: () => Promise.resolve(),
   testVerification: () => Promise.resolve(),
   updateUser: () => Promise.resolve(),
-  refreshUser: () => {}
+  refreshUser: () => { }
 });
 
 // ----------------------------------------------------------------------
@@ -184,7 +184,7 @@ function AuthProvider({ children }) {
     });
   };
 
-  const register = async (email, password, firstName, lastName,countryCode, phone, file) => {
+  const register = async (email, password, firstName, lastName, countryCode, phone, file) => {
     const response = await axios.post('/api/users/create', {
       "email": email,
       "password": password,
@@ -195,7 +195,7 @@ function AuthProvider({ children }) {
       "role": "TEACHER"
     });
     const user = response.data;
-    const accessToken  = user.token;
+    const accessToken = user.token;
     setSession(accessToken);
     window.localStorage.setItem('accessToken', accessToken);
     const signedUrl = await axios.get('/api/images/preSignedUrlCertificateImage')
@@ -229,11 +229,11 @@ function AuthProvider({ children }) {
 
   const updateUser = async (values) => {
     const user = values;
-    dispatch({type:'UPDATE',payload:{user}})
+    dispatch({ type: 'UPDATE', payload: { user } })
   };
 
-  const refreshUser = (user) =>{
-    dispatch({type:'REFRESH', payload:{user}})
+  const refreshUser = (user) => {
+    dispatch({ type: 'REFRESH', payload: { user } })
   }
 
   const testVerification = async (callBackFailed) => {

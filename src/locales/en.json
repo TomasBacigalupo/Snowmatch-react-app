@@ -151,7 +151,8 @@
   "account": {
     "tabs": {
       "general": "My information",
-      "social_links": "My Social Links"
+      "social_links": "My Social Links",
+      "documents": "My Documents"
     }
   },
   "filter": {

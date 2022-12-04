@@ -1,22 +1,18 @@
 import PropTypes from 'prop-types';
-import { useCallback, useEffect, useMemo } from 'react';
-import { RHFUploadSingleFile, RHFTextField } from 'src/components/hook-form';
-import * as Yup from 'yup';
+import { useCallback } from 'react';
+import { RHFUploadSingleFile } from 'src/components/hook-form';
 import { useState } from 'react';
-import { UploadSingleFile } from 'src/components/upload';
-import { fData } from 'src/utils/formatNumber';
 import { FormProvider } from 'src/components/hook-form';
 //form
 import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
 
 // @mui
-import { Box, Collapse, Stack, Button, TextField, Typography, IconButton, Dialog } from '@mui/material';
+import { Box, Stack, Button, Typography, Dialog } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 
 // redux
 import { updateLoggedUser, uploadCertificatePicture } from 'src/redux/slices/teachers';
-import { useDispatch} from 'src/redux/store'
+import { useDispatch } from 'src/redux/store'
 import useAuth from 'src/hooks/useAuth';
 
 UploadDocumentModal.propTypes = {
@@ -29,17 +25,22 @@ export default function UploadDocumentModal({ isOpen, onCancel, name }) {
 
     const methods = useForm();
     const [loading, setLoading] = useState(false)
-    const {updateUser, user} = useAuth()
+    const { updateUser, user } = useAuth()
     const dispatch = useDispatch()
+    const {
+        setValue,
+        handleSubmit
+    } = methods
+
     const onSubmit = data => {
         setLoading(true)
         dispatch(uploadCertificatePicture(data.certificate, name, (uploaded) => {
-            if(uploaded){
+            if (uploaded) {
                 const document = {
                     name: name,
                     state: 'NEEDS_VERIFICATION'
-                }   
-                user.documents = [...user.documents,document]
+                }
+                user.documents = [...user.documents, document]
                 updateUser(user)
             }
             dispatch(updateLoggedUser((updatedUser) => updateUser(updatedUser)))
@@ -47,16 +48,10 @@ export default function UploadDocumentModal({ isOpen, onCancel, name }) {
             onCancel()
         }))
     }
-    const {
-        setValue,
-        handleSubmit
-    } = methods
-    
 
     const handleDrop = useCallback(
         (acceptedFiles) => {
             const file = acceptedFiles[0];
-
             if (file) {
                 setValue(
                     'certificate',
@@ -70,7 +65,7 @@ export default function UploadDocumentModal({ isOpen, onCancel, name }) {
     );
 
     return (
-            <Dialog open={isOpen}>
+        <Dialog open={isOpen}>
             <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
                 <Box
                     sx={{
@@ -83,14 +78,22 @@ export default function UploadDocumentModal({ isOpen, onCancel, name }) {
                         <Typography variant="subtitle1">Add new document</Typography>
 
                         <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
-                            <RHFUploadSingleFile name="certificate" accept="image/*" maxSize={16000000} onDrop={handleDrop} />
+                            <RHFUploadSingleFile
+                                name="certificate"
+                                accept="image/*"
+                                maxSize={16000000}
+                                onDrop={handleDrop} />
                         </Stack>
 
                         <Stack direction="row" justifyContent="flex-end" spacing={1.5}>
                             <Button color="inherit" variant="outlined" onClick={onCancel}>
                                 Cancel
                             </Button>
-                            <LoadingButton loading={loading} type="submit" variant="contained" onClick={() => { }}>
+                            <LoadingButton
+                                loading={loading}
+                                type="submit"
+                                variant="contained"
+                                onClick={() => { }}>
                                 Save Change
                             </LoadingButton>
                         </Stack>

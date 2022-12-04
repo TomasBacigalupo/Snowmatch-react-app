@@ -1,16 +1,10 @@
-import { Grid, Card, Button, Box, Typography, createStyles } from "@mui/material";
-import Iconify from "src/components/Iconify";
-import UploadDocumentModal from "./modals/UploadDocumentModal";
-import { useState } from 'react';
-import DocumentInfoModal from "./modals/DocumentInfoModal";
+import { Grid, Typography } from "@mui/material";
 import CertificateItem from "./CertificateItem";
 import useAuth from "src/hooks/useAuth";
 import { uploadCertificatePicture } from "src/redux/slices/teachers";
 import { useDispatch } from "react-redux";
 
-export default function AccountSocialLinks() {
-    const [open, setOpen] = useState(false)
-    const [infoOpen, setInfoOpen] = useState(false)
+export default function AccountDocuments() {
     const { user } = useAuth()
     const dispatch = useDispatch()
     const handleUpload = (name, image) => {

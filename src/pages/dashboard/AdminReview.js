@@ -45,7 +45,7 @@ import DeclineForm from '../../sections/@dashboard/admin/DeclineForm';
 // ---------------------------------------------------------------------
 
 
-const STATUS_OPTIONS = ['all','UNDER_REVIEW'];
+const STATUS_OPTIONS = ['all', 'UNDER_REVIEW'];
 
 const ROLE_OPTIONS = [
   'all',
@@ -54,9 +54,10 @@ const ROLE_OPTIONS = [
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Name', align: 'left' },
+  { id: 'id', label: 'Id', align: 'left' },
   { id: 'role', label: 'Role', align: 'left' },
   { id: 'level', label: 'Level', align: 'left' },
-  { id: 'isVerified', label: 'Verified', align: 'center' },
+  { id: 'isAuthorized', label: 'Authorized', align: 'center' },
   { id: 'state', label: 'State', align: 'left' },
   { id: '' },
 ];
@@ -149,14 +150,19 @@ export default function UserList() {
 
   const dispatch = useDispatch();
 
-  const { teachers, isOpenModal, selectedEmail } = useSelector((state) =>{console.log(state);return state.admin});
+  const { teachers, isOpenModal, selectedEmail } = useSelector((state) => { return state.admin });
 
-  const [reqPage, setReqPage] = useState(1);
+  const [reqPage, setReqPage] = useState(0);
 
-  const onChangePage2 = async () =>{
-    dispatch(getTeachers(reqPage+1));
-    setReqPage(reqPage+1)
-    setTableData(teachers);
+  const onChangePage2 = async (event, newPage) => {
+    dispatch(getTeachers(newPage + 1))
+    setPage(newPage)
+  }
+
+  const onChangePage3 = (event, newPage) => {
+    dispatch(getTeachers(newPage))
+    setTableData(teachers)
+    setPage(newPage)
   }
 
   useEffect(() => {
@@ -165,9 +171,8 @@ export default function UserList() {
 
   useEffect(() => {
     dispatch(getTeachers(1));
-    //setTableData(teachers);
-  }, [dispatch]);
-  
+  }, []);
+
   return (
     <Page title="Admin Review: List">
       <Container maxWidth={themeStretch ? false : 'lg'}>
@@ -178,16 +183,16 @@ export default function UserList() {
             { name: 'Admin', href: PATH_DASHBOARD.admin.root },
             { name: 'Review' },
           ]}
-          // action={
-          //   <Button
-          //     variant="contained"
-          //     component={RouterLink}
-          //     to={PATH_DASHBOARD.user.new}
-          //     startIcon={<Iconify icon={'eva:plus-fill'} />}
-          //   >
-          //     New Client
-          //   </Button>
-          // }
+        // action={
+        //   <Button
+        //     variant="contained"
+        //     component={RouterLink}
+        //     to={PATH_DASHBOARD.user.new}
+        //     startIcon={<Iconify icon={'eva:plus-fill'} />}
+        //   >
+        //     New Client
+        //   </Button>
+        // }
         />
 
         <Card>
@@ -254,7 +259,7 @@ export default function UserList() {
                 />
 
                 <TableBody>
-                  {tableData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
+                  {tableData.slice(0, rowsPerPage).map((row) => (
                     <AdminTableRow
                       key={row.id}
                       row={row}
@@ -267,7 +272,7 @@ export default function UserList() {
                     />
                   ))}
 
-                  <TableEmptyRows height={denseHeight} emptyRows={emptyRows(page, rowsPerPage, tableData.length)} />
+                  <TableEmptyRows height={denseHeight} emptyRows={0} />
 
                   <TableNoData isNotFound={isNotFound} />
                 </TableBody>
@@ -279,7 +284,7 @@ export default function UserList() {
             <TablePagination
               rowsPerPageOptions={[5, 10, 25]}
               component="div"
-              count={dataFiltered.length+5}
+              count={-1}
               rowsPerPage={rowsPerPage}
               page={page}
               onPageChange={onChangePage2}
@@ -296,8 +301,8 @@ export default function UserList() {
         <DialogAnimate open={isOpenModal} onClose={handleDeclineCloseModal}>
           <DialogTitle>{'Seguro que queres declinar?'}</DialogTitle>
           <DeclineForm
-          email={selectedEmail}
-          onCancel={handleDeclineCloseModal}
+            email={selectedEmail}
+            onCancel={handleDeclineCloseModal}
           ></DeclineForm>
         </DialogAnimate>
       </Container>

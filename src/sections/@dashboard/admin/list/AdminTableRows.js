@@ -21,7 +21,7 @@ UserTableRow.propTypes = {
 export default function UserTableRow({ row, selected, onEditRow, onSelectRow, onConfirmRow, onDeclineRow }) {
   const theme = useTheme();
 
-  const { name,lastname, imageLink, role, level, isVerified, state } = row;
+  const { name, lastname, imageLink, role, level, isVerified, state, id } = row;
 
   const [openMenu, setOpenMenuActions] = useState(null);
 
@@ -45,8 +45,13 @@ export default function UserTableRow({ row, selected, onEditRow, onSelectRow, on
           {name + " " + lastname}
         </Typography>
       </TableCell>
+      <TableCell align="left">
+        {id}
+      </TableCell>
 
-      <TableCell align="left">{role}</TableCell>
+      <TableCell align="left">
+        {role}
+      </TableCell>
 
       <TableCell align="left" sx={{ textTransform: 'capitalize' }}>
         {level}
@@ -54,6 +59,7 @@ export default function UserTableRow({ row, selected, onEditRow, onSelectRow, on
 
       <TableCell align="center">
         <Iconify
+          //todo verificar que funcione con cambios de back
           icon={isVerified ? 'eva:checkmark-circle-fill' : 'eva:clock-outline'}
           sx={{
             width: 20,
@@ -67,13 +73,13 @@ export default function UserTableRow({ row, selected, onEditRow, onSelectRow, on
       <TableCell align="left">
         <Label
           variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
-          color={(state === 'UNDER_REVIEW' && 'error') || 'success'}
+          color={(state === 'UNAVAILABLE' && 'error') || 'success'}
           sx={{ textTransform: 'capitalize' }}
         >
           {state}
         </Label>
       </TableCell>
-
+      
       <TableCell align="right">
         <TableMoreMenu
           open={openMenu}

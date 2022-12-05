@@ -102,13 +102,10 @@ const navConfig = [
           { title: 'new client', path: PATH_DASHBOARD.school.new },
         ],
       },
-<<<<<<< HEAD
-=======
       { title: 'discounts', path: PATH_DASHBOARD.general.discounts, icon: <DiscountIcon/> }
       // { title: 'chat', path: PATH_DASHBOARD.chat.root, icon: ICONS.chat },
      
       // { title: 'kanban', path: PATH_DASHBOARD.kanban, icon: ICONS.kanban },
->>>>>>> main
     ],
   },
 ];

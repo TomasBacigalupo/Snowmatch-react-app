@@ -18,9 +18,55 @@ const initialState = {
   isLoading: false,
   error: null,
   board: {
-    cards: {},
-    columns: {},
-    columnOrder: [],
+    cards: {
+      "9d98ce30-3c51-4de3-8537-7a4b663ee3af": {
+        "id": "9d98ce30-3c51-4de3-8537-7a4b663ee3af",
+        "name": "Jardin de nieve",
+        "description": "Martes 17/08 10:00hs AM",
+        "assignee": [
+          {
+            "id": "473d2720-341c-49bf-94ed-556999cf6ef7",
+            "avatar": "https://minimal-assets-api.vercel.app/assets/images/avatars/avatar_2.jpg",
+            "name": "Soren Durham"
+          }
+        ],
+        "due": [
+          null,
+          null
+        ],
+        "attachments": [],
+        "comments": [],
+        "completed": true
+      }},
+    columns: [
+      {
+        "id": "8cd887ec-b3bc-11eb-8529-0242ac130003",
+        "name": "Clases a Completar",
+        "cardIds": [
+          "9d98ce30-3c51-4de3-8537-7a4b663ee3af"
+        ]
+      },
+      {
+        "id": "23008a1f-ad94-4771-b85c-3566755afab7",
+        "name": "Clases Completas",
+        "cardIds": [
+          
+        ]
+      },
+      {
+        "id": "37a9a747-f732-4587-a866-88d51c037641",
+        "name": "Clases Sin Profesor",
+        "cardIds": []
+      },
+      {
+        "id": "4ac3cd37-b3e1-466a-8e3b-d7d88f6f5d4f",
+        "name": "Clases Vendidas",
+        "cardIds": [
+          
+        ]
+      }
+    ],
+    columnOrder: ["8cd887ec-b3bc-11eb-8529-0242ac130003","23008a1f-ad94-4771-b85c-3566755afab7","37a9a747-f732-4587-a866-88d51c037641","4ac3cd37-b3e1-466a-8e3b-d7d88f6f5d4f"],
   },
 };
 

@@ -22,7 +22,7 @@ import { NAVBAR } from '../../../../config';
 import Iconify from '../../../../components/Iconify';
 import Scrollbar from '../../../../components/Scrollbar';
 import { ColorManyPicker } from '../../../../components/color-utils';
-import { RHFMultiCheckbox, RHFRadioGroup, RHFTextField, RHFSelect} from '../../../../components/hook-form';
+import { RHFMultiCheckbox, RHFRadioGroup, RHFTextField, RHFSelect } from '../../../../components/hook-form';
 import { MobileDatePicker } from '@mui/lab';
 import useLocales from 'src/hooks/useLocales';
 import { FilterSharp } from '@mui/icons-material';
@@ -42,9 +42,43 @@ export const FILTER_RATING_OPTIONS = ['up4Star', 'up3Star', 'up2Star', 'up1Star'
 
 export const FILTER_LANGUAGE_OPTIONS = ['Español', 'English', 'Portugues', 'Italiano']
 
-export const FILTER_RESORT_OPTIONS = ['Aconcagua', 'Batea Mahuida', 'Calafate Mountain Park', 'Caviahue', 'Cerro Bayo', 'Cerro Castor', 'Cerro Catedral', 'Chapelco', 'La Hoya', 'Las Leñas', 'Las Pendientes', 'Los Penitentes', 'Los Puquios', 'Monte Bianco', 'Patagonia Heliski', 'Perito Moreno', 'Vallecitos']
-
-
+export const FILTER_RESORT_OPTIONS = [
+  { category: "Argentina", resorts: ['Aconcagua', 'Batea Mahuida', 'Calafate Mountain Park', 'Caviahue', 'Cerro Bayo', 'Cerro Castor', 'Cerro Catedral', 'Chapelco', 'La Hoya', 'Las Leñas', 'Las Pendientes', 'Los Penitentes', 'Los Puquios', 'Monte Bianco', 'Patagonia Heliski', 'Perito Moreno', 'Vallecitos'] },
+  {
+    category: "United States", resorts: [
+      "Aspen",
+      "Aspen Highlands",
+      "Beaver Creek",
+      "Breckenridge",
+      "Buttermilk",
+      "Copper Mountain",
+      "Crested Butte",
+      "Cuchara Mountain",
+      "Durango Mountain Resort",
+      "Echo Mountain",
+      "Eldora Mountain Resort",
+      "Hesperus",
+      "Howelsen Hill",
+      "Irwin Catskiing by Eleven",
+      "Kendall Mountain",
+      "Keystone",
+      "Loveland",
+      "Monarch Ski Area",
+      "Powderhorn",
+      "Purgatory",
+      "Silverton Mountain",
+      "Ski Cooper",
+      "Snowmass",
+      "SolVista Golf and Ski Ranch (Silver Creek)",
+      "Steamboat",
+      "Sunlight Mountain Resort",
+      "Telluride",
+      "Vail",
+      "Winter Park",
+      "Wolf Creek Ski Area"
+    ]
+  },
+]
 
 
 // ----------------------------------------------------------------------
@@ -93,11 +127,16 @@ export default function ShopFilterSidebar({ isOpen, onResetAll, onOpen, onClose 
               <Typography variant="subtitle1">{translate('filter.resort')}</Typography>
 
               <RHFSelect name="resort" label="Resort" placeholder="Resort">
-                <option value="" />
-                {FILTER_RESORT_OPTIONS.map((option) => (
-                  <option key={option} value={option}>
-                    {option}
-                  </option>
+                <option value="test" />
+
+                {FILTER_RESORT_OPTIONS.map((country) => (
+                  <optgroup label={country.category}>
+                    {country.resorts.sort().map(r => (
+                      <option key={r} value={r}>
+                        {r}
+                      </option>
+                    ))}
+                  </optgroup>
                 ))}
               </RHFSelect>
             </Stack>
@@ -125,36 +164,36 @@ export default function ShopFilterSidebar({ isOpen, onResetAll, onOpen, onClose 
             <Stack spacing={1}>
               <Typography variant="subtitle1">{translate('filter.range')}</Typography>
               <Controller
-                  name="from"
-                  control={control}
-                  render={({ field }) => (
-                    <MobileDatePicker
-                      {...field}
-                      label="Start date"
-                      inputFormat="dd/MM/yyyy"
-                      renderInput={(params) => <TextField {...params} fullWidth />}
-                    />
-                  )}
-                />
+                name="from"
+                control={control}
+                render={({ field }) => (
+                  <MobileDatePicker
+                    {...field}
+                    label="Start date"
+                    inputFormat="dd/MM/yyyy"
+                    renderInput={(params) => <TextField {...params} fullWidth />}
+                  />
+                )}
+              />
 
-                <Controller
-                  name="to"
-                  control={control}
-                  render={({ field }) => (
-                    <MobileDatePicker
-                      {...field}
-                      label="End date"
-                      inputFormat="dd/MM/yyyy"
-                      renderInput={(params) => (
-                        <TextField
-                          {...params}
-                          fullWidth
-                        />
-                      )}
-                    />
-                  )}
-                />
-                </Stack>
+              <Controller
+                name="to"
+                control={control}
+                render={({ field }) => (
+                  <MobileDatePicker
+                    {...field}
+                    label="End date"
+                    inputFormat="dd/MM/yyyy"
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        fullWidth
+                      />
+                    )}
+                  />
+                )}
+              />
+            </Stack>
 
             <Stack spacing={1}>
               <Typography variant="subtitle1">{translate('filter.rating')}</Typography>

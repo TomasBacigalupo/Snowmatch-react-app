@@ -31,6 +31,7 @@
     }
   },
   "landingPRO": {
+    "heroTitle0": "Are you an instructor?",
     "heroTitle1": "Take your job to",
     "heroTitle2": "the next level with",
     "desc1": "Handle all your customers on a centralized platform.",
@@ -69,7 +70,12 @@
     "Schools": "Schools",
     "Independent": "Independent",
     "School PROs": "School PROs",
-    "Independent PROs": "Independent PROs"
+    "Independent PROs": "Independent PROs",
+    "currentWeek": "Current week",
+    "kanban": "Boards",
+    "products": "Lessons",
+    "newProduct": "Create Lesson",
+    "myLessons": "My lessons"
   },
   "calendar": {
     "newEvent": "Create Event",
@@ -145,7 +151,8 @@
   "account": {
     "tabs": {
       "general": "My information",
-      "social_links": "My Social Links"
+      "social_links": "My Social Links",
+      "documents": "My Documents"
     }
   },
   "filter": {
@@ -178,7 +185,12 @@
     "noScheduledEvents": "No Scheduled Events",
     "welcomeBack": "Welcome back, ",
     "lookingBestTeacher": "Are you looking for the best PRO for your client?",
-    "topClients": "Top Clients"
+    "topClients": "Top Clients",
+    "bookedLessons": "Booked Lessons",
+    "Cancel": "Rejected",
+    "Pending": "Pending",
+    "Accepted": "Accepted",
+    "thanLastMonth": "than last month"
   },
   "teacherDetails": {
     "title": "PRO Details",
@@ -220,5 +232,36 @@
     "details": "Discount details",
     "findBrands": "Find Brands...",
     "sendNoti": "Done! If you are in conditions to get the voucher you will receive it via Whats App"
+  },
+
+  "rental": {
+    "Personal Data": "Personal Data",
+    "Equipment": "Equipment",
+    "Result": "Results PRO",
+    "height": "Height",
+    "heightHelper": "Height in centimeters",
+    "weight": "Weight",
+    "weightHelper": "Weight in KG",
+    "size": "Shoes Size",
+    "sizeHelper": "Size EU ex: 37, 38, 39, 40...",
+    "showResult": "Show this result to the rental",
+    "prev": "Prev",
+    "next": "Next",
+    "ski": "Skis",
+    "skiResult": "Skis from {{from}}cm to {{to}}cm",
+    "boots": "Boots",
+    "poles": "Poles",
+    "googles": "Googles",
+    "gloves": "Gloves",
+    "table": "Snowboard",
+    "helmet": "Helmet",
+    "BEGINNER": "Beginner",
+    "INTERMEDIATE": "Intermediate",
+    "EXPERT": "Expert",
+    "needsGloves": "Necesita guantes",
+    "needsGoogles": "Necesita antiparras",
+    "needsHelmet": "Necesita Cazco",
+    "discipline": "Discipline"
   }
+
 }

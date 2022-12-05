@@ -3,6 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import sum from 'lodash/sum';
 import uniqBy from 'lodash/uniqBy';
 import { func, number } from 'prop-types';
+import useAuth from 'src/hooks/useAuth';
 // utils
 import axios from '../../utils/axios';
 //
@@ -12,6 +13,7 @@ import { dispatch } from '../store';
 
 const initialState = {
   isLoading: false,
+  openClinicModal: true,
   error: null,
   products: [],
   teachers: [],
@@ -26,8 +28,8 @@ const initialState = {
     discipline: [],
     language: [],
     from: undefined,
-    to:undefined,
-    resort:'',
+    to: undefined,
+    resort: '',
   },
   checkout: {
     activeStep: 0,
@@ -43,12 +45,19 @@ const initialState = {
   totalIncome: 0,
   topClients: [],
   totalClients: 0,
+  conversations: []
 };
 
 const slice = createSlice({
   name: 'teacher',
   initialState,
   reducers: {
+
+    // CLOSE CLINIC MODAL
+    closeClinicModal(state) {
+      state.openClinicModal = false;
+    },
+
     // START LOADING
     startLoading(state) {
       state.isLoading = true;
@@ -119,7 +128,12 @@ const slice = createSlice({
 
     //GET TEACHER OVERVIEW TOTAL CLIENTS
     getTeacherOverviewSuccessTotalClients(state, action) {
-      state.totalClients= action.payload;
+      state.totalClients = action.payload;
+    },
+
+    //GET TEACHER CONVERSATIONS
+    getTeacherOverviewSuccessConversations(state, action) {
+      state.conversations = action.payload
     },
 
     //  SORT & FILTER PRODUCTS
@@ -272,6 +286,7 @@ export const {
   decreaseQuantity,
   sortByProducts,
   filterTeachers,
+  closeClinicModal
 } = slice.actions;
 
 // ----------------------------------------------------------------------
@@ -290,18 +305,18 @@ export function getProducts() {
 
 // ----------------------------------------------------------------------
 function merge(ranges) {
-    var result = [], last;
+  var result = [], last;
 
-    ranges.forEach(function (r) {
-        if (!last || r.start > last.end){
-            result.push(r);
-            last = r;
-        }
-        else if (r.end > last.end)
-            last.end = r.end;
-    });
+  ranges.forEach(function (r) {
+    if (!last || r.start > last.end) {
+      result.push(r);
+      last = r;
+    }
+    else if (r.end > last.end)
+      last.end = r.end;
+  });
 
-    return result;
+  return result;
 }
 
 export function getTeachers() {
@@ -367,9 +382,9 @@ export function getTeacherWithRates(email) {
             "rates": rates,
             "teacher": teacher
           }
-            if(dto.teacher.events){
-              dto.teacher.events = merge(dto.teacher.events.sort(function(a, b) { return new Date(a.start)-new Date(b.start) })) 
-      }
+          if (dto.teacher.events) {
+            dto.teacher.events = merge(dto.teacher.events.sort(function (a, b) { return new Date(a.start) - new Date(b.start) }))
+          }
           dispatch(slice.actions.getTeacherWithRatesSuccess(dto));
         })
       })
@@ -436,6 +451,34 @@ export function changeProfilePicture(picture, callBack) {
   }
 }
 
+export function uploadCertificatePicture(picture, certificate, callBack) {
+  return async () => {
+    try {
+      const signedUrl = await axios.get(`/api/images/preSignedUrlImage/${certificate}`)
+      // Upload at URL
+      await fetch(signedUrl.data, {
+        method: 'PUT',
+        headers: {
+          "Content-Type": picture.type,
+        },
+        body: picture
+      });
+
+    } catch (error) {
+      console.error(error)
+      callBack(false)
+    }
+    callBack(true)
+  }
+}
+
+export function updateLoggedUser(callBack) {
+  return async () => {
+    const updatedUser = await axios.get(`/api/users/my`)
+    callBack(updatedUser.data)
+  }
+}
+
 // ----------------------------------------------------------------------
 
 export function getOverview() {
@@ -497,6 +540,19 @@ export function getTopClients() {
     try {
       const resp = await axios.get(`/api/overview/topClients`)
       dispatch(slice.actions.getTeacherOverviewSuccessTopClients(resp.data));
+    } catch (error) {
+      console.error(error)
+    }
+  }
+}
+
+// ----------------------------------------------------------------------
+
+export function getConversations() {
+  return async () => {
+    try {
+      const resp = await axios.get(`/api/conversation/conversations`)
+      dispatch(slice.actions.getTeacherOverviewSuccessConversations(resp.data));
     } catch (error) {
       console.error(error)
     }

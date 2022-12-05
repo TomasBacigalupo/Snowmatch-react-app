@@ -32,12 +32,13 @@
         }
     },
     "landingPRO": {
-        "heroTitle1": "Potencia",
+        "heroTitle0": "¿Sos profesor?",
+        "heroTitle1": "Potenciá ",
         "heroTitle2": "tu trabajo con",
         "desc1": "Manejá a tus clientes en un solo lugar.",
-        "desc2": "Ponete en contacto con nuevos clientes.",
+        "desc2": "Ponéte en contacto con nuevos clientes.",
         "desc3": "Manejá tus ingresos.",
-        "getStarted": "Empeza ahora",
+        "getStarted": "Quiero ser PRO",
         "useCases": "¿Por qué SnowMatch?",
         "clientData": "Agenda de Clientes",
         "clientDataDesc": "Todos tus datos son privados y estan protegidos por SnowMatch",
@@ -71,7 +72,14 @@
         "Independent": "Independentes",
         "School PROs": "PROs de Escuelas",
         "Independent PROs": "PROs Independientes",
-        "discounts": "PRO Deal"
+        "discounts": "PRO Deal",
+        "rental": "Rental",
+        "calculate": "Calcular Talles",
+        "currentWeek": "Semana actual",
+        "kanban": "Tableros",
+        "products": "Grupales",
+        "myLessons": "Mis Clases",
+        "newProduct": "Nueva Clase"
     },
     "calendar": {
         "newEvent": "Crear Evento",
@@ -146,7 +154,8 @@
     "account":{
         "tabs":{
             "general": "Mi información",
-            "social_links": "Mis redes sociales"
+            "social_links": "Mis redes sociales",
+            "documents": "Mis Documentos"
         }
     },
     "filter":{
@@ -179,7 +188,12 @@
         "noScheduledEvents": "No tiene eventos agendados",
         "welcomeBack": "Bienvenido, ",
         "lookingBestTeacher":"¿Estás buscando al mejor PRO para tu cliente?",
-        "topClients": "Ranking de Clientes"
+        "topClients": "Ranking de Clientes",
+        "bookedLessons": "Clases Reservadas",
+        "Cancel": "Rechazadas",
+        "Pending": "Pendientes",
+        "Accepted": "Aceptadas",
+        "thanLastMonth": "respecto mes anterior"
     },
     "teacherDetails":{
         "title": "Detalles PRO",
@@ -221,5 +235,36 @@
           "details": "Detalles del Descuento",
           "findBrands":"Buscar Marcas...",
           "sendNoti": "¡Listo! Estamos tramitando tu código de descuento. Si aplicás al código te va a estar llegando por Whats App"
-      }
+      },
+
+    "rental":{
+        "Personal Data": "Datos Personales",
+        "Equipment": "Equipamiento",
+        "Result": "Resultados PRO",
+        "height": "Altura",
+        "heightHelper": "Altura en centímeros",
+        "weight": "Peso",
+        "weightHelper": "Peso en KG",
+        "size": "Talle de zapatos",
+        "sizeHelper": "Talle en EU ej: 37, 38, 39, 40...",
+        "showResult": "Mostra este resultado en el rental",
+        "prev": "Atras",
+        "next": "Continuar",
+        "ski": "Esquies",
+        "skiResult": "Esquies desde {{from}}cm hasta {{to}}cm",
+        "boots": "Botas",
+        "poles": "Bastones",
+        "googles": "Antiparras",
+        "gloves": "Guantes",
+        "table": "Tabla de snowboard",
+        "helmet": "Cazco",
+        "level": "Nivel",
+        "BEGINNER": "Principiante",
+        "INTERMEDIATE":"Intermedio",
+        "EXPERT":"Experto",
+        "needsGloves": "Necesita guantes",
+        "needsGoogles": "Necesita antiparras",
+        "needsHelmet": "Necesita Cazco",
+        "discipline": "Disciplina"
+    }
 }

@@ -8,7 +8,8 @@ import { fCurrency, fPercent } from '../../../../utils/formatNumber';
 // components
 import Iconify from '../../../../components/Iconify';
 import BaseOptionChart from '../../../../components/chart/BaseOptionChart';
-
+import PropTypes, { number } from 'prop-types';
+import useLocales from 'src/hooks/useLocales';
 // ----------------------------------------------------------------------
 
 const RootStyle = styled(Card)(({ theme }) => ({
@@ -24,7 +25,14 @@ const TOTAL = 18765;
 const PERCENT = 2.6;
 const CHART_DATA = [{ data: [111, 136, 76, 108, 74, 54, 57, 84] }];
 
-export default function BookingTotalIncomes() {
+// BookingTotalIncomes.PropTypes = {
+//   total: PropTypes.number,
+//   percent: PropTypes.number,
+//   chartData: PropTypes.arrayOf(PropTypes.number)
+// };
+
+export default function BookingTotalIncomes({total, percent, chartData}) {
+  const {translate} = useLocales()
   const chartOptions = merge(BaseOptionChart(), {
     chart: { sparkline: { enabled: true } },
     xaxis: { labels: { show: false } },
@@ -44,29 +52,30 @@ export default function BookingTotalIncomes() {
     fill: { gradient: { opacityFrom: 0, opacityTo: 0 } },
   });
 
+
   return (
     <RootStyle>
       <Stack direction="row" justifyContent="space-between" sx={{ mb: 3 }}>
         <div>
-          <Typography sx={{ mb: 2, typography: 'subtitle2' }}>Total Incomes</Typography>
-          <Typography sx={{ typography: 'h3' }}>{fCurrency(TOTAL)}</Typography>
+          <Typography sx={{ mb: 2, typography: 'subtitle2' }}>{translate('generalApp.totalIncome')}</Typography>
+          <Typography sx={{ typography: 'h3' }}>{fCurrency(total)}</Typography>
         </div>
 
         <div>
           <Stack direction="row" alignItems="center" justifyContent="flex-end" sx={{ mb: 0.6 }}>
-            <Iconify width={20} height={20} icon={PERCENT >= 0 ? 'eva:trending-up-fill' : 'eva:trending-down-fill'} />
+            <Iconify width={20} height={20} icon={percent >= 0 ? 'eva:trending-up-fill' : 'eva:trending-down-fill'} />
             <Typography variant="subtitle2" component="span" sx={{ ml: 0.5 }}>
-              {PERCENT > 0 && '+'}
-              {fPercent(PERCENT)}
+              {percent > 0 && '+'}
+              {fPercent(percent)}
             </Typography>
           </Stack>
           <Typography variant="body2" component="span" sx={{ opacity: 0.72 }}>
-            &nbsp;than last month
+            &nbsp;{translate('generalApp.thanLastMonth')}
           </Typography>
         </div>
       </Stack>
 
-      <ReactApexChart type="area" series={CHART_DATA} options={chartOptions} height={132} />
+      <ReactApexChart type="area" series={chartData} options={chartOptions} height={132} />
     </RootStyle>
   );
 }

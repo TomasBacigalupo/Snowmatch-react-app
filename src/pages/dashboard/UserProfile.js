@@ -2,7 +2,8 @@ import { capitalCase } from 'change-case';
 import { useState } from 'react';
 // @mui
 import { styled } from '@mui/material/styles';
-import { Tab, Box, Card, Tabs, Container } from '@mui/material';
+import EditIcon from '@mui/icons-material/Edit';
+import { Tab, Box, Card, Tabs, Container, Button, IconButton } from '@mui/material';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // hooks
@@ -24,6 +25,8 @@ import {
   ProfileFollowers,
 } from '../../sections/@dashboard/user/profile';
 import useLocales from 'src/hooks/useLocales';
+import { useNavigate } from 'react-router';
+import CertificateItem from 'src/sections/@dashboard/user/account/CertificateItem';
 
 // ----------------------------------------------------------------------
 
@@ -55,6 +58,8 @@ export default function UserProfile() {
   const { currentTab, onChangeTab } = useTabs('profile');
 
   const [findFriends, setFindFriends] = useState('');
+
+  const navigate = useNavigate()
 
   const handleFindFriends = (value) => {
     setFindFriends(value);
@@ -106,7 +111,14 @@ export default function UserProfile() {
           const isMatched = tab.value === currentTab;
           return isMatched && <Box key={tab.value}>{tab.component}</Box>;
         })}
+        
       </Container>
+      <Button 
+        onClick={() => { navigate(PATH_DASHBOARD.user.account, {replace: true})}}
+      variant='contained' 
+      sx={{ position: 'fixed', right: '15px', bottom: '15px', borderRadius:'100%', height:'60px', width:'60px' }}>
+        <EditIcon backgroundColor='red'/>
+      </Button>
     </Page>
   );
 }

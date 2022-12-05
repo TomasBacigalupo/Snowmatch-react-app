@@ -22,6 +22,7 @@ import { useEffect, useState } from 'react';
 
 import { countries } from '../../../../_mock';
 import useLocales from 'src/hooks/useLocales';
+import { useSelector } from 'react-redux';
 
 
 
@@ -32,9 +33,8 @@ ContactForm.propTypes = {
 export default function ContactForm({ teacher, onCancel,cellphone }) {
   const { enqueueSnackbar } = useSnackbar();
   const { translate } = useLocales();
-
-
-    const [open, setOpen] = useState(false);
+  const { contactForm } = useSelector((state) => state.contact);
+  const [open, setOpen] = useState(false);
   const handleOpen = () => {
     setOpen(true);
   };
@@ -57,23 +57,12 @@ export default function ContactForm({ teacher, onCancel,cellphone }) {
     classDate:Yup.string(),
   });
 
-  const today = new Date();
-  const defaultValues = {
-    from: "",
-    countryCode: "54",
-    age:"",
-    firstname:"",
-    lastname:"",
-    level:"BEGINNER",
-    activity:"",
-    amount:1,
-    duration:"",
-    classDate:today,
-  }
+  
+  
 
   const methods = useForm({
     resolver: yupResolver(ContactSchema),
-    defaultValues
+    defaultValues: contactForm
   });
 
   const {
@@ -223,7 +212,6 @@ export default function ContactForm({ teacher, onCancel,cellphone }) {
         <LoadingButton type="submit" variant="contained" loading={isSubmitting} sx={{':hover':{color:'#3399FF'}}}>
         {translate("conversation.contact")}
         </LoadingButton>
-
       </DialogActions>
 
         <DialogAnimate open={open} onClose={handleClose}>

@@ -75,7 +75,7 @@ const HeroImgStyle = styled(m.div)(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 export default function HomeHero() {
-  const {translate} = useLocales()
+  const { translate } = useLocales()
   const [value, setValue] = useState(0);
 
   const handleChange = (event, newValue) => {
@@ -103,8 +103,8 @@ export default function HomeHero() {
   ]
 
   const defaultValues = {
-      resort: "Catedral",
-    }
+    resort: "Catedral",
+  }
 
   const methods = useForm({
     resolver: yupResolver({}),
@@ -134,17 +134,20 @@ export default function HomeHero() {
 
         <Container>
           <ContentStyle>
-            <Grid container spacing={0}>
+            <Grid container spacing={2}>
               <Grid item xs={12} md={6.5}>
                 <HomeFilterTeachers />
               </Grid>
-              <Grid item xs={12} md={5.5}>
+              <Grid item xs={12} md={5.5} >
                 <m.div variants={varFade().inRight}>
-                  <Typography variant="h1" sx={{ color: 'common.white' }}>
-                    {translate('landingPRO.heroTitle1')}<br />
-                    {translate('landingPRO.heroTitle2')}
-                    <Typography component="span" variant="h1" sx={{ color: 'primary.main' }}>
-                      &nbsp;SnowMatch
+                  <Typography variant="h2" sx={{ color: 'common.white' }}>
+                    {translate('landingPRO.heroTitle0')}
+                  </Typography>
+                  <Typography variant="h3" sx={{ color: 'common.white' }}>
+                    {translate('landingPRO.heroTitle1')}
+                    {translate('landingPRO.heroTitle2')}<br />
+                    <Typography component="span" variant="h3" sx={{ color: 'primary.main' }}>
+                      SnowMatch
                     </Typography>
                   </Typography>
                 </m.div>
@@ -162,7 +165,7 @@ export default function HomeHero() {
                   </Typography>
 
                 </m.div>
-                <br/>
+                <br />
                 <m.div variants={varFade().inRight}>
                   <HoverButton
                     size="large"
@@ -176,12 +179,12 @@ export default function HomeHero() {
                   </HoverButton>
                 </m.div>
               </Grid>
-              
+
 
             </Grid>
-            
 
-            
+
+
             {/* <Stack spacing={2.5} alignItems="center" direction={{ xs: 'column', md: 'row' }}>
               <m.div variants={varFade().inRight}>
                 <TextIconLabel

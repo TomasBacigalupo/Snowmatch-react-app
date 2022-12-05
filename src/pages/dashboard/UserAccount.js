@@ -1,6 +1,6 @@
 import { capitalCase } from 'change-case';
 // @mui
-import { Container, Tab, Box, Tabs } from '@mui/material';
+import { Container, Tab, Box, Tabs, useTheme, useMediaQuery } from '@mui/material';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // hooks
@@ -17,6 +17,7 @@ import {
   AccountGeneral,
   AccountBilling,
   AccountSocialLinks,
+  AccountDocuments,
   AccountNotifications,
   AccountChangePassword,
 } from '../../sections/@dashboard/user/account';
@@ -28,6 +29,8 @@ export default function UserAccount() {
   const { themeStretch } = useSettings();
   const { currentTab, onChangeTab } = useTabs('general');
   const {translate} = useLocales()
+  const theme = useTheme()
+  const mobile = useMediaQuery(theme.breakpoints.down("sm"))
   const ACCOUNT_TABS = [
     {
       value: 'general',
@@ -38,6 +41,11 @@ export default function UserAccount() {
       value: 'social_links',
       icon: <Iconify icon={'eva:share-fill'} width={20} height={20} />,
       component: <AccountSocialLinks myProfile={_userAbout} />,
+    },
+    {
+      value: 'documents',
+      icon: <Iconify icon={'ion:documents'} width={20} height={20} />,
+      component: <AccountDocuments/>,
     },
   ];
 
@@ -61,7 +69,7 @@ export default function UserAccount() {
           onChange={onChangeTab}
         >
           {ACCOUNT_TABS.map((tab) => (
-            <Tab disableRipple key={tab.value} label={translate("account.tabs." + tab.value)} icon={tab.icon} value={tab.value} />
+            <Tab disableRipple key={tab.value} label={mobile ? '' : translate("account.tabs." + tab.value)} icon={tab.icon} value={tab.value} />
           ))}
         </Tabs>
 

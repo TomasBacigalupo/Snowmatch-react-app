@@ -18,7 +18,7 @@ KanbanTaskCard.propTypes = {
 };
 
 export default function KanbanTaskCard({ card, onDeleteTask, index }) {
-  const { name, attachments } = card;
+  const { name, attachments, description } = card;
 
   const [openDetails, setOpenDetails] = useState(false);
 
@@ -49,13 +49,13 @@ export default function KanbanTaskCard({ card, onDeleteTask, index }) {
               '&:hover': {
                 boxShadow: (theme) => theme.customShadows.z16,
               },
-              ...(attachments.length > 0 && {
+              ...(attachments?.length > 0 && {
                 pt: 2,
               }),
             }}
           >
             <Box onClick={handleOpenDetails} sx={{ cursor: 'pointer' }}>
-              {attachments.length > 0 && (
+              {attachments?.length > 0 && (
                 <Box
                   sx={{
                     pt: '60%',
@@ -77,7 +77,7 @@ export default function KanbanTaskCard({ card, onDeleteTask, index }) {
 
               <Typography
                 noWrap
-                variant="subtitle2"
+                variant="h6"
                 sx={{
                   py: 3,
                   pl: 5,
@@ -89,6 +89,11 @@ export default function KanbanTaskCard({ card, onDeleteTask, index }) {
                 }}
               >
                 {name}
+                <Typography
+                  variant="body2"
+                >
+                  {description}
+                </Typography>
               </Typography>
             </Box>
 
@@ -98,7 +103,7 @@ export default function KanbanTaskCard({ card, onDeleteTask, index }) {
               icon={<Iconify icon={'eva:radio-button-off-outline'} />}
               checkedIcon={<Iconify icon={'eva:checkmark-circle-2-outline'} />}
               onChange={handleChangeComplete}
-              sx={{ position: 'absolute', bottom: 15 }}
+              sx={{ position: 'absolute', bottom: '30%', left:'10px' }}
             />
           </Paper>
 

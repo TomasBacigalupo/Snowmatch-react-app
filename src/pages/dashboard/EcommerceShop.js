@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import orderBy from 'lodash/orderBy';
 // form
 import { useForm } from 'react-hook-form';
@@ -12,6 +12,7 @@ import { getTeachers, filterTeachers } from '../../redux/slices/teachers';
 import { PATH_DASHBOARD, PATH_GUEST } from '../../routes/paths';
 // hooks
 import useSettings from '../../hooks/useSettings';
+import { useLocation } from 'react-router-dom';
 // layouts
 import MainHeader from 'src/layouts/main/MainHeader';
 // components
@@ -28,9 +29,15 @@ import {
 } from '../../sections/@dashboard/e-commerce/shop';
 import CartWidget from '../../sections/@dashboard/e-commerce/CartWidget';
 import useAuth from 'src/hooks/useAuth';
+import { useParams } from 'react-router';
 
 // ----------------------------------------------------------------------
 
+function useQuery() {
+  const { search } = useLocation();
+
+  return useMemo(() => new URLSearchParams(search), [search]);
+}
 
 // ----------------------------------------------------------------------
 
@@ -40,14 +47,19 @@ export default function EcommerceShop({isGuest=false, teacherType="school"}) {
 
   const dispatch = useDispatch();
   const { user } = useAuth();
-
+  const query = useQuery()
   const [openFilter, setOpenFilter] = useState(false);
 
   const { teachers, sortBy, filters } = useSelector((state) => { return state.teachers })
 
+  useEffect(()=>{
+    console.log('test', query.get('resort'))
+    dispatch(filterTeachers({resort: query.get('resort')}))
+  }, [])
+
   //const { products, sortBy } = useSelector((state) => state.product);
 
-  const filteredTeachers = applyFilter(teachers, sortBy, filters,teacherType);
+  const filteredTeachers = applyFilter(teachers, sortBy, filters, teacherType);
 
   const defaultValues = {
     rating: filters.rating,
@@ -57,7 +69,7 @@ export default function EcommerceShop({isGuest=false, teacherType="school"}) {
     language: filters.language,
     from: filters.from,
     to: filters.to,
-    resort: filters.resort,
+    resort: query.get('resort'),
   };
 
   const methods = useForm({
@@ -68,6 +80,7 @@ export default function EcommerceShop({isGuest=false, teacherType="school"}) {
 
   const values = watch();
 
+ 
   const isDefault =
     !values.rating &&
     values.gender.length == 0 &&
@@ -76,9 +89,6 @@ export default function EcommerceShop({isGuest=false, teacherType="school"}) {
     values.language.length == 0 &&
     (!values.from || !values.to) &&
     !values.resort;
-
-
-
 
   useEffect(() => {
     dispatch(getTeachers());

@@ -12,6 +12,18 @@ const initialState = {
   isOpenReferModal: false,
   isOpenContactModal: false,
   selectedTeacher:null,
+  contactForm: {
+    from: "",
+    countryCode: "54",
+    age: "",
+    firstname: "",
+    lastname: "",
+    level: "BEGINNER",
+    activity: "",
+    amount: 1,
+    duration: "",
+    classDate: new Date(),
+  }
 };
 
 const slice = createSlice({
@@ -36,7 +48,6 @@ const slice = createSlice({
       state.isOpenModal = true;
     },
 
-
     // OPEN MODAL
     openContactModal(state) {
       state.isOpenContactModal = true;
@@ -56,6 +67,11 @@ const slice = createSlice({
       state.isOpenReferModal = false;
       state.selectedTeacher = null;
     },
+    
+    // SAVE CONTACT DATA
+    setContactData(state, action){
+     state.contactForm = action.payload
+    } 
   },
 });
 
@@ -63,14 +79,19 @@ const slice = createSlice({
 export default slice.reducer;
 
 // Actions
-export const { openContactModal, closeContactModal,openReferModal,closeReferModal, selectTeacher } = slice.actions;
+export const { openContactModal, closeContactModal, openReferModal, closeReferModal, selectTeacher } = slice.actions;
 
 
 // ----------------------------------------------------------------------
 
 export function contactTeacher(teacherId, contactData) {
   return async () => {
-    //dispatch(slice.actions.startLoading());
+    
+    dispatch(slice.actions.setContactData({
+      ...contactData,
+      classDate: new Date(contactData.classDate)
+    }));
+    
     try {
       const response = await axios.post(`/api/conversation/contact/${teacherId}`, contactData);
       return response;

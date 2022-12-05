@@ -92,10 +92,14 @@ export default function HomeFilterTeachers() {
                                 <Grid item xs={12}>
                                     <RHFSelect name="resort" label={translate("filter.resort")} placeholder="Resort">
                                         <option value="" />
-                                        {FILTER_RESORT_OPTIONS.map((option) => (
-                                            <option key={option} value={option}>
-                                                {option}
-                                            </option>
+                                        {FILTER_RESORT_OPTIONS.map((country) => (
+                                            <optgroup label={country.category}>
+                                                {country.resorts.sort().map(r => (
+                                                    <option key={r} value={r}>
+                                                        {r}
+                                                    </option>
+                                                ))}
+                                            </optgroup>
                                         ))}
                                     </RHFSelect>
                                 </Grid>
@@ -144,16 +148,6 @@ export default function HomeFilterTeachers() {
 
                             </Grid>
                         </Card>
-
-                        <Stack direction="row" spacing={1.5} sx={{ mt: 3 }}>
-                            <Button onClick={onSubmitIndependent}
-                            fullWidth type="submit" variant="outlined" size="large" startIcon={<PersonIcon/>}>
-                                {translate("landingPRO.independent")}
-                            </Button>
-                            <Button onClick={onSubmitSchools} fullWidth type="submit" variant="outlined" size="large" startIcon={<SchoolIcon/>} >
-                                {translate("landingPRO.school")}
-                            </Button>
-                        </Stack>
                     </Grid>
                 </Grid>
             </FormProvider>

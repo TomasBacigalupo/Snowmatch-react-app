@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { useState, useRef } from 'react';
 // @mui
-import { MobileDateRangePicker } from '@mui/lab';
+import { MobileDateRangePicker, MobileDateTimePicker } from '@mui/lab';
 import { styled } from '@mui/material/styles';
 import {
   Box,
@@ -154,7 +154,7 @@ export default function KanbanTaskDetails({ card, isOpen, onClose, onDeleteTask 
               }}
             />
             <Stack direction="row">
-              <LabelStyle sx={{ mt: 1.5 }}>Assignee</LabelStyle>
+              <LabelStyle sx={{ mt: 1.5 }}>Profesor</LabelStyle>
               <Stack direction="row" flexWrap="wrap" alignItems="center">
                 {assignee.map((user) => (
                   <Avatar key={user.id} alt={user.name} src={user.avatar} sx={{ m: 0.5, width: 36, height: 36 }} />
@@ -168,9 +168,9 @@ export default function KanbanTaskDetails({ card, isOpen, onClose, onDeleteTask 
             </Stack>
 
             <Stack direction="row" alignItems="center">
-              <LabelStyle> Due date</LabelStyle>
+              <LabelStyle> Comienza</LabelStyle>
               <>
-                {startTime && endTime ? (
+                {startTime && (
                   <DisplayTime
                     startTime={startTime}
                     endTime={endTime}
@@ -179,29 +179,44 @@ export default function KanbanTaskDetails({ card, isOpen, onClose, onDeleteTask 
                     onOpenPicker={onOpenPicker}
                     sx={{ typography: 'body2' }}
                   />
-                ) : (
-                  <Tooltip title="Add assignee">
-                    <IconButtonAnimate
-                      onClick={onOpenPicker}
-                      sx={{
-                        p: 1,
-                        ml: 0.5,
-                        border: (theme) => `dashed 1px ${theme.palette.divider}`,
-                      }}
-                    >
-                      <Iconify icon={'eva:plus-fill'} width={20} height={20} />
-                    </IconButtonAnimate>
-                  </Tooltip>
                 )}
 
-                <MobileDateRangePicker
+                <MobileDateTimePicker
                   open={openPicker}
                   onClose={onClosePicker}
                   onOpen={onOpenPicker}
                   value={dueDate}
                   onChange={onChangeDueDate}
-                  renderInput={() => {}}
+                  inputFormat="dd/MM/yyyy hh:mm a"
+                  renderInput={(params) => <TextField {...params} />}
                 />
+                
+              </>
+            </Stack>
+            <Stack direction="row" alignItems="center">
+              <LabelStyle> Termina</LabelStyle>
+              <>
+                {endTime && (
+                  <DisplayTime
+                    startTime={startTime}
+                    endTime={endTime}
+                    isSameDays={isSameDays}
+                    isSameMonths={isSameMonths}
+                    onOpenPicker={onOpenPicker}
+                    sx={{ typography: 'body2' }}
+                  />
+                )}
+
+                <MobileDateTimePicker
+                  open={openPicker}
+                  onClose={onClosePicker}
+                  onOpen={onOpenPicker}
+                  value={dueDate}
+                  onChange={onChangeDueDate}
+                  inputFormat="dd/MM/yyyy hh:mm a"
+                  renderInput={(params) => <TextField {...params}/>}
+                />
+
               </>
             </Stack>
 

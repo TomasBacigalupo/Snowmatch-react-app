@@ -62,7 +62,6 @@ export default function UserAccount() {
         />
 
         <Tabs
-          allowScrollButtonsMobile
           variant="scrollable"
           scrollButtons="auto"
           value={currentTab}

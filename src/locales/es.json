@@ -79,7 +79,9 @@
         "kanban": "Tableros",
         "products": "Grupales",
         "myLessons": "Mis Clases",
-        "newProduct": "Nueva Clase"
+        "newProduct": "Nueva Clase",
+        "admin": "Administrador",
+        "review teachers": "Revisar Pros"
     },
     "calendar": {
         "newEvent": "Crear Evento",

@@ -75,7 +75,9 @@
     "kanban": "Boards",
     "products": "Lessons",
     "newProduct": "Create Lesson",
-    "myLessons": "My lessons"
+    "myLessons": "My lessons",
+    "admin": "Admin",
+    "review teachers": "Review PROs"
   },
   "calendar": {
     "newEvent": "Create Event",

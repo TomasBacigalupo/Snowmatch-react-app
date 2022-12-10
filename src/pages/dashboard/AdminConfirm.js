@@ -39,7 +39,7 @@ export default function AdminConfirm() {
   useEffect(() => {
     console.log(teachers)
     console.log("teachers")
-    setTeacherData(teachers.find((teacher) => teacher.id === parseInt(id)))
+    setTeacherData(teachers.find((teacher) => teacher.userId === parseInt(id)))
     console.log("currentTeacher")
     console.log(currentTeacher)
     console.log(currentTeacher?.name)

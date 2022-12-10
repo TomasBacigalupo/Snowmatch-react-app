@@ -259,18 +259,19 @@ export default function UserList() {
                 />
 
                 <TableBody>
-                  {tableData.slice(0, rowsPerPage).map((row) => (
-                    <AdminTableRow
+                  {tableData.slice(0, rowsPerPage).map((row) => {
+                    console.log({row})
+                    return <AdminTableRow
                       key={row.id}
                       row={row}
-                      selected={selected.includes(row.id)}
-                      onSelectRow={() => onSelectRow(row.id)}
+                      selected={selected.includes(row.userId)}
+                      onSelectRow={() => onSelectRow(row.userId)}
                       // onDeleteRow={() => handleDeleteRow(row.id)}
                       onEditRow={() => handleEditRow(row.name)}
-                      onConfirmRow={() => handleConfirmRow(row.id)}
+                      onConfirmRow={() => handleConfirmRow(row.userId)}
                       onDeclineRow={() => handleDeclineOpenModal(row.email)}
                     />
-                  ))}
+})}
 
                   <TableEmptyRows height={denseHeight} emptyRows={0} />
 

@@ -106,7 +106,7 @@ export function confirmTeacher(teacherData){
       console.log(teacherData);
       console.log("###############");
       console.log(teacher);
-      console.log('/api/admin/approve/'+teacher.mail+"?level=" + teacher.level+"&dni="+ teacher.dni + "&name=" + teacher.name + "&lastName=" + teacher.lastname)
+      console.log('/api/admin/approve/'+teacher.email+"?level=" + teacher.level+"&dni="+ teacher.dni + "&name=" + teacher.name + "&lastName=" + teacher.lastname)
       const response = await axios.post('/api/admin/approve/'+teacher.email+"?level=" + teacher.level+"&dni="+ teacher.dni + "&name=" + teacher.name + "&lastName=" + teacher.lastname );
       console.log(response)
       dispatch(slice.actions.getTeacherSuccess(response.data));

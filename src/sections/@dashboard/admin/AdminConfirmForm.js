@@ -66,7 +66,7 @@ export default function AdminConfirmForm({ isEdit, currentTeacher }) {
     dni: Yup.number().required('DNI is required'),
     // gender: Yup.string().required('Gender is required'),
     level: Yup.number().required('Level is required'),
-    id: Yup.number().required('ID is required'),
+    userId: Yup.number().required('ID is required'),
   });
 
   const defaultValues = useMemo(
@@ -84,7 +84,7 @@ export default function AdminConfirmForm({ isEdit, currentTeacher }) {
       dni: currentTeacher?.dni || '',
       // gender: currentTeacher?.gender || '',
       level: currentTeacher?.level.toString() || '',
-      id: currentTeacher?.id || '',
+      userId: currentTeacher?.userId || '',
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentTeacher]
@@ -113,6 +113,7 @@ export default function AdminConfirmForm({ isEdit, currentTeacher }) {
 
   const onSubmit = async (data) => {
     console.log(data)
+    debugger
     var func;
     // if(isEdit){
     //   func = editClient(data);
@@ -122,7 +123,7 @@ export default function AdminConfirmForm({ isEdit, currentTeacher }) {
     // }
     try {
       //console.log(data)
-      const response = dispatch(func);
+      const response = dispatch(confirmTeacher(data));
       reset();
       console.log(response)
       console.log("SENT")
@@ -135,109 +136,21 @@ export default function AdminConfirmForm({ isEdit, currentTeacher }) {
 
   const [imageSrc,setImageSrc] = useState('');
 
-  // useEffect(()=>{
-  // const accessToken = window.localStorage.getItem('accessToken');
-  // axios.get(currentTeacher?.certificateImageLink)
-  // .then((response ) => {
-  //   let data = `data:${response.headers['content-type']};base64, ${new Buffer(response.data).toString('base64')}`;;
-  //   setImageSrc(data)
-  // },[])
-  // }
-  // )
-
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Grid container spacing={3}>
         <Grid item xs={12} md={4}>
           <Card sx={{ py: 10, px: 3 }}>
-            {/* {isEdit && (
-              <Label
-                color={values.status !== 'active' ? 'error' : 'success'}
-                sx={{ textTransform: 'uppercase', position: 'absolute', top: 24, right: 24 }}
-              >
-                {values.status}
-              </Label>
-            )} */}
-
             <Box sx={{ mb: 0 }}>
-              {/* <RHFUploadAvatar
-                name="avatarUrl"
-                accept="image/*"
-                maxSize={3145728}
-                onDrop={handleDrop}
-                helperText={
-                  <Typography
-                    variant="caption"
-                    sx={{
-                      mt: 2,
-                      mx: 'auto',
-                      display: 'block',
-                      textAlign: 'center',
-                      color: 'text.secondary',
-                    }}
-                  >
-                    Allowed *.jpeg, *.jpg, *.png, *.gif
-                    <br /> max size of {fData(3145728)}
-                  </Typography>
-                }
-              /> */}
-              {/* <Avatar alt={currentTeacher?.name || ""} src={currentTeacher?.imageLink || ""} sx={{ mr: 2 }} /> */}
-              <TeacherDetailsCarousel teacher={{ images: [currentTeacher?.certificateImageLink]}} />
-              {/* <Image alt={currentTeacher?.name || ""} src={currentTeacher?.certificateImageLink || ""} onClick={()=> window.open((currentTeacher?.certificateImageLink || ""), "_blank")} sx={{ borderRadius: 1 }} /> */}
-              {/* <TeacherDetailsCarousel teacher={{ images: [imageSrc]}} /> */}
-              {/* <Image alt={currentTeacher?.name || ""} src={imageSrc || ""}  sx={{ borderRadius: 1 }} /> */}
-              {/* <img src={imageSrc || ""}></img> */}
-              
+              <Image alt={'certificate'} src={currentTeacher?.certificateImageS3} ratio="1/1" />
+              {/* <TeacherDetailsCarousel teacher={
+                {images: [`${currentTeacher?.certificateImageS3}`]}
+              } /> */}
               <Typography variant="subtitle2" noWrap>
-                {currentTeacher?.name}
+                {`${currentTeacher?.name} ${currentTeacher?.lastname}`}
               </Typography>
+              {console.log(currentTeacher?.certificateImageS3)}
             </Box>
-
-            {/* {isEdit && (
-              <FormControlLabel
-                labelPlacement="start"
-                control={
-                  <Controller
-                    name="status"
-                    control={control}
-                    render={({ field }) => (
-                      <Switch
-                        {...field}
-                        checked={field.value !== 'active'}
-                        onChange={(event) => field.onChange(event.target.checked ? 'banned' : 'active')}
-                      />
-                    )}
-                  />
-                }
-                label={
-                  <>
-                    <Typography variant="subtitle2" sx={{ mb: 0.5 }}>
-                      Banned
-                    </Typography>
-                    <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                      Apply disable account
-                    </Typography>
-                  </>
-                }
-                sx={{ mx: 0, mb: 3, width: 1, justifyContent: 'space-between' }}
-              />
-            )}
-
-            <RHFSwitch
-              name="isVerified"
-              labelPlacement="start"
-              label={
-                <>
-                  <Typography variant="subtitle2" sx={{ mb: 0.5 }}>
-                    Email Verified
-                  </Typography>
-                  <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                    Disabling this will automatically send the user a verification email
-                  </Typography>
-                </>
-              }
-              sx={{ mx: 0, width: 1, justifyContent: 'space-between' }}
-            /> */}
           </Card>
         </Grid>
 
@@ -253,19 +166,7 @@ export default function AdminConfirmForm({ isEdit, currentTeacher }) {
             >
               <RHFTextField name="name" label="Name" />
               <RHFTextField name="lastname" label="Last Name" />
-              {/* <RHFTextField name="email" label="Email Address" /> */}
-              {/* <RHFTextField name="phoneNumber" label="Phone Number" /> */}
-              {/* <RHFTextField name="birth" label="Birthday" /> */}
-              {/* {false && <RHFTextField name="id" label="Id" /> } */}
               {false && <RHFTextField name="email" label="Email Address" /> }
-              {/* <RHFSelect name="gender" label="Gender" placeholder="Gender">
-                <option value={currentTeacher?.gender || ""} />
-                {genders.map((option) => (
-                  <option key={option.code} value={option.label}>
-                    {option.label}
-                  </option>
-                ))}
-              </RHFSelect> */}
 
               <RHFSelect name="level" label="Level" placeholder="Level">
                 {levels.map((option) => (
@@ -274,11 +175,8 @@ export default function AdminConfirmForm({ isEdit, currentTeacher }) {
                   </option>
                 ))}
               </RHFSelect>
-
-              {/* <RHFTextField name="role" label="Role" /> */}
               <RHFTextField name="dni" label="DNI" />
             </Box>
-
             <Stack alignItems="flex-end" sx={{ mt: 3 }}>
               <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
                 {!isEdit ? 'Create User' : 'Save Changes'}

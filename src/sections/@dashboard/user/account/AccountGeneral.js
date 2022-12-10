@@ -238,7 +238,7 @@ export default function AccountGeneral() {
               }
             />
 
-            <RHFSwitch name="state" labelPlacement="start" label={translate("general.form.aUnited Statesable")} sx={{ mt: 5 }} />
+            <RHFSwitch name="state" labelPlacement="start" label={translate("general.form.available")} sx={{ mt: 5 }} />
           </Card>
         </Grid>
 

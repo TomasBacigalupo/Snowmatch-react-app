@@ -72,9 +72,9 @@ export default function HomeFilterTeachers() {
     const onSubmit = () => {
         dispatch(filterTeachers(values))
         if(values.resort === "Cerro Catedral"){
-            navigate('/match/independent')
+            navigate('/match/independent?resort=Cerro Catedral')
         }else{
-            navigate('/match')
+            navigate(`/match/school?resort=${values.resort}`)
         }
             
     } 

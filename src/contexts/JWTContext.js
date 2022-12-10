@@ -184,7 +184,7 @@ function AuthProvider({ children }) {
     });
   };
 
-  const register = async (email, password, firstName, lastName, countryCode, phone, file) => {
+  const register = async (email, password, firstName, lastName, countryCode, phone, entity, file) => {
     const response = await axios.post('/api/users/create', {
       "email": email,
       "password": password,
@@ -198,7 +198,7 @@ function AuthProvider({ children }) {
     const accessToken = user.token;
     setSession(accessToken);
     window.localStorage.setItem('accessToken', accessToken);
-    const signedUrl = await axios.get('/api/images/preSignedUrlCertificateImage')
+    const signedUrl = await axios.get(`/api/images/preSignedUrlImage/${entity}`)
     await fetch(signedUrl.data, {
       method: 'PUT',
       headers: {

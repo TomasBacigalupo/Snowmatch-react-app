@@ -12,7 +12,7 @@ import useAuth from '../../../hooks/useAuth';
 import useIsMountedRef from '../../../hooks/useIsMountedRef';
 // components
 import Iconify from '../../../components/Iconify';
-import { FormProvider, RHFEditor, RHFSelect, RHFTextField, RHFUploadMultiFile, RHFUploadSingleFile } from '../../../components/hook-form';
+import { FormProvider, RHFEditor, RHFRadioGroup, RHFSelect, RHFTextField, RHFUploadMultiFile, RHFUploadSingleFile } from '../../../components/hook-form';
 
 //mock
 import { countries } from "src/_mock"
@@ -46,6 +46,7 @@ export default function RegisterForm() {
     password: '',
     countryCode: '54',
     cellphone: '',
+    entity: 'AADIDESS',
     certificate: null
   });
 
@@ -91,7 +92,7 @@ export default function RegisterForm() {
   const onSubmit = async (data) => {
 
     try {
-      await register(data.email, data.password, data.firstName, data.lastName, data.countryCode, data.cellphone, data.certificate);
+      await register(data.email, data.password, data.firstName, data.lastName, data.countryCode, data.cellphone, data.entity, data.certificate);
 
     } catch (error) {
       if (error.messages && error.messages.entry){
@@ -143,6 +144,7 @@ export default function RegisterForm() {
           }}
         />
         <Typography variant="subtitle1">Instructor certification</Typography>
+        <RHFRadioGroup name='entity' options={["AADIDESS", "PSIA"]}/>
         <RHFUploadSingleFile name="certificate" accept="image/*" maxSize={16000000} onDrop={handleDrop}/>
         <LoadingButton fullWidth size="large" type="submit" variant="contained" loading={isSubmitting} sx={{':hover':{color:'#3399FF'}}}>
           Register

@@ -558,3 +558,31 @@ export function getConversations() {
     }
   }
 }
+
+// ----------------------------------------------------------------------
+
+export function sendResetPasswordEmail(email) {
+  return async () => {
+    try {
+      await axios.post(`api/userPersonalDataVerification/changePassword/${email}`)
+    } catch (error) {
+      console.error(error)
+    }
+  }
+}
+
+export function changePassword(password, repeatPassword, token, callback) {
+  return async () => {
+    try {
+      await axios.put(`api/userPersonalDataVerification/changePassword/${token}`,
+       {
+         password: password,
+         repeatPassword: repeatPassword
+       })
+       callback()
+    } catch (error) {
+      console.error(error)
+      callback()
+    }
+  }
+}

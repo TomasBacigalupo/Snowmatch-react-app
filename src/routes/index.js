@@ -20,7 +20,6 @@ import Discounts from 'src/pages/dashboard/Discounts';
 const Loadable = (Component) => (props) => {
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const { pathname } = useLocation();
-  
   return (
     <Suspense fallback={<LoadingScreen isDashboard={pathname.includes('/dashboard')} />}>
       <Component {...props} />
@@ -52,6 +51,7 @@ export default function Router() {
         { path: 'login-unprotected', element: <Login /> },
         { path: 'register-unprotected', element: <Register /> },
         { path: 'reset-password', element: <ResetPassword /> },
+        { path: 'changePassword/:token', element: <ResetPassword /> },
         { path: 'verify', element: <VerifyCode /> },
       ],
     },

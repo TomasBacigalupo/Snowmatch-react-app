@@ -89,15 +89,13 @@ export default function Login() {
 
         {mdUp && (
           <SectionStyle>
-            <Typography variant="h3" sx={{ px: 5, mt: 10, mb: 5 }}>
-              Hi, Welcome Back
-            </Typography>
-            <Image
-              visibleByDefault
-              disabledEffect
-              alt="login"
-              src="https://minimals.cc/assets/illustrations/illustration_login.png"
-            />
+            <Box sx={{
+              padding: '10px',
+              paddingTop: '80px',
+              textAlign: 'center'
+            }}>
+              <iframe width="414" height="736" src="https://www.youtube.com/embed/fq3I-CRurQU" title="SnowMatch, la app que te conecta con tu instructor de ski o snowboard ideal" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </Box>
           </SectionStyle>
         )}
 

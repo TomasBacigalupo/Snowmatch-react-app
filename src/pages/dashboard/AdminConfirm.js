@@ -17,6 +17,8 @@ import { useDispatch, useSelector } from '../../redux/store';
 import { getTeachers } from '../../redux/slices/admin'
 
 import { _userList } from '../../_mock';
+import { getTeacherByID } from 'src/redux/slices/teachers';
+import CertificateItem from 'src/sections/@dashboard/admin/CeritificateItem';
 
 // ----------------------------------------------------------------------
 
@@ -39,11 +41,15 @@ export default function AdminConfirm() {
   useEffect(() => {
     console.log(teachers)
     console.log("teachers")
+    dispatch(getTeacherByID(id, (teacherComplete) => {
+      setTeacherData(teacherComplete)
+    }))
     setTeacherData(teachers.find((teacher) => teacher.userId === parseInt(id)))
+    
     console.log("currentTeacher")
     console.log(currentTeacher)
     console.log(currentTeacher?.name)
-  }, [teachers,currentTeacher, id]);
+  }, [teachers, id]);
 
   useEffect(() => {
     dispatch(getTeachers());
@@ -60,8 +66,11 @@ export default function AdminConfirm() {
             { name: currentTeacher?.name || "asd" },
           ]}
         />
-
         <AdminConfirmForm isEdit={isEdit} currentTeacher={currentTeacher} />
+        {currentTeacher?.documents?.map(document=>(
+          <CertificateItem {...document}/>
+        ))}
+        
       </Container>
     </Page>
   );

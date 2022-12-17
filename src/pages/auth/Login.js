@@ -94,7 +94,7 @@ export default function Login() {
               paddingTop: '80px',
               textAlign: 'center'
             }}>
-              <iframe width="414" height="736" src="https://www.youtube.com/embed/fq3I-CRurQU" title="SnowMatch, la app que te conecta con tu instructor de ski o snowboard ideal" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+              <iframe width="414" height="736" src="https://www.youtube.com/embed/fq3I-CRurQU" title="SnowMatch, la app que te conecta con tu instructor de ski o snowboard ideal" frameborder="10" allow="autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" ></iframe>
             </Box>
           </SectionStyle>
         )}

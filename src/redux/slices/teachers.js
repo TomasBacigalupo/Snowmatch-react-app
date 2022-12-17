@@ -586,3 +586,14 @@ export function changePassword(password, repeatPassword, token, callback) {
     }
   }
 }
+
+export function getTeacherByID(userId, callback) {
+  return async () => {
+    try {
+      const resp = await axios.get(`api/users/byId/${userId}`)
+      callback(resp.data)
+    } catch (error) {
+      console.error(error)
+    }
+  }
+}

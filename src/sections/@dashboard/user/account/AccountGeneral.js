@@ -114,7 +114,7 @@ export default function AccountGeneral() {
     country: user?.country || '',  // FALTA EN EDITUSERDTO
     information: user?.information || undefined,
     description: user?.description || undefined,
-    state: user?.state === "AUnited StatesABLE" || false, //FALTA EN EDITUSERDTO
+    state: user?.state === "AVAILABLE" || false, //FALTA EN EDITUSERDTO
     speaks: user?.speaks || [],
     skills: user?.skills || [],
     disciplines: user?.disciplines || [],
@@ -152,12 +152,12 @@ export default function AccountGeneral() {
 
     var endpoint = "";
     if (value.state) {
-      value.state = 'AUnited StatesABLE'
-      endpoint = 'aUnited Statesable'
+      value.state = 'AVAILABLE'
+      endpoint = 'available'
     }
     else {
-      value.state = 'UNAUnited StatesABLE'
-      endpoint = 'unaUnited Statesable'
+      value.state = 'UNAVAILABLE'
+      endpoint = 'unavailable'
     }
 
     if (typeof data.photoURL === "object" && data.photoURL.path) {

@@ -5,7 +5,7 @@ import { useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { Box, Grid, Card, Stack, Typography } from '@mui/material';
+import { Box, Grid, Card, Stack, Typography, Tooltip } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 // redux
 import { useDispatch, useSelector } from '../../../../redux/store';
@@ -290,10 +290,13 @@ export default function AccountGeneral() {
               <RHFMultipleSelect name="skills" freeSolo={true} label={translate("general.form.skills")} list={["Ski tunning", "Baby sitter", "Car rent"]} />
             </Stack>
             <Stack sx={{ mt: 3 }}>
-              <RHFTextField multiline
-                rows={2}
-                name="information"
-                label={translate("general.form.quickInformation")} />
+              <Tooltip title={translate("general.form.quickInformationHelper")}>
+                <RHFTextField multiline
+                  rows={2}
+                  name="information"
+                  label={translate("general.form.quickInformation")}
+                />
+              </Tooltip>
             </Stack>
 
             <Stack sx={{ mt: 3 }}>

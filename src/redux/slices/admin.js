@@ -32,17 +32,17 @@ const slice = createSlice({
       state.isLoading = false;
       state.error = action.payload;
     },
-    
+
     // GET TEACHERS
     getTeachersSuccess(state, action) {
-        state.isLoading = false;
-        state.teachers = action.payload;
-     },
-    
+      state.isLoading = false;
+      state.teachers = action.payload;
+    },
+
     getTeacherSuccess(state, action) {
       state.isLoading = false;
       state.teacher = action.payload;
-   },
+    },
     openModal(state, email) {
       state.isOpenModal = true;
       state.selectedEmail = email.payload;
@@ -70,7 +70,7 @@ export function getTeachers(page) {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get('/api/admin/getTeachers/?page='+page);
+      const response = await axios.get('/api/admin/getTeachers/?page=' + page);
       dispatch(slice.actions.getTeachersSuccess(response.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
@@ -89,29 +89,42 @@ export function declineTeacher(teacherData) {
   };
 }
 
-export function confirmTeacher(teacherData){
+export function confirmTeacher(teacherData) {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      const teacher ={
-        email:teacherData.email, 
-        cellphone:teacherData.cellphone,
-        name:teacherData.name,
-        lastname:teacherData.lastname,
-        notes:teacherData.notes,
-        level:teacherData.level,
-        id:teacherData.id,
-        dni:teacherData.dni
+      const teacher = {
+        email: teacherData.email,
+        cellphone: teacherData.cellphone,
+        name: teacherData.name,
+        lastname: teacherData.lastname,
+        notes: teacherData.notes,
+        level: teacherData.level,
+        id: teacherData.id,
+        dni: teacherData.dni
       }
       console.log(teacherData);
       console.log("###############");
       console.log(teacher);
-      console.log('/api/admin/approve/'+teacher.email+"?level=" + teacher.level+"&dni="+ teacher.dni + "&name=" + teacher.name + "&lastName=" + teacher.lastname)
-      const response = await axios.post('/api/admin/approve/'+teacher.email+"?level=" + teacher.level+"&dni="+ teacher.dni + "&name=" + teacher.name + "&lastName=" + teacher.lastname );
+      console.log('/api/admin/approve/' + teacher.email + "?level=" + teacher.level + "&dni=" + teacher.dni + "&name=" + teacher.name + "&lastName=" + teacher.lastname)
+      const response = await axios.post('/api/admin/approve/' + teacher.email + "?level=" + teacher.level + "&dni=" + teacher.dni + "&name=" + teacher.name + "&lastName=" + teacher.lastname);
       console.log(response)
       dispatch(slice.actions.getTeacherSuccess(response.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }
   };
+}
+
+export function updateDocument(teacherId, documentName, state, callback) {
+  return async () => { 
+    try {
+      const pathState = state === "VERIFIED" ? "verify" : "reject"
+      const response = await axios.put(`api/admin/${teacherId}/documents/${documentName}/${pathState}`)
+      callback(response.status === 200)
+      // //updateCurrentTeacherDocument
+    } catch(error){
+      callback(false)
+    }
+  }
 }

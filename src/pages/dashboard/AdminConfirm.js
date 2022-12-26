@@ -68,7 +68,7 @@ export default function AdminConfirm() {
         />
         <AdminConfirmForm isEdit={isEdit} currentTeacher={currentTeacher} />
         {currentTeacher?.documents?.map(document=>(
-          <CertificateItem {...document}/>
+          <CertificateItem teacherId={currentTeacher.id} {...document}/>
         ))}
         
       </Container>

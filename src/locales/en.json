@@ -25,6 +25,7 @@
       "resorts": "Resorts",
       "skills": "Skills",
       "quickInformation": "Quick information",
+      "quickInformationHelper": "This is teh information that your client will see",
       "description": "Description",
       "available": "I'm available",
       "saveChanges": "Save Changes"

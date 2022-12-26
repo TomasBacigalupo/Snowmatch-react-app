@@ -26,6 +26,7 @@
             "resorts": "Centro de esquí en el que da clases",
             "skills": "Extras",
             "quickInformation": "Breve descripción",
+            "quickInformationHelper": "Esta será la información que verá el cliente",
             "description":"Descripción",
             "available": "Estoy disponible",
             "saveChanges": "Guardar Cambios"

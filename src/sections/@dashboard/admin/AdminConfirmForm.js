@@ -149,7 +149,7 @@ export default function AdminConfirmForm({ isEdit, currentTeacher }) {
               <Typography variant="subtitle2" noWrap>
                 {`${currentTeacher?.name} ${currentTeacher?.lastname}`}
               </Typography>
-              {console.log(currentTeacher?.certificateImageS3)}
+              {console.log({currentTeacher})}
             </Box>
           </Card>
         </Grid>

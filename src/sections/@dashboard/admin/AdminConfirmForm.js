@@ -1,28 +1,23 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useSnackbar } from 'notistack';
 import { useNavigate } from 'react-router-dom';
 // form
-import { useForm, Controller } from 'react-hook-form';
+import { useForm,} from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { LoadingButton } from '@mui/lab';
 import { Box, Card, Grid, Stack, Switch, Typography, FormControlLabel, Avatar } from '@mui/material';
-// utils
-import { fData } from '../../../utils/formatNumber';
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
-// _mock
-import { countries } from '../../../_mock';
 // components
 import Label from '../../../components/Label';
-import { FormProvider, RHFSelect, RHFSwitch, RHFTextField, RHFUploadAvatar } from '../../../components/hook-form';
+import { FormProvider, RHFSelect, RHFTextField } from '../../../components/hook-form';
 import Image from '../../../components/Image';
 
 import { confirmTeacher } from '../../../redux/slices/admin.js'
 import { useDispatch, useSelector } from '../../../redux/store';
-import axios from 'src/utils/axios'
 
 import {
   TeacherDetailsCarousel
@@ -58,15 +53,15 @@ export default function AdminConfirmForm({ isEdit, currentTeacher }) {
 
   const NewTeacherSchema = Yup.object().shape({
     name: Yup.string().required('Name is required'),
-    email: Yup.string().required('Email is required').email(),
+    //email: Yup.string().required('Email is required').email(),
     // phoneNumber: Yup.string().required('Phone number is required'),
     // role: Yup.string().required('Role Number is required'),
     lastname: Yup.string().required('Last name is required'),
     // birth: Yup.string().required('Birth is required'),
-    dni: Yup.number().required('DNI is required'),
+    //dni: Yup.number().required('DNI is required'),
     // gender: Yup.string().required('Gender is required'),
     level: Yup.number().required('Level is required'),
-    userId: Yup.number().required('ID is required'),
+    //userId: Yup.number().required('ID is required'),
   });
 
   const defaultValues = useMemo(
@@ -112,17 +107,7 @@ export default function AdminConfirmForm({ isEdit, currentTeacher }) {
   }, [isEdit, currentTeacher]);
 
   const onSubmit = async (data) => {
-    console.log(data)
-    debugger
-    var func;
-    // if(isEdit){
-    //   func = editClient(data);
-    // }
-    // else{
-    func = await confirmTeacher(data);
-    // }
     try {
-      //console.log(data)
       const response = dispatch(confirmTeacher(data));
       reset();
       console.log(response)
@@ -134,7 +119,6 @@ export default function AdminConfirmForm({ isEdit, currentTeacher }) {
     }
   };
 
-  const [imageSrc,setImageSrc] = useState('');
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
@@ -142,10 +126,7 @@ export default function AdminConfirmForm({ isEdit, currentTeacher }) {
         <Grid item xs={12} md={4}>
           <Card sx={{ py: 10, px: 3 }}>
             <Box sx={{ mb: 0 }}>
-              <Image alt={'certificate'} src={currentTeacher?.certificateImageS3} ratio="1/1" />
-              {/* <TeacherDetailsCarousel teacher={
-                {images: [`${currentTeacher?.certificateImageS3}`]}
-              } /> */}
+              <Image alt={'certificate'} src={currentTeacher?.imageLink} ratio="1/1" />
               <Typography variant="subtitle2" noWrap>
                 {`${currentTeacher?.name} ${currentTeacher?.lastname}`}
               </Typography>

@@ -143,7 +143,7 @@ export default function CalendarForm({ event, range, onCancel, clients }) {
         if (classType === 'teacher') {
           func = createEvent(newEvent);
           snackbar = 'Create success!'
-        } if (classType === 'teacher') {
+        } if (classType === 'school') {
           func = createSchoolEvent(newEvent);
           snackbar = 'Create success!'
         }

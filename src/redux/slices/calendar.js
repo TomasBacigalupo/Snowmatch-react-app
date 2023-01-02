@@ -150,6 +150,22 @@ export function createEvent(newEvent) {
 
 // ----------------------------------------------------------------------
 
+export function createSchoolEvent(newEvent) {
+  return async () => {
+    //dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.post('/api/events/create/school', newEvent);
+      dispatch(slice.actions.createEventSuccess(response.data));
+      return response;
+    } catch (error) {
+      //dispatch(slice.actions.hasError(error));
+      return error;
+    }
+  };
+}
+
+// ----------------------------------------------------------------------
+
 export function updateEvent(eventId, updateEvent) {
   return async () => {
     //dispatch(slice.actions.startLoading());
@@ -166,11 +182,41 @@ export function updateEvent(eventId, updateEvent) {
 
 // ----------------------------------------------------------------------
 
+export function updateSchoolEvent(eventId, updateEvent) {
+  return async () => {
+    //dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.put(`/api/events/school`, updateEvent);
+      dispatch(slice.actions.updateEventSuccess({...updateEvent, id: eventId}));
+      return response;
+    } catch (error) {
+      //dispatch(slice.actions.hasError(error));
+      return error;
+    }
+  };
+}
+
+// ----------------------------------------------------------------------
+
 export function deleteEvent(eventId) {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
       await axios.delete(`/api/events/byId/${ eventId }`);
+      dispatch(slice.actions.deleteEventSuccess({ eventId }));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+// ----------------------------------------------------------------------
+
+export function deleteSchoolEvent(eventId) {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      await axios.delete(`/api/events/school/${ eventId }`);
       dispatch(slice.actions.deleteEventSuccess({ eventId }));
     } catch (error) {
       dispatch(slice.actions.hasError(error));

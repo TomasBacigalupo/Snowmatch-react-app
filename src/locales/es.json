@@ -85,10 +85,13 @@
         "review teachers": "Revisar Pros"
     },
     "calendar": {
+        "name": "Calendario",
         "newEvent": "Crear Evento",
         "editEvent": "Editar Evento",
         "addEvent": "Crear Evento",
         "form":{
+            "teacher": "Profesor",
+            "school": "Escuela",
             "startDate": "Desde",
             "endDate": "Hasta",
             "description": "Descripción",

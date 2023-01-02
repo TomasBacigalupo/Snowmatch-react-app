@@ -81,10 +81,13 @@
     "review teachers": "Review PROs"
   },
   "calendar": {
+    "name": "Calendar",
     "newEvent": "Create Event",
     "editEvent": "Edit Event",
     "addEvent": "Add Event",
     "form": {
+      "teacher": "teacher",
+      "school": "School",
       "startDate": "Start Date",
       "endDate": "End Date",
       "description": "Description",

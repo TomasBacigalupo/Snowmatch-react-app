@@ -158,7 +158,9 @@
     "tabs": {
       "general": "My information",
       "social_links": "My Social Links",
-      "documents": "My Documents"
+      "documents": "My Documents",
+      "school": "My School",
+      "school_teachers": "My teachers"
     }
   },
   "filter": {

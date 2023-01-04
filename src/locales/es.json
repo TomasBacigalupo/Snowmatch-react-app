@@ -161,7 +161,9 @@
         "tabs":{
             "general": "Mi información",
             "social_links": "Mis redes sociales",
-            "documents": "Mis Documentos"
+            "documents": "Mis documentos",
+            "school": "Mi escuela",
+            "school_teachers": "Mis Profesores"
         }
     },
     "filter":{

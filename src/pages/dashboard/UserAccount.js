@@ -20,6 +20,7 @@ import {
   AccountDocuments,
   AccountNotifications,
   AccountChangePassword,
+  AccountSchool
 } from '../../sections/@dashboard/user/account';
 import useLocales from 'src/hooks/useLocales';
 
@@ -46,6 +47,11 @@ export default function UserAccount() {
       value: 'documents',
       icon: <Iconify icon={'ion:documents'} width={20} height={20} />,
       component: <AccountDocuments/>,
+    },
+    {
+      value: 'school',
+      icon: <Iconify icon={'ion:school'} width={20} height={20} />,
+      component: <AccountSchool/>,
     },
   ];
 

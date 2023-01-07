@@ -26,6 +26,7 @@ import { RHFMultiCheckbox, RHFRadioGroup, RHFTextField, RHFSelect } from '../../
 import { MobileDatePicker } from '@mui/lab';
 import useLocales from 'src/hooks/useLocales';
 import { FilterSharp } from '@mui/icons-material';
+import { ContourLayer } from 'deck.gl';
 
 
 
@@ -130,7 +131,7 @@ export default function ShopFilterSidebar({ isOpen, onResetAll, onOpen, onClose 
                 <option value="test" />
 
                 {FILTER_RESORT_OPTIONS.map((country) => (
-                  <optgroup label={country.category}>
+                  <optgroup label={country.category} key={country.category}>
                     {country.resorts.sort().map(r => (
                       <option key={r} value={r}>
                         {r}

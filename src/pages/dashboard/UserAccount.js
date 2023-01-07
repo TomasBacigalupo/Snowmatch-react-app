@@ -23,41 +23,111 @@ import {
   AccountSchool
 } from '../../sections/@dashboard/user/account';
 import useLocales from 'src/hooks/useLocales';
+import useAuth from 'src/hooks/useAuth';
+import { useEffect, useState } from 'react';
+import LoadingScreen from 'src/components/LoadingScreen';
 
 // ----------------------------------------------------------------------
 
 export default function UserAccount() {
   const { themeStretch } = useSettings();
   const { currentTab, onChangeTab } = useTabs('general');
-  const {translate} = useLocales()
+  const { translate } = useLocales()
   const theme = useTheme()
   const mobile = useMediaQuery(theme.breakpoints.down("sm"))
-  const ACCOUNT_TABS = [
-    {
-      value: 'general',
-      icon: <Iconify icon={'ic:round-account-box'} width={20} height={20} />,
-      component: <AccountGeneral />,
-    },
-    {
-      value: 'social_links',
-      icon: <Iconify icon={'eva:share-fill'} width={20} height={20} />,
-      component: <AccountSocialLinks myProfile={_userAbout} />,
-    },
-    {
-      value: 'documents',
-      icon: <Iconify icon={'ion:documents'} width={20} height={20} />,
-      component: <AccountDocuments/>,
-    },
-    {
-      value: 'school',
-      icon: <Iconify icon={'ion:school'} width={20} height={20} />,
-      component: <AccountSchool/>,
-    },
-  ];
+  const user = useAuth()
+  // const ACCOUNT_TABS = [
+  //   {
+  //     value: 'social_links',
+  //     icon: <Iconify icon={'eva:share-fill'} width={20} height={20} />,
+  //     component: <AccountSocialLinks myProfile={_userAbout} />,
+  //   },
+  //   {
+  //     value: 'documents',
+  //     icon: <Iconify icon={'ion:documents'} width={20} height={20} />,
+  //     component: <AccountDocuments />,
+  //   },
+
+  // ];
+
+  const [tabs, setTabs] = useState([{
+    value: 'social_links',
+    icon: <Iconify icon={'eva:share-fill'} width={20} height={20} />,
+    component: <AccountSocialLinks myProfile={_userAbout} />,
+  },
+  {
+    value: 'documents',
+    icon: <Iconify icon={'ion:documents'} width={20} height={20} />,
+    component: <AccountDocuments />,
+  },])
+
+  useEffect(() => {
+    console.log(user)
+    if (user?.user?.role === 'ADMIN') {
+      setTabs([
+        {
+          value: 'general',
+          icon: <Iconify icon={'ic:round-account-box'} width={20} height={20} />,
+          component: <AccountGeneral />,
+        },
+        {
+          value: 'school',
+          icon: <Iconify icon={'ion:school'} width={20} height={20} />,
+          component: <AccountSchool />,
+        }, 
+        {
+          value: 'social_links',
+          icon: <Iconify icon={'eva:share-fill'} width={20} height={20} />,
+          component: <AccountSocialLinks myProfile={_userAbout} />,
+        },
+        {
+          value: 'documents',
+          icon: <Iconify icon={'ion:documents'} width={20} height={20} />,
+          component: <AccountDocuments />,
+        }])
+    }
+    else if (user?.user?.role === 'TEACHER') {
+      setTabs([
+        {
+          value: 'general',
+          icon: <Iconify icon={'ic:round-account-box'} width={20} height={20} />,
+          component: <AccountGeneral />,
+        },
+        {
+          value: 'social_links',
+          icon: <Iconify icon={'eva:share-fill'} width={20} height={20} />,
+          component: <AccountSocialLinks myProfile={_userAbout} />,
+        },
+        {
+          value: 'documents',
+          icon: <Iconify icon={'ion:documents'} width={20} height={20} />,
+          component: <AccountDocuments />,
+        }])
+    }
+    else if (user?.user?.role === 'SCHOOL_ADMIN') {
+      setTabs([
+        {
+          value: 'school',
+          icon: <Iconify icon={'ion:school'} width={20} height={20} />,
+          component: <AccountSchool />,
+        },
+        {
+          value: 'social_links',
+          icon: <Iconify icon={'eva:share-fill'} width={20} height={20} />,
+          component: <AccountSocialLinks myProfile={_userAbout} />,
+        },
+        {
+          value: 'documents',
+          icon: <Iconify icon={'ion:documents'} width={20} height={20} />,
+          component: <AccountDocuments />,
+        }])
+    }
+
+  }, [user])
 
   return (
     <Page title="User: Account Settings">
-      <Container maxWidth={themeStretch ? false : 'lg'}>
+      {user?.user ? <Container maxWidth={themeStretch ? false : 'lg'}>
         <HeaderBreadcrumbs
           heading={translate("breadcrumb.account")}
           links={[
@@ -73,18 +143,18 @@ export default function UserAccount() {
           value={currentTab}
           onChange={onChangeTab}
         >
-          {ACCOUNT_TABS.map((tab) => (
+          {tabs.map((tab) => (
             <Tab disableRipple key={tab.value} label={mobile ? '' : translate("account.tabs." + tab.value)} icon={tab.icon} value={tab.value} />
           ))}
         </Tabs>
 
         <Box sx={{ mb: 5 }} />
 
-        {ACCOUNT_TABS.map((tab) => {
+        {tabs.map((tab) => {
           const isMatched = tab.value === currentTab;
           return isMatched && <Box key={tab.value}>{tab.component}</Box>;
         })}
-      </Container>
+      </Container> : <LoadingScreen />}
     </Page>
   );
 }

@@ -22,6 +22,7 @@ import axios from '../../../../utils/axios';
 import { useMediaQuery } from 'react-responsive';
 import useLocales from 'src/hooks/useLocales';
 import { getBusiness, updateBusiness } from '../../../../redux/slices/business';
+import EmptyContent from '../../../../components/EmptyContent';
 
 const LANGUAGES = [
     { title: "Español", category: "Languages" },
@@ -222,7 +223,16 @@ export default function AccountGeneral() {
 
     return (
         <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-            <Grid container spacing={3}>
+            { business?.name ? <Typography
+                                    variant="caption"
+                                    sx={{
+                                        mt: 2,
+                                        mx: 'auto',
+                                        display: 'block',
+                                        textAlign: 'center',
+                                        color: 'text.secondary',
+                                    }}
+                                >loading information...</Typography> :<Grid container spacing={3}>
                 <Grid item xs={12} md={4}>
                     <Card sx={{ py: imageSize, textAlign: 'center' }}>
                         <RHFUploadAvatar
@@ -307,7 +317,7 @@ export default function AccountGeneral() {
 
                     </Card>
                 </Grid>
-            </Grid>
+            </Grid>}
         </FormProvider>
     );
 }

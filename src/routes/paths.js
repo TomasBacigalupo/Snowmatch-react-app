@@ -82,7 +82,8 @@ export const PATH_DASHBOARD = {
     list: path(ROOTS_DASHBOARD, '/school/list'),
     new: path(ROOTS_DASHBOARD, '/school/new'),
     edit: (name) => path(ROOTS_DASHBOARD, `/school/${name}/edit`),
-
+    pending: path(ROOTS_DASHBOARD, '/school/pending'),
+    teachers: path(ROOTS_DASHBOARD, '/school/teachers'),
   },
   eCommerce: {
     root: path(ROOTS_DASHBOARD, '/e-commerce'),

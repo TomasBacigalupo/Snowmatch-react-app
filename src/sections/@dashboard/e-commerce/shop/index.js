@@ -6,3 +6,4 @@ export { default as ShopFilterSidebar } from './ShopFilterSidebar';
 export { default as ShopProductSearch } from './ShopProductSearch';
 export { default as ShopTeacherList } from './ShopTeacherList'
 export { default as TeacherTagFiltered} from './TeacherTagFiltered'
+export { default as PendingTeacherList} from './PendingTeacherList'

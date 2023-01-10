@@ -13,29 +13,51 @@ import { dispatch } from '../store';
 
 const initialState = {
     isLoading: false,
+    isLoadingModal: false,
     success: null,
     error: null,
     business: null,
     businesses: [],
+    teachers: [],
+    sortBy: null,
+    filters: {
+        rating: '',
+        gender: [],
+        category: [],
+        discipline: [],
+        language: [],
+        from: undefined,
+        to: undefined,
+        resort: '',
+    },
+    selectedTeacher: null,
+    isOpenFireModal: false,
+    isOpenHireModal: false
 };
 
 const slice = createSlice({
     name: 'business',
     initialState,
     reducers: {
-        
+
         hasSuccess(state, action) {
             state.isLoading = false;
+            state.isLoadingModal = false;
             state.success = action.payload;
+        },
+
+        hasError(state, action) {
+            state.isLoadingModal = false;
+            state.isLoading = false;
+            state.error = action.payload;
         },
 
         startLoading(state) {
             state.isLoading = true;
         },
 
-        hasError(state, action) {
-            state.isLoading = false;
-            state.error = action.payload;
+        startLoadingModal(state) {
+            state.isLoadingModal = true;
         },
 
         getBusinessesSuccess(state, action) {
@@ -47,6 +69,50 @@ const slice = createSlice({
             state.isLoading = false;
             state.business = action.payload;
         },
+
+        getTeachersSuccess(state, action) {
+            state.isLoading = false;
+            state.teachers = action.payload;
+        },
+
+        filterTeachers(state, action) {
+            state.filters.gender = action.payload.gender;
+            state.filters.category = action.payload.category;
+            state.filters.discipline = action.payload.discipline;
+            state.filters.rating = action.payload.rating;
+            state.filters.language = action.payload.language;
+            state.filters.from = action.payload.from;
+            state.filters.to = action.payload.to;
+            state.filters.resort = action.payload.resort;
+        },
+
+        sortByProducts(state, action) {
+            state.sortBy = action.payload;
+        },
+
+        openFireModal(state) {
+            state.isOpenFireModal = true;
+        },
+
+        closeFireModal(state) {
+            state.isOpenFireModal = false;
+            state.selectedTeacher = null;
+        },
+
+        openHireModal(state) {
+            state.isOpenHireModal = true;
+        },
+
+        closeHireModal(state) {
+            state.isOpenHireModal = false;
+            state.selectedTeacher = null;
+        },
+
+        selectTeacher(state, action) {
+            const teacherId = action.payload;
+            state.selectedTeacher = teacherId;
+            state.isOpenModal = true;
+        },
     },
 });
 
@@ -55,10 +121,17 @@ export default slice.reducer;
 
 // Actions
 export const {
+    startLoadingModal,
     startLoading,
     hasError,
     getSchoolSuccess,
-    getSchoolsSuccess
+    getSchoolsSuccess,
+    filterTeachers,
+    openFireModal,
+    closeFireModal,
+    openHireModal,
+    closeHireeModal,
+    selectTeacher
 } = slice.actions;
 
 // ----------------------------------------------------------------------
@@ -106,3 +179,67 @@ export function updateBusiness(school) {
 
 // ----------------------------------------------------------------------
 
+export function getBusinessMembers() {
+    return async () => {
+        dispatch(slice.actions.startLoading());
+        try {
+            const response = await axios.get('/api/business/members');
+            const teachers = response.data;
+
+            dispatch(slice.actions.getTeachersSuccess(teachers));
+        } catch (error) {
+            dispatch(slice.actions.hasError(error));
+        }
+    };
+}
+
+
+// ----------------------------------------------------------------------
+
+export function getBusinessPending() {
+    return async () => {
+        dispatch(slice.actions.startLoading());
+        try {
+            const response = await axios.get('/api/business/requests');
+            const teachers = response.data;
+
+            dispatch(slice.actions.getTeachersSuccess(teachers));
+        } catch (error) {
+            dispatch(slice.actions.hasError(error));
+        }
+    }
+}
+
+// ----------------------------------------------------------------------
+
+export function fireTeacher(teacher) {
+    return async () => {
+        dispatch(slice.actions.startLoadingModal());
+        try {
+            const resp = await axios.put(`/api/business/fire/` + teacher?.id)
+            dispatch(slice.actions.closeFireModal())
+            dispatch(slice.actions.hasSuccess("business.fire_success"))
+        } catch (error) {
+            dispatch(slice.actions.hasError(error))
+            dispatch(slice.actions.closeFireModal())
+
+        }
+    }
+}
+
+// ----------------------------------------------------------------------
+
+export function hireTeacher(teacher) {
+    return async () => {
+        dispatch(slice.actions.startLoadingModal());
+        try {
+            const resp = await axios.post(`/api/business/hire/` + teacher?.id)
+            dispatch(slice.actions.closeHireModal())
+            dispatch(slice.actions.hasSuccess("business.hire_success"))
+        } catch (error) {
+            dispatch(slice.actions.hasError(error))
+            dispatch(slice.actions.closeHireModal())
+
+        }
+    }
+}

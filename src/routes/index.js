@@ -140,6 +140,8 @@ export default function Router() {
             { path: 'list', element: <ClientList /> },
             { path: 'new', element: <ClientCreate /> },
             { path: ':name/edit', element: <ClientCreate /> },
+            { path: 'pending', element: <PendingTeachers /> },
+            { path: 'teachers', element: <PendingTeachers isPending={false} /> },
           ],
         },
         {
@@ -284,6 +286,7 @@ const PageVerify = Loadable(lazy(() => import('../pages/PageVerify')));
 
 //School
 const Products = Loadable(lazy(() => import('../pages/dashboard/Products')))
+const PendingTeachers = Loadable(lazy(() => import('../pages/dashboard/PendingTeachers')))
 
 //RENTAL
 const Rental = Loadable(lazy(() => import('../pages/rental/UserRentalData')))

@@ -82,7 +82,10 @@
         "myLessons": "Mis Clases",
         "newProduct": "Nueva Clase",
         "admin": "Administrador",
-        "review teachers": "Revisar Pros"
+        "review teachers": "Revisar Pros",
+        "school_teachers": "profesores de escuela",
+        "pending_teachers": "profesores pendientes",
+        "my_teachers": "mis profesores"
     },
     "calendar": {
         "name": "Calendario",
@@ -274,5 +277,17 @@
         "needsGoogles": "Necesita antiparras",
         "needsHelmet": "Necesita Cazco",
         "discipline": "Disciplina"
+    },
+    "business": {
+        "fire": "Despedir",
+        "hire": "Contratar",
+        "my_teachers": "Mis profesores",
+        "fire_teacher_title": "¿Despedir a {{name}}?",
+        "fire_teacher_message": "¿Estas seguro que desea despedir a {{name}}?",
+        "cancel": "Cancelar",
+        "hire_teacher_title": "¿COntratar a {{name}}?",
+        "hire_teacher_message": "¿Estas seguro que desea contratar a {{name}}?",
+        "hire_success": "Contrato exitoso!",
+        "fire_success": "Despido exitoso!"
     }
 }

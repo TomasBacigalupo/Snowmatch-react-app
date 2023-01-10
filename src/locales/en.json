@@ -50,8 +50,8 @@
     "school": "School PROs",
     "getStartedToday": "Get started with SnowMatch!",
     "find": "Match with the PRO you need...",
-    "start_date":"Start date",
-    "end_date":"End date"
+    "start_date": "Start date",
+    "end_date": "End date"
   },
   "menu": {
     "general": "General",
@@ -78,7 +78,10 @@
     "newProduct": "Create Lesson",
     "myLessons": "My lessons",
     "admin": "Admin",
-    "review teachers": "Review PROs"
+    "review teachers": "Review PROs",
+    "school_teachers": "School teachers",
+    "pending_teachers": "Pending teachers",
+    "my_teachers": "My teachers"
   },
   "calendar": {
     "name": "Calendar",
@@ -119,9 +122,8 @@
         "resorts": "Resorts",
         "notes": "Notes",
         "isRenting": "Is Renting",
-        "createClient":"Create client",
-        "saveChanges":"Save changes"
-
+        "createClient": "Create client",
+        "saveChanges": "Save changes"
       }
     }
   },
@@ -213,27 +215,26 @@
     "description": "Description",
     "skills": "Skills"
   },
-
-  "conversation":{
-    "not_valid":"Your phone number is not validated, check Whatsapp and try again",
-    "message_sent":"Message sent, they will soon be in touch!",
-    "age":"Client Age",
-    "age2":"Age",
-    "level":"Client Level",
-    "tips":"Does the client tip?",
-    "commission":"Commission",
-    "activity":"Activity",
-    "amount":"Number of people",
-    "duration":"Duration",
-    "classdate":"Class date",
-    "days":"Number of days",
-    "cancel":"Cancel",
-    "contact":"Contact",
-    "refer_class":"Refer Class",
-    "contact_pro":"Contact PRO",
-    "validation_required":"Validation required!",
-    "validation_required_body":"Check your Whatsapp for a validation message. It may take a while. If you didn't get a message, check your number and try again!",
-    "close":"Close"
+  "conversation": {
+    "not_valid": "Your phone number is not validated, check Whatsapp and try again",
+    "message_sent": "Message sent, they will soon be in touch!",
+    "age": "Client Age",
+    "age2": "Age",
+    "level": "Client Level",
+    "tips": "Does the client tip?",
+    "commission": "Commission",
+    "activity": "Activity",
+    "amount": "Number of people",
+    "duration": "Duration",
+    "classdate": "Class date",
+    "days": "Number of days",
+    "cancel": "Cancel",
+    "contact": "Contact",
+    "refer_class": "Refer Class",
+    "contact_pro": "Contact PRO",
+    "validation_required": "Validation required!",
+    "validation_required_body": "Check your Whatsapp for a validation message. It may take a while. If you didn't get a message, check your number and try again!",
+    "close": "Close"
   },
   "discounts": {
     "getCupon": "Get Voucher",
@@ -241,7 +242,6 @@
     "findBrands": "Find Brands...",
     "sendNoti": "Done! If you are in conditions to get the voucher you will receive it via Whats App"
   },
-
   "rental": {
     "Personal Data": "Personal Data",
     "Equipment": "Equipment",
@@ -270,6 +270,17 @@
     "needsGoogles": "Necesita antiparras",
     "needsHelmet": "Necesita Cazco",
     "discipline": "Discipline"
+  },
+  "business": {
+    "my_teachers": "My teachers",
+    "fire": "Fire",
+    "hire": "Hire",
+    "fire_teacher_title": "Fire  {{name}}?",
+    "fire_teacher_message": "are you sure you want to fire {{name}}?",
+    "cancel": "Cancel",
+    "hire_teacher_title": "Hire  {{name}}?",
+    "hire_teacher_message": "are you sure you want to hire {{name}}?",
+    "hire_success": "Successfully hired!",
+    "fire_success": "Successfully fired!"
   }
-
 }

@@ -199,7 +199,7 @@ export default function AccountGeneral() {
     };
 
     useEffect(() => {
-        if(business?.seccess!=null){
+        if(business?.success!=null){
             enqueueSnackbar(business?.success);
         }
     }, [business]);

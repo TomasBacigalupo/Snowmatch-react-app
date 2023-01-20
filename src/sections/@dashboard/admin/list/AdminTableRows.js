@@ -21,7 +21,7 @@ AdminTableRow.propTypes = {
 export default function AdminTableRow({ row, selected, onEditRow, onSelectRow, onConfirmRow, onDeclineRow }) {
   const theme = useTheme();
 
-  const { name, lastname, imageLink, role, level, isVerified, state, id } = row;
+  const { name, lastname, imageLink, role, level, authorized, state, id } = row;
 
   const [openMenu, setOpenMenuActions] = useState(null);
 
@@ -60,12 +60,12 @@ export default function AdminTableRow({ row, selected, onEditRow, onSelectRow, o
       <TableCell align="center">
         <Iconify
           //todo verificar que funcione con cambios de back
-          icon={isVerified ? 'eva:checkmark-circle-fill' : 'eva:clock-outline'}
+          icon={authorized ? 'eva:checkmark-circle-fill' : 'eva:clock-outline'}
           sx={{
             width: 20,
             height: 20,
             color: 'success.main',
-            ...(!isVerified && { color: 'warning.main' }),
+            ...(!authorized && { color: 'warning.main' }),
           }}
         />
       </TableCell>

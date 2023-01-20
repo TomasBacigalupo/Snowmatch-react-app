@@ -172,6 +172,7 @@ export default function AdminConfirmForm({ isEdit, currentTeacher, documents }) 
     ytUrl: Yup.string(),
     twUrl: Yup.string(),
     disciplines: Yup.array().of(Yup.string()),
+    authorized: Yup.boolean(),
   });
 
   const defaultValues = useMemo(
@@ -180,7 +181,7 @@ export default function AdminConfirmForm({ isEdit, currentTeacher, documents }) 
       email: currentTeacher?.email || '',
       lastname: currentTeacher?.lastname || '',
       dni: currentTeacher?.dni || '',
-      level: currentTeacher?.level.toString() || '',
+      level: currentTeacher?.level?.toString() || '',
       userId: currentTeacher?.userId || '',
       cellphone: currentTeacher?.cellphone || '',
       countryCode: currentTeacher?.countryCode || '',
@@ -199,6 +200,7 @@ export default function AdminConfirmForm({ isEdit, currentTeacher, documents }) 
       ytUrl: currentTeacher?.ytUrl || '',
       twUrl: currentTeacher?.twUrl || '',
       disciplines: currentTeacher?.disciplines || [],
+      authorized: currentTeacher?.authorized || false,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentTeacher]
@@ -228,9 +230,9 @@ export default function AdminConfirmForm({ isEdit, currentTeacher, documents }) 
   const onSubmit = (data) => {
     try {
       const response = dispatch(editTeacher(data));
-      // reset();
-      // enqueueSnackbar('Review success!');
-      // navigate(PATH_DASHBOARD.admin.review);
+      reset();
+      enqueueSnackbar('Review success!');
+      navigate(PATH_DASHBOARD.admin.review);
     } catch (error) {
       console.error(error);
     }
@@ -316,6 +318,14 @@ export default function AdminConfirmForm({ isEdit, currentTeacher, documents }) 
               <RHFMultipleSelect name="disciplines" label={translate("general.form.disciplines")} list={["Ski", "SnowBoard"]} />
               <RHFMultipleSelect name="speaks" label={translate("general.form.languages")} list={["Español", "English", "Portugues", "Italiano"]} />
             </Box>
+            <Stack sx={{ mt: 3 }}>
+            <RHFSwitch
+                    name="authorized"
+                    label="is authorized"
+                    sx={{ mb: 1, mx: 0, width: 1 }}
+                  />
+            </Stack>
+            
             <Stack sx={{ mt: 3 }}>
               <RHFTextField
                 key={"igUrl"}

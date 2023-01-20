@@ -64,7 +64,7 @@ const TABLE_HEAD = [
 
 // ----------------------------------------------------------------------
 
-export default function UserList() {
+export default function AdminReview() {
   const {
     dense,
     page,
@@ -259,10 +259,9 @@ export default function UserList() {
                 />
 
                 <TableBody>
-                  {tableData.slice(0, rowsPerPage).map((row) => {
-                    console.log({row})
-                    return <AdminTableRow
-                      key={row.id}
+                  {tableData.slice(0, rowsPerPage).map((row) => (
+                    <AdminTableRow
+                      key={row.userId}
                       row={row}
                       selected={selected.includes(row.userId)}
                       onSelectRow={() => onSelectRow(row.userId)}
@@ -270,8 +269,7 @@ export default function UserList() {
                       onEditRow={() => handleEditRow(row.name)}
                       onConfirmRow={() => handleConfirmRow(row.userId)}
                       onDeclineRow={() => handleDeclineOpenModal(row.email)}
-                    />
-})}
+                    />))}
 
                   <TableEmptyRows height={denseHeight} emptyRows={0} />
 

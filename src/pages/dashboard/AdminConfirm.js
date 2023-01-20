@@ -44,10 +44,6 @@ export default function AdminConfirm() {
   // }, [teachers, id]);
 
   useEffect(() => {
-    dispatch(getTeachers());
-  }, [dispatch]);
-
-  useEffect(() => {
     dispatch(getTeacher(id));
   }, [dispatch,id]);
 
@@ -72,9 +68,9 @@ export default function AdminConfirm() {
             { name: teacher?.name || "asd" },
           ]}
         />
-        <AdminConfirmForm isEdit={isEdit} currentTeacher={teacher} />
+        {teacher!=undefined? <AdminConfirmForm isEdit={isEdit} currentTeacher={teacher} /> : " " }
         {documents?.map(document=>(
-          <CertificateItem teacherId={teacher.id} {...document}/>
+          <CertificateItem teacherId={id} {...document}/>
         ))}
         
       </Container>

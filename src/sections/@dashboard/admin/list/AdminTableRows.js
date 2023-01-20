@@ -10,7 +10,7 @@ import { TableMoreMenu } from '../../../../components/table';
 
 // ----------------------------------------------------------------------
 
-UserTableRow.propTypes = {
+AdminTableRow.propTypes = {
   row: PropTypes.object,
   selected: PropTypes.bool,
   onEditRow: PropTypes.func,
@@ -18,7 +18,7 @@ UserTableRow.propTypes = {
   onDeleteRow: PropTypes.func,
 };
 
-export default function UserTableRow({ row, selected, onEditRow, onSelectRow, onConfirmRow, onDeclineRow }) {
+export default function AdminTableRow({ row, selected, onEditRow, onSelectRow, onConfirmRow, onDeclineRow }) {
   const theme = useTheme();
 
   const { name, lastname, imageLink, role, level, isVerified, state, id } = row;
@@ -113,7 +113,7 @@ export default function UserTableRow({ row, selected, onEditRow, onSelectRow, on
                 }}
               >
                 <Iconify icon={'eva:edit-fill'} />
-                Confirm
+                Edit
               </MenuItem>
               <MenuItem
                 onClick={() => {

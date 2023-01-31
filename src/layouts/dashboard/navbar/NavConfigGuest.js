@@ -43,8 +43,9 @@ const navConfigGuest = [
         path: PATH_GUEST.root,
         icon: ICONS.match,
         children: [
-          { title: 'Schools', path: PATH_GUEST.school },
+          { title: 'school_teachers', path: PATH_GUEST.school },
           { title: 'Independent', path: PATH_GUEST.independent },
+          { title: 'Schools', path: PATH_GUEST.schools },
         ],
       }
       // { title: 'chat', path: PATH_DASHBOARD.chat.root, icon: ICONS.chat },

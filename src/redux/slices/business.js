@@ -63,11 +63,14 @@ const slice = createSlice({
         getBusinessesSuccess(state, action) {
             state.isLoading = false;
             state.businesses = action.payload;
+            console.log("action",action.payload)
+
         },
 
         getBusinessSuccess(state, action) {
             state.isLoading = false;
             state.business = action.payload;
+
         },
 
         getTeachersSuccess(state, action) {
@@ -85,6 +88,17 @@ const slice = createSlice({
             state.filters.to = action.payload.to;
             state.filters.resort = action.payload.resort;
         },
+
+        filterBusinesses(state, action) {
+            state.filters.gender = action.payload.gender;
+            state.filters.category = action.payload.category;
+            state.filters.discipline = action.payload.discipline;
+            state.filters.rating = action.payload.rating;
+            state.filters.language = action.payload.language;
+            state.filters.from = action.payload.from;
+            state.filters.to = action.payload.to;
+            state.filters.resort = action.payload.resort;
+          },
 
         sortByProducts(state, action) {
             state.sortBy = action.payload;
@@ -127,6 +141,7 @@ export const {
     getSchoolSuccess,
     getSchoolsSuccess,
     filterTeachers,
+    filterBusinesses,
     openFireModal,
     closeFireModal,
     openHireModal,
@@ -141,7 +156,7 @@ export function getBusinesses(page) {
         dispatch(slice.actions.startLoading());
         try {
             const response = await axios.get('/api/business?page=' + page);
-            dispatch(slice.actions.getBusinessesSuccess(response.data.business));
+            dispatch(slice.actions.getBusinessesSuccess(response.data));
         } catch (error) {
             dispatch(slice.actions.hasError(error));
         }
@@ -169,8 +184,9 @@ export function updateBusiness(school) {
     return async () => {
         dispatch(slice.actions.startLoading());
         try {
-            const resp = await axios.put(`/api/business`, school)
+            const resp = await axios.put(`/api/business/`+school.id, school)
             dispatch(slice.actions.hasSuccess(resp))
+            dispatch(slice.actions.getBusinessSuccess(school))
         } catch (error) {
             dispatch(slice.actions.hasError(error));
         }
@@ -239,6 +255,20 @@ export function hireTeacher(teacher) {
         } catch (error) {
             dispatch(slice.actions.hasError(error))
             dispatch(slice.actions.closeHireModal())
+
+        }
+    }
+}
+
+
+export function getMembersPublic(businessId) {
+    return async () => {
+        dispatch(slice.actions.startLoadingModal());
+        try {
+            const resp = await axios.get(`/api/business/` + businessId + '/members')
+            dispatch(slice.actions.getTeachersSuccess(resp.data))
+        } catch (error) {
+            dispatch(slice.actions.hasError(error))
 
         }
     }

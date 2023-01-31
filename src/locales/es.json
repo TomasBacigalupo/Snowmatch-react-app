@@ -85,7 +85,8 @@
         "review teachers": "Revisar Pros",
         "school_teachers": "profesores de escuela",
         "pending_teachers": "profesores pendientes",
-        "my_teachers": "mis profesores"
+        "my_teachers": "mis profesores",
+        "PRO Schools": "PRO Schools"
     },
     "calendar": {
         "name": "Calendario",
@@ -219,7 +220,19 @@
         "description": "Descripción",
         "skills": "Skills"
     },
-
+    "schoolDetails":{
+        "title": "Detalles PRO school",
+        "calendar": "Calendario",
+        "verified": "Escuela Verificada y Aprobada",
+        "reply": "Activo a Match",
+        "replyDescription": "Este PRO responde a SnowMatch en menos de un día",
+        "verifiedDescription": "Este profesor esta validado por SnowMatch ",
+        "warranty": "Garantia SnowMatch",
+        "warrantyDescription": "SnowMatch asegura que cumple con la reglamentación para dar clases",
+        "information": "Información",
+        "description": "Descripción",
+        "skills": "Skills"
+    },
     "conversation":{
         "not_valid":"Tu numero de telefono no esta validado, revisa WhatsApp y probá de nuevo!",
         "message_sent":"Mensaje enviado, pronto se contactarán contigo!",

@@ -14,6 +14,7 @@ import { PATH_AFTER_LOGIN } from '../config';
 // components
 import LoadingScreen from '../components/LoadingScreen';
 import Discounts from 'src/pages/dashboard/Discounts';
+import SchoolList from 'src/pages/dashboard/SchoolsList';
 
 // ----------------------------------------------------------------------
 
@@ -74,7 +75,10 @@ export default function Router() {
         { path: '*', element: <EcommerceShop isGuest={true} teacherType="school"/> },
         { path: 'independent', element: <EcommerceShop isGuest={true} teacherType="independent"/> },
         { path: 'school', element: <EcommerceShop isGuest={true} teacherType="school"/> },
-        { path: 'teacher/:name', element: <EcommerceTeacherDetails isGuest={true}/> }
+        { path: 'teacher/:name', element: <EcommerceTeacherDetails isGuest={true}/> },
+        { path: 'schools/:id', element: <SchoolDetails isGuest={true}/> },
+        { path: 'schools', element: <SchoolList teacherType="school"/> }
+
       ]
     },
 
@@ -112,6 +116,8 @@ export default function Router() {
             { path: 'shop', element: <EcommerceShop /> },
             { path: 'shop/independent', element: <EcommerceShop teacherType="independent" /> },
             { path: 'shop/school', element: <EcommerceShop teacherType="school"/> },
+            { path: 'shop/schools', element: <SchoolList teacherType="school"/> },
+            { path: 'school/:id', element: <SchoolDetails /> },
 
             { path: 'teacher/:name', element: <EcommerceTeacherDetails /> },
             { path: 'product/:name', element: <EcommerceProductDetails /> },
@@ -232,6 +238,7 @@ const GeneralBooking = Loadable(lazy(() => import('../pages/dashboard/GeneralBoo
 // ECOMMERCE
 const EcommerceShop = Loadable(lazy(() => import('../pages/dashboard/EcommerceShop')));
 const EcommerceProductDetails = Loadable(lazy(() => import('../pages/dashboard/EcommerceProductDetails')));
+const SchoolDetails = Loadable(lazy(() => import('../pages/dashboard/SchoolDetails')));
 const EcommerceTeacherDetails = Loadable(lazy(() => import('../pages/dashboard/EcommerceTeacherDetails')));
 const EcommerceProductList = Loadable(lazy(() => import('../pages/dashboard/EcommerceProductList')));
 const EcommerceProductCreate = Loadable(lazy(() => import('../pages/dashboard/EcommerceProductCreate')));

@@ -73,7 +73,6 @@ export default function PageVerifyWhatsApp() {
 
     const handleResend = async () =>{
         const response = axios.post('/api/userPersonalDataVerification/registrationNumericCode');
-        
         setRunTimer(true)
     }
 

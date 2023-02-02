@@ -82,7 +82,9 @@
         "myLessons": "Mis Clases",
         "newProduct": "Nueva Clase",
         "admin": "Administrador",
-        "review teachers": "Revisar Pros"
+        "review teachers": "Revisar Pros",
+        "reviews": "Mis Calificaciones",
+        "lessons": "Mis Clases"
     },
     "calendar": {
         "newEvent": "Crear Evento",
@@ -132,11 +134,15 @@
         "accountSettings": "Ajustes de cuenta",
         "editProfile": "Editar Mi Perfil",
         "school":"Escuela",
-        "agenda": "Agenda"
+        "agenda": "Agenda",
+        "lessons": "Clases",
+        "reviews": "Mis Calificaciones",
+        "lesson_details": "Detalles de la clase"
     },
     "profile":{
         "tabs":{
-            "profile": "Mi información"
+            "profile": "Mi información",
+            "review": "Mis Calificaciones"
         },
         "clients": "Clientes",
         "level": "Nivel de Instructor",
@@ -179,8 +185,9 @@
         "Profile": "Mi Perfíl",
         "Settings": "Ajustes",
         "SignUpAsAPRO": "Quiero ser PRO",
-        "LogIn": "LogIn",
-        "logOut":"LogOut",
+        "SignUpAsAGuest": "Sign Up",
+        "LogIn": "Log In",
+        "logOut":"Log Out",
         "help": "Ayuda"
     },
     "generalApp":{
@@ -211,7 +218,6 @@
         "description": "Descripción",
         "skills": "Skills"
     },
-
     "conversation":{
         "not_valid":"Tu numero de telefono no esta validado, revisa WhatsApp y probá de nuevo!",
         "message_sent":"Mensaje enviado, pronto se contactarán contigo!",
@@ -231,7 +237,8 @@
         "contact_pro":"Contactar PRO",
         "validation_required":"Validation required!",
         "validation_required_body":"Vas a recibir un mensaje de validación por WhatsApp, puede tardar unos minutos. Si no te llega el mensaje, revisa tu número y proba de nuevo!",
-        "close":"Cerrar"
+        "close":"Cerrar",
+        "match_pro": "Match Pro"
       },
       "discounts":{
           "getCupon":"Conseguir Cupon",
@@ -269,5 +276,18 @@
         "needsGoogles": "Necesita antiparras",
         "needsHelmet": "Necesita Cazco",
         "discipline": "Disciplina"
+    },
+    "completeOrder": {
+        "order": "Su codigo de clase SnowMatch es: ",
+        "thanksMessage": "Match! Gracias por usar SnowMatch",
+        "info": "Vamos a contactar al Pro y ponerlo en contacto con usted a la brevedad. Cualquier consulta no dude en contactarnos. "
+    },
+    "checkout":{
+        "deal_with_pro": "Arregle con el PRO",
+        "free": "Gratis",
+        "morning": "Mañana",
+        "afternoon": "Tarde",
+        "allday": "Todo el día",
+        "continue": "Seguir buscando Pros"
     }
 }

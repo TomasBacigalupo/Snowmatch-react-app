@@ -1,8 +1,8 @@
 import { m } from 'framer-motion';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // @mui
 import { styled } from '@mui/material/styles';
-import { Box, Button, Typography, Container, CircularProgress } from '@mui/material';
+import { Box, Button, Typography, Container, CircularProgress, Stack } from '@mui/material';
 // components
 import Page from '../components/Page';
 import { MotionContainer, varBounce } from '../components/animate';
@@ -11,8 +11,13 @@ import VerifyEmailIllustration from 'src/assets/illustration_email_verify';
 // hooks
 import useAuth from '../hooks/useAuth';
 import { useSnackbar } from 'notistack';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import HoverButton from 'src/components/HoverButton';
+import axios from '../utils/axios';
+
+import { PATH_DASHBOARD, PATH_AUTH } from '../routes/paths';
+import { dispatch, useSelector } from 'src/redux/store';
+import { setRequestedRoute } from 'src/redux/slices/config';
 
 // ----------------------------------------------------------------------
 
@@ -27,17 +32,70 @@ const RootStyle = styled('div')(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 export default function PageVerifyEmail() {
-  const { testVerification } = useAuth();
+  const { testVerification, logout } = useAuth();
   const { enqueueSnackbar } = useSnackbar();
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
+  const [sendingEmail, setSendingEmail] = useState(false);
+  const [canSendEmail, setCanSendEmail] = useState(true);
+  const [countDown, setCountDown] = useState(0);
+  const [runTimer, setRunTimer] = useState(true);
+  const navigate = useNavigate();
+  const {requestedRoute}  = useSelector(state => state.config)
+
+  useEffect(() => {
+    let timerId;
+    if (runTimer) {
+      setCountDown(10);
+      timerId = setInterval(() => {
+        setCountDown((countDown) => countDown - 1);
+      }, 1000);
+    } else {
+      clearInterval(timerId);
+    }
+
+    return () => clearInterval(timerId);
+  }, [runTimer]);
+
+  useEffect(() => {
+    if (countDown < 0 && runTimer) {
+      setRunTimer(false);
+      setCountDown(0);
+    }
+
+
+  }, [countDown, runTimer]);
+
+  const seconds = String(countDown % 60).padStart(2, 0);
+  const minutes = String(Math.floor(countDown / 60)).padStart(2, 0);
 
   const onReload = () => {
     setLoading(true);
-    testVerification(() => {
-      enqueueSnackbar('Email not verified', { variant: 'warning'});
-      setLoading(false);
+    testVerification((succ) => {
+      if(!succ){
+        enqueueSnackbar('Email not verified', { variant: 'warning' });
+        setLoading(false);
+      }
+      
     })
   }
+
+  const onSendEmail = () => {
+    setRunTimer(true)
+    const response = axios.post('/api/userPersonalDataVerification/verificationEmail');
+    console.log(response)
+    
+  }
+
+  const onLogout = async () => {
+    try {
+      await logout();
+      navigate(PATH_AUTH.login, { replace: true });
+    } catch (error) {
+      console.error(error);
+      enqueueSnackbar('Unable to logout!', { variant: 'error' });
+    }
+  };
+
 
   return (
     <Page title="Email verification" sx={{ height: 1 }}>
@@ -56,13 +114,24 @@ export default function PageVerifyEmail() {
             <m.div variants={varBounce().in}>
               <VerifyEmailIllustration sx={{ height: 260, my: { xs: 5, sm: 10 } }} />
             </m.div>
-            {loading && (
+            {loading || sendingEmail && (
               <CircularProgress/>
             )}
-            {!loading && <HoverButton onClick={onReload} loading={loading}>
-              Reload
-            </HoverButton>}
-            
+            <Stack>
+              {!loading && !sendingEmail && <HoverButton onClick={onReload} loading={loading}>
+                Reload
+              </HoverButton>}
+            </Stack>
+            <Stack>
+              {!loading && !sendingEmail && <HoverButton disabled={runTimer} onClick={onSendEmail} loading={sendingEmail}>
+                Send email {runTimer && <Typography style={{ marginLeft: '5px' }}>{' ' + minutes}:{seconds}</Typography>}
+              </HoverButton>}
+            </Stack>
+            <Stack>
+              {!loading && <HoverButton onClick={onLogout} loading={loading}>
+                Logout
+              </HoverButton>}
+            </Stack>
           </Box>
         </Container>
       </RootStyle>

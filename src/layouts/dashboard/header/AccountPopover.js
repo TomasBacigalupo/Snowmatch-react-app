@@ -35,6 +35,10 @@ const GUEST_MENU_OPTIONS = [
     linkTo: '/auth/register',
   },
   {
+    label: 'SignUpAsAGuest',
+    linkTo: '/auth/guest-register',
+  },
+  {
     label: 'LogIn',
     linkTo: '/auth/login',
   },

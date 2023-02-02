@@ -92,7 +92,6 @@ export default function CalendarForm({ event, range, onCancel, clients }) {
   const onSubmit = async (data) => {
     try {
       let newEvent
-      debugger
       switch (data.type) {
         case 'Break':
         case 'Training':
@@ -128,7 +127,6 @@ export default function CalendarForm({ event, range, onCancel, clients }) {
       var func;
       var snackbar;
       if (event.id) {
-        debugger
         func = updateEvent(event.id, newEvent);
         snackbar = 'Update success!'
       }

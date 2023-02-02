@@ -5,9 +5,10 @@ import { useNavigate } from 'react-router-dom';
 import { Controller, useForm } from 'react-hook-form';
 // @mui
 import { useTheme, styled } from '@mui/material/styles';
-import { Box, Link, Stack, Button, Rating, Divider, IconButton, Typography, DialogTitle, Tooltip } from '@mui/material';
+import { Box, Link, Stack, Button, Rating, Divider, IconButton, Typography, DialogTitle, Tooltip, ToggleButtonGroup, ToggleButton } from '@mui/material';
 // routes
 import { PATH_DASHBOARD } from '../../../../routes/paths';
+import HireForm from './HireForm';
 // utils
 import { fShortenNumber, fCurrency } from '../../../../utils/formatNumber';
 // components
@@ -89,7 +90,11 @@ export default function TeacherDetailsSummary({ cart, teacher, onAddCart, onGoto
   const user = useAuth();
 
   const [view, setView] = useState('dayGridMonth');
+  const [lessons, setLessons] = useState('me');
 
+  const handleChange = (event, value) => {
+    setLessons(value);
+  };
 
   const { isOpenReferModal, isOpenContactModal, error } = useSelector((state) => state.contact);
 
@@ -128,9 +133,8 @@ export default function TeacherDetailsSummary({ cart, teacher, onAddCart, onGoto
     twUrl,
     resorts,
     school
-  } = teacher.teacher;
+  } = teacher;
 
-  const rates = teacher.rates;
 
   const alreadyProduct = cart.map((item) => item.id).includes(id);
 
@@ -182,7 +186,7 @@ export default function TeacherDetailsSummary({ cart, teacher, onAddCart, onGoto
 
   const handleAddCart = async () => {
     try {
-      onAddCart(teacher.teacher);
+      onAddCart(teacher);
     } catch (error) {
       console.error("ERROR", error);
     }
@@ -348,12 +352,39 @@ export default function TeacherDetailsSummary({ cart, teacher, onAddCart, onGoto
 
 
 
-          {button(user, !school &&level>=3 && resorts?.includes("Cerro Catedral"))}
+        <HoverButton
+          fullWidth
+          size="large"
+          color="primary"
+          variant="contained"
+          startIcon={<ConnectWithoutContactIcon />}
+          onClick={handleContact}
+          sx={{ whiteSpace: 'nowrap' }}
+        >
+          {translate("conversation.match_pro")}
+        </HoverButton>
 
         <DialogAnimate open={isOpenContactModal} onClose={handleCloseContactModal}>
           <DialogTitle>{translate("conversation.contact_pro")}</DialogTitle>
           {console.log("aca")}
-          <ContactForm teacher={id} onCancel={handleCloseContactModal} />
+          <Box margin='8px'>
+            <ToggleButtonGroup
+              color="primary"
+              value={lessons}
+              fullWidth
+              exclusive
+              onChange={handleChange}
+            >
+              <ToggleButton value="me">My Lessons</ToggleButton>
+              <Tooltip title='Not available in your country'>
+                <ToggleButton disabled={true} value="family">My Family Lessons</ToggleButton>
+              </Tooltip>
+              
+            </ToggleButtonGroup>
+          </Box>
+          {lessons === 'me' && <HireForm teacher={teacher} onCancel={handleCloseContactModal}/>}
+          {!(lessons === 'me') && <ContactForm teacher={id} onCancel={handleCloseContactModal} />}
+          
         </DialogAnimate>
 
         <DialogAnimate open={isOpenReferModal} onClose={handleCloseReferModal}>

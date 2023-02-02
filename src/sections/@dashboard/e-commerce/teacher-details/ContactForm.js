@@ -23,6 +23,7 @@ import { useEffect, useState } from 'react';
 import { countries } from '../../../../_mock';
 import useLocales from 'src/hooks/useLocales';
 import { useSelector } from 'react-redux';
+import AuthGuard from 'src/guards/AuthGuard';
 
 
 
@@ -125,6 +126,7 @@ export default function ContactForm({ teacher, onCancel,cellphone }) {
   
 
   return (
+    <AuthGuard>
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Stack spacing={3} sx={{ p: 3 }}>
         <RHFTextField name="firstname" label={translate("general.form.name")} />
@@ -227,6 +229,7 @@ export default function ContactForm({ teacher, onCancel,cellphone }) {
 
 
     </FormProvider>
+    </AuthGuard>
 
 
   );

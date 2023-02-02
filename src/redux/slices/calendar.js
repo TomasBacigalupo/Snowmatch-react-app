@@ -14,7 +14,9 @@ const initialState = {
   isOpenModal: false,
   selectedEventId: null,
   selectedRange: null,
-  upcomingEvents: []
+  upcomingEvents: [],
+  lessons: [],
+  lesson: {}
 };
 
 const slice = createSlice({
@@ -44,7 +46,25 @@ const slice = createSlice({
       });
     },
 
-        // GET UPCOMING EVENTS
+    // GET LESSONS
+    getLessonsSuccess(state, action) {
+      state.isLoading = false;
+      state.lessons = action.payload.map(e => {
+        return {
+          ...e,
+          start: utcToLocalDate(e.start),
+          end: utcToLocalDate(e.end)
+        };
+      });
+    },
+
+    // GET LESSON
+    getLessonSuccess(state, action) {
+      state.isLoading = false;
+      state.lesson = action.payload
+    },
+
+    // GET UPCOMING EVENTS
     getUpcomingEventsSuccess(state, action) {
       state.isLoading = false;
       state.upcomingEvents = action.payload;
@@ -126,6 +146,39 @@ export function getEvents() {
     try {
       const response = await axios.get('/api/events/');
       dispatch(slice.actions.getEventsSuccess(response.data));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+// ----------------------------------------------------------------------
+
+export function getLessons() {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get('/api/events/');
+      dispatch(slice.actions.getLessonsSuccess(response.data.filter(e => e.source==='APP')));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+// ----------------------------------------------------------------------
+
+export function getLessonById(id) {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const responseEvent = await axios.get(`/api/events/byId/${id}`);
+      const {studentId} = responseEvent.data
+      const responseStudent = await axios.get(`/api/users/student/byId/${studentId}`);
+      dispatch(slice.actions.getLessonSuccess({
+        ...responseEvent.data,
+        student: responseStudent.data
+      }));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }

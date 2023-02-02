@@ -128,7 +128,8 @@ export default function HomeMinimal() {
                     mx: 'auto',
                     width: 40,
                     height: 40,
-                    filter: 'invert(1)',
+                    color:'black',
+                    filter: 'invert(0)',
                   }}
                 />
                 <Typography variant="h5" paragraph>

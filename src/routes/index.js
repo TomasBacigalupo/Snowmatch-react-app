@@ -2,7 +2,7 @@ import { Suspense, lazy } from 'react';
 import { Navigate, useRoutes, useLocation } from 'react-router-dom';
 // layouts
 import MainLayout from '../layouts/main';
-import {DashboardLayout,GuestLayout} from '../layouts/dashboard';
+import { DashboardLayout, GuestLayout } from '../layouts/dashboard';
 
 import LogoOnlyLayout from '../layouts/LogoOnlyLayout';
 // guards
@@ -14,12 +14,16 @@ import { PATH_AFTER_LOGIN } from '../config';
 // components
 import LoadingScreen from '../components/LoadingScreen';
 import Discounts from 'src/pages/dashboard/Discounts';
+import RegisterStudent from 'src/pages/auth/RegisterStudent';
+import RoleBasedGuard from 'src/guards/RoleBasedGuard';
+import ReviewTeacher from 'src/pages/dashboard/ReviewTeacher';
+import { useSelector } from 'src/redux/store';
 
 // ----------------------------------------------------------------------
 
 const Loadable = (Component) => (props) => {
   // eslint-disable-next-line react-hooks/rules-of-hooks
-  const { pathname } = useLocation();
+  const { pathname } = useLocation();  
   return (
     <Suspense fallback={<LoadingScreen isDashboard={pathname.includes('/dashboard')} />}>
       <Component {...props} />
@@ -28,6 +32,7 @@ const Loadable = (Component) => (props) => {
 };
 
 export default function Router() {
+
   return useRoutes([
     {
       path: 'auth',
@@ -48,11 +53,20 @@ export default function Router() {
             </GuestGuard>
           ),
         },
+        {
+          path: 'guest-register',
+          element: (
+            <GuestGuard>
+              <RegisterStudent />
+            </GuestGuard>
+          ),
+        },
         { path: 'login-unprotected', element: <Login /> },
         { path: 'register-unprotected', element: <Register /> },
         { path: 'reset-password', element: <ResetPassword /> },
         { path: 'changePassword/:token', element: <ResetPassword /> },
         { path: 'verify', element: <VerifyCode /> },
+        { path: 'verify-successful/:token', element: <PageVerificationSucceed /> }
       ],
     },
     {
@@ -68,21 +82,41 @@ export default function Router() {
     },
     {
       path: 'match',
-      element: (<GuestLayout/>),
+      element: (
+        <RoleBasedGuard accessibleRoles={['GUEST', 'STUDENT']}>
+          <GuestLayout />
+        </RoleBasedGuard>
+
+      ),
       children: [
         { element: <Navigate to={'/match/school/:resort'} replace />, index: true },
-        { path: '*', element: <EcommerceShop isGuest={true} teacherType="school"/> },
-        { path: 'independent', element: <EcommerceShop isGuest={true} teacherType="independent"/> },
-        { path: 'school', element: <EcommerceShop isGuest={true} teacherType="school"/> },
-        { path: 'teacher/:name', element: <EcommerceTeacherDetails isGuest={true}/> }
+        { path: '*', element: <EcommerceShop isGuest={true} teacherType="school" /> },
+        { path: 'independent', element: <EcommerceShop isGuest={true} teacherType="independent" /> },
+        { path: 'school', element: <EcommerceShop isGuest={true} teacherType="school" /> },
+        {
+          path: 'teacher/:id', element:
+              <EcommerceTeacherDetails isGuest={true} />
+        },
+        {
+          path: 'teacher/:id/review', element:
+            <AuthGuard>
+              <ReviewTeacher/>
+            </AuthGuard>
+        },
+        {
+          path: 'teacher/:id/hire', element:
+            <AuthGuard>
+              <EcommerceCheckoutTeacher/>
+            </AuthGuard>
+        }
       ]
     },
 
     {
       path: 'shops',
       children: [
-        { path: 'trown', element: <RedirectToShop url={"https://www.trown.com.ar"}/>},
-        { path: 'salpa', element: <RedirectToShop url={"https://www.salpa.com.ar"}/>},
+        { path: 'trown', element: <RedirectToShop url={"https://www.trown.com.ar"} /> },
+        { path: 'salpa', element: <RedirectToShop url={"https://www.salpa.com.ar"} /> },
         { path: 'dignos', element: <RedirectToShop url={"https://dignosofficial.com"} /> },
 
       ]
@@ -93,31 +127,33 @@ export default function Router() {
       path: 'dashboard',
       element: (
         <AuthGuard>
-          <DashboardLayout />
+          <RoleBasedGuard accessibleRoles={['ADMIN', 'TEACHER']}>
+            <DashboardLayout />
+          </RoleBasedGuard>
         </AuthGuard>
       ),
       children: [
         { element: <Navigate to={PATH_AFTER_LOGIN} replace />, index: true },
         { path: 'app', element: <GeneralApp /> },
         { path: 'ecommerce', element: <GeneralEcommerce /> },
-        { path: 'discounts', element: <Discounts/>},
+        { path: 'discounts', element: <Discounts /> },
         { path: 'analytics', element: <GeneralAnalytics /> },
         { path: 'banking', element: <GeneralBanking /> },
         { path: 'booking', element: <GeneralBooking /> },
-        { path: 'products', element:<Products/>},
+        { path: 'products', element: <Products /> },
         {
           path: 'e-commerce',
           children: [
             { element: <Navigate to="/dashboard/e-commerce/shop" replace />, index: true },
             { path: 'shop', element: <EcommerceShop /> },
             { path: 'shop/independent', element: <EcommerceShop teacherType="independent" /> },
-            { path: 'shop/school', element: <EcommerceShop teacherType="school"/> },
+            { path: 'shop/school', element: <EcommerceShop teacherType="school" /> },
 
-            { path: 'teacher/:name', element: <EcommerceTeacherDetails /> },
+            { path: 'teacher/:id', element: <EcommerceTeacherDetails /> },
             { path: 'product/:name', element: <EcommerceProductDetails /> },
             { path: 'list', element: <EcommerceProductList /> },
             { path: 'product/new', element: <EcommerceProductCreate /> },
-            { path: 'product/:name/edit', element: <EcommerceProductCreate /> },
+            { path: 'product/:id/edit', element: <EcommerceProductCreate /> },
             { path: 'checkout', element: <EcommerceCheckoutTeacher /> },
           ],
         },
@@ -131,6 +167,9 @@ export default function Router() {
             { path: 'new', element: <ClientCreate /> },
             { path: ':name/edit', element: <ClientCreate /> },
             { path: 'account', element: <UserAccount /> },
+            { path: 'reviews', element: <UserReviews /> },
+            { path: 'lessons', element: <UserLessons /> },
+            { path: 'lessons/:eventId', element: <LessonDetails/> },
           ],
         },
         {
@@ -217,6 +256,7 @@ const Login = Loadable(lazy(() => import('../pages/auth/Login')));
 const Register = Loadable(lazy(() => import('../pages/auth/Register')));
 const ResetPassword = Loadable(lazy(() => import('../pages/auth/ResetPassword')));
 const VerifyCode = Loadable(lazy(() => import('../pages/auth/VerifyCode')));
+const PageVerificationSucceed = Loadable(lazy(() => import('../pages/PageVerificationSucceed')))
 
 // DASHBOARD
 
@@ -235,8 +275,9 @@ const EcommerceProductList = Loadable(lazy(() => import('../pages/dashboard/Ecom
 const EcommerceProductCreate = Loadable(lazy(() => import('../pages/dashboard/EcommerceProductCreate')));
 const EcommerceCheckout = Loadable(lazy(() => import('../pages/dashboard/EcommerceCheckout')));
 
+
 // TEACHER ECOMMERCE
-const EcommerceCheckoutTeacher = Loadable(lazy(() => import('../pages/dashboard/EcommerceCheckout')));
+const EcommerceCheckoutTeacher = Loadable(lazy(() => import('../pages/dashboard/EcommerceCheckoutTeacher')));
 
 // INVOICE
 const InvoiceList = Loadable(lazy(() => import('../pages/dashboard/InvoiceList')));
@@ -257,6 +298,9 @@ const UserAccount = Loadable(lazy(() => import('../pages/dashboard/UserAccount')
 const UserCreate = Loadable(lazy(() => import('../pages/dashboard/UserCreate')));
 const ClientCreate = Loadable(lazy(() => import('../pages/dashboard/ClientCreate')));
 const ClientList = Loadable(lazy(() => import('../pages/dashboard/ClientList')));
+const UserReviews = Loadable(lazy(() => import('src/pages/dashboard/UserReviews')));
+const UserLessons = Loadable(lazy(() => import('src/pages/dashboard/UserLessons')));
+const LessonDetails = Loadable(lazy(() => import('src/pages/dashboard/LessonDetails')));
 
 // ADMIN
 const AdminReview = Loadable(lazy(() => import('../pages/dashboard/AdminReview')));
@@ -288,7 +332,7 @@ const Products = Loadable(lazy(() => import('../pages/dashboard/Products')))
 //RENTAL
 const Rental = Loadable(lazy(() => import('../pages/rental/UserRentalData')))
 
-function RedirectToShop({url}) {
+function RedirectToShop({ url }) {
   window.location.replace(url);
 
   return null;

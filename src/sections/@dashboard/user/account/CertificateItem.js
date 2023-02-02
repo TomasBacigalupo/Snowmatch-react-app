@@ -14,12 +14,12 @@ CertificateItem.prototype = {
 }
 
 export default function CertificateItem({ title, imageLink, status, certificateImageLink, description }) {
-    
+
     const [open, setOpen] = useState(false)
     const [infoOpen, setInfoOpen] = useState(false)
     const theme = useTheme()
     const mobile = useMediaQuery(theme.breakpoints.down("sm"));
-    
+
     return (
         <>
             <UploadDocumentModal
@@ -37,15 +37,20 @@ export default function CertificateItem({ title, imageLink, status, certificateI
             <Box style={mobile ? styles.certContainerMobile : styles.certContainer}>
                 <Card sx={styles.card}>
                     <Grid container>
-                        <Grid item xs={mobile??4}>
+                        <Grid item xs={mobile ?? 4}>
                             <img style={styles.image} src={imageLink} />
                         </Grid>
                         <Grid item xs={mobile ?? 4}>
                             <Typography style={styles.title} variant="h4">{title}</Typography>
                         </Grid>
+                        {console.log({ status })}
                         <Grid item xs={mobile ?? 4}>
-                            {status === 'VERIFIED' && (
-                                <Button style={styles.button} color='success' size="small" startIcon={<Iconify icon={'material-symbols:cloud-done'} />} onClick={() => setInfoOpen(true)}>
+                            {(status === 'VERIFIED' || status === 'REJECTED') && (
+                                <Button
+                                    style={styles.button}
+                                    color={status === 'VERIFIED' ? 'success' : 'error'}
+                                    size="small"
+                                    startIcon={<Iconify icon={'material-symbols:cloud-done'} />} onClick={() => setInfoOpen(true)}>
                                     Info
                                 </Button>
                             )}
@@ -54,7 +59,7 @@ export default function CertificateItem({ title, imageLink, status, certificateI
                                     Info
                                 </Button>
                             )}
-                            {status === 'NO_DATA' || status === undefined && (
+                            {(status === 'REJECTED' || status === undefined) && (
                                 <Button style={styles.button} size="small" startIcon={<Iconify icon={'material-symbols:cloud-upload'} />} onClick={() => setOpen(true)}>
                                     Upload
                                 </Button>

@@ -78,7 +78,9 @@
     "newProduct": "Create Lesson",
     "myLessons": "My lessons",
     "admin": "Admin",
-    "review teachers": "Review PROs"
+    "review teachers": "Review PROs",
+    "reviews": "My Reviews",
+    "lessons": "My Lessons"
   },
   "calendar": {
     "newEvent": "Create Event",
@@ -129,11 +131,15 @@
     "accountSettings": "Account Settings",
     "editProfile": "Edit Profile",
     "school": "School",
-    "agenda": "Agenda"
+    "agenda": "Agenda",
+    "lessons": "Lessons",
+    "reviews": "Reviews",
+    "lesson_details": "Lesson details"
   },
   "profile": {
     "tabs": {
-      "profile": "My information"
+      "profile": "My information",
+      "review":"My Reviews"
     },
     "clients": "Clients",
     "level": "Instructor Level",
@@ -176,6 +182,7 @@
     "Profile": "My Profile",
     "Settings": "Settings",
     "SignUpAsAPRO": "I want to be a PRO",
+    "SignUpAsAGuest": "Sign Up",
     "LogIn": "LogIn",
     "logOut": "LogOut",
     "help": "Help"
@@ -265,6 +272,18 @@
     "needsGoogles": "Necesita antiparras",
     "needsHelmet": "Necesita Cazco",
     "discipline": "Discipline"
+  },
+  "completeOrder": {
+    "order": "Your SnowMatch code is: ",
+    "thanksMessage": "Match! Thanks for trusting in SnowMatch",
+    "info": "Your Pro will get in touch with you soon."
+  },
+  "checkout": {
+    "deal_with_pro": "Deal with PRO",
+    "free": "Free",
+    "morning": "Morning",
+    "afternoon": "Afternoon",
+    "all_day": "All Day",
+    "continue": "Continue to find Pros"
   }
-
 }

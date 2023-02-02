@@ -35,7 +35,7 @@ export const countries = [
   { code: 'BW', label: 'Botswana', phone: '267' },
   { code: 'BY', label: 'Belarus', phone: '375' },
   { code: 'BZ', label: 'Belize', phone: '501' },
-  { code: 'CA', label: 'Canada', phone: '1' },
+  { code: 'CA', label: 'USA & Canada', phone: '1' },
   { code: 'CC', label: 'Cocos (Keeling) Islands', phone: '61' },
   { code: 'CD', label: 'Congo, Democratic Republic of the', phone: '243' },
   { code: 'CF', label: 'Central African Republic', phone: '236' },

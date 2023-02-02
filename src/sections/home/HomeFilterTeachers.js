@@ -14,15 +14,17 @@ import PersonIcon from '@mui/icons-material/Person';
 import useLocales from 'src/hooks/useLocales';
 import StylesButton from 'src/components/StylesButton';
 import HoverButton from 'src/components/HoverButton';
-
+import useAuth from 'src/hooks/useAuth';
+import { useTheme } from '@mui/material/styles';
 
 export default function HomeFilterTeachers() {
 
-
+    const theme = useTheme()
     const dispatch = useDispatch()
     const navigate = useNavigate()
-    
-    const {translate} = useLocales()
+    const { isTeacher, user } = useAuth()
+
+    const { translate } = useLocales()
 
 
 
@@ -54,7 +56,11 @@ export default function HomeFilterTeachers() {
     const onSubmitSchools = () => {
         try {
             dispatch(filterTeachers(values))
-            navigate('/match')
+            if (isTeacher) {
+                navigate('/dashboard/e-commerce/shop/school')
+            } else {
+                navigate('/match')
+            }
         } catch (error) {
             console.error(error);
         }
@@ -63,7 +69,11 @@ export default function HomeFilterTeachers() {
     const onSubmitIndependent = () => {
         try {
             dispatch(filterTeachers(values))
-            navigate('/match/independent')
+            if (isTeacher) {
+                navigate('/dashboard/e-commerce/shop/independent')
+            } else {
+                navigate('/match/independent')
+            }
         } catch (error) {
             console.error(error);
         }
@@ -71,20 +81,30 @@ export default function HomeFilterTeachers() {
 
     const onSubmit = () => {
         dispatch(filterTeachers(values))
-        if(values.resort === "Cerro Catedral"){
-            navigate('/match/independent?resort=Cerro Catedral')
-        }else{
-            navigate(`/match/school?resort=${values.resort}`)
+        if (values.resort === "Cerro Catedral") {
+            if (isTeacher) {
+                navigate('/dashboard/e-commerce/independent?resort=Cerro Catedral')
+            } else {
+                navigate('/match/independent?resort=Cerro Catedral')
+            }
+
+        } else {
+            if (isTeacher) {
+                navigate(`/dashboard/e-commerce/shop/school?resort=${values.resort}`)
+            } else {
+                navigate(`/match/school?resort=${values.resort}`)
+            }
+
         }
-            
-    } 
+
+    }
 
     return (
         <>
             <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
                 <Grid container spacing={2}>
                     <Grid item xs={12} md={9} justifyContent='center'>
-                        <Typography variant="h5" sx={{ color: 'common.white' }}> {translate("landingPRO.find")} </Typography>
+                        <Typography variant="h5" sx={{ color: theme.typography.color }}> {translate("landingPRO.find")} </Typography>
                     </Grid>
                     <Grid item xs={12} md={9}>
                         <Card sx={{ p: 3 }}>
@@ -142,7 +162,7 @@ export default function HomeFilterTeachers() {
                                 </Grid>
                                 <Grid item xs={6}>
                                     <HoverButton fullWidth type="submit" variant="contained" size="large" startIcon={<Iconify icon={'eva:flash-fill'} width={20} height={20} />}>
-                                    {translate("landingPRO.match")}
+                                        {translate("landingPRO.match")}
                                     </HoverButton>
                                 </Grid>
 

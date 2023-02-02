@@ -6,6 +6,9 @@ import { Box } from '@mui/material';
 //
 import Logo from './Logo';
 import ProgressBar from './ProgressBar';
+import { useDispatch, useSelector } from 'src/redux/store';
+import { Navigate } from 'react-router';
+import { setRequestedRoute } from 'src/redux/slices/config';
 
 // ----------------------------------------------------------------------
 

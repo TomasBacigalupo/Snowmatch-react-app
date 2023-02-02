@@ -1,0 +1,73 @@
+import { useState } from "react";
+import { Typography, Box, Card, Button, Avatar } from "@mui/material";
+import Iconify from "src/components/Iconify";
+import { formatDate } from "@fullcalendar/react";
+import { useNavigate } from "react-router";
+import { PATH_DASHBOARD } from "src/routes/paths";
+
+export default function EventCard({ lesson }) {
+    
+    const {start, end, id, name, lastName, resort } = lesson;
+    const navigate = useNavigate()
+    const [toggle, setToogle] = useState(false);
+
+    return (
+        <Card 
+            onClick={() => {
+                navigate(`${PATH_DASHBOARD.user.lessons}/${id}`)
+            }}
+        sx={{ display: 'flex', alignItems: 'center', p: 3 }}>
+            <Avatar alt={'Tomi'} src={'avatarUrl'} sx={{ width: 48, height: 48 }} />
+            <Box sx={{ flexGrow: 1, minWidth: 200, pl: 2, pr: 1 }}>
+                <Typography variant="subtitle2" noWrap>
+                    {`${name} ${lastName}`}
+                </Typography>
+                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                    <Iconify icon={'eva:pin-fill'} sx={{ width: 16, height: 16, mr: 0.5, flexShrink: 0 }} />
+                    <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
+                        {resort}
+                    </Typography>
+                </Box>
+                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                    <Iconify icon={'material-symbols:calendar-month'} sx={{ width: 16, height: 16, mr: 0.5, flexShrink: 0 }} />
+                    <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
+                        {`${formatDate(start)}`}
+                    </Typography>
+                </Box>
+                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                    <Iconify icon={'ic:outline-access-time'} sx={{ width: 16, height: 16, mr: 0.5, flexShrink: 0 }} />
+                    <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
+                        {`${start.slice(11)}hs a ${end.slice(11)}hs`}
+                    </Typography>
+                </Box>
+            </Box>
+            <Box sx={{ flexGrow: 1, minWidth: 0, pl: 0, pr: 0 }}>
+                <Button
+                    size="small"
+                    onClick={() => setToogle(!toggle)}
+                    variant={toggle ? 'text' : 'outlined'}
+                    sx={{
+                        marginBottom: '3px',
+                        marginRight: '3px'
+                    }}
+                    color={toggle ? 'success' : 'inherit'}
+                    startIcon={toggle && <Iconify icon={'eva:checkmark-fill'} />}
+                >
+                    {toggle ? 'Payed' : 'Pay'}
+                </Button>
+                <Button
+                    size="small"
+                    onClick={()=>{
+                        navigate(`${PATH_DASHBOARD.user.lessons}/${id}`)
+                    }}
+                    variant={'outlined'}
+                    color={'primary'}
+                    startIcon={toggle && <Iconify icon={'mdi:user'} />}
+                >
+                    Info
+                </Button>
+            </Box>
+            
+        </Card>
+    );
+}

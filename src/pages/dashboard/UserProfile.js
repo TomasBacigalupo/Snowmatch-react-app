@@ -27,6 +27,7 @@ import {
 import useLocales from 'src/hooks/useLocales';
 import { useNavigate } from 'react-router';
 import CertificateItem from 'src/sections/@dashboard/user/account/CertificateItem';
+import { TeacherDetailsReview } from 'src/sections/@dashboard/e-commerce/teacher-details';
 
 // ----------------------------------------------------------------------
 
@@ -70,6 +71,11 @@ export default function UserProfile() {
       value: 'profile',
       icon: <Iconify icon={'ic:round-account-box'} width={20} height={20} />,
       component: <Profile myProfile={_userAbout} posts={_userFeeds} />,
+    },
+    {
+      value: 'review',
+      icon: <Iconify icon={'ic:round-account-box'} width={20} height={20} />,
+      component: <TeacherDetailsReview teacher={user} />,
     }
   ];
 

@@ -14,6 +14,8 @@ const initialState = {
   emailVerified: false,
   phoneVerified: false,
   user: null,
+  isTeacher: false,
+  isStudent: false
 };
 
 const handlers = {
@@ -26,7 +28,10 @@ const handlers = {
       isAuthorized,
       user,
       emailVerified: user?.emailVerified,
-      phoneVerified: user?.cellphoneVerified
+      phoneVerified: user?.cellphoneVerified,
+      isTeacher: user?.role === 'TEACHER',
+      isStudent: user?.role === 'STUDENT',
+      isAdmin: user?.role === 'ADMIN',
     };
   },
   LOGIN: (state, action) => {
@@ -37,14 +42,20 @@ const handlers = {
       user,
       isAuthorized: user.state != 'UNDER_REVIEW',
       emailVerified: user.emailVerified,
-      phoneVerified: user?.cellphoneVerified
+      phoneVerified: user?.cellphoneVerified,
+      isTeacher: user?.role === 'TEACHER',
+      isStudent: user?.role === 'STUDENT',
+      isAdmin: user?.role === 'ADMIN',
     };
   },
   LOGOUT: (state) => ({
     ...state,
     isAuthenticated: false,
     user: null,
-    isAuthorized: false
+    isAuthorized: false,
+    isTeacher: false,
+    isStudent: false,
+    isAdmin: false,
   }),
   REGISTER: (state, action) => {
     const { user } = action.payload;
@@ -55,7 +66,10 @@ const handlers = {
       user,
       isAuthorized: user.state != 'UNDER_REVIEW',
       emailVerified: user.emailVerified,
-      phoneVerified: user.cellphoneVerified
+      phoneVerified: user.cellphoneVerified,
+      isTeacher: user?.role === 'TEACHER',
+      isStudent: user?.role === 'STUDENT',
+      isAdmin: user?.role === 'ADMIN',
     };
   },
   VERIFY: (state, action) => {
@@ -68,7 +82,10 @@ const handlers = {
       isAuthorized: user.state != 'UNDER_REVIEW',
       isInitialized: true,
       emailVerified: user.emailVerified,
-      phoneVerified: user?.cellphoneVerified
+      phoneVerified: user?.cellphoneVerified,
+      isTeacher: user?.role === 'TEACHER',
+      isStudent: user?.role === 'STUDENT',
+      isAdmin: user?.role === 'ADMIN',
     };
   },
   UPDATE: (state, action) => {
@@ -119,7 +136,7 @@ function AuthProvider({ children }) {
           const email = jwtDecode(accessToken).sub;
           const response = await axios.get(`/api/users/auth/${email}`);
           const user = response.data;
-          if (!user?.emailVerified) {
+          if (user?.emailVerified) {
             dispatch({
               type: 'VERIFY',
               payload: {
@@ -132,13 +149,15 @@ function AuthProvider({ children }) {
               },
             });
           } else {
+            console.log({user})
             dispatch({
               type: 'INITIALIZE',
               payload: {
                 isAuthenticated: true,
                 isAuthorized: true,
                 user,
-                phoneVerified: user?.cellphoneVerified
+                phoneVerified: user?.cellphoneVerified,
+                emailVerified: user?.emailVerified,
               },
             });
           }
@@ -184,7 +203,7 @@ function AuthProvider({ children }) {
     });
   };
 
-  const register = async (email, password, firstName, lastName, countryCode, phone, entity, file) => {
+  const register = async (email, password, firstName, lastName, countryCode, phone, entity, file, role = 'TEACHER') => {
     const response = await axios.post('/api/users/create', {
       "email": email,
       "password": password,
@@ -192,20 +211,23 @@ function AuthProvider({ children }) {
       "lastname": lastName,
       "countryCode": countryCode,
       "cellphone": phone,
-      "role": "TEACHER"
+      "role": role
     });
     const user = response.data;
     const accessToken = user.token;
     setSession(accessToken);
     window.localStorage.setItem('accessToken', accessToken);
-    const signedUrl = await axios.get(`/api/images/preSignedUrlImage/${entity}`)
-    await fetch(signedUrl.data, {
-      method: 'PUT',
-      headers: {
-        "Content-Type": file.type,
-      },
-      body: file
-    });
+    if(role !== 'STUDENT'){
+      const signedUrl = await axios.get(`/api/images/preSignedUrlImage/${entity}`)
+      await fetch(signedUrl.data, {
+        method: 'PUT',
+        headers: {
+          "Content-Type": file.type,
+        },
+        body: file
+      });
+    }
+    
     dispatch({
       type: 'REGISTER',
       payload: {
@@ -236,11 +258,10 @@ function AuthProvider({ children }) {
     dispatch({ type: 'REFRESH', payload: { user } })
   }
 
-  const testVerification = async (callBackFailed) => {
+  const testVerification = async (callBack) => {
     const response = await axios.get(`/api/users/auth/${state.user.email}`);
     const user = response.data;
-    if (user.emailVerified || user.cellphoneVerified) {
-
+    if (user.emailVerified) {
       dispatch({
         type: 'INITIALIZE',
         payload: {
@@ -250,8 +271,9 @@ function AuthProvider({ children }) {
           user,
         },
       });
+      callBack(true)
     } else {
-      callBackFailed()
+      callBack(false)
       dispatch({
         type: 'INITIALIZE',
         payload: {

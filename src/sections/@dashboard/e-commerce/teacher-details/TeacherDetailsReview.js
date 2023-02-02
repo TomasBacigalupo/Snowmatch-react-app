@@ -6,19 +6,31 @@ import { Divider, Collapse } from '@mui/material';
 import ProductDetailsReviewForm from './ProductDetailsReviewForm';
 import TeacherDetailsReviewList from './TeacherDetailsReviewList';
 import TeacherDetailsReviewOverview from './TeacherDetailsReviewOverview';
+import useAuth from 'src/hooks/useAuth';
+import { useNavigate } from 'react-router';
+import { dispatch } from 'src/redux/store';
+import { setRequestedRoute } from 'src/redux/slices/config';
 
 // ----------------------------------------------------------------------
 
 TeacherDetailsReview.propTypes = {
   teacher: PropTypes.object,
+  openForm: PropTypes.bool
 };
 
-export default function TeacherDetailsReview({ teacher }) {
-  const [reviewBox, setReviewBox] = useState(false);
-  const { rates } = teacher.rates;
+export default function TeacherDetailsReview({ teacher, openForm = false }) {
+  const [reviewBox, setReviewBox] = useState(openForm);
+  const navigate = useNavigate()
+  const {isStudent} = useAuth()
 
   const handleOpenReviewBox = () => {
-    setReviewBox((prev) => !prev);
+    if(isStudent){
+      setReviewBox((prev) => !prev);
+    } else {
+      dispatch(setRequestedRoute(`/match/teacher/${teacher.id}`))
+      navigate('review')
+    }
+    
   };
 
   const handleCloseReviewBox = () => {
@@ -30,9 +42,9 @@ export default function TeacherDetailsReview({ teacher }) {
       <TeacherDetailsReviewOverview teacher={teacher} onOpen={handleOpenReviewBox} />
 
       <Divider />
-
+      
       <Collapse in={reviewBox}>
-        <ProductDetailsReviewForm onClose={handleCloseReviewBox} id="move_add_review" />
+        <ProductDetailsReviewForm onClose={handleCloseReviewBox} id="move_add_review" teacherId={teacher.id}/>
         <Divider />
       </Collapse>
 

@@ -34,18 +34,22 @@ const initialState = {
   checkout: {
     activeStep: 0,
     cart: [],
+    events: [],
     subtotal: 0,
     total: 0,
     discount: 0,
     shipping: 0,
     billing: null,
+    isOpenAddEventModal: false,
+    teacher: {}
   },
   cakeChart: [0, 0, 0, 0],
   totalClasses: 0,
   totalIncome: 0,
   topClients: [],
   totalClients: 0,
-  conversations: []
+  conversations: [],
+  loadingRate: false
 };
 
 const slice = createSlice({
@@ -56,6 +60,17 @@ const slice = createSlice({
     // CLOSE CLINIC MODAL
     closeClinicModal(state) {
       state.openClinicModal = false;
+      
+    },
+
+    // CLOSE EVENT MODAL
+    closeAddEventModal(state) {
+      state.checkout.isOpenAddEventModal = false;
+    },
+
+    // OPEN EVENT MODAL
+    openAddEventModal(state) {
+      state.checkout.isOpenAddEventModal = true;
     },
 
     // START LOADING
@@ -156,7 +171,7 @@ const slice = createSlice({
     getCart(state, action) {
       const cart = action.payload;
 
-      const subtotal = sum(cart.map((cartItem) => cartItem.price * cartItem.quantity));
+      const subtotal = 0//sum(cart.map((cartItem) => cartItem.price * cartItem.quantity));
       const discount = cart.length === 0 ? 0 : state.checkout.discount;
       const shipping = cart.length === 0 ? 0 : state.checkout.shipping;
       const billing = cart.length === 0 ? null : state.checkout.billing;
@@ -170,30 +185,20 @@ const slice = createSlice({
     },
 
     addCart(state, action) {
-      const product = action.payload;
-      const isEmptyCart = state.checkout.cart.length === 0;
-
-      if (isEmptyCart) {
-        state.checkout.cart = [...state.checkout.cart, product];
-      } else {
-        state.checkout.cart = state.checkout.cart.map((_product) => {
-          const isExisted = _product.id === product.id;
-          if (isExisted) {
-            return {
-              ..._product,
-              quantity: _product.quantity + 1,
-            };
-          }
-          return _product;
-        });
+      const {teacher, event} = action.payload;
+      if(teacher){
+        state.checkout.teacher = teacher;
       }
-      state.checkout.cart = uniqBy([...state.checkout.cart, product], 'id');
+      
+      state.checkout.cart = [...state.checkout.cart, teacher];
+      state.checkout.events = [...state.checkout.events, event];
+      state.checkout.cart = uniqBy([...state.checkout.cart, teacher], 'id');
     },
 
     deleteCart(state, action) {
-      const updateCart = state.checkout.cart.filter((item) => item.id !== action.payload);
+      const updateCart = state.checkout.events.filter((event, idx) => idx !== action.payload);
 
-      state.checkout.cart = updateCart;
+      state.checkout.events = updateCart;
     },
 
     resetCart(state) {
@@ -264,6 +269,26 @@ const slice = createSlice({
       state.checkout.shipping = shipping;
       state.checkout.total = state.checkout.subtotal - state.checkout.discount + shipping;
     },
+
+    // SUCCESS RATE
+    onRateSuccess(state, action) {
+      const {teacherId} = action.payload;
+      state.teacher = state.teachers.map(teacher => {
+        if(teacherId === teacher.id){
+          return {
+            ...teacher,
+            rated: true
+          }
+        }
+        return teacher
+        }
+      )
+      state.loadingRate = false
+    },
+
+    onRateError(state, action) {
+      state.loadingRate = false
+    }
   },
 });
 
@@ -286,7 +311,9 @@ export const {
   decreaseQuantity,
   sortByProducts,
   filterTeachers,
-  closeClinicModal
+  closeClinicModal,
+  closeAddEventModal,
+  openAddEventModal
 } = slice.actions;
 
 // ----------------------------------------------------------------------
@@ -368,26 +395,38 @@ export function getTeacher(name) {
 
 // ----------------------------------------------------------------------
 
+export function getTeacherBiId(teacherId) {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get(`/api/users/teacher/byId/${teacherId}`);
+      dispatch(slice.actions.getTeacherSuccess(response.data));
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+// ----------------------------------------------------------------------
+
 export function getTeacherWithRates(email) {
   return async () => {
-    const ratesRequest = `/api/rate/getRates/${email}`;
     const teacherRequest = `/api/users/${email}`;
     dispatch(slice.actions.startLoading());
     try {
       axios.get(teacherRequest).then(r => {
         const teacher = r.data;
-        axios.get(ratesRequest).then(rs => {
-          const rates = rs.data;
-          const dto = {
-            "rates": rates,
+        const dto = {
+            "rates": [],
             "teacher": teacher
-          }
+        }
           if (dto.teacher.events) {
             dto.teacher.events = merge(dto.teacher.events.sort(function (a, b) { return new Date(a.start) - new Date(b.start) }))
           }
           dispatch(slice.actions.getTeacherWithRatesSuccess(dto));
-        })
       })
+      
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error));
@@ -594,6 +633,17 @@ export function getTeacherByID(userId, callback) {
       callback(resp.data)
     } catch (error) {
       console.error(error)
+    }
+  }
+}
+
+export function hireTeacher(teacherId, requestedEvents, callback){
+  return async () =>{
+    try{
+      const resp = await axios.post(`api/hire/byId/${teacherId}`, requestedEvents)
+      callback(true)
+    } catch(e){
+      callback(false)
     }
   }
 }

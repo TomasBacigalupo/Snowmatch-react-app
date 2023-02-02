@@ -1,19 +1,14 @@
 import PropTypes from 'prop-types';
-import { paramCase } from 'change-case';
-import { Link as RouterLink, Router, useNavigate } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // @mui
 import { Box, Card, Link, Typography, Stack } from '@mui/material';
 // routes
 import { PATH_DASHBOARD, PATH_GUEST } from '../../../../routes/paths';
-// utils
-import { fCurrency } from '../../../../utils/formatNumber';
 // components
 import Label from '../../../../components/Label';
 import Image from '../../../../components/Image';
-import { ColorPreview } from '../../../../components/color-utils';
 import useAuth from 'src/hooks/useAuth';
 import { useState } from 'react';
-import { useTheme } from '@mui/material/styles';
 
 // ----------------------------------------------------------------------
 
@@ -22,19 +17,16 @@ ShopTeacherCard.propTypes = {
 };
 
 export default function ShopTeacherCard({ teacher }) {
-  const { name, lastname, imageLink, stars, level, information, email, state, resorts} = teacher;
-  const status = 'sale';
-  const priceSale = 10;
-  const theme = useTheme();
+  const { name, lastname, imageLink, information, email, resorts, id } = teacher;
 
   const navigate = useNavigate();
   const [src, setSrc] = useState(imageLink)
 
-  const { isAuthenticated} = useAuth()
-  const linkTo =  isAuthenticated ? PATH_DASHBOARD.eCommerce.viewTeacher(email) : PATH_GUEST.viewTeacher(email) ;
+  const { isTeacher } = useAuth()
+  const linkTo = isTeacher ? PATH_DASHBOARD.eCommerce.viewTeacher(id) : PATH_GUEST.viewTeacher(id);
 
   return (
-    <Card onClick={()=>navigate(linkTo)}>
+    <Card onClick={() => navigate(linkTo)}>
       <Box sx={{ position: 'relative' }}>
         {resorts && (
           <Label
@@ -45,13 +37,13 @@ export default function ShopTeacherCard({ teacher }) {
               zIndex: 9,
               position: 'absolute',
               textTransform: 'uppercase',
-              bgcolor:'#99FFFF'
+              bgcolor: '#99FFFF'
             }}
           >
             {resorts[0]}
           </Label>
         )}
-        <Image alt={name} src={src} ratio="1/1" onError={()=>setSrc('/assets/notFound.jpeg')}/>
+        <Image alt={name} src={src} ratio="1/1" onError={() => setSrc('/assets/notFound.jpeg')} />
       </Box>
 
       <Stack spacing={2} sx={{ p: 3 }}>
@@ -62,12 +54,9 @@ export default function ShopTeacherCard({ teacher }) {
         </Link>
 
         <Stack direction="row" alignItems="center" justifyContent="space-between">
-          {/* <ColorPreview colors={colors} /> */}
-            <Typography component="span" sx={{ color: 'text.disabled', }}>
-                {information}
-            </Typography>
-
-        
+          <Typography component="span" sx={{ color: 'text.disabled', }}>
+            {information}
+          </Typography>
         </Stack>
       </Stack>
     </Card>

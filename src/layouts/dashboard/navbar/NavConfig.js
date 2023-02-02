@@ -56,6 +56,9 @@ const navConfig = [
           // { title: 'cards', path: PATH_DASHBOARD.user.cards },
           // { title: 'edit', path: PATH_DASHBOARD.user.demoEdit },
           { title: 'account', path: PATH_DASHBOARD.user.account },
+          { title: 'reviews', path: PATH_DASHBOARD.user.reviews },
+          { title: 'lessons', path: PATH_DASHBOARD.user.lessons },
+          
         ],
       },
 

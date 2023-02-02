@@ -2,7 +2,7 @@ import { m } from 'framer-motion';
 import { Link as RouterLink } from 'react-router-dom';
 // @mui
 import { styled } from '@mui/material/styles';
-import { Button, Box, Link, Container, Typography, Stack, Grid, Select } from '@mui/material';
+import { Button, Box, Link, Container, Typography, Stack, Grid, Select, Hidden } from '@mui/material';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // components
@@ -24,12 +24,13 @@ import HoverButton from 'src/components/HoverButton';
 
 const RootStyle = styled(m.div)(({ theme }) => ({
   position: 'relative',
-  backgroundColor: theme.palette.grey[400],
+  backgroundColor: 'white',
   [theme.breakpoints.up('md')]: {
     top: 0,
     left: 0,
+    flex:1,
     width: '100%',
-    height: '100vh',
+    height: '100%',
     display: 'flex',
     position: 'fixed',
     alignItems: 'center',
@@ -124,61 +125,67 @@ export default function HomeHero() {
     console.log(data)
   }
   return (
-    <MotionContainer>
+    <MotionContainer sx={{ height: '100vh'}}>
       <RootStyle>
-        <HeroOverlayStyle
+        {/* <HeroOverlayStyle
           alt="overlay"
           src="/assets/overlay.svg"
           variants={varFade().in}
-        />
+        /> */}
 
         <Container>
           <ContentStyle>
             <Grid container spacing={2}>
+              <Hidden smUp>
+                <img src='/logo/snowmatch.png' sx={{height: '200px', width:'100%'}}/>
+              </Hidden>
               <Grid item xs={12} md={6.5}>
                 <HomeFilterTeachers />
               </Grid>
-              <Grid item xs={12} md={5.5} >
-                <m.div variants={varFade().inRight}>
-                  <Typography variant="h2" sx={{ color: 'common.white' }}>
-                    {translate('landingPRO.heroTitle0')}
-                  </Typography>
-                  <Typography variant="h3" sx={{ color: 'common.white' }}>
-                    {translate('landingPRO.heroTitle1')}
-                    {translate('landingPRO.heroTitle2')}<br />
-                    <Typography component="span" variant="h3" sx={{ color: 'primary.main' }}>
-                      SnowMatch
+              <Hidden smDown>
+                <Grid item xs={12} md={5.5} >
+                  <m.div variants={varFade().inRight}>
+                    <Typography variant="h2" >
+                      {translate('landingPRO.heroTitle0')}
                     </Typography>
-                  </Typography>
-                </m.div>
+                    <Typography variant="h3" >
+                      {translate('landingPRO.heroTitle1')}
+                      {translate('landingPRO.heroTitle2')}<br />
+                      <Typography component="span" variant="h3" sx={{ color: 'primary.main' }}>
+                        SnowMatch
+                      </Typography>
+                    </Typography>
+                  </m.div>
 
-                <m.div variants={varFade().inRight}>
+                  <m.div variants={varFade().inRight}>
 
-                  <Typography sx={{ color: 'common.white' }}>
-                    {translate('landingPRO.desc1')}
-                  </Typography>
-                  <Typography sx={{ color: 'common.white' }}>
-                    {translate('landingPRO.desc2')}
-                  </Typography>
-                  <Typography sx={{ color: 'common.white' }}>
-                    {translate('landingPRO.desc3')}
-                  </Typography>
+                    <Typography >
+                      {translate('landingPRO.desc1')}
+                    </Typography>
+                    <Typography >
+                      {translate('landingPRO.desc2')}
+                    </Typography>
+                    <Typography>
+                      {translate('landingPRO.desc3')}
+                    </Typography>
 
-                </m.div>
-                <br />
-                <m.div variants={varFade().inRight}>
-                  <HoverButton
-                    size="large"
-                    variant="contained"
-                    component={RouterLink}
-                    to={"/auth/register"}
-                    sx={{ marginBottom: '10px' }}
-                    startIcon={<Iconify icon={'eva:flash-fill'} width={20} height={20} />}
-                  >
-                    {translate('landingPRO.getStarted')}
-                  </HoverButton>
-                </m.div>
-              </Grid>
+                  </m.div>
+                  <br />
+                  <m.div variants={varFade().inRight}>
+                    <HoverButton
+                      size="large"
+                      variant="contained"
+                      component={RouterLink}
+                      to={"/auth/register"}
+                      sx={{ marginBottom: '10px' }}
+                      startIcon={<Iconify icon={'eva:flash-fill'} width={20} height={20} />}
+                    >
+                      {translate('landingPRO.getStarted')}
+                    </HoverButton>
+                  </m.div>
+                </Grid>
+              </Hidden>
+              
 
 
             </Grid>

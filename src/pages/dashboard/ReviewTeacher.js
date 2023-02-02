@@ -108,15 +108,16 @@ export default function ReviewTeacher() {
                         <Card>
                             <Grid container>
                                 <Grid item xs={12} md={6} lg={7}>
-                                    <TeacherDetailsCarousel teacher={{ images: [teacher.imageLink] }} />
+                                    <TeacherDetailsCarousel teacher={{ images: [teacher?.imageLink] }} />
                                 </Grid>
                                 <Grid item xs={12} md={6} lg={5}>
-                                    <TeacherDetailsSummary
+                                    {teacher && <TeacherDetailsSummary
                                         teacher={teacher}
                                         cart={checkout.cart}
                                         onAddCart={handleAddCart}
                                         onGotoStep={handleGotoStep}
-                                    />
+                                    />}
+                                    
                                 </Grid>
                             </Grid>
                         </Card>
@@ -136,7 +137,8 @@ export default function ReviewTeacher() {
                                 </Box>
                                 <Divider />
                                 <TabPanel value="1">
-                                    <TeacherDetailsReview teacher={teacher} openForm={true}/>
+                                    {teacher && <TeacherDetailsReview teacher={teacher} openForm={true} />}
+                                    
                                 </TabPanel>
                             </TabContext>
                         </Card>

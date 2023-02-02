@@ -47,6 +47,7 @@ export default function AuthGuard({ children }) {
   // }  
 
   if (!isAuthenticated) {
+    dispatch(setRequestedRoute(requestedLocation))
     if (pathname !== requestedLocation) {
       setRequestedLocation(pathname);
     }

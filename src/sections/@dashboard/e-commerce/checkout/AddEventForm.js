@@ -72,7 +72,7 @@ const AddEventForm = ({ onCancel }) => {
                 people: data.amount,
                 resort: data.resort,
                 lessonTime: data.duration,
-                date: date.getTime() / 1000
+                date: data.classDate
             };
             dispatch(addCart({
                 teacher: teacher,

@@ -1,39 +1,28 @@
 import React from 'react'
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import merge from 'lodash/merge';
-import { isBefore } from 'date-fns';
-import { useSnackbar } from 'notistack';
 // form
-import { useForm, Controller, useWatch } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { Box, Stack, Button, Tooltip, TextField, IconButton, DialogActions, Modal, DialogTitle } from '@mui/material';
+import { Box, Stack, Button, TextField, DialogActions, DialogTitle } from '@mui/material';
 import { LoadingButton, MobileDatePicker } from '@mui/lab';
 // redux
 import { useDispatch } from '../../../../redux/store';
-import { contactTeacher } from '../../../../redux/slices/contact';
 // components
-import Iconify from '../../../../components/Iconify';
 import { DialogAnimate } from '../../../../components/animate';
 
-import { ColorSinglePicker } from '../../../../components/color-utils';
-import { FormProvider, RHFTextField, RHFSwitch, RHFSelect } from '../../../../components/hook-form';
+import { FormProvider, RHFTextField, RHFSelect } from '../../../../components/hook-form';
 import { useEffect, useState } from 'react';
 
-import { countries } from '../../../../_mock';
 import useLocales from 'src/hooks/useLocales';
-import { useSelector } from 'react-redux';
-import AuthGuard from 'src/guards/AuthGuard';
-import { addCart, hireTeacher } from 'src/redux/slices/teachers';
+import { addCart } from 'src/redux/slices/teachers';
 import { useNavigate } from 'react-router';
 import { setRequestedRoute } from 'src/redux/slices/config';
 
 
 const HireForm = ({ teacher, onCancel}) => {
-    const { enqueueSnackbar } = useSnackbar();
     const { translate } = useLocales();
-    const { contactForm } = useSelector((state) => state.contact);
     const [open, setOpen] = useState(false);
     const navigate = useNavigate()
 
@@ -172,13 +161,12 @@ const HireForm = ({ teacher, onCancel}) => {
                     </Button>
 
                     <LoadingButton type="submit" variant="contained" loading={isSubmitting} sx={{ ':hover': { color: '#3399FF' } }}>
-                        {translate("checkout.book_lesson")}
+                    {translate("checkout.book_lesson")}
                     </LoadingButton>
                 </DialogActions>
 
                 <DialogAnimate open={open} onClose={handleClose}>
                     <DialogTitle>{translate("conversation.validation_required")}</DialogTitle>
-
                     <Box spacing={3} sx={{ p: 3 }}>
                         <p id="validation-modal-description">
                             {translate("conversation.validation_required_body")}
@@ -186,8 +174,6 @@ const HireForm = ({ teacher, onCancel}) => {
                         <Button onClick={handleClose}>{translate("conversation.close")}</Button>
                     </Box>
                 </DialogAnimate>
-
-
             </FormProvider>
     );
 }

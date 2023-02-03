@@ -172,7 +172,7 @@ const HireForm = ({ teacher, onCancel}) => {
                     </Button>
 
                     <LoadingButton type="submit" variant="contained" loading={isSubmitting} sx={{ ':hover': { color: '#3399FF' } }}>
-                        {translate("conversation.contact")}
+                        {translate("checkout.book_lesson")}
                     </LoadingButton>
                 </DialogActions>
 

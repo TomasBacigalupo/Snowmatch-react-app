@@ -366,24 +366,7 @@ export default function TeacherDetailsSummary({ cart, teacher, onAddCart, onGoto
 
         <DialogAnimate open={isOpenContactModal} onClose={handleCloseContactModal}>
           <DialogTitle>{translate("conversation.contact_pro")}</DialogTitle>
-          {console.log("aca")}
-          <Box margin='8px'>
-            <ToggleButtonGroup
-              color="primary"
-              value={lessons}
-              fullWidth
-              exclusive
-              onChange={handleChange}
-            >
-              <ToggleButton value="me">My Lessons</ToggleButton>
-              <Tooltip title='Not available in your country'>
-                <ToggleButton disabled={true} value="family">My Family Lessons</ToggleButton>
-              </Tooltip>
-              
-            </ToggleButtonGroup>
-          </Box>
-          {lessons === 'me' && <HireForm teacher={teacher} onCancel={handleCloseContactModal}/>}
-          {!(lessons === 'me') && <ContactForm teacher={id} onCancel={handleCloseContactModal} />}
+          <HireForm teacher={teacher} onCancel={handleCloseContactModal}/>
           
         </DialogAnimate>
 

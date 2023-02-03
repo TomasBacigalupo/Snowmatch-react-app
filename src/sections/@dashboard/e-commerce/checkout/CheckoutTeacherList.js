@@ -22,6 +22,7 @@ import Iconify from '../../../../components/Iconify';
 import { formatDate } from '@fullcalendar/react';
 import useLocales from 'src/hooks/useLocales';
 import { toLower } from 'lodash';
+import { useSelector } from 'src/redux/store';
 
 // ----------------------------------------------------------------------
 
@@ -38,15 +39,15 @@ const IncrementerStyle = styled('div')(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 CheckoutTeacherList.propTypes = {
-    teacher: PropTypes.object.isRequired,
     events: PropTypes.array.isRequired,
     onDelete: PropTypes.func,
     onDecreaseQuantity: PropTypes.func,
     onIncreaseQuantity: PropTypes.func,
 };
 
-export default function CheckoutTeacherList({ teacher, events, onDelete, onIncreaseQuantity, onDecreaseQuantity }) {
+export default function CheckoutTeacherList({ events, onDelete, onIncreaseQuantity, onDecreaseQuantity }) {
     const {translate} = useLocales()
+    const {teacher} = useSelector(state => state.teachers)
     return (
         <TableContainer >
             <Table>
@@ -65,7 +66,7 @@ export default function CheckoutTeacherList({ teacher, events, onDelete, onIncre
                             <TableRow key={idx}>
                                 <TableCell>
                                     <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                                        <Image alt="product image" src={teacher.imageUrl} sx={{ width: 64, height: 64, borderRadius: 1.5, mr: 2 }} />
+                                        <Image alt="teacher Picture" src={teacher.imageLink} sx={{ width: 64, height: 64, borderRadius: 1.5, mr: 2 }} />
                                         <Box>
                                             <Typography noWrap variant="subtitle2" sx={{ maxWidth: 240 }}>
                                                 {formatDate(date)}

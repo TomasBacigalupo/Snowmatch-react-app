@@ -1,40 +1,34 @@
 import React from 'react'
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import merge from 'lodash/merge';
-import { isBefore } from 'date-fns';
 import { useSnackbar } from 'notistack';
 // form
-import { useForm, Controller, useWatch } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { Box, Stack, Button, Tooltip, TextField, IconButton, DialogActions, Modal, DialogTitle } from '@mui/material';
+import { Box, Stack, Button, Tooltip, TextField, DialogActions, DialogTitle } from '@mui/material';
 import { LoadingButton, MobileDatePicker } from '@mui/lab';
 // redux
 import { useDispatch } from '../../../../redux/store';
-import { contactTeacher } from '../../../../redux/slices/contact';
 // components
-import Iconify from '../../../../components/Iconify';
 import { DialogAnimate } from '../../../../components/animate';
 
-import { ColorSinglePicker } from '../../../../components/color-utils';
-import { FormProvider, RHFTextField, RHFSwitch, RHFSelect } from '../../../../components/hook-form';
-import { useEffect, useState } from 'react';
+import { FormProvider, RHFTextField, RHFSelect } from '../../../../components/hook-form';
+import { useState } from 'react';
 
-import { countries } from '../../../../_mock';
+
 import useLocales from 'src/hooks/useLocales';
 import { useSelector } from 'react-redux';
-import AuthGuard from 'src/guards/AuthGuard';
-import { addCart, closeAddEventModal, hireTeacher } from 'src/redux/slices/teachers';
+import { addCart, closeAddEventModal } from 'src/redux/slices/teachers';
 import { useNavigate } from 'react-router';
 
 
-const AddEventForm = ({ teacher, onCancel }) => {
+const AddEventForm = ({ onCancel }) => {
     const { enqueueSnackbar } = useSnackbar();
     const { translate } = useLocales();
     const { contactForm } = useSelector((state) => state.contact);
+    const { teacher } = useSelector((state) => state.teachers);
     const [open, setOpen] = useState(false);
-    const navigate = useNavigate()
     const handleOpen = () => {
         setOpen(true);
     };
@@ -45,11 +39,11 @@ const AddEventForm = ({ teacher, onCancel }) => {
     const dispatch = useDispatch();
 
     const ContactSchema = Yup.object().shape({
-        level: Yup.string(),
-        activity: Yup.string(),
-        amount: Yup.number(),
-        duration: Yup.string(),
-        classDate: Yup.string(),
+        level: Yup.string().required(),
+        activity: Yup.string().required(),
+        amount: Yup.number().required(),
+        duration: Yup.string().required(),
+        resort: Yup.string().required()
     });
 
 
@@ -75,6 +69,8 @@ const AddEventForm = ({ teacher, onCancel }) => {
             const date = new Date(data.classDate)
             const requestEvent = {
                 price: 0,
+                people: data.amount,
+                resort: data.resort,
                 lessonTime: data.duration,
                 date: date.getTime() / 1000
             };
@@ -82,24 +78,8 @@ const AddEventForm = ({ teacher, onCancel }) => {
                 teacher: teacher,
                 event: requestEvent
             }))
+            enqueueSnackbar(translate('checkout.event_added'))
             dispatch(closeAddEventModal())
-            // dispatch(hireTeacher(teacher, [requestEvent], (succ) =>{
-            //     if (!succ) {
-            //         enqueueSnackbar("Error trying to hire Teacher", {
-            //             variant: 'error',
-            //             autoHideDuration: 10000,
-            //         })
-            //     }
-
-            //     else {
-            //         enqueueSnackbar(translate("conversation.message_sent"), {
-            //             variant: 'success',
-            //             autoHideDuration: 10000,
-            //         })
-            //         onCancel();
-            //         reset();
-            //     }
-            // }));
         } catch (error) {
             console.error(error);
         }
@@ -111,6 +91,12 @@ const AddEventForm = ({ teacher, onCancel }) => {
     return (
             <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
                 <Stack spacing={3} sx={{ p: 3 }}>
+                <RHFSelect name='resort' label={'Resort'}>
+                    <option value="" />
+                    {teacher?.resorts.map(resort => <option key={resort} value={resort}>
+                        {resort}
+                    </option>)}
+                </RHFSelect>
                     <RHFSelect name="level" label={translate("school.clients.form.level")} placeholder={translate("school.clients.form.level")}>
                         <option value="" />
                         <option key="BEGINNER" value="BEGINNER">
@@ -127,30 +113,27 @@ const AddEventForm = ({ teacher, onCancel }) => {
                         </option>
                     </RHFSelect>
 
-                    <RHFSelect name="activity" label={translate("conversation.activity")} placeholder={translate("conversation.activity")}>
-                        <option value="" />
-                        <option key="SKI" value="SKI">
-                            SKI
-                        </option>
-                        <option key="SNOWBOARD" value="SNOWBOARD">
-                            SNOWBOARD
-                        </option>
-                    </RHFSelect>
+                <RHFSelect name="activity" label={translate("conversation.activity")} placeholder={translate("conversation.activity")}>
+                    <option value="" />
+                    {teacher?.disciplines.map(opt => <option key={opt} value={opt}>
+                        {opt}
+                    </option>)}
+                </RHFSelect>
 
-                    <RHFTextField name="amount" label={translate("conversation.amount")} />
+                <RHFTextField name="amount" label={translate("conversation.amount")} />
 
-                    <RHFSelect name="duration" label={translate("conversation.duration")} placeholder={translate("conversation.duration")}>
-                        <option value="" />
-                        <option key="HALFDAY (MORNING)" value="MORNING">
-                            HALFDAY (MORNING)
-                        </option>
-                        <option key="HALFDAY (AFTERNOON)" value="AFTERNOON">
-                            HALFDAY (AFTERNOON)
-                        </option>
-                        <option key="FULLDAY" value="ALLDAY">
-                            FULLDAY
-                        </option>
-                    </RHFSelect>
+                <RHFSelect name="duration" label={translate("conversation.duration")} placeholder={translate("conversation.duration")}>
+                    <option value="" />
+                    <option key="MORNING" value="MORNING">
+                        {translate('checkout.morning')}
+                    </option>
+                    <option key="AFTERNOON" value="AFTERNOON">
+                        {translate('checkout.afternoon')}
+                    </option>
+                    <option key="FULLDAY" value="ALLDAY">
+                        {translate('checkout.allday')}
+                    </option>
+                </RHFSelect>
 
                     <Controller
                         name="classDate"

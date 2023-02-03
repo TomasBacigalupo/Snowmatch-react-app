@@ -7,7 +7,7 @@ import interactionPlugin from '@fullcalendar/interaction';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 // @mui
-import { Box, Grid, Card, Button, Typography, Avatar, Link, IconButton, Dialog,DialogActions,DialogContent, DialogTitle } from '@mui/material';
+import { Box, Grid, Card, Button, Typography, Avatar, Link, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../../../redux/store';
 import { onBackStep, onNextStep, createBilling } from '../../../../redux/slices/teachers';
@@ -15,11 +15,8 @@ import { onBackStep, onNextStep, createBilling } from '../../../../redux/slices/
 import { _addressBooks } from '../../../../_mock';
 // components
 import Label from '../../../../components/Label';
-import Iconify from '../../../../components/Iconify';
 //
 import CheckoutSummary from './CheckoutSummary';
-import CheckoutNewAddressForm from './CheckoutNewAddressForm';
-import { eventToString } from 'src/utils/eventUtils';
 // calendar
 import {
     CalendarStyle,
@@ -28,6 +25,8 @@ import {
 import useResponsive from 'src/hooks/useResponsive';
 import { nullableTypeAnnotation } from '@babel/types';
 import ShopTeacherCard from '../shop/ShopTeacherCard';
+import EventCard from '../../user/cards/EventCard';
+import EventConfirmCard from './EventConfirmCard';
 // ----------------------------------------------------------------------
 
 FriendCard.propTypes = {
@@ -53,7 +52,7 @@ function FriendCard({ friend, onClick, events }) {
                 {`${name} ${lastname}`}
             </Link>
             {events.map(event=> <Typography>
-                Lesson: {eventToString(event)}
+                Lesson:
             </Typography>)}
 
         </Card>
@@ -100,7 +99,7 @@ export default function CheckoutConfirmation() {
                     <Grid item xs={12} >
                         <Grid container spacing={2}>
                             <Grid item xs={6}>
-                                <ShopTeacherCard teacher={teacher}/>
+                                {teacher && <ShopTeacherCard teacher={teacher}/>}
                             </Grid>
                             <Grid item xs={6}>
                                 <Card sx={{
@@ -112,9 +111,10 @@ export default function CheckoutConfirmation() {
                                     flexDirection: 'column',
                                 }}>
                                     <Grid container spacing={2}>
-                                        {events.map(event => <Grid item xs={12}><Typography>
-                                            Lesson: {eventToString(event)}
-                                        </Typography></Grid>)}
+                                        <Typography variant='body1' sx={{pl:3}}>Lessons:</Typography>
+                                        {events.map(event => <Grid item xs={12}>
+                                            <EventConfirmCard event={event}/>
+                                        </Grid>)}
                                     </Grid>
                                 </Card>
                             </Grid>
@@ -187,7 +187,10 @@ export default function CheckoutConfirmation() {
             <Dialog open={open} onClose={handleClose}>
                 <DialogTitle>Event Requested</DialogTitle>
                 <DialogContent>
-                    <Typography variant='body2'>{selectedEvent ? eventToString(selectedEvent): ''}</Typography>
+                    <Typography variant='body2'>{selectedEvent?.price}</Typography>
+                    <Typography variant='body2'>{selectedEvent?.people}</Typography>
+                    <Typography variant='body2'>{selectedEvent?.level}</Typography>
+                    <Typography variant='body2'>{selectedEvent?.discipline}</Typography>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose}>Close</Button>

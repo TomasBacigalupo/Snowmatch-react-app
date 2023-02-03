@@ -7,7 +7,7 @@ import { Box, Grid, Step, Stepper, Container, StepLabel, StepConnector, DialogTi
 import { useDispatch, useSelector } from '../../redux/store';
 import { getCart, createBilling } from '../../redux/slices/teachers';
 // routes
-import { PATH_DASHBOARD } from '../../routes/paths';
+import { PATH_DASHBOARD, PATH_DOCS, PATH_GUEST } from '../../routes/paths';
 // hooks
 import useIsMountedRef from '../../hooks/useIsMountedRef';
 import useSettings from '../../hooks/useSettings';
@@ -104,11 +104,7 @@ export default function EcommerceCheckoutTeacher() {
         <HeaderBreadcrumbs
           heading="Checkout"
           links={[
-            { name: 'Dashboard', href: PATH_DASHBOARD.root },
-            {
-              name: 'E-Commerce',
-              href: PATH_DASHBOARD.eCommerce.root,
-            },
+            { name: 'home', href: PATH_GUEST.school },
             { name: 'Checkout' },
           ]}
         />

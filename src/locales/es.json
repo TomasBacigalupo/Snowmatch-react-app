@@ -288,6 +288,8 @@
         "morning": "Mañana",
         "afternoon": "Tarde",
         "allday": "Todo el día",
-        "continue": "Seguir buscando Pros"
+        "continue": "Seguir buscando Pros",
+        "event_added": "Clase agendada",
+        "book_lesson": "Reservar clase"
     }
 }

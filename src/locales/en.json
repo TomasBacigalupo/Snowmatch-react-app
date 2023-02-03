@@ -284,6 +284,8 @@
     "morning": "Morning",
     "afternoon": "Afternoon",
     "all_day": "All Day",
-    "continue": "Continue to find Pros"
+    "continue": "Continue to find Pros",
+    "event_added": "Lesson booked",
+    "book_lesson": "Book"
   }
 }

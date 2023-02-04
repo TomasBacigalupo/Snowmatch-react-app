@@ -51,7 +51,7 @@ export default function PageVerificationSucceed() {
                         </Typography>
 
                         <m.div variants={varBounce().in}>
-                            <VerifyEmailIllustration sx={{ height: 260, my: { xs: 5, sm: 10 } }} />
+                            <VerifyEmailIllustration success={true} sx={{ height: 260, my: { xs: 5, sm: 10 } }} />
                         </m.div>
                         {loading && (
                             <CircularProgress />

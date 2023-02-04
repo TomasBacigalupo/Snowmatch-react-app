@@ -287,5 +287,12 @@
     "continue": "Continue to find Pros",
     "event_added": "Lesson booked",
     "book_lesson": "Book"
+  },
+  "verify": {
+    "title": "Verify your Mail",
+    "description": "We sent a verification email to {{email}}. Verify your email and the press Continue.",
+    "reload": "Continue",
+    "logout": "Log out",
+    "send_email": "Resend verification email"
   }
 }

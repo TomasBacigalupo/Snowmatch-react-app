@@ -291,5 +291,12 @@
         "continue": "Seguir buscando Pros",
         "event_added": "Clase agendada",
         "book_lesson": "Reservar clase"
+    },
+    "verify": {
+        "title": "Verifique su Mail",
+        "description": "Enviamos un mail a {{email}}. Verifique su identidad y luego presione continuar.",
+        "reload": "Continuar",
+        "logout": "Cerrar sesión",
+        "send_email": "Reenviar mail de verificación"
     }
 }

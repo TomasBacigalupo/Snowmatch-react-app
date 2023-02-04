@@ -18,6 +18,7 @@ import axios from '../utils/axios';
 import { PATH_DASHBOARD, PATH_AUTH } from '../routes/paths';
 import { dispatch, useSelector } from 'src/redux/store';
 import { setRequestedRoute } from 'src/redux/slices/config';
+import useLocales from 'src/hooks/useLocales';
 
 // ----------------------------------------------------------------------
 
@@ -32,8 +33,9 @@ const RootStyle = styled('div')(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 export default function PageVerifyEmail() {
-  const { testVerification, logout } = useAuth();
+  const { testVerification, logout, user } = useAuth();
   const { enqueueSnackbar } = useSnackbar();
+  const { translate } = useLocales()
   const [loading, setLoading] = useState(false);
   const [sendingEmail, setSendingEmail] = useState(false);
   const [canSendEmail, setCanSendEmail] = useState(true);
@@ -104,11 +106,11 @@ export default function PageVerifyEmail() {
           <Box sx={{ maxWidth: 480, margin: 'auto', textAlign: 'center' }}>
             <m.div variants={varBounce().in}>
               <Typography variant="h3" paragraph>
-                Verify your email
+                {translate('verify.title')}
               </Typography>
             </m.div>
             <Typography sx={{ color: 'text.secondary' }}>
-              You need to verify your email to continue. If you already verify it just reload the window.
+              {translate('verify.description', {email: user.email})}
             </Typography>
 
             <m.div variants={varBounce().in}>
@@ -119,17 +121,17 @@ export default function PageVerifyEmail() {
             )}
             <Stack>
               {!loading && !sendingEmail && <HoverButton onClick={onReload} loading={loading}>
-                Reload
+                {translate('verify.reload')}
               </HoverButton>}
             </Stack>
             <Stack>
               {!loading && !sendingEmail && <HoverButton disabled={runTimer} onClick={onSendEmail} loading={sendingEmail}>
-                Send email {runTimer && <Typography style={{ marginLeft: '5px' }}>{' ' + minutes}:{seconds}</Typography>}
+                {translate('verify.send_email')} {runTimer && <Typography style={{ marginLeft: '5px' }}>{' ' + minutes}:{seconds}</Typography>}
               </HoverButton>}
             </Stack>
             <Stack>
               {!loading && <HoverButton onClick={onLogout} loading={loading}>
-                Logout
+                {translate('verify.logout')}
               </HoverButton>}
             </Stack>
           </Box>

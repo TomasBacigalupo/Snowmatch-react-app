@@ -144,6 +144,12 @@ const HireForm = ({ teacher, onCancel}) => {
                                 {...field}
                                 label={translate("conversation.classdate")}
                                 inputFormat="dd/MM/yyyy"
+                                shouldDisableDate={ (day) => {
+                                    return teacher.events.filter(e => {
+                                        const date = new Date(e.start)
+                                        return date.getDate() === day.getDate() && date.getFullYear() === day.getFullYear() && date.getMonth() === day.getMonth()
+                                    }).length > 0
+                                }}
                                 renderInput={(params) => <TextField {...params} fullWidth />}
                             />
                         )}

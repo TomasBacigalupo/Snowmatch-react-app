@@ -6,7 +6,7 @@ import { useSnackbar } from 'notistack';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { Box, Stack, Button, Tooltip, TextField, DialogActions, DialogTitle } from '@mui/material';
+import { Box, Stack, Button, TextField, DialogActions, DialogTitle } from '@mui/material';
 import { LoadingButton, MobileDatePicker } from '@mui/lab';
 // redux
 import { useDispatch } from '../../../../redux/store';
@@ -143,6 +143,12 @@ const AddEventForm = ({ onCancel }) => {
                                 {...field}
                                 label={translate("conversation.classdate")}
                                 inputFormat="dd/MM/yyyy"
+                                shouldDisableDate={(day) => {
+                                    return teacher.events.filter(e => {
+                                        const date = new Date(e.start)
+                                        return date.getDate() === day.getDate() && date.getFullYear() === day.getFullYear() && date.getMonth() === day.getMonth()
+                                    }).length > 0
+                                }}
                                 renderInput={(params) => <TextField {...params} fullWidth />}
                             />
                         )}

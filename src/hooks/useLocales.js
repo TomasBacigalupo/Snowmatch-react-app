@@ -9,19 +9,19 @@ const LANGS = [
     label: 'Español',
     value: 'es',
     systemValue: esES,
-    icon: '/assets/i18n/ic_flag_es.svg',
+    //icon: '/assets/i18n/ic_flag_es.svg',
   },
   {
     label: 'English',
     value: 'en',
     systemValue: enUS,
-    icon: '/assets/i18n/ic_flag_en.svg',
+    //icon: '/assets/i18n/ic_flag_en.svg',
   },
   {
     label: 'Português',
     value: 'pt',
     systemValue: ptPT,
-    icon: '/assets/i18n/ic_flag_pt.svg',
+    //icon: '/assets/i18n/ic_flag_pt.svg',
   },
   // {
   //   label: 'German',

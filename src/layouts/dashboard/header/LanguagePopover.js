@@ -1,12 +1,13 @@
 import { useState } from 'react';
 // @mui
-import { MenuItem, Stack } from '@mui/material';
+import { Avatar, MenuItem, Stack } from '@mui/material';
 // hooks
 import useLocales from '../../../hooks/useLocales';
 // components
 import Image from '../../../components/Image';
 import MenuPopover from '../../../components/MenuPopover';
 import { IconButtonAnimate } from '../../../components/animate';
+import Iconify from 'src/components/Iconify';
 
 // ----------------------------------------------------------------------
 
@@ -23,6 +24,18 @@ export default function LanguagePopover() {
     setOpen(null);
   };
 
+  const getIcon = (ln) => {
+    switch(ln){
+      case 'es':
+        return 'flag:ar-4x3'
+      case 'en':
+        return 'flag:us-4x3'
+      case 'pt':
+        return 'flag:br-4x3'
+    }
+    return ''
+  }
+
   return (
     <>
       <IconButtonAnimate
@@ -32,10 +45,10 @@ export default function LanguagePopover() {
           height: 40,
           marginRight:'10px',
           ...(open && { bgcolor: 'action.selected' }),
-          bgcolor:'#212B36'
+          backgroundColor: ''
         }}
       >
-        <Image disabledEffect src={currentLang.icon} alt={currentLang.label} />
+        <Avatar><Iconify icon={getIcon(currentLang.value)} /></Avatar>
       </IconButtonAnimate>
 
       <MenuPopover
@@ -59,8 +72,7 @@ export default function LanguagePopover() {
                 handleClose();
               }}
             >
-              <Image disabledEffect alt={option.label} src={option.icon} sx={{ width: 28, mr: 2 }} />
-
+              <Iconify icon={getIcon(option.value)} sx={{mr:1}}/>
               {option.label}
             </MenuItem>
           ))}

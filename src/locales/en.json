@@ -185,7 +185,8 @@
     "SignUpAsAGuest": "Sign Up",
     "LogIn": "LogIn",
     "logOut": "LogOut",
-    "help": "Help"
+    "help": "Help",
+    "Lessons": "My lessons"
   },
   "generalApp": {
     "totalLessons": "Total Lessons",

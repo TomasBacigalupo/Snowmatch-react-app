@@ -1,11 +1,21 @@
+import { formatDate } from "@fullcalendar/react";
 import { Grid } from "@mui/material";
+import { start } from "nprogress";
 import useAuth from "src/hooks/useAuth";
+import { useSelector } from "src/redux/store";
 import EventCard from "../cards/EventCard";
 
-export default function UserLessonsList(){
-    const {user} = useAuth()
+const date = new Date()
+date.toLocaleString()
 
-    const lessons = user?.events.filter(e => e.source === 'APP')
+export default function UserLessonsList(){
+    const {user, isTeacher} = useAuth()
+    const {events} = useSelector(state => state.calendar) 
+    const lessons = isTeacher ? user?.events.filter(e => e.source === 'APP') : events.filter(e => e.source === 'APP').map(e => ({
+        ...e,
+        start: e.start.toLocaleString(),
+        end: e.end.toLocaleString()
+    }))
 
     return (
         <Grid container spacing={2}>

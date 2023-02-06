@@ -4,9 +4,10 @@ import Iconify from "src/components/Iconify";
 import { formatDate } from "@fullcalendar/react";
 import { useNavigate } from "react-router";
 import { PATH_DASHBOARD } from "src/routes/paths";
+import useAuth from "src/hooks/useAuth";
 
 export default function EventInfoCard({ lesson }) {
-
+    const { isStudent } = useAuth()
     const { start, end, id, name, lastName, resort, people } = lesson;
     const [toggle, setToogle] = useState(false);
 
@@ -42,7 +43,7 @@ export default function EventInfoCard({ lesson }) {
                 </Box>
             </Box>
             <Box sx={{ flexGrow: 1, minWidth: 0, pl: 0, pr: 0 }}>
-                <Button
+                {!isStudent && <Button
                     size="small"
                     onClick={() => setToogle(!toggle)}
                     variant={toggle ? 'text' : 'outlined'}
@@ -54,7 +55,7 @@ export default function EventInfoCard({ lesson }) {
                     startIcon={toggle && <Iconify icon={'eva:checkmark-fill'} />}
                 >
                     {toggle ? 'Payed' : 'Pay'}
-                </Button>
+                </Button>}
             </Box>
 
         </Card>

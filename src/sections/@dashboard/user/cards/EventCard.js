@@ -3,9 +3,12 @@ import { Typography, Box, Card, Button, Avatar } from "@mui/material";
 import Iconify from "src/components/Iconify";
 import { formatDate } from "@fullcalendar/react";
 import { useNavigate } from "react-router";
-import { PATH_DASHBOARD } from "src/routes/paths";
+import { PATH_DASHBOARD, PATH_GUEST } from "src/routes/paths";
+import useAuth from "src/hooks/useAuth";
 
 export default function EventCard({ lesson }) {
+
+    const {user, isStudent} = useAuth()
     
     const {start, end, id, name, lastName, resort } = lesson;
     const navigate = useNavigate()
@@ -14,7 +17,7 @@ export default function EventCard({ lesson }) {
     return (
         <Card 
             onClick={() => {
-                navigate(`${PATH_DASHBOARD.user.lessons}/${id}`)
+                navigate(`${isStudent ? '/match/lessons' : PATH_DASHBOARD.user.lessons}/${id}`)
             }}
         sx={{ display: 'flex', alignItems: 'center', p: 3 }}>
             <Avatar alt={'Tomi'} src={'avatarUrl'} sx={{ width: 48, height: 48 }} />
@@ -37,12 +40,12 @@ export default function EventCard({ lesson }) {
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
                     <Iconify icon={'ic:outline-access-time'} sx={{ width: 16, height: 16, mr: 0.5, flexShrink: 0 }} />
                     <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
-                        {`${start.slice(11)}hs a ${end.slice(11)}hs`}
+                        {`${start?.slice(11)}hs a ${end?.slice(11)}hs`}
                     </Typography>
                 </Box>
             </Box>
             <Box sx={{ flexGrow: 1, minWidth: 0, pl: 0, pr: 0 }}>
-                <Button
+                {!isStudent && <Button
                     size="small"
                     onClick={() => setToogle(!toggle)}
                     variant={toggle ? 'text' : 'outlined'}
@@ -54,7 +57,8 @@ export default function EventCard({ lesson }) {
                     startIcon={toggle && <Iconify icon={'eva:checkmark-fill'} />}
                 >
                     {toggle ? 'Payed' : 'Pay'}
-                </Button>
+                </Button>}
+                
                 <Button
                     size="small"
                     onClick={()=>{

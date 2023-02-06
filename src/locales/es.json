@@ -188,7 +188,8 @@
         "SignUpAsAGuest": "Sign Up",
         "LogIn": "Log In",
         "logOut":"Log Out",
-        "help": "Ayuda"
+        "help": "Ayuda",
+        "Lessons": "Mis clases"
     },
     "generalApp":{
         "totalLessons": "Clases",

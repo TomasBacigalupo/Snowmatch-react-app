@@ -108,7 +108,9 @@ export default function Router() {
             <AuthGuard>
               <EcommerceCheckoutTeacher/>
             </AuthGuard>
-        }
+        },
+        { path: 'lessons', element: <UserLessons /> },
+        { path: 'lessons/:eventId', element: <LessonDetails /> },
       ]
     },
 

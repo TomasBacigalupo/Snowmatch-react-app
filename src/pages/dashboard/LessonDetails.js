@@ -6,7 +6,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import { Tab, Box, Card, Tabs, Container, Button, IconButton, Grid } from '@mui/material';
 import { TeacherDetailsReview } from 'src/sections/@dashboard/e-commerce/teacher-details';
 // routes
-import { PATH_DASHBOARD } from '../../routes/paths';
+import { PATH_DASHBOARD, PATH_GUEST } from '../../routes/paths';
 // hooks
 import useAuth from '../../hooks/useAuth';
 import useTabs from '../../hooks/useTabs';
@@ -32,7 +32,7 @@ import UserLessonsList from 'src/sections/@dashboard/user/list/UserLessonsList';
 import ContactCard from 'src/sections/@dashboard/user/cards/ContactCard';
 import { useDispatch, useSelector } from 'src/redux/store';
 import { useEffect } from 'react';
-import { getLessonById } from 'src/redux/slices/calendar';
+import { getEvents, getLessonById } from 'src/redux/slices/calendar';
 import { CommentsDisabledOutlined } from '@mui/icons-material';
 import EventInfoCard from 'src/sections/@dashboard/user/cards/EventInfoCard';
 
@@ -57,10 +57,11 @@ const TabsWrapperStyle = styled('div')(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 export default function UserLessons() {
+    const {isStudent, isTeacher} = useAuth()
     const { themeStretch } = useSettings();
     const { translate } = useLocales();
     const {isLoading, lesson} = useSelector(state => state.calendar)
-    const {student} = lesson
+    const {student, owner} = lesson
     const {eventId} = useParams()
     const dispatch = useDispatch()
 
@@ -72,20 +73,29 @@ export default function UserLessons() {
     return (
         <Page title="Lesson">
             <Container maxWidth={themeStretch ? false : 'lg'}>
-                <HeaderBreadcrumbs
+                {isStudent && <HeaderBreadcrumbs
+                    heading={translate("breadcrumb.lesson_details")}
+                    links={[
+                        { name: 'Match', href: PATH_GUEST.root },
+                        { name: translate("breadcrumb.lessons"), href: PATH_GUEST.root +'/lessons' },
+                        { name: translate("breadcrumb.lesson_details") },
+                    ]}
+                />}
+                {isTeacher && <HeaderBreadcrumbs
                     heading={translate("breadcrumb.lesson_details")}
                     links={[
                         { name: translate("breadcrumb.dashboard"), href: PATH_DASHBOARD.root },
                         { name: translate("breadcrumb.lessons"), href: PATH_DASHBOARD.user.lessons },
                         { name: translate("breadcrumb.lesson_details") },
                     ]}
-                />
+                />}
+                
                 {isLoading && <>LOADING</>}
                 {!isLoading && student && 
                 <Grid container spacing={2}>
                     <Grid item xs={12} md={6}>
                         <ContactCard 
-                            user={student}
+                            user={isStudent ?  student : owner}
                         />
                     </Grid>
                     <Grid item xs={12} md={6}>

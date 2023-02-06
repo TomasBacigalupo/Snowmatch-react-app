@@ -1,12 +1,12 @@
 import { capitalCase } from 'change-case';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 // @mui
 import { styled } from '@mui/material/styles';
 import EditIcon from '@mui/icons-material/Edit';
 import { Tab, Box, Card, Tabs, Container, Button, IconButton } from '@mui/material';
 import { TeacherDetailsReview } from 'src/sections/@dashboard/e-commerce/teacher-details';
 // routes
-import { PATH_DASHBOARD } from '../../routes/paths';
+import { PATH_DASHBOARD, PATH_GUEST } from '../../routes/paths';
 // hooks
 import useAuth from '../../hooks/useAuth';
 import useTabs from '../../hooks/useTabs';
@@ -29,6 +29,8 @@ import useLocales from 'src/hooks/useLocales';
 import { useNavigate } from 'react-router';
 import CertificateItem from 'src/sections/@dashboard/user/account/CertificateItem';
 import UserLessonsList from 'src/sections/@dashboard/user/list/UserLessonsList';
+import { dispatch, useDispatch } from 'src/redux/store';
+import { getEvents } from 'src/redux/slices/calendar';
 
 // ----------------------------------------------------------------------
 
@@ -53,7 +55,7 @@ const TabsWrapperStyle = styled('div')(({ theme }) => ({
 export default function UserLessons() {
     const { themeStretch } = useSettings();
 
-    const { user } = useAuth();
+    const { isTeacher, isStudent } = useAuth();
 
     const { translate } = useLocales()
 
@@ -62,21 +64,34 @@ export default function UserLessons() {
     const [findFriends, setFindFriends] = useState('');
 
     const navigate = useNavigate()
+    const dispatch = useDispatch()
 
     const handleFindFriends = (value) => {
         setFindFriends(value);
     };
 
+    useEffect(() => {
+        dispatch(getEvents())
+    }, [dispatch])
+
     return (
         <Page title="User: Lessons">
             <Container maxWidth={themeStretch ? false : 'lg'}>
-                <HeaderBreadcrumbs
+                {isTeacher && <HeaderBreadcrumbs
                     heading={translate("breadcrumb.lessons")}
                     links={[
                         { name: translate("breadcrumb.dashboard"), href: PATH_DASHBOARD.root },
                         { name: translate("breadcrumb.lessons") },
                     ]}
-                />
+                />}
+
+                {isStudent && <HeaderBreadcrumbs
+                    heading={translate("breadcrumb.lessons")}
+                    links={[
+                        { name: 'Match', href: PATH_GUEST.root },
+                        { name: translate("breadcrumb.lessons") },
+                    ]}
+                />}
                 <Card
                     sx={{
                         mb: 3,

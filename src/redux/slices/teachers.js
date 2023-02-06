@@ -201,6 +201,10 @@ const slice = createSlice({
       state.checkout.events = updateCart;
     },
 
+    cleanCart(state, action){
+      state.checkout.events = []
+    },
+
     resetCart(state) {
       state.checkout.activeStep = 0;
       state.checkout.cart = [];
@@ -313,7 +317,8 @@ export const {
   filterTeachers,
   closeClinicModal,
   closeAddEventModal,
-  openAddEventModal
+  openAddEventModal,
+  cleanCart
 } = slice.actions;
 
 // ----------------------------------------------------------------------

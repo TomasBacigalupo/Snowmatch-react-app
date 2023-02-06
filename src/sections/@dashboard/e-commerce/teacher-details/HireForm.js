@@ -34,6 +34,7 @@ const HireForm = ({ teacher, onCancel}) => {
         setOpen(true);
     };
     const handleClose = () => {
+        onCancel()
         setOpen(false);
     };
 

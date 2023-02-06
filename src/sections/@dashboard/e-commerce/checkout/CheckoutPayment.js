@@ -8,7 +8,7 @@ import { Grid, Button } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 // redux
 import { useDispatch, useSelector } from '../../../../redux/store';
-import { onGotoStep, onBackStep, onNextStep, applyShipping, hireTeacher } from '../../../../redux/slices/teachers';
+import { onGotoStep, onBackStep, onNextStep, applyShipping, hireTeacher, cleanCart } from '../../../../redux/slices/teachers';
 // components
 import Iconify from '../../../../components/Iconify';
 import { FormProvider } from '../../../../components/hook-form';
@@ -113,6 +113,7 @@ export default function CheckoutPayment() {
     try {
       dispatch(hireTeacher(teacher.id, events, (succ)=>{
         setLoading(false)
+        dispatch(cleanCart())
         handleNextStep();
       }))
     } catch (error) {

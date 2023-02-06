@@ -10,6 +10,10 @@ import Image from '../../../../components/Image';
 import SocialsButton from '../../../../components/SocialsButton';
 import SvgIconStyle from '../../../../components/SvgIconStyle';
 import ContactButton from 'src/components/ContactButtons';
+import { useDispatch, useSelector } from 'src/redux/store';
+import { useEffect } from 'react';
+import { getRates } from 'src/redux/slices/teachers';
+import useAuth from 'src/hooks/useAuth';
 
 // ----------------------------------------------------------------------
 
@@ -30,8 +34,13 @@ ContactCard.propTypes = {
 };
 
 export default function ContactCard({ user }) {
+    const {isTeacher} = useAuth()
+    const dispatch = useDispatch()
+    const {rates} = useSelector(state => state.teachers)
     const { name, follower, lastname, avatarUrl, following, phone, email, countryCode, cellphone, imageLink, events } = user;
-
+    useEffect(()=>{
+        getRates(user.id)
+    }, [dispatch])
     return (
         <Card sx={{ textAlign: 'center' }}>
             <Box sx={{ position: 'relative' }}>
@@ -70,17 +79,17 @@ export default function ContactCard({ user }) {
             <Typography variant="subtitle1" sx={{ mt: 6 }}>
                 {`${name} ${lastname}`}
             </Typography>
-
-            <Stack alignItems="center">
-                <ContactButton 
-                initialColor sx={{ my: 2.5 }}
-                links={{
-                    phone: '+' + countryCode  + cellphone,
-                    mail: email,
-                    whatsapp: '+' + countryCode + cellphone
-                }}
+            {isTeacher && <Stack alignItems="center">
+                <ContactButton
+                    initialColor sx={{ my: 2.5 }}
+                    links={{
+                        phone: '+' + countryCode + cellphone,
+                        mail: email,
+                        whatsapp: '+' + countryCode + cellphone
+                    }}
                 />
-            </Stack>
+            </Stack>}
+            
 
             <Divider sx={{ borderStyle: 'dashed' }} />
 
@@ -96,14 +105,14 @@ export default function ContactCard({ user }) {
                     <Typography variant="caption" component="div" sx={{ mb: 0.75, color: 'text.disabled' }}>
                         Reviews
                     </Typography>
-                    <Typography variant="subtitle1">0</Typography>
+                    <Typography variant="subtitle1">{rates ? rates.length : 0}</Typography>
                 </div>
 
                 <div>
                     <Typography variant="caption" component="div" sx={{ mb: 0.75, color: 'text.disabled' }}>
                         Level
                     </Typography>
-                    <Typography variant="subtitle1">Beginner</Typography>
+                    <Typography variant="subtitle1">{user?.level ? user.level :'Beginner'}</Typography>
                 </div>
             </Box>
         </Card>

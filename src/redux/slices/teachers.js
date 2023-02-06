@@ -398,6 +398,20 @@ export function getTeacher(name) {
   };
 }
 
+export function getTeacherByEmail(email) {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get(`/api/users/${email}`
+      );
+      dispatch(slice.actions.getTeacherSuccess(response.data));
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
 // ----------------------------------------------------------------------
 
 export function getTeacherBiId(teacherId) {

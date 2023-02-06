@@ -35,6 +35,7 @@ import { useEffect } from 'react';
 import { getEvents, getLessonById } from 'src/redux/slices/calendar';
 import { CommentsDisabledOutlined } from '@mui/icons-material';
 import EventInfoCard from 'src/sections/@dashboard/user/cards/EventInfoCard';
+import { getTeacherByEmail } from 'src/redux/slices/teachers';
 
 // ----------------------------------------------------------------------
 
@@ -61,6 +62,7 @@ export default function UserLessons() {
     const { themeStretch } = useSettings();
     const { translate } = useLocales();
     const {isLoading, lesson} = useSelector(state => state.calendar)
+    const { teacher } = useSelector(state => state.teachers)
     const {student, owner} = lesson
     const {eventId} = useParams()
     const dispatch = useDispatch()
@@ -68,6 +70,12 @@ export default function UserLessons() {
     useEffect(() => {
         dispatch(getLessonById(eventId))
     }, [dispatch])
+
+    useEffect(()=>{
+        if(lesson){
+            dispatch(getTeacherByEmail(lesson.ownerEmail))
+        }
+    }, [lesson])
     
 
     return (
@@ -91,17 +99,28 @@ export default function UserLessons() {
                 />}
                 
                 {isLoading && <>LOADING</>}
-                {!isLoading && student && 
+                {!isLoading && isStudent && teacher && 
                 <Grid container spacing={2}>
                     <Grid item xs={12} md={6}>
                         <ContactCard 
-                            user={isStudent ?  student : owner}
+                            user={teacher}
                         />
                     </Grid>
                     <Grid item xs={12} md={6}>
                         <EventInfoCard lesson={lesson}/>
                     </Grid>
                 </Grid>}
+                {!isLoading && isTeacher && student &&
+                    <Grid container spacing={2}>
+                        <Grid item xs={12} md={6}>
+                            <ContactCard
+                                user={student}
+                            />
+                        </Grid>
+                        <Grid item xs={12} md={6}>
+                            <EventInfoCard lesson={lesson} />
+                        </Grid>
+                    </Grid>}
             </Container>
         </Page>
     );

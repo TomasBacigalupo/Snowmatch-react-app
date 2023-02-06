@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 // @mui
 import { styled } from '@mui/material/styles';
 import { Box, Grid, Step, Stepper, Container, StepLabel, StepConnector, DialogTitle, ToggleButtonGroup, ToggleButton } from '@mui/material';
@@ -7,7 +7,7 @@ import { Box, Grid, Step, Stepper, Container, StepLabel, StepConnector, DialogTi
 import { useDispatch, useSelector } from '../../redux/store';
 import { getCart, createBilling } from '../../redux/slices/teachers';
 // routes
-import { PATH_DASHBOARD, PATH_DOCS, PATH_GUEST } from '../../routes/paths';
+import { PATH_GUEST } from '../../routes/paths';
 // hooks
 import useIsMountedRef from '../../hooks/useIsMountedRef';
 import useSettings from '../../hooks/useSettings';
@@ -15,8 +15,6 @@ import useSettings from '../../hooks/useSettings';
 import Page from '../../components/Page';
 import Iconify from '../../components/Iconify';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
-import { DialogAnimate } from 'src/components/animate';
-import HireForm from 'src/sections/@dashboard/e-commerce/teacher-details/HireForm';
 
 // sections
 import {

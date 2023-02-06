@@ -14,10 +14,9 @@ import AdminConfirmForm from '../../sections/@dashboard/admin/AdminConfirmForm';
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from '../../redux/store';
-import { getTeachers } from '../../redux/slices/admin'
+import { getTeachers, getTeacher, getTeacherDocuments} from '../../redux/slices/admin'
 
 import { _userList } from '../../_mock';
-import { getTeacherByID } from 'src/redux/slices/teachers';
 import CertificateItem from 'src/sections/@dashboard/admin/CeritificateItem';
 
 // ----------------------------------------------------------------------
@@ -31,29 +30,36 @@ export default function AdminConfirm() {
 
   const dispatch = useDispatch();
 
-  const isEdit = true;
+  const isEdit = true; 
  
-  const { teachers = {} } = useSelector((state) =>{console.log(state);return state.admin});
-
-  const [currentTeacher, setTeacherData]= useState(null);
+  const { teacher, documents } = useSelector((state) =>{return state.admin});
 
 
-  useEffect(() => {
-    console.log(teachers)
-    console.log("teachers")
-    dispatch(getTeacherByID(id, (teacherComplete) => {
-      setTeacherData(teacherComplete)
-    }))
-    setTeacherData(teachers.find((teacher) => teacher.userId === parseInt(id)))
-    
-    console.log("currentTeacher")
-    console.log(currentTeacher)
-    console.log(currentTeacher?.name)
-  }, [teachers, id]);
+
+  // useEffect(() => {
+  //   dispatch(getTeacherByID(id, (teacherComplete) => {
+  //     setTeacherData(teacherComplete)
+  //   }))
+  //   setTeacherData(teachers.find((teacher) => teacher.userId === parseInt(id)))
+  // }, [teachers, id]);
 
   useEffect(() => {
     dispatch(getTeachers());
   }, [dispatch]);
+
+  useEffect(() => {
+    dispatch(getTeacher(id));
+  }, [dispatch,id]);
+
+  useEffect(() => {
+    dispatch(getTeacherDocuments(id));
+  }, [dispatch,id]);
+
+
+  useEffect(()=>{
+    console.log("documents",documents)
+    console.log("teacher",teacher)
+  },[dispatch, documents, teacher ])
 
   return (
     <Page title="Admin: Confirm a new teacher">
@@ -63,12 +69,12 @@ export default function AdminConfirm() {
           links={[
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
             { name: 'Admin', href: PATH_DASHBOARD.admin.review },
-            { name: currentTeacher?.name || "asd" },
+            { name: teacher?.name || "asd" },
           ]}
         />
-        <AdminConfirmForm isEdit={isEdit} currentTeacher={currentTeacher} />
-        {currentTeacher?.documents?.map(document=>(
-          <CertificateItem teacherId={currentTeacher.id} {...document}/>
+        <AdminConfirmForm isEdit={isEdit} currentTeacher={teacher} />
+        {documents?.map(document=>(
+          <CertificateItem teacherId={teacher.id} {...document}/>
         ))}
         
       </Container>

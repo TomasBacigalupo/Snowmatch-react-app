@@ -13,9 +13,10 @@ const initialState = {
   isLoading: false,
   error: null,
   teachers: [],
-  teacher: [],
+  teacher: null,
   isOpenModal: false,
   selectedEmail: '',
+  documents: [],
 };
 
 const slice = createSlice({
@@ -37,6 +38,11 @@ const slice = createSlice({
     getTeachersSuccess(state, action) {
       state.isLoading = false;
       state.teachers = action.payload;
+    },
+
+    getDocumentsSuccess(state, action) {
+      state.isLoading = false;
+      state.documents = action.payload;
     },
 
     getTeacherSuccess(state, action) {
@@ -70,8 +76,20 @@ export function getTeachers(page) {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get('/api/admin/getTeachers/?page=' + page);
+      const response = await axios.get('/api/admin/users/?page=' + page);
       dispatch(slice.actions.getTeachersSuccess(response.data));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+export function getTeacher(id) {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get('/api/admin/users/' + id);
+      dispatch(slice.actions.getTeacherSuccess(response.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }
@@ -103,12 +121,19 @@ export function confirmTeacher(teacherData) {
         id: teacherData.id,
         dni: teacherData.dni
       }
-      console.log(teacherData);
-      console.log("###############");
-      console.log(teacher);
-      console.log('/api/admin/approve/' + teacher.email + "?level=" + teacher.level + "&dni=" + teacher.dni + "&name=" + teacher.name + "&lastName=" + teacher.lastname)
       const response = await axios.post('/api/admin/approve/' + teacher.email + "?level=" + teacher.level + "&dni=" + teacher.dni + "&name=" + teacher.name + "&lastName=" + teacher.lastname);
-      console.log(response)
+      dispatch(slice.actions.getTeacherSuccess(response.data));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+export function editTeacher(teacherData) {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.put('/api/admin/users/' + teacherData.userId, teacherData);
       dispatch(slice.actions.getTeacherSuccess(response.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
@@ -127,4 +152,16 @@ export function updateDocument(teacherId, documentName, state, callback) {
       callback(false)
     }
   }
+}
+
+export function getTeacherDocuments(id) {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get('/api/admin/users/' + id + '/documents');
+      dispatch(slice.actions.getDocumentsSuccess(response.data));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
 }

@@ -48,7 +48,7 @@ export default function PendingTeacherCard({ teacher }) {
   return (
     <>{teacher==undefined ? <SkeletonProductItem/>  :
       <Card >
-        <Box sx={{ position: 'relative' }} onClick={() => navigate(linkTo)}>
+        <Box sx={{ position: 'relative' }} >
           {resorts && (
             <Label
               variant="filled"
@@ -67,7 +67,7 @@ export default function PendingTeacherCard({ teacher }) {
           <Image alt={name} src={src} ratio="1/1" onError={() => setSrc('/assets/notFound.jpeg')} />
         </Box>
 
-        <Stack spacing={2} sx={{ p: 3 }} onClick={() => navigate(linkTo)}>
+        <Stack spacing={2} sx={{ p: 3 }} >
           <Link to={linkTo} color="inherit" component={RouterLink}>
             <Typography variant="subtitle2" noWrap>
               {name + " " + lastname}

@@ -32,7 +32,7 @@ MemberTeacherCard.propTypes = {
 };
 
 export default function MemberTeacherCard({ teacher }) {
-  const { name, lastname, imageLink, stars, level, information, email, state, resorts } = teacher || {};
+  const { name, lastname, imageLink, stars, level, information, email, state, resorts, id } = teacher || {};
   const theme = useTheme();
   const { translate } = useLocales();
   const dispatch = useDispatch();
@@ -41,7 +41,7 @@ export default function MemberTeacherCard({ teacher }) {
   const [src, setSrc] = useState(imageLink)
 
   const { isAuthenticated } = useAuth()
-  const linkTo = isAuthenticated ? PATH_DASHBOARD.eCommerce.viewTeacher(email) : PATH_GUEST.viewTeacher(email);
+  const linkTo = isAuthenticated ? PATH_DASHBOARD.eCommerce.viewTeacher(id) : PATH_GUEST.viewTeacher(id);
 
   const { error, selectedTeacher, isOpenFireModal} = useSelector((state) => state.business);
 

@@ -57,7 +57,6 @@ export default function RHFMultipleSelect({ name, label, list, freeSolo, grouped
               />
             )}
             isOptionEqualToValue={(option, value) => {
-              console.log({option})
               return option?.title === value}}
           />
         )}

@@ -50,8 +50,8 @@
     "school": "School PROs",
     "getStartedToday": "Get started with SnowMatch!",
     "find": "Match with the PRO you need...",
-    "start_date":"Start date",
-    "end_date":"End date"
+    "start_date": "Start date",
+    "end_date": "End date"
   },
   "menu": {
     "general": "General",
@@ -79,14 +79,21 @@
     "myLessons": "My lessons",
     "admin": "Admin",
     "review teachers": "Review PROs",
+    "school_teachers": "School teachers",
+    "pending_teachers": "Pending teachers",
+    "my_teachers": "My teachers",
+    "PRO Schools": "PRO Schools",
     "reviews": "My Reviews",
     "lessons": "My Lessons"
   },
   "calendar": {
+    "name": "Calendar",
     "newEvent": "Create Event",
     "editEvent": "Edit Event",
     "addEvent": "Add Event",
     "form": {
+      "teacher": "teacher",
+      "school": "School",
       "startDate": "Start Date",
       "endDate": "End Date",
       "description": "Description",
@@ -118,9 +125,8 @@
         "resorts": "Resorts",
         "notes": "Notes",
         "isRenting": "Is Renting",
-        "createClient":"Create client",
-        "saveChanges":"Save changes"
-
+        "createClient": "Create client",
+        "saveChanges": "Save changes"
       }
     }
   },
@@ -161,7 +167,9 @@
     "tabs": {
       "general": "My information",
       "social_links": "My Social Links",
-      "documents": "My Documents"
+      "documents": "My Documents",
+      "school": "My School",
+      "school_teachers": "My teachers"
     }
   },
   "filter": {
@@ -208,35 +216,48 @@
     "calendar": "Calendar",
     "verified": "Verified PRO",
     "reply": "Ready to Match",
-    "replyDescription": "Replies in less than one day",
+    "replyDescription": "Replies in less than a day",
     "verifiedDescription": "Validated by SnowMatch ",
-    "warranty": "Warranty SnowMatch",
-    "warrantyDescription": "SnowMatch verified that it's a good teacher",
+    "warranty": "SnowMatch Warranty",
+    "warrantyDescription": "SnowMatch ensures that it complies with the regulations to teach classes",
     "information": "Information",
     "description": "Description",
     "skills": "Skills"
   },
-
-  "conversation":{
-    "not_valid":"Your phone number is not validated, check Whatsapp and try again",
-    "message_sent":"Message sent, they will soon be in touch!",
-    "age":"Client Age",
-    "age2":"Age",
-    "level":"Client Level",
-    "tips":"Does the client tip?",
-    "commission":"Commission",
-    "activity":"Activity",
-    "amount":"Number of people",
-    "duration":"Duration",
-    "classdate":"Class date",
-    "days":"Number of days",
-    "cancel":"Cancel",
-    "contact":"Contact",
-    "refer_class":"Refer Class",
-    "contact_pro":"Contact PRO",
-    "validation_required":"Validation required!",
-    "validation_required_body":"Check your Whatsapp for a validation message. It may take a while. If you didn't get a message, check your number and try again!",
-    "close":"Close"
+  "schoolDetails":{
+    "title": "PRO school details",
+    "calendar": "Calendar",
+    "verified": "Verified and approved school",
+    "reply": "Ready to Match",
+    "replyDescription": "This PRO school replies in less than a day ",
+    "verifiedDescription": "Validated by SnowMatch ",
+    "warranty": "SnowMatch Warranty",
+    "warrantyDescription": "SnowMatch ensures that it complies with the regulations to teach",
+    "information": "Information",
+    "description": "Description",
+    "skills": "Skills",
+    "ourTeachers": "PRO school teachers"
+  },
+  "conversation": {
+    "not_valid": "Your phone number is not validated, check Whatsapp and try again",
+    "message_sent": "Message sent, they will soon be in touch!",
+    "age": "Client Age",
+    "age2": "Age",
+    "level": "Client Level",
+    "tips": "Does the client tip?",
+    "commission": "Commission",
+    "activity": "Activity",
+    "amount": "Number of people",
+    "duration": "Duration",
+    "classdate": "Class date",
+    "days": "Number of days",
+    "cancel": "Cancel",
+    "contact": "Contact",
+    "refer_class": "Refer Class",
+    "contact_pro": "Contact PRO",
+    "validation_required": "Validation required!",
+    "validation_required_body": "Check your Whatsapp for a validation message. It may take a while. If you didn't get a message, check your number and try again!",
+    "close": "Close"
   },
   "discounts": {
     "getCupon": "Get Voucher",
@@ -244,7 +265,6 @@
     "findBrands": "Find Brands...",
     "sendNoti": "Done! If you are in conditions to get the voucher you will receive it via Whats App"
   },
-
   "rental": {
     "Personal Data": "Personal Data",
     "Equipment": "Equipment",
@@ -273,6 +293,18 @@
     "needsGoogles": "Necesita antiparras",
     "needsHelmet": "Necesita Cazco",
     "discipline": "Discipline"
+  },
+  "business": {
+    "my_teachers": "My teachers",
+    "fire": "Fire",
+    "hire": "Hire",
+    "fire_teacher_title": "Fire  {{name}}?",
+    "fire_teacher_message": "are you sure you want to fire {{name}}?",
+    "cancel": "Cancel",
+    "hire_teacher_title": "Hire  {{name}}?",
+    "hire_teacher_message": "are you sure you want to hire {{name}}?",
+    "hire_success": "Successfully hired!",
+    "fire_success": "Successfully fired!"
   },
   "completeOrder": {
     "order": "Your SnowMatch code is: ",

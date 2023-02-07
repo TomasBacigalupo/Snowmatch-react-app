@@ -14,6 +14,7 @@ import { PATH_AFTER_LOGIN } from '../config';
 // components
 import LoadingScreen from '../components/LoadingScreen';
 import Discounts from 'src/pages/dashboard/Discounts';
+import SchoolList from 'src/pages/dashboard/SchoolsList';
 import RegisterStudent from 'src/pages/auth/RegisterStudent';
 import RoleBasedGuard from 'src/guards/RoleBasedGuard';
 import ReviewTeacher from 'src/pages/dashboard/ReviewTeacher';
@@ -90,9 +91,15 @@ export default function Router() {
       ),
       children: [
         { element: <Navigate to={'/match/school/:resort'} replace />, index: true },
-        { path: '*', element: <EcommerceShop isGuest={true} teacherType="school" /> },
-        { path: 'independent', element: <EcommerceShop isGuest={true} teacherType="independent" /> },
-        { path: 'school', element: <EcommerceShop isGuest={true} teacherType="school" /> },
+        { path: '*', element: <EcommerceShop isGuest={true} teacherType="school"/> },
+        { path: 'independent', element: <EcommerceShop isGuest={true} teacherType="independent"/> },
+        { path: 'school', element: <EcommerceShop isGuest={true} teacherType="school"/> },
+        { path: 'teacher/:name', element: <EcommerceTeacherDetails isGuest={true}/> },
+        { path: 'schools/:id', element: <SchoolDetails isGuest={true}/> },
+        { path: 'schools', element: <SchoolList teacherType="school"/> },
+        // { path: '*', element: <EcommerceShop isGuest={true} teacherType="school" /> },
+        // { path: 'independent', element: <EcommerceShop isGuest={true} teacherType="independent" /> },
+        // { path: 'school', element: <EcommerceShop isGuest={true} teacherType="school" /> },
         {
           path: 'teacher/:id', element:
               <EcommerceTeacherDetails isGuest={true} />
@@ -149,8 +156,10 @@ export default function Router() {
             { element: <Navigate to="/dashboard/e-commerce/shop" replace />, index: true },
             { path: 'shop', element: <EcommerceShop /> },
             { path: 'shop/independent', element: <EcommerceShop teacherType="independent" /> },
+            { path: 'shop/school', element: <EcommerceShop teacherType="school"/> },
+            { path: 'shop/schools', element: <SchoolList teacherType="school"/> },
+            { path: 'school/:id', element: <SchoolDetails /> },
             { path: 'shop/school', element: <EcommerceShop teacherType="school" /> },
-
             { path: 'teacher/:id', element: <EcommerceTeacherDetails /> },
             { path: 'product/:name', element: <EcommerceProductDetails /> },
             { path: 'list', element: <EcommerceProductList /> },
@@ -181,6 +190,8 @@ export default function Router() {
             { path: 'list', element: <ClientList /> },
             { path: 'new', element: <ClientCreate /> },
             { path: ':name/edit', element: <ClientCreate /> },
+            { path: 'pending', element: <PendingTeachers /> },
+            { path: 'teachers', element: <PendingTeachers isPending={false} /> },
           ],
         },
         {
@@ -272,6 +283,7 @@ const GeneralBooking = Loadable(lazy(() => import('../pages/dashboard/GeneralBoo
 // ECOMMERCE
 const EcommerceShop = Loadable(lazy(() => import('../pages/dashboard/EcommerceShop')));
 const EcommerceProductDetails = Loadable(lazy(() => import('../pages/dashboard/EcommerceProductDetails')));
+const SchoolDetails = Loadable(lazy(() => import('../pages/dashboard/SchoolDetails')));
 const EcommerceTeacherDetails = Loadable(lazy(() => import('../pages/dashboard/EcommerceTeacherDetails')));
 const EcommerceProductList = Loadable(lazy(() => import('../pages/dashboard/EcommerceProductList')));
 const EcommerceProductCreate = Loadable(lazy(() => import('../pages/dashboard/EcommerceProductCreate')));
@@ -330,6 +342,7 @@ const PageVerify = Loadable(lazy(() => import('../pages/PageVerify')));
 
 //School
 const Products = Loadable(lazy(() => import('../pages/dashboard/Products')))
+const PendingTeachers = Loadable(lazy(() => import('../pages/dashboard/PendingTeachers')))
 
 //RENTAL
 const Rental = Loadable(lazy(() => import('../pages/rental/UserRentalData')))

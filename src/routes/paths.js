@@ -27,6 +27,8 @@ export const PATH_GUEST = {
   school: path(ROOTS_FIND_A_PRO, `/school`),
   independent: path(ROOTS_FIND_A_PRO, `/independent`),
   viewTeacher: (name) => path(ROOTS_FIND_A_PRO, `/teacher/${name}`),
+  schools: path(ROOTS_FIND_A_PRO, `/schools`),
+  viewSchool: (id) => path(ROOTS_FIND_A_PRO, `/schools/${id}`),
   rental: ROOTS_RENTAL,
   calculate: path(ROOTS_RENTAL, `/calculate`)
 };
@@ -84,6 +86,9 @@ export const PATH_DASHBOARD = {
     root: path(ROOTS_DASHBOARD, '/school'),
     list: path(ROOTS_DASHBOARD, '/school/list'),
     new: path(ROOTS_DASHBOARD, '/school/new'),
+    edit: (name) => path(ROOTS_DASHBOARD, `/school/${name}/edit`),
+    pending: path(ROOTS_DASHBOARD, '/school/pending'),
+    teachers: path(ROOTS_DASHBOARD, '/school/teachers'),
     edit: (id) => path(ROOTS_DASHBOARD, `/school/${id}/edit`),
 
   },
@@ -92,6 +97,8 @@ export const PATH_DASHBOARD = {
     shop: path(ROOTS_DASHBOARD, '/e-commerce/shop'),
     shopInd: path(ROOTS_DASHBOARD, '/e-commerce/shop/independent'),
     shopSchool: path(ROOTS_DASHBOARD, '/e-commerce/shop/school'),
+    schools: path(ROOTS_DASHBOARD, '/e-commerce/shop/schools'),
+    viewSchool: (id) => path(ROOTS_DASHBOARD, `/e-commerce/school/${id}`),
     list: path(ROOTS_DASHBOARD, '/e-commerce/list'),
     checkout: path(ROOTS_DASHBOARD, '/e-commerce/checkout'),
     new: path(ROOTS_DASHBOARD, '/e-commerce/product/new'),

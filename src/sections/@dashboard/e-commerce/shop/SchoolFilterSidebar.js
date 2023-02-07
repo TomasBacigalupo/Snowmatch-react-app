@@ -33,7 +33,7 @@ import { ContourLayer } from 'deck.gl';
 // ----------------------------------------------------------------------
 
 
-export const FILTER_GENDER_OPTIONS = ['Male', 'Female'];
+// export const FILTER_GENDER_OPTIONS = ['Male', 'Female'];
 
 export const FILTER_CATEGORY_OPTIONS = ['SnowBoard', 'Ski'];
 
@@ -141,10 +141,10 @@ export default function ShopFilterSidebar({ isOpen, onResetAll, onOpen, onClose 
                 ))}
               </RHFSelect>
             </Stack>
-            <Stack spacing={1}>
+            {/* <Stack spacing={1}>
               <Typography variant="subtitle1">{translate('filter.gender')}</Typography>
               <RHFMultiCheckbox name="gender" options={FILTER_GENDER_OPTIONS} sx={{ width: 1 }} />
-            </Stack>
+            </Stack> */}
 
             <Stack spacing={1}>
               <Typography variant="subtitle1">{translate('filter.category')}</Typography>

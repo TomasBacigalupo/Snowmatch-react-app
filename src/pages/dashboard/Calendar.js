@@ -157,11 +157,11 @@ export default function Calendar() {
   };
 
   return (
-    <Page title="Calendar">
+    <Page title={translate('calendar.name') }>
       <Container maxWidth={themeStretch ? false : 'xl'}>
         <HeaderBreadcrumbs
-          heading="Calendar"
-          links={[{ name: 'Dashboard', href: PATH_DASHBOARD.root }, { name: 'Calendar' }]}
+          heading={translate('calendar.name') }
+          links={[{ name: 'Dashboard', href: PATH_DASHBOARD.root }, { name: translate('calendar.name') }]}
           action={
             <HoverButton
               variant="contained"

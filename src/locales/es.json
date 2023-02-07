@@ -83,14 +83,21 @@
         "newProduct": "Nueva Clase",
         "admin": "Administrador",
         "review teachers": "Revisar Pros",
+        "school_teachers": "profesores de escuela",
+        "pending_teachers": "profesores pendientes",
+        "my_teachers": "mis profesores",
+        "PRO Schools": "PRO Schools",
         "reviews": "Mis Calificaciones",
         "lessons": "Mis Clases"
     },
     "calendar": {
+        "name": "Calendario",
         "newEvent": "Crear Evento",
         "editEvent": "Editar Evento",
         "addEvent": "Crear Evento",
         "form":{
+            "teacher": "Profesor",
+            "school": "Escuela",
             "startDate": "Desde",
             "endDate": "Hasta",
             "description": "Descripción",
@@ -164,7 +171,9 @@
         "tabs":{
             "general": "Mi información",
             "social_links": "Mis redes sociales",
-            "documents": "Mis Documentos"
+            "documents": "Mis documentos",
+            "school": "Mi escuela",
+            "school_teachers": "Mis Profesores"
         }
     },
     "filter":{
@@ -218,6 +227,20 @@
         "information": "Información",
         "description": "Descripción",
         "skills": "Skills"
+    },
+    "schoolDetails":{
+        "title": "Detalles PRO school",
+        "calendar": "Calendario",
+        "verified": "Escuela Verificada y Aprobada",
+        "reply": "Activo a Match",
+        "replyDescription": "Esta PRO school responde a SnowMatch en menos de un día",
+        "verifiedDescription": "Esta escuela esta validado por SnowMatch ",
+        "warranty": "Garantia SnowMatch",
+        "warrantyDescription": "SnowMatch asegura que cumple con la reglamentación para dar clases",
+        "information": "Información",
+        "description": "Descripción",
+        "skills": "Skills",
+        "ourTeachers": "PROs de escuela"
     },
     "conversation":{
         "not_valid":"Tu numero de telefono no esta validado, revisa WhatsApp y probá de nuevo!",
@@ -277,6 +300,18 @@
         "needsGoogles": "Necesita antiparras",
         "needsHelmet": "Necesita Cazco",
         "discipline": "Disciplina"
+    },
+    "business": {
+        "fire": "Despedir",
+        "hire": "Contratar",
+        "my_teachers": "Mis profesores",
+        "fire_teacher_title": "¿Despedir a {{name}}?",
+        "fire_teacher_message": "¿Estas seguro que desea despedir a {{name}}?",
+        "cancel": "Cancelar",
+        "hire_teacher_title": "¿COntratar a {{name}}?",
+        "hire_teacher_message": "¿Estas seguro que desea contratar a {{name}}?",
+        "hire_success": "Contrato exitoso!",
+        "fire_success": "Despido exitoso!"
     },
     "completeOrder": {
         "order": "Su codigo de clase SnowMatch es: ",

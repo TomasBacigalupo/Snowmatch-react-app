@@ -93,6 +93,7 @@ const navConfig = [
         children: [
           { title: 'School PROs', path: PATH_DASHBOARD.eCommerce.shopSchool },
           { title: 'Independent PROs', path: PATH_DASHBOARD.eCommerce.shopInd },
+          { title: 'PRO Schools', path: PATH_DASHBOARD.eCommerce.schools },
         ],
       },
       { title: 'calendar', path: PATH_DASHBOARD.calendar, icon: ICONS.calendar },
@@ -112,6 +113,12 @@ const navConfig = [
             title: 'products', path: PATH_DASHBOARD.eCommerce.new, children: [
               { title: 'myLessons', path: PATH_DASHBOARD.eCommerce.new, },
               { title: 'newProduct', path: PATH_DASHBOARD.eCommerce.new, },
+            ]
+          },
+          {
+            title: 'school_teachers', path: PATH_DASHBOARD.school.teachers, children: [
+              { title: 'my_teachers', path: PATH_DASHBOARD.school.teachers, },
+              { title: 'pending_teachers', path: PATH_DASHBOARD.school.pending, },
             ]
           }
         ],

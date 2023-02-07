@@ -63,9 +63,9 @@ NavbarVertical.propTypes = {
   isGuest: PropTypes.bool,
 };
 
-export default function NavbarVertical({ isOpenSidebar, onCloseSidebar,isGuest }) {
+export default function NavbarVertical({ isOpenSidebar, onCloseSidebar, isGuest }) {
   const theme = useTheme();
-  
+
   const { pathname } = useLocation();
 
   const isDesktop = useResponsive('up', 'lg');
@@ -74,7 +74,7 @@ export default function NavbarVertical({ isOpenSidebar, onCloseSidebar,isGuest }
   const { isCollapse, collapseClick, collapseHover, onToggleCollapse, onHoverEnter, onHoverLeave } =
     useCollapseDrawer();
 
-  const config = isGuest?navConfigGuest:navConfig;
+  const config = isGuest ? navConfigGuest : navConfig;
 
   useEffect(() => {
     if (isOpenSidebar) {
@@ -120,23 +120,23 @@ export default function NavbarVertical({ isOpenSidebar, onCloseSidebar,isGuest }
 
   const user = useAuth()
 
-  useEffect(()=>{
+  useEffect(() => {
     console.log(navConfig[2].items)
-    if(user?.user?.role=='ADMIN'){
-      if (!navConfig[2].items.some(e => e.title === 'admin')){
-        navConfig[2].items .push(
-            {
-              title: 'admin',
-              path: PATH_DASHBOARD.admin.root,
-              icon: ICONS.user,
-              children: [
-                { title: 'review teachers', path: PATH_DASHBOARD.admin.review },
-              ],
-            })
+    if (user?.user?.role == 'ADMIN') {
+      if (!navConfig[2].items.some(e => e.title === 'admin')) {
+        navConfig[2].items.push(
+          {
+            title: 'admin',
+            path: PATH_DASHBOARD.admin.root,
+            icon: ICONS.user,
+            children: [
+              { title: 'review teachers', path: PATH_DASHBOARD.admin.review },
+            ],
+          })
       }
     }
 
-  },[])
+  }, [])
 
   return (
     <RootStyle

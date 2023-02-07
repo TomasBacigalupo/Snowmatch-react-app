@@ -7,11 +7,11 @@ import { useSnackbar } from 'notistack';
 import { useForm, Controller, useWatch } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { Box, Stack, Button, Tooltip, TextField, IconButton, DialogActions } from '@mui/material';
+import { Box, Stack, Button, Tooltip, TextField, IconButton, DialogActions, ToggleButton, ToggleButtonGroup } from '@mui/material';
 import { LoadingButton, MobileDateTimePicker } from '@mui/lab';
 // redux
 import { useDispatch } from '../../../redux/store';
-import { createEvent, updateEvent, deleteEvent } from '../../../redux/slices/calendar';
+import { createEvent, updateEvent, deleteEvent, createSchoolEvent, updateSchoolEvent, deleteSchoolEvent, } from '../../../redux/slices/calendar';
 // components
 import Iconify from '../../../components/Iconify';
 import { ColorSinglePicker } from '../../../components/color-utils';
@@ -20,6 +20,9 @@ import { useEffect, useState } from 'react';
 import { Avatar } from '@mui/material';
 import { Autocomplete } from '@mui/material';
 import useLocales from 'src/hooks/useLocales';
+//User for is admin
+import useAuth from 'src/hooks/useAuth';
+
 
 // ----------------------------------------------------------------------
 
@@ -61,8 +64,8 @@ CalendarForm.propTypes = {
 
 export default function CalendarForm({ event, range, onCancel, clients }) {
   const { enqueueSnackbar } = useSnackbar();
-  const {translate} = useLocales()
-  const [client, setClient] = useState(clients.find(c =>event?.clientId ===c.id))
+  const { translate } = useLocales()
+  const [client, setClient] = useState(clients.find(c => event?.clientId === c.id))
 
   const dispatch = useDispatch();
 
@@ -115,7 +118,7 @@ export default function CalendarForm({ event, range, onCancel, clients }) {
             type: data.type,
             price: data.price === null ? undefined : data.price,
           };
-          if(client !== null && client !== undefined){
+          if (client !== null && client !== undefined) {
             newEvent = {
               ...newEvent,
               clientId: client.id
@@ -127,12 +130,23 @@ export default function CalendarForm({ event, range, onCancel, clients }) {
       var func;
       var snackbar;
       if (event.id) {
-        func = updateEvent(event.id, newEvent);
-        snackbar = 'Update success!'
+        if (classType === 'teacher') {
+          func = updateEvent(event.id, newEvent);
+          snackbar = 'Update success!'
+        }
+        else if (classType === 'school') {
+          func = updateSchoolEvent(event.id, newEvent);
+          snackbar = 'Update success!'
+        }
       }
       else {
-        func = createEvent(newEvent);
-        snackbar = 'Create success!'
+        if (classType === 'teacher') {
+          func = createEvent(newEvent);
+          snackbar = 'Create success!'
+        } if (classType === 'school') {
+          func = createSchoolEvent(newEvent);
+          snackbar = 'Create success!'
+        }
       }
       const response = await dispatch(func);
 
@@ -165,6 +179,36 @@ export default function CalendarForm({ event, range, onCancel, clients }) {
     }
   };
 
+  const [classType, setClassType] = useState('teacher');
+
+  useEffect(() => {
+    if (user?.user?.role === 'TEACHER') {
+      setClassType('teacher')
+    } else {
+      setClassType('school')
+    }
+  }, []);
+
+  useEffect(() => {
+    if (event?.businessOwnerId != null)
+      setClassType('school')
+    else if (event?.teacherOwnerId != null) {
+      setClassType('teacher')
+    }
+  }, [event]);
+
+  const handleSchoolChange = (onChangeEvent, newAlignment) => {
+    console.log(event)
+    if (event?.id != null) {
+      return
+    }
+    if (user?.user?.role === 'TEACHER') {
+      return
+    }
+
+    setClassType(newAlignment);
+  };
+
   const values = watch();
 
   const isDateError = isBefore(new Date(values.end), new Date(values.start));
@@ -174,22 +218,35 @@ export default function CalendarForm({ event, range, onCancel, clients }) {
     { group: 'Off', classify: ['Break', 'Training', 'Illness'] },
   ];
 
+  const user = useAuth()
+
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+
       <Stack spacing={3} sx={{ p: 3 }}>
+        {(user?.user?.role === 'ADMIN' || user?.user?.role === 'SCHOOL_ADMIN') && <ToggleButtonGroup
+          color="primary"
+          value={classType}
+          exclusive
+          onChange={handleSchoolChange}
+          aria-label="Platform"
+          fullWidth
+        >
+          <ToggleButton value="teacher">{translate('calendar.form.teacher')}</ToggleButton>
+          <ToggleButton value="school">{translate('calendar.form.school')}</ToggleButton>
+        </ToggleButtonGroup>}
+
         {clients?.length > 0 && <Autocomplete
           name="clientId" label={translate('calendar.form.client')}
           value={client}
           options={clients}
-          onChange={(event,value)=>{
-            if (value !== null){
+          onChange={(event, value) => {
+            if (value !== null) {
               setClient(value)
-            }else{
+            } else {
               setClient(null)
             }
-
-            }
-            
+          }
           }
           autoHighlight
           getOptionLabel={(c) => `${client?.name} ${client?.lastname}`}
@@ -213,7 +270,7 @@ export default function CalendarForm({ event, range, onCancel, clients }) {
             // />
           )}
         />}
-        
+
 
         <RHFSelect name="type" label={translate('calendar.form.type')}>
           {TYPE_OPTION.map((type) => (
@@ -290,7 +347,7 @@ export default function CalendarForm({ event, range, onCancel, clients }) {
           {translate('calendar.form.cancel')}
         </Button>
 
-        <LoadingButton type="submit" variant="contained" loading={isSubmitting} sx={{':hover':{color:'#3399FF'}}}>
+        <LoadingButton type="submit" variant="contained" loading={isSubmitting} sx={{ ':hover': { color: '#3399FF' } }}>
           {translate('calendar.form.add')}
         </LoadingButton>
       </DialogActions>

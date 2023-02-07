@@ -63,7 +63,7 @@ export const ICON = {
 // ----------------------------------------------------------------------
 
 export const defaultSettings = {
-  themeMode: 'dark',
+  themeMode: 'light',
   themeDirection: 'ltr',
   themeColorPresets: 'designer',
   themeLayout: 'horizontal',

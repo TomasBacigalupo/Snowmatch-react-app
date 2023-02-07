@@ -82,7 +82,9 @@
     "school_teachers": "School teachers",
     "pending_teachers": "Pending teachers",
     "my_teachers": "My teachers",
-    "PRO Schools": "PRO Schools"
+    "PRO Schools": "PRO Schools",
+    "reviews": "My Reviews",
+    "lessons": "My Lessons"
   },
   "calendar": {
     "name": "Calendar",
@@ -135,11 +137,15 @@
     "accountSettings": "Account Settings",
     "editProfile": "Edit Profile",
     "school": "School",
-    "agenda": "Agenda"
+    "agenda": "Agenda",
+    "lessons": "Lessons",
+    "reviews": "Reviews",
+    "lesson_details": "Lesson details"
   },
   "profile": {
     "tabs": {
-      "profile": "My information"
+      "profile": "My information",
+      "review":"My Reviews"
     },
     "clients": "Clients",
     "level": "Instructor Level",
@@ -184,9 +190,11 @@
     "Profile": "My Profile",
     "Settings": "Settings",
     "SignUpAsAPRO": "I want to be a PRO",
+    "SignUpAsAGuest": "Sign Up",
     "LogIn": "LogIn",
     "logOut": "LogOut",
-    "help": "Help"
+    "help": "Help",
+    "Lessons": "My lessons"
   },
   "generalApp": {
     "totalLessons": "Total Lessons",
@@ -297,5 +305,27 @@
     "hire_teacher_message": "are you sure you want to hire {{name}}?",
     "hire_success": "Successfully hired!",
     "fire_success": "Successfully fired!"
+  },
+  "completeOrder": {
+    "order": "Your SnowMatch code is: ",
+    "thanksMessage": "Match! Thanks for trusting in SnowMatch",
+    "info": "Your Pro will get in touch with you soon."
+  },
+  "checkout": {
+    "deal_with_pro": "Deal with PRO",
+    "free": "Free",
+    "morning": "Morning",
+    "afternoon": "Afternoon",
+    "all_day": "All Day",
+    "continue": "Continue to find Pros",
+    "event_added": "Lesson booked",
+    "book_lesson": "Book"
+  },
+  "verify": {
+    "title": "Verify your Mail",
+    "description": "We sent a verification email to {{email}}. Verify your email and the press Continue.",
+    "reload": "Continue",
+    "logout": "Log out",
+    "send_email": "Resend verification email"
   }
 }

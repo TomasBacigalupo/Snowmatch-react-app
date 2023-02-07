@@ -1,4 +1,5 @@
 import * as Yup from 'yup';
+import { useEffect } from 'react';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -7,7 +8,7 @@ import { Grid, Button } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 // redux
 import { useDispatch, useSelector } from '../../../../redux/store';
-import { onGotoStep, onBackStep, onNextStep, applyShipping } from '../../../../redux/slices/product';
+import { onGotoStep, onBackStep, onNextStep, applyShipping, hireTeacher, cleanCart } from '../../../../redux/slices/teachers';
 // components
 import Iconify from '../../../../components/Iconify';
 import { FormProvider } from '../../../../components/hook-form';
@@ -16,19 +17,21 @@ import CheckoutSummary from './CheckoutSummary';
 import CheckoutDelivery from './CheckoutDelivery';
 import CheckoutBillingInfo from './CheckoutBillingInfo';
 import CheckoutPaymentMethods from './CheckoutPaymentMethods';
+import CheckoutService from './CheckoutService';
+import { useState } from 'react';
 
 // ----------------------------------------------------------------------
 
-const DELIVERY_OPTIONS = [
+const SERVICE_OPTIONS = [
   {
     value: 0,
-    title: 'Standard delivery (Free)',
-    description: 'Delivered on Monday, August 12',
+    title: 'Standard service (Free)',
+    description: 'You will deal with teachers by your own',
   },
   {
     value: 2,
-    title: 'Fast delivery ($2,00)',
-    description: 'Delivered on Monday, August 5',
+    title: 'SnowMatch Support ($20,00)',
+    description: 'We will help you in every step of your lesson',
   },
 ];
 
@@ -65,9 +68,11 @@ const CARDS_OPTIONS = [
 export default function CheckoutPayment() {
   const dispatch = useDispatch();
 
-  const { checkout } = useSelector((state) => state.product);
+  const [loading, setLoading] = useState(false)
 
-  const { total, discount, subtotal, shipping } = checkout;
+  const { checkout, teacher } = useSelector((state) => state.teachers);
+
+  const { total, discount, subtotal, shipping, events } = checkout;
 
   const handleNextStep = () => {
     dispatch(onNextStep());
@@ -101,12 +106,16 @@ export default function CheckoutPayment() {
 
   const {
     handleSubmit,
-    formState: { isSubmitting },
   } = methods;
 
   const onSubmit = async () => {
+    setLoading(true)
     try {
-      handleNextStep();
+      dispatch(hireTeacher(teacher.id, events, (succ)=>{
+        setLoading(false)
+        dispatch(cleanCart())
+        handleNextStep();
+      }))
     } catch (error) {
       console.error(error);
     }
@@ -116,7 +125,7 @@ export default function CheckoutPayment() {
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Grid container spacing={3}>
         <Grid item xs={12} md={8}>
-          <CheckoutDelivery onApplyShipping={handleApplyShipping} deliveryOptions={DELIVERY_OPTIONS} />
+          <CheckoutService onApplyShipping={handleApplyShipping} deliveryOptions={SERVICE_OPTIONS} />
           <CheckoutPaymentMethods cardOptions={CARDS_OPTIONS} paymentOptions={PAYMENT_OPTIONS} />
           <Button
             size="small"
@@ -129,7 +138,7 @@ export default function CheckoutPayment() {
         </Grid>
 
         <Grid item xs={12} md={4}>
-          <CheckoutBillingInfo onBackStep={handleBackStep} />
+          {/* <CheckoutBillingInfo onBackStep={handleBackStep} /> */}
 
           <CheckoutSummary
             enableEdit
@@ -139,7 +148,7 @@ export default function CheckoutPayment() {
             shipping={shipping}
             onEdit={() => handleGotoStep(0)}
           />
-          <LoadingButton fullWidth size="large" type="submit" variant="contained" loading={isSubmitting}>
+          <LoadingButton fullWidth size="large" type="submit" variant="contained" loading={loading}>
             Complete Order
           </LoadingButton>
         </Grid>

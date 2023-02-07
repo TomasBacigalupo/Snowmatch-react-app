@@ -86,7 +86,9 @@
         "school_teachers": "profesores de escuela",
         "pending_teachers": "profesores pendientes",
         "my_teachers": "mis profesores",
-        "PRO Schools": "PRO Schools"
+        "PRO Schools": "PRO Schools",
+        "reviews": "Mis Calificaciones",
+        "lessons": "Mis Clases"
     },
     "calendar": {
         "name": "Calendario",
@@ -139,11 +141,15 @@
         "accountSettings": "Ajustes de cuenta",
         "editProfile": "Editar Mi Perfil",
         "school":"Escuela",
-        "agenda": "Agenda"
+        "agenda": "Agenda",
+        "lessons": "Clases",
+        "reviews": "Mis Calificaciones",
+        "lesson_details": "Detalles de la clase"
     },
     "profile":{
         "tabs":{
-            "profile": "Mi información"
+            "profile": "Mi información",
+            "review": "Mis Calificaciones"
         },
         "clients": "Clientes",
         "level": "Nivel de Instructor",
@@ -188,9 +194,11 @@
         "Profile": "Mi Perfíl",
         "Settings": "Ajustes",
         "SignUpAsAPRO": "Quiero ser PRO",
-        "LogIn": "LogIn",
-        "logOut":"LogOut",
-        "help": "Ayuda"
+        "SignUpAsAGuest": "Sign Up",
+        "LogIn": "Log In",
+        "logOut":"Log Out",
+        "help": "Ayuda",
+        "Lessons": "Mis clases"
     },
     "generalApp":{
         "totalLessons": "Clases",
@@ -253,7 +261,8 @@
         "contact_pro":"Contactar PRO",
         "validation_required":"Validation required!",
         "validation_required_body":"Vas a recibir un mensaje de validación por WhatsApp, puede tardar unos minutos. Si no te llega el mensaje, revisa tu número y proba de nuevo!",
-        "close":"Cerrar"
+        "close":"Cerrar",
+        "match_pro": "Match Pro"
       },
       "discounts":{
           "getCupon":"Conseguir Cupon",
@@ -303,5 +312,27 @@
         "hire_teacher_message": "¿Estas seguro que desea contratar a {{name}}?",
         "hire_success": "Contrato exitoso!",
         "fire_success": "Despido exitoso!"
+    },
+    "completeOrder": {
+        "order": "Su codigo de clase SnowMatch es: ",
+        "thanksMessage": "Match! Gracias por usar SnowMatch",
+        "info": "Vamos a contactar al Pro y ponerlo en contacto con usted a la brevedad. Cualquier consulta no dude en contactarnos. "
+    },
+    "checkout":{
+        "deal_with_pro": "Arregle con el PRO",
+        "free": "Gratis",
+        "morning": "Mañana",
+        "afternoon": "Tarde",
+        "allday": "Todo el día",
+        "continue": "Seguir buscando Pros",
+        "event_added": "Clase agendada",
+        "book_lesson": "Reservar clase"
+    },
+    "verify": {
+        "title": "Verifique su Mail",
+        "description": "Enviamos un mail a {{email}}. Verifique su identidad y luego presione continuar.",
+        "reload": "Continuar",
+        "logout": "Cerrar sesión",
+        "send_email": "Reenviar mail de verificación"
     }
 }

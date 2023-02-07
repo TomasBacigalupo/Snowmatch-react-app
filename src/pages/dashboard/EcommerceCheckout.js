@@ -15,6 +15,7 @@ import useSettings from '../../hooks/useSettings';
 import Page from '../../components/Page';
 import Iconify from '../../components/Iconify';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
+
 // sections
 import {
   CheckoutCart,
@@ -82,7 +83,7 @@ export default function EcommerceCheckout() {
   const isMountedRef = useIsMountedRef();
   const { checkout } = useSelector((state) => state.product);
   const { cart, billing, activeStep } = checkout;
-  const isComplete = activeStep === STEPS.length;
+  const isComplete = false //activeStep === STEPS.length;
 
   useEffect(() => {
     if (isMountedRef.current) {
@@ -113,7 +114,7 @@ export default function EcommerceCheckout() {
 
         <Grid container justifyContent={isComplete ? 'center' : 'flex-start'}>
           <Grid item xs={12} md={8} sx={{ mb: 5 }}>
-            <Stepper alternativeLabel activeStep={activeStep} connector={<QontoConnector />}>
+            <Stepper alternativeLabel activeStep={1} connector={<QontoConnector />}>
               {STEPS.map((label) => (
                 <Step key={label}>
                   <StepLabel

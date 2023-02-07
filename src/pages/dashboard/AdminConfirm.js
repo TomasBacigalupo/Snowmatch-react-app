@@ -57,6 +57,20 @@ export default function AdminConfirm() {
     console.log("teacher",teacher)
   },[dispatch, documents, teacher ])
 
+  useEffect(() => {
+    dispatch(getTeacher(id));
+  }, [dispatch,id]);
+
+  useEffect(() => {
+    dispatch(getTeacherDocuments(id));
+  }, [dispatch,id]);
+
+
+  useEffect(()=>{
+    console.log("documents",documents)
+    console.log("teacher",teacher)
+  },[dispatch, documents, teacher ])
+
   return (
     <Page title="Admin: Confirm a new teacher">
       <Container maxWidth={themeStretch ? false : 'lg'}>

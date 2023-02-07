@@ -1,10 +1,10 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useSnackbar } from 'notistack';
 import { useNavigate } from 'react-router-dom';
 // form
-import { useForm, Controller } from 'react-hook-form';
+import { useForm,} from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { LoadingButton } from '@mui/lab';
@@ -13,8 +13,6 @@ import { Box, Card, Grid, Stack, Switch, Typography, FormControlLabel, Avatar, T
 import { fData } from '../../../utils/formatNumber';
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
-// _mock
-import { countries } from '../../../_mock';
 // components
 import Label from '../../../components/Label';
 import { FormProvider, RHFMultipleSelect, RHFSelect, RHFSwitch, RHFTextField, RHFUploadAvatar } from '../../../components/hook-form';
@@ -22,7 +20,6 @@ import Image from '../../../components/Image';
 
 import { confirmTeacher, editTeacher } from '../../../redux/slices/admin.js'
 import { useDispatch, useSelector } from '../../../redux/store';
-import axios from 'src/utils/axios'
 
 import {
   TeacherDetailsCarousel
@@ -30,6 +27,7 @@ import {
 import useLocales from 'src/hooks/useLocales';
 import Iconify from 'src/components/Iconify';
 import Button from 'src/theme/overrides/Button';
+import { countries } from 'src/_mock';
 // } from '../../sections/@dashboard/e-commerce/teacher-details';
 
 // ----------------------------------------------------------------------
@@ -246,10 +244,7 @@ export default function AdminConfirmForm({ isEdit, currentTeacher, documents }) 
         <Grid item xs={12} md={4}>
           <Card sx={{ py: 10, px: 3 }}>
             <Box sx={{ mb: 0 }}>
-              <Image alt={'certificate'} src={currentTeacher?.certificateImageS3} ratio="1/1" />
-              {/* <TeacherDetailsCarousel teacher={
-                {images: [`${currentTeacher?.certificateImageS3}`]}
-              } /> */}
+              <Image alt={'certificate'} src={currentTeacher?.imageLink} ratio="1/1" />
               <Typography variant="subtitle2" noWrap>
                 {`${currentTeacher?.name} ${currentTeacher?.lastname}`}
               </Typography>

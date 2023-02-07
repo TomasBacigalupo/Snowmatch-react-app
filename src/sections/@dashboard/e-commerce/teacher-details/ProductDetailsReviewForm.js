@@ -8,7 +8,11 @@ import { styled } from '@mui/material/styles';
 import { Button, Stack, Rating, Typography, FormHelperText } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 // components
-import { FormProvider, RHFTextField } from '../../../../components/hook-form';
+import { FormProvider, RHFRadioGroup, RHFSelect, RHFTextField } from '../../../../components/hook-form';
+import useAuth from 'src/hooks/useAuth';
+import { useNavigate } from 'react-router';
+import { rateTeacherByID } from 'src/redux/slices/rates';
+import { useDispatch, useSelector } from 'src/redux/store';
 
 // ----------------------------------------------------------------------
 
@@ -24,21 +28,27 @@ const RootStyle = styled('div')(({ theme }) => ({
 ProductDetailsReviewForm.propTypes = {
   onClose: PropTypes.func,
   id: PropTypes.string,
+  teacherId: PropTypes.number
 };
 
-export default function ProductDetailsReviewForm({ onClose, id, ...other }) {
+export default function ProductDetailsReviewForm({ onClose, id, teacherId, ...other }) {
+
+
+  const dispatch = useDispatch()
+  const {isSubmitting} = useSelector(state => state.rates)
+
   const ReviewSchema = Yup.object().shape({
-    rating: Yup.mixed().required('Rating is required'),
-    review: Yup.string().required('Review is required'),
-    name: Yup.string().required('Name is required'),
-    email: Yup.string().email('Email must be a valid email address').required('Email is required'),
+    stars: Yup.mixed().required('Rating is required'),
+    comment: Yup.string().required('Comment is required'),
+    fun: Yup.string().required('Fun is requires'),
+    safety: Yup.string().required('Safety is requires')
   });
 
   const defaultValues = {
-    rating: null,
-    review: '',
-    name: '',
-    email: '',
+    stars: 0,
+    comment: '',
+    fun: 0,
+    safety: 0,
   };
 
   const methods = useForm({
@@ -50,15 +60,43 @@ export default function ProductDetailsReviewForm({ onClose, id, ...other }) {
     reset,
     control,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = methods;
 
-  const onSubmit = async () => {
+  const onSubmit = async (data) => {
+    let fun, safe
+    switch(data.fun){
+      case "Boring":
+        fun = 0
+        break
+      case "Fun":
+        fun = 1
+        break
+      case "Extremely Fun":
+        fun = 2
+        break
+    }
+    switch (data.safety) {
+      case "Not Safe":
+        safe = 0
+        break
+      case "Safe":
+        safe = 1
+        break
+      case "Extremely Safety":
+        safe = 2
+        break
+    }
     try {
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      reset();
+      dispatch(rateTeacherByID(teacherId, {
+        ...data,
+        fun: fun,
+        safe: safe,
+        stars: Number(data.stars)
+      }))
       onClose();
     } catch (error) {
+      console.log("error")
       console.error(error);
     }
   };
@@ -81,7 +119,7 @@ export default function ProductDetailsReviewForm({ onClose, id, ...other }) {
               <Typography variant="body2">Your review about this product:</Typography>
 
               <Controller
-                name="rating"
+                name="stars"
                 control={control}
                 render={({ field }) => <Rating {...field} value={Number(field.value)} />}
               />
@@ -89,11 +127,13 @@ export default function ProductDetailsReviewForm({ onClose, id, ...other }) {
             {!!errors.rating && <FormHelperText error> {errors.rating?.message}</FormHelperText>}
           </div>
 
-          <RHFTextField name="review" label="Review *" multiline rows={3} />
+          <RHFTextField name="comment" label="Share a story or situation of your choice *" multiline rows={3} />
 
-          <RHFTextField name="name" label="Name *" />
+          <Typography variant="body2">Fun:</Typography>
+          <RHFRadioGroup name='fun' options={["Boring", 'Fun', "Extremely Fun"]}/>
 
-          <RHFTextField name="email" label="Email *" />
+          <Typography variant="body2">Safety:</Typography>
+          <RHFRadioGroup name='safety' options={["Not Safe", 'Safe', "Extremely Safety"]} />
 
           <Stack direction="row" justifyContent="flex-end" spacing={1.5}>
             <Button color="inherit" variant="outlined" onClick={onCancel}>

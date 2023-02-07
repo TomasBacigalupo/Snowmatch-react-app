@@ -41,7 +41,7 @@ TeacherDetailsCalendar.propTypes = {
 };
 
 export default function TeacherDetailsCalendar({ teacher }) {
-  const { events } = teacher.teacher;
+  const { events } = teacher;
 
   const [view, setView] = useState('dayGridMonth');
   const [date, setDate] = useState(new Date());

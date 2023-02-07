@@ -13,7 +13,12 @@ import adminReducer from './slices/admin'
 import clientReducer from './slices/clients';
 import contactReducer from './slices/contact';
 import discountReducer from './slices/discount';
+<<<<<<< HEAD
 import businessReducer from './slices/business';
+=======
+import rateReducer from './slices/rates';
+import configReducer from './slices/config';
+>>>>>>> dev
 
 
 // ----------------------------------------------------------------------
@@ -44,7 +49,12 @@ const rootReducer = combineReducers({
   clients: clientReducer,
   contact: contactReducer,
   discounts: discountReducer,
+<<<<<<< HEAD
   business: businessReducer,
+=======
+  rates: rateReducer,
+  config: configReducer
+>>>>>>> dev
 });
 
 export { rootPersistConfig, rootReducer };

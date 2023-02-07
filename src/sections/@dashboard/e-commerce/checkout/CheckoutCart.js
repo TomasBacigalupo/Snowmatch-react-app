@@ -1,12 +1,11 @@
 import sum from 'lodash/sum';
+import { useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 // @mui
-import { Grid, Card, Button, CardHeader, Typography } from '@mui/material';
+import { Grid, Card, Button, CardHeader, Typography, Box, DialogTitle } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../../../redux/store';
 import {
-  deleteCart,
-  onNextStep,
   applyDiscount,
   increaseQuantity,
   decreaseQuantity,
@@ -17,25 +16,31 @@ import { PATH_DASHBOARD } from '../../../../routes/paths';
 import Iconify from '../../../../components/Iconify';
 import Scrollbar from '../../../../components/Scrollbar';
 import EmptyContent from '../../../../components/EmptyContent';
+import { DialogAnimate } from 'src/components/animate';
+import AddEventForm from './AddEventForm';
 //
 import CheckoutSummary from './CheckoutSummary';
-import CheckoutProductList from './CheckoutProductList';
+import CheckoutTeacherList from './CheckoutTeacherList';
+import useLocales from 'src/hooks/useLocales';
+import { closeAddEventModal, openAddEventModal, deleteCart, onNextStep } from 'src/redux/slices/teachers';
 
 // ----------------------------------------------------------------------
 
 export default function CheckoutCart() {
+  const { translate } = useLocales()
+  const [isOpenContactModal, setIsOpenContactModal] = useState(false)
   const dispatch = useDispatch();
 
-  const { checkout } = useSelector((state) => state.product);
+  const { checkout } = useSelector((state) => state.teachers);
 
-  const { cart, total, discount, subtotal } = checkout;
+  const { cart, total, discount, subtotal, isOpenAddEventModal, events } = checkout;
 
   const totalItems = sum(cart.map((item) => 1));
 
   const isEmptyCart = cart.length === 0;
 
-  const handleDeleteCart = (productId) => {
-    dispatch(deleteCart(productId));
+  const handleDeleteCart = (eventIdx) => {
+    dispatch(deleteCart(eventIdx));
   };
 
   const handleNextStep = () => {
@@ -54,6 +59,9 @@ export default function CheckoutCart() {
     dispatch(applyDiscount(value));
   };
 
+  const handleCloseContactModal = () => {
+    dispatch(closeAddEventModal())
+  }
   return (
     <Grid container spacing={3}>
       <Grid item xs={12} md={8}>
@@ -61,7 +69,7 @@ export default function CheckoutCart() {
           <CardHeader
             title={
               <Typography variant="h6">
-                Card
+                Lessons:
                 <Typography component="span" sx={{ color: 'text.secondary' }}>
                   &nbsp;({totalItems} item)
                 </Typography>
@@ -72,8 +80,9 @@ export default function CheckoutCart() {
 
           {!isEmptyCart ? (
             <Scrollbar>
-              <CheckoutProductList
-                products={cart}
+              <CheckoutTeacherList
+                teacher={cart}
+                events={events}
                 onDelete={handleDeleteCart}
                 onIncreaseQuantity={handleIncreaseQuantity}
                 onDecreaseQuantity={handleDecreaseQuantity}
@@ -86,21 +95,26 @@ export default function CheckoutCart() {
               img="https://minimal-assets-api.vercel.app/assets/illustrations/illustration_empty_cart.svg"
             />
           )}
-        </Card>
+          <Box padding={1} display='flex' flexDirection='row' justifyContent='flex-end'>
+            <Button onClick={()=>dispatch(openAddEventModal())}
+              variant='outlined'
+            >
+              Add Lesson
+            </Button>
+          </Box>
 
-        <Button
-          color="inherit"
-          component={RouterLink}
-          to={PATH_DASHBOARD.eCommerce.root}
-          startIcon={<Iconify icon={'eva:arrow-ios-back-fill'} />}
-        >
-          Continue Shopping
-        </Button>
+          <DialogAnimate open={isOpenAddEventModal} onClose={handleCloseContactModal}>
+            <DialogTitle>{translate("conversation.contact_pro")}</DialogTitle>
+            <AddEventForm onCancel={() => { dispatch(closeAddEventModal())}}/>
+          </DialogAnimate>
+
+        </Card>
       </Grid>
 
       <Grid item xs={12} md={4}>
         <CheckoutSummary
           enableDiscount
+          totalEvents={events.length}
           total={total}
           discount={discount}
           subtotal={subtotal}
@@ -111,7 +125,7 @@ export default function CheckoutCart() {
           size="large"
           type="submit"
           variant="contained"
-          disabled={cart.length === 0}
+          disabled={events.length === 0}
           onClick={handleNextStep}
         >
           Check Out

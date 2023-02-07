@@ -28,6 +28,12 @@ export default function DocumentInfoModal({ isOpen, onClose, certificateImageLin
                     {status === 'NEEDS_VERIFICATION' && <Typography variant='body1'>
                         This document is under verification process of SnowMatch.pro
                     </Typography> }
+                    {status === 'VERIFIED' && <Typography variant='body1'>
+                        This document is verified by SnowMatch.pro
+                    </Typography>}
+                    {status === 'REJECTED' && <Typography variant='body1'>
+                        This document is rejected by SnowMatch.pro.
+                    </Typography>}
                     {description && <Typography variant='body2'>
                         {description}
                     </Typography>}

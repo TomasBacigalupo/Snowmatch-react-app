@@ -2,12 +2,12 @@ import PropTypes from 'prop-types';
 import { useEffect } from 'react';
 // @mui
 import { styled } from '@mui/material/styles';
-import { Box, Grid, Step, Stepper, Container, StepLabel, StepConnector } from '@mui/material';
+import { Box, Grid, Step, Stepper, Container, StepLabel, StepConnector, DialogTitle, ToggleButtonGroup, ToggleButton } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
 import { getCart, createBilling } from '../../redux/slices/teachers';
 // routes
-import { PATH_DASHBOARD } from '../../routes/paths';
+import { PATH_GUEST } from '../../routes/paths';
 // hooks
 import useIsMountedRef from '../../hooks/useIsMountedRef';
 import useSettings from '../../hooks/useSettings';
@@ -15,17 +15,18 @@ import useSettings from '../../hooks/useSettings';
 import Page from '../../components/Page';
 import Iconify from '../../components/Iconify';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
+
 // sections
 import {
   CheckoutCart,
   CheckoutPayment,
   CheckoutOrderComplete,
-  CheckoutBillingAddress,
+  CheckoutConfirmation,
 } from '../../sections/@dashboard/e-commerce/checkout';
 
 // ----------------------------------------------------------------------
 
-const STEPS = ['Cart', 'Billing & address', 'Payment'];
+const STEPS = ['Days', 'Confirmation', 'Payment'];
 
 const QontoConnector = styled(StepConnector)(({ theme }) => ({
   top: 10,
@@ -80,10 +81,9 @@ export default function EcommerceCheckoutTeacher() {
   const { themeStretch } = useSettings();
   const dispatch = useDispatch();
   const isMountedRef = useIsMountedRef();
-  const { checkout } = useSelector((state) => state.product);
+  const { checkout } = useSelector((state) => state.teachers);
   const { cart, billing, activeStep } = checkout;
   const isComplete = activeStep === STEPS.length;
-
   useEffect(() => {
     if (isMountedRef.current) {
       dispatch(getCart(cart));
@@ -97,16 +97,12 @@ export default function EcommerceCheckoutTeacher() {
   }, [dispatch, activeStep]);
 
   return (
-    <Page title="Ecommerce: Checkout">
+    <Page title="Teacher: Match">
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <HeaderBreadcrumbs
           heading="Checkout"
           links={[
-            { name: 'Dashboard', href: PATH_DASHBOARD.root },
-            {
-              name: 'E-Commerce',
-              href: PATH_DASHBOARD.eCommerce.root,
-            },
+            { name: 'home', href: PATH_GUEST.school },
             { name: 'Checkout' },
           ]}
         />
@@ -136,8 +132,8 @@ export default function EcommerceCheckoutTeacher() {
         {!isComplete ? (
           <>
             {activeStep === 0 && <CheckoutCart />}
-            {activeStep === 1 && <CheckoutBillingAddress />}
-            {activeStep === 2 && billing && <CheckoutPayment />}
+            {activeStep === 1 && <CheckoutConfirmation />}
+            {activeStep === 2 && <CheckoutPayment />}
           </>
         ) : (
           <CheckoutOrderComplete open={isComplete} />

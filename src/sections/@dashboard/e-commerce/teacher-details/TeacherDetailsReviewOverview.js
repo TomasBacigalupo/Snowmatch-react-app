@@ -8,6 +8,12 @@ import { fShortenNumber } from '../../../../utils/formatNumber';
 // components
 import Iconify from '../../../../components/Iconify';
 import { MapControlScale } from 'src/components/map';
+import useAuth from 'src/hooks/useAuth';
+import { useDispatch, useSelector } from 'src/redux/store';
+import { getRates } from 'src/redux/slices/product';
+import { useEffect } from 'react';
+import { useSnackbar } from 'notistack';
+
 
 // ----------------------------------------------------------------------
 
@@ -37,11 +43,30 @@ TeacherDetailsReviewOverview.propTypes = {
 };
 
 export default function TeacherDetailsReviewOverview({ teacher, onOpen }) {
-  const { rates } = teacher;
 
-  
+  const { isTeacher, user } = useAuth();
+  const { enqueueSnackbar } = useSnackbar()
+  const { rates, isLoading } = useSelector(state => state.rates)
+  const dispatch = useDispatch()
 
-  //const total = sumBy(rates, (stars) => stars.starCount);
+  useEffect(() => {
+    dispatch(getRates(teacher.id))
+  }, [])
+
+  const getStarsAvg = () => {
+    if (rates.length === 0) return 0
+    return Math.floor(rates.map(r => r.stars).reduce((total, stars) => total + stars) / rates.length)
+  }
+
+  const getSafetyAvg = () => {
+    if (rates.length === 0) return 0
+    return Math.floor(rates.map(r => r.safety).reduce((total, safety) => total + safety) * 100 / (rates.length * 3))
+  }
+
+  const getFunAvg = () => {
+    if (rates.length === 0) return 0
+    return Math.floor(rates.map(r => r.fun).reduce((total, fun) => total + fun) * 100 / (rates.length * 3))
+  }
 
   return (
     <Grid container>
@@ -49,34 +74,51 @@ export default function TeacherDetailsReviewOverview({ teacher, onOpen }) {
         <Typography variant="subtitle1" gutterBottom>
           Average rating
         </Typography>
-        <Typography variant="h2" gutterBottom sx={{ color: 'error.main' }}>
-          {10}/5
+        <Typography variant="h2" gutterBottom sx={{ color: getStarsAvg() > 3 ? 'success.main' : 'error.main' }}>
+          {getStarsAvg()}/5
         </Typography>
-        <RatingStyle readOnly value={50} precision={0.1} />
+        <RatingStyle readOnly value={getStarsAvg()} precision={0.1} />
         <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-          ({fShortenNumber(10)}
+          ({fShortenNumber(rates.length)}
           &nbsp;reviews)
         </Typography>
       </GridStyle>
 
       <GridStyle item xs={12} md={4}>
         <Stack spacing={1.5} sx={{ width: 1 }}>
-          {rates
+          {[{
+            name: 'Safety',
+            stars: getSafetyAvg(),
+          },
+          {
+            name: 'Fun',
+            stars: getFunAvg(),
+          },
+          ]
             .slice(0)
             .reverse()
             .map((rate) => (
-              <ProgressItem key={rate.name} star={5} total={10} />
+              <ProgressItem key={rate.name} name={rate.name} star={rate.stars} total={rates.length * 3} />
             ))}
         </Stack>
       </GridStyle>
-
-      <GridStyle item xs={12} md={4}>
+      {isTeacher &&
+        <GridStyle item xs={12} md={4}>
+          <Button size="large" onClick={() => {
+            navigator.clipboard.writeText(`https://snowmatch.pro/match/teacher/${user.id}/review#move_add_review`);
+            enqueueSnackbar('Review link copied!', { variant: 'success' });
+          }} variant="outlined" startIcon={<Iconify icon={'oi:share'} />}>
+            Copy my review Link
+          </Button>
+        </GridStyle>}
+      {!isTeacher && <GridStyle item xs={12} md={4}>
         <Link href="#move_add_review" underline="none">
-          <Button size="large" onClick={onOpen} variant="outlined" startIcon={<Iconify icon={'eva:edit-2-fill'} />}>
+          <Button size="large" disable={isTeacher} onClick={onOpen} variant="outlined" startIcon={<Iconify icon={'eva:edit-2-fill'} />}>
             Write your review
           </Button>
         </Link>
-      </GridStyle>
+      </GridStyle>}
+
     </Grid>
   );
 }
@@ -88,14 +130,14 @@ ProgressItem.propTypes = {
   total: PropTypes.number,
 };
 
-function ProgressItem({ star, total }) {
-  const { name, starCount, reviewCount } = star;
+function ProgressItem({ star, total, name }) {
+  const { reviewCount } = star;
   return (
     <Stack direction="row" alignItems="center" spacing={1.5}>
       <Typography variant="subtitle2">{name}</Typography>
       <LinearProgress
         variant="determinate"
-        value={(starCount / total) * 100}
+        value={star}
         sx={{
           mx: 2,
           flexGrow: 1,
@@ -103,7 +145,7 @@ function ProgressItem({ star, total }) {
         }}
       />
       <Typography variant="body2" sx={{ color: 'text.secondary', minWidth: 64, textAlign: 'right' }}>
-        {fShortenNumber(reviewCount)}
+        {fShortenNumber(total)}
       </Typography>
     </Stack>
   );

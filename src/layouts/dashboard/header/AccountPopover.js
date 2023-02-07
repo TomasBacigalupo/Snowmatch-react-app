@@ -5,7 +5,7 @@ import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { alpha } from '@mui/material/styles';
 import { Box, Divider, Typography, Stack, MenuItem } from '@mui/material';
 // routes
-import { PATH_DASHBOARD, PATH_AUTH } from '../../../routes/paths';
+import { PATH_DASHBOARD, PATH_AUTH, PATH_GUEST } from '../../../routes/paths';
 // hooks
 import useAuth from '../../../hooks/useAuth';
 import useIsMountedRef from '../../../hooks/useIsMountedRef';
@@ -29,10 +29,21 @@ const MENU_OPTIONS = [
   },
 ];
 
+const STUDENT_OPTIONS = [
+  {
+    label: 'Lessons',
+    linkTo: PATH_GUEST.root + '/lessons',
+  },
+];
+
 const GUEST_MENU_OPTIONS = [
   {
     label: 'SignUpAsAPRO',
     linkTo: '/auth/register',
+  },
+  {
+    label: 'SignUpAsAGuest',
+    linkTo: '/auth/guest-register',
   },
   {
     label: 'LogIn',
@@ -45,7 +56,7 @@ const GUEST_MENU_OPTIONS = [
 export default function AccountPopover() {
   const navigate = useNavigate();
 
-  const { user, logout, isAuthenticated } = useAuth();
+  const { user, logout, isAuthenticated, isStudent, isTeacher } = useAuth();
 
   const isMountedRef = useIsMountedRef();
 
@@ -124,8 +135,15 @@ export default function AccountPopover() {
 
         <Divider sx={{ borderStyle: 'dashed' }} /></>)}
 
-        {isAuthenticated && <Stack sx={{ p: 1 }}>
+        {isTeacher && <Stack sx={{ p: 1 }}>
           {MENU_OPTIONS.map((option) => (
+            <MenuItem key={option.label} to={option.linkTo} component={RouterLink} onClick={handleClose}>
+              {translate("accountPopover." + option.label)}
+            </MenuItem>
+          ))}
+        </Stack>}
+        {isStudent && <Stack sx={{ p: 1 }}>
+          {STUDENT_OPTIONS.map((option) => (
             <MenuItem key={option.label} to={option.linkTo} component={RouterLink} onClick={handleClose}>
               {translate("accountPopover." + option.label)}
             </MenuItem>

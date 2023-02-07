@@ -4,7 +4,7 @@ import { Link as RouterLink } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 import { Box, Card, Stack, Link, Alert, Tooltip, Container, Typography } from '@mui/material';
 // routes
-import { PATH_AUTH,PATH_GUEST } from '../../routes/paths';
+import { PATH_AUTH, PATH_GUEST } from '../../routes/paths';
 // hooks
 import useAuth from '../../hooks/useAuth';
 import useResponsive from '../../hooks/useResponsive';
@@ -75,7 +75,7 @@ export default function Login() {
           {smUp && (
             <Typography variant="body2" sx={{ mt: { md: -2 } }} align="right">
               Don’t have an account? {''}
-              <Link variant="subtitle2" component={RouterLink} to={PATH_AUTH.register}>
+              <Link variant="subtitle2" component={RouterLink} to={PATH_AUTH.registerStudent}>
                 Get started
               </Link>
               <><br /></>
@@ -126,14 +126,13 @@ export default function Login() {
 
             <LoginForm />
 
-            {!smUp && (
-              <Typography variant="body2" align="center" sx={{ mt: 3 }}>
-                Don’t have an account?{' '}
-                <Link variant="subtitle2" component={RouterLink} to={PATH_AUTH.register}>
-                  Get started
-                </Link>
-              </Typography>
-            )}
+
+            <Typography variant="body2" align="center" sx={{ mt: 3 }}>
+              Don’t have an account?{' '}
+              <Link variant="subtitle2" component={RouterLink} to={PATH_AUTH.registerStudent}>
+                Get started
+              </Link>
+            </Typography>
           </ContentStyle>
         </Container>
       </RootStyle>

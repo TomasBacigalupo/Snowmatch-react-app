@@ -1,12 +1,14 @@
 import PropTypes from 'prop-types';
-import { useState } from 'react';
+import { useEffect } from 'react';
 // @mui
-import { Box, List, Button, Rating, Avatar, ListItem, Pagination, Typography } from '@mui/material';
+import { Box, List, Button, Rating, Avatar, ListItem, Pagination, Typography, CircularProgress } from '@mui/material';
 // utils
 import { fDate } from '../../../../utils/formatTime';
 import { fShortenNumber } from '../../../../utils/formatNumber';
 // components
 import Iconify from '../../../../components/Iconify';
+import { useDispatch, useSelector } from 'src/redux/store';
+import { getRates } from 'src/redux/slices/rates';
 
 // ----------------------------------------------------------------------
 
@@ -15,20 +17,28 @@ TeacherDetailsReviewList.propTypes = {
 };
 
 export default function TeacherDetailsReviewList({ teacher }) {
-    
-    const  rates  = teacher.rates;
-  
+
+  const {rates, isLoading} = useSelector((state) => state.rates)
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    dispatch(getRates(teacher.id))
+  }, [dispatch])
 
   return (
     <Box sx={{ pt: 3, px: 2, pb: 5 }}>
-      <List disablePadding>
-        {rates.map((rate) => (
-          <ReviewItem key={rate.id} review={rate} />
-        ))}
-      </List>
-      <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-        <Pagination count={10} color="primary" />
-      </Box>
+      {isLoading && <CircularProgress/>}
+      {rates.length === 0 && (
+        <Typography>No reviews for this PRO</Typography>
+      )}
+      {!isLoading &&(
+        <List disablePadding>
+          {rates.map((rate) => (
+            <ReviewItem key={rate.id} review={rate} />
+          ))}
+        </List>
+      )}
+      
     </Box>
   );
 }
@@ -40,13 +50,8 @@ ReviewItem.propTypes = {
 };
 
 function ReviewItem({ review }) {
-  const [isHelpful, setHelpfuls] = useState(false);
 
-  const { raterName, raterLastname, rating, rateDate, comment, helpful,  imageLink, isPurchased, stars } = review;
-
-  const handleClickHelpful = () => {
-    setHelpfuls((prev) => !prev);
-  };
+  const { raterName, raterLastname, rateDate, comment,  imageLink, isPurchased, stars } = review;
 
   return (
     <>
@@ -63,7 +68,7 @@ function ReviewItem({ review }) {
             mr: 2,
             display: 'flex',
             alignItems: 'center',
-            mb: { xs: 2, sm: 0 },
+            mb: { xs: 0, sm: 0 },
             minWidth: { xs: 160, md: 240 },
             textAlign: { sm: 'center' },
             flexDirection: { sm: 'column' },
@@ -107,30 +112,6 @@ function ReviewItem({ review }) {
           )}
 
           <Typography variant="body2">{comment}</Typography>
-
-          <Box
-            sx={{
-              mt: 1,
-              display: 'flex',
-              flexWrap: 'wrap',
-              alignItems: 'center',
-            }}
-          >
-            {!isHelpful && (
-              <Typography variant="body2" sx={{ mr: 1 }}>
-                Was this review helpful to you?
-              </Typography>
-            )}
-
-            <Button
-              size="small"
-              color="inherit"
-              startIcon={<Iconify icon={!isHelpful ? 'ic:round-thumb-up' : 'eva:checkmark-fill'} />}
-              onClick={handleClickHelpful}
-            >
-              {isHelpful ? 'Helpful' : 'Thank'}({fShortenNumber(!isHelpful ? helpful : helpful + 1)})
-            </Button>
-          </Box>
         </div>
       </ListItem>
     </>

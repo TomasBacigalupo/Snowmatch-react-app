@@ -249,7 +249,7 @@ export function hireTeacher(teacher) {
     return async () => {
         dispatch(slice.actions.startLoadingModal());
         try {
-            const resp = await axios.post(`/api/business/hire/` + teacher?.id)
+            const resp = await axios.post(`/api/business/members/` + teacher?.id)
             dispatch(slice.actions.closeHireModal())
             dispatch(slice.actions.hasSuccess("business.hire_success"))
         } catch (error) {

@@ -201,7 +201,7 @@ export default function SchoolDetailsSummary({ cart, business, onAddCart, onGoto
                 color: 'success.main',
             }}
             >
-            {translate('general.' + 'state')}
+            {translate('schoolDetails.verified')}
             </Typography>
         )}
 

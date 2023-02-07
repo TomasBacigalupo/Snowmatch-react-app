@@ -121,7 +121,7 @@ export default function EcommerceTeacherDetails({ isGuest = false }) {
             </Card>
             <br></br>
             {/* <Grid container sx={{ my: 1 }}> */}
-            <Typography variant='h4'>Our teachers</Typography>
+            <Typography variant='h4'> {translate("schoolDetails.ourTeachers")}</Typography>
             <br></br>
 
               <SchoolDetailsMembersList teachers={teachers} loading={isLoading}></SchoolDetailsMembersList>

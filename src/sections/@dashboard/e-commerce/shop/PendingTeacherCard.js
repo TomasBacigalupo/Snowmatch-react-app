@@ -28,7 +28,7 @@ PendingTeacherCard.propTypes = {
 };
 
 export default function PendingTeacherCard({ teacher }) {
-  const { name, lastname, imageLink, stars, level, information, email, state, resorts } = teacher || {} ;
+  const { name, lastname, imageLink, stars, level, information, email, state, resorts, id } = teacher || {} ;
   const theme = useTheme();
   const {translate} = useLocales();
 
@@ -36,7 +36,7 @@ export default function PendingTeacherCard({ teacher }) {
   const [src, setSrc] = useState(imageLink)
 
   const { isAuthenticated } = useAuth()
-  const linkTo = isAuthenticated ? PATH_DASHBOARD.eCommerce.viewTeacher(email) : PATH_GUEST.viewTeacher(email);
+  const linkTo = isAuthenticated ? PATH_DASHBOARD.eCommerce.viewTeacher(id) : PATH_GUEST.viewTeacher(id);
   const dispatch = useDispatch();
   
   const handleOpenHireModal = () => {
@@ -47,8 +47,8 @@ export default function PendingTeacherCard({ teacher }) {
 
   return (
     <>{teacher==undefined ? <SkeletonProductItem/>  :
-      <Card onClick={() => navigate(linkTo)}>
-        <Box sx={{ position: 'relative' }}>
+      <Card >
+        <Box sx={{ position: 'relative' }} onClick={() => navigate(linkTo)}>
           {resorts && (
             <Label
               variant="filled"
@@ -67,7 +67,7 @@ export default function PendingTeacherCard({ teacher }) {
           <Image alt={name} src={src} ratio="1/1" onError={() => setSrc('/assets/notFound.jpeg')} />
         </Box>
 
-        <Stack spacing={2} sx={{ p: 3 }}>
+        <Stack spacing={2} sx={{ p: 3 }} onClick={() => navigate(linkTo)}>
           <Link to={linkTo} color="inherit" component={RouterLink}>
             <Typography variant="subtitle2" noWrap>
               {name + " " + lastname}

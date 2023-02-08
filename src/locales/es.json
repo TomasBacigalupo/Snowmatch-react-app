@@ -308,10 +308,11 @@
         "fire_teacher_title": "¿Despedir a {{name}}?",
         "fire_teacher_message": "¿Estas seguro que desea despedir a {{name}}?",
         "cancel": "Cancelar",
-        "hire_teacher_title": "¿COntratar a {{name}}?",
+        "Hire_teacher_title": "¿Contratar a {{name}}?",
         "hire_teacher_message": "¿Estas seguro que desea contratar a {{name}}?",
         "hire_success": "Contrato exitoso!",
-        "fire_success": "Despido exitoso!"
+        "fire_success": "Despido exitoso!",
+        "pending_teachers":"Profesores pendientes"
     },
     "completeOrder": {
         "order": "Su codigo de clase SnowMatch es: ",

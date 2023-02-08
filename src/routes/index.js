@@ -136,7 +136,7 @@ export default function Router() {
       path: 'dashboard',
       element: (
         <AuthGuard>
-          <RoleBasedGuard accessibleRoles={['ADMIN', 'TEACHER']}>
+          <RoleBasedGuard accessibleRoles={['ADMIN', 'TEACHER', 'SCHOOL_ADMIN']}>
             <DashboardLayout />
           </RoleBasedGuard>
         </AuthGuard>

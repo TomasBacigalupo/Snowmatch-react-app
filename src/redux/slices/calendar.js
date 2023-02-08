@@ -38,6 +38,14 @@ const slice = createSlice({
     getEventsSuccess(state, action) {
       state.isLoading = false;
       state.events = action.payload.map( e => {
+        if(e?.source === 'APP'){
+          return {
+            ...e,
+            title: `${e.name} ${e.lastName}`,
+            start: utcToLocalDate(e.start),
+            end: utcToLocalDate(e.end)
+          };
+        }
         return {
           ...e,
           start: utcToLocalDate(e.start),

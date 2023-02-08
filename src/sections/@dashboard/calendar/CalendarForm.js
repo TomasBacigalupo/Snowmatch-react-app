@@ -214,7 +214,7 @@ export default function CalendarForm({ event, range, onCancel, clients }) {
   const isDateError = isBefore(new Date(values.end), new Date(values.start));
 
   const TYPE_OPTION = [
-    { group: 'Class', classify: ['App class', 'School class', 'Referred class', 'Own client class'] },
+    { group: 'Class', classify: ['School class', 'Referred class', 'Own client class'] },
     { group: 'Off', classify: ['Break', 'Training', 'Illness'] },
   ];
 
@@ -222,7 +222,6 @@ export default function CalendarForm({ event, range, onCancel, clients }) {
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-
       <Stack spacing={3} sx={{ p: 3 }}>
         {(user?.user?.role === 'ADMIN' || user?.user?.role === 'SCHOOL_ADMIN') && <ToggleButtonGroup
           color="primary"

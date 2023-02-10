@@ -15,7 +15,7 @@ import useAuth from '../../../../hooks/useAuth';
 // utils
 import { fData } from '../../../../utils/formatNumber';
 // _mock
-import { countries } from '../../../../_mock';
+import { countries, ski_resorts } from '../../../../_mock';
 // components
 import { FormProvider, RHFSwitch, RHFSelect, RHFTextField, RHFUploadAvatar, RHFMultipleSelect } from '../../../../components/hook-form';
 import axios from '../../../../utils/axios';
@@ -54,58 +54,6 @@ const SOCIAL_LINKS = [
         icon: <Iconify icon={'ant-design:youtube-filled'} width={24} height={24} />,
     },
 ];
-
-
-const SKI_RESORTS = [
-    { title: "Aconcagua", category: "Argentina" },
-    { title: "Batea Mahuida", category: "Argentina" },
-    { title: "Calafate Mountain Park", category: "Argentina" },
-    { title: "Caviahue", category: "Argentina" },
-    { title: "Cerro Bayo", category: "Argentina" },
-    { title: "Cerro Castor", category: "Argentina" },
-    { title: "Cerro Catedral", category: "Argentina" },
-    { title: "Chapelco", category: "Argentina" },
-    { title: "La Hoya", category: "Argentina" },
-    { title: "Las Leñas", category: "Argentina" },
-    { title: "Las Pendientes", category: "Argentina" },
-    { title: "Lago Hermoso", category: "Argentina" },
-    { title: "Los Penitentes", category: "Argentina" },
-    { title: "Los Puquios", category: "Argentina" },
-    { title: "Monte Bianco", category: "Argentina" },
-    { title: "Patagonia Heliski", category: "Argentina" },
-    { title: "Perito Moreno", category: "Argentina" },
-    { title: "Vallecitos", category: "Argentina" },
-    { title: "Aspen", category: "United States" },
-    { title: "Aspen Highlands", category: "United States" },
-    { title: "Beaver Creek", category: "United States" },
-    { title: "Breckenridge", category: "United States" },
-    { title: "Buttermilk", category: "United States" },
-    { title: "Copper Mountain", category: "United States" },
-    { title: "Crested Butte", category: "United States" },
-    { title: "Cuchara Mountain", category: "United States" },
-    { title: "Durango Mountain Resort", category: "United States" },
-    { title: "Echo Mountain", category: "United States" },
-    { title: "Eldora Mountain Resort", category: "United States" },
-    { title: "Hesperus", category: "United States" },
-    { title: "Howelsen Hill", category: "United States" },
-    { title: "Irwin Catskiing by Eleven", category: "United States" },
-    { title: "Kendall Mountain", category: "United States" },
-    { title: "Keystone", category: "United States" },
-    { title: "Loveland", category: "United States" },
-    { title: "Monarch Ski Area", category: "United States" },
-    { title: "Powderhorn", category: "United States" },
-    { title: "Purgatory", category: "United States" },
-    { title: "Silverton Mountain", category: "United States" },
-    { title: "Ski Cooper", category: "United States" },
-    { title: "Snowmass", category: "United States" },
-    { title: "SolVista Golf and Ski Ranch (Silver Creek)", category: "United States" },
-    { title: "Steamboat", category: "United States" },
-    { title: "Sunlight Mountain Resort", category: "United States" },
-    { title: "Telluride", category: "United States" },
-    { title: "Vail", category: "United States" },
-    { title: "Winter Park", category: "United States" },
-    { title: "Wolf Creek Ski Area", category: "United States" },
-]
 
 // ----------------------------------------------------------------------
 
@@ -281,7 +229,7 @@ export default function AccountGeneral() {
                         </Stack>
 
                         <Stack sx={{ mt: 3 }}>
-                            <RHFMultipleSelect name="resorts" label={translate("general.form.resorts")} freeSolo={true} grouped={true} list={SKI_RESORTS} />
+                            <RHFMultipleSelect name="resorts" label={translate("general.form.resorts")} freeSolo={true} grouped={true} list={ski_resorts} />
                         </Stack>
 
 

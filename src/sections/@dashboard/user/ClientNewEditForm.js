@@ -14,7 +14,7 @@ import { fData } from '../../../utils/formatNumber';
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
 // _mock
-import { countries } from '../../../_mock';
+import { countries, ski_resorts } from '../../../_mock';
 // components
 import Label from '../../../components/Label';
 
@@ -313,7 +313,7 @@ ClientNewEditForm.propTypes = {
                             gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)' },
                             }}
                         >
-                      <RHFMultipleSelect name="resorts" label={translate("school.clients.form.resorts")} list={SKI_RESORTS}/>
+                      <RHFMultipleSelect name="resorts" label={translate("school.clients.form.resorts")} freeSolo={true} grouped={true} list={ski_resorts}/>
 
                       <RHFTextField multiline name="notes" label={translate("school.clients.form.notes")} rows={3} />
                             </Box>

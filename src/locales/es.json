@@ -274,6 +274,7 @@
     "rental":{
         "Personal Data": "Datos Personales",
         "Equipment": "Equipamiento",
+        "Quality": "Calidad",
         "Result": "Resultados PRO",
         "height": "Altura",
         "heightHelper": "Altura en centímeros",
@@ -335,5 +336,17 @@
         "reload": "Continuar",
         "logout": "Cerrar sesión",
         "send_email": "Reenviar mail de verificación"
+    },
+    "pricing": {
+        "title1": "Planes flexibles para el",
+        "title2": "tamaño y necesidades de tu centro de esqui",
+        "subtitle": "Elegí tu plan y lleva tu servicio de clases al siguiente nivel",
+        "feature1": "Plataforma Match de clientes e instructores",
+        "feature2": "Pauta publicitaria en Redes Sociales",
+        "feature3": "Control pauta publicitaria",
+        "feature4": "Control de oferta de clases",
+        "feature5": "Data analytics de la temporada",
+        "feature6": "Plataforma de gestion de Escuela",
+        "feature7": "Gestión relación laboral con Instructores"
     }
 }

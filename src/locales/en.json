@@ -268,6 +268,7 @@
   "rental": {
     "Personal Data": "Personal Data",
     "Equipment": "Equipment",
+    "Quality": "Quality",
     "Result": "Results PRO",
     "height": "Height",
     "heightHelper": "Height in centimeters",
@@ -327,5 +328,17 @@
     "reload": "Continue",
     "logout": "Log out",
     "send_email": "Resend verification email"
+  },
+  "pricing": {
+    "titele1": "Flexible plans for your",
+    "title2": "resort size and needs",
+    "subtitle": "Choose your plan and take your clients learning service to the next level",
+    "feature1": "Plataforma Match de clientes e instructores",
+    "feature2": "Social network marketing",
+    "feature3": "Control social network marketing",
+    "feature4": "Season data analytics",
+    "feature5": "Control of ski lessons supply ",
+    "feature6": "Plataforma de gestion de Escuela",
+    "feature7": "Gestión relación laboral Instructores"
   }
 }

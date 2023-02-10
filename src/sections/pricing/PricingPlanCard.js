@@ -50,10 +50,10 @@ export default function PricingPlanCard({ card, index }) {
         {subscription}
       </Typography>
 
-      <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 2 }}>
+      <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2, mb: 1 }}>
         {index === 1 || index === 2 ? (
           <Typography variant="subtitle1" sx={{ color: 'text.secondary' }}>
-            $
+            
           </Typography>
         ) : (
           ''
@@ -71,13 +71,26 @@ export default function PricingPlanCard({ card, index }) {
               color: 'text.secondary',
             }}
           >
-            /mo
+            
           </Typography>
         ) : (
           ''
         )}
       </Box>
 
+      <Typography
+        variant="caption"
+        sx={{
+          color: 'text.secondary',
+          mb:1
+        }}
+      >
+        {index === 1 || index === 2 ?
+          'Comisionado del valor de la clase' :
+          'Acuerdo con instructores'
+        }
+        
+      </Typography>
       <Typography
         variant="caption"
         sx={{
@@ -100,13 +113,15 @@ export default function PricingPlanCard({ card, index }) {
             spacing={1.5}
             sx={{ typography: 'body2', color: item.isAvailable ? 'text.primary' : 'text.disabled' }}
           >
-            <Iconify icon={'eva:checkmark-fill'} sx={{ width: 20, height: 20 }} />
+            <Iconify icon={item.isAvailable ? 'eva:checkmark-fill' : 'radix-icons:cross-2'} sx={{ width: 20, height: 20 }} />
             <Typography variant="body2">{item.text}</Typography>
           </Stack>
         ))}
       </Stack>
 
-      <Button fullWidth size="large" variant="contained" disabled={index === 0}>
+      <Button onClick={()=>{
+        window.location.href = "mailto:bacigalupotomas@gmail.com";
+      }} fullWidth size="large" variant="contained" disabled={index === 0}>
         {labelAction}
       </Button>
     </RootStyle>

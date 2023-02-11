@@ -8,8 +8,8 @@ import useAuth from "src/hooks/useAuth";
 
 export default function EventInfoCard({ lesson }) {
     const { isStudent } = useAuth()
-    const { start, end, id, name, lastName, resort, people } = lesson;
-    const [toggle, setToogle] = useState(false);
+    const { start, end, id, name, lastName, resort, people, payed } = lesson;
+    const [toggle, setToogle] = useState(payed);
 
     return (
         <Card sx={{ display: 'flex', alignItems: 'center', p: 3 }}>

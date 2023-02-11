@@ -1,5 +1,5 @@
 import { styled } from '@mui/material/styles';
-import { Box, Step, StepLabel, Stepper, StepConnector, Grid , Checkbox, StepIcon, MenuItem, Select, TextField, Button, Typography} from "@mui/material";
+import { Box, Step, StepLabel, Stepper, StepConnector, Grid , Checkbox, StepIcon, MenuItem, Select, TextField, Button, Typography, Dialog} from "@mui/material";
 import { useState } from "react";
 import Iconify from "src/components/Iconify";
 import Page from "src/components/Page";
@@ -328,6 +328,16 @@ export default function UserRentalData({isGuest=false}){
                     )}
                 </Grid>
             </Grid>
+            <Dialog open={true} sx={{width: '100%'}}>
+                    <iframe id="inlineFrameExample"
+                        title="Inline Frame Example"
+                        width="100%"
+                        height="100%"
+                        src="https://checkout.zenrise.io?token=f8d82336-c158-4d00-941e-9e181452a67b">
+                    </iframe>
+                    <Button sx={{zIndex:9999}}> Close </Button>
+
+            </Dialog>
             </Box>
         </Page>
         

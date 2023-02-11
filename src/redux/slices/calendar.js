@@ -104,9 +104,45 @@ const slice = createSlice({
       state.events = updateEvents;
     },
 
+    // PAYED LESSON
+    payLessonSuccess(state, action) {
+      const {eventId}  = action.payload
+      state.isLoadingPayment = false;
+      state.lesson = { ...state.lesson, payed: true }
+      const updateEvents = state.events.map((_event, i) => {
+        if (_event.id === eventId) {
+          return {
+            ..._event,
+            payed: true
+          };
+        }
+        return _event;
+      });
+      state.isLoading = false;
+      state.events = updateEvents;
+    },
+
+    // UNPAID LESSON
+    unpaidLessonSuccess(state, action) {
+      const eventId = action.payload
+      state.isLoadingPayment = false;
+      state.lesson = { ...state.lesson, payed: true};
+      const updateEvents = state.events.map((_event, i) => {
+        if (_event.id === eventId) {
+          return {
+            ..._event,
+            payed: true
+          };
+        }
+        return _event;
+      });
+      state.isLoading = false;
+      state.events = updateEvents;
+    },
+
     // DELETE EVENT
     deleteEventSuccess(state, action) {
-      const { eventId } = action.payload;
+      const eventId = action.payload;
       const deleteEvent = state.events.filter((event) => event.id !== eventId);
       state.events = deleteEvent;
     },
@@ -325,6 +361,34 @@ export function getUpcomingEvents() {
 
 
       dispatch(slice.actions.getUpcomingEventsSuccess([a1,a2,a3]));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+// ----------------------------------------------------------------------
+
+export function setUnpaid(eventId) {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      await axios.put(`/api/events/byId/${eventId}/unpaid`);
+      dispatch(slice.actions.unpaidLessonSuccess({ eventId }));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+// ----------------------------------------------------------------------
+
+export function setPaid(eventId) {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      await axios.put(`/api/events/byId/${eventId}/pay`);
+      dispatch(slice.actions.paidLessonSuccess({ eventId }));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }

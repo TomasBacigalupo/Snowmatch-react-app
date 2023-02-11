@@ -105,6 +105,11 @@
       "add": "Add"
     }
   },
+  "event": {
+    "payed": "Payed",
+    "pay": "Pay",
+    "information":"Information"
+  },
   "school": {
     "clients": {
       "newClient": "New Client",

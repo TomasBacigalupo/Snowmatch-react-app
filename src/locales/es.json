@@ -109,6 +109,11 @@
             "add": "Crear"
         }
     },
+    "event":{
+        "payed": "Cobrado",
+        "pay": "Cobrar",
+        "information":"Informacion"
+    },
     "school":{
         "clients":{
             "newClient": "Agregar cliente",

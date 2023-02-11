@@ -94,7 +94,7 @@ export default function Router() {
         { path: '*', element: <EcommerceShop isGuest={true} teacherType="school"/> },
         { path: 'independent', element: <EcommerceShop isGuest={true} teacherType="independent"/> },
         { path: 'school', element: <EcommerceShop isGuest={true} teacherType="school"/> },
-        { path: 'teacher/:name', element: <EcommerceTeacherDetails isGuest={true}/> },
+        { path: 'teacher/:id', element: <EcommerceTeacherDetails isGuest={true}/> },
         { path: 'schools/:id', element: <SchoolDetails isGuest={true}/> },
         { path: 'schools', element: <SchoolList teacherType="school"/> },
         // { path: '*', element: <EcommerceShop isGuest={true} teacherType="school" /> },

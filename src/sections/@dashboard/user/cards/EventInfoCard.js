@@ -38,7 +38,7 @@ export default function EventInfoCard({ lesson }) {
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
                     <Iconify icon={'ic:outline-access-time'} sx={{ width: 16, height: 16, mr: 0.5, flexShrink: 0 }} />
                     <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
-                        {`${start.slice(11)}hs a ${end.slice(11)}hs`}
+                        {`${start.slice(11)} a ${end?.slice(11)}hs`}
                     </Typography>
                 </Box>
             </Box>

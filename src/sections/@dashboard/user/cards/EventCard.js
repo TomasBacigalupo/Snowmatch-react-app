@@ -10,11 +10,11 @@ import { setPaid, setUnpaid } from "src/redux/slices/calendar";
 import useLocales from "src/hooks/useLocales";
 
 export default function EventCard({ lesson }) {
-    const {translate} = useLocales()
+    const { translate } = useLocales()
     const dispatch = useDispatch()
     const { user, isStudent } = useAuth()
 
-    const { start, end, id, name, lastName, resort, payed } = lesson;
+    const { start, end, id, name, lastName, resort, payed, owner, student } = lesson;
     const [payedState, setPayedState] = useState(payed)
     const navigate = useNavigate()
 
@@ -29,14 +29,11 @@ export default function EventCard({ lesson }) {
 
     return (
         <Card
-            // onClick={() => {
-            //     navigate(`${isStudent ? '/match/lessons' : PATH_DASHBOARD.user.lessons}/${id}`)
-            // }}
             sx={{ display: 'flex', alignItems: 'center', p: 3 }}>
             <Avatar alt={'Tomi'} src={'avatarUrl'} sx={{ width: 48, height: 48 }} />
             <Box sx={{ flexGrow: 1, minWidth: 200, pl: 2, pr: 1 }}>
                 <Typography variant="subtitle2" noWrap>
-                    {`${name} ${lastName}`}
+                    {isStudent ? `${owner.name} ${owner.lastname}` : `${student.name} ${student.lastname}`}
                 </Typography>
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
                     <Iconify icon={'eva:pin-fill'} sx={{ width: 16, height: 16, mr: 0.5, flexShrink: 0 }} />
@@ -53,7 +50,7 @@ export default function EventCard({ lesson }) {
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
                     <Iconify icon={'ic:outline-access-time'} sx={{ width: 16, height: 16, mr: 0.5, flexShrink: 0 }} />
                     <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
-                        {`${start?.slice(11)}hs a ${end?.slice(11)}hs`}
+                        {`${start.getHours()}:${start.getMinutes()} a ${end.getHours()}:${end.getMinutes()}hs`}
                     </Typography>
                 </Box>
             </Box>
@@ -76,7 +73,7 @@ export default function EventCard({ lesson }) {
                 <Button
                     size="small"
                     onClick={() => {
-                        navigate(`${PATH_DASHBOARD.user.lessons}/${id}`)
+                        navigate(`${isStudent ? '/match/lessons' : PATH_DASHBOARD.user.lessons}/${id}`)
                     }}
                     variant={'outlined'}
                     color={'primary'}

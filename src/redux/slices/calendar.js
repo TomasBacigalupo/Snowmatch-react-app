@@ -202,8 +202,8 @@ export function getLessons() {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get('/api/events/');
-      dispatch(slice.actions.getLessonsSuccess(response.data.filter(e => e.source==='APP')));
+      const response = await axios.get('/api/events/lessons');
+      dispatch(slice.actions.getLessonsSuccess(response.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }
@@ -216,13 +216,8 @@ export function getLessonById(id) {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      const responseEvent = await axios.get(`/api/events/byId/${id}`);
-      const {studentId} = responseEvent.data
-      const responseStudent = await axios.get(`/api/users/student/byId/${studentId}`);
-      dispatch(slice.actions.getLessonSuccess({
-        ...responseEvent.data,
-        student: responseStudent.data
-      }));
+      const responseEvent = await axios.get(`/api/events/lessons/byId/${id}`);
+      dispatch(slice.actions.getLessonSuccess(responseEvent.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }

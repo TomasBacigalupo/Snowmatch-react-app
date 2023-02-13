@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { utcToLocalDate } from 'src/utils/dateUtils';
+import { utcDateToLocalDate, utcToLocalDate } from 'src/utils/dateUtils';
 // utils
 import axios from '../../utils/axios';
 //
@@ -69,7 +69,11 @@ const slice = createSlice({
     // GET LESSON
     getLessonSuccess(state, action) {
       state.isLoading = false;
-      state.lesson = action.payload
+      state.lesson = {
+        ...action.payload,
+        start: utcToLocalDate(action.payload.start),
+        end: utcToLocalDate(action.payload.end)
+      }
     },
 
     // GET UPCOMING EVENTS

@@ -50,7 +50,7 @@ export default function EventCard({ lesson }) {
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
                     <Iconify icon={'ic:outline-access-time'} sx={{ width: 16, height: 16, mr: 0.5, flexShrink: 0 }} />
                     <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
-                        {`${start.getHours()}:${start.getMinutes()} a ${end.getHours()}:${end.getMinutes()}hs`}
+                        {`${start.toString().slice(16, 21)}hs a ${end.toString().slice(16, 21)}hs`}
                     </Typography>
                 </Box>
             </Box>

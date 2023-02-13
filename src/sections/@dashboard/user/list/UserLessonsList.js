@@ -19,7 +19,7 @@ export default function UserLessonsList(){
     },[dispatch])
     return (
         <Grid container spacing={2}>
-            {lessons.map((lesson, idx) => 
+            {lessons.filter(lesson => lesson?.owner && lesson?.student).map((lesson, idx) => 
                 <Grid item xs={12} md={6}>
                     <EventCard key={idx} lesson={lesson} />
                 </Grid>

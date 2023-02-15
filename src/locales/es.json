@@ -3,31 +3,31 @@
         "title": "English",
         "introduction": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
     },
-    "heading":{
+    "heading": {
         "clientList": "Agenda de clientes"
     },
-    "general":{
-        "cancel":"Cancelar",
+    "general": {
+        "cancel": "Cancelar",
         "AVAILABLE": "Disponible",
         "UNAVAILABLE": "Ocupado",
-        "form":{
+        "form": {
             "name": "Nombre",
             "lastName": "Apellido",
-            "cellphone":"Teléfono",
-            "country":"Nacionalidad",
+            "cellphone": "Teléfono",
+            "country": "Nacionalidad",
             "countryCode": "Codigo País",
             "email": "Email",
             "gender": "Genero",
             "male": "Masculino",
             "female": "Femenino",
             "disciplines": "Disciplinas",
-            "languages":"Idiomas",
+            "languages": "Idiomas",
             "school": "Escuela",
             "resorts": "Centro de esquí en el que da clases",
             "skills": "Extras",
             "quickInformation": "Breve descripción",
             "quickInformationHelper": "Esta será la información que verá el cliente",
-            "description":"Descripción",
+            "description": "Descripción",
             "available": "Estoy disponible",
             "saveChanges": "Guardar Cambios"
         }
@@ -51,8 +51,8 @@
         "school": "PROs de Escuelas",
         "getStartedToday": "¡Formá parte de SnowMatch!",
         "find": "Matchea con el PRO que te hace falta...",
-        "start_date":"Desde",
-        "end_date":"Hasta"
+        "start_date": "Desde",
+        "end_date": "Hasta"
     },
     "menu": {
         "general": "General",
@@ -67,7 +67,7 @@
         "account": "Editar perfil",
         "new client": "Agregar cliente",
         "user": "Mi perfil",
-        "overview":"Estadísticas",
+        "overview": "Estadísticas",
         "school": "mi escuela",
         "Schools": "Escuelas",
         "Independent": "Independentes",
@@ -95,13 +95,13 @@
         "newEvent": "Crear Evento",
         "editEvent": "Editar Evento",
         "addEvent": "Crear Evento",
-        "form":{
+        "form": {
             "teacher": "Profesor",
             "school": "Escuela",
             "startDate": "Desde",
             "endDate": "Hasta",
             "description": "Descripción",
-            "client":"Cliente",
+            "client": "Cliente",
             "type": "Motivo",
             "title": "Título",
             "price": "Precio",
@@ -109,15 +109,15 @@
             "add": "Crear"
         }
     },
-    "event":{
+    "event": {
         "payed": "Cobrado",
         "pay": "Cobrar",
-        "information":"Informacion"
+        "information": "Informacion"
     },
-    "school":{
-        "clients":{
+    "school": {
+        "clients": {
             "newClient": "Agregar cliente",
-            "form":{
+            "form": {
                 "createANewClient": "Agregar Cliente",
                 "editClient": "Editar Cliente",
                 "level": "Nivel",
@@ -125,45 +125,45 @@
                 "INTERMEDIATE": "Intermedio",
                 "ADVANCED": "Avanzado",
                 "EXPERT": "Experto",
-                "doesTip":"¿Deja propina?",
+                "doesTip": "¿Deja propina?",
                 "usualTip": "Propina habitual",
                 "hobbies": "Hobbies",
-                "work":"Trabaja en...",
-                "family":"Familia",
+                "work": "Trabaja en...",
+                "family": "Familia",
                 "staysAt": "Se hospeda en...",
                 "resorts": "Centros de esqui",
                 "notes": "Notas",
-                "isRenting":"Alquila equipo?",
-                "createClient":"Crear cliente",
-                "saveChanges":"Guardar Cambios"
+                "isRenting": "Alquila equipo?",
+                "createClient": "Crear cliente",
+                "saveChanges": "Guardar Cambios"
             }
         }
     },
-    "breadcrumb":{
+    "breadcrumb": {
         "dashboard": "Estadísticas",
         "profile": "Mi Perfil",
         "account": "Mi información",
         "accountSettings": "Ajustes de cuenta",
         "editProfile": "Editar Mi Perfil",
-        "school":"Escuela",
+        "school": "Escuela",
         "agenda": "Agenda",
         "lessons": "Clases",
         "reviews": "Mis Calificaciones",
         "lesson_details": "Detalles de la clase"
     },
-    "profile":{
-        "tabs":{
+    "profile": {
+        "tabs": {
             "profile": "Mi información",
             "review": "Mis Calificaciones"
         },
         "clients": "Clientes",
         "level": "Nivel de Instructor",
         "information": "Informacion",
-        "description":"Descripción",
+        "description": "Descripción",
         "skills": "Habilidades",
         "about": "Acerca de mi",
         "underReview": "Bajo revisión",
-        "proAt":"PRO en "
+        "proAt": "PRO en "
     },
     "accountSocialLinks": {
         "igUserName": "Nombre de usuario de instagram",
@@ -172,8 +172,8 @@
         "ytUserName": "ID de canal de YouTube",
         "saveChanges": "Guardar Cambios"
     },
-    "account":{
-        "tabs":{
+    "account": {
+        "tabs": {
             "general": "Mi información",
             "social_links": "Mis redes sociales",
             "documents": "Mis documentos",
@@ -181,8 +181,8 @@
             "school_teachers": "Mis Profesores"
         }
     },
-    "filter":{
-        "gender":"Genero",
+    "filter": {
+        "gender": "Genero",
         "resort": "Cerro",
         "category": "Categoría",
         "discipline": "Disciplina",
@@ -195,24 +195,24 @@
         "filters": "Filtros",
         "clearAll": "Limpiar filtros"
     },
-    "accountPopover":{
+    "accountPopover": {
         "Profile": "Mi Perfíl",
         "Settings": "Ajustes",
         "SignUpAsAPRO": "Quiero ser PRO",
         "SignUpAsAGuest": "Sign Up",
         "LogIn": "Log In",
-        "logOut":"Log Out",
+        "logOut": "Log Out",
         "help": "Ayuda",
         "Lessons": "Mis clases"
     },
-    "generalApp":{
+    "generalApp": {
         "totalLessons": "Clases",
         "totalIncome": "Ingresos",
         "totalClients": "Clientes",
         "lessonsAnalytics": "Estadistica de Clases",
         "noScheduledEvents": "No tiene eventos agendados",
         "welcomeBack": "Bienvenido, ",
-        "lookingBestTeacher":"¿Estás buscando al mejor PRO para tu cliente?",
+        "lookingBestTeacher": "¿Estás buscando al mejor PRO para tu cliente?",
         "topClients": "Ranking de Clientes",
         "bookedLessons": "Clases Reservadas",
         "Cancel": "Rechazadas",
@@ -220,7 +220,7 @@
         "Accepted": "Aceptadas",
         "thanLastMonth": "respecto mes anterior"
     },
-    "teacherDetails":{
+    "teacherDetails": {
         "title": "Detalles PRO",
         "calendar": "Calendario",
         "verified": "Profesor Verificado y Aprobado",
@@ -233,7 +233,7 @@
         "description": "Descripción",
         "skills": "Skills"
     },
-    "schoolDetails":{
+    "schoolDetails": {
         "title": "Detalles PRO school",
         "calendar": "Calendario",
         "verified": "Escuela Verificada y Aprobada",
@@ -247,36 +247,35 @@
         "skills": "Skills",
         "ourTeachers": "PROs de escuela"
     },
-    "conversation":{
-        "not_valid":"Tu numero de telefono no esta validado, revisa WhatsApp y probá de nuevo!",
-        "message_sent":"Mensaje enviado, pronto se contactarán contigo!",
-        "age":"Edad del cliente",
-        "age2":"Edad",
-        "level":"Nivel del cliente",
-        "tips":"Suele dejar propina?",
-        "commission":"Comisión",
-        "activity":"Actividad",
-        "amount":"Cantidad de personas",
-        "duration":"Duración",
-        "classdate":"Fecha",
-        "days":"Cantidad de días",
-        "cancel":"Cancelar",
-        "contact":"Contactar",
-        "refer_class":"Referir Clase",
-        "contact_pro":"Contactar PRO",
-        "validation_required":"Validation required!",
-        "validation_required_body":"Vas a recibir un mensaje de validación por WhatsApp, puede tardar unos minutos. Si no te llega el mensaje, revisa tu número y proba de nuevo!",
-        "close":"Cerrar",
+    "conversation": {
+        "not_valid": "Tu numero de telefono no esta validado, revisa WhatsApp y probá de nuevo!",
+        "message_sent": "Mensaje enviado, pronto se contactarán contigo!",
+        "age": "Edad del cliente",
+        "age2": "Edad",
+        "level": "Nivel del cliente",
+        "tips": "Suele dejar propina?",
+        "commission": "Comisión",
+        "activity": "Actividad",
+        "amount": "Cantidad de personas",
+        "duration": "Duración",
+        "classdate": "Fecha",
+        "days": "Cantidad de días",
+        "cancel": "Cancelar",
+        "contact": "Contactar",
+        "refer_class": "Referir Clase",
+        "contact_pro": "Contactar PRO",
+        "validation_required": "Validation required!",
+        "validation_required_body": "Vas a recibir un mensaje de validación por WhatsApp, puede tardar unos minutos. Si no te llega el mensaje, revisa tu número y proba de nuevo!",
+        "close": "Cerrar",
         "match_pro": "Match Pro"
-      },
-      "discounts":{
-          "getCupon":"Conseguir Cupon",
-          "details": "Detalles del Descuento",
-          "findBrands":"Buscar Marcas...",
-          "sendNoti": "¡Listo! Estamos tramitando tu código de descuento. Si aplicás al código te va a estar llegando por Whats App"
-      },
-
-    "rental":{
+    },
+    "discounts": {
+        "getCupon": "Conseguir Cupon",
+        "details": "Detalles del Descuento",
+        "findBrands": "Buscar Marcas...",
+        "sendNoti": "¡Listo! Estamos tramitando tu código de descuento. Si aplicás al código te va a estar llegando por Whats App"
+    },
+    "rental": {
         "Personal Data": "Datos Personales",
         "Equipment": "Equipamiento",
         "Quality": "Calidad",
@@ -300,8 +299,8 @@
         "helmet": "Cazco",
         "level": "Nivel",
         "BEGINNER": "Principiante",
-        "INTERMEDIATE":"Intermedio",
-        "EXPERT":"Experto",
+        "INTERMEDIATE": "Intermedio",
+        "EXPERT": "Experto",
         "needsGloves": "Necesita guantes",
         "needsGoogles": "Necesita antiparras",
         "needsHelmet": "Necesita Cazco",
@@ -318,14 +317,14 @@
         "hire_teacher_message": "¿Estas seguro que desea contratar a {{name}}?",
         "hire_success": "Contrato exitoso!",
         "fire_success": "Despido exitoso!",
-        "pending_teachers":"Profesores pendientes"
+        "pending_teachers": "Profesores pendientes"
     },
     "completeOrder": {
         "order": "Su codigo de clase SnowMatch es: ",
         "thanksMessage": "Match! Gracias por usar SnowMatch",
         "info": "Vamos a contactar al Pro y ponerlo en contacto con usted a la brevedad. Cualquier consulta no dude en contactarnos. "
     },
-    "checkout":{
+    "checkout": {
         "deal_with_pro": "Arregle con el PRO",
         "free": "Gratis",
         "morning": "Mañana",
@@ -353,5 +352,26 @@
         "feature5": "Data analytics de la temporada",
         "feature6": "Plataforma de gestion de Escuela",
         "feature7": "Gestión relación laboral con Instructores"
+    },
+    "faqs": {
+        "title": "Preguntas frecuentes",
+        "question0": "¿Qué es SnowMatch?",
+        "answer0": "SnowMatch es una herramienta para instructores de esquí y snowboard que te ayuda a organizar tu agenda de clientes; funciona como medio de pago; y te permite darte a conocer con cientos de alumnos que buscan diariamente un instructor. Los clientes pueden calificar tus servicios y podés acceder a estadísticas sobre tu rendimiento.",
+        "question1": "¿Cómo funciona?",
+        "answer1": "SnowMatch te conecta con clientes que están buscando clases de esquí o snowboard usando tecnología basada en la ubicación, en el nivel de esquí, idioma, y demás intereses que configura el usuario.<br/> Una vez que el cliente encuentra un instructor que se ajuste a sus intereses, carga los datos de su tarjeta bancaria y se produce el match. A partir de ese momento SnowMatch te pone en contacto con el alumno a través de un chat de WhatsApp para que coordinen un punto de encuentro en la montaña.<br/> Cuando la clase finaliza, el dinero se acredita en tu cuenta.",
+        "question2": "¿Cómo me hago un usuario?",
+        "answer2": "Es muy sencillo. Solamente tenés que completar tus datos personales, subir una foto y cargar tu información profesional (dónde das clases, si sos instructor de esquí o snowboard, tu certificado de instructor), contar con una cuenta de email y una cuenta bancaria.",
+        "question3": "¿Qué pasa si no tengo una cuenta bancaria?",
+        "answer3": "Es imprescindible que tengas una cuenta donde se te pueda depositar el dinero de la clase. Por ahora, SnowMatch no permite los pagos en efectivo o por cualquier otra modalidad.",
+        "question4": "¿Cómo funcionan los matches de SnowMatch?",
+        "answer4": "Los matches se dan cuando un cliente encuentra a un instructor que se ajusta a sus intereses y expectativas, y al mismo tiempo está disponible en el día y horario requerido. Los instructores no pueden buscar clientes ni ofrecer sus clases, es el cliente el que realiza la búsqueda.",
+        "question5": "¿Tengo que confirmar la clase?",
+        "answer5": "No es necesario. Si se produce el match es porque indicaste que estás disponible en ese día y en ese horario. En caso que debas suspender o postergar una clase confirmada, ponete en contacto con el alumno a través de la pestaña Mis Clases. Si conocés algún instructor que esté interesado en dar esa clase, lo podés recomendar y ganar dinero por eso.",
+        "question6": "¿Qué pasa si no estoy disponible para dar clases?",
+        "answer6": "No pasa nada. Podés configurar tu perfil como no disponible, y nadie podrá matchear con vos.",
+        "question7": "¿Cuánto cuesta ser parte de SnowMatch?",
+        "answer7": "Todas las herramientas de SnowMatch son gratuitas. Solo se cobrará una comisión por aquellas transacciones que se produzcan a través de la plataforma.<br/>La comisión será de un 15% por clase en aquellos casos en los que el cliente llegó a vos a través de la herramienta.<br/>La comisión será de un 5% si el cliente te conoce por fuera de SnowMatch y utiliza la plataforma solamente como medio de pago.<br/>No se cobrará comisión en el caso de que el contacto con el cliente y la transacción se produzcan por fuera de SnowMatch, y solo utilices el calendario para agendar la clase.",
+        "question8": "¿Qué beneficios tengo por ser parte de SnowMatch?",
+        "answer8": "Andá a la pestaña PRO Deal de SnowMatch y conocé beneficios exclusivos para los instructores. Hay increíbles descuentos que te esperan."
     }
 }

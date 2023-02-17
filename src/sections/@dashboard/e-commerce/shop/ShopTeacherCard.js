@@ -9,6 +9,7 @@ import Label from '../../../../components/Label';
 import Image from '../../../../components/Image';
 import useAuth from 'src/hooks/useAuth';
 import { useState } from 'react';
+import { useSelector } from 'src/redux/store';
 
 // ----------------------------------------------------------------------
 
@@ -18,12 +19,21 @@ ShopTeacherCard.propTypes = {
 
 export default function ShopTeacherCard({ teacher }) {
   const { name, lastname, imageLink, information, email, resorts, id } = teacher;
-
+  const {filters} = useSelector(state => state.teachers)
   const navigate = useNavigate();
   const [src, setSrc] = useState(imageLink)
 
   const { isTeacher } = useAuth()
   const linkTo = isTeacher ? PATH_DASHBOARD.eCommerce.viewTeacher(id) : PATH_GUEST.viewTeacher(id);
+
+  const getResortToShow = () => {
+    if(resorts && resorts?.length > 1){
+      if(resorts?.find( r => r === filters.resort)){
+        return filters.resort
+      }
+    }
+    return resorts[0]
+  }
 
   return (
     <Card onClick={() => navigate(linkTo)}>
@@ -40,7 +50,7 @@ export default function ShopTeacherCard({ teacher }) {
               bgcolor: '#99FFFF'
             }}
           >
-            {resorts[0]}
+            {getResortToShow()}
           </Label>
         )}
         <Image alt={name} src={src} ratio="1/1" onError={() => setSrc('/assets/notFound.jpeg')} />

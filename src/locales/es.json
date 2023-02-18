@@ -373,5 +373,16 @@
         "answer7": "Todas las herramientas de SnowMatch son gratuitas. Solo se cobrará una comisión por aquellas transacciones que se produzcan a través de la plataforma.<br/>La comisión será de un 15% por clase en aquellos casos en los que el cliente llegó a vos a través de la herramienta.<br/>La comisión será de un 5% si el cliente te conoce por fuera de SnowMatch y utiliza la plataforma solamente como medio de pago.<br/>No se cobrará comisión en el caso de que el contacto con el cliente y la transacción se produzcan por fuera de SnowMatch, y solo utilices el calendario para agendar la clase.",
         "question8": "¿Qué beneficios tengo por ser parte de SnowMatch?",
         "answer8": "Andá a la pestaña PRO Deal de SnowMatch y conocé beneficios exclusivos para los instructores. Hay increíbles descuentos que te esperan."
+    },
+    "notifications":{
+        "title": "Notificaciones",
+        "new_title":"Sin leer",
+        "old_title": "Leídas",
+        "no_new_title": "No tenés nuevas notificaciones",
+        "mark_all_read": "Marcar todas como leídas",
+        "new_notifications": "Tenés {{totalUnread}} nuevas notificaciones",
+        "description":{
+            "hired": "Match! Quieren disfrutar de la montaña con vos."
+        }
     }
 }

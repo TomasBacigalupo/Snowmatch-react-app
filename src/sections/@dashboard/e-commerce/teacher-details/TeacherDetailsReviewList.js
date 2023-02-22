@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 // @mui
 import { Box, List, Button, Rating, Avatar, ListItem, Pagination, Typography, CircularProgress } from '@mui/material';
 // utils
@@ -18,12 +18,13 @@ TeacherDetailsReviewList.propTypes = {
 
 export default function TeacherDetailsReviewList({ teacher }) {
 
-  const {rates, isLoading} = useSelector((state) => state.rates)
+  const {rates, isLoading, totalPages} = useSelector((state) => state.rates)
   const dispatch = useDispatch()
+  const [page, setPage] = useState(0)
 
   useEffect(() => {
-    dispatch(getRates(teacher.id))
-  }, [dispatch])
+    dispatch(getRates(teacher.id, page, 5))
+  }, [dispatch, page])
 
   return (
     <Box sx={{ pt: 3, px: 2, pb: 5 }}>
@@ -38,6 +39,17 @@ export default function TeacherDetailsReviewList({ teacher }) {
           ))}
         </List>
       )}
+      {!isLoading && rates.length === 0 &&
+      <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+        <Pagination 
+          count={totalPages}
+        onChange={(event, page) =>{
+          setPage(page-1)
+        }}
+        page={page+1}
+        color="primary" />
+      </Box>
+      }
       
     </Box>
   );

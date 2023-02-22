@@ -11,6 +11,8 @@ const initialState = {
     isSubmitting: false,
     error: null,
     rates: [],
+    totalElements: 0,
+    totalPages: 0,
     ratedTeacherIds:[]
 };
 
@@ -35,10 +37,12 @@ const slice = createSlice({
 
         // GET RATES
         getRatesSuccess(state, action) {
-            const rates = action.payload;
+            const {content, totalElements, totalPages} = action.payload;
 
             state.isLoading = false;
-            state.rates = rates;
+            state.rates = content;
+            state.totalPages = totalPages;
+            state.totalElements = totalElements;
         },
 
         // POST RATE
@@ -55,11 +59,11 @@ export default slice.reducer;
 
 // ----------------------------------------------------------------------
 
-export function getRates(teacherId) {
+export function getRates(teacherId, page, size) {
     return async () => {
         dispatch(slice.actions.startLoading());
         try {
-            const response = await axios.get(`/api/rate/byId/${teacherId}`);
+            const response = await axios.get(`/api/rate/byId/${teacherId}?page=${page}&size=${size}`);
             dispatch(slice.actions.getRatesSuccess(response.data));
         } catch (error) {
             dispatch(slice.actions.hasError(error));

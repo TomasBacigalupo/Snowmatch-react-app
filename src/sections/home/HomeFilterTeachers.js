@@ -1,7 +1,7 @@
 import { Controller, useForm } from 'react-hook-form';
 // @mui
-import { MobileDatePicker } from '@mui/lab';
-import { Grid, Card, Stack, Button, TextField, Typography } from '@mui/material';
+import { MobileDatePicker, MobileDateRangePicker } from '@mui/lab';
+import { Grid, Card, Stack, Button, TextField, Typography, Box } from '@mui/material';
 //
 import { FormProvider, RHFMultiCheckbox, RHFSelect } from 'src/components/hook-form';
 import { FILTER_CATEGORY_OPTIONS, FILTER_DISCIPLINE_OPTIONS, FILTER_RESORT_OPTIONS } from '../@dashboard/e-commerce/shop/ShopFilterSidebar';
@@ -16,6 +16,7 @@ import StylesButton from 'src/components/StylesButton';
 import HoverButton from 'src/components/HoverButton';
 import useAuth from 'src/hooks/useAuth';
 import { useTheme } from '@mui/material/styles';
+import React from 'react';
 
 export default function HomeFilterTeachers() {
 
@@ -30,6 +31,7 @@ export default function HomeFilterTeachers() {
 
     const defaultValues = {
         resort: '',
+        range: [null, null],
         from: new Date(),
         to: new Date().getMonth() == 11 ? new Date(new Date().getFullYear() + 1, 0, 1) : new Date(new Date().getFullYear(), new Date().getMonth() + 1, 1),
         gender: [],
@@ -55,7 +57,10 @@ export default function HomeFilterTeachers() {
 
     const onSubmitSchools = () => {
         try {
-            dispatch(filterTeachers(values))
+            dispatch(filterTeachers({...values,
+            from: values.range[0],
+            to: values.range[1]
+        }))
             if (isTeacher) {
                 navigate('/dashboard/e-commerce/shop/school')
             } else {
@@ -68,7 +73,11 @@ export default function HomeFilterTeachers() {
 
     const onSubmitIndependent = () => {
         try {
-            dispatch(filterTeachers(values))
+            dispatch(filterTeachers({
+                ...values,
+                from: values.range[0],
+                to: values.range[1]
+            }))
             if (isTeacher) {
                 navigate('/dashboard/e-commerce/shop/independent')
             } else {
@@ -80,7 +89,11 @@ export default function HomeFilterTeachers() {
     };
 
     const onSubmit = () => {
-        dispatch(filterTeachers(values))
+        dispatch(filterTeachers({
+            ...values,
+            from: values.range[0],
+            to: values.range[1]
+        }))
         if (values.resort === "Cerro Catedral") {
             if (isTeacher) {
                 navigate('/dashboard/e-commerce/independent?resort=Cerro Catedral')
@@ -123,35 +136,27 @@ export default function HomeFilterTeachers() {
                                         ))}
                                     </RHFSelect>
                                 </Grid>
-                                <Grid item xs={6}>
+                                <Grid item xs={12}>
                                     <Controller
-                                        name="from"
+                                        name="range"
                                         control={control}
                                         render={({ field }) => (
-                                            <MobileDatePicker
+                                            <MobileDateRangePicker
                                                 {...field}
                                                 label={translate("landingPRO.start_date")}
                                                 inputFormat="dd/MM/yyyy"
-                                                renderInput={(params) => <TextField {...params} fullWidth />}
-                                            />
-                                        )}
-                                    />
-                                </Grid>
-
-                                <Grid item xs={6}>
-                                    <Controller
-                                        name="to"
-                                        control={control}
-                                        render={({ field }) => (
-                                            <MobileDatePicker
-                                                {...field}
-                                                label={translate("landingPRO.end_date")}
-                                                inputFormat="dd/MM/yyyy"
-                                                renderInput={(params) => (
-                                                    <TextField
-                                                        {...params}
-                                                        fullWidth
-                                                    />
+                                                renderInput={(startProps, endProps) => (
+                                                    <React.Fragment>
+                                                        <TextField
+                                                            {...startProps}
+                                                            label={translate("landingPRO.start_date")}
+                                                            placeholder={translate("landingPRO.start_date")}
+                                                        />
+                                                        <Box sx={{ mx: 2 }}> - </Box>
+                                                        <TextField  {...endProps}
+                                                            label={translate("landingPRO.end_date")}
+                                                            placeholder={translate("landingPRO.start_date")} />
+                                                    </React.Fragment>
                                                 )}
                                             />
                                         )}

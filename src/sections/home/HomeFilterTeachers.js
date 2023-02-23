@@ -143,6 +143,7 @@ export default function HomeFilterTeachers() {
                                         render={({ field }) => (
                                             <MobileDateRangePicker
                                                 {...field}
+                                                disablePast
                                                 label={translate("landingPRO.start_date")}
                                                 inputFormat="dd/MM/yyyy"
                                                 renderInput={(startProps, endProps) => (

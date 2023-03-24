@@ -1,5 +1,5 @@
 import { styled } from '@mui/material/styles';
-import { Box, Step, StepLabel, Stepper, StepConnector, Grid , Checkbox, StepIcon, MenuItem, Select, TextField, Button, Typography} from "@mui/material";
+import { Box, Step, StepLabel, Stepper, StepConnector, Grid , Checkbox, StepIcon, MenuItem, Select, TextField, Button, Typography, Dialog} from "@mui/material";
 import { useState } from "react";
 import Iconify from "src/components/Iconify";
 import Page from "src/components/Page";
@@ -85,7 +85,7 @@ const EQUIPMENT = [
 
 export default function UserRentalData({isGuest=false}){
     const {translate} = useLocales() 
-    const STEPS = ['Personal Data', 'Equipment', 'Result'];
+    const STEPS = ['Personal Data', 'Equipment', 'Quality', 'Result'];
     const [activeStep, setActiveStep] = useState(0)
     const [formData, setFormData] = useState(initialData)
     const navigate = useNavigate()
@@ -214,7 +214,56 @@ export default function UserRentalData({isGuest=false}){
                         })}
                     </Grid>                    
                 )}
-                {activeStep === 2 && (
+                    {activeStep === 2 && (
+                        <Grid  container item xs={12} alignItems={'center'} textAlign='center' sx={{ width: '100%', height: 'fit-content' }}>
+                            <Grid xs={12} container alignItems={'center'}>
+                                <Grid item xs={6}>
+                                    <img src='/assets/rental/austria/ski/1.png' />
+                                </Grid>
+                                <Grid item xs={6} container alignItems='center'> 
+                                    <Grid item xs={6} justifyContent='space-between' textAlign='center'>
+                                        <Typography>Standard</Typography>
+                                    </Grid>
+                                    <Grid item xs={6} justifyContent='space-between'>
+                                        <Checkbox
+                                        />
+                                    </Grid>
+                                </Grid>
+                                
+                            </Grid>
+                            <Grid xs={12} container alignItems={'center'}>
+                                <Grid item xs={6}>
+                                    <img src='/assets/rental/austria/ski/2.png' />
+                                </Grid>
+                                <Grid item xs={6} container alignItems='center'>
+                                    <Grid item xs={6} justifyContent='space-between' textAlign='center'>
+                                        <Typography>Premium</Typography>
+                                    </Grid>
+                                    <Grid item xs={6} justifyContent='space-between'>
+                                        <Checkbox
+                                        />
+                                    </Grid>
+                                </Grid>
+                                
+                            </Grid>
+                            <Grid xs={12} container alignItems={'center'} >
+                                <Grid item xs={6}>
+                                    <img src='/assets/rental/austria/ski/3.png' />
+                                </Grid>
+                                <Grid item xs={6} container alignItems='center'>
+                                    <Grid item xs={6} justifyContent='space-between' textAlign='center'>
+                                        <Typography>Gold</Typography>
+                                    </Grid>
+                                    <Grid item xs={6} justifyContent='space-between'>
+                                        <Checkbox
+                                        />
+                                    </Grid>
+                                </Grid>
+                                
+                            </Grid>
+                        </Grid>
+                    )}
+                {activeStep === 3 && (
                         <Grid item xs={12} textAlign='center' sx={{ width: '100%', height: '400px' }}>
                             <Typography variant='h5'>{translate('rental.showResult')}</Typography>
                             <Typography>{`${translate('rental.discipline')}: ${formData.discipline}`}</Typography>
@@ -259,16 +308,16 @@ export default function UserRentalData({isGuest=false}){
                     </Button>
                 </Grid>
                 <Grid item xs={6} >
-                        {activeStep !== 2 && (
+                        {activeStep !== 3 && (
                     <Button 
                     fullWidth
-                    disabled={activeStep === 2}
+                    disabled={activeStep === 3}
                     variant='contained' 
                     onClick={() => setActiveStep(activeStep+1)}
                     >
                             {translate('rental.next')}
                     </Button>)}
-                    {activeStep === 2 && (
+                    {activeStep === 3 && (
                             <Button
                                 fullWidth
                                 variant='contained'
@@ -279,6 +328,16 @@ export default function UserRentalData({isGuest=false}){
                     )}
                 </Grid>
             </Grid>
+            <Dialog open={true} sx={{width: '100%'}}>
+                    <iframe id="inlineFrameExample"
+                        title="Inline Frame Example"
+                        width="100%"
+                        height="100%"
+                        src="https://checkout.zenrise.io?token=f8d82336-c158-4d00-941e-9e181452a67b">
+                    </iframe>
+                    <Button sx={{zIndex:9999}}> Close </Button>
+
+            </Dialog>
             </Box>
         </Page>
         

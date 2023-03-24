@@ -37,14 +37,17 @@ const SERVICE_OPTIONS = [
 
 const PAYMENT_OPTIONS = [
   {
-    value: 'paypal',
-    title: 'Pay with Paypal',
-    description: 'You will be redirected to PayPal website to complete your purchase securely.',
-    icons: ['https://minimal-assets-api.vercel.app/assets/icons/ic_paypal.svg'],
+    value: 'debit_card',
+    title: 'Debit Card',
+    description: 'We support Mastercard, Visa, Discover and Stripe.',
+    icons: [
+      'https://minimal-assets-api.vercel.app/assets/icons/ic_mastercard.svg',
+      'https://minimal-assets-api.vercel.app/assets/icons/ic_visa.svg',
+    ],
   },
   {
     value: 'credit_card',
-    title: 'Credit / Debit Card',
+    title: 'Credit',
     description: 'We support Mastercard, Visa, Discover and Stripe.',
     icons: [
       'https://minimal-assets-api.vercel.app/assets/icons/ic_mastercard.svg',

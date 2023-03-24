@@ -4,6 +4,7 @@ import { Grid, Container, Typography } from '@mui/material';
 // components
 import Page from '../components/Page';
 import { FaqsHero, FaqsCategory, FaqsList, FaqsForm } from '../sections/faqs';
+import useLocales from 'src/hooks/useLocales';
 
 // ----------------------------------------------------------------------
 
@@ -17,6 +18,7 @@ const RootStyle = styled('div')(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 export default function Faqs() {
+  const {translate} = useLocales()
   return (
     <Page title="Faqs">
       <RootStyle>
@@ -26,16 +28,16 @@ export default function Faqs() {
           <FaqsCategory />
 
           <Typography variant="h3" sx={{ mb: 5 }}>
-            Frequently asked questions
+            {translate("faqs.title")}
           </Typography>
 
           <Grid container spacing={10}>
             <Grid item xs={12} md={6}>
               <FaqsList />
             </Grid>
-            <Grid item xs={12} md={6}>
+            {/* <Grid item xs={12} md={6}>
               <FaqsForm />
-            </Grid>
+            </Grid> */}
           </Grid>
         </Container>
       </RootStyle>

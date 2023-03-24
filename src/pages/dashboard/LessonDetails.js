@@ -3,7 +3,7 @@ import { useState } from 'react';
 // @mui
 import { styled } from '@mui/material/styles';
 import EditIcon from '@mui/icons-material/Edit';
-import { Tab, Box, Card, Tabs, Container, Button, IconButton, Grid } from '@mui/material';
+import { Tab, Box, Card, Tabs, Container, Button, IconButton, Grid, LinearProgress } from '@mui/material';
 import { TeacherDetailsReview } from 'src/sections/@dashboard/e-commerce/teacher-details';
 // routes
 import { PATH_DASHBOARD, PATH_GUEST } from '../../routes/paths';
@@ -62,22 +62,13 @@ export default function UserLessons() {
     const { themeStretch } = useSettings();
     const { translate } = useLocales();
     const {isLoading, lesson} = useSelector(state => state.calendar)
-    const { teacher } = useSelector(state => state.teachers)
-    const {student, owner} = lesson
     const {eventId} = useParams()
     const dispatch = useDispatch()
 
     useEffect(() => {
         dispatch(getLessonById(eventId))
     }, [dispatch])
-
-    useEffect(()=>{
-        if(lesson){
-            dispatch(getTeacherByEmail(lesson.ownerEmail))
-        }
-    }, [lesson])
     
-
     return (
         <Page title="Lesson">
             <Container maxWidth={themeStretch ? false : 'lg'}>
@@ -98,23 +89,23 @@ export default function UserLessons() {
                     ]}
                 />}
                 
-                {isLoading && <>LOADING</>}
-                {!isLoading && isStudent && teacher && 
+                {isLoading && <LinearProgress/> }
+                {!isLoading && isStudent && lesson.owner && 
                 <Grid container spacing={2}>
                     <Grid item xs={12} md={6}>
                         <ContactCard 
-                            user={teacher}
+                            user={lesson.owner}
                         />
                     </Grid>
                     <Grid item xs={12} md={6}>
                         <EventInfoCard lesson={lesson}/>
                     </Grid>
                 </Grid>}
-                {!isLoading && isTeacher && student &&
+                {!isLoading && isTeacher && lesson.student &&
                     <Grid container spacing={2}>
                         <Grid item xs={12} md={6}>
                             <ContactCard
-                                user={student}
+                                user={lesson.student}
                             />
                         </Grid>
                         <Grid item xs={12} md={6}>

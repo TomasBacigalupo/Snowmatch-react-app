@@ -53,7 +53,15 @@ const slice = createSlice({
     getNotificationsSuccess(state, action) {
         state.isLoading = false;
         state.notifications = action.payload;
-      },
+    },
+
+    // read NOTIFICATIONS
+    readNotificationsSuccess(state, action) {
+      state.notifications = state.notifications.map( n => ({
+        ...n,
+        unread: false
+      }))
+    },
 
     //  SORT & FILTER NOTIFICATIONS
     sortByNotifications(state, action) {
@@ -81,12 +89,25 @@ export const {
 
 // ----------------------------------------------------------------------
 
-export function getNotifications(name) {
+export function getNotifications(id) {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`/api/users/notifications/${name}`);
+      const response = await axios.get(`/api/users/notifications/${id}`);
       dispatch(slice.actions.getNotificationsSuccess(response.data));
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+// ----------------------------------------------------------------------
+
+export function readNotifications() {
+  return async () => {
+    try {
+      const response = await axios.put(`/api/users/notifications/read`);
+      dispatch(slice.actions.readNotificationsSuccess());
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error));

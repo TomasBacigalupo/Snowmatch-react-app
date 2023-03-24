@@ -74,7 +74,7 @@ export default function UserProfile() {
     },
     {
       value: 'review',
-      icon: <Iconify icon={'ic:round-account-box'} width={20} height={20} />,
+      icon: <Iconify icon={'material-symbols:rate-review'} width={20} height={20} />,
       component: <TeacherDetailsReview teacher={user} />,
     }
   ];
@@ -100,14 +100,14 @@ export default function UserProfile() {
 
           <TabsWrapperStyle>
             <Tabs
-              allowScrollButtonsMobile
-              variant="scrollable"
+              variant='standard'
               scrollButtons="auto"
               value={currentTab}
               onChange={onChangeTab}
+              sx={{ml: 2}}
             >
               {PROFILE_TABS.map((tab) => (
-                <Tab disableRipple key={tab.value} value={tab.value} icon={tab.icon} label={translate("profile.tabs."+tab.value)} />
+                <Tab  key={tab.value} value={tab.value} icon={tab.icon} label={translate("profile.tabs."+tab.value)} />
               ))}
             </Tabs>
           </TabsWrapperStyle>

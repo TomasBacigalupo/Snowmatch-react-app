@@ -25,6 +25,10 @@ const menuConfig = [
         ],
       }]
   },
+  {
+    title: 'FAQs',
+    path: '/faqs'
+  }
  
 ];
 

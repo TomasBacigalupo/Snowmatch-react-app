@@ -34,10 +34,11 @@ ContactCard.propTypes = {
 };
 
 export default function ContactCard({ user }) {
-    const {isTeacher} = useAuth()
+    console.log("acata", user)
+    const {isTeacher, isStudent} = useAuth()
     const dispatch = useDispatch()
     const {rates} = useSelector(state => state.teachers)
-    const { name, follower, lastname, avatarUrl, following, phone, email, countryCode, cellphone, imageLink, events } = user;
+    const { name, lastname, avatarUrl, phone, email, countryCode, cellphone, imageLink, events } = user;
     useEffect(()=>{
         getRates(user.id)
     }, [dispatch])
@@ -89,6 +90,16 @@ export default function ContactCard({ user }) {
                     }}
                 />
             </Stack>}
+            {isStudent && <Stack alignItems="center">
+                <ContactButton
+                    initialColor sx={{ my: 2.5 }}
+                    links={{
+                        phone: '+' + countryCode + cellphone,
+                        mail: email,
+                        whatsapp: '+' + countryCode + cellphone
+                    }}
+                />
+            </Stack>}
             
 
             <Divider sx={{ borderStyle: 'dashed' }} />
@@ -98,7 +109,7 @@ export default function ContactCard({ user }) {
                     <Typography variant="caption" component="div" sx={{ mb: 0.75, color: 'text.disabled' }}>
                         Hires
                     </Typography>
-                    <Typography variant="subtitle1">{fShortenNumber(events.length)}</Typography>
+                    <Typography variant="subtitle1">{fShortenNumber(events ? events?.length :0)}</Typography>
                 </div>
 
                 <div>

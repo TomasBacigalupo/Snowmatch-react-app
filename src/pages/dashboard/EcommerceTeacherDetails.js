@@ -77,6 +77,7 @@ export default function EcommerceTeacherDetails({isGuest = false}) {
   
   
   useEffect(() => {
+    console.log({id})
     dispatch(getTeacherBiId(id));
   }, [dispatch, id]);
 

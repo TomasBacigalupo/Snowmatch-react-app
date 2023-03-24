@@ -26,6 +26,7 @@ import { CalendarForm, CalendarStyle, CalendarToolbar } from '../../sections/@da
 import { getClients } from 'src/redux/slices/clients';
 import useLocales from 'src/hooks/useLocales';
 import HoverButton from 'src/components/HoverButton';
+import LessonForm from 'src/sections/@dashboard/calendar/LessonForm';
 
 // ----------------------------------------------------------------------
 
@@ -210,7 +211,9 @@ export default function Calendar() {
 
         <DialogAnimate open={isOpenModal} onClose={handleCloseModal}>
           <DialogTitle>{selectedEvent ? translate('calendar.editEvent') : translate('calendar.addEvent')}</DialogTitle>
-          <CalendarForm event={selectedEvent || {}} range={selectedRange} onCancel={handleCloseModal} clients={clients}/>
+          {selectedEvent?.source === 'APP' ? 
+            <LessonForm event={selectedEvent || {}} range={selectedRange} onCancel={handleCloseModal} clients={clients}/> : <CalendarForm event={selectedEvent || {}} range={selectedRange} onCancel={handleCloseModal} clients={clients} />}
+          
         </DialogAnimate>
       </Container>
     </Page>

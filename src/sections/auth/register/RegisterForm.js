@@ -137,7 +137,7 @@ export default function RegisterForm() {
           }}
         />
         <Typography variant="subtitle1">Instructor certification</Typography>
-        <RHFRadioGroup name='entity' options={["AADIDESS", "PSIA"]}/>
+        <RHFRadioGroup name='entity' options={["AADIDESS", "PSIA", "ENISSCHAG"]}/>
         <RHFUploadSingleFile name="certificate" accept="image/*" maxSize={16000000} onDrop={handleDrop}/>
         <LoadingButton fullWidth size="large" type="submit" variant="contained" loading={isSubmitting} sx={{':hover':{color:'#3399FF'}}}>
           Register

@@ -45,40 +45,8 @@ export const FILTER_LANGUAGE_OPTIONS = ['Español', 'English', 'Portugues', 'Ita
 
 export const FILTER_RESORT_OPTIONS = [
   { category: "Argentina", resorts: ['Aconcagua', 'Batea Mahuida', 'Calafate Mountain Park', 'Caviahue', 'Cerro Bayo', 'Cerro Castor', 'Cerro Catedral', 'Chapelco', 'La Hoya', 'Las Leñas', 'Las Pendientes', 'Los Penitentes', 'Los Puquios', 'Monte Bianco', 'Patagonia Heliski', 'Perito Moreno', 'Vallecitos'] },
-  {
-    category: "United States", resorts: [
-      "Aspen",
-      "Aspen Highlands",
-      "Beaver Creek",
-      "Breckenridge",
-      "Buttermilk",
-      "Copper Mountain",
-      "Crested Butte",
-      "Cuchara Mountain",
-      "Durango Mountain Resort",
-      "Echo Mountain",
-      "Eldora Mountain Resort",
-      "Hesperus",
-      "Howelsen Hill",
-      "Irwin Catskiing by Eleven",
-      "Kendall Mountain",
-      "Keystone",
-      "Loveland",
-      "Monarch Ski Area",
-      "Powderhorn",
-      "Purgatory",
-      "Silverton Mountain",
-      "Ski Cooper",
-      "Snowmass",
-      "SolVista Golf and Ski Ranch (Silver Creek)",
-      "Steamboat",
-      "Sunlight Mountain Resort",
-      "Telluride",
-      "Vail",
-      "Winter Park",
-      "Wolf Creek Ski Area"
-    ]
-  },
+  { category: "Chile", resorts: ["Antillanca",  "Colorado", "Corralco", "El Fraile", "La Parva", "Las Araucarias", "Osorno", "Portillo", "Punta Arenas", "Valle Nevado", "Chillan"]},
+  { category: "United States", resorts: ["Aspen", "Aspen Highlands", "Beaver Creek", "Breckenridge", "Buttermilk", "Copper Mountain", "Crested Butte", "Cuchara Mountain", "Durango Mountain Resort", "Echo Mountain", "Eldora Mountain Resort", "Hesperus", "Howelsen Hill", "Irwin Catskiing by Eleven", "Kendall Mountain", "Keystone", "Loveland", "Monarch Ski Area", "Powderhorn", "Purgatory", "Silverton Mountain", "Ski Cooper", "Snowmass", "SolVista Golf and Ski Ranch (Silver Creek)", "Steamboat", "Sunlight Mountain Resort", "Telluride", "Vail", "Winter Park", "Wolf Creek Ski Area"] },
 ]
 
 

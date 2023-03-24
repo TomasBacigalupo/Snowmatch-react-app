@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { utcToLocalDate } from 'src/utils/dateUtils';
+import { utcDateToLocalDate, utcToLocalDate } from 'src/utils/dateUtils';
 // utils
 import axios from '../../utils/axios';
 //
@@ -38,6 +38,14 @@ const slice = createSlice({
     getEventsSuccess(state, action) {
       state.isLoading = false;
       state.events = action.payload.map( e => {
+        if(e?.source === 'APP'){
+          return {
+            ...e,
+            title: `${e.name} ${e.lastName}`,
+            start: utcToLocalDate(e.start),
+            end: utcToLocalDate(e.end)
+          };
+        }
         return {
           ...e,
           start: utcToLocalDate(e.start),
@@ -61,7 +69,11 @@ const slice = createSlice({
     // GET LESSON
     getLessonSuccess(state, action) {
       state.isLoading = false;
-      state.lesson = action.payload
+      state.lesson = {
+        ...action.payload,
+        start: utcToLocalDate(action.payload.start),
+        end: utcToLocalDate(action.payload.end)
+      }
     },
 
     // GET UPCOMING EVENTS
@@ -96,9 +108,45 @@ const slice = createSlice({
       state.events = updateEvents;
     },
 
+    // PAYED LESSON
+    payLessonSuccess(state, action) {
+      const {eventId}  = action.payload
+      state.isLoadingPayment = false;
+      state.lesson = { ...state.lesson, payed: true }
+      const updateEvents = state.events.map((_event, i) => {
+        if (_event.id === eventId) {
+          return {
+            ..._event,
+            payed: true
+          };
+        }
+        return _event;
+      });
+      state.isLoading = false;
+      state.events = updateEvents;
+    },
+
+    // UNPAID LESSON
+    unpaidLessonSuccess(state, action) {
+      const eventId = action.payload
+      state.isLoadingPayment = false;
+      state.lesson = { ...state.lesson, payed: true};
+      const updateEvents = state.events.map((_event, i) => {
+        if (_event.id === eventId) {
+          return {
+            ..._event,
+            payed: true
+          };
+        }
+        return _event;
+      });
+      state.isLoading = false;
+      state.events = updateEvents;
+    },
+
     // DELETE EVENT
     deleteEventSuccess(state, action) {
-      const { eventId } = action.payload;
+      const eventId = action.payload;
       const deleteEvent = state.events.filter((event) => event.id !== eventId);
       state.events = deleteEvent;
     },
@@ -158,8 +206,8 @@ export function getLessons() {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get('/api/events/');
-      dispatch(slice.actions.getLessonsSuccess(response.data.filter(e => e.source==='APP')));
+      const response = await axios.get('/api/events/lessons');
+      dispatch(slice.actions.getLessonsSuccess(response.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }
@@ -172,13 +220,8 @@ export function getLessonById(id) {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      const responseEvent = await axios.get(`/api/events/byId/${id}`);
-      const {studentId} = responseEvent.data
-      const responseStudent = await axios.get(`/api/users/student/byId/${studentId}`);
-      dispatch(slice.actions.getLessonSuccess({
-        ...responseEvent.data,
-        student: responseStudent.data
-      }));
+      const responseEvent = await axios.get(`/api/events/lessons/byId/${id}`);
+      dispatch(slice.actions.getLessonSuccess(responseEvent.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }
@@ -317,6 +360,34 @@ export function getUpcomingEvents() {
 
 
       dispatch(slice.actions.getUpcomingEventsSuccess([a1,a2,a3]));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+// ----------------------------------------------------------------------
+
+export function setUnpaid(eventId) {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      await axios.put(`/api/events/byId/${eventId}/unpaid`);
+      dispatch(slice.actions.unpaidLessonSuccess({ eventId }));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+// ----------------------------------------------------------------------
+
+export function setPaid(eventId) {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      await axios.put(`/api/events/byId/${eventId}/pay`);
+      dispatch(slice.actions.paidLessonSuccess({ eventId }));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }

@@ -27,51 +27,52 @@ import MenuPopover from '../../../components/MenuPopover';
 import { IconButtonAnimate } from '../../../components/animate';
 // redux
 import { useDispatch, useSelector } from '../../../redux/store';
-import { getNotifications } from 'src/redux/slices/notifications';
+import { getNotifications, readNotifications } from 'src/redux/slices/notifications';
 // hooks
 import useAuth from '../../../hooks/useAuth';
 import { useEffect } from 'react';
 import Logo from 'src/components/Logo';
+import useLocales from 'src/hooks/useLocales';
 
 
 // ----------------------------------------------------------------------
 
 export default function NotificationsPopover() {
-  const [notifications, setNotifications] = useState(_notifications);
-  const totalUnRead = notifications.filter((item) => item.isUnRead === true).length;
+
   const [open, setOpen] = useState(null);
+  const { translate } = useLocales()
   const { user } = useAuth();
   const dispatch = useDispatch();
-  const  wtf  = useSelector( (state) => state);
+  const wtf = useSelector((state) => state);
+  const { notifications } = useSelector(state => state.notifications)
+  const totalUnread = notifications.filter((item) => item.unread === true).length;
 
   const handleOpen = (event) => {
     setOpen(event.currentTarget);
   };
 
   const handleClose = () => {
+    // if(totalUnread > 0){
+    //   handleMarkAllAsRead()
+    // }
     setOpen(null);
   };
 
   const handleMarkAllAsRead = () => {
-    setNotifications(
-      notifications.map((notification) => ({
-        ...notification,
-        isUnRead: false,
-      }))
-    );
+    dispatch(readNotifications())
   };
 
-  
+
   useEffect(() => {
-    dispatch(getNotifications(user?.username));
-  }, [dispatch, user?.username]);
+    dispatch(getNotifications(user?.email));
+  }, [dispatch, user?.email]);
 
   const N = wtf.notifications.notifications;
 
   return (
     <>
       <IconButtonAnimate color={open ? 'primary' : 'default'} onClick={handleOpen} sx={{ width: 40, height: 40 }}>
-        <Badge badgeContent={N.length} color="error">
+        <Badge badgeContent={totalUnread} color="error">
           <Iconify icon="eva:bell-fill" width={20} height={20} />
         </Badge>
       </IconButtonAnimate>
@@ -84,14 +85,17 @@ export default function NotificationsPopover() {
       >
         <Box sx={{ display: 'flex', alignItems: 'center', py: 2, px: 2.5 }}>
           <Box sx={{ flexGrow: 1 }}>
-            <Typography variant="subtitle1">Notifications</Typography>
-            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-              You don't have notifications
-            </Typography>
+            <Typography variant="subtitle1">{translate("notifications.title")}</Typography>
+            {totalUnread > 0 && <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+              {translate('notifications.new_notifications', { totalUnread })}
+            </Typography>}
+            {totalUnread === 0 && <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+              {translate("notifications.no_new_title")}
+            </Typography>}
           </Box>
 
-          {totalUnRead > 0 && (
-            <Tooltip title=" Mark all as read">
+          {totalUnread > 0 && (
+            <Tooltip title={translate("notifications.mark_all_read")}>
               <IconButtonAnimate color="primary" onClick={handleMarkAllAsRead}>
                 <Iconify icon="eva:done-all-fill" width={20} height={20} />
               </IconButtonAnimate>
@@ -102,31 +106,31 @@ export default function NotificationsPopover() {
         <Divider sx={{ borderStyle: 'dashed' }} />
 
         <Scrollbar sx={{ height: { xs: 340, sm: 'auto' } }}>
+          {totalUnread > 0 && <List
+            disablePadding
+            subheader={
+              <ListSubheader disableSticky sx={{ py: 1, px: 2.5, typography: 'overline' }}>
+                {translate("notifications.new_title")}
+              </ListSubheader>
+            }
+          >
+            {notifications.filter(n => n.unread).map((notification) => (
+              <NotificationItem key={notification.id} notification={notification} />
+            ))}
+          </List>}
+          {totalUnread < notifications.length &&
           <List
             disablePadding
             subheader={
               <ListSubheader disableSticky sx={{ py: 1, px: 2.5, typography: 'overline' }}>
-                New
+                {translate("notifications.old_title")}
               </ListSubheader>
             }
           >
-            {notifications.slice(0, 2).map((notification) => (
+            {notifications.filter(n => !n.unread).map((notification) => (
               <NotificationItem key={notification.id} notification={notification} />
             ))}
-          </List>
-
-          <List
-            disablePadding
-            subheader={
-              <ListSubheader disableSticky sx={{ py: 1, px: 2.5, typography: 'overline' }}>
-                Before that
-              </ListSubheader>
-            }
-          >
-            {notifications.slice(2, 5).map((notification) => (
-              <NotificationItem key={notification.id} notification={notification} />
-            ))}
-          </List>
+          </List>}
         </Scrollbar>
 
         {/* <Divider sx={{ borderStyle: 'dashed' }} />
@@ -147,7 +151,7 @@ NotificationItem.propTypes = {
   notification: PropTypes.shape({
     createdAt: PropTypes.instanceOf(Date),
     id: PropTypes.string,
-    isUnRead: PropTypes.bool,
+    isUnread: PropTypes.bool,
     title: PropTypes.string,
     description: PropTypes.string,
     type: PropTypes.string,
@@ -156,7 +160,8 @@ NotificationItem.propTypes = {
 };
 
 function NotificationItem({ notification }) {
-  const { avatar, title } = renderContent(notification);
+  const { translate } = useLocales()
+  const { avatar, title } = renderContent(notification, translate);
 
   return (
     <ListItemButton
@@ -164,7 +169,7 @@ function NotificationItem({ notification }) {
         py: 1.5,
         px: 2.5,
         mt: '1px',
-        ...(notification.isUnRead && {
+        ...(notification.isUnread && {
           bgcolor: 'action.selected',
         }),
       }}
@@ -195,12 +200,12 @@ function NotificationItem({ notification }) {
 
 // ----------------------------------------------------------------------
 
-function renderContent(notification) {
+function renderContent(notification, translate) {
   const title = (
     <Typography variant="subtitle2">
-      {notification.title}
+      {`${notification.notifier.name} ${notification.notifier.lastname}`}
       <Typography component="span" variant="body2" sx={{ color: 'text.secondary' }}>
-        &nbsp; {noCase(notification.description)}
+        &nbsp; {translate("notifications.description.hired")}
       </Typography>
     </Typography>
   );
@@ -220,7 +225,7 @@ function renderContent(notification) {
     return {
       avatar: (
         <img
-          alt={notification.title}
+          alt={`${notification.notifier.name} ${notification.notifier.lastname}`}
           src="https://minimal-assets-api.vercel.app/assets/icons/ic_notification_shipping.svg"
         />
       ),
@@ -241,7 +246,7 @@ function renderContent(notification) {
   if (notification.type === 'snowMatch') {
     return {
       avatar: (
-        <Logo sx={{height:'30px'}}/>
+        <Logo sx={{ height: '30px' }} />
       ),
       title,
     };

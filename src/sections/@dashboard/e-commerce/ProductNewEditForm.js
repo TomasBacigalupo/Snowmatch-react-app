@@ -68,10 +68,18 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
   const [date, setDate] = useState(new Date());
   const { enqueueSnackbar } = useSnackbar();
   const [view, setView] = useState(true ? 'dayGridMonth' : 'listWeek');
+  const [events, setEvents] = useState([{
+    title: 'hola',
+  start: new Date(),
+  }])
   const [event, setEvent] = useState(
     { title: "Jardin de nieve", id: "1", textColor: '#1890FF' },
   )
   let draggableEl = document.getElementById("external-events");
+
+  useEffect(() => {
+    console.log({events})
+  }, [events])
 
   const NewProductSchema = Yup.object().shape({
     name: Yup.string().required('Name is required'),
@@ -225,6 +233,8 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
   };
 
   const handleDropEvent = async ({ event }) => {
+    console.log({events})
+    setEvents([...events, event])
     try {
       // dispatch(
       //   updateEvent(event.id, {
@@ -247,6 +257,7 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
 
   useEffect(() => {
     let draggableEl = document.getElementById("external-events");
+    console.log('pase')
     new Draggable(draggableEl, {
       itemSelector: ".fc-event",
       eventData: function (eventEl) {
@@ -300,7 +311,7 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
                   editable
                   droppable
                   selectable
-                  events={[]}
+                  events={events}
                   ref={calendarRef}
                   rerenderDelay={10}
                   initialDate={date}

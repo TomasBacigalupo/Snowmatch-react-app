@@ -8,8 +8,8 @@ import useAuth from "src/hooks/useAuth";
 
 export default function EventInfoCard({ lesson }) {
     const { isStudent } = useAuth()
-    const { start, end, id, name, lastName, resort, people } = lesson;
-    const [toggle, setToogle] = useState(false);
+    const { start, end, id, name, lastName, resort, people, payed } = lesson;
+    const [toggle, setToogle] = useState(payed);
 
     return (
         <Card sx={{ display: 'flex', alignItems: 'center', p: 3 }}>
@@ -38,7 +38,7 @@ export default function EventInfoCard({ lesson }) {
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
                     <Iconify icon={'ic:outline-access-time'} sx={{ width: 16, height: 16, mr: 0.5, flexShrink: 0 }} />
                     <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
-                        {`${start.slice(11)}hs a ${end.slice(11)}hs`}
+                        {`${start.toString().slice(16, 21)}hs a ${end.toString().slice(16, 21)}hs`}
                     </Typography>
                 </Box>
             </Box>

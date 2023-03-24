@@ -22,11 +22,6 @@ import PaymentNewCardForm from './PaymentNewCardForm';
 
 const PAYMENT_OPTIONS = [
   {
-    value: 'paypal',
-    title: 'Pay with Paypal',
-    icons: ['https://minimal-assets-api.vercel.app/assets/icons/ic_paypal.svg'],
-  },
-  {
     value: 'credit_card',
     title: 'Credit / Debit Card',
     icons: [

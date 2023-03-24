@@ -130,7 +130,7 @@ const AddEventForm = ({ onCancel }) => {
                     <option key="AFTERNOON" value="AFTERNOON">
                         {translate('checkout.afternoon')}
                     </option>
-                    <option key="FULLDAY" value="ALLDAY">
+                    <option key="FULLDAY" value="ALL_DAY">
                         {translate('checkout.allday')}
                     </option>
                 </RHFSelect>

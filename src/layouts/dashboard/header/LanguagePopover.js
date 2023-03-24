@@ -27,9 +27,9 @@ export default function LanguagePopover() {
   const getIcon = (ln) => {
     switch(ln){
       case 'es':
-        return 'flag:ar-4x3'
+        return 'emojione:flag-for-argentina'
       case 'en':
-        return 'flag:us-4x3'
+        return 'emojione:flag-for-united-states'
       case 'pt':
         return 'flag:br-4x3'
     }
@@ -43,12 +43,11 @@ export default function LanguagePopover() {
         sx={{
           width: 40,
           height: 40,
-          marginRight:'10px',
           ...(open && { bgcolor: 'action.selected' }),
           backgroundColor: ''
         }}
       >
-        <Avatar><Iconify icon={getIcon(currentLang.value)} /></Avatar>
+        <Iconify icon={getIcon(currentLang.value)} />
       </IconButtonAnimate>
 
       <MenuPopover

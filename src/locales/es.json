@@ -79,7 +79,7 @@
         "currentWeek": "Semana actual",
         "kanban": "Tableros",
         "products": "Grupales",
-        "myLessons": "Mis Clases",
+        "myProducts": "Mis Clases",
         "newProduct": "Nueva Clase",
         "admin": "Administrador",
         "review teachers": "Revisar Pros",
@@ -149,6 +149,7 @@
         "agenda": "Agenda",
         "lessons": "Clases",
         "reviews": "Mis Calificaciones",
+        "product": "Productos",
         "lesson_details": "Detalles de la clase"
     },
     "profile": {
@@ -333,6 +334,66 @@
         "continue": "Seguir buscando Pros",
         "event_added": "Clase agendada",
         "book_lesson": "Reservar clase"
+    },
+    "product": {
+        "heading": {
+            "create": "Create",
+            "edit": "Edit"
+        },
+        "new": "Nuevo producto",
+        "date": {
+            "0": "Domingo",
+            "1": "Lunes",
+            "2": "Martes",
+            "3": "Miercoles",
+            "4": "Jueves",
+            "5": "Viernes",
+            "6": "Sabado"
+        },
+        "name": {
+            "value": "Nombre",
+            "max": "El nombre debe ser menor a {{max}} carateres"
+        },
+        "time": {
+            "value": "Duración",
+            "max": "El tiempo debe ser menor a {{max}} minutos",
+            "min": "El tiempo debe ser mayor a {{min}} minutos"
+        },
+        "resort": {
+            "value": "Centro de esqui",
+            "required": "Resort es obligatorio"
+        },
+        "maxStudents": {
+            "value": "Cupo Maximo",
+            "moreThan": "There should be at least one student"
+        },
+        "price": {
+            "value": "Precio",
+            "moreThan": "El precio debe ser mayor que 0"
+        },
+        "ageFrom": {
+            "value": "Desde",
+            "moreThan": "La edad minima debe ser mayor que 0"
+        },
+        "ageTo": {
+            "value": "Hasta",
+            "lessThan": "La edad maxima debe ser menor a 99"
+        },
+        "information": "Informacion",
+        "description": "Descripción",
+        "dropToDelete": "Arrastras para eliminar",
+        "deleteAll": "Eliminar todos",
+        "generator": "Generador de eventos",
+        "startDate": "Desde",
+        "endDate": "Hasta",
+        "startTime": "Hora de inicio",
+        "generateEvents": "Generar",
+        "isMinors": "Solo menores",
+        "saleLastSpots": "Descuento para ultimos cupos",
+        "saleConsecutive": "Descuento para dias consecutivos",
+        "create": "Crear producto",
+        "save": "Guardar porducto",
+        "delete": "Delete product"
     },
     "verify": {
         "title": "Verifique su Mail",

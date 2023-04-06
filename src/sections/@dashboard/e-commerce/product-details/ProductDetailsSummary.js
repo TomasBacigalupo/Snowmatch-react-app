@@ -239,7 +239,7 @@ export default function ProductDetailsSummary({ cart, product, onAddCart, onGoto
             size="large"
             color="warning"
             variant="contained"
-            startIcon={<Iconify icon={'ic:round-add-shopping-cart'} />}
+            startIcon={<Iconify icon={'ic:round-add-shopping-cart'} />} 
             onClick={handleAddCart}
             sx={{ whiteSpace: 'nowrap' }}
           >

@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 import { Box, Link, Button, Divider, Typography, Stack } from '@mui/material';
 // redux
-import { useDispatch } from '../../../../redux/store';
+import { useDispatch, useSelector } from '../../../../redux/store';
 import { resetCart } from '../../../../redux/slices/teachers';
 // routes
 import { PATH_DASHBOARD, PATH_GUEST } from '../../../../routes/paths';
@@ -31,7 +31,9 @@ const DialogStyle = styled(DialogAnimate)(({ theme }) => ({
 export default function CheckoutOrderComplete({ ...other }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const {translate} = useLocales()
+  const {translate} = useLocales();
+
+  const {paymentId} = useSelector(state => state.teachers.checkout.paymentInfo)
 
   const handleResetStep = () => {
     dispatch(resetCart());
@@ -55,7 +57,7 @@ export default function CheckoutOrderComplete({ ...other }) {
 
           <Typography align="left" paragraph>
             {translate('completeOrder.order')} &nbsp;
-            <Link href="#">01dc1370-3df6-11eb-b378-0242ac130002</Link>
+            <Link href="#">{paymentId}</Link>
           </Typography>
 
           <Typography align="left" sx={{ color: 'text.secondary' }}>

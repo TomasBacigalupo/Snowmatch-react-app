@@ -23,6 +23,7 @@ import useResponsive from '../../../../hooks/useResponsive';
 // components
 import Image from '../../../../components/Image';
 import Iconify from '../../../../components/Iconify';
+import CardInput from './CardInput';
 
 // ----------------------------------------------------------------------
 
@@ -62,7 +63,7 @@ export default function CheckoutPaymentMethods({ paymentOptions, cardOptions }) 
                   {paymentOptions.map((method) => {
                     const { value, title, icons, description } = method;
 
-                    const hasChildren = value === 'credit_card';
+                    const hasChildren = value === 'debit_card';
 
                     const selected = field.value === value;
 
@@ -99,22 +100,23 @@ export default function CheckoutPaymentMethods({ paymentOptions, cardOptions }) 
                         )}
 
                         {hasChildren && (
-                          <Collapse in={field.value === 'credit_card'} sx={{ width: 1 }}>
-                            <TextField select fullWidth label="Cards" SelectProps={{ native: true }}>
+                          <Collapse in={field.value === 'debit_card'} sx={{ width: 1 }}>
+                            {/* <TextField select fullWidth label="Cards" SelectProps={{ native: true }}>
                               {cardOptions.map((option) => (
                                 <option key={option.value} value={option.value}>
                                   {option.label}
                                 </option>
                               ))}
-                            </TextField>
+                            </TextField> */}
 
-                            <Button
+                            <CardInput />
+                            {/* <Button
                               size="small"
                               startIcon={<Iconify icon={'eva:plus-fill'} width={20} height={20} />}
                               sx={{ my: 3 }}
                             >
                               Add new card
-                            </Button>
+                            </Button> */}
                           </Collapse>
                         )}
                       </OptionStyle>
@@ -122,7 +124,6 @@ export default function CheckoutPaymentMethods({ paymentOptions, cardOptions }) 
                   })}
                 </Stack>
               </RadioGroup>
-
               {!!error && (
                 <FormHelperText error sx={{ pt: 1, px: 2 }}>
                   {error.message}

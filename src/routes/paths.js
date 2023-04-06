@@ -30,7 +30,8 @@ export const PATH_GUEST = {
   schools: path(ROOTS_FIND_A_PRO, `/schools`),
   viewSchool: (id) => path(ROOTS_FIND_A_PRO, `/schools/${id}`),
   rental: ROOTS_RENTAL,
-  calculate: path(ROOTS_RENTAL, `/calculate`)
+  calculate: path(ROOTS_RENTAL, `/calculate`),
+  checkout: (id) => path(ROOTS_FIND_A_PRO, `/teacher/${id}/hire`)
 };
 
 export const PATH_PAGE = {

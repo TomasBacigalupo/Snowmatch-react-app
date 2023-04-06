@@ -110,9 +110,9 @@ const navConfig = [
             ]
           },
           {
-            title: 'products', path: PATH_DASHBOARD.eCommerce.new, children: [
-              { title: 'myLessons', path: PATH_DASHBOARD.eCommerce.new, },
-              { title: 'newProduct', path: PATH_DASHBOARD.eCommerce.new, },
+            title: 'products', path: PATH_DASHBOARD.eCommerce.newProduct, children: [
+              { title: 'myProducts', path: PATH_DASHBOARD.eCommerce.viewProducts, },
+              { title: 'newProduct', path: PATH_DASHBOARD.eCommerce.newProduct, },
             ]
           },
           {

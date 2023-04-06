@@ -19,52 +19,56 @@ ShopProductCard.propTypes = {
 };
 
 export default function ShopProductCard({ product }) {
-  const { name, cover, price, colors, status, priceSale } = product;
+  const { name, price, id, description } = product;
 
-  const linkTo = PATH_DASHBOARD.eCommerce.view(paramCase(name));
+  const linkTo = PATH_DASHBOARD.eCommerce.editProduct(id);
 
   return (
-    <Card>
-      <Box sx={{ position: 'relative' }}>
-        {status && (
-          <Label
-            variant="filled"
-            color={(status === 'sale' && 'error') || 'info'}
-            sx={{
-              top: 16,
-              right: 16,
-              zIndex: 9,
-              position: 'absolute',
-              textTransform: 'uppercase',
-            }}
-          >
-            {status}
-          </Label>
-        )}
-        <Image alt={name} src={cover} ratio="1/1" />
-      </Box>
+    <Link to={linkTo} color="inherit" component={RouterLink}>
+      <Card sx={{ m: 1 }}>
+        <Box sx={{ position: 'relative' }}>
+          {"status" && (
+            <Label
+              variant="filled"
+              color={("status" === 'sale' && 'error') || 'info'}
+              sx={{
+                top: 16,
+                right: 16,
+                zIndex: 9,
+                position: 'absolute',
+                textTransform: 'uppercase',
+              }}
+            >
+              {"status"}
+            </Label>
+          )}
+          {/* <Image alt={name} src={"cover"} ratio="1/1" /> */}
+        </Box>
 
-      <Stack spacing={2} sx={{ p: 3 }}>
-        <Link to={linkTo} color="inherit" component={RouterLink}>
+        <Stack spacing={2} sx={{ p: 3 }}>
+          {/* <Link to={linkTo} color="inherit" component={RouterLink}> */}
           <Typography variant="subtitle2" noWrap>
             {name}
           </Typography>
-        </Link>
+          <Typography variant="subtitle3" noWrap>
+            {description}
+          </Typography>
+          {/* </Link> */}
 
-        <Stack direction="row" alignItems="center" justifyContent="space-between">
-          <ColorPreview colors={colors} />
+          <Stack direction="row" alignItems="center" justifyContent="space-between">
 
-          <Stack direction="row" spacing={0.5}>
-            {priceSale && (
+            <Stack direction="row" spacing={0.5}>
+              {/* {priceSale && (
               <Typography component="span" sx={{ color: 'text.disabled', textDecoration: 'line-through' }}>
                 {fCurrency(priceSale)}
               </Typography>
-            )}
+            )} */}
 
-            <Typography variant="subtitle1">{fCurrency(price)}</Typography>
+              <Typography variant="subtitle1">{fCurrency(price)}</Typography>
+            </Stack>
           </Stack>
         </Stack>
-      </Stack>
-    </Card>
+      </Card>
+    </Link>
   );
 }

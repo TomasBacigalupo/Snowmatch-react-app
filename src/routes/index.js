@@ -162,9 +162,9 @@ export default function Router() {
             { path: 'shop/school', element: <EcommerceShop teacherType="school" /> },
             { path: 'teacher/:id', element: <EcommerceTeacherDetails /> },
             { path: 'product/:name', element: <EcommerceProductDetails /> },
-            { path: 'list', element: <EcommerceProductList /> },
-            { path: 'product/new', element: <EcommerceProductCreate /> },
-            { path: 'product/:id/edit', element: <EcommerceProductCreate /> },
+            { path: 'product', element: <EcommerceProductList /> },
+            { path: 'product/new', element: <ProductCreate /> },
+            { path: 'product/:id/edit', element: <ProductCreate /> },
             { path: 'checkout', element: <EcommerceCheckoutTeacher /> },
           ],
         },
@@ -286,7 +286,7 @@ const EcommerceProductDetails = Loadable(lazy(() => import('../pages/dashboard/E
 const SchoolDetails = Loadable(lazy(() => import('../pages/dashboard/SchoolDetails')));
 const EcommerceTeacherDetails = Loadable(lazy(() => import('../pages/dashboard/EcommerceTeacherDetails')));
 const EcommerceProductList = Loadable(lazy(() => import('../pages/dashboard/EcommerceProductList')));
-const EcommerceProductCreate = Loadable(lazy(() => import('../pages/dashboard/EcommerceProductCreate')));
+const ProductCreate = Loadable(lazy(() => import('../pages/dashboard/ProductCreate')));
 const EcommerceCheckout = Loadable(lazy(() => import('../pages/dashboard/EcommerceCheckout')));
 
 

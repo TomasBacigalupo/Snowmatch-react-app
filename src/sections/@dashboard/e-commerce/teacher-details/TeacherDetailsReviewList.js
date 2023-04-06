@@ -39,7 +39,7 @@ export default function TeacherDetailsReviewList({ teacher }) {
           ))}
         </List>
       )}
-      {!isLoading && rates.length === 0 &&
+      {!isLoading && rates.length !== 0 &&
       <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
         <Pagination 
           count={totalPages}

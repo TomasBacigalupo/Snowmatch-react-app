@@ -82,11 +82,11 @@ export default function EcommerceCheckoutTeacher() {
   const dispatch = useDispatch();
   const isMountedRef = useIsMountedRef();
   const { checkout } = useSelector((state) => state.teachers);
-  const { cart, billing, activeStep } = checkout;
+  const { cart, billing, activeStep, events } = checkout;
   const isComplete = activeStep === STEPS.length;
   useEffect(() => {
     if (isMountedRef.current) {
-      dispatch(getCart(cart));
+      dispatch(getCart(events));
     }
   }, [dispatch, isMountedRef, cart]);
 

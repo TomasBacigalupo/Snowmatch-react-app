@@ -9,7 +9,7 @@ import Iconify from '../../components/Iconify';
 
 PaymentNewCardForm.propTypes = {
   onCancel: PropTypes.func,
-};
+}; 
 
 export default function PaymentNewCardForm({ onCancel }) {
   const [isOpen, setIsOpen] = useState(null);

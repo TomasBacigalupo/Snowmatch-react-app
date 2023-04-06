@@ -23,6 +23,7 @@ import CheckoutSummary from './CheckoutSummary';
 import CheckoutTeacherList from './CheckoutTeacherList';
 import useLocales from 'src/hooks/useLocales';
 import { closeAddEventModal, openAddEventModal, deleteCart, onNextStep } from 'src/redux/slices/teachers';
+import { CheckCircle } from '@mui/icons-material';
 
 // ----------------------------------------------------------------------
 
@@ -34,6 +35,7 @@ export default function CheckoutCart() {
   const { checkout } = useSelector((state) => state.teachers);
 
   const { cart, total, discount, subtotal, isOpenAddEventModal, events } = checkout;
+  console.log({checkout})
 
   const totalItems = sum(cart.map((item) => 1));
 

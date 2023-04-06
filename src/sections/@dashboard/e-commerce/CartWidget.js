@@ -6,9 +6,10 @@ import { Badge } from '@mui/material';
 // redux
 import { useSelector } from '../../../redux/store';
 // routes
-import { PATH_DASHBOARD } from '../../../routes/paths';
+import { PATH_DASHBOARD, PATH_GUEST } from '../../../routes/paths';
 // components
 import Iconify from '../../../components/Iconify';
+import te from 'date-fns/esm/locale/te/index.js';
 
 // ----------------------------------------------------------------------
 
@@ -36,12 +37,13 @@ const RootStyle = styled(RouterLink)(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 export default function CartWidget() {
-  const { checkout } = useSelector((state) => state.teachers);
+  const { checkout, teacher } = useSelector((state) => state.teachers);
   const totalItems = sum(checkout.cart.map((item) => 1));
 
   return (
-    <RootStyle to={PATH_DASHBOARD.eCommerce.checkout}>
-      <Badge showZero badgeContent={totalItems} color="error" max={99}>
+    // <RootStyle> to={PATH_GUEST.root + ''}>
+    <RootStyle to={PATH_GUEST.checkout(teacher?.id)}>
+      <Badge showZero={false} badgeContent={totalItems} color="error" max={99}>
         <Iconify icon={'eva:shopping-cart-fill'} width={24} height={24} />
       </Badge>
     </RootStyle>

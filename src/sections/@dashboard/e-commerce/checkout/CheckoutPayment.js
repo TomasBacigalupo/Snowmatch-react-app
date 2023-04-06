@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { Grid, Button } from '@mui/material';
+import { Grid, Button, Card } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 // redux
 import { useDispatch, useSelector } from '../../../../redux/store';
@@ -19,6 +19,8 @@ import CheckoutBillingInfo from './CheckoutBillingInfo';
 import CheckoutPaymentMethods from './CheckoutPaymentMethods';
 import CheckoutService from './CheckoutService';
 import { useState } from 'react';
+import { cardPayment, getAuthToken, getSplitToken, getToken } from '../../../../services/zenRise';
+import CardInput from './CardInput';
 
 // ----------------------------------------------------------------------
 
@@ -38,16 +40,7 @@ const SERVICE_OPTIONS = [
 const PAYMENT_OPTIONS = [
   {
     value: 'debit_card',
-    title: 'Debit Card',
-    description: 'We support Mastercard, Visa, Discover and Stripe.',
-    icons: [
-      'https://minimal-assets-api.vercel.app/assets/icons/ic_mastercard.svg',
-      'https://minimal-assets-api.vercel.app/assets/icons/ic_visa.svg',
-    ],
-  },
-  {
-    value: 'credit_card',
-    title: 'Credit',
+    title: 'Debit/Credit Card',
     description: 'We support Mastercard, Visa, Discover and Stripe.',
     icons: [
       'https://minimal-assets-api.vercel.app/assets/icons/ic_mastercard.svg',
@@ -56,8 +49,8 @@ const PAYMENT_OPTIONS = [
   },
   {
     value: 'cash',
-    title: 'Cash on CheckoutDelivery',
-    description: 'Pay with cash when your order is delivered.',
+    title: 'Cash on meet',
+    description: 'Pay with cash when your meet your Pro.',
     icons: [],
   },
 ];
@@ -75,7 +68,8 @@ export default function CheckoutPayment() {
 
   const { checkout, teacher } = useSelector((state) => state.teachers);
 
-  const { total, discount, subtotal, shipping, events } = checkout;
+  const { total, discount, subtotal, shipping, events, card } = checkout;
+
 
   const handleNextStep = () => {
     dispatch(onNextStep());
@@ -94,7 +88,7 @@ export default function CheckoutPayment() {
   };
 
   const PaymentSchema = Yup.object().shape({
-    payment: Yup.string().required('Payment is required!'),
+
   });
 
   const defaultValues = {
@@ -113,12 +107,32 @@ export default function CheckoutPayment() {
 
   const onSubmit = async () => {
     setLoading(true)
-    try {
-      dispatch(hireTeacher(teacher.id, events, (succ)=>{
+    try{
+      const cardPaymentResponse = await cardPayment(card, 1000, [])
+      console.log("cardPayment Response", cardPaymentResponse)
+      if(cardPaymentResponse.status === 200){
+        //pago exitoso
+        dispatch(hireTeacher(teacher.id, events, (succ)=>{
         setLoading(false)
         dispatch(cleanCart())
         handleNextStep();
       }))
+      }else{
+        //pago rechazado
+        setLoading(false)
+      }
+
+    } catch (error) {
+      console.error("catcheado",error);
+      setLoading(false)
+    }
+    
+    try {
+      // dispatch(hireTeacher(teacher.id, events, (succ)=>{
+      //   setLoading(false)
+      //   dispatch(cleanCart())
+      //   handleNextStep();
+      // }))
     } catch (error) {
       console.error(error);
     }
@@ -129,7 +143,8 @@ export default function CheckoutPayment() {
       <Grid container spacing={3}>
         <Grid item xs={12} md={8}>
           <CheckoutService onApplyShipping={handleApplyShipping} deliveryOptions={SERVICE_OPTIONS} />
-          <CheckoutPaymentMethods cardOptions={CARDS_OPTIONS} paymentOptions={PAYMENT_OPTIONS} />
+          {/* <CheckoutPaymentMethods cardOptions={CARDS_OPTIONS} paymentOptions={PAYMENT_OPTIONS} /> */}
+          <Card sx={{ my: 3 }}><CardInput /></Card>
           <Button
             size="small"
             color="inherit"

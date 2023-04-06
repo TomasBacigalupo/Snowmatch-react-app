@@ -41,7 +41,8 @@ const initialState = {
     shipping: 0,
     billing: null,
     isOpenAddEventModal: false,
-    teacher: {}
+    teacher: {},
+    card: {}
   },
   cakeChart: [0, 0, 0, 0],
   totalClasses: 0,
@@ -169,19 +170,18 @@ const slice = createSlice({
 
     // CHECKOUT
     getCart(state, action) {
-      const cart = action.payload;
-
-      const subtotal = 0//sum(cart.map((cartItem) => cartItem.price * cartItem.quantity));
-      const discount = cart.length === 0 ? 0 : state.checkout.discount;
-      const shipping = cart.length === 0 ? 0 : state.checkout.shipping;
-      const billing = cart.length === 0 ? null : state.checkout.billing;
-
-      state.checkout.cart = cart;
+      const events = action.payload;
+      const subtotal = sum(events.map((event) => event.price));
+      const discount = events.length === 0 ? 0 : state.checkout.discount;
+      const shipping = events.length === 0 ? 0 : state.checkout.shipping;
+      const billing = events.length === 0 ? null : state.checkout.billing;
+      
+      state.checkout.events = events;
       state.checkout.discount = discount;
       state.checkout.shipping = shipping;
       state.checkout.billing = billing;
       state.checkout.subtotal = subtotal;
-      state.checkout.total = subtotal - discount;
+      state.checkout.total = subtotal * 1.03;
     },
 
     addCart(state, action) {
@@ -189,10 +189,17 @@ const slice = createSlice({
       if(teacher){
         state.checkout.teacher = teacher;
       }
-      
+      // business logic to set price
       state.checkout.cart = [...state.checkout.cart, teacher];
       state.checkout.events = [...state.checkout.events, event];
+      state.checkout.total = state.checkout.total + event.price * 1.03
+      state.checkout.subtotal = state.checkout.subtotal + event.price
       state.checkout.cart = uniqBy([...state.checkout.cart, teacher], 'id');
+    },
+
+    addCard(state, action){
+      const card = action.payload
+      state.checkout.card = card
     },
 
     deleteCart(state, action) {
@@ -318,7 +325,8 @@ export const {
   closeClinicModal,
   closeAddEventModal,
   openAddEventModal,
-  cleanCart
+  cleanCart,
+  addCard
 } = slice.actions;
 
 // ----------------------------------------------------------------------

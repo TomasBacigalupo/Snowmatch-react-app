@@ -10,6 +10,8 @@
         "cancel": "Cancelar",
         "AVAILABLE": "Disponible",
         "UNAVAILABLE": "Ocupado",
+        "total_days": "Total Días",
+        "done": "Confirmar",
         "form": {
             "name": "Nombre",
             "lastName": "Apellido",
@@ -230,8 +232,13 @@
         "warranty": "Garantia SnowMatch",
         "warrantyDescription": "SnowMatch asegura que cumple con la reglamentación para dar clases",
         "information": "Información",
-        "description": "Descripción",
-        "skills": "Skills"
+        "description": "Info",
+        "skills": "Skills",
+        "people": "Personas",
+        "resort": "Cerro",
+        "level": "Nivel",
+        "duration": "Duración",
+        "reviews": "Ranking"
     },
     "schoolDetails": {
         "title": "Detalles PRO school",
@@ -267,7 +274,9 @@
         "validation_required": "Validation required!",
         "validation_required_body": "Vas a recibir un mensaje de validación por WhatsApp, puede tardar unos minutos. Si no te llega el mensaje, revisa tu número y proba de nuevo!",
         "close": "Cerrar",
-        "match_pro": "Match Pro"
+        "match_pro": "Match Pro",
+        "select_dates": "Seleccionar Días",
+        "time": "Horarios disponibles"
     },
     "discounts": {
         "getCupon": "Conseguir Cupon",
@@ -330,6 +339,7 @@
         "morning": "Mañana",
         "afternoon": "Tarde",
         "allday": "Todo el día",
+        "halfday": "Medio día",
         "continue": "Seguir buscando Pros",
         "event_added": "Clase agendada",
         "book_lesson": "Reservar clase"
@@ -374,15 +384,20 @@
         "question8": "¿Qué beneficios tengo por ser parte de SnowMatch?",
         "answer8": "Andá a la pestaña PRO Deal de SnowMatch y conocé beneficios exclusivos para los instructores. Hay increíbles descuentos que te esperan."
     },
-    "notifications":{
+    "notifications": {
         "title": "Notificaciones",
-        "new_title":"Sin leer",
+        "new_title": "Sin leer",
         "old_title": "Leídas",
         "no_new_title": "No tenés nuevas notificaciones",
         "mark_all_read": "Marcar todas como leídas",
         "new_notifications": "Tenés {{totalUnread}} nuevas notificaciones",
-        "description":{
+        "description": {
             "hired": "Match! Quieren disfrutar de la montaña con vos."
         }
+    },
+    "selectTime":{
+        "morning": "Mañana",
+        "afternoon": "Tarde",
+        "allday": "Día completo"
     }
 }

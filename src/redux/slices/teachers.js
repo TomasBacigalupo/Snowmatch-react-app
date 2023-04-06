@@ -42,7 +42,8 @@ const initialState = {
     billing: null,
     isOpenAddEventModal: false,
     teacher: {},
-    card: {}
+    card: {},
+    paymentInfo: {}
   },
   cakeChart: [0, 0, 0, 0],
   totalClasses: 0,
@@ -281,6 +282,10 @@ const slice = createSlice({
       state.checkout.total = state.checkout.subtotal - state.checkout.discount + shipping;
     },
 
+    setPaymentInfo(state, action) {
+      state.checkout.paymentInfo = action.payload;
+    },
+
     // SUCCESS RATE
     onRateSuccess(state, action) {
       const {teacherId} = action.payload;
@@ -326,7 +331,8 @@ export const {
   closeAddEventModal,
   openAddEventModal,
   cleanCart,
-  addCard
+  addCard,
+  setPaymentInfo
 } = slice.actions;
 
 // ----------------------------------------------------------------------

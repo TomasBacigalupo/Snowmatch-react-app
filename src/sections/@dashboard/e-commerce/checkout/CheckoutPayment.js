@@ -8,7 +8,7 @@ import { Grid, Button, Card } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 // redux
 import { useDispatch, useSelector } from '../../../../redux/store';
-import { onGotoStep, onBackStep, onNextStep, applyShipping, hireTeacher, cleanCart } from '../../../../redux/slices/teachers';
+import { onGotoStep, onBackStep, onNextStep, applyShipping, hireTeacher, cleanCart, setPaymentInfo } from '../../../../redux/slices/teachers';
 // components
 import Iconify from '../../../../components/Iconify';
 import { FormProvider } from '../../../../components/hook-form';
@@ -111,7 +111,29 @@ export default function CheckoutPayment() {
       const cardPaymentResponse = await cardPayment(card, 1000, [])
       console.log("cardPayment Response", cardPaymentResponse)
       if(cardPaymentResponse.status === 200){
-        //pago exitoso
+
+        const stream = cardPaymentResponse.body;
+        const reader = stream.getReader();
+        reader.read().then(({done, value})=>{
+          //pago exitoso
+          debugger
+          if (done) {
+            console.log(value)
+          }
+
+          // Datos del pago a guardar en el BE
+          const {
+            paymentMethod,
+            paymentId,
+            amountPayed,
+            status,
+            invoiceId
+          } = value;
+          dispatch(setPaymentInfo(JSON.parse(value)))
+        })
+
+        
+        
         dispatch(hireTeacher(teacher.id, events, (succ)=>{
         setLoading(false)
         dispatch(cleanCart())

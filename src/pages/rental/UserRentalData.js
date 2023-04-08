@@ -328,16 +328,6 @@ export default function UserRentalData({isGuest=false}){
                     )}
                 </Grid>
             </Grid>
-            <Dialog open={true} sx={{width: '100%'}}>
-                    <iframe id="inlineFrameExample"
-                        title="Inline Frame Example"
-                        width="100%"
-                        height="100%"
-                        src="https://checkout.zenrise.io?token=f8d82336-c158-4d00-941e-9e181452a67b">
-                    </iframe>
-                    <Button sx={{zIndex:9999}}> Close </Button>
-
-            </Dialog>
             </Box>
         </Page>
         

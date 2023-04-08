@@ -121,6 +121,7 @@ export default function AdminConfirmForm({ isEdit, currentTeacher, documents }) 
     twUrl: Yup.string(),
     disciplines: Yup.array().of(Yup.string()),
     authorized: Yup.boolean(),
+    zenriseHash: Yup.string()
   });
 
   const defaultValues = useMemo(
@@ -149,6 +150,7 @@ export default function AdminConfirmForm({ isEdit, currentTeacher, documents }) 
       twUrl: currentTeacher?.twUrl || '',
       disciplines: currentTeacher?.disciplines || [],
       authorized: currentTeacher?.authorized || false,
+      zenriseHash: currentTeacher?.zenriseHash || ''
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentTeacher]
@@ -262,14 +264,15 @@ export default function AdminConfirmForm({ isEdit, currentTeacher, documents }) 
 
               <RHFMultipleSelect name="disciplines" label={translate("general.form.disciplines")} list={["Ski", "SnowBoard"]} />
               <RHFMultipleSelect name="speaks" label={translate("general.form.languages")} list={["Español", "English", "Portugues", "Italiano"]} />
+              <Stack sx={{ mt: 3 }}>
+                <RHFSwitch
+                  name="authorized"
+                  label="is authorized"
+                  sx={{ mb: 1, mx: 0, width: 1 }}
+                />
+              </Stack>
+              <RHFTextField name="zenriseHash" label="Zenrise Hash" />
             </Box>
-            <Stack sx={{ mt: 3 }}>
-            <RHFSwitch
-                    name="authorized"
-                    label="is authorized"
-                    sx={{ mb: 1, mx: 0, width: 1 }}
-                  />
-            </Stack>
             
             <Stack sx={{ mt: 3 }}>
               <RHFTextField

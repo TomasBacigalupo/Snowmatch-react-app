@@ -98,25 +98,8 @@ export default function CheckoutConfirmation() {
                 <Grid item xs={12} md={8} container spacing={3}>
                     <Grid item xs={12} >
                         <Grid container spacing={2}>
-                            <Grid item xs={6}>
+                            <Grid item xs={12}>
                                 {teacher && <ShopTeacherCard teacher={teacher}/>}
-                            </Grid>
-                            <Grid item xs={6}>
-                                <Card sx={{
-                                    py: 3,
-                                    px:1,
-                                    display: 'flex',
-                                    position: 'relative',
-                                    alignItems: 'center',
-                                    flexDirection: 'column',
-                                }}>
-                                    <Grid container spacing={2}>
-                                        <Typography variant='body1' sx={{pl:3}}>Lessons:</Typography>
-                                        {events.map(event => <Grid item xs={12}>
-                                            <EventConfirmCard event={event}/>
-                                        </Grid>)}
-                                    </Grid>
-                                </Card>
                             </Grid>
                         </Grid>
                     </Grid>
@@ -125,7 +108,12 @@ export default function CheckoutConfirmation() {
                             <CalendarStyle>
                                 <FullCalendar
                                     weekends
-                                    events={events}
+                                    events={events.map((e, idx) =>({
+                                        id: idx,
+                                        title: `$${e.price}`,
+                                        ...e,
+                                        color: '#3399FF'
+                                    }))}
                                     rerenderDelay={10}
                                     initialDate={events[0].date}
                                     initialView={'dayGridMonth'}
@@ -134,13 +122,11 @@ export default function CheckoutConfirmation() {
                                     headerToolbar={false}
                                     allDayMaintainDuration
                                     eventResizableFromStart
-                                    // select={handleSelectRange}
-                                    // eventDrop={handleDropEvent}
-                                    eventClick={(event)=>{
+                                    eventClick={(arg) => {
+                                        const idx = arg.event.id
                                         setOpen(true)
-                                        setSelectedEvent(event)
+                                        setSelectedEvent(events[idx])
                                     }}
-                                    // eventResize={handleResizeEvent}
                                     height={isDesktop ? 720 : 'auto'}
                                     plugins={[listPlugin, dayGridPlugin, timelinePlugin, timeGridPlugin, interactionPlugin]}
                                 />
@@ -187,10 +173,22 @@ export default function CheckoutConfirmation() {
             <Dialog open={open} onClose={handleClose}>
                 <DialogTitle>Event Requested</DialogTitle>
                 <DialogContent>
-                    <Typography variant='body2'>{selectedEvent?.price}</Typography>
-                    <Typography variant='body2'>{selectedEvent?.people}</Typography>
-                    <Typography variant='body2'>{selectedEvent?.level}</Typography>
-                    <Typography variant='body2'>{selectedEvent?.discipline}</Typography>
+                    <Box sx={{ mb: 1, mt: 3 }}>
+                        <Typography  sx={{ display: 'inline-block', minWidth: '100px' }}>Price: </Typography>
+                        <Typography variant='body2' sx={{ display: 'inline-block' }}>{selectedEvent?.price}</Typography>
+                    </Box>
+                    <Box sx={{ mb: 1 }}>
+                        <Typography  sx={{ display: 'inline-block', minWidth: '100px' }}>Attendees: </Typography>
+                        <Typography variant='body2' sx={{ display: 'inline-block' }}>{selectedEvent?.people}</Typography>
+                    </Box>
+                    <Box sx={{ mb: 1 }}>
+                        <Typography  sx={{ display: 'inline-block', minWidth: '100px' }}>Level: </Typography>
+                        <Typography variant='body2' sx={{ display: 'inline-block' }}>{selectedEvent?.level}</Typography>
+                    </Box>
+                    <Box>
+                        <Typography  sx={{ display: 'inline-block', minWidth: '100px' }}>Discipline: </Typography>
+                        <Typography variant='body2' sx={{ display: 'inline-block' }}>{selectedEvent?.discipline}</Typography>
+                    </Box>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose}>Close</Button>

@@ -17,7 +17,8 @@ import { getUpcomingEvents, openModal, selectEvent } from '../../../../redux/sli
 
 import { PATH_DASHBOARD } from '../../../../routes/paths';
 import { Grid } from '@mui/material';
-import { getProducts } from 'src/redux/slices/product';
+import { getProducts } from 'src/redux/slices/product'
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
 
 // ----------------------------------------------------------------------
 
@@ -81,7 +82,9 @@ export default function ProductsCarousel({teacherId}) {
                     index={index} 
                     events={product}
                     price={product.price}
-                    title={product.name} isActive={index === currentIndex} dispatch={dispatch} key={index} />
+                    title={product.name} 
+                    lengthInMinutes={product.lengthInMinutes}
+                    isActive={index === currentIndex} dispatch={dispatch} key={index} />
                 ))}
             </Slider>
 
@@ -115,37 +118,6 @@ CarouselItem.propTypes = {
     index: PropTypes.number,
 };
 
-function handleEventClick(e, event, dispatch) {
-    dispatch(openModal())
-    dispatch(selectEvent(event.id));
-
-}
-
-function hasEvents(events, dispatch) {
-    if (events && events.length > 0) {
-        return (
-            events?.map((event, index) => (
-                <m.div variants={varFade().inRight} key={event.id}>
-                    <Link onClick={e => handleEventClick(e, event, dispatch)} component={RouterLink} to="/dashboard/calendar" color="inherit" underline="none">
-                        <Typography variant="h8" gutterBottom noWrap>
-                            {event.title}
-                        </Typography>
-                    </Link>
-                </m.div>
-            ))
-        )
-    }
-    else {
-        return (
-            <m.div variants={varFade().inRight}>
-                <Typography variant="overline" component="span" sx={{ mb: 1, opacity: 0.48 }}>
-                    No tiene eventos agendados
-                </Typography>
-            </m.div>
-        )
-    }
-}
-
 function getDate(index) {
 
     const today = new Date()
@@ -163,7 +135,20 @@ function getDate(index) {
     )
 }
 
-function CarouselItem({ index, events, isActive, dispatch, title, price }) {
+function getTime(lengthInMinutes){
+    if (lengthInMinutes === 60 ){
+        return "Una Hora"
+    }
+    if (lengthInMinutes === 120) {
+        return "Dos Horas"
+    }
+    if (lengthInMinutes < 60 * 3) {
+        return "Medio día"
+    }
+    return "Dia Completo"
+}
+
+function CarouselItem({ index, events, isActive, dispatch, title, price, lengthInMinutes }) {
 
     return (
         <Box sx={{ position: 'relative', }}>
@@ -180,13 +165,21 @@ function CarouselItem({ index, events, isActive, dispatch, title, price }) {
                     color: 'common.white',
                 }}
             >
-                <Grid container alignItems='center' sx={{mb:1}}>
-                    <Grid item xs={6}>
-                        <Typography variant='h6'>{title}</Typography>
+                <Grid container alignItems='center' sx={{ mb: 1, mt: 2 }}>
+                    <Grid item xs={6} container flexDirection='column'>
+                        <Grid item xs={12}>
+                            <Typography variant='h6' sx={{ml:0.5}}>{title}</Typography>
+                        </Grid>
+                        <Grid item xs={12}>
+                            <Typography sx={{ display: 'flex', alignItems: 'center' }}>
+                                <AccessTimeIcon sx={{ mr: 1, fontSize: 18 }} />
+                                {getTime(lengthInMinutes)}
+                            </Typography>
+                        </Grid>
                     </Grid>
                     <Grid item xs={6} container alignItems='center'>
                         <Grid item xs={6}>
-                            ${price}
+                            <Typography variant='h6' sx={{ ml: 0.5 }}>${price}</Typography>
                         </Grid>
                         <Grid item xs={6}>
                             <Button variant='contained'>Select</Button>

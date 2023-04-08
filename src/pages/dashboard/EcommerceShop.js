@@ -169,7 +169,7 @@ export default function EcommerceShop({isGuest=false, teacherType="school"}) {
           sx={{ mb: 2 }}
         >
           <ShopProductSearch teachers={filteredTeachers} />
-
+          <CartWidget />
           <Stack direction="row" spacing={1} flexShrink={0} sx={{ my: 1 }}>
             <FormProvider methods={methods}>
               <ShopFilterSidebar

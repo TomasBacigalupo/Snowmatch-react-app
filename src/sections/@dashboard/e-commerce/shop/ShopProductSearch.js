@@ -81,14 +81,14 @@ export default function ShopProductSearch({teachers}) {
         />
       )}
       renderOption={(props, product, { inputValue }) => {
-        const { name,lastname,email, imageLink } = product;
+        const { name,lastname,email, imageLink, id } = product;
         const matches = match(name+" "+lastname, inputValue);
         const parts = parse(name+" "+lastname, matches);
 
         return (
           <li {...props}>
             <Image alt={name} src={imageLink} sx={{ width: 48, height: 48, borderRadius: 1, flexShrink: 0, mr: 1.5 }} />
-            <Link underline="none" onClick={() => handleClick(email)}>
+            <Link underline="none" onClick={() => handleClick(id)}>
               {parts.map((part, index) => (
                 <Typography
                   key={index}

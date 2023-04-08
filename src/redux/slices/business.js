@@ -17,6 +17,7 @@ const initialState = {
     success: null,
     error: null,
     business: null,
+    products: [],
     businesses: [],
     teachers: [],
     sortBy: null,
@@ -70,6 +71,12 @@ const slice = createSlice({
         getBusinessSuccess(state, action) {
             state.isLoading = false;
             state.business = action.payload;
+
+        },
+
+        getProductsByBusinessSuccess(state, action) {
+            state.isLoading = false;
+            state.products = action.payload;
 
         },
 
@@ -172,6 +179,20 @@ export function getBusiness(id) {
         try {
             const response = await axios.get('/api/business/' + id);
             dispatch(slice.actions.getBusinessSuccess(response.data));
+        } catch (error) {
+            dispatch(slice.actions.hasError(error));
+        }
+    };
+}
+
+// ----------------------------------------------------------------------
+
+export function getProductsByBusinessId(id) {
+    return async () => {
+        dispatch(slice.actions.startLoading());
+        try {
+            const response = await axios.get(`/api/product/business/${id}`);
+            dispatch(slice.actions.getBusinessProductsSuccess(response.data));
         } catch (error) {
             dispatch(slice.actions.hasError(error));
         }

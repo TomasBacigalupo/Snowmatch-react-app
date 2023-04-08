@@ -18,7 +18,7 @@ import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
 import useAuth from 'src/hooks/useAuth';
 // sections
 import useLocales from 'src/hooks/useLocales';
-import { getBusiness, getMembersPublic } from 'src/redux/slices/business';
+import { getBusiness, getMembersPublic, getProductsByBusinessId } from 'src/redux/slices/business';
 import { SchoolDetailsCarousel, SchoolDetailsSummary } from 'src/sections/@dashboard/e-commerce/school-details';
 import SchoolDetailsMembersList from 'src/sections/@dashboard/e-commerce/school-details/SchoolDetailsMembersList';
 
@@ -72,6 +72,7 @@ export default function EcommerceTeacherDetails({ isGuest = false }) {
 
   useEffect(() => {
     dispatch(getBusiness(id));
+    dispatch(getProductsByBusinessId(id))
   }, [dispatch, id]);
 
   useEffect(() => {
@@ -119,6 +120,14 @@ export default function EcommerceTeacherDetails({ isGuest = false }) {
                 </Grid>
               </Grid>
             </Card>
+            <br></br>
+            {/* <Grid container sx={{ my: 1 }}> */}
+            <Typography variant='h4'>Clases</Typography>
+            <br></br>
+
+            <SchoolDetailsMembersList teachers={teachers} loading={isLoading}></SchoolDetailsMembersList>
+            {/* </Grid> */}
+            <br></br>
             <br></br>
             {/* <Grid container sx={{ my: 1 }}> */}
             <Typography variant='h4'> {translate("schoolDetails.ourTeachers")}</Typography>

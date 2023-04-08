@@ -304,7 +304,7 @@ export default function TeacherDetailsSummary({ cart, teacher, onAddCart, onGoto
 
       <Divider sx={{ borderStyle: 'dashed' }} />
 
-      <ProductsCarousel/>
+      <ProductsCarousel teacherId={id}/>
 
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
 

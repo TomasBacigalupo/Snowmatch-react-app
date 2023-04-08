@@ -72,11 +72,11 @@ export const { openModal, closeModal, getSelectedEmail } = slice.actions;
 
 // ----------------------------------------------------------------------
 
-export function getTeachers(page) {
+export function getTeachers(page, role, name, level) {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get('/api/admin/users/?page=' + page);
+      const response = await axios.get(`/api/admin/filter?page=${page}&role=${role}&level=${level}&name=${name}`);
       dispatch(slice.actions.getTeachersSuccess(response.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));

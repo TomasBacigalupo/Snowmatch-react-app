@@ -222,13 +222,13 @@ export const {
 
 // ----------------------------------------------------------------------
 
-export function getProducts(isTeacher) {
+export function getProducts(isTeacher, id) {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
       let pathExtra = "business"
       if (isTeacher) {
-        pathExtra = "teacher"
+        pathExtra = `teacher/${id}`
       }
       const response = await axios.get('/api/product/' + pathExtra);
       console.log("response", response)

@@ -17,6 +17,7 @@ import { getUpcomingEvents, openModal, selectEvent } from '../../../../redux/sli
 
 import { PATH_DASHBOARD } from '../../../../routes/paths';
 import { Grid } from '@mui/material';
+import { getProducts } from 'src/redux/slices/product';
 
 // ----------------------------------------------------------------------
 
@@ -33,13 +34,15 @@ const OverlayStyle = styled('div')(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 
-export default function ProductsCarousel() {
+export default function ProductsCarousel({teacherId}) {
     const theme = useTheme();
     const carouselRef = useRef(null);
     const [currentIndex, setCurrentIndex] = useState(theme.direction === 'rtl' ? _appFeatured.length - 1 : 0);
     const dispatch = useDispatch()
-    const upcomingEvents = [{title: "Grupal", price: 10000}, { title: "Junior", price: 7000}]
-    useEffect(() => dispatch(getUpcomingEvents()), [])
+    const upcomingEvents = useSelector(state => state.product.products)
+    useEffect(() => dispatch(getProducts(true, teacherId)), [teacherId])
+
+
 
 
     const settings = {
@@ -78,7 +81,7 @@ export default function ProductsCarousel() {
                     index={index} 
                     events={product}
                     price={product.price}
-                      title={product.title} isActive={index === currentIndex} dispatch={dispatch} key={index} />
+                    title={product.name} isActive={index === currentIndex} dispatch={dispatch} key={index} />
                 ))}
             </Slider>
 

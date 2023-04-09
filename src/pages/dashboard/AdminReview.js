@@ -275,9 +275,8 @@ export default function AdminReview() {
                       row={row}
                       selected={selected.includes(row.userId)}
                       onSelectRow={() => onSelectRow(row.userId)}
-                      // onDeleteRow={() => handleDeleteRow(row.id)}
-                      onEditRow={() => handleEditRow(row.name)}
-                      onConfirmRow={() => handleConfirmRow(row.userId)}
+                      onEditRow={() => handleEditRow(row.id)}
+                      onConfirmRow={() => handleConfirmRow(row.id)}
                       onDeclineRow={() => handleDeclineOpenModal(row.email)}
                     />))}
 

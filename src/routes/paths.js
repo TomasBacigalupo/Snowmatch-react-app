@@ -72,6 +72,7 @@ export const PATH_DASHBOARD = {
   products: path(ROOTS_DASHBOARD, '/products'),
   user: {
     root: path(ROOTS_DASHBOARD, '/user'),
+    root: path(ROOTS_DASHBOARD, '/prices'),
     school: path(ROOTS_DASHBOARD, '/user/school'),
     new: path(ROOTS_DASHBOARD, '/user/new'),
     list: path(ROOTS_DASHBOARD, '/user/list'),

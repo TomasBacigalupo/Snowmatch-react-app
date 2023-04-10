@@ -54,18 +54,18 @@ export default function TeacherDetailsReviewOverview({ teacher, onOpen }) {
   }, [])
 
   const getStarsAvg = () => {
-    if (rates.length === 0) return 0
-    return Math.floor(rates.map(r => r.stars).reduce((total, stars) => total + stars) / rates.length)
+    if (rates?.length === 0) return 0
+    return Math.floor(rates?.map(r => r.stars).reduce((total, stars) => total + stars) / rates?.length)
   }
 
   const getSafetyAvg = () => {
-    if (rates.length === 0) return 0
-    return Math.floor(rates.map(r => r.safety).reduce((total, safety) => total + safety) * 100 / (rates.length * 3))
+    if (rates?.length === 0) return 0
+    return Math.floor(rates?.map(r => r.safety).reduce((total, safety) => total + safety) * 100 / (rates?.length * 3))
   }
 
   const getFunAvg = () => {
-    if (rates.length === 0) return 0
-    return Math.floor(rates.map(r => r.fun).reduce((total, fun) => total + fun) * 100 / (rates.length * 3))
+    if (rates?.length === 0) return 0
+    return Math.floor(rates?.map(r => r.fun).reduce((total, fun) => total + fun) * 100 / (rates?.length * 3))
   }
 
   return (
@@ -79,7 +79,7 @@ export default function TeacherDetailsReviewOverview({ teacher, onOpen }) {
         </Typography>
         <RatingStyle readOnly value={getStarsAvg()} precision={0.1} />
         <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-          ({fShortenNumber(rates.length)}
+          ({fShortenNumber(rates?.length)}
           &nbsp;reviews)
         </Typography>
       </GridStyle>
@@ -98,7 +98,7 @@ export default function TeacherDetailsReviewOverview({ teacher, onOpen }) {
             .slice(0)
             .reverse()
             .map((rate) => (
-              <ProgressItem key={rate.name} name={rate.name} star={rate.stars} total={rates.length * 3} />
+              <ProgressItem key={rate.name} name={rate.name} star={rate.stars} total={rates?.length * 3} />
             ))}
         </Stack>
       </GridStyle>

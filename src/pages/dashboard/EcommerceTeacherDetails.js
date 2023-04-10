@@ -28,7 +28,6 @@ import {
 } from '../../sections/@dashboard/e-commerce/teacher-details';
 import CartWidget from '../../sections/@dashboard/e-commerce/CartWidget';
 import useLocales from 'src/hooks/useLocales';
-
 // ----------------------------------------------------------------------
 
 const PRODUCT_DESCRIPTION = [
@@ -101,8 +100,7 @@ export default function EcommerceTeacherDetails({isGuest = false}) {
           ]
         }
         />
-
-        {/* <CartWidget /> */}
+        <CartWidget />
         {!isLoading &&  teacher && (
           <>
             <Card>
@@ -127,13 +125,13 @@ export default function EcommerceTeacherDetails({isGuest = false}) {
                 <Box sx={{ px: 3, bgcolor: 'background.neutral' }}>
                   <TabList onChange={(e, value) => setValue(value)}>
                     <Tab
-                      disableRipple
+                      focusRipple={true}
                       value="0"
-                      label={`Reviews`}
+                      icon={<Iconify icon={'material-symbols:rate-review'} width={20} height={20} />}
                       sx={{ '& .MuiTab-wrapper': { whiteSpace: 'nowrap' } }}
                     />
-                    <Tab disableRipple value="1" label={translate('teacherDetails.calendar')} />
-
+                    <Tab value="1" icon={<Iconify icon={'material-symbols:calendar-month'} width={20} height={20} />} sx={{ maxWidth: 'fit-content' } }/>
+                    <Tab value="2" icon={<Iconify icon={'mingcute:profile-line'} width={20} height={20} />} sx={{ maxWidth: 'fit-content' }} />
                   </TabList>
                 </Box>
 
@@ -145,6 +143,22 @@ export default function EcommerceTeacherDetails({isGuest = false}) {
                 <TabPanel value="1">
                   <TeacherDetailsCalendar teacher={teacher} />
                 </TabPanel>
+                <TabPanel value="2">
+                  <Box sx={{ p: 3 }}>
+                    <Markdown children={teacher.information} />
+                  </Box>
+                  <Box sx={{ p: 3 }}>
+                    <Markdown children={teacher.description} />
+                  </Box>
+                </TabPanel>
+                {/* <TabPanel value="2">
+                  <Box sx={{ p: 3 }}>
+                    <Typography variant='body1'>{teacher.information}</Typography>
+                  </Box>
+                  <Box sx={{ p: 3 }}>
+                    <Typography variant='body1'>{teacher.description}</Typography>
+                  </Box>
+                </TabPanel> */}
               </TabContext>
             </Card>
 

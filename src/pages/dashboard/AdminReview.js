@@ -48,8 +48,8 @@ import DeclineForm from '../../sections/@dashboard/admin/DeclineForm';
 const STATUS_OPTIONS = ['all', 'UNDER_REVIEW'];
 
 const ROLE_OPTIONS = [
-  'all',
   'TEACHER',
+  'STUDENT'
 ];
 
 const TABLE_HEAD = [
@@ -91,8 +91,8 @@ export default function AdminReview() {
   const [tableData, setTableData] = useState([]);
 
   const [filterName, setFilterName] = useState('');
-
-  const [filterRole, setFilterRole] = useState('all');
+  const [filterRole, setFilterRole] = useState(ROLE_OPTIONS[0]);
+  const [filterLevel, setFilterLevel] = useState(0);
 
   const { currentTab: filterStatus, onChangeTab: onChangeFilterStatus } = useTabs('all');
 
@@ -111,6 +111,10 @@ export default function AdminReview() {
 
   const handleFilterRole = (event) => {
     setFilterRole(event.target.value);
+  };
+
+  const handleFilterLevel = (event) => {
+    setFilterLevel(event.target.value);
   };
 
   // const handleDeleteRow = (id) => {
@@ -155,19 +159,23 @@ export default function AdminReview() {
   const [reqPage, setReqPage] = useState(0);
 
   const onChangePage2 = async (event, newPage) => {
-    dispatch(getTeachers(newPage + 1))
+    dispatch(getTeachers(newPage + 1, filterRole))
     setPage(newPage)
   }
 
   const onChangePage3 = (event, newPage) => {
-    dispatch(getTeachers(newPage))
-    setTableData(teachers)
+    dispatch(getTeachers(newPage, filterRole))
+    setTableData(teachers ?? [])
     setPage(newPage)
   }
 
   useEffect(() => {
-    setTableData(teachers);
+    setTableData(teachers ?? []);
   }, [teachers]);
+
+  useEffect(()=>{
+    dispatch(getTeachers(page, filterRole, filterName, filterLevel))
+  }, [filterRole, filterName, filterLevel, page])
 
   useEffect(() => {
     dispatch(getTeachers(1));
@@ -214,8 +222,10 @@ export default function AdminReview() {
           <AdminTableToolbar
             filterName={filterName}
             filterRole={filterRole}
+            filterLevel={filterLevel}
             onFilterName={handleFilterName}
             onFilterRole={handleFilterRole}
+            onFilterLevel={handleFilterLevel}
             optionsRole={ROLE_OPTIONS}
           />
 
@@ -229,7 +239,7 @@ export default function AdminReview() {
                   onSelectAllRows={(checked) =>
                     onSelectAllRows(
                       checked,
-                      tableData.map((row) => row.id)
+                      tableData?.map((row) => row.id)
                     )
                   }
                   actions={
@@ -247,27 +257,26 @@ export default function AdminReview() {
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
-                  rowCount={tableData.length}
+                  rowCount={tableData?.length ?? 0}
                   numSelected={selected.length}
                   onSort={onSort}
                   onSelectAllRows={(checked) =>
                     onSelectAllRows(
                       checked,
-                      tableData.map((row) => row.id)
+                      tableData?.map((row) => row.id)
                     )
                   }
                 />
 
                 <TableBody>
-                  {tableData.slice(0, rowsPerPage).map((row) => (
+                  {tableData?.map((row) => (
                     <AdminTableRow
                       key={row.userId}
                       row={row}
                       selected={selected.includes(row.userId)}
                       onSelectRow={() => onSelectRow(row.userId)}
-                      // onDeleteRow={() => handleDeleteRow(row.id)}
-                      onEditRow={() => handleEditRow(row.name)}
-                      onConfirmRow={() => handleConfirmRow(row.userId)}
+                      onEditRow={() => handleEditRow(row.id)}
+                      onConfirmRow={() => handleConfirmRow(row.id)}
                       onDeclineRow={() => handleDeclineOpenModal(row.email)}
                     />))}
 
@@ -312,26 +321,31 @@ export default function AdminReview() {
 // ----------------------------------------------------------------------
 
 function applySortFilter({ tableData, comparator, filterName, filterStatus, filterRole }) {
-  const stabilizedThis = tableData.map((el, index) => [el, index]);
+  return tableData
+  debugger
+  if(tableData.length === 0){
+    return tableData
+  }
+  const stabilizedThis = tableData?.map((el, index) => [el, index]);
 
-  stabilizedThis.sort((a, b) => {
+  stabilizedThis?.sort((a, b) => {
     const order = comparator(a[0], b[0]);
     if (order !== 0) return order;
     return a[1] - b[1];
   });
 
-  tableData = stabilizedThis.map((el) => el[0]);
+  tableData = stabilizedThis?.map((el) => el[0]);
 
   if (filterName) {
-    tableData = tableData.filter((item) => item.name.toLowerCase().indexOf(filterName.toLowerCase()) !== -1);
+    tableData = tableData?.filter((item) => item.name.toLowerCase().indexOf(filterName.toLowerCase()) !== -1);
   }
 
   if (filterStatus !== 'all') {
-    tableData = tableData.filter((item) => item.status === filterStatus);
+    tableData = tableData?.filter((item) => item.status === filterStatus);
   }
 
   if (filterRole !== 'all') {
-    tableData = tableData.filter((item) => item.role === filterRole);
+    tableData = tableData?.filter((item) => item.role === filterRole);
   }
 
   return tableData;

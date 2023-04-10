@@ -29,17 +29,17 @@ export default function TeacherDetailsReviewList({ teacher }) {
   return (
     <Box sx={{ pt: 3, px: 2, pb: 5 }}>
       {isLoading && <CircularProgress/>}
-      {rates.length === 0 && (
+      {rates?.length === 0 && (
         <Typography>No reviews for this PRO</Typography>
       )}
       {!isLoading &&(
         <List disablePadding>
-          {rates.map((rate) => (
-            <ReviewItem key={rate.id} review={rate} />
+          {rates?.map((rate) => (
+             <ReviewItem key={rate.id} review={rate} />
           ))}
         </List>
       )}
-      {!isLoading && rates.length === 0 &&
+      {!isLoading && rates?.length !== 0 &&
       <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
         <Pagination 
           count={totalPages}

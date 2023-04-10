@@ -47,6 +47,7 @@ export default function EcommerceShop({isGuest=false, teacherType="school"}) {
 
   const dispatch = useDispatch();
   const { user } = useAuth();
+  const isTeacher = user.role === "TEACHER"
   const query = useQuery()
   const [openFilter, setOpenFilter] = useState(false);
 
@@ -151,7 +152,6 @@ export default function EcommerceShop({isGuest=false, teacherType="school"}) {
 
   return (
     <Page title="Match">
-      
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <HeaderBreadcrumbs
           heading="Match"
@@ -170,7 +170,8 @@ export default function EcommerceShop({isGuest=false, teacherType="school"}) {
           sx={{ mb: 2 }}
         >
           <ShopProductSearch teachers={filteredTeachers} />
-
+          {!isTeacher && <CartWidget /> }
+          
           <Stack direction="row" spacing={1} flexShrink={0} sx={{ my: 1 }}>
             <FormProvider methods={methods}>
               <ShopFilterSidebar

@@ -130,7 +130,7 @@ export default function UserAccount() {
       {user?.user ? <Container maxWidth={themeStretch ? false : 'lg'}>
         <HeaderBreadcrumbs
           heading={translate("breadcrumb.account")}
-          links={[
+          links={[ 
             { name: translate("breadcrumb.dashboard"), href: PATH_DASHBOARD.root },
             { name: translate("breadcrumb.profile"), href: PATH_DASHBOARD.user.root },
             { name: translate("breadcrumb.editProfile") },

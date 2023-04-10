@@ -173,6 +173,7 @@ export default function Router() {
           children: [
             { element: <Navigate to="/dashboard/user/profile" replace />, index: true },
             { path: 'profile', element: <UserProfile /> },
+            { path: 'prices', element: <Prices /> },
             { path: 'cards', element: <UserCards /> },
             { path: 'list', element: <ClientList /> },
             { path: 'new', element: <ClientCreate /> },
@@ -306,6 +307,7 @@ const BlogNewPost = Loadable(lazy(() => import('../pages/dashboard/BlogNewPost')
 
 // USER
 const UserProfile = Loadable(lazy(() => import('../pages/dashboard/UserProfile')));
+const Prices = Loadable(lazy(() => import('../pages/dashboard/Prices')));
 const UserCards = Loadable(lazy(() => import('../pages/dashboard/UserCards')));
 const UserList = Loadable(lazy(() => import('../pages/dashboard/UserList')));
 const UserAccount = Loadable(lazy(() => import('../pages/dashboard/UserAccount')));

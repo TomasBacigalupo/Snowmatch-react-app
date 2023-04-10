@@ -30,7 +30,8 @@ export const PATH_GUEST = {
   schools: path(ROOTS_FIND_A_PRO, `/schools`),
   viewSchool: (id) => path(ROOTS_FIND_A_PRO, `/schools/${id}`),
   rental: ROOTS_RENTAL,
-  calculate: path(ROOTS_RENTAL, `/calculate`)
+  calculate: path(ROOTS_RENTAL, `/calculate`),
+  checkout: (id) => path(ROOTS_FIND_A_PRO, `/teacher/${id}/hire`)
 };
 
 export const PATH_PAGE = {
@@ -71,13 +72,14 @@ export const PATH_DASHBOARD = {
   products: path(ROOTS_DASHBOARD, '/products'),
   user: {
     root: path(ROOTS_DASHBOARD, '/user'),
+    root: path(ROOTS_DASHBOARD, '/prices'),
     school: path(ROOTS_DASHBOARD, '/user/school'),
     new: path(ROOTS_DASHBOARD, '/user/new'),
     list: path(ROOTS_DASHBOARD, '/user/list'),
     cards: path(ROOTS_DASHBOARD, '/user/cards'),
     profile: path(ROOTS_DASHBOARD, '/user/profile'),
     account: path(ROOTS_DASHBOARD, '/user/account'),
-    edit: (name) => path(ROOTS_DASHBOARD, `/user/${name}/edit`),
+    edit: (id) => path(ROOTS_DASHBOARD, `/user/${id}/edit`),
     reviews: path(ROOTS_DASHBOARD, `/user/reviews`),
     lessons: path(ROOTS_DASHBOARD, `/user/lessons`),
     demoEdit: path(ROOTS_DASHBOARD, `/user/reece-chung/edit`),

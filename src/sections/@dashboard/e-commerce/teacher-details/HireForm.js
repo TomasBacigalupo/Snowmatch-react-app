@@ -76,7 +76,6 @@ const HireForm = ({ teacher, onCancel}) => {
                 date: data.classDate,
                 resort: data.resort
             };
-            console.log({teacher})
             dispatch(addCart({
                 teacher: teacher, 
                 event: requestEvent

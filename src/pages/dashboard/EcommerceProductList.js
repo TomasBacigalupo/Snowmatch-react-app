@@ -39,6 +39,7 @@ import {
 // sections
 import { ProductTableRow, ProductTableToolbar } from '../../sections/@dashboard/e-commerce/product-list';
 import { ShopProductCard } from 'src/sections/@dashboard/e-commerce/shop';
+import useAuth from 'src/hooks/useAuth';
 
 // ----------------------------------------------------------------------
 
@@ -76,13 +77,15 @@ export default function EcommerceProductList() {
   const { themeStretch } = useSettings();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const {user} = useAuth()
+
   const { products, isLoading } = useSelector((state) => state.product);
   const [tableData, setTableData] = useState([]);
   const [filterName, setFilterName] = useState('');
 
 
   useEffect(() => {
-    dispatch(getProducts(true));
+    dispatch(getProducts(true,user.id));
   }, [dispatch]);
 
   useEffect(() => {

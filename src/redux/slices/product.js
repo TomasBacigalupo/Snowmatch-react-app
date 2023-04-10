@@ -5,6 +5,7 @@ import uniqBy from 'lodash/uniqBy';
 import axios from '../../utils/axios';
 //
 import { dispatch } from '../store';
+import { startLoading } from './business';
 
 // ----------------------------------------------------------------------
 
@@ -30,6 +31,7 @@ const initialState = {
     shipping: 0,
     billing: null,
   },
+  success: ""
 };
 
 const slice = createSlice({
@@ -39,6 +41,10 @@ const slice = createSlice({
     // START LOADING
     startLoading(state) {
       state.isLoading = true;
+    },
+
+    stopLoading(state){
+      state.isLoading = false;
     },
 
     // HAS ERROR
@@ -59,6 +65,10 @@ const slice = createSlice({
       state.product = action.payload;
     },
 
+    clearProduct(state) {
+      state.product = null
+    },
+
     //  SORT & FILTER PRODUCTS
     sortByProducts(state, action) {
       state.sortBy = action.payload;
@@ -70,6 +80,10 @@ const slice = createSlice({
       state.filters.colors = action.payload.colors;
       state.filters.priceRange = action.payload.priceRange;
       state.filters.rating = action.payload.rating;
+    },
+
+    setSuccess(state, message) {
+      state.success = message
     },
 
     // CHECKOUT
@@ -206,16 +220,23 @@ export const {
   decreaseQuantity,
   sortByProducts,
   filterProducts,
+  setSuccess,
+  clearProduct,
 } = slice.actions;
 
 // ----------------------------------------------------------------------
 
-export function getProducts() {
+export function getProducts(isTeacher) {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get('/api/products');
-      dispatch(slice.actions.getProductsSuccess(response.data.products));
+      let pathExtra = "business"
+      if (isTeacher) {
+        pathExtra = "teacher"
+      }
+      const response = await axios.get('/api/product/' + pathExtra);
+      console.log("response", response)
+      dispatch(slice.actions.getProductsSuccess(response.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }
@@ -238,14 +259,13 @@ export function getTeachers() {
 
 // ----------------------------------------------------------------------
 
-export function getProduct(name) {
+export function getProduct(id) {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get('/api/products/product', {
-        params: { name },
-      });
-      dispatch(slice.actions.getProductSuccess(response.data.product));
+      const response = await axios.get('/api/product/' + id);
+      dispatch(slice.actions.getProductSuccess(response.data));
+      console.log(response)
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error));
@@ -260,7 +280,7 @@ export function getTeacher(name) {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.get(`/api/users/teacher/${name}`
-);
+      );
       dispatch(slice.actions.getTeacherSuccess(response.data));
     } catch (error) {
       console.error(error);
@@ -272,28 +292,28 @@ export function getTeacher(name) {
 // ----------------------------------------------------------------------
 
 export function getTeacherWithRates(email) {
-return async () => {
-  const ratesRequest = `/api/rate/getRates/${email}`;
-  const teacherRequest = `/api/users/teacher/email/${email}`;
-  dispatch(slice.actions.startLoading());
-  try {
-    axios.get(teacherRequest).then(r=>{
-      const teacher = r.data;
-      axios.get(ratesRequest).then(rs =>{
-        const rates = rs.data;
-        const dto = {
-          "rates": rates,
-          "teacher": teacher
-        }
-        dispatch(slice.actions.getTeacherWithRatesSuccess(dto));
+  return async () => {
+    const ratesRequest = `/api/rate/getRates/${email}`;
+    const teacherRequest = `/api/users/teacher/email/${email}`;
+    dispatch(slice.actions.startLoading());
+    try {
+      axios.get(teacherRequest).then(r => {
+        const teacher = r.data;
+        axios.get(ratesRequest).then(rs => {
+          const rates = rs.data;
+          const dto = {
+            "rates": rates,
+            "teacher": teacher
+          }
+          dispatch(slice.actions.getTeacherWithRatesSuccess(dto));
+        })
       })
-    })
-  } catch (error) {
-    console.error(error);
-    dispatch(slice.actions.hasError(error));
-  }
-};
-}  
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
 
 export function getRates(email, teacher) {
   return async () => {
@@ -312,5 +332,61 @@ export function getRates(email, teacher) {
   };
 }
 
+export function createProduct(productData, isTeacher) {
+  return async () => {
+    dispatch(slice.actions.startLoading())
+    try {
+      let pathExtra = "business"
+      if (isTeacher) {
+        pathExtra = "teacher"
+      }
+      console.log(productData)
+      const createResponse = await axios.post('/api/product/' + pathExtra, productData)
+      console.log(createResponse)
+      dispatch(slice.actions.setSuccess("Product created!"))
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error));
+    }
+  }
+}
+
+export function editProduct(productData, isTeacher, productId) {
+  return async () => {
+    dispatch(slice.actions.startLoading())
+    try {
+      let pathExtra = "business"
+      if (isTeacher) {
+        pathExtra = "teacher"
+      }
+      const createResponse = await axios.put('/api/product/' + productId + "/" + pathExtra, productData)
+      dispatch(slice.actions.setSuccess("Product edited!"))
+      dispatch(slice.actions.stopLoading())
+
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error));
+      dispatch(slice.actions.stopLoading())
+
+    }
+  }
+}
+
+export function deleteProduct(isTeacher, productId) {
+  return async () => {
+    dispatch(slice.actions.startLoading())
+    try {
+      let pathExtra = "business"
+      if (isTeacher) {
+        pathExtra = "teacher"
+      }
+      await axios.delete('/api/product/' + productId + "/" + pathExtra)
+      dispatch(slice.actions.setSuccess("Product deleted!"))
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error));
+    }
+  }
+}
 
 

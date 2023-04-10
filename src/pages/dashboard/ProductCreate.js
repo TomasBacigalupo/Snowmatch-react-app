@@ -5,7 +5,7 @@ import { useParams, useLocation } from 'react-router-dom';
 import { Container } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
-import { getProducts } from '../../redux/slices/product';
+import { clearProduct, getProduct, getProducts } from '../../redux/slices/product';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // hooks
@@ -14,38 +14,39 @@ import useSettings from '../../hooks/useSettings';
 import Page from '../../components/Page';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
 import ProductNewEditForm from '../../sections/@dashboard/e-commerce/ProductNewEditForm';
+import useLocales from 'src/hooks/useLocales';
 
 // ----------------------------------------------------------------------
 
-export default function EcommerceProductCreate() {
+export default function ProductCreate() {
   const { themeStretch } = useSettings();
   const dispatch = useDispatch();
   const { pathname } = useLocation();
-  const { name } = useParams();
-  const { products } = useSelector((state) => state.product);
+  const { id } = useParams();
+  const { products, product } = useSelector((state) => state.product);
   const isEdit = pathname.includes('edit');
-  const currentProduct = products.find((product) => paramCase(product.name) === name);
+  const { translate } = useLocales()
 
   useEffect(() => {
-    dispatch(getProducts());
-  }, [dispatch]);
+    if (isEdit) {
+      dispatch(getProduct(id))
+    } else {
+      dispatch(clearProduct())
+    }
+  }, [isEdit]);
 
   return (
-    <Page title="Ecommerce: Create a new product">
+    <Page title={translate("product.title")}>
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <HeaderBreadcrumbs
-          heading={!isEdit ? 'Create a new product' : 'Edit product'}
+          heading={!isEdit ? translate("product.heading.create") : translate("product.heading.edit")}
           links={[
-            { name: 'Dashboard', href: PATH_DASHBOARD.root },
-            {
-              name: 'E-Commerce',
-              href: PATH_DASHBOARD.eCommerce.root,
-            },
-            { name: !isEdit ? 'New product' : name },
+            { name: translate("breadcrumb.dashboard"), href: PATH_DASHBOARD.root},
+            { name: translate("breadcrumb.product"), href: PATH_DASHBOARD.eCommerce.root},
+            { name: (!isEdit ? translate("product.new") : product?.name)},
           ]}
         />
-
-        <ProductNewEditForm isEdit={isEdit} currentProduct={currentProduct} />
+        <ProductNewEditForm isEdit={isEdit} currentProduct={product} />
       </Container>
     </Page>
   );

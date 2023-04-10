@@ -1,0 +1,60 @@
+export const ski_resorts_grouped = [
+    {
+        id: 1, name: "Argentina", resorts: [
+            { id: 1, title: "Aconcagua" },
+            { id: 2, title: "Batea Mahuida" },
+            { id: 3, title: "Calafate Mountain Park" },
+            { id: 4, title: "Caviahue" },
+            { id: 5, title: "Cerro Bayo" },
+            { id: 6, title: "Cerro Castor" },
+            { id: 7, title: "Cerro Catedral" },
+            { id: 8, title: "Chapelco" },
+            { id: 9, title: "La Hoya" },
+            { id: 10, title: "Las Leñas" },
+            { id: 11, title: "Las Pendientes" },
+            { id: 12, title: "Lago Hermoso" },
+            { id: 13, title: "Los Penitentes" },
+            { id: 14, title: "Los Puquios" },
+            { id: 15, title: "Monte Bianco" },
+            { id: 16, title: "Patagonia Heliski" },
+            { id: 17, title: "Perito Moreno" },
+            { id: 18, title: "Vallecitos" }
+        ]
+    },
+    {
+        id: 2, name: "United States", resorts: [
+            { id: 19, title: "Aspen"},
+            { id: 20, title: "Aspen Highlands"},
+            { id: 21, title: "Beaver Creek"},
+            { id: 22, title: "Breckenridge"},
+            { id: 23, title: "Buttermilk"},
+            { id: 24, title: "Copper Mountain"},
+            { id: 25, title: "Crested Butte"},
+            { id: 26, title: "Cuchara Mountain"},
+            { id: 27, title: "Durango Mountain Resort"},
+            { id: 28, title: "Echo Mountain"},
+            { id: 29, title: "Eldora Mountain Resort"},
+            { id: 30, title: "Hesperus"},
+            { id: 31, title: "Howelsen Hill"},
+            { id: 32, title: "Irwin Catskiing by Eleven"},
+            { id: 33, title: "Kendall Mountain"},
+            { id: 34, title: "Keystone"},
+            { id: 35, title: "Loveland"},
+            { id: 36, title: "Monarch Ski Area"},
+            { id: 37, title: "Powderhorn"},
+            { id: 38, title: "Purgatory"},
+            { id: 39, title: "Silverton Mountain"},
+            { id: 40, title: "Ski Cooper"},
+            { id: 41, title: "Snowmass"},
+            { id: 42, title: "SolVista Golf and Ski Ranch (Silver Creek)"},
+            { id: 43, title: "Steamboat"},
+            { id: 44, title: "Sunlight Mountain Resort"},
+            { id: 45, title: "Telluride"},
+            { id: 46, title: "Vail"},
+            { id: 47, title: "Winter Park"},
+            { id: 48, title: "Wolf Creek Ski Area"},
+        ]
+    },
+
+
+]

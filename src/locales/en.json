@@ -76,7 +76,7 @@
     "kanban": "Boards",
     "products": "Lessons",
     "newProduct": "Create Lesson",
-    "myLessons": "My lessons",
+    "myProducts": "My lessons",
     "admin": "Admin",
     "review teachers": "Review PROs",
     "school_teachers": "School teachers",
@@ -145,12 +145,13 @@
     "agenda": "Agenda",
     "lessons": "Lessons",
     "reviews": "Reviews",
+    "product": "Products",
     "lesson_details": "Lesson details"
   },
   "profile": {
     "tabs": {
       "profile": "My information",
-      "review":"My Reviews"
+      "review": "My Reviews"
     },
     "clients": "Clients",
     "level": "Instructor Level",
@@ -229,7 +230,7 @@
     "description": "Description",
     "skills": "Skills"
   },
-  "schoolDetails":{
+  "schoolDetails": {
     "title": "PRO school details",
     "calendar": "Calendar",
     "verified": "Verified and approved school",
@@ -326,6 +327,65 @@
     "continue": "Continue to find Pros",
     "event_added": "Lesson booked",
     "book_lesson": "Book"
+  },
+  "product": {
+    "heading": {
+      "create": "create",
+      "edit": "Edit"
+    },
+    "new": "New Product",
+    "date": {
+      "0": "Domingo",
+      "1": "Monday",
+      "2": "Tuesday",
+      "3": "Wednesday",
+      "4": "Thursday",
+      "5": "Friday",
+      "6": "Saturday"
+    },
+    "name": {
+      "value": "Name",
+      "max": "Name must be shorter than {{max}} characters"
+    },
+    "time": {
+      "value": "Duration",
+      "max": "Time must be shorter than {{max}} minutes"
+    },
+    "resort": {
+      "value": "Resort",
+      "required": "Resort es obligatorio"
+    },
+    "maxStudents": {
+      "value": "Max capacity",
+      "moreThan": "There should be at least one student"
+    },
+    "price": {
+      "value": "Price",
+      "moreThan": "The price must be grater than 0"
+    },
+    "ageFrom": {
+      "value": "From",
+      "moreThan": "The min age must be greater than 0"
+    },
+    "ageTo": {
+      "value": "To",
+      "lessThan": "The max age must be lower than 99"
+    },
+    "information": "Information",
+    "description": "Description",
+    "dropToDelete": "Drag to delete",
+    "deleteAll": "Delete all",
+    "generator": "Event generator",
+    "startDate": "From",
+    "endDate": "To",
+    "startTime": "Start time",
+    "generateEvents": "Generate",
+    "isMinors": "Only minors",
+    "saleLastSpots": "Discount for last spots",
+    "saleConsecutive": "Discount for consecutive days",
+    "create": "Create product",
+    "save": "Save product",
+    "delete": "Delete product"
   },
   "verify": {
     "title": "Verify your Mail",

@@ -44,7 +44,7 @@ function useQuery() {
 
 // ----------------------------------------------------------------------
 
-export default function EcommerceShop({  isPending = true }) {
+export default function EcommerceShop({ isPending = true }) {
 
     const { themeStretch } = useSettings();
 
@@ -54,13 +54,13 @@ export default function EcommerceShop({  isPending = true }) {
     const [openFilter, setOpenFilter] = useState(false);
     const { translate } = useLocales()
 
-    const { teachers, sortBy, filters, isLoading } = useSelector((state) => { return state.business })
-
+    const { members, pending, sortBy, filters, isLoading } = useSelector((state) => { return state.business })
+//todo revisar members y pending
     useEffect(() => {
         dispatch(filterTeachers({ resort: query.get('resort') }))
     }, [])
 
-    const filteredTeachers = applyFilter(teachers, sortBy, filters);
+    const filteredTeachers = applyFilter(isPending ? pending : members, sortBy, filters);
 
     const defaultValues = {
         rating: filters.rating,
@@ -97,7 +97,7 @@ export default function EcommerceShop({  isPending = true }) {
         } else {
             dispatch(getBusinessMembers());
         }
-    }, [dispatch,isPending]);
+    }, [dispatch, isPending]);
 
     useEffect(() => {
         dispatch(filterTeachers(values));
@@ -155,15 +155,15 @@ export default function EcommerceShop({  isPending = true }) {
 
 
     return (
-        <Page title={isPending? translate('business.pending_teachers'): translate('business.my_teachers')}>
+        <Page title={isPending ? translate('business.pending_teachers') : translate('business.my_teachers')}>
 
             <Container maxWidth={themeStretch ? false : 'lg'}>
                 <HeaderBreadcrumbs
-                    heading={isPending? translate('business.pending_teachers'): translate('business.my_teachers')}
+                    heading={isPending ? translate('business.pending_teachers') : translate('business.my_teachers')}
                     links={[
-                        { name: 'Dashboard', href: PATH_DASHBOARD.root } ,
+                        { name: 'Dashboard', href: PATH_DASHBOARD.root },
                         { name: 'School', href: PATH_DASHBOARD.school.root },
-                        { name: isPending? translate('business.pending_teachers'): translate('business.my_teachers') }
+                        { name: isPending ? translate('business.pending_teachers') : translate('business.my_teachers') }
                     ]}
                 />
                 <Stack
@@ -214,7 +214,7 @@ export default function EcommerceShop({  isPending = true }) {
                     )}
                 </Stack>
 
-                <PendingTeacherList teachers={filteredTeachers} loading={!filteredTeachers.length || isLoading} isPending={isPending} /> 
+                <PendingTeacherList teachers={filteredTeachers} loading={!filteredTeachers.length || isLoading} isPending={isPending} />
             </Container>
             <><br /></>
 

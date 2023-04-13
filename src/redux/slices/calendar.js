@@ -246,11 +246,11 @@ export function createEvent(newEvent) {
 
 // ----------------------------------------------------------------------
 
-export function createSchoolEvent(newEvent) {
+export function createBusinessEvent(newEvent) {
   return async () => {
     //dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.post('/api/events/create/school', newEvent);
+      const response = await axios.post('/api/events/create/business', newEvent);
       dispatch(slice.actions.createEventSuccess(response.data));
       return response;
     } catch (error) {
@@ -278,11 +278,11 @@ export function updateEvent(eventId, updateEvent) {
 
 // ----------------------------------------------------------------------
 
-export function updateSchoolEvent(eventId, updateEvent) {
+export function updateBusinessEvent(eventId, updateEvent) {
   return async () => {
     //dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.put(`/api/events/school`, updateEvent);
+      const response = await axios.put(`/api/events/business`, updateEvent);
       dispatch(slice.actions.updateEventSuccess({...updateEvent, id: eventId}));
       return response;
     } catch (error) {

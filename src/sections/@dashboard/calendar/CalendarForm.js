@@ -11,7 +11,7 @@ import { Box, Stack, Button, Tooltip, TextField, IconButton, DialogActions, Togg
 import { LoadingButton, MobileDateTimePicker } from '@mui/lab';
 // redux
 import { useDispatch } from '../../../redux/store';
-import { createEvent, updateEvent, deleteEvent, createSchoolEvent, updateSchoolEvent, deleteSchoolEvent, } from '../../../redux/slices/calendar';
+import { createEvent, updateEvent, deleteEvent, createBusinessEvent, updateBusinessEvent, deleteSchoolEvent, } from '../../../redux/slices/calendar';
 // components
 import Iconify from '../../../components/Iconify';
 import { ColorSinglePicker } from '../../../components/color-utils';
@@ -62,14 +62,15 @@ CalendarForm.propTypes = {
   onCancel: PropTypes.func,
 };
 
-export default function CalendarForm({ event, range, onCancel, clients }) {
+export default function CalendarForm({ event, range, onCancel, clients, members }) {
   const { enqueueSnackbar } = useSnackbar();
   const { translate } = useLocales()
-  const [client, setClient] = useState(clients.find(c => event?.clientId === c.id))
+  const [selectedClients, setSelectedClients] = useState([...event?.clients || []])
+  const [assignedUsers, setAssignedUsers] = useState([...event?.assignedUsers || []])
+  const [isCreating, setIsCreating] = useState(false)
+  const [classType, setClassType] = useState('teacher');
 
   const dispatch = useDispatch();
-
-  const isCreating = Object.keys(event).length === 0;
 
   const EventSchema = Yup.object().shape({
     title: Yup.string().max(255).required('Title is required'),
@@ -93,6 +94,8 @@ export default function CalendarForm({ event, range, onCancel, clients }) {
   } = methods;
 
   const onSubmit = async (data) => {
+    console.log(data)
+
     try {
       let newEvent
       switch (data.type) {
@@ -109,7 +112,7 @@ export default function CalendarForm({ event, range, onCancel, clients }) {
           };
           break
         default:
-          newEvent = {
+          newEvent = {...event,
             title: data.title,
             description: data.description,
             textColor: data.textColor,
@@ -117,13 +120,10 @@ export default function CalendarForm({ event, range, onCancel, clients }) {
             end: data.end,
             type: data.type,
             price: data.price === null ? undefined : data.price,
+            assignedUsers: assignedUsers,
+            clients: selectedClients, 
+            id: event.id
           };
-          if (client !== null && client !== undefined) {
-            newEvent = {
-              ...newEvent,
-              clientId: client.id
-            }
-          }
       }
 
 
@@ -135,7 +135,7 @@ export default function CalendarForm({ event, range, onCancel, clients }) {
           snackbar = 'Update success!'
         }
         else if (classType === 'school') {
-          func = updateSchoolEvent(event.id, newEvent);
+          func = updateBusinessEvent(event.id, newEvent);
           snackbar = 'Update success!'
         }
       }
@@ -144,11 +144,11 @@ export default function CalendarForm({ event, range, onCancel, clients }) {
           func = createEvent(newEvent);
           snackbar = 'Create success!'
         } if (classType === 'school') {
-          func = createSchoolEvent(newEvent);
+          func = createBusinessEvent(newEvent);
           snackbar = 'Create success!'
         }
       }
-      const response = await dispatch(func);
+      const response = dispatch(func);
 
       if (response.messages) {
         for (const entry of response.messages.entry) {
@@ -179,10 +179,15 @@ export default function CalendarForm({ event, range, onCancel, clients }) {
     }
   };
 
-  const [classType, setClassType] = useState('teacher');
 
   useEffect(() => {
-    if (user?.user?.role === 'TEACHER') {
+    if(event?.owner !== null && event?.owner!=undefined){
+      setClassType('teacher')
+    } 
+    else if( event?.businessOwner !== null && event?.businessOwner!=undefined){
+      setClassType('school')
+    }
+    else if (user?.user?.role === 'TEACHER') {
       setClassType('teacher')
     } else {
       setClassType('school')
@@ -190,16 +195,16 @@ export default function CalendarForm({ event, range, onCancel, clients }) {
   }, []);
 
   useEffect(() => {
-    if (event?.businessOwnerId != null)
-      setClassType('school')
-    else if (event?.teacherOwnerId != null) {
-      setClassType('teacher')
-    }
+    setIsCreating(event==={})
+  }, [event]);
+
+  useEffect(() => {
+    console.log("event", event)
+    console.log("members", members)
   }, [event]);
 
   const handleSchoolChange = (onChangeEvent, newAlignment) => {
-    console.log(event)
-    if (event?.id != null) {
+    if (event?.id !== null || event?.id != undefined) {
       return
     }
     if (user?.user?.role === 'TEACHER') {
@@ -236,19 +241,15 @@ export default function CalendarForm({ event, range, onCancel, clients }) {
         </ToggleButtonGroup>}
 
         {clients?.length > 0 && <Autocomplete
+          multiple
+          disableCloseOnSelect
           name="clientId" label={translate('calendar.form.client')}
-          value={client}
-          options={clients}
+          value={selectedClients}
+          options={[...clients].sort((a, b) => a?.name?.localeCompare(b?.name))}
+          getOptionLabel={(c) => `${c?.name} ${c?.lastname}`}
           onChange={(event, value) => {
-            if (value !== null) {
-              setClient(value)
-            } else {
-              setClient(null)
-            }
-          }
-          }
-          autoHighlight
-          getOptionLabel={(c) => `${client?.name} ${client?.lastname}`}
+            setSelectedClients([...value])
+          }}
           renderOption={(props, client) => (
             <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
               <Avatar sx={{ marginRight: '10px' }}>{`${client?.name[0]}${client?.lastname[0]}`}</Avatar>
@@ -270,7 +271,63 @@ export default function CalendarForm({ event, range, onCancel, clients }) {
           )}
         />}
 
+        {members?.length > 0 && event?.businessOwner !=null && event?.businessOwner != undefined && <Autocomplete
+          disableCloseOnSelect
+          multiple
+          name="assigenedTeachersId" label={translate('calendar.form.assignedTeachers')}
+          value={assignedUsers}
+          options={[...members].sort((a, b) => a?.name?.localeCompare(b?.name))}
+          getOptionLabel={(m) => `${m?.name} ${m?.lastname}`}
+          onChange={(event, value) => {
+            setAssignedUsers([...value])
+          }}
+          renderOption={(props, member) => (
+            <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+              <Avatar sx={{ marginRight: '10px' }}>{`${member?.name[0]}${member?.lastname[0]}`}</Avatar>
+              {`${member.name} ${member.lastname}`}
+            </Box>
+          )}
+          renderInput={(params) => (
+            <RHFTextField {...params}
+              name="assigenedTeachersId" label={translate('calendar.form.assignedTeachers')} />
+            // <TextField
+            //   {...params}
+            //   label="Client"
+            //   inputProps={{
+            //     ...params.inputProps,
+            //     autoComplete: 'new-password', // disable autocomplete and autofill
+            //   }}
+            // />
+          )}
 
+        ></Autocomplete>}
+
+        {event?.students?.length > 0 && <Autocomplete
+          name="assigenedTeachersId" label={translate('calendar.form.assignedTeachers')}
+          multiple
+          value={event?.students}
+          options={{}}
+          getOptionLabel={(m) => `${m?.name} ${m?.lastname}`}
+          renderOption={(props, student) => (
+            <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+              <Avatar sx={{ marginRight: '10px' }}>{`${student?.name[0]}${student?.lastname[0]}`}</Avatar>
+              {`${student.name} ${student.lastname}`}
+            </Box>
+          )}
+          renderInput={(params) => (
+            <RHFTextField {...params}
+              name="assigenedTeachersId" label="AssignedTeacher" />
+            // <TextField
+            //   {...params}
+            //   label="Client"
+            //   inputProps={{
+            //     ...params.inputProps,
+            //     autoComplete: 'new-password', // disable autocomplete and autofill
+            //   }}
+            // />
+          )}
+
+        ></Autocomplete>}
         <RHFSelect name="type" label={translate('calendar.form.type')}>
           {TYPE_OPTION.map((type) => (
             <optgroup key={type.group} label={type.group}>
@@ -347,7 +404,7 @@ export default function CalendarForm({ event, range, onCancel, clients }) {
         </Button>
 
         <LoadingButton type="submit" variant="contained" loading={isSubmitting} sx={{ ':hover': { color: '#3399FF' } }}>
-          {translate('calendar.form.add')}
+          {isCreating? translate('calendar.form.add') : translate('calendar.form.edit')}
         </LoadingButton>
       </DialogActions>
     </FormProvider>

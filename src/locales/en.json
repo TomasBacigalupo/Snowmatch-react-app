@@ -92,7 +92,8 @@
     "editEvent": "Edit Event",
     "addEvent": "Add Event",
     "form": {
-      "teacher": "teacher",
+      "assignedTeachers" : "Assigned teachers",
+      "teacher": "Teacher",
       "school": "School",
       "startDate": "Start Date",
       "endDate": "End Date",
@@ -102,7 +103,8 @@
       "title": "Title",
       "price": "Price",
       "cancel": "Cancel",
-      "add": "Add"
+      "add": "Add",
+      "edit": "Edit"
     }
   },
   "event": {

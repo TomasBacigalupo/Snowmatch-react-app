@@ -20,6 +20,8 @@ const initialState = {
     products: [],
     businesses: [],
     teachers: [],
+    members: [],
+    pending: [],
     sortBy: null,
     filters: {
         rating: '',
@@ -64,8 +66,6 @@ const slice = createSlice({
         getBusinessesSuccess(state, action) {
             state.isLoading = false;
             state.businesses = action.payload;
-            console.log("action",action.payload)
-
         },
 
         getBusinessSuccess(state, action) {
@@ -83,6 +83,16 @@ const slice = createSlice({
         getTeachersSuccess(state, action) {
             state.isLoading = false;
             state.teachers = action.payload;
+        },
+        
+        getMembersSuccess(state, action) {
+            state.isLoading = false;
+            state.members = action.payload;
+        },
+
+        getPendingSuccess(state, action) {
+            state.isLoading = false;
+            state.pending = action.payload;
         },
 
         filterTeachers(state, action) {
@@ -222,8 +232,7 @@ export function getBusinessMembers() {
         try {
             const response = await axios.get('/api/business/members');
             const teachers = response.data;
-
-            dispatch(slice.actions.getTeachersSuccess(teachers));
+            dispatch(slice.actions.getMembersSuccess(teachers));
         } catch (error) {
             dispatch(slice.actions.hasError(error));
         }

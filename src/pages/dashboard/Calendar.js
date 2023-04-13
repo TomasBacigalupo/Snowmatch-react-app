@@ -27,6 +27,7 @@ import { getClients } from 'src/redux/slices/clients';
 import useLocales from 'src/hooks/useLocales';
 import HoverButton from 'src/components/HoverButton';
 import LessonForm from 'src/sections/@dashboard/calendar/LessonForm';
+import { getBusinessMembers } from 'src/redux/slices/business';
 
 // ----------------------------------------------------------------------
 
@@ -55,11 +56,13 @@ export default function Calendar() {
   const selectedEvent = useSelector(selectedEventSelector);
 
   const { events, isOpenModal, selectedRange } = useSelector((state) => state.calendar);
+  const { members } = useSelector((state) => state.business);
   const { clients } = useSelector((state) => state.clients);
 
   useEffect(() => {
-    dispatch(getEvents());
+    dispatch(getEvents())
     dispatch(getClients())
+    dispatch(getBusinessMembers())
   }, [dispatch]);
 
   useEffect(() => {
@@ -212,7 +215,8 @@ export default function Calendar() {
         <DialogAnimate open={isOpenModal} onClose={handleCloseModal}>
           <DialogTitle>{selectedEvent ? translate('calendar.editEvent') : translate('calendar.addEvent')}</DialogTitle>
           {selectedEvent?.source === 'APP' ? 
-            <LessonForm event={selectedEvent || {}} range={selectedRange} onCancel={handleCloseModal} clients={clients}/> : <CalendarForm event={selectedEvent || {}} range={selectedRange} onCancel={handleCloseModal} clients={clients} />}
+            <LessonForm event={selectedEvent || {}} range={selectedRange} onCancel={handleCloseModal} clients={clients} members={members || {}}/> : 
+            <CalendarForm event={selectedEvent || {}} range={selectedRange} onCancel={handleCloseModal} clients={clients} members={members || {}}/>}
           
         </DialogAnimate>
       </Container>

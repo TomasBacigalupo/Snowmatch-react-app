@@ -47,7 +47,7 @@ export default function EcommerceShop({isGuest=false, teacherType="school"}) {
 
   const dispatch = useDispatch();
   const { user } = useAuth();
-  const isTeacher = user.role === "TEACHER"
+  const isTeacher = user?.role === "TEACHER"
   const query = useQuery()
   const [openFilter, setOpenFilter] = useState(false);
 

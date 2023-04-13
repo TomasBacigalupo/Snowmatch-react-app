@@ -98,6 +98,7 @@
         "editEvent": "Editar Evento",
         "addEvent": "Crear Evento",
         "form": {
+            "assignedTeachers" : "Profesores Assignados",
             "teacher": "Profesor",
             "school": "Escuela",
             "startDate": "Desde",
@@ -108,7 +109,8 @@
             "title": "Título",
             "price": "Precio",
             "cancel": "Cancelar",
-            "add": "Crear"
+            "add": "Crear",
+            "edit": "Editar"
         }
     },
     "event": {

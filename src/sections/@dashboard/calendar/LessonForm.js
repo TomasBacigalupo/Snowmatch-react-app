@@ -11,7 +11,7 @@ import { Box, Stack, Button, Tooltip, TextField, IconButton, DialogActions, Togg
 import { LoadingButton, MobileDateTimePicker } from '@mui/lab';
 // redux
 import { useDispatch } from '../../../redux/store';
-import { createEvent, updateEvent, deleteEvent, createSchoolEvent, updateSchoolEvent, deleteSchoolEvent, } from '../../../redux/slices/calendar';
+import { createEvent, updateEvent, deleteEvent, createBusinessEvent, updateBusinessEvent, deleteSchoolEvent, } from '../../../redux/slices/calendar';
 // components
 import Iconify from '../../../components/Iconify';
 import { ColorSinglePicker } from '../../../components/color-utils';
@@ -62,11 +62,11 @@ LessonForm.propTypes = {
     onCancel: PropTypes.func,
 };
 
-export default function LessonForm({ event, range, onCancel, clients }) {
+export default function LessonForm({ event, range, onCancel, clients, members }) {
     const { enqueueSnackbar } = useSnackbar();
     const { translate } = useLocales()
     const [client, setClient] = useState(clients.find(c => event?.clientId === c.id))
-
+    const [classType, setClassType] = useState('teacher');
     const dispatch = useDispatch();
 
     const isCreating = Object.keys(event).length === 0;
@@ -126,7 +126,6 @@ export default function LessonForm({ event, range, onCancel, clients }) {
                     }
             }
 
-
             var func;
             var snackbar;
             if (event.id) {
@@ -135,7 +134,7 @@ export default function LessonForm({ event, range, onCancel, clients }) {
                     snackbar = 'Update success!'
                 }
                 else if (classType === 'school') {
-                    func = updateSchoolEvent(event.id, newEvent);
+                    func = updateBusinessEvent(event.id, newEvent);
                     snackbar = 'Update success!'
                 }
             }
@@ -144,7 +143,7 @@ export default function LessonForm({ event, range, onCancel, clients }) {
                     func = createEvent(newEvent);
                     snackbar = 'Create success!'
                 } if (classType === 'school') {
-                    func = createSchoolEvent(newEvent);
+                    func = createBusinessEvent(newEvent);
                     snackbar = 'Create success!'
                 }
             }
@@ -179,7 +178,6 @@ export default function LessonForm({ event, range, onCancel, clients }) {
         }
     };
 
-    const [classType, setClassType] = useState('teacher');
 
     useEffect(() => {
         if (user?.user?.role === 'TEACHER') {
@@ -197,8 +195,12 @@ export default function LessonForm({ event, range, onCancel, clients }) {
         }
     }, [event]);
 
+    useEffect(() => {
+        console.log("event", event)
+        console.log("members", members)
+    }, [event]);
+
     const handleSchoolChange = (onChangeEvent, newAlignment) => {
-        console.log(event)
         if (event?.id != null) {
             return
         }
@@ -214,7 +216,7 @@ export default function LessonForm({ event, range, onCancel, clients }) {
     const isDateError = isBefore(new Date(values.end), new Date(values.start));
 
     const TYPE_OPTION = [
-        { group: 'Class', classify: ['App class','School class', 'Referred class', 'Own client class'] },
+        { group: 'Class', classify: ['App class', 'School class', 'Referred class', 'Own client class'] },
         { group: 'Off', classify: ['Break', 'Training', 'Illness'] },
     ];
 
@@ -258,6 +260,10 @@ export default function LessonForm({ event, range, onCancel, clients }) {
                     )}
                 />}
 
+                {members?.length > 0 && <Autocomplete
+                    multiple
+                    value={event.assignedUsers}
+                    options={members}></Autocomplete>}
 
                 <RHFSelect disabled name="type" label={translate('calendar.form.type')}>
                     {TYPE_OPTION.map((type) => (

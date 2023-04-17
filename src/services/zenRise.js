@@ -71,6 +71,7 @@ export const getSplitToken = async (amount, partnersFee, contact, authToken) => 
 
 
 export const cardPayment = async (card, amount, partnersFee, contact) => {
+
     // Get JWT auth token
     const authToken = await getAuthToken()
     
@@ -98,5 +99,5 @@ export const cardPayment = async (card, amount, partnersFee, contact) => {
         })
     })
 
-    return response
+    return  await response.json()
 }

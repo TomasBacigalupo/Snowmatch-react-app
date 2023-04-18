@@ -259,80 +259,21 @@ export default function TeacherDetailsSummary({ cart, teacher, onAddCart, onGoto
 
   return (
     <RootStyle {...other}>
-      {/* {state !== 'AVAILABLE' && (
-        <Label
-          variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
-          color={state !== 'AVAILABLE' ? 'success' : 'error'}
-          sx={{ textTransform: 'uppercase' }}
-        >
-          {sentenceCase(state || '')}
-        </Label>
-      )}
-
-      {state === 'AVAILABLE' && (
-        <Typography
-          variant="overline"
-          sx={{
-            mt: 2,
-            mb: 1,
-            display: 'block',
-            color: state !== 'AVAILABLE' ? 'error.main' : 'success.main',
-          }}
-        >
-          {translate('general.' + state)}
-        </Typography>
-      )} */}
-
       <Typography variant="h5" paragraph>
         {name + " " + lastname}
       </Typography>
 
       <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 2 }}>
         <Rating value={stars} precision={0.1} readOnly />
-        {/* <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-            ({fShortenNumber(rates.length)}
-          {' '}reviews)
-          </Typography> */}
+       
       </Stack>
       <TeacherSkills skills={skills} />
-      {/* <Typography variant="h4" sx={{ mb: 3 }}>
-          <Box component="span" sx={{ color: 'text.disabled', textDecoration: 'line-through' }}>
-            {priceSale && fCurrency(priceSale)}
-          </Box>
-          &nbsp;{fCurrency(price)}
-        </Typography> */}
 
       <Divider sx={{ borderStyle: 'dashed' }} />
 
       <ProductsCarousel teacherId={id}/>
 
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-
-        {/* <Stack direction="row" justifyContent="space-between" sx={{ mb: 3 }}>
-          <Typography variant="subtitle1" sx={{ mt: 0.5 }}>
-            Size
-          </Typography>
-
-          <RHFSelect
-            name="size"
-            size="small"
-            fullWidth={false}
-            FormHelperTextProps={{
-              sx: { textAlign: 'right', margin: 0, mt: 1 },
-            }}
-            helperText={
-              <Link underline="always" color="text.secondary">
-                Size Chart
-              </Link>
-            }
-          >
-            {sizes.map((size) => (
-              <option key={size} value={size}>
-                {size}
-              </option>
-            ))}
-          </RHFSelect>
-        </Stack> */}
 
         <Stack direction="row" justifyContent="space-between" sx={{ mb: 3, mt: 2 }}>
           <Typography variant="subtitle1" sx={{ mt: 0.5 }}>

@@ -15,10 +15,11 @@ import { CarouselDots, CarouselArrows } from '../../../../components/carousel';
 import { useDispatch, useSelector } from '../../../../redux/store';
 import { getUpcomingEvents, openModal, selectEvent } from '../../../../redux/slices/calendar';
 
-import { PATH_DASHBOARD } from '../../../../routes/paths';
+import { PATH_DASHBOARD, PATH_GUEST } from '../../../../routes/paths';
 import { Grid } from '@mui/material';
 import { getTeacherProducts } from 'src/redux/slices/product'
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import useLocales from 'src/hooks/useLocales';
 
 // ----------------------------------------------------------------------
 
@@ -83,6 +84,8 @@ export default function ProductsCarousel({teacherId}) {
                     events={product}
                     price={product.price}
                     title={product.name} 
+                    productId={product.id}
+                    teacherId={teacherId}
                     lengthInMinutes={product.lengthInMinutes}
                     isActive={index === currentIndex} dispatch={dispatch} key={index} />
                 ))}
@@ -148,8 +151,8 @@ function getTime(lengthInMinutes){
     return "Dia Completo"
 }
 
-function CarouselItem({ index, events, isActive, dispatch, title, price, lengthInMinutes }) {
-
+function CarouselItem({ index, events, isActive, dispatch, title, price, lengthInMinutes, productId, teacherId }) {
+    const {translate} = useLocales()
     return (
         <Box sx={{ position: 'relative', }}>
             <CardContent
@@ -182,7 +185,15 @@ function CarouselItem({ index, events, isActive, dispatch, title, price, lengthI
                             <Typography variant='h6' sx={{ ml: 0.5 }}>${price}</Typography>
                         </Grid>
                         <Grid item xs={6}>
-                            <Button variant='contained'>Select</Button>
+                            <Button
+                                component={RouterLink}
+                                to={PATH_GUEST.viewTeacherProducts(teacherId, productId)}
+                                variant="contained"
+                                color="primary"
+                                fullWidth
+                            >
+                                Select{/* {translate("product.selection.select")} */}
+                            </Button>
                         </Grid>
                     </Grid>
                 </Grid>

@@ -107,48 +107,37 @@ export default function CheckoutPayment() {
 
   const onSubmit = async () => {
     setLoading(true)
-    try{
+    try {
       const cardPaymentResponse = await cardPayment(card, 1000, [])
-      console.log("cardPayment Response", cardPaymentResponse)
-      if(cardPaymentResponse.status === 200){
 
-        const stream = cardPaymentResponse.body;
-        const reader = stream.getReader();
-        reader.read().then(({done, value})=>{
-          //pago exitoso
-          debugger
-          if (done) {
-            console.log(value)
-          }
+      if (cardPaymentResponse.status === 200) {
 
-          // Datos del pago a guardar en el BE
-          const {
-            paymentMethod,
-            paymentId,
-            amountPayed,
-            status,
-            invoiceId
-          } = value;
-          dispatch(setPaymentInfo(JSON.parse(value)))
-        })
+        // Datos del pago a guardar en el BE
+        const {
+          paymentMethod,
+          paymentId,
+          amountPayed,
+          status,
+          invoiceId
+        } = cardPaymentResponse;
+        dispatch(setPaymentInfo(cardPaymentResponse))
 
-        
-        
-        dispatch(hireTeacher(teacher.id, events, (succ)=>{
-        setLoading(false)
-        dispatch(cleanCart())
-        handleNextStep();
-      }))
-      }else{
+
+        dispatch(hireTeacher(teacher.id, events, (succ) => {
+          setLoading(false)
+          dispatch(cleanCart())
+          handleNextStep();
+        }))
+      } else {
         //pago rechazado
         setLoading(false)
+        
       }
 
     } catch (error) {
-      console.error("catcheado",error);
       setLoading(false)
     }
-    
+
     try {
       // dispatch(hireTeacher(teacher.id, events, (succ)=>{
       //   setLoading(false)

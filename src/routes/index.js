@@ -95,6 +95,7 @@ export default function Router() {
         { path: 'independent', element: <EcommerceShop isGuest={true} teacherType="independent"/> },
         { path: 'school', element: <EcommerceShop isGuest={true} teacherType="school"/> },
         { path: 'teacher/:id', element: <EcommerceTeacherDetails isGuest={true}/> },
+        { path: 'teacher/:id/products/:productId', element: <EcommerceTeacherProducts/> },
         { path: 'schools/:id', element: <SchoolDetails isGuest={true}/> },
         { path: 'schools', element: <SchoolList teacherType="school"/> },
         // { path: '*', element: <EcommerceShop isGuest={true} teacherType="school" /> },
@@ -286,6 +287,7 @@ const EcommerceShop = Loadable(lazy(() => import('../pages/dashboard/EcommerceSh
 const EcommerceProductDetails = Loadable(lazy(() => import('../pages/dashboard/EcommerceProductDetails')));
 const SchoolDetails = Loadable(lazy(() => import('../pages/dashboard/SchoolDetails')));
 const EcommerceTeacherDetails = Loadable(lazy(() => import('../pages/dashboard/EcommerceTeacherDetails')));
+const EcommerceTeacherProducts = Loadable(lazy(() => import('../pages/dashboard/EcommerceTeacherProducts')));
 const EcommerceProductList = Loadable(lazy(() => import('../pages/dashboard/EcommerceProductList')));
 const ProductCreate = Loadable(lazy(() => import('../pages/dashboard/ProductCreate')));
 const EcommerceCheckout = Loadable(lazy(() => import('../pages/dashboard/EcommerceCheckout')));

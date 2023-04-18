@@ -226,15 +226,56 @@ export const {
 
 // ----------------------------------------------------------------------
 
-export function getProducts(isTeacher, id) {
+export function getTeacherProducts(id) {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      let pathExtra = "business"
-      if (isTeacher) {
-        pathExtra = `teacher/${id}`
-      }
-      const response = await axios.get('/api/product/' + pathExtra);
+      const response = await axios.get('/api/product/teacher' + id);
+      console.log("response", response)
+      dispatch(slice.actions.getProductsSuccess(response.data));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+// ----------------------------------------------------------------------
+
+export function getBusinessProducts(id) {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get('/api/product/business' + id);
+      console.log("response", response)
+      dispatch(slice.actions.getProductsSuccess(response.data));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+// ----------------------------------------------------------------------
+
+export function getMyTeacherProducts() {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get('/api/product/teacher');
+      console.log("response", response)
+      dispatch(slice.actions.getProductsSuccess(response.data));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+// ----------------------------------------------------------------------
+
+export function getMyBusinessProducts() {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get('/api/product/business');
       console.log("response", response)
       dispatch(slice.actions.getProductsSuccess(response.data));
     } catch (error) {

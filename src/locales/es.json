@@ -349,8 +349,8 @@
     },
     "product": {
         "heading": {
-            "create": "Create",
-            "edit": "Edit"
+            "create": "Crear",
+            "edit": "Editar"
         },
         "new": "Nuevo producto",
         "date": {
@@ -374,6 +374,10 @@
         "resort": {
             "value": "Centro de esqui",
             "required": "Resort es obligatorio"
+        },
+        "studentLevel": {
+            "value": "Nivel de estudiante",
+            "required": "Nivel es obligatorio"
         },
         "maxStudents": {
             "value": "Cupo Maximo",

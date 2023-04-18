@@ -355,8 +355,12 @@
     },
     "resort": {
       "value": "Resort",
-      "required": "Resort es obligatorio"
+      "required": "Resort is required"
     },
+    "studentLevel": {
+      "value": "Student level",
+      "required": "Student level is required"
+  },
     "maxStudents": {
       "value": "Max capacity",
       "moreThan": "There should be at least one student"

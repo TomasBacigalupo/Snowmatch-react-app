@@ -41,6 +41,7 @@ import { fi } from 'date-fns/locale';
 import uuidv4 from 'src/utils/uuidv4';
 import product, { createProduct, deleteProduct, editProduct } from 'src/redux/slices/product';
 import useAuth from 'src/hooks/useAuth';
+import { student_level } from 'src/_mock/studentLevel';
 // ----------------------------------------------------------------------
 
 // const TAGS_OPTION = [
@@ -103,7 +104,7 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
   const [draggable, setDraggable] = useState()
   const draggableRef = createRef()
   const trashRef = createRef()
-  const { success, error, isLoading} = useSelector(state => state.product)
+  const { success, error, isLoading } = useSelector(state => state.product)
 
 
   const NewProductSchema = Yup.object().shape({
@@ -252,7 +253,7 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
   };
 
   //todo checkquear fechas sean correctas 
-  
+
   // const handleDrop = useCallback(
   //   (acceptedFiles) => {
   //     setValue(
@@ -453,7 +454,7 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
     setEvents([])
   }
 
-  const handleDeleteProduct = () =>{
+  const handleDeleteProduct = () => {
     console.log("asds")
     if (user?.user?.role === 'SCHOOL_ADMIN') {
       dispatch(deleteProduct(false, currentProduct.id))
@@ -641,6 +642,14 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
                     type: 'number',
                   }}
                 />
+                <RHFSelect name="studentLevel" label={translate("product.studentLevel.value")}>
+                  {student_level.map((studentLevel) => {
+                    return <option value={studentLevel.value} key={studentLevel.id} >{studentLevel.title}</option>
+                  })
+                  }
+
+
+                </RHFSelect>
               </Stack>
             </Card>
 
@@ -701,7 +710,7 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
             <LoadingButton type="submit" variant="contained" size="large" loading={isSubmitting}>
               {!isEdit ? translate("product.create") : translate("product.save")}
             </LoadingButton>
-            {isEdit?  < LoadingButton  variant="contained" color="error" size="large" loading={isLoading} onClick={handleDeleteProduct}>
+            {isEdit ? < LoadingButton variant="contained" color="error" size="large" loading={isLoading} onClick={handleDeleteProduct}>
               {translate("product.delete")}
             </LoadingButton> : <></>}
           </Stack>

@@ -17,7 +17,7 @@ import { getUpcomingEvents, openModal, selectEvent } from '../../../../redux/sli
 
 import { PATH_DASHBOARD } from '../../../../routes/paths';
 import { Grid } from '@mui/material';
-import { getProducts } from 'src/redux/slices/product'
+import { getTeacherProducts } from 'src/redux/slices/product'
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 
 // ----------------------------------------------------------------------
@@ -41,7 +41,7 @@ export default function ProductsCarousel({teacherId}) {
     const [currentIndex, setCurrentIndex] = useState(theme.direction === 'rtl' ? _appFeatured.length - 1 : 0);
     const dispatch = useDispatch()
     const upcomingEvents = useSelector(state => state.product.products)
-    useEffect(() => dispatch(getProducts(true, teacherId)), [teacherId])
+    useEffect(() => dispatch(getTeacherProducts(true, teacherId)), [teacherId])
 
 
 

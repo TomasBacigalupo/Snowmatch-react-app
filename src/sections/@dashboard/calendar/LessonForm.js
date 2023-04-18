@@ -1,25 +1,24 @@
+import { isBefore } from 'date-fns';
+import merge from 'lodash/merge';
+import { useSnackbar } from 'notistack';
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import merge from 'lodash/merge';
-import { isBefore } from 'date-fns';
-import { useSnackbar } from 'notistack';
 // form
-import { useForm, Controller, useWatch } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { Controller, useForm } from 'react-hook-form';
 // @mui
-import { Box, Stack, Button, Tooltip, TextField, IconButton, DialogActions, ToggleButton, ToggleButtonGroup } from '@mui/material';
 import { LoadingButton, MobileDateTimePicker } from '@mui/lab';
+import { Box, Button, DialogActions, IconButton, Stack, TextField, Tooltip } from '@mui/material';
 // redux
+import { createBusinessEvent, createEvent, deleteEvent, updateBusinessEvent, updateEvent } from '../../../redux/slices/calendar';
 import { useDispatch } from '../../../redux/store';
-import { createEvent, updateEvent, deleteEvent, createBusinessEvent, updateBusinessEvent, deleteSchoolEvent, } from '../../../redux/slices/calendar';
 // components
+import { Autocomplete, Avatar } from '@mui/material';
+import { useEffect, useState } from 'react';
+import useLocales from 'src/hooks/useLocales';
 import Iconify from '../../../components/Iconify';
 import { ColorSinglePicker } from '../../../components/color-utils';
-import { FormProvider, RHFTextField, RHFSwitch, RHFSelect } from '../../../components/hook-form';
-import { useEffect, useState } from 'react';
-import { Avatar } from '@mui/material';
-import { Autocomplete } from '@mui/material';
-import useLocales from 'src/hooks/useLocales';
+import { FormProvider, RHFSelect, RHFTextField } from '../../../components/hook-form';
 //User for is admin
 import useAuth from 'src/hooks/useAuth';
 

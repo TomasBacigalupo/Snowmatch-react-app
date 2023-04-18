@@ -18,7 +18,7 @@ import {
 } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
-import { getProducts } from '../../redux/slices/product';
+import { getMyBusinessProducts, getMyTeacherProducts } from '../../redux/slices/product';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // hooks
@@ -77,7 +77,7 @@ export default function EcommerceProductList() {
   const { themeStretch } = useSettings();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const {user} = useAuth()
+  const { user } = useAuth()
 
   const { products, isLoading } = useSelector((state) => state.product);
   const [tableData, setTableData] = useState([]);
@@ -85,7 +85,12 @@ export default function EcommerceProductList() {
 
 
   useEffect(() => {
-    dispatch(getProducts(true,user.id));
+    if (user?.role === 'TEACHER') {
+      dispatch(getMyTeacherProducts())
+    }
+    else {
+      dispatch(getMyBusinessProducts())
+    }
   }, [dispatch]);
 
   useEffect(() => {
@@ -95,7 +100,7 @@ export default function EcommerceProductList() {
   }, [products]);
 
   useEffect(() => {
-    console.log("products",products)
+    console.log("products", products)
   }, [products]);
 
   const handleFilterName = (filterName) => {

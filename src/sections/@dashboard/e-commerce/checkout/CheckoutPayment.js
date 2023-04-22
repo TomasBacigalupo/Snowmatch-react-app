@@ -21,6 +21,7 @@ import CheckoutService from './CheckoutService';
 import { useState } from 'react';
 import { cardPayment, getAuthToken, getSplitToken, getToken } from '../../../../services/zenRise';
 import CardInput from './CardInput';
+import { useSnackbar } from 'notistack';
 
 // ----------------------------------------------------------------------
 
@@ -69,6 +70,7 @@ export default function CheckoutPayment() {
   const { checkout, teacher } = useSelector((state) => state.teachers);
 
   const { total, discount, subtotal, shipping, events, card } = checkout;
+  const enqueueSnackbar = useSnackbar();
 
 
   const handleNextStep = () => {
@@ -108,31 +110,36 @@ export default function CheckoutPayment() {
   const onSubmit = async () => {
     setLoading(true)
     try {
-      const cardPaymentResponse = await cardPayment(card, 1000, [])
+      dispatch(hireTeacher(teacher.id, events, (succ) => {
+        if(succ){
+          try {
+            cardPayment(card, 1000, []).then((res) => {
+              if (res.status === 200) {
+                dispatch(setPaymentInfo(res))
+                dispatch(cleanCart())
+                handleNextStep();
+              } else {
+                enqueueSnackbar('Payment failed', { variant: 'error' })
+                //pago rechazado
+                //call unhire
 
-      if (cardPaymentResponse.status === 200) {
-
-        // Datos del pago a guardar en el BE
-        const {
-          paymentMethod,
-          paymentId,
-          amountPayed,
-          status,
-          invoiceId
-        } = cardPaymentResponse;
-        dispatch(setPaymentInfo(cardPaymentResponse))
-
-
-        dispatch(hireTeacher(teacher.id, events, (succ) => {
-          setLoading(false)
-          dispatch(cleanCart())
-          handleNextStep();
-        }))
-      } else {
-        //pago rechazado
+              }
+            }).catch((err) => {
+              enqueueSnackbar('Payment failed', { variant: 'error' })
+              //pago rechazado
+              //call unhire
+            })
+          } catch (error) {
+            enqueueSnackbar('Payment failed', { variant: 'error' })
+              //pago rechazado
+              //call unhire
+          }
+          
+        } else {
+          //avisar que no estan disponibles esos eventos que reintente buscar otras fechas
+        }
         setLoading(false)
-        
-      }
+      }))
 
     } catch (error) {
       setLoading(false)

@@ -116,6 +116,12 @@ const navConfig = [
             ]
           },
           {
+            title: 'privates', children: [
+              { title: 'halfDay', path: PATH_DASHBOARD.eCommerce.PrivateProductHalf, },
+              { title: 'fullDay', path: PATH_DASHBOARD.eCommerce.PrivateProductFull, },
+            ]
+          },
+          {
             title: 'school_teachers', path: PATH_DASHBOARD.school.teachers, children: [
               { title: 'my_teachers', path: PATH_DASHBOARD.school.teachers, },
               { title: 'pending_teachers', path: PATH_DASHBOARD.school.pending, },

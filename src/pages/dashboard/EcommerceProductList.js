@@ -158,7 +158,7 @@ export default function EcommerceProductList() {
             </Button>
           }
         />
-        {products?.map((product) => {
+        {products?.filter(p => p.name !== "PRIVATE_FULL_DAY" && p.name !== "PRIVATE_HALF_DAY").map((product) => {
           return <ShopProductCard product={product} key={product.id}></ShopProductCard>
         })}
 

@@ -226,11 +226,11 @@ export const {
 
 // ----------------------------------------------------------------------
 
-export function getTeacherProducts(id) {
+export function getTeacherProducts() {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get('/api/product/teacher' + id);
+      const response = await axios.get('/api/product/teacher');
       console.log("response", response)
       dispatch(slice.actions.getProductsSuccess(response.data));
     } catch (error) {

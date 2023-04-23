@@ -65,6 +65,12 @@ const slice = createSlice({
       state.product = action.payload;
     },
 
+    // GET PRODUCT EVENTS
+    getProductEventsSuccess(state, action) {
+      state.isLoading = false;
+      state.product.events = action.payload;
+    },
+
     clearProduct(state) {
       state.product = null
     },
@@ -226,11 +232,26 @@ export const {
 
 // ----------------------------------------------------------------------
 
-export function getTeacherProducts() {
+export function getTeacherProducts(id) {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.get('/api/product/teacher');
+      console.log("response", response)
+      dispatch(slice.actions.getProductsSuccess(response.data));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+// ----------------------------------------------------------------------
+
+export function getTeacherProductsById(id) {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get(`/api/product/teacher/${id}`);
       console.log("response", response)
       dispatch(slice.actions.getProductsSuccess(response.data));
     } catch (error) {
@@ -306,6 +327,22 @@ export function getProduct(id) {
     try {
       const response = await axios.get('/api/product/' + id);
       dispatch(slice.actions.getProductSuccess(response.data));
+      console.log(response)
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+// ----------------------------------------------------------------------
+
+export function getProductEvents(id) {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get('/api/events/product/' + id);
+      dispatch(slice.actions.getProductEventsSuccess(response.data));
       console.log(response)
     } catch (error) {
       console.error(error);

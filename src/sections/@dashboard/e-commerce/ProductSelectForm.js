@@ -25,7 +25,7 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import useLocales from 'src/hooks/useLocales';
-import product, { createProduct, editProduct } from 'src/redux/slices/product';
+import product, { createProduct, editProduct, getProduct, getProductEvents } from 'src/redux/slices/product';
 import useAuth from 'src/hooks/useAuth';
 import { addCart } from 'src/redux/slices/teachers';
 // ----------------------------------------------------------------------
@@ -57,6 +57,10 @@ export default function ProductSelectForm({ currentProduct }) {
     const handleCloseHowToDialog = () => {
         setHowToDialogOpen(false);
     };
+    
+    useEffect(() => {
+        dispatch(getProductEvents(currentProduct.id))
+    }, [currentProduct])
 
 
     const NewProductSchema = Yup.object().shape({
@@ -244,24 +248,22 @@ export default function ProductSelectForm({ currentProduct }) {
     };
 
     const renderEventContent = (event) => {
-        debugger
-        const isAvailable = !selectedEvents.some((e) => e.id === event.event.id);
+        const isAvailable = !selectedEvents.some((e) => e?.id === Number(event.event.id));
         const icons = {
             bought: <Check style={{ fontSize: 18, marginRight: 1 }} />,
             toBuy: <ShoppingCart style={{ fontSize: 18, marginRight: 1 }} />
         };
-
         const eventIcon = icons[isAvailable ? 'toBuy' : 'bought']
         const eventText = isAvailable ? "Add to cart" : "Booked"
 
         const onAddCart = () => {
-            setSelectedEvents(selectedEvents => [...selectedEvents, events[event.event.id]])
+            setSelectedEvents(selectedEvents => [...selectedEvents, events.find(e => e.id === Number(event.event.id))])
             const requestEvent = {
-                price: product.price,
+                price: currentProduct.price,
                 people: values.amount,
                 lessonTime: "MORNING",
                 date: new Date(event.start),
-                resort: product.resort
+                resort: currentProduct.resort
             };
             dispatch(addCart({
                 event: requestEvent
@@ -276,7 +278,7 @@ export default function ProductSelectForm({ currentProduct }) {
                         onAddCart()
                         enqueueSnackbar("Lesson Booked", success)
                     } else {
-                        setSelectedEvents(events => events.filter(e => e.id !== event.id))
+                        setSelectedEvents(events => events.filter(e => e.id !== Number(event.event.id)))
                         enqueueSnackbar("Event out of cart", success)
                     }
                 }}
@@ -315,7 +317,7 @@ export default function ProductSelectForm({ currentProduct }) {
                                     editable
                                     droppable
                                     selectable
-                                    events={events.map((event, idx) => ({ ...event, id: idx, textColor: '#ffffff' }))}
+                                    events={events.map((event, idx) => ({ ...event, textColor: '#ffffff' }))}
                                     ref={calendarRef}
                                     rerenderDelay={10}
                                     initialDate={date}

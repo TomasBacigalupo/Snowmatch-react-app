@@ -1,38 +1,26 @@
 import PropTypes from 'prop-types';
-import { useCallback } from 'react';
-import { sentenceCase } from 'change-case';
-import { useNavigate } from 'react-router-dom';
+import { useCallback, useEffect } from 'react';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // form
-import { Controller, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 // @mui
 import { useTheme, styled } from '@mui/material/styles';
-import { Box, Link, Stack, Button, Rating, Divider, IconButton, Typography, DialogTitle, Tooltip, ToggleButtonGroup, ToggleButton, FormControlLabel } from '@mui/material';
+import { Box, Stack, Button, Rating, Divider, IconButton, Typography, DialogTitle, FormControlLabel } from '@mui/material';
 // routes
-import { PATH_DASHBOARD } from '../../../../routes/paths';
+import { PATH_DASHBOARD, PATH_GUEST } from '../../../../routes/paths';
 import HireForm from './HireForm';
-// utils
-import { fShortenNumber, fCurrency } from '../../../../utils/formatNumber';
 // components
-import Label from '../../../../components/Label';
 import Iconify from '../../../../components/Iconify';
-import SocialsButton from '../../../../components/SocialsButton';
-import { ColorSinglePicker } from '../../../../components/color-utils';
 import { FormProvider, RHFSelect } from '../../../../components/hook-form';
 import { DialogAnimate } from '../../../../components/animate';
 import { useDispatch, useSelector } from '../../../../redux/store';
 
 import { openContactModal, closeContactModal, openReferModal, closeReferModal } from '../../../../redux/slices/contact';
-import { ContactForm, ReferForm } from '.';
+import { ReferForm } from '.';
 import ConnectWithoutContactIcon from '@mui/icons-material/ConnectWithoutContact';
+import { getProduct, getTeacherProducts, getTeacherProductsById } from 'src/redux/slices/product';
 
-import FullCalendar from '@fullcalendar/react'; // => request placed at the top
-import { CalendarStyle } from '../../calendar';
 
-import listPlugin from '@fullcalendar/list';
-import dayGridPlugin from '@fullcalendar/daygrid';
-import timeGridPlugin from '@fullcalendar/timegrid';
-import timelinePlugin from '@fullcalendar/timeline';
-import interactionPlugin from '@fullcalendar/interaction';
 
 import { useState } from 'react';
 import TeacherSkills from './TeacherSkills';
@@ -44,7 +32,6 @@ import SelectDates from './SelectDates';
 import { Checkbox } from '@mui/material';
 import SelectRangeDates from './SelectRangeDates';
 import ProductsCarousel from '../../general/app/ProductsCarousel';
-import { set } from 'lodash';
 import { addCart } from 'src/redux/slices/teachers';
 
 
@@ -100,22 +87,25 @@ export default function TeacherDetailsSummary({ cart, teacher, onAddCart, onGoto
   const [lessons, setLessons] = useState('me');
   const [selectDatesModal, setSelectDatesModal] = useState(false);
   const [flexibleTime, setFlexibleTime] = useState(true);
-  const products = [{title: ""}]
   const handleChange = (event, value) => {
     setLessons(value);
   };
+  const products = useSelector(state => state.product.products)
+  
+
 
   const { isOpenReferModal, isOpenContactModal, error } = useSelector((state) => state.contact);
 
   const handleContact = () => {
-    dispatch(openContactModal());
+    
+    //dispatch(openContactModal());
   };
 
   const handleRefer = () => {
     console.log(user)
     dispatch(openReferModal());
   };
-  
+
   const handleAddToCart = (events) => {
     dispatch()
   }
@@ -148,11 +138,12 @@ export default function TeacherDetailsSummary({ cart, teacher, onAddCart, onGoto
     lastname,
     quantity: 1, //people
     resort: "",
-    duration:"MORNING",
+    duration: "MORNING",
     people: 1,
     level: "BEGINNER"
   };
 
+  useEffect(() => dispatch(getTeacherProductsById(id)), [id])
   const methods = useForm({
     defaultValues,
   });
@@ -177,8 +168,8 @@ export default function TeacherDetailsSummary({ cart, teacher, onAddCart, onGoto
 
       for (var arr = [], dt = range[0]; dt <= range[1]; dt.setDate(dt.getDate() + 1)) {
         let lessonTime = values.duration
-        if(values.duration === 'HALF_DAY'){
-          lessonTime='MORNING'
+        if (values.duration === 'HALF_DAY') {
+          lessonTime = 'MORNING'
         }
         const requestEvent = {
           price: 9000,
@@ -256,6 +247,14 @@ export default function TeacherDetailsSummary({ cart, teacher, onAddCart, onGoto
       )
     }
   }
+  const getProductName = (product) => {
+    if (product.name === "PRIVATE_HALF_DAY")
+      return translate("product.private_half_day")
+    if (product.name === "PRIVATE_FULL_DAY")
+      return translate("product.private_full_day")
+    return product.name
+  }
+
 
   return (
     <RootStyle {...other}>
@@ -265,13 +264,13 @@ export default function TeacherDetailsSummary({ cart, teacher, onAddCart, onGoto
 
       <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 2 }}>
         <Rating value={stars} precision={0.1} readOnly />
-       
+
       </Stack>
       <TeacherSkills skills={skills} />
 
       <Divider sx={{ borderStyle: 'dashed' }} />
 
-      <ProductsCarousel teacherId={id}/>
+      <ProductsCarousel teacherId={id} />
 
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
 
@@ -293,38 +292,28 @@ export default function TeacherDetailsSummary({ cart, teacher, onAddCart, onGoto
           </RHFSelect>
         </Stack>
 
-        <Stack direction="row" justifyContent="space-between" sx={{ mb: 3 }}>
-          <Typography variant="subtitle1" sx={{ mt: 0.5 }}>
-            {translate('teacherDetails.level')}
-          </Typography>
+        <Stack direction="row" justifyContent="space-between" sx={{ mb: 3, mt: 2 }}>
           <RHFSelect
-            size='small'
-            fullWidth={false}
-            name="level"
-            placeholder={translate("school.clients.form.level")}>
-            <option value="" />
-            <option key="BEGINNER" value="BEGINNER">
-              {translate("school.clients.form.BEGINNER")}
-            </option>
-            <option key="INTERMEDIATE" value="INTERMEDIATE">
-              {translate("school.clients.form.INTERMEDIATE")}
-            </option>
-            <option key="ADVANCED" value="ADVANCED">
-              {translate("school.clients.form.ADVANCED")}
-            </option>
-            <option key="EXPERT" value="EXPERT">
-              {translate("school.clients.form.EXPERT")}
-            </option>
+            name="product"
+            size="small"
+            fullWidth
+          >
+            {products?.map((product) => (
+              <option key={product.id} value={product.id}>
+                {getProductName(product)}
+              </option>
+            ))}
           </RHFSelect>
         </Stack>
 
-        <Stack direction="row" justifyContent="space-between" sx={{ mb: 3 }} justifyItems='center'>
+
+        {/* <Stack direction="row" justifyContent="space-between" sx={{ mb: 3 }} justifyItems='center'>
           <Typography variant="subtitle1" sx={{ mt: 0.5 }}>
             {translate('teacherDetails.duration')}
           </Typography>
           <FormControlLabel label="Flexible" labelPlacement="start" control={
             <Checkbox checked={flexibleTime} onChange={(event) => setFlexibleTime(event.target.checked)} />
-          }/>
+          } />
           {!flexibleTime ? (
             <RHFSelect
               size='small'
@@ -340,28 +329,25 @@ export default function TeacherDetailsSummary({ cart, teacher, onAddCart, onGoto
                 {translate('checkout.allday')}
               </option>
             </RHFSelect>
-        
-        ): (<RHFSelect
-          size='small'
-          fullWidth={false}
-          name="duration">
-          <option key="HALF_DAY" value="HALF_DAY">
-            {translate('checkout.halfday')}
-          </option>
-          <option key="FULLDAY" value="ALL_DAY">
-            {translate('checkout.allday')}
-          </option>
-        </RHFSelect>
-        )}
-        </Stack>
-          
 
-        <Stack direction="row" justifyContent="space-between" sx={{ mb: 3 }}>
+          ) : (<RHFSelect
+            size='small'
+            fullWidth={false}
+            name="duration">
+            <option key="HALF_DAY" value="HALF_DAY">
+              {translate('checkout.halfday')}
+            </option>
+            <option key="FULLDAY" value="ALL_DAY">
+              {translate('checkout.allday')}
+            </option>
+          </RHFSelect>
+          )}
+        </Stack> */}
+
+        {/* <Stack direction="row" justifyContent="space-between" sx={{ mb: 3 }}>
           <Typography variant="subtitle1" sx={{ mt: 0.5 }}>
             {translate('teacherDetails.people')}
           </Typography>
-
-
           <div>
             <Incrementer
               name="quantity"
@@ -374,36 +360,47 @@ export default function TeacherDetailsSummary({ cart, teacher, onAddCart, onGoto
               Available: {9}
             </Typography>
           </div>
-        </Stack>
+        </Stack> */}
 
         <Divider sx={{ borderStyle: 'dashed' }} />
 
         <Stack direction="row" spacing={2} sx={{ mt: 5 }}>
 
-          <Button
+          {/* <Button
             fullWidth
             //disabled={hasLessons}
             size="large"
             color="warning"
             variant="contained"
             startIcon={<Iconify icon={'ic:round-add-shopping-cart'} />}
-            onClick={()=>setSelectDatesModal(true)}
+            onClick={() => setSelectDatesModal(true)}
             sx={{ whiteSpace: 'nowrap' }}
           >
             Add to Cart
+          </Button> */}
+          <Button 
+          component={RouterLink}
+          fullWidth
+            size="large"
+            color="primary"
+            sx={{ whiteSpace: 'nowrap' }}
+            variant="contained" to={PATH_GUEST.viewTeacherProducts(id, watch("product"))}>
+            {translate("conversation.select_dates")}
           </Button>
 
-          <HoverButton
+          {/* <HoverButton
             fullWidth
             size="large"
             color="primary"
             variant="contained"
-            startIcon={<ConnectWithoutContactIcon />}
+            // startIcon={<ConnectWithoutContactIcon />}
+            //calendar Icon
+            to={PATH_GUEST.viewTeacherProducts(id, watch("product"))}
             onClick={handleContact}
             sx={{ whiteSpace: 'nowrap' }}
           >
-            {translate("conversation.match_pro")}
-          </HoverButton>
+            {translate("conversation.select_dates")}
+          </HoverButton> */}
 
           <DialogAnimate open={selectDatesModal} onClose={handleCloseContactModal}>
             <DialogTitle>{translate("conversation.select_dates")}</DialogTitle>

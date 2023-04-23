@@ -211,6 +211,8 @@ export default function PrivateNewEditForm({ isEdit, currentProduct, isHalfDay }
         _product.events.map((event) => (
             {
                 ...event,
+                title: isHalfDay ? "Private Half Day" : "Private Full Day",
+                color: isHalfDay ? "#FFC83D" : "#FFC83A",
                 type: "Product class",
                 price: data.price
             }
@@ -237,9 +239,9 @@ export default function PrivateNewEditForm({ isEdit, currentProduct, isHalfDay }
             }
         }
         if (success !== "") {
-            enqueueSnackbar(success)
+            enqueueSnackbar("Saved", { variant: 'success' })
         } else {
-            enqueueSnackbar(error)
+            enqueueSnackbar("Error trying to save", { variant: 'error' })
         }
     };
 
@@ -327,7 +329,7 @@ export default function PrivateNewEditForm({ isEdit, currentProduct, isHalfDay }
 
     const handleDropExternalEvent = (event) => {
         let newEvent = {}
-        newEvent.title = "Private"
+        newEvent.title = isHalfDay ? "Private Half Day" : "Private Full Day"
         let d = new Date(event.date)
         newEvent.start = new Date(event.date)
         d.setTime(d.getTime() + 60 * 1000 * values.lengthInMinutes)
@@ -395,10 +397,9 @@ export default function PrivateNewEditForm({ isEdit, currentProduct, isHalfDay }
         let tempEventList = []
         for (var start = new Date(startDate); start <= endDate; start.setDate(start.getDate() + 1)) {
             if (selectedDays.includes(start.getDay())) {
-
                 let e = {}
                 e.id = uuidv4()
-                e.title = "Private"
+                e.title = "Private Half"
                 e.start = new Date(start)
                 e.start.setHours(getDefaultStartMorning().getHours())
                 e.start.setSeconds(getDefaultStartMorning().getSeconds())
@@ -408,7 +409,7 @@ export default function PrivateNewEditForm({ isEdit, currentProduct, isHalfDay }
                 e.textColor = '#3399ff'
                 let et = {}
                 et.id = uuidv4()
-                et.title = "Private"
+                et.title = "Private Half"
                 et.start = new Date(start)
                 et.start.setHours(getDefaultStartAfternoon().getHours())
                 et.start.setSeconds(getDefaultStartAfternoon().getSeconds())
@@ -418,7 +419,7 @@ export default function PrivateNewEditForm({ isEdit, currentProduct, isHalfDay }
                 et.textColor = '#3399ff'
                 let ed = {}
                 ed.id = uuidv4()
-                ed.title = "Private"
+                ed.title = "Private Full"
                 ed.start = new Date(start)
                 ed.start.setHours(time.getHours())
                 ed.start.setSeconds(time.getSeconds())
@@ -435,37 +436,36 @@ export default function PrivateNewEditForm({ isEdit, currentProduct, isHalfDay }
             }
         }
         setEvents([...events, ...tempEventList])
-        enqueueSnackbar("Events generated success!")
+        enqueueSnackbar("Events generated success!", { variant: 'success' })
 
     }
 
     const handleDeleteEvents = () => {
         if (events.length != 0) {
-            enqueueSnackbar("Delete success!")
+            enqueueSnackbar("Delete success!", { variant: 'success' })
         }
         setEvents([])
     }
 
     const handleDeleteProduct = () => {
-        console.log("asds")
         if (user?.user?.role === 'SCHOOL_ADMIN') {
             dispatch(deleteProduct(false, currentProduct.id))
         } else {
             dispatch(deleteProduct(true, currentProduct.id))
         }
         if (success !== "") {
-            enqueueSnackbar(success)
+            enqueueSnackbar("Product deleted Successfully", { variant: 'success' })
         } else {
-            enqueueSnackbar(error)
+            enqueueSnackbar("Product deleted Failed", { variant: 'error' })
         }
     }
 
     return (
         <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
             <Grid container spacing={3}>
-                <Grid item xs={12} md={4}>
+                <Grid item xs={12} md={12}>
                     <Stack spacing={3}>
-                        <Stack spacing={3} mb={2}>
+                        <Stack spacing={3} xs={12} md={4} mb={2}>
                             <RHFTextField
                                 name="price"
                                 label={translate("product.price.value")}
@@ -479,7 +479,7 @@ export default function PrivateNewEditForm({ isEdit, currentProduct, isHalfDay }
                                 }}
                             />
                         </Stack>
-                        <Stack>
+                        <Stack xs={12} md={4}>
                             <RHFSelect name="resort" label={translate("product.resort.value")} >
                                 <option aria-label="None" value="" />
                                 {ski_resorts_grouped.map((group) => {
@@ -492,36 +492,38 @@ export default function PrivateNewEditForm({ isEdit, currentProduct, isHalfDay }
                                 })}
                             </RHFSelect>
                         </Stack>
-                        <Card sx={{ p: 3, display: 'none' }}>
-                            <div
-                                ref={draggableRef}
-                                id="external-events"
-                                style={{
-                                    padding: "10px",
-                                    width: "80%",
-                                    height: "auto",
-                                    maxHeight: "-webkit-fill-available",
-                                }}
-                            >
-                                <Typography>Events</Typography>
+                        <Stack xs={12} md={4}>
+                            <Card sx={{ p: 3 }}>
                                 <div
-                                    className="fc-event"
-                                    title={'Private'}
-                                    id={uuidv4()}
+                                    ref={draggableRef}
+                                    id="external-events"
                                     style={{
                                         padding: "10px",
-                                        margin: '5px',
+                                        width: "80%",
                                         height: "auto",
                                         maxHeight: "-webkit-fill-available",
-                                        background: '#3399ff',
-                                        borderRadius: '5px'
                                     }}
                                 >
+                                    <Typography>Events</Typography>
+                                    <div
+                                        className="fc-event"
+                                        title={'Private'}
+                                        id={uuidv4()}
+                                        style={{
+                                            padding: "10px",
+                                            margin: '5px',
+                                            height: "auto",
+                                            maxHeight: "-webkit-fill-available",
+                                            background: '#3399ff',
+                                            borderRadius: '5px'
+                                        }}
+                                    >
 
-                                    <Typography color='black'>{"Private ‎"} </Typography>
+                                        <Typography color='black'>{"Private ‎"} </Typography>
+                                    </div>
                                 </div>
-                            </div>
-                        </Card>
+                            </Card>
+                        </Stack>
                     </Stack>
                 </Grid>
                 <Grid item xs={12} >

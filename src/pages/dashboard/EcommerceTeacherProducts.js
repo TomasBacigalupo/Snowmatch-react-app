@@ -4,7 +4,7 @@ import { Link as RouterLink, useParams } from 'react-router-dom';
 import { Container, Grid, Typography, Card, CardContent, Button, Box } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
-import { getTeacherProducts } from '../../redux/slices/product';
+import { getTeacherProducts, getTeacherProductsById } from '../../redux/slices/product';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // components
@@ -22,7 +22,7 @@ export default function ProductSelect() {
     const { translate } = useLocales()
     const { id, productId } = useParams()
     useEffect(() => {
-        dispatch(getTeacherProducts(id));
+        dispatch(getTeacherProductsById(id));
     }, []);
 
     return (

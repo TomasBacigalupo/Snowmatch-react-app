@@ -409,7 +409,7 @@
         "saleConsecutive": "Descuento para dias consecutivos",
         "create": "Crear producto",
         "save": "Guardar porducto",
-        "delete": "Delete product",
+        "delete": "Eliminar producto",
         "selection":{
             "heading": "Seleccione los dias y horarios"
         }

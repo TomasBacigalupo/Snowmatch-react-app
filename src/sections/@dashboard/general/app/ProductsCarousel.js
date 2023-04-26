@@ -42,7 +42,7 @@ export default function ProductsCarousel({teacherId}) {
     const [currentIndex, setCurrentIndex] = useState(theme.direction === 'rtl' ? _appFeatured.length - 1 : 0);
     const dispatch = useDispatch()
     const upcomingEvents = useSelector(state => state.product.products)
-    useEffect(() => dispatch(getTeacherProducts(true, teacherId)), [teacherId])
+    //useEffect(() => dispatch(getTeacherProducts(true, teacherId)), [teacherId])
 
 
 

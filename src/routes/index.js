@@ -18,7 +18,6 @@ import SchoolList from 'src/pages/dashboard/SchoolsList';
 import RegisterStudent from 'src/pages/auth/RegisterStudent';
 import RoleBasedGuard from 'src/guards/RoleBasedGuard';
 import ReviewTeacher from 'src/pages/dashboard/ReviewTeacher';
-import { useSelector } from 'src/redux/store';
 
 // ----------------------------------------------------------------------
 
@@ -166,6 +165,8 @@ export default function Router() {
             { path: 'product', element: <EcommerceProductList /> },
             { path: 'product/new', element: <ProductCreate /> },
             { path: 'product/:id/edit', element: <ProductCreate /> },
+            { path: 'private-half/', element: <PrivateProductHalf /> },
+            { path: 'private-full/', element: <PrivateProductFull /> },
             { path: 'checkout', element: <EcommerceCheckoutTeacher /> },
           ],
         },
@@ -291,6 +292,8 @@ const EcommerceTeacherProducts = Loadable(lazy(() => import('../pages/dashboard/
 const EcommerceProductList = Loadable(lazy(() => import('../pages/dashboard/EcommerceProductList')));
 const ProductCreate = Loadable(lazy(() => import('../pages/dashboard/ProductCreate')));
 const EcommerceCheckout = Loadable(lazy(() => import('../pages/dashboard/EcommerceCheckout')));
+const PrivateProductFull = Loadable(lazy(() => import('../pages/dashboard/PrivateFullDay')));
+const PrivateProductHalf = Loadable(lazy(() => import('../pages/dashboard/PrivateHalfDay')));
 
 
 // TEACHER ECOMMERCE

@@ -84,6 +84,8 @@ export default function AdminConfirmForm({ isEdit, currentTeacher, documents }) 
 
   const dispatch = useDispatch();
 
+  const onInvalid = (errors) => console.error(errors);
+
   const genders = [
     { code: 'H', label: 'Male' },
     { code: 'M', label: 'Female' }]
@@ -121,7 +123,8 @@ export default function AdminConfirmForm({ isEdit, currentTeacher, documents }) 
     twUrl: Yup.string(),
     disciplines: Yup.array().of(Yup.string()),
     authorized: Yup.boolean(),
-    zenriseHash: Yup.string()
+    zenriseClient: Yup.string(),
+    zenriseSecret: Yup.string(),
   });
 
   const defaultValues = useMemo(
@@ -131,7 +134,7 @@ export default function AdminConfirmForm({ isEdit, currentTeacher, documents }) 
       lastname: currentTeacher?.lastname || '',
       dni: currentTeacher?.dni || '',
       level: currentTeacher?.level?.toString() || '',
-      userId: currentTeacher?.userId || '',
+      userId: currentTeacher?.id || '',
       cellphone: currentTeacher?.cellphone || '',
       countryCode: currentTeacher?.countryCode || '',
       country: currentTeacher?.country || '',
@@ -150,7 +153,8 @@ export default function AdminConfirmForm({ isEdit, currentTeacher, documents }) 
       twUrl: currentTeacher?.twUrl || '',
       disciplines: currentTeacher?.disciplines || [],
       authorized: currentTeacher?.authorized || false,
-      zenriseHash: currentTeacher?.zenriseHash || ''
+      zenriseClient: currentTeacher?.zenriseClient || '',
+      zenriseSecret: currentTeacher?.zenriseSecret || '',
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentTeacher]
@@ -165,7 +169,10 @@ export default function AdminConfirmForm({ isEdit, currentTeacher, documents }) 
     reset,
     handleSubmit,
     formState: { isSubmitting },
+    watch,
   } = methods;
+
+  console.log(watch());
 
   useEffect(() => {
     if (isEdit && currentTeacher) {
@@ -178,6 +185,7 @@ export default function AdminConfirmForm({ isEdit, currentTeacher, documents }) 
   }, [isEdit, currentTeacher]);
 
   const onSubmit = (data) => {
+    console.log("pase")
     try {
       const response = dispatch(editTeacher(data));
       reset();
@@ -191,7 +199,7 @@ export default function AdminConfirmForm({ isEdit, currentTeacher, documents }) 
   const [imageSrc, setImageSrc] = useState('');
 
   return (
-    <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+    <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit, onInvalid)}>
       <Grid container spacing={3}>
         <Grid item xs={12} md={4}>
           <Card sx={{ py: 10, px: 3 }}>
@@ -264,6 +272,8 @@ export default function AdminConfirmForm({ isEdit, currentTeacher, documents }) 
 
               <RHFMultipleSelect name="disciplines" label={translate("general.form.disciplines")} list={["Ski", "SnowBoard"]} />
               <RHFMultipleSelect name="speaks" label={translate("general.form.languages")} list={["Español", "English", "Portugues", "Italiano"]} />
+              <RHFTextField name="zenriseClient" label="Zenrise Client" />
+              <RHFTextField name="zenriseSecret" label="Zenrise Secret" />
               <Stack sx={{ mt: 3 }}>
                 <RHFSwitch
                   name="authorized"
@@ -271,7 +281,6 @@ export default function AdminConfirmForm({ isEdit, currentTeacher, documents }) 
                   sx={{ mb: 1, mx: 0, width: 1 }}
                 />
               </Stack>
-              <RHFTextField name="zenriseHash" label="Zenrise Hash" />
             </Box>
             
             <Stack sx={{ mt: 3 }}>

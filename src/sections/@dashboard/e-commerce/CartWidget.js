@@ -38,7 +38,7 @@ const RootStyle = styled(RouterLink)(({ theme }) => ({
 
 export default function CartWidget() {
   const { checkout, teacher } = useSelector((state) => state.teachers);
-  const totalItems = sum(checkout.cart.map((item) => 1));
+  const totalItems = sum(checkout.events.map((item) => 1));
 
   return (
     // <RootStyle> to={PATH_GUEST.root + ''}>

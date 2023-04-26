@@ -7,6 +7,7 @@ import Page from "src/components/Page";
 import useLocales from "src/hooks/useLocales";
 import { PATH_DASHBOARD } from "src/routes/paths";
 import { yupResolver } from '@hookform/resolvers/yup';
+import PrivateNewEditForm from 'src/sections/@dashboard/e-commerce/PrivateNewEditForm';
 
 export default function Prices() {
     const { translate } = useLocales()
@@ -62,116 +63,7 @@ export default function Prices() {
                         { name: translate("breadcrumb.prices") },
                     ]}
                 />
-                <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-                    <Card sx={{ px: 3, py: 2, my: 2 }}>
-                        <Typography variant='h3'>Privadas Medio Dia</Typography>
-                        <Grid container spacing={1} width='100%'>
-                            <Grid item xs={12}>
-                                <Typography>Una persona</Typography>
-                            </Grid>
-                            <Grid item xs={4}>
-                                <RHFTextField name="privateHalfOneLow" label='Baja' />
-                            </Grid>
-                            <Grid item xs={4}>
-                                <RHFTextField name="privateHalfOneMed" label='Media' />
-                            </Grid>
-                            <Grid item xs={4}>
-                                <RHFTextField name="privateHalfOneHigh" label='Alta' />
-                            </Grid>
-                            <Grid item xs={12}>
-                                <Typography>Dos personas</Typography>
-                            </Grid>
-                            <Grid item xs={4}>
-                                <RHFTextField name="privateHalfTowLow" label='Baja' />
-                            </Grid>
-                            <Grid item xs={4}>
-                                <RHFTextField name="privateHalfTowMed" label='Media' />
-                            </Grid>
-                            <Grid item xs={4}>
-                                <RHFTextField name="privateHalfTowHigh" label='Alta' />
-                            </Grid>
-                            <Grid item xs={12}>
-                                <Typography>Tres personas</Typography>
-                            </Grid>
-                            <Grid item xs={4}>
-                                <RHFTextField name="privateHalfThreeLow" label='Baja' />
-                            </Grid>
-                            <Grid item xs={4}>
-                                <RHFTextField name="privateHalfThreeMed" label='Media' />
-                            </Grid>
-                            <Grid item xs={4}>
-                                <RHFTextField name="privateHalfThreeHigh" label='Alta' />
-                            </Grid>
-                            <Grid item xs={12}>
-                                <Typography>Cuatro personas</Typography>
-                            </Grid>
-                            
-                            <Grid item xs={4}>
-                                <RHFTextField name="privateHalfFourLow" label='Baja' />
-                            </Grid>
-                            <Grid item xs={4}>
-                                <RHFTextField name="privateHalfFourMed" label='Media' />
-                            </Grid>
-                            <Grid item xs={4}>
-                                <RHFTextField name="privateHalfFourHigh" label='Alta' />
-                            </Grid>
-                        </Grid>
-                    </Card>
-                    <Card sx={{ px: 3, py: 2 }}>
-                        <Typography variant='h3'>Privadas Dia Completo</Typography>
-                        <Grid container spacing={1} width='100%'>
-                            <Grid item xs={12}>
-                                <Typography>Una persona</Typography>
-                            </Grid>
-                            <Grid item xs={4}>
-                                <RHFTextField name="privatfOneLow" label='Baja' />
-                            </Grid>
-                            <Grid item xs={4}>
-                                <RHFTextField name="privateOneMed" label='Media' />
-                            </Grid>
-                            <Grid item xs={4}>
-                                <RHFTextField name="privateOneHigh" label='Alta' />
-                            </Grid>
-                            <Grid item xs={12}>
-                                <Typography>Dos personas</Typography>
-                            </Grid>
-                            <Grid item xs={4}>
-                                <RHFTextField name="privateTowLow" label='Baja' />
-                            </Grid>
-                            <Grid item xs={4}>
-                                <RHFTextField name="privateTowMed" label='Media' />
-                            </Grid>
-                            <Grid item xs={4}>
-                                <RHFTextField name="privateTowHigh" label='Alta' />
-                            </Grid>
-                            <Grid item xs={12}>
-                                <Typography>Tres personas</Typography>
-                            </Grid>
-                            <Grid item xs={4}>
-                                <RHFTextField name="privateThreeLow" label='Baja' />
-                            </Grid>
-                            <Grid item xs={4}>
-                                <RHFTextField name="privateThreeMed" label='Media' />
-                            </Grid>
-                            <Grid item xs={4}>
-                                <RHFTextField name="privateThreeHigh" label='Alta' />
-                            </Grid>
-                            <Grid item xs={12}>
-                                <Typography>Cuatro personas</Typography>
-                            </Grid>
-
-                            <Grid item xs={4}>
-                                <RHFTextField name="privateFourLow" label='Baja' />
-                            </Grid>
-                            <Grid item xs={4}>
-                                <RHFTextField name="privateFourMed" label='Media' />
-                            </Grid>
-                            <Grid item xs={4}>
-                                <RHFTextField name="privateFourHigh" label='Alta' />
-                            </Grid>
-                        </Grid>
-                    </Card>
-                </FormProvider>
+                <PrivateNewEditForm isEdit={false} currentProduct={null} />
             </Container>
         </Page>
     )

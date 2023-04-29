@@ -153,14 +153,6 @@ export default function EcommerceShop({isGuest=false, teacherType="school"}) {
   return (
     <Page title="Match">
       <Container maxWidth={themeStretch ? false : 'lg'}>
-        <HeaderBreadcrumbs
-          heading="Match"
-          links={[
-            !isGuest? { name: 'Dashboard', href: PATH_DASHBOARD.root} : {name: 'Home', href: '/'},
-            !isGuest? { name: 'Match', href: PATH_DASHBOARD.eCommerce.root} : { name: 'Match', href: PATH_GUEST.root},
-            { name: 'Pro',}
-          ]}
-        />
         {isGuest}
         <Stack
           spacing={2}

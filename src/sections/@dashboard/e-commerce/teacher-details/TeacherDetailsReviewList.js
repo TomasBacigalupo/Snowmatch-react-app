@@ -9,6 +9,7 @@ import { fShortenNumber } from '../../../../utils/formatNumber';
 import Iconify from '../../../../components/Iconify';
 import { useDispatch, useSelector } from 'src/redux/store';
 import { getRates } from 'src/redux/slices/rates';
+import useLocales from 'src/hooks/useLocales';
 
 // ----------------------------------------------------------------------
 
@@ -18,6 +19,7 @@ TeacherDetailsReviewList.propTypes = {
 
 export default function TeacherDetailsReviewList({ teacher }) {
 
+  const {translate} = useLocales()
   const {rates, isLoading, totalPages} = useSelector((state) => state.rates)
   const dispatch = useDispatch()
   const [page, setPage] = useState(0)
@@ -30,7 +32,7 @@ export default function TeacherDetailsReviewList({ teacher }) {
     <Box sx={{ pt: 3, px: 2, pb: 5 }}>
       {isLoading && <CircularProgress/>}
       {rates?.length === 0 && (
-        <Typography>No reviews for this PRO</Typography>
+        <Typography>{translate("teacherDetails.no_reviews")}</Typography>
       )}
       {!isLoading &&(
         <List disablePadding>

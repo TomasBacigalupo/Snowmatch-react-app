@@ -58,6 +58,7 @@ export default function ShopProductSearch({teachers}) {
     <Autocomplete
       size="small"
       autoHighlight
+      fullWidth
       popupIcon={null}
       PopperComponent={PopperStyle}
       options={searchResults}
@@ -69,6 +70,7 @@ export default function ShopProductSearch({teachers}) {
         <InputStyle
           {...params}
           stretchStart={200}
+          fullWidth
           placeholder="Search instructors..."
           InputProps={{
             ...params.InputProps,
@@ -86,7 +88,7 @@ export default function ShopProductSearch({teachers}) {
         const parts = parse(name+" "+lastname, matches);
 
         return (
-          <li {...props}>
+          <li {...props} onClick={() => handleClick(id)}>
             <Image alt={name} src={imageLink} sx={{ width: 48, height: 48, borderRadius: 1, flexShrink: 0, mr: 1.5 }} />
             <Link underline="none" onClick={() => handleClick(id)}>
               {parts.map((part, index) => (

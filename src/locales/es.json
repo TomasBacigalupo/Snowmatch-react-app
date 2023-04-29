@@ -252,7 +252,8 @@
         "resort": "Cerro",
         "level": "Nivel",
         "duration": "Duración",
-        "reviews": "Ranking"
+        "reviews": "Ranking",
+        "no_reviews": "No hay calificaciones"
     },
     "schoolDetails": {
         "title": "Detalles PRO school",
@@ -426,7 +427,9 @@
         "selection":{
             "heading": "Seleccione los dias y horarios"
         },
-        "add_new_product": "Crear"
+        "add_new_product": "Crear",
+        "private_full_day":"Privada día completo",
+        "private_half_day":"Privada medio día"
     },
     "verify": {
         "title": "Verifique su Mail",

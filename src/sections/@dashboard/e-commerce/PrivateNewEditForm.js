@@ -614,12 +614,16 @@ export default function PrivateNewEditForm({ isEdit, currentProduct, isHalfDay }
                             </Box>
                         </Stack>
                     </Card>
-                    <LoadingButton type="submit" variant="contained" size="large" loading={isSubmitting}>
-                        {!isEdit ? translate("product.create") : translate("product.save")}
-                    </LoadingButton>
-                    {isEdit ? < LoadingButton variant="contained" color="error" size="large" loading={isLoading} onClick={handleDeleteProduct}>
-                        {translate("product.delete")}
-                    </LoadingButton> : <></>}
+                    <Grid xs={12} container justifyContent={'flex-end'}>
+                        <Grid xs={isEdit ? 6 : 12} sx={{ p: 2 }} >
+                            <LoadingButton sx={{p:1}} fullWidth type="submit" variant="contained" size="large" loading={isSubmitting}>
+                                {!isEdit ? translate("product.create") : translate("product.save")}
+                            </LoadingButton>
+                        </Grid> 
+                        {isEdit ? <Grid xs={6} sx={{ p: 2 }} >< LoadingButton sx={{ mY: 1 }} fullWidth variant="contained" color="error" size="large" loading={isLoading} onClick={handleDeleteProduct}>
+                            {translate("product.delete")}
+                        </LoadingButton> </Grid> : <></>}
+                    </Grid> 
                 </Grid>
             </Grid>
         </FormProvider>

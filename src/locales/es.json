@@ -93,7 +93,12 @@
         "lessons": "Mis Clases",
         "privates": "Privadas",
         "halfDay":"Medio día",
-        "fullDay":"Día completo"
+        "fullDay":"Día completo",
+        "independent": "Independientes",
+        "schools": "Escuelas",
+        "for_school": "Para Escuelas",
+        "group": "Grupales",
+        "private": "Privadas"           
     },
     "calendar": {
         "name": "Calendario",
@@ -157,7 +162,10 @@
         "lessons": "Clases",
         "reviews": "Mis Calificaciones",
         "product": "Productos",
-        "lesson_details": "Detalles de la clase"
+        "lesson_details": "Detalles de la clase",
+        "private_half_day": "Privada medio día",
+        "private_full_day": "Privada día completo",
+        "group":"Grupales"
     },
     "profile": {
         "tabs": {
@@ -348,7 +356,9 @@
         "halfday": "Medio día",
         "continue": "Seguir buscando Pros",
         "event_added": "Clase agendada",
-        "book_lesson": "Reservar clase"
+        "book_lesson": "Reservar clase",
+        "start_time": "De",
+        "end_time": "a"
     },
     "product": {
         "heading": {
@@ -415,7 +425,8 @@
         "delete": "Delete product",
         "selection":{
             "heading": "Seleccione los dias y horarios"
-        }
+        },
+        "add_new_product": "Crear"
     },
     "verify": {
         "title": "Verifique su Mail",

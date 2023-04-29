@@ -42,7 +42,7 @@ export default function ProductCreate() {
           heading={!isEdit ? translate("product.heading.create") : translate("product.heading.edit")}
           links={[
             { name: translate("breadcrumb.dashboard"), href: PATH_DASHBOARD.root},
-            { name: translate("breadcrumb.product"), href: PATH_DASHBOARD.eCommerce.root},
+            { name: translate("breadcrumb.group"), href: PATH_DASHBOARD.eCommerce.viewProducts},
             { name: (!isEdit ? translate("product.new") : product?.name)},
           ]}
         />

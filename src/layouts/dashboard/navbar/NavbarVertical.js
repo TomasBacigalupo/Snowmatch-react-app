@@ -121,10 +121,10 @@ export default function NavbarVertical({ isOpenSidebar, onCloseSidebar, isGuest 
   const user = useAuth()
 
   useEffect(() => {
-    console.log(navConfig[2].items)
+    console.log(navConfig)
     if (user?.user?.role == 'ADMIN') {
-      if (!navConfig[2].items.some(e => e.title === 'admin')) {
-        navConfig[2].items.push(
+      if (!navConfig.some(e => e.title === 'admin')) {
+        navConfig.push(
           {
             title: 'admin',
             path: PATH_DASHBOARD.admin.root,

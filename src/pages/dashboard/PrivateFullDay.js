@@ -26,11 +26,10 @@ export default function PrivateFullDay() {
         <Page title={translate("prices.prices")}>
             <Container>
                 <HeaderBreadcrumbs
-                    heading={translate("breadcrumb.prices")}
+                    heading={translate("breadcrumb.private_full_day")}
                     links={[
                         { name: translate("breadcrumb.dashboard"), href: PATH_DASHBOARD.root },
-                        { name: translate("breadcrumb.profile"), href: PATH_DASHBOARD.user.root },
-                        { name: translate("breadcrumb.prices") },
+                        { name: translate("breadcrumb.private_full_day") },
                     ]}
                 />
                 <PrivateNewEditForm isEdit={isEdit} currentProduct={products.find((product) => product.name === "PRIVATE_FULL_DAY")} isHalfDay={false} />

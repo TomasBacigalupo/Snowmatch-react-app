@@ -3,18 +3,9 @@ import { useState, useEffect } from 'react';
 import { useNavigate, Link as RouterLink } from 'react-router-dom';
 // @mui
 import {
-  Box,
-  Card,
-  Table,
   Button,
-  Switch,
-  Tooltip,
-  TableBody,
   Container,
-  IconButton,
-  TableContainer,
-  TablePagination,
-  FormControlLabel,
+  Typography,
 } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
@@ -23,21 +14,14 @@ import { getMyBusinessProducts, getMyTeacherProducts } from '../../redux/slices/
 import { PATH_DASHBOARD } from '../../routes/paths';
 // hooks
 import useSettings from '../../hooks/useSettings';
-import useTable, { getComparator, emptyRows } from '../../hooks/useTable';
+import useTable, { getComparator } from '../../hooks/useTable';
+import useLocales from 'src/hooks/useLocales';
 // components
 import Page from '../../components/Page';
 import Iconify from '../../components/Iconify';
-import Scrollbar from '../../components/Scrollbar';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
-import {
-  TableNoData,
-  TableSkeleton,
-  TableEmptyRows,
-  TableHeadCustom,
-  TableSelectedActions,
-} from '../../components/table';
+
 // sections
-import { ProductTableRow, ProductTableToolbar } from '../../sections/@dashboard/e-commerce/product-list';
 import { ShopProductCard } from 'src/sections/@dashboard/e-commerce/shop';
 import useAuth from 'src/hooks/useAuth';
 
@@ -55,22 +39,8 @@ const TABLE_HEAD = [
 
 export default function EcommerceProductList() {
   const {
-    dense,
-    page,
     order,
     orderBy,
-    rowsPerPage,
-    setPage,
-    //
-    selected,
-    setSelected,
-    onSelectRow,
-    onSelectAllRows,
-    //
-    onSort,
-    onChangeDense,
-    onChangePage,
-    onChangeRowsPerPage,
   } = useTable({
     defaultOrderBy: 'createdAt',
   });
@@ -78,8 +48,9 @@ export default function EcommerceProductList() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { user } = useAuth()
+  const {translate} = useLocales();
 
-  const { products, isLoading } = useSelector((state) => state.product);
+  const { products } = useSelector((state) => state.product);
   const [tableData, setTableData] = useState([]);
   const [filterName, setFilterName] = useState('');
 
@@ -103,36 +74,11 @@ export default function EcommerceProductList() {
     console.log("products", products)
   }, [products]);
 
-  const handleFilterName = (filterName) => {
-    setFilterName(filterName);
-    setPage(0);
-  };
-
-  const handleDeleteRow = (id) => {
-    const deleteRow = tableData.filter((row) => row.id !== id);
-    setSelected([]);
-    setTableData(deleteRow);
-  };
-
-  const handleDeleteRows = (selected) => {
-    const deleteRows = tableData.filter((row) => !selected.includes(row.id));
-    setSelected([]);
-    setTableData(deleteRows);
-  };
-
-  const handleEditRow = (id) => {
-    navigate(PATH_DASHBOARD.eCommerce.editProduct(paramCase(id)));
-  };
-
   const dataFiltered = applySortFilter({
     tableData,
     comparator: getComparator(order, orderBy),
     filterName,
   });
-
-  const denseHeight = dense ? 60 : 80;
-
-  const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
 
   return (
     <Page title="Match">
@@ -140,12 +86,8 @@ export default function EcommerceProductList() {
         <HeaderBreadcrumbs
           heading="Product List"
           links={[
-            { name: 'Dashboard', href: PATH_DASHBOARD.root },
-            {
-              name: 'E-Commerce',
-              href: PATH_DASHBOARD.eCommerce.root,
-            },
-            { name: 'Product List' },
+            { name: translate("breadcrumb.dashboard"), href: PATH_DASHBOARD.root },
+            { name: translate("breadcrumb.group") },
           ]}
           action={
             <Button
@@ -154,14 +96,14 @@ export default function EcommerceProductList() {
               component={RouterLink}
               to={PATH_DASHBOARD.eCommerce.newProduct}
             >
-              New Product
+              {translate("product.add_new_product")}
             </Button>
           }
         />
         {products?.filter(p => p.name !== "PRIVATE_FULL_DAY" && p.name !== "PRIVATE_HALF_DAY").map((product) => {
           return <ShopProductCard product={product} key={product.id}></ShopProductCard>
         })}
-
+        {!products || (products && products.length === 0) && <Typography>{translate("product.no_products")}</Typography>}
       </Container>
     </Page>
   );

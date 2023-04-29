@@ -23,6 +23,7 @@ import { formatDate } from '@fullcalendar/react';
 import useLocales from 'src/hooks/useLocales';
 import { toLower } from 'lodash';
 import { useSelector } from 'src/redux/store';
+import { format } from 'date-fns/esm';
 
 // ----------------------------------------------------------------------
 
@@ -61,7 +62,7 @@ export default function CheckoutTeacherList({ events, onDelete, onIncreaseQuanti
 
                 <TableBody>
                     {events.map((event, idx) => {
-                        const { price, date, lessonTime } = event;
+                        const { price, date } = event;
                         return (
                             <TableRow key={idx}>
                                 <TableCell>
@@ -69,10 +70,11 @@ export default function CheckoutTeacherList({ events, onDelete, onIncreaseQuanti
                                         <Image alt="teacher Picture" src={teacher.imageLink} sx={{ width: 64, height: 64, borderRadius: 1.5, mr: 2 }} />
                                         <Box>
                                             <Typography noWrap variant="subtitle2" sx={{ maxWidth: 240 }}>
-                                                {formatDate(date)}
+                                                {formatDate(event.start)}
                                             </Typography>
-                                            <Typography variant="subtitle2">
-                                                {translate('checkout.'+lessonTime.toLowerCase())}
+                                            {/* start and end time od the event */}
+                                            <Typography noWrap variant="body2" sx={{ color: 'text.secondary' }}>
+                                                {translate('checkout.start_time')} {format(event.start, "basic")} {translate('checkout.end_time')} {format(event.end, "basic")}
                                             </Typography>
                                         </Box>
                                     </Box>

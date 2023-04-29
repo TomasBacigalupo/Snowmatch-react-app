@@ -7,16 +7,15 @@ import interactionPlugin from '@fullcalendar/interaction';
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
 import { useSnackbar } from 'notistack';
-import { useNavigate } from 'react-router-dom';
 import { createRef, useEffect, useMemo, useRef, useState } from 'react';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { styled } from '@mui/material/styles';
 import { Card, Grid, Stack, Typography, Box, Button, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 import { CalendarStyle, CalendarToolbar } from '../calendar';
-import { Check, Cancel, ShoppingCart } from '@mui/icons-material';
+import { Check, ShoppingCart } from '@mui/icons-material';
 
 // components
 import {
@@ -25,20 +24,28 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import useLocales from 'src/hooks/useLocales';
-import product, { createProduct, editProduct, getProduct, getProductEvents } from 'src/redux/slices/product';
+import product, {  getProductEvents } from 'src/redux/slices/product';
 import useAuth from 'src/hooks/useAuth';
-import { addCart } from 'src/redux/slices/teachers';
+import { addCart, getTeacherByID } from 'src/redux/slices/teachers';
+import { PATH_DASHBOARD, PATH_GUEST } from 'src/routes/paths';
 // ----------------------------------------------------------------------
 
 
 ProductSelectForm.propTypes = {
     currentProduct: PropTypes.object,
+    currentTeacher: PropTypes.object
 };
 
-export default function ProductSelectForm({ currentProduct }) {
+export default function ProductSelectForm({ currentProduct, currentTeacher }) {
+    
     const {
         description,
     } = currentProduct
+
+    const { events } = useSelector( state => state.teachers.checkout)
+    const { teacher } = useSelector( state => state.teachers.teacher)
+    const { success, error, isLoading } = useSelector(state => state.product)
+
     const calendarRef = useRef(null);
     const { user } = useAuth();
     const dispatch = useDispatch()
@@ -46,9 +53,9 @@ export default function ProductSelectForm({ currentProduct }) {
     const { enqueueSnackbar } = useSnackbar();
     const [view, setView] = useState('listWeek');
     const { translate } = useLocales()
-    const [events, setEvents] = useState([...currentProduct.events] || []);
+    const [availableEvents, setEvents] = useState([...currentProduct.events] || []);
     const trashRef = createRef()
-    const { success, error, isLoading } = useSelector(state => state.product)
+    
     // State to keep track of whether the "How To" dialog is open or closed
     const [isHowToDialogOpen, setHowToDialogOpen] = useState(true);
     const [selectedEvents, setSelectedEvents] = useState([]);
@@ -127,7 +134,7 @@ export default function ProductSelectForm({ currentProduct }) {
     }, [currentProduct]);
 
     useEffect(() => {
-        setEvents(events.map((event) => ({ ...event, title: values.name })))
+        setEvents(availableEvents.map((event) => ({ ...event, title: values.name })))
     }, [values.name]);
 
     useEffect(() => {
@@ -136,7 +143,7 @@ export default function ProductSelectForm({ currentProduct }) {
 
 
     useEffect(() => {
-        let tmpEvents = events
+        let tmpEvents = availableEvents
         tmpEvents = tmpEvents.map((event) => {
             let d = new Date(event.start)
             d.setTime(d.getTime() + values.lengthInMinutes * 60 * 1000)
@@ -147,7 +154,7 @@ export default function ProductSelectForm({ currentProduct }) {
 
     const onSubmit = async (data) => {
         let product = data
-        product.events = events
+        product.events = availableEvents
         product.events.map((event) => {
             event.start = event.start
             event.type = "Product class"
@@ -208,7 +215,7 @@ export default function ProductSelectForm({ currentProduct }) {
         let trashCoords = trashRef.current.getBoundingClientRect()
         if (info.jsEvent.clientX > trashCoords.left && info.jsEvent.clientX < trashCoords.right && info.jsEvent.clientY < trashCoords.bottom && info.jsEvent.clientY > trashCoords.top
         ) {
-            let tmpEvents = events
+            let tmpEvents = availableEvents
             tmpEvents.filter((event, index, arr) => {
                 if (event.id == info.event.id) {
                     arr.splice(index, 1)
@@ -224,7 +231,7 @@ export default function ProductSelectForm({ currentProduct }) {
 
     const handleDropEvent = async (eventInfo) => {
         try {
-            let tmpEvents = events
+            let tmpEvents = availableEvents
             tmpEvents.filter((event, index, arr) => {
                 if (event.id == eventInfo.oldEvent.id) {
                     arr.splice(index, 1)
@@ -248,7 +255,8 @@ export default function ProductSelectForm({ currentProduct }) {
     };
 
     const renderEventContent = (event) => {
-        const isAvailable = !selectedEvents.some((e) => e?.id === Number(event.event.id));
+        const currentEventId = Number(event.event.id);
+        const isAvailable = !events.some((e) => e?.id === currentEventId);
         const icons = {
             bought: <Check style={{ fontSize: 18, marginRight: 1 }} />,
             toBuy: <ShoppingCart style={{ fontSize: 18, marginRight: 1 }} />
@@ -257,13 +265,12 @@ export default function ProductSelectForm({ currentProduct }) {
         const eventText = isAvailable ? "Add to cart" : "Booked"
 
         const onAddCart = () => {
-            setSelectedEvents(selectedEvents => [...selectedEvents, events.find(e => e.id === Number(event.event.id))])
             const requestEvent = {
+                id: currentEventId,
+                start: event.event.start,
+                end: event.event.end,
                 price: currentProduct.price,
-                people: values.amount,
-                lessonTime: "MORNING",
-                date: new Date(event.start),
-                resort: currentProduct.resort
+                teacher: currentTeacher
             };
             dispatch(addCart({
                 event: requestEvent
@@ -317,7 +324,7 @@ export default function ProductSelectForm({ currentProduct }) {
                                     editable
                                     droppable
                                     selectable
-                                    events={events.map((event, idx) => ({ ...event, textColor: '#ffffff' }))}
+                                    events={availableEvents.map((event) => ({ ...event, textColor: '#ffffff' }))}
                                     ref={calendarRef}
                                     rerenderDelay={10}
                                     initialDate={date}
@@ -341,7 +348,11 @@ export default function ProductSelectForm({ currentProduct }) {
 
                 <Grid item xs={12} md={4}>
                     <Stack spacing={3}>
-                        <Button variant='contained'> Continue </Button>
+                        <Button 
+                        variant='contained'
+                        component={RouterLink}
+                        to={PATH_GUEST.checkout(currentTeacher.id)}
+                        > Continue </Button>
                     </Stack>
                 </Grid>
             </Grid>

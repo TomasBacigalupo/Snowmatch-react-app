@@ -43,57 +43,21 @@ const navConfig = [
 
   // MANAGEMENT
   // ----------------------------------------------------------------------
-  {
-    subheader: 'management',
-    items: [
-      // USER
-      {
-        title: 'user',
-        path: PATH_DASHBOARD.user.root,
-        icon: ICONS.user,
-        children: [
-          { title: 'profile', path: PATH_DASHBOARD.user.profile },
-          // { title: 'cards', path: PATH_DASHBOARD.user.cards },
-          // { title: 'edit', path: PATH_DASHBOARD.user.demoEdit },
-          { title: 'account', path: PATH_DASHBOARD.user.account },
-          { title: 'reviews', path: PATH_DASHBOARD.user.reviews },
-          { title: 'lessons', path: PATH_DASHBOARD.user.lessons },
-          
-        ],
-      },
 
-      // E-COMMERCE
-
-    ],
-  },
 
   // APP
   // ----------------------------------------------------------------------
   {
     subheader: 'snowMatch',
     items: [
-      // ADMIN
-      // {
-      //   title: 'admin',
-      //   path: PATH_DASHBOARD.admin.root,
-      //   icon: ICONS.user,
-      //   children: [
-      //     { title: 'review teachers', path: PATH_DASHBOARD.admin.review },
-      //     // { title: 'cards', path: PATH_DASHBOARD.user.cards },
-      //     // { title: 'clients', path: PATH_DASHBOARD.user.list },
-      //     // { title: 'new client', path: PATH_DASHBOARD.user.new },
-      //     // { title: 'edit', path: PATH_DASHBOARD.user.demoEdit },
-      //     // { title: 'account', path: PATH_DASHBOARD.user.account },
-      //   ],
-      // },
       {
         title: 'match',
         path: PATH_DASHBOARD.eCommerce.root,
         icon: ICONS.match,
         children: [
-          { title: 'School PROs', path: PATH_DASHBOARD.eCommerce.shopSchool },
-          { title: 'Independent PROs', path: PATH_DASHBOARD.eCommerce.shopInd },
-          { title: 'PRO Schools', path: PATH_DASHBOARD.eCommerce.schools },
+          { title: 'independent', path: PATH_DASHBOARD.eCommerce.shopInd },
+          { title: 'for_school', path: PATH_DASHBOARD.eCommerce.shopSchool },
+          { title: 'schools', path: PATH_DASHBOARD.eCommerce.schools },
         ],
       },
       { title: 'calendar', path: PATH_DASHBOARD.calendar, icon: ICONS.calendar },
@@ -103,30 +67,20 @@ const navConfig = [
         icon: <SchoolIcon />,
         children: [
           { title: 'clients', path: PATH_DASHBOARD.school.list },
-          { title: 'new client', path: PATH_DASHBOARD.school.new },
+          // {
+          //   title: 'kanban', path: PATH_DASHBOARD.kanban, children: [
+          //     { title: 'currentWeek', path: PATH_DASHBOARD.kanban, },
+          //   ]
+          // },
           {
-            title: 'kanban', path: PATH_DASHBOARD.kanban, children: [
-              { title: 'currentWeek', path: PATH_DASHBOARD.kanban, },
-            ]
+            title: 'group', path: PATH_DASHBOARD.eCommerce.viewProducts
           },
           {
-            title: 'products', path: PATH_DASHBOARD.eCommerce.newProduct, children: [
-              { title: 'myProducts', path: PATH_DASHBOARD.eCommerce.viewProducts, },
-              { title: 'newProduct', path: PATH_DASHBOARD.eCommerce.newProduct, },
-            ]
-          },
-          {
-            title: 'privates', children: [
+            title: 'private', path: PATH_DASHBOARD.eCommerce.newProduct, children: [
               { title: 'halfDay', path: PATH_DASHBOARD.eCommerce.PrivateProductHalf, },
               { title: 'fullDay', path: PATH_DASHBOARD.eCommerce.PrivateProductFull, },
             ]
           },
-          {
-            title: 'school_teachers', path: PATH_DASHBOARD.school.teachers, children: [
-              { title: 'my_teachers', path: PATH_DASHBOARD.school.teachers, },
-              { title: 'pending_teachers', path: PATH_DASHBOARD.school.pending, },
-            ]
-          }
         ],
       },
       { title: 'discounts', path: PATH_DASHBOARD.general.discounts, icon: <DiscountIcon /> }

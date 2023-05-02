@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 // @mui
-import { Box } from '@mui/material';
+import { Box, TextField } from '@mui/material';
 // components
 import { SkeletonProductItem } from '../../../../components/skeleton';
 //
@@ -27,6 +27,9 @@ export default function ShopProductList({ products, loading }) {
         },
       }}
     >
+      <TextField
+      placeholder='Search'
+      />
       {(loading ? [...Array(12)] : products).map((product, index) =>
         product ? <ShopProductCard key={product.id} product={product} /> : <SkeletonProductItem key={index} />
       )}

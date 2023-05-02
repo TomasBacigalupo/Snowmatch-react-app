@@ -33,7 +33,8 @@
             "available": "Estoy disponible",
             "saveChanges": "Guardar Cambios"
         },
-        "teachers_found": "Profesores encontrados"
+        "teachers_found": "Profesores encontrados",
+        "search": "Buscar..."
     },
     "landingPRO": {
         "heroTitle0": "¿Sos profesor?",
@@ -425,6 +426,7 @@
         "create": "Crear producto",
         "save": "Guardar porducto",
         "delete": "Delete product",
+        "no_products": "No hay productos",
         "selection":{
             "heading": "Seleccionar clases",
             "add_to_cart": "Reservar",

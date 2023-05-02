@@ -10,12 +10,12 @@ import { useSnackbar } from 'notistack';
 import { useNavigate } from 'react-router-dom';
 import { createRef, useEffect, useMemo, useRef, useState } from 'react';
 // form
-import { useForm,  } from 'react-hook-form';
+import { useForm, } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { styled } from '@mui/material/styles';
 import { LoadingButton, MobileDatePicker, TimePicker } from '@mui/lab';
-import { Card,  Grid, Stack, TextField, Typography, InputAdornment, Box, ToggleButton, ToggleButtonGroup, Select, Button, ButtonBase } from '@mui/material';
+import { Card, Grid, Stack, TextField, Typography, InputAdornment, Box, ToggleButton, ToggleButtonGroup, Select, Button, ButtonBase } from '@mui/material';
 import { CalendarStyle, CalendarToolbar } from '../calendar';
 // components
 import {
@@ -414,6 +414,7 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Grid container spacing={3}>
         <Grid item xs={12} md={8}>
+
           <Card sx={{ p: 3 }}>
             <Stack spacing={3}>
               <RHFTextField name="name" label={translate("product.name.value")} />
@@ -421,6 +422,46 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
                 <LabelStyle>{translate("product.description")}</LabelStyle>
                 <RHFTextField rows={2} multiline name="description" />
               </div>
+              <Card sx={{ p: 3, mt: 2 }} spacing={3}>
+                <Stack spacing={3} mb={2}>
+                  <Typography variant="h3">{translate("product.generator")}</Typography>
+                  <ToggleButtonGroup fullWidth value={selectedDays} onChange={handelSelectDays}>
+                    {DAYS.map((day) => (
+                      <ToggleButton color={"primary"} value={day.id} key={day.id}>{translate("product.date." + day.id)}</ToggleButton>
+                    ))}
+                  </ToggleButtonGroup>
+                  <Box
+                    sx={{
+                      display: 'grid',
+                      rowGap: 3,
+                      columnGap: 2,
+                      gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
+                    }}
+                  >
+                    <MobileDatePicker
+                      label={translate("product.startDate")}
+                      inputFormat="dd/MM/yyyy"
+                      value={startDate}
+                      onChange={handleChangeStartDate}
+                      renderInput={(params) => <TextField {...params} />}
+                    />
+                    <MobileDatePicker
+                      label={translate("product.endDate")}
+                      inputFormat="dd/MM/yyyy"
+                      value={endDate}
+                      onChange={handleChangeEndDate}
+                      renderInput={(params) => <TextField {...params} />}
+                    />
+                    <TimePicker
+                      label={translate("product.startTime")}
+                      value={time}
+                      onChange={handleChangeTime}
+                      renderInput={(params) => <TextField {...params} />}
+                    />
+                    <Button color="primary" variant="contained" onClick={handleGenerateEvents}>{translate("product.generateEvents")}</Button>
+                  </Box>
+                </Stack>
+              </Card>
               <CalendarStyle>
                 <CalendarToolbar
                   date={date}
@@ -465,46 +506,7 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
               </Box>
             </Stack>
           </Card>
-          <Card sx={{ p: 3, mt: 2 }} spacing={3}>
-            <Stack spacing={3} mb={2}>
-              <Typography variant="h3">{translate("product.generator")}</Typography>
-              <ToggleButtonGroup fullWidth value={selectedDays} onChange={handelSelectDays}>
-                {DAYS.map((day) => (
-                  <ToggleButton color={"primary"} value={day.id} key={day.id}>{translate("product.date." + day.id)}</ToggleButton>
-                ))}
-              </ToggleButtonGroup>
-              <Box
-                sx={{
-                  display: 'grid',
-                  rowGap: 3,
-                  columnGap: 2,
-                  gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
-                }}
-              >
-                <MobileDatePicker
-                  label={translate("product.startDate")}
-                  inputFormat="dd/MM/yyyy"
-                  value={startDate}
-                  onChange={handleChangeStartDate}
-                  renderInput={(params) => <TextField {...params} />}
-                />
-                <MobileDatePicker
-                  label={translate("product.endDate")}
-                  inputFormat="dd/MM/yyyy"
-                  value={endDate}
-                  onChange={handleChangeEndDate}
-                  renderInput={(params) => <TextField {...params} />}
-                />
-                <TimePicker
-                  label={translate("product.startTime")}
-                  value={time}
-                  onChange={handleChangeTime}
-                  renderInput={(params) => <TextField {...params} />}
-                />
-                <Button color="primary" variant="contained" onClick={handleGenerateEvents}>{translate("product.generateEvents")}</Button>
-              </Box>
-            </Stack>
-          </Card>
+
         </Grid>
 
         <Grid item xs={12} md={4}>

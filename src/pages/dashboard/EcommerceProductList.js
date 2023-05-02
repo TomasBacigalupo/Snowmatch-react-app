@@ -5,7 +5,9 @@ import { useNavigate, Link as RouterLink } from 'react-router-dom';
 import {
   Button,
   Container,
+  TextField,
   Typography,
+  InputAdornment
 } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
@@ -20,6 +22,7 @@ import useLocales from 'src/hooks/useLocales';
 import Page from '../../components/Page';
 import Iconify from '../../components/Iconify';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
+import InputStyle from "src/components/InputStyle";
 
 // sections
 import { ShopProductCard } from 'src/sections/@dashboard/e-commerce/shop';
@@ -100,7 +103,21 @@ export default function EcommerceProductList() {
             </Button>
           }
         />
-        {products?.filter(p => p.name !== "PRIVATE_FULL_DAY" && p.name !== "PRIVATE_HALF_DAY").map((product) => {
+        <InputStyle
+          stretchStart={240}
+          value={filterName}
+          onChange={(event) => setFilterName(event.target.value)}
+          placeholder={translate('general.search')}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <Iconify icon={'eva:search-fill'} sx={{ color: 'text.disabled', width: 20, height: 20 }} />
+              </InputAdornment>
+            ),
+          }}
+          sx={{ mb: 5 }}
+        />
+        {products?.filter(p => p.name !== "PRIVATE_FULL_DAY" && p.name !== "PRIVATE_HALF_DAY").filter(p => p.name.includes(filterName)).map((product) => {
           return <ShopProductCard product={product} key={product.id}></ShopProductCard>
         })}
         {!products || (products && products.length === 0) && <Typography>{translate("product.no_products")}</Typography>}

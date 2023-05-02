@@ -184,7 +184,6 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
     tmpEvents = tmpEvents.map((event) => {
       let d = new Date(event.start)
       d.setTime(d.getTime() + values.lengthInMinutes * 60 * 1000)
-      event.end = d
       return { ...event, end: d }
     })
     setEvents([...tmpEvents])

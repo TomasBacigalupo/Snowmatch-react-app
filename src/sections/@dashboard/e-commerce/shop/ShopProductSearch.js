@@ -19,6 +19,7 @@ import InputStyle from '../../../../components/InputStyle';
 import SearchNotFound from '../../../../components/SearchNotFound';
 
 import useAuth from 'src/hooks/useAuth';
+import useLocales from 'src/hooks/useLocales';
 
 // ----------------------------------------------------------------------
 
@@ -39,6 +40,7 @@ export default function ShopProductSearch({teachers}) {
 
   const { isAuthenticated} = useAuth()
 
+  const { translate } = useLocales()
 
   const handleChangeSearch = async () => {
     setSearchResults(teachers)
@@ -52,7 +54,6 @@ export default function ShopProductSearch({teachers}) {
       navigate(PATH_GUEST.viewTeacher(email));
     }
   };
-
 
   return (
     <Autocomplete
@@ -71,7 +72,7 @@ export default function ShopProductSearch({teachers}) {
           {...params}
           stretchStart={200}
           fullWidth
-          placeholder="Search instructors..."
+          placeholder={translate('general.search')}
           InputProps={{
             ...params.InputProps,
             startAdornment: (

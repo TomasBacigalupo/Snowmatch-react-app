@@ -74,7 +74,7 @@ export default function CheckoutTeacherList({ events, onDelete, onIncreaseQuanti
                                             </Typography>
                                             {/* start and end time od the event */}
                                             <Typography noWrap variant="body2" sx={{ color: 'text.secondary' }}>
-                                                {translate('checkout.start_time')} {format(event.start, "basic")} {translate('checkout.end_time')} {format(event.end, "basic")}
+                                                {`${translate('checkout.start_time')} ${event.start.getHours()}:${event.start.getMinutes() < 10 ? '0' + event.start.getMinutes() : event.start.getMinutes()}`} ${translate('checkout.end_time')}  {`${event.end.getHours()}:${event.end.getMinutes() < 10 ? '0' + event.end.getMinutes() : event.end.getMinutes() }`}
                                             </Typography>
                                         </Box>
                                     </Box>

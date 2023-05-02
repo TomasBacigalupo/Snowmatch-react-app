@@ -262,7 +262,7 @@ export default function ProductSelectForm({ currentProduct, currentTeacher }) {
             toBuy: <ShoppingCart style={{ fontSize: 18, marginRight: 1 }} />
         };
         const eventIcon = icons[isAvailable ? 'toBuy' : 'bought']
-        const eventText = isAvailable ? "Add to cart" : "Booked"
+        const eventText = isAvailable ? translate('product.selection.add_to_cart') : translate('product.selection.booked')
 
         const onAddCart = () => {
             const requestEvent = {
@@ -283,10 +283,10 @@ export default function ProductSelectForm({ currentProduct, currentTeacher }) {
                 onClick={() => {
                     if (isAvailable) {
                         onAddCart()
-                        enqueueSnackbar("Lesson Booked", success)
+                        enqueueSnackbar(translate('product.selection.lesson_booked'), success)
                     } else {
                         setSelectedEvents(events => events.filter(e => e.id !== Number(event.event.id)))
-                        enqueueSnackbar("Event out of cart", success)
+                        enqueueSnackbar(translate('product.selection.lesson_unbooked'), success)
                     }
                 }}
                 variant={isAvailable ? 'contained' : 'text'}
@@ -352,30 +352,10 @@ export default function ProductSelectForm({ currentProduct, currentTeacher }) {
                         variant='contained'
                         component={RouterLink}
                         to={PATH_GUEST.checkout(currentTeacher.id)}
-                        > Continue </Button>
+                        > {translate('product.selection.continue')} </Button>
                     </Stack>
                 </Grid>
             </Grid>
-            {/* "How To" Dialog */}
-            <Dialog open={isHowToDialogOpen} onClose={handleCloseHowToDialog}>
-                <DialogTitle>How to Select Dates</DialogTitle>
-                <DialogContent>
-                    <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                        1. Click on a date to select it.
-                    </Typography>
-                    <Typography variant="body2" sx={{ color: 'text.secondary', mt: 1 }}>
-                        2. Drag and drop to create an event on the selected date.
-                    </Typography>
-                    <Typography variant="body2" sx={{ color: 'text.secondary', mt: 1 }}>
-                        3. Click on an event to view details or edit it.
-                    </Typography>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleCloseHowToDialog} color="primary">
-                        Got It
-                    </Button>
-                </DialogActions>
-            </Dialog>
         </FormProvider>
     );
 }

@@ -24,6 +24,7 @@ export default function ProductSelect() {
     const { id, productId } = useParams();
     const { products } = useSelector((state) => state.product);
     const { teacher } = useSelector((state) => state.teachers);
+    const { name, lastname } = teacher || { name: "", lastname: ""};
     const { translate } = useLocales();
 
     useEffect(() => {
@@ -37,8 +38,7 @@ export default function ProductSelect() {
                 <HeaderBreadcrumbs
                     heading={translate("product.selection.heading")}
                     links={[
-                        { name: translate("breadcrumb.dashboard"), href: PATH_DASHBOARD.root },
-                        { name: translate("breadcrumb.product"), href: PATH_DASHBOARD.eCommerce.root },
+                        { name: `${name} ${lastname}`, href: PATH_DASHBOARD.eCommerce.root },
                         { name: translate("product.selection.heading") },
                     ]}
                 />

@@ -8,6 +8,7 @@ import useAuth from 'src/hooks/useAuth';
 import axios from '../../utils/axios';
 //
 import { dispatch } from '../store';
+import { useSelector } from 'react-redux';
 
 // ----------------------------------------------------------------------
 
@@ -17,6 +18,7 @@ const initialState = {
   error: null,
   products: [],
   teachers: [],
+  teachersWithEvents: [],
   teacher: null,
   rates: [],
   product: null,
@@ -27,8 +29,8 @@ const initialState = {
     category: [],
     discipline: [],
     language: [],
-    from: undefined,
-    to: undefined,
+    from: new Date(),
+    to: new Date(new Date().getTime() + (10 * 24 * 60 * 60 * 1000)),
     resort: '',
   },
   checkout: {
@@ -96,6 +98,12 @@ const slice = createSlice({
     getTeachersSuccess(state, action) {
       state.isLoading = false;
       state.teachers = action.payload;
+    },
+
+    // GET TEACHERS WITH EVENTS
+    getTeachersWithEventsSuccess(state, action) {
+      state.isLoading = false;
+      state.teachersWithEvents = action.payload;
     },
 
     // GET PRODUCT
@@ -285,6 +293,9 @@ const slice = createSlice({
     setPaymentInfo(state, action) {
       state.checkout.paymentInfo = action.payload;
     },
+    resetFilters(state) {
+      state.filters = initialState.filters;
+    },
 
     // SUCCESS RATE
     onRateSuccess(state, action) {
@@ -332,7 +343,8 @@ export const {
   openAddEventModal,
   cleanCart,
   addCard,
-  setPaymentInfo
+  setPaymentInfo,
+  resetFilters
 } = slice.actions;
 
 // ----------------------------------------------------------------------
@@ -373,6 +385,23 @@ export function getTeachers() {
       const teachers = response.data;
 
       dispatch(slice.actions.getTeachersSuccess(teachers));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+// ----------------------------------------------------------------------
+
+export function getTeachersWithEvents(filters) {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+
+    try {
+      const response = await axios.get(`/api/users/teacher/with_filters?startDate=${filters.from}&endDate=${filters.to}&resort=${filters.resort}`);
+      const teachers = response.data;
+
+      dispatch(slice.actions.getTeachersWithEventsSuccess(teachers));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }

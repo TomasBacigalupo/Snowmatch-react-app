@@ -32,7 +32,8 @@
             "description": "Descripción",
             "available": "Estoy disponible",
             "saveChanges": "Guardar Cambios"
-        }
+        },
+        "teachers_found": "Profesores encontrados"
     },
     "landingPRO": {
         "heroTitle0": "¿Sos profesor?",
@@ -209,7 +210,7 @@
         "range": "Fechas",
         "rating": "Puntuación",
         "filters": "Filtros",
-        "clearAll": "Limpiar filtros"
+        "clearAll": "Borrar"
     },
     "accountPopover": {
         "Profile": "Mi Perfíl",
@@ -425,7 +426,12 @@
         "save": "Guardar porducto",
         "delete": "Delete product",
         "selection":{
-            "heading": "Seleccione los dias y horarios"
+            "heading": "Seleccionar clases",
+            "add_to_cart": "Reservar",
+            "booked": "Reservado",
+            "lesson_booked": "Clase Reservada",
+            "lesson_unbooked": "Clase liberada",
+            "continue": "Continuar"
         },
         "add_new_product": "Crear",
         "private_full_day":"Privada día completo",

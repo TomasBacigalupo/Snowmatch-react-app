@@ -25,6 +25,7 @@ export default function ShopProductCard({ product }) {
 
   return (
     <Link to={linkTo} color="inherit" component={RouterLink}>
+      {console.log({ product })}
       <Card sx={{ m: 1 }}>
         <Box sx={{ position: 'relative' }}>
           {"status" && (
@@ -39,7 +40,7 @@ export default function ShopProductCard({ product }) {
                 textTransform: 'uppercase',
               }}
             >
-              {"status"}
+              {product?.level}
             </Label>
           )}
           {/* <Image alt={name} src={"cover"} ratio="1/1" /> */}

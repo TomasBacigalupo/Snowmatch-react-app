@@ -3,8 +3,6 @@ import { sentenceCase } from 'change-case';
 // @mui
 import { useTheme, styled } from '@mui/material/styles';
 import { Chip, Typography, Stack, Button } from '@mui/material';
-// utils
-import getColorName from '../../../../utils/getColorName';
 // components
 import Iconify from '../../../../components/Iconify';
 import useLocales from 'src/hooks/useLocales';
@@ -73,103 +71,85 @@ export default function TeacherTagFiltered({
   return (
     <RootStyle>
       {gender?.length > 0 && (
-        <WrapperStyle>
-          <LabelStyle>{translate("filter.gender")}:</LabelStyle>
-          <Stack direction="row" flexWrap="wrap" sx={{ p: 0.75 }}>
-            {gender.map((_gender) => (
-              <Chip
-                key={_gender}
-                label={_gender}
-                size="small"
-                onDelete={() => onRemoveGender(_gender)}
-                sx={{ m: 0.5 }}
-              />
-            ))}
-          </Stack>
-        </WrapperStyle>
+        <Stack direction="row" flexWrap="wrap">
+          {gender.map((_gender) => (
+            <Chip
+              key={_gender}
+              variant='outlined'
+              label={_gender}
+              size="small"
+              onDelete={() => onRemoveGender(_gender)}
+              sx={{ m: 0.5 }}
+            />
+          ))}
+        </Stack>
       )}
 
       
     {discipline?.length > 0 && (
-        <WrapperStyle>
-          <LabelStyle>{translate("filter.discipline")}:</LabelStyle>
-          <Stack direction="row" flexWrap="wrap" sx={{ p: 0.75 }}>
-            {discipline.map((_discipline) => (
-              <Chip
-                key={_discipline}
-                label={_discipline}
-                size="small"
-                onDelete={() => onRemoveDiscipline(_discipline)}
-                sx={{ m: 0.5 }}
-              />
-            ))}
-          </Stack>
-        </WrapperStyle>
+        <Stack direction="row" flexWrap="wrap" >
+          {discipline.map((_discipline) => (
+            <Chip
+              key={_discipline}
+              label={_discipline}
+              size="small"
+              variant='outlined'
+              onDelete={() => onRemoveDiscipline(_discipline)}
+              sx={{ m: 0.5 }}
+            />
+          ))}
+        </Stack>
       )}
       {category?.length > 0 && (
-        <WrapperStyle>
-          <LabelStyle>{translate("filter.category")}:</LabelStyle>
-          <Stack direction="row" flexWrap="wrap" sx={{ p: 0.75 }}>
-            {category.map((_category) => (
-              <Chip
-                key={_category}
-                label={_category}
-                size="small"
-                onDelete={() => onRemoveCategory(_category)}
-                sx={{ m: 0.5 }}
-              />
-            ))}
-          </Stack>
-        </WrapperStyle>
+        <Stack direction="row" flexWrap="wrap" >
+          {category.map((_category) => (
+            <Chip
+              variant='outlined'
+              key={_category}
+              label={_category}
+              size="small"
+              onDelete={() => onRemoveCategory(_category)}
+              sx={{ m: 0.5 }}
+            />
+          ))}
+        </Stack>
       )}
       {language?.length > 0 && (
-        <WrapperStyle>
-          <LabelStyle>{translate("filter.language")}:</LabelStyle>
-          <Stack direction="row" flexWrap="wrap" sx={{ p: 0.75 }}>
-            {language.map((_language) => (
-              <Chip
-                key={_language}
-                label={_language}
-                size="small"
-                onDelete={() => onRemoveLanguage(_language)}
-                sx={{ m: 0.5 }}
-              />
-            ))}
-          </Stack>
-        </WrapperStyle>
+        <Stack direction="row" flexWrap="wrap" >
+          {language.map((_language) => (
+            <Chip
+              key={_language}
+              label={_language}
+              variant='outlined'
+              size="small"
+              onDelete={() => onRemoveLanguage(_language)}
+              sx={{ m: 0.5 }}
+            />
+          ))}
+        </Stack>
       )}
 
       {rating && (
-        <WrapperStyle>
-          <LabelStyle>{translate("filter.rating")}:</LabelStyle>
-          <Stack direction="row" flexWrap="wrap" sx={{ p: 0.75 }}>
-            <Chip size="small" label={sentenceCase(rating)} onDelete={onRemoveRating} sx={{ m: 0.5 }} />
-          </Stack>
-        </WrapperStyle>
+        <Stack direction="row" flexWrap="wrap" >
+          <Chip size="small" label={sentenceCase(rating)} onDelete={onRemoveRating} sx={{ m: 0.5 }} />
+        </Stack>
       )}
 
       {from && to && (
-        <WrapperStyle>
-          <LabelStyle>{translate("filter.range")}:</LabelStyle>
-          <Stack direction="row" flexWrap="wrap" sx={{ p: 0.75 }}>
-            <Chip size="small" label={from.getDate()+"/"+(from.getMonth()+1)+"/"+from.getFullYear()+"-"+to.getDate()+"/"+(to.getMonth()+1)+"/"+to.getFullYear()} onDelete={onRemoveRange} sx={{ m: 0.5 }} />
-          </Stack>
-        </WrapperStyle>
+        <Stack direction="row" flexWrap="wrap" >
+          <Chip variant='outlined' size="small" label={from.getDate() + "/" + (from.getMonth() + 1) + "/" + from.getFullYear() + "-" + to.getDate() + "/" + (to.getMonth() + 1) + "/" + to.getFullYear()} onDelete={onRemoveRange} sx={{ m: 0.5 }} />
+        </Stack>
       )}
 
       {resort && (
-        <WrapperStyle>
-          <LabelStyle>{translate("filter.resort")}:</LabelStyle>
-          <Stack direction="row" flexWrap="wrap" sx={{ p: 0.75 }}>
-            <Chip size="small" label={resort} onDelete={onRemoveResort} sx={{ m: 0.5 }} />
-          </Stack>
-        </WrapperStyle>
+        <Stack direction="row" flexWrap="wrap" >
+          <Chip variant='outlined' size="small" label={resort} onDelete={onRemoveResort} sx={{ m: 0.5 }} />
+        </Stack>
       )}
 
 
       {isShowReset && (
-        <Button color="error" size="small" onClick={onResetAll} startIcon={<Iconify icon={'ic:round-clear-all'} />}>
-          {translate("filter.clearAll")}
+        <Button color="error" size="small" onClick={onResetAll} startIcon={<Iconify icon={'ic:round-delete'} />}>
         </Button>
       )}
     </RootStyle>

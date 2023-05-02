@@ -6,7 +6,7 @@ import { useForm } from 'react-hook-form';
 import { Container, Typography, Stack } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
-import { getTeachers, filterTeachers } from '../../redux/slices/teachers';
+import { getTeachers, filterTeachers, getTeachersWithEvents, resetFilters } from '../../redux/slices/teachers';
 
 // routes
 import { PATH_DASHBOARD, PATH_GUEST } from '../../routes/paths';
@@ -30,6 +30,8 @@ import {
 import CartWidget from '../../sections/@dashboard/e-commerce/CartWidget';
 import useAuth from 'src/hooks/useAuth';
 import { useParams } from 'react-router';
+import useLocales from 'src/hooks/useLocales';
+import ShopOtherTeacherList from 'src/sections/@dashboard/e-commerce/shop/ShopOtherTeachersList';
 
 // ----------------------------------------------------------------------
 
@@ -44,7 +46,7 @@ function useQuery() {
 export default function EcommerceShop({isGuest=false, teacherType="school"}) {
 
   const { themeStretch } = useSettings();
-
+  const {translate} = useLocales()
   const dispatch = useDispatch();
   const { user } = useAuth();
   const isTeacher = user?.role === "TEACHER"
@@ -54,11 +56,8 @@ export default function EcommerceShop({isGuest=false, teacherType="school"}) {
   const { teachers, sortBy, filters } = useSelector((state) => { return state.teachers })
 
   useEffect(()=>{
-    console.log('test', query.get('resort'))
     dispatch(filterTeachers({resort: query.get('resort')}))
   }, [])
-
-  //const { products, sortBy } = useSelector((state) => state.product);
 
   const filteredTeachers = applyFilter(teachers, sortBy, filters, teacherType);
 
@@ -93,7 +92,8 @@ export default function EcommerceShop({isGuest=false, teacherType="school"}) {
 
   useEffect(() => {
     dispatch(getTeachers());
-  }, [dispatch]);
+    dispatch(getTeachersWithEvents(filters));
+  }, [dispatch, filters]);
 
   useEffect(() => {
     dispatch(filterTeachers(values));
@@ -108,10 +108,7 @@ export default function EcommerceShop({isGuest=false, teacherType="school"}) {
   };
 
   const handleResetFilter = () => {
-    reset();
-    handleRemoveRange();
-    //handleRemoveResort();
-    handleCloseFilter();
+    dispatch(resetFilters());
   };
 
   const handleRemoveRating = () => {
@@ -153,15 +150,18 @@ export default function EcommerceShop({isGuest=false, teacherType="school"}) {
   return (
     <Page title="Match">
       <Container maxWidth={themeStretch ? false : 'lg'}>
-        {isGuest}
         <Stack
           spacing={2}
-          direction={{ xs: 'column', sm: 'row' }}
+          direction={{ xs: 'row', sm: 'row' }}
           alignItems={{ sm: 'center' }}
           justifyContent="space-between"
           sx={{ mb: 2 }}
+          xs={12}
         >
-          <ShopProductSearch teachers={filteredTeachers} />
+          <Stack xs={12}>
+            <ShopProductSearch teachers={filteredTeachers} />
+          </Stack>
+          
           {!isTeacher && <CartWidget /> }
           
           <Stack direction="row" spacing={1} flexShrink={0} sx={{ my: 1 }}>
@@ -173,9 +173,7 @@ export default function EcommerceShop({isGuest=false, teacherType="school"}) {
                 onClose={handleCloseFilter}
               />
             </FormProvider>
-
             {/*<ShopProductSort />*/}
-
           </Stack>
         </Stack>
 
@@ -184,7 +182,7 @@ export default function EcommerceShop({isGuest=false, teacherType="school"}) {
             <>
               <Typography variant="body2" gutterBottom>
                 <strong>{filteredTeachers.length}</strong>
-                &nbsp;Teachers found
+                &nbsp;{translate('general.teachers_found')}
               </Typography>
 
               <TeacherTagFiltered
@@ -202,8 +200,11 @@ export default function EcommerceShop({isGuest=false, teacherType="school"}) {
             </>
           )}
         </Stack>
-
+        
         <ShopTeacherList teachers={filteredTeachers} loading={!filteredTeachers.length && isDefault} />
+        <ShopOtherTeacherList teachers={[...filteredTeachers, ...filteredTeachers]} loading={!filteredTeachers.length && isDefault} />
+
+        
       </Container>
       <><br /></>
 

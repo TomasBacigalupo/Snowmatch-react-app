@@ -63,7 +63,7 @@ NavbarVertical.propTypes = {
   isGuest: PropTypes.bool,
 };
 
-export default function NavbarVertical({ isOpenSidebar, onCloseSidebar, isGuest }) {
+export default function NavbarVertical({ isOpenSidebar, onCloseSidebar, isGuest, isAdmin }) {
   const theme = useTheme();
 
   const { pathname } = useLocation();
@@ -121,10 +121,11 @@ export default function NavbarVertical({ isOpenSidebar, onCloseSidebar, isGuest 
   const user = useAuth()
 
   useEffect(() => {
-    console.log(navConfig[2].items)
-    if (user?.user?.role == 'ADMIN') {
-      if (!navConfig[2].items.some(e => e.title === 'admin')) {
-        navConfig[2].items.push(
+    console.log({navConfig})
+    if (user?.user?.role === 'ADMIN') {
+        navConfig.push({
+          subheader: 'Admin',
+          items: [
           {
             title: 'admin',
             path: PATH_DASHBOARD.admin.root,
@@ -132,8 +133,7 @@ export default function NavbarVertical({ isOpenSidebar, onCloseSidebar, isGuest 
             children: [
               { title: 'review teachers', path: PATH_DASHBOARD.admin.review },
             ],
-          })
-      }
+          }]})
     }
 
   }, [])

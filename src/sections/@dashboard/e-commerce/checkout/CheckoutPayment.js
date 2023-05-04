@@ -160,7 +160,7 @@ export default function CheckoutPayment() {
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Grid container spacing={3}>
         <Grid item xs={12} md={8}>
-          <CheckoutService onApplyShipping={handleApplyShipping} deliveryOptions={SERVICE_OPTIONS} />
+          {/* <CheckoutService onApplyShipping={handleApplyShipping} deliveryOptions={SERVICE_OPTIONS} /> */}
           {/* <CheckoutPaymentMethods cardOptions={CARDS_OPTIONS} paymentOptions={PAYMENT_OPTIONS} /> */}
           <Card sx={{ my: 3 }}><CardInput /></Card>
           <Button

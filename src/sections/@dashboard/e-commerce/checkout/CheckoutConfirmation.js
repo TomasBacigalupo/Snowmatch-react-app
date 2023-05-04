@@ -65,9 +65,7 @@ export default function CheckoutConfirmation() {
     //
     const isDesktop = useResponsive('up', 'sm');
     const dispatch = useDispatch();
-    const { checkout } = useSelector((state) => state.teachers);
-    console.log({checkout})
-    const { total, discount, subtotal, teacher, events } = checkout;
+    const { total, discount, subtotal, events } = useSelector((state) => state.teachers.checkout);
     //
     const [open, setOpen] = useState(false);
     const [selectedEvent,setSelectedEvent] = useState(null)
@@ -99,7 +97,7 @@ export default function CheckoutConfirmation() {
                     <Grid item xs={12} >
                         <Grid container spacing={2}>
                             <Grid item xs={12}>
-                                {teacher && <ShopTeacherCard teacher={teacher}/>}
+                                {events[0].teacher && <ShopTeacherCard teacher={events[0].teacher}/>}
                             </Grid>
                         </Grid>
                     </Grid>

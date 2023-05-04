@@ -32,7 +32,9 @@
             "description": "Descripción",
             "available": "Estoy disponible",
             "saveChanges": "Guardar Cambios"
-        }
+        },
+        "teachers_found": "Profesores encontrados",
+        "search": "Buscar..."
     },
     "landingPRO": {
         "heroTitle0": "¿Sos profesor?",
@@ -93,7 +95,12 @@
         "lessons": "Mis Clases",
         "privates": "Privadas",
         "halfDay":"Medio día",
-        "fullDay":"Día completo"
+        "fullDay":"Día completo",
+        "independent": "Independientes",
+        "schools": "Escuelas",
+        "for_school": "Para Escuelas",
+        "group": "Grupales",
+        "private": "Privadas"           
     },
     "calendar": {
         "name": "Calendario",
@@ -157,7 +164,10 @@
         "lessons": "Clases",
         "reviews": "Mis Calificaciones",
         "product": "Productos",
-        "lesson_details": "Detalles de la clase"
+        "lesson_details": "Detalles de la clase",
+        "private_half_day": "Privada medio día",
+        "private_full_day": "Privada día completo",
+        "group":"Grupales"
     },
     "profile": {
         "tabs": {
@@ -201,7 +211,7 @@
         "range": "Fechas",
         "rating": "Puntuación",
         "filters": "Filtros",
-        "clearAll": "Limpiar filtros"
+        "clearAll": "Borrar"
     },
     "accountPopover": {
         "Profile": "Mi Perfíl",
@@ -244,7 +254,8 @@
         "resort": "Cerro",
         "level": "Nivel",
         "duration": "Duración",
-        "reviews": "Ranking"
+        "reviews": "Ranking",
+        "no_reviews": "No hay calificaciones"
     },
     "schoolDetails": {
         "title": "Detalles PRO school",
@@ -348,7 +359,9 @@
         "halfday": "Medio día",
         "continue": "Seguir buscando Pros",
         "event_added": "Clase agendada",
-        "book_lesson": "Reservar clase"
+        "book_lesson": "Reservar clase",
+        "start_time": "De",
+        "end_time": "a"
     },
     "product": {
         "heading": {
@@ -412,10 +425,23 @@
         "saleConsecutive": "Descuento para dias consecutivos",
         "create": "Crear producto",
         "save": "Guardar porducto",
+<<<<<<< HEAD
         "delete": "Eliminar producto",
+=======
+        "delete": "Delete product",
+        "no_products": "No hay productos",
+>>>>>>> 7e5a7f392422833b3eab9167df40201853ecaf34
         "selection":{
-            "heading": "Seleccione los dias y horarios"
-        }
+            "heading": "Seleccionar clases",
+            "add_to_cart": "Reservar",
+            "booked": "Reservado",
+            "lesson_booked": "Clase Reservada",
+            "lesson_unbooked": "Clase liberada",
+            "continue": "Continuar"
+        },
+        "add_new_product": "Crear",
+        "private_full_day":"Privada día completo",
+        "private_half_day":"Privada medio día"
     },
     "verify": {
         "title": "Verifique su Mail",

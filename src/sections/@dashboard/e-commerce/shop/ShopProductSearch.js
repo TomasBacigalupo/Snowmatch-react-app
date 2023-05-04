@@ -19,6 +19,7 @@ import InputStyle from '../../../../components/InputStyle';
 import SearchNotFound from '../../../../components/SearchNotFound';
 
 import useAuth from 'src/hooks/useAuth';
+import useLocales from 'src/hooks/useLocales';
 
 // ----------------------------------------------------------------------
 
@@ -39,6 +40,7 @@ export default function ShopProductSearch({teachers}) {
 
   const { isAuthenticated} = useAuth()
 
+  const { translate } = useLocales()
 
   const handleChangeSearch = async () => {
     setSearchResults(teachers)
@@ -53,11 +55,11 @@ export default function ShopProductSearch({teachers}) {
     }
   };
 
-
   return (
     <Autocomplete
       size="small"
       autoHighlight
+      fullWidth
       popupIcon={null}
       PopperComponent={PopperStyle}
       options={searchResults}
@@ -69,7 +71,8 @@ export default function ShopProductSearch({teachers}) {
         <InputStyle
           {...params}
           stretchStart={200}
-          placeholder="Search instructors..."
+          fullWidth
+          placeholder={translate('general.search')}
           InputProps={{
             ...params.InputProps,
             startAdornment: (
@@ -86,7 +89,7 @@ export default function ShopProductSearch({teachers}) {
         const parts = parse(name+" "+lastname, matches);
 
         return (
-          <li {...props}>
+          <li {...props} onClick={() => handleClick(id)}>
             <Image alt={name} src={imageLink} sx={{ width: 48, height: 48, borderRadius: 1, flexShrink: 0, mr: 1.5 }} />
             <Link underline="none" onClick={() => handleClick(id)}>
               {parts.map((part, index) => (

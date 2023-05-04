@@ -176,7 +176,6 @@ const isMobile = useMediaQuery({ query: `(max-width: 760px)` });
           heading={translate("heading.clientList")}
           links={[
             { name: translate('breadcrumb.dashboard'), href: PATH_DASHBOARD.root },
-            { name: translate("breadcrumb.school"), href: PATH_DASHBOARD.school.root },
             { name: translate("breadcrumb.agenda") },
           ]}
           action={

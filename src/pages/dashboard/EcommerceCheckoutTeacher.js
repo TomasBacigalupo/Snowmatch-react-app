@@ -26,7 +26,7 @@ import {
 
 // ----------------------------------------------------------------------
 
-const STEPS = ['Days', 'Confirmation', 'Payment'];
+const STEPS = [ 'Confirmation', 'Payment'];
 
 const QontoConnector = styled(StepConnector)(({ theme }) => ({
   top: 10,
@@ -99,14 +99,6 @@ export default function EcommerceCheckoutTeacher() {
   return (
     <Page title="Teacher: Match">
       <Container maxWidth={themeStretch ? false : 'lg'}>
-        <HeaderBreadcrumbs
-          heading="Checkout"
-          links={[
-            { name: 'home', href: PATH_GUEST.school },
-            { name: 'Checkout' },
-          ]}
-        />
-
         <Grid container justifyContent={isComplete ? 'center' : 'flex-start'}>
           <Grid item xs={12} md={8} sx={{ mb: 5 }}>
             <Stepper alternativeLabel activeStep={activeStep} connector={<QontoConnector />}>
@@ -132,8 +124,7 @@ export default function EcommerceCheckoutTeacher() {
         {!isComplete ? (
           <>
             {activeStep === 0 && <CheckoutCart />}
-            {activeStep === 1 && <CheckoutConfirmation />}
-            {activeStep === 2 && <CheckoutPayment />}
+            {activeStep === 1 && <CheckoutPayment />}
           </>
         ) : (
           <CheckoutOrderComplete open={isComplete} />

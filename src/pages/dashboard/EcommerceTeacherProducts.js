@@ -13,17 +13,24 @@ import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
 import useLocales from 'src/hooks/useLocales';
 import ProductSelectForm from 'src/sections/@dashboard/e-commerce/ProductSelectForm';
 import CartWidget from 'src/sections/@dashboard/e-commerce/CartWidget';
+import { getTeacherByID } from 'src/redux/slices/teachers';
+import LoadingScreen from 'src/components/LoadingScreen';
 
 // ----------------------------------------------------------------------
 
 export default function ProductSelect() {
+
     const dispatch = useDispatch();
+    const { id, productId } = useParams();
     const { products } = useSelector((state) => state.product);
-    const { translate } = useLocales()
-    const { id, productId } = useParams()
+    const { teacher } = useSelector((state) => state.teachers);
+    const { name, lastname } = teacher || { name: "", lastname: ""};
+    const { translate } = useLocales();
+
     useEffect(() => {
         dispatch(getTeacherProductsById(id));
-    }, []);
+        dispatch(getTeacherByID(id));
+    }, [id, productId]);
 
     return (
         <Page title={translate("product.selection.title")}>
@@ -31,14 +38,18 @@ export default function ProductSelect() {
                 <HeaderBreadcrumbs
                     heading={translate("product.selection.heading")}
                     links={[
-                        { name: translate("breadcrumb.dashboard"), href: PATH_DASHBOARD.root },
-                        { name: translate("breadcrumb.product"), href: PATH_DASHBOARD.eCommerce.root },
+                        { name: `${name} ${lastname}`, href: PATH_DASHBOARD.eCommerce.root },
                         { name: translate("product.selection.heading") },
                     ]}
                 />
                 <CartWidget />
-                {products.filter(p => p.id === Number(productId))[0] &&
-                    <ProductSelectForm isEdit={false} currentProduct={products.filter(p => p.id === Number(productId))[0]} />
+                {products && teacher ? (
+                    products.filter(p => p.id === Number(productId))[0] &&
+                    <ProductSelectForm
+                        currentTeacher={teacher}
+                        isEdit={false}
+                        currentProduct={products.filter(p => p.id === Number(productId))[0]} />
+                ) : <LoadingScreen />
                 }
             </Container>
         </Page>

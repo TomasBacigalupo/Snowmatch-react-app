@@ -4,40 +4,32 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import timelinePlugin from '@fullcalendar/timeline';
 import interactionPlugin, { Draggable } from '@fullcalendar/interaction';
-import resourceTimelinePlugin from '@fullcalendar/resource-timeline';
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
 import { useSnackbar } from 'notistack';
 import { useNavigate } from 'react-router-dom';
-import { createRef, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { createRef, useEffect, useMemo, useRef, useState } from 'react';
 // form
-import { useForm, Controller } from 'react-hook-form';
+import { useForm, } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { styled } from '@mui/material/styles';
 import { LoadingButton, MobileDatePicker, TimePicker } from '@mui/lab';
-import { Card, Chip, Grid, Stack, TextField, Typography, Autocomplete, InputAdornment, Box, ToggleButton, ToggleButtonGroup, Select, Button, ButtonBase } from '@mui/material';
+import { Card, Grid, Stack, TextField, Typography, InputAdornment, Box, ToggleButton, ToggleButtonGroup, Select, Button, ButtonBase } from '@mui/material';
 import { CalendarStyle, CalendarToolbar } from '../calendar';
-// routes
-import { PATH_DASHBOARD } from '../../../routes/paths';
 // components
 import {
   FormProvider,
   RHFSwitch,
   RHFSelect,
-  RHFEditor,
   RHFTextField,
-  RHFRadioGroup,
-  RHFUploadMultiFile,
-  RHFMultipleSelect,
 } from '../../../components/hook-form';
+
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import useLocales from 'src/hooks/useLocales';
-import { ski_resorts } from 'src/_mock';
 import { ski_resorts_grouped } from 'src/_mock/ski_resorts_simple';
 import Iconify from 'src/components/Iconify';
-import { fi } from 'date-fns/locale';
 import uuidv4 from 'src/utils/uuidv4';
 import product, { createProduct, deleteProduct, editProduct } from 'src/redux/slices/product';
 import useAuth from 'src/hooks/useAuth';
@@ -124,14 +116,12 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
     () => ({
       name: currentProduct?.name || '',
       description: currentProduct?.description || '',
-      // images: currentProduct?.images || [],
       maxStudents: currentProduct?.maxStudents || 10,
       ageFrom: currentProduct?.ageTo || 18,
       ageTo: currentProduct?.ageFrom || 80,
       price: currentProduct?.price || 0,
       priceSale: currentProduct?.priceSale || 0,
       lengthInMinutes: currentProduct?.lengthInMinutes || 60,
-      // tags: currentProduct?.tags || [TAGS_OPTION[0]],
       isMinors: currentProduct?.isMinors || false,
       saleConsecutive: currentProduct?.saleConsecutive || false,
       saleLastSpots: currentProduct?.saleLastSpots || false,
@@ -149,7 +139,6 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
   const {
     reset,
     watch,
-    control,
     setValue,
     getValues,
     handleSubmit,
@@ -195,7 +184,6 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
     tmpEvents = tmpEvents.map((event) => {
       let d = new Date(event.start)
       d.setTime(d.getTime() + values.lengthInMinutes * 60 * 1000)
-      event.end = d
       return { ...event, end: d }
     })
     setEvents([...tmpEvents])
@@ -252,31 +240,6 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
     }
   };
 
-  //todo checkquear fechas sean correctas 
-
-  // const handleDrop = useCallback(
-  //   (acceptedFiles) => {
-  //     setValue(
-  //       'images',
-  //       acceptedFiles.map((file) =>
-  //         Object.assign(file, {
-  //           preview: URL.createObjectURL(file),
-  //         })
-  //       )
-  //     );
-  //   },
-  //   [setValue]
-  // );
-
-  // const handleRemoveAll = () => {
-  //   setValue('images', []);
-  // };
-
-  // const handleRemove = (file) => {
-  //   const filteredItems = values.images?.filter((_file) => _file !== file);
-  //   setValue('images', filteredItems);
-  // };
-
   const handleClickToday = () => {
     const calendarEl = calendarRef.current;
     if (calendarEl) {
@@ -313,15 +276,6 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
     }
   };
 
-  const handleSelectRange = (arg) => {
-    const calendarEl = calendarRef.current;
-    if (calendarEl) {
-      const calendarApi = calendarEl.getApi();
-      calendarApi.unselect();
-    }
-    //dispatch(selectRange(arg.start, arg.end));
-  };
-
   const handleSelectEvent = (arg) => {
     const id = arg.event.id
     //dispatch(selectEvent(id));
@@ -356,7 +310,6 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
       setEvents([...tmpEvents])
       enqueueSnackbar("Delete success!")
     }
-
   };
 
   const handleDropExternalEvent = (event) => {
@@ -371,8 +324,6 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
 
     setEvents([...events, newEvent])
   }
-
-
 
   const handleDropEvent = async (eventInfo) => {
     try {
@@ -399,13 +350,6 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
     }
   };
 
-  const handleAddEvent = () => {
-    // dispatch(openModal());
-  };
-
-  const handleCloseModal = () => {
-    // dispatch(closeModal());
-  };
 
   const handelSelectDays = (event, newFormats) => {
     setSelectedDays(newFormats);
@@ -414,8 +358,6 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
   const handleChangeStartDate = (newValue) => {
     setStartDate(newValue);
   };
-
-
 
   const handleChangeEndDate = (newValue) => {
     setEndDate(newValue);
@@ -472,6 +414,7 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Grid container spacing={3}>
         <Grid item xs={12} md={8}>
+
           <Card sx={{ p: 3 }}>
             <Stack spacing={3}>
               <RHFTextField name="name" label={translate("product.name.value")} />
@@ -479,20 +422,46 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
                 <LabelStyle>{translate("product.description")}</LabelStyle>
                 <RHFTextField rows={2} multiline name="description" />
               </div>
-
-
-              {/* <div>
-                <LabelStyle>Images</LabelStyle>
-                <RHFUploadMultiFile
-                  name="images"
-                  showPreview
-                  accept="image/*"
-                  maxSize={16000000}
-                  onDrop={handleDrop}
-                  onRemove={handleRemove}
-                  onRemoveAll={handleRemoveAll}
-                />
-              </div> */}
+              <Card sx={{ p: 3, mt: 2 }} spacing={3}>
+                <Stack spacing={3} mb={2}>
+                  <Typography variant="h3">{translate("product.generator")}</Typography>
+                  <ToggleButtonGroup fullWidth value={selectedDays} onChange={handelSelectDays}>
+                    {DAYS.map((day) => (
+                      <ToggleButton color={"primary"} value={day.id} key={day.id}>{translate("product.date." + day.id)}</ToggleButton>
+                    ))}
+                  </ToggleButtonGroup>
+                  <Box
+                    sx={{
+                      display: 'grid',
+                      rowGap: 3,
+                      columnGap: 2,
+                      gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
+                    }}
+                  >
+                    <MobileDatePicker
+                      label={translate("product.startDate")}
+                      inputFormat="dd/MM/yyyy"
+                      value={startDate}
+                      onChange={handleChangeStartDate}
+                      renderInput={(params) => <TextField {...params} />}
+                    />
+                    <MobileDatePicker
+                      label={translate("product.endDate")}
+                      inputFormat="dd/MM/yyyy"
+                      value={endDate}
+                      onChange={handleChangeEndDate}
+                      renderInput={(params) => <TextField {...params} />}
+                    />
+                    <TimePicker
+                      label={translate("product.startTime")}
+                      value={time}
+                      onChange={handleChangeTime}
+                      renderInput={(params) => <TextField {...params} />}
+                    />
+                    <Button color="primary" variant="contained" onClick={handleGenerateEvents}>{translate("product.generateEvents")}</Button>
+                  </Box>
+                </Stack>
+              </Card>
               <CalendarStyle>
                 <CalendarToolbar
                   date={date}
@@ -517,7 +486,6 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
                   headerToolbar={false}
                   allDayMaintainDuration
                   eventResizableFromStart
-                  //select={handleSelectRange}
                   drop={handleDropExternalEvent}
                   eventDrop={handleDropEvent}
                   eventClick={handleSelectEvent}
@@ -538,46 +506,7 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
               </Box>
             </Stack>
           </Card>
-          <Card sx={{ p: 3, mt: 2 }} spacing={3}>
-            <Stack spacing={3} mb={2}>
-              <Typography variant="h3">{translate("product.generator")}</Typography>
-              <ToggleButtonGroup fullWidth value={selectedDays} onChange={handelSelectDays}>
-                {DAYS.map((day) => (
-                  <ToggleButton color={"primary"} value={day.id} key={day.id}>{translate("product.date." + day.id)}</ToggleButton>
-                ))}
-              </ToggleButtonGroup>
-              <Box
-                sx={{
-                  display: 'grid',
-                  rowGap: 3,
-                  columnGap: 2,
-                  gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
-                }}
-              >
-                <MobileDatePicker
-                  label={translate("product.startDate")}
-                  inputFormat="dd/MM/yyyy"
-                  value={startDate}
-                  onChange={handleChangeStartDate}
-                  renderInput={(params) => <TextField {...params} />}
-                />
-                <MobileDatePicker
-                  label={translate("product.endDate")}
-                  inputFormat="dd/MM/yyyy"
-                  value={endDate}
-                  onChange={handleChangeEndDate}
-                  renderInput={(params) => <TextField {...params} />}
-                />
-                <TimePicker
-                  label={translate("product.startTime")}
-                  value={time}
-                  onChange={handleChangeTime}
-                  renderInput={(params) => <TextField {...params} />}
-                />
-                <Button color="primary" variant="contained" onClick={handleGenerateEvents}>{translate("product.generateEvents")}</Button>
-              </Box>
-            </Stack>
-          </Card>
+
         </Grid>
 
         <Grid item xs={12} md={4}>
@@ -600,30 +529,9 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
                     })}
                   </RHFSelect>
                 </Stack>
-                {/* <Controller
-                  name="tags"
-                  control={control}
-                  render={({ field }) => (
-                    <Autocomplete
-                      {...field}
-                      multiple
-                      freeSolo
-                      onChange={(event, newValue) => field.onChange(newValue)}
-                      options={TAGS_OPTION.map((option) => option)}
-                      renderTags={(value, getTagProps) =>
-                        value.map((option, index) => (
-                          <Chip {...getTagProps({ index })} key={option} size="small" label={option} />
-                        ))
-                      }
-                      renderInput={(params) => <TextField label="Tags" {...params} />}
-                    />
-                  )}
-                /> */}
               </Stack>
             </Card>
-
             <Card sx={{ p: 3 }}>
-
               <Stack spacing={3} mb={2}>
                 <RHFSwitch name="isMinors" label={translate("product.isMinors")} />
                 <RHFTextField
@@ -668,10 +576,8 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
                   }}
                 />
               </Stack>
-
               <RHFSwitch name="saleLastSpots" label={translate("product.saleLastSpots")} />
               <RHFSwitch name="saleConsecutive" label={translate("product.saleConsecutive")} />
-
             </Card>
 
             <Card sx={{ p: 3 }}>
@@ -685,7 +591,7 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
                   maxHeight: "-webkit-fill-available",
                 }}
               >
-                <Typography>Events</Typography>
+                <Typography>{translate("product.events")}</Typography>
                 <div
                   className="fc-event"
                   title={values.name}
@@ -699,14 +605,10 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
                     borderRadius: '5px'
                   }}
                 >
-
                   <Typography color='black'>{values.name + "‎"} </Typography>
                 </div>
-
-
               </div>
             </Card>
-
             <LoadingButton type="submit" variant="contained" size="large" loading={isSubmitting}>
               {!isEdit ? translate("product.create") : translate("product.save")}
             </LoadingButton>

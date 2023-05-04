@@ -23,14 +23,28 @@ export default function ShopProductCard({ product }) {
 
   const linkTo = PATH_DASHBOARD.eCommerce.editProduct(id);
 
+  const getLevelColor = (level) => {
+    switch (level) {
+      case 'BEGINNER':
+        return 'success';
+      case 'INTERMEDIATE':
+        return 'info';
+      case 'ADVANCED':
+        return 'error';
+      default:
+        return 'warning';
+      }
+  }
+
   return (
     <Link to={linkTo} color="inherit" component={RouterLink}>
+      {console.log({ product })}
       <Card sx={{ m: 1 }}>
         <Box sx={{ position: 'relative' }}>
           {"status" && (
             <Label
               variant="filled"
-              color={("status" === 'sale' && 'error') || 'info'}
+              color={getLevelColor(product?.level)}
               sx={{
                 top: 16,
                 right: 16,
@@ -39,7 +53,7 @@ export default function ShopProductCard({ product }) {
                 textTransform: 'uppercase',
               }}
             >
-              {"status"}
+              {product?.level}
             </Label>
           )}
           {/* <Image alt={name} src={"cover"} ratio="1/1" /> */}

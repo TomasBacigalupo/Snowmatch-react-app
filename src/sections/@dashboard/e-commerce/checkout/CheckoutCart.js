@@ -68,18 +68,6 @@ export default function CheckoutCart() {
     <Grid container spacing={3}>
       <Grid item xs={12} md={8}>
         <Card sx={{ mb: 3 }}>
-          <CardHeader
-            title={
-              <Typography variant="h6">
-                Lessons:
-                <Typography component="span" sx={{ color: 'text.secondary' }}>
-                  &nbsp;({totalItems} item)
-                </Typography>
-              </Typography>
-            }
-            sx={{ mb: 3 }}
-          />
-
           {!isEmptyCart ? (
             <Scrollbar>
               <CheckoutTeacherList
@@ -97,13 +85,13 @@ export default function CheckoutCart() {
               img="https://minimal-assets-api.vercel.app/assets/illustrations/illustration_empty_cart.svg"
             />
           )}
-          <Box padding={1} display='flex' flexDirection='row' justifyContent='flex-end'>
+          {/* <Box padding={1} display='flex' flexDirection='row' justifyContent='flex-end'>
             <Button onClick={()=>dispatch(openAddEventModal())}
               variant='outlined'
             >
               Add Lesson
             </Button>
-          </Box>
+          </Box> */}
 
           <DialogAnimate open={isOpenAddEventModal} onClose={handleCloseContactModal}>
             <DialogTitle>{translate("conversation.contact_pro")}</DialogTitle>

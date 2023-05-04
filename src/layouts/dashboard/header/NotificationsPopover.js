@@ -189,8 +189,8 @@ function NotificationItem({ notification }) {
               color: 'text.disabled',
             }}
           >
-            <Iconify icon="eva:clock-outline" sx={{ mr: 0.5, width: 16, height: 16 }} />
-            {fToNow(notification.createdAt)}
+            {notification.createdAt &&<Iconify icon="eva:clock-outline" sx={{ mr: 0.5, width: 16, height: 16 }} />}
+            {notification.createdAt && fToNow(notification.createdAt)}
           </Typography>
         }
       />

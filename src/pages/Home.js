@@ -6,14 +6,10 @@ import Page from '../components/Page';
 import {
   HomeHero,
   HomeMinimal,
-  HomeDarkMode,
-  HomeLookingFor,
-  HomeColorPresets,
-  HomePricingPlans,
   HomeAdvertisement,
-  HomeCleanInterfaces,
-  HomeHugePackElements,
 } from '../sections/home';
+import useAuth from 'src/hooks/useAuth';
+import { useEffect } from 'react';
 
 // ----------------------------------------------------------------------
 
@@ -30,6 +26,17 @@ const ContentStyle = styled('div')(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 export default function HomePage() {
+  
+  const {user} = useAuth()
+ 
+  useEffect(() => {
+    if (user){
+      if(user.role === "TEACHER"){
+        window.location.href = "/dashboard"
+      }
+    }
+  },[user])
+  
   return (
     <Page title="Match a PRO">
       <RootStyle>

@@ -270,8 +270,6 @@ export default function TeacherDetailsSummary({ cart, teacher, onAddCart, onGoto
 
       <Divider sx={{ borderStyle: 'dashed' }} />
 
-      <ProductsCarousel teacherId={id} />
-
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
 
         <Stack direction="row" justifyContent="space-between" sx={{ mb: 3, mt: 2 }}>
@@ -361,8 +359,6 @@ export default function TeacherDetailsSummary({ cart, teacher, onAddCart, onGoto
             </Typography>
           </div>
         </Stack> */}
-
-        <Divider sx={{ borderStyle: 'dashed' }} />
 
         <Stack direction="row" spacing={2} sx={{ mt: 5 }}>
 

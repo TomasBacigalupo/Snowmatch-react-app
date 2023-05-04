@@ -230,7 +230,7 @@ export default function Router() {
         {
           path: 'admin',
           children: [
-            { element: <Navigate to="/dashboard/admin/reveiw" replace />, index: true },
+            { element: <Navigate to="/dashboard/admin/review" replace />, index: true },
             { path: 'review', element: <AdminReview /> },
             { path: ':id/confirm', element: <AdminConfirm /> },
           ],

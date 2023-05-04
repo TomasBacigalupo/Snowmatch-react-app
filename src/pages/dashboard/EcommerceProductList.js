@@ -117,7 +117,7 @@ export default function EcommerceProductList() {
           }}
           sx={{ mb: 5 }}
         />
-        {products?.filter(p => p.name !== "PRIVATE_FULL_DAY" && p.name !== "PRIVATE_HALF_DAY").filter(p => p.name.includes(filterName)).map((product) => {
+        {products?.filter(p => p.name !== "PRIVATE_FULL_DAY" && p.name !== "PRIVATE_HALF_DAY").filter(p => p.name.includes(filterName)).sort((a,b) => a.name.toLowerCase() <= b.name.toLowerCase() ? -1 : 1).map((product) => {
           return <ShopProductCard product={product} key={product.id}></ShopProductCard>
         })}
         {!products || (products && products.length === 0) && <Typography>{translate("product.no_products")}</Typography>}

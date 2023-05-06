@@ -213,6 +213,7 @@ export default function PrivateNewEditForm({ isEdit, currentProduct, isHalfDay }
                 ...event,
                 title: isHalfDay ? "PRIVATE_HALF_DAY" : "PRIVATE_FULL_DAY",
                 color: isHalfDay ? "#FFC83D" : "#FFC83A",
+                source: "PRODUCT",
                 type: "Product class",
                 price: data.price
             }
@@ -232,6 +233,7 @@ export default function PrivateNewEditForm({ isEdit, currentProduct, isHalfDay }
                 dispatch(createProduct(_product, false))
             } else {
                 dispatch(createProduct(_product, true))
+                window.location.reload()
             }
         } else {
             if (user?.user?.role === 'SCHOOL_ADMIN') {
@@ -407,6 +409,7 @@ export default function PrivateNewEditForm({ isEdit, currentProduct, isHalfDay }
                 e.start.setSeconds(getDefaultStartMorning().getSeconds())
                 e.start.setMinutes(getDefaultStartMorning().getMinutes())
                 e.end = new Date(e.start)
+                e.type = "Product class"
                 e.end.setTime(e.end.getTime() + 60 * 1000 * (180 - 60))
                 e.textColor = '#3399ff'
                 let et = {}
@@ -418,15 +421,18 @@ export default function PrivateNewEditForm({ isEdit, currentProduct, isHalfDay }
                 et.start.setMinutes(getDefaultStartAfternoon().getMinutes())
                 et.end = new Date(et.start)
                 et.end.setTime(et.end.getTime() + 60 * 1000 * (180 - 60))
+                et.type = "Product class"
                 et.textColor = '#3399ff'
                 let ed = {}
                 ed.id = uuidv4()
                 ed.title = isHalfDay ? "PRIVATE_HALF_DAY" : "PRIVATE_FULL_DAY"
+                ed.source = "PRODUCT"
                 ed.start = new Date(start)
                 ed.start.setHours(time.getHours())
                 ed.start.setSeconds(time.getSeconds())
                 ed.start.setMinutes(time.getMinutes())
                 ed.end = new Date(e.start)
+                ed.type = "Product class"
                 ed.end.setTime(ed.end.getTime() + 60 * 1000 * (480 - 60))
                 ed.textColor = '#3399ff'
                 if (isHalfDay) {

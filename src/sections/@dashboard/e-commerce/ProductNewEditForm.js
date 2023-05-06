@@ -4,7 +4,7 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import timelinePlugin from '@fullcalendar/timeline';
 import interactionPlugin, { Draggable } from '@fullcalendar/interaction';
-import PropTypes from 'prop-types';
+import PropTypes, { instanceOf } from 'prop-types';
 import * as Yup from 'yup';
 import { useSnackbar } from 'notistack';
 import { useNavigate } from 'react-router-dom';
@@ -109,7 +109,8 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
     maxStudents: Yup.number().moreThan(0, translate("product.resort.moreThan")),
     ageFrom: Yup.number().moreThan(0, translate("product.ageFrom.moreThan")),
     ageTo: Yup.number().lessThan(100, translate("product.agetTo.lessThan")),
-    isMinors: Yup.boolean()
+    isMinors: Yup.boolean(),
+    studentLevel: Yup.string().required("Level is requiered")
   });
 
   const defaultValues = useMemo(
@@ -126,6 +127,7 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
       saleConsecutive: currentProduct?.saleConsecutive || false,
       saleLastSpots: currentProduct?.saleLastSpots || false,
       resort: currentProduct?.resort || '',
+      studentLevel: currentProduct?.studentLevel || 'FIRST_TIME',
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentProduct]
@@ -164,20 +166,9 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
 
   }, [currentProduct]);
 
-  // useEffect(() => {
-  //   console.log("currentProduct ",currentProduct)
-  //   if(currentProduct!=undefined)
-  //     setEvents(JSON.parse(JSON.stringify(currentProduct?.events)))
-  // }, [currentProduct]);
-
   useEffect(() => {
     setEvents(events.map((event) => ({ ...event, title: values.name })))
   }, [values.name]);
-
-  useEffect(() => {
-    console.log("currentProduct", currentProduct)
-  }, [currentProduct]);
-
 
   useEffect(() => {
     let tmpEvents = events
@@ -212,14 +203,24 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
   const onSubmit = async (data) => {
     let product = data
     product.events = events
-    product.events.map((event) => {
-      event.start = event.start
-      event.type = "Product class"
-      event.price = data.price
-      event.description = "Event created for " + data.name + " product"
-
+    product.events = product.events.map((event) => {
+      let start = event.start
+      let end  = event.end
+      if ((start instanceof Date) ){
+        start.setMinutes(start.getMinutes() - start.getTimezoneOffset())
+      }
+      if ((end  instanceof Date) ){
+        end.setMinutes(end.getMinutes() - end.getTimezoneOffset())
+      }
+      return {
+        ...event,
+        start: start,
+        end: end,
+        type: "Product class",
+        price: data.price,
+        description: "Event created for " + data.name + " product"
+      }
     })
-    console.log(data)
     if (!isEdit) {
       if (user?.user?.role === 'SCHOOL_ADMIN') {
         dispatch(createProduct(product, false))
@@ -397,7 +398,6 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
   }
 
   const handleDeleteProduct = () => {
-    console.log("asds")
     if (user?.user?.role === 'SCHOOL_ADMIN') {
       dispatch(deleteProduct(false, currentProduct.id))
     } else {

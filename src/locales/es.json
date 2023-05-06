@@ -425,12 +425,8 @@
         "saleConsecutive": "Descuento para dias consecutivos",
         "create": "Crear producto",
         "save": "Guardar porducto",
-<<<<<<< HEAD
         "delete": "Eliminar producto",
-=======
-        "delete": "Delete product",
         "no_products": "No hay productos",
->>>>>>> 7e5a7f392422833b3eab9167df40201853ecaf34
         "selection":{
             "heading": "Seleccionar clases",
             "add_to_cart": "Reservar",
@@ -441,7 +437,8 @@
         },
         "add_new_product": "Crear",
         "private_full_day":"Privada día completo",
-        "private_half_day":"Privada medio día"
+        "private_half_day":"Privada medio día",
+        "title": "Producto"
     },
     "verify": {
         "title": "Verifique su Mail",

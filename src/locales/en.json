@@ -391,7 +391,8 @@
     "saleConsecutive": "Discount for consecutive days",
     "create": "Create product",
     "save": "Save product",
-    "delete": "Delete product"
+    "delete": "Delete product",
+    "title": "Product"
   },
   "verify": {
     "title": "Verify your Mail",

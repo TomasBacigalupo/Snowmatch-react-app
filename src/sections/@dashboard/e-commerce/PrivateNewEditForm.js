@@ -211,7 +211,7 @@ export default function PrivateNewEditForm({ isEdit, currentProduct, isHalfDay }
         _product.events.map((event) => (
             {
                 ...event,
-                title: isHalfDay ? "Private Half Day" : "Private Full Day",
+                title: isHalfDay ? "PRIVATE_HALF_DAY" : "PRIVATE_FULL_DAY",
                 color: isHalfDay ? "#FFC83D" : "#FFC83A",
                 type: "Product class",
                 price: data.price
@@ -221,8 +221,10 @@ export default function PrivateNewEditForm({ isEdit, currentProduct, isHalfDay }
 
         if (isHalfDay) {
             _product.name = "PRIVATE_HALF_DAY"
+            _product.title = "PRIVATE_HALF_DAY"
         } else {
             _product.name = "PRIVATE_FULL_DAY"
+            _product.title = "PRIVATE_FULL_DAY"
         }
 
         if (!isEdit) {
@@ -329,7 +331,7 @@ export default function PrivateNewEditForm({ isEdit, currentProduct, isHalfDay }
 
     const handleDropExternalEvent = (event) => {
         let newEvent = {}
-        newEvent.title = isHalfDay ? "Private Half Day" : "Private Full Day"
+        newEvent.title = isHalfDay ? "PRIVATE_HALF_DAY" : "PRIVATE_FULL_DAY"
         let d = new Date(event.date)
         newEvent.start = new Date(event.date)
         d.setTime(d.getTime() + 60 * 1000 * values.lengthInMinutes)
@@ -399,7 +401,7 @@ export default function PrivateNewEditForm({ isEdit, currentProduct, isHalfDay }
             if (selectedDays.includes(start.getDay())) {
                 let e = {}
                 e.id = uuidv4()
-                e.title = "Private Half"
+                e.title = isHalfDay ? "PRIVATE_HALF_DAY" : "PRIVATE_FULL_DAY"
                 e.start = new Date(start)
                 e.start.setHours(getDefaultStartMorning().getHours())
                 e.start.setSeconds(getDefaultStartMorning().getSeconds())
@@ -409,7 +411,7 @@ export default function PrivateNewEditForm({ isEdit, currentProduct, isHalfDay }
                 e.textColor = '#3399ff'
                 let et = {}
                 et.id = uuidv4()
-                et.title = "Private Half"
+                et.title = isHalfDay ? "PRIVATE_HALF_DAY" : "PRIVATE_FULL_DAY"
                 et.start = new Date(start)
                 et.start.setHours(getDefaultStartAfternoon().getHours())
                 et.start.setSeconds(getDefaultStartAfternoon().getSeconds())
@@ -419,7 +421,7 @@ export default function PrivateNewEditForm({ isEdit, currentProduct, isHalfDay }
                 et.textColor = '#3399ff'
                 let ed = {}
                 ed.id = uuidv4()
-                ed.title = "Private Full"
+                ed.title = isHalfDay ? "PRIVATE_HALF_DAY" : "PRIVATE_FULL_DAY"
                 ed.start = new Date(start)
                 ed.start.setHours(time.getHours())
                 ed.start.setSeconds(time.getSeconds())

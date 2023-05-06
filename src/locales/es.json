@@ -425,12 +425,8 @@
         "saleConsecutive": "Descuento para dias consecutivos",
         "create": "Crear producto",
         "save": "Guardar porducto",
-<<<<<<< HEAD
         "delete": "Eliminar producto",
-=======
-        "delete": "Delete product",
         "no_products": "No hay productos",
->>>>>>> 7e5a7f392422833b3eab9167df40201853ecaf34
         "selection":{
             "heading": "Seleccionar clases",
             "add_to_cart": "Reservar",

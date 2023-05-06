@@ -709,3 +709,46 @@ export function hireTeacher(teacherId, requestedEvents, callback){
     }
   }
 }
+
+export function hireTeacherEvents(requestedEvents, callback) {
+  return async () => {
+    try {
+      const resp = await axios.post(`api/hire/byEvents`, requestedEvents)
+      callback(true)
+    } catch (e) {
+      callback(false)
+    }
+  }
+}
+
+export function cancelHireTeacherEvents(requestedEvents, callback) {
+  return async () => {
+    try {
+      const resp = await axios.post(`api/hire/cancelByEvents`, requestedEvents)
+      callback(true)
+    } catch (e) {
+      callback(false)
+    }
+  }
+}
+
+export function startPayment(events, callBack){
+  return async () =>{
+    try{
+      const resp = await axios.post(`api/pay/startPayment`, events)
+      callBack(resp.data)
+    } catch(e){
+      callBack(false)
+    }
+  }
+}
+
+export function completePayment(id, zenrisePayment){
+  return async () =>{
+    try{
+      const resp = await axios.put(`api/pay/${id}`, zenrisePayment)
+    } catch(e){
+      console.error(e)
+    }
+  }
+}

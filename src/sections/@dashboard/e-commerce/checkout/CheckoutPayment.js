@@ -8,7 +8,7 @@ import { Grid, Button, Card } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 // redux
 import { useDispatch, useSelector } from '../../../../redux/store';
-import { onGotoStep, onBackStep, onNextStep, applyShipping, hireTeacher, cleanCart, setPaymentInfo } from '../../../../redux/slices/teachers';
+import { onGotoStep, onBackStep, onNextStep, applyShipping, hireTeacher, cleanCart, setPaymentInfo, hireTeacherEvents, startPayment, completePayment } from '../../../../redux/slices/teachers';
 // components
 import Iconify from '../../../../components/Iconify';
 import { FormProvider } from '../../../../components/hook-form';
@@ -110,42 +110,60 @@ export default function CheckoutPayment() {
   const onSubmit = async () => {
     setLoading(true)
     try {
-      dispatch(hireTeacher(teacher.id, events, (succ) => {
-        if(succ){
+      dispatch(hireTeacherEvents(events, (succ) => {
+        if (succ) {
           try {
-            cardPayment(card, 1000, []).then((res) => {
-              if (res.status === 200) {
-                dispatch(setPaymentInfo(res))
-                dispatch(cleanCart())
-                handleNextStep();
-              } else {
+            dispatch(startPayment(events, (paymentData) => {
+              try {
+                cardPayment(card, 1000, []).then((res) => {
+                  if (res.status === 200) {
+                    dispatch(completePayment(paymentData.id, {
+                      zenriseId: res.result.paymentId,
+                      amount: res.result.amountPayed
+                    }))
+                    dispatch(setPaymentInfo(res.result))
+                    dispatch(cleanCart())
+                    handleNextStep();
+                  } else {
+                    setLoading(false)
+                    enqueueSnackbar('Payment failed', { variant: 'error' })
+                    //pago rechazado
+                    //TODO: call unhire
+
+                  }
+                }).catch((err) => {
+                  setLoading(false)
+                  enqueueSnackbar('Payment failed', { variant: 'error' })
+                  //pago rechazado
+                  //TODO: call unhire
+                })
+              } catch (err) {
+                setLoading(false)
                 enqueueSnackbar('Payment failed', { variant: 'error' })
                 //pago rechazado
-                //call unhire
+                //TODO: call unhire
 
-              }
-            }).catch((err) => {
-              enqueueSnackbar('Payment failed', { variant: 'error' })
-              //pago rechazado
-              //call unhire
-            })
+              }}))
+
           } catch (error) {
+            setLoading(false)
             enqueueSnackbar('Payment failed', { variant: 'error' })
-              //pago rechazado
-              //call unhire
+            //pago rechazado
+            //TODO: call unhire
           }
-          
-        } else {
-          //avisar que no estan disponibles esos eventos que reintente buscar otras fechas
-        }
-        setLoading(false)
-      }))
 
+        } else {
+          //TODO: avisar que no estan disponibles esos eventos que reintente buscar otras fechas
+          enqueueSnackbar('Events had been booked', { variant: 'error' })
+          setLoading(false)
+        }
+      }))
     } catch (error) {
       setLoading(false)
     }
 
     try {
+      // OLD Request events
       // dispatch(hireTeacher(teacher.id, events, (succ)=>{
       //   setLoading(false)
       //   dispatch(cleanCart())

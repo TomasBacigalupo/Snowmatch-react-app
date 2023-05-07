@@ -4,7 +4,6 @@ import { styled } from '@mui/material/styles';
 import {
     Box,
     Table,
-    Divider,
     TableRow,
     TableBody,
     TableCell,
@@ -14,16 +13,13 @@ import {
     TableContainer,
 } from '@mui/material';
 // utils
-import getColorName from '../../../../utils/getColorName';
 import { fCurrency } from '../../../../utils/formatNumber';
 // components
 import Image from '../../../../components/Image';
 import Iconify from '../../../../components/Iconify';
 import { formatDate } from '@fullcalendar/react';
 import useLocales from 'src/hooks/useLocales';
-import { toLower } from 'lodash';
 import { useSelector } from 'src/redux/store';
-import { format } from 'date-fns/esm';
 
 // ----------------------------------------------------------------------
 
@@ -62,7 +58,7 @@ export default function CheckoutTeacherList({ events, onDelete, onIncreaseQuanti
 
                 <TableBody>
                     {events.map((event, idx) => {
-                        const { price, date } = event;
+                        const { price, id } = event;
                         return (
                             <TableRow key={idx}>
                                 <TableCell>
@@ -74,7 +70,7 @@ export default function CheckoutTeacherList({ events, onDelete, onIncreaseQuanti
                                             </Typography>
                                             {/* start and end time od the event */}
                                             <Typography noWrap variant="body2" sx={{ color: 'text.secondary' }}>
-                                                {`${translate('checkout.start_time')} ${event.start.getHours()}:${event.start.getMinutes() < 10 ? '0' + event.start.getMinutes() : event.start.getMinutes()}`} ${translate('checkout.end_time')}  {`${event.end.getHours()}:${event.end.getMinutes() < 10 ? '0' + event.end.getMinutes() : event.end.getMinutes() }`}
+                                                {`${event.start.getHours()}:${event.start.getMinutes() < 10 ? '0' + event.start.getMinutes() : event.start.getMinutes()}`} ${translate('checkout.end_time')}  {`${event.end.getHours()}:${event.end.getMinutes() < 10 ? '0' + event.end.getMinutes() : event.end.getMinutes() }`}
                                             </Typography>
                                         </Box>
                                     </Box>
@@ -83,7 +79,7 @@ export default function CheckoutTeacherList({ events, onDelete, onIncreaseQuanti
                                 <TableCell align="right">{price === 0 ? translate('checkout.deal_with_pro') : fCurrency(price)}</TableCell>
 
                                 <TableCell align="right">
-                                    <IconButton onClick={() => onDelete(idx)}>
+                                    <IconButton onClick={() => onDelete(id)}>
                                         <Iconify icon={'eva:trash-2-outline'} width={20} height={20} />
                                     </IconButton>
                                 </TableCell>

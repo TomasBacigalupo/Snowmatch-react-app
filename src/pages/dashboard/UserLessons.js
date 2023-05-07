@@ -30,7 +30,7 @@ import { useNavigate } from 'react-router';
 import CertificateItem from 'src/sections/@dashboard/user/account/CertificateItem';
 import UserLessonsList from 'src/sections/@dashboard/user/list/UserLessonsList';
 import { dispatch, useDispatch } from 'src/redux/store';
-import { getEvents } from 'src/redux/slices/calendar';
+import { getEvents, getLessons } from 'src/redux/slices/calendar';
 
 // ----------------------------------------------------------------------
 
@@ -71,7 +71,7 @@ export default function UserLessons() {
     };
 
     useEffect(() => {
-        dispatch(getEvents())
+        dispatch(getLessons())
     }, [dispatch])
 
     return (

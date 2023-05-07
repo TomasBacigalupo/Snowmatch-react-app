@@ -33,6 +33,8 @@ import { Checkbox } from '@mui/material';
 import SelectRangeDates from './SelectRangeDates';
 import ProductsCarousel from '../../general/app/ProductsCarousel';
 import { addCart } from 'src/redux/slices/teachers';
+import { fCurrency } from 'src/utils/formatNumber';
+import { set } from 'lodash';
 
 
 
@@ -91,18 +93,17 @@ export default function TeacherDetailsSummary({ cart, teacher, onAddCart, onGoto
     setLessons(value);
   };
   const products = useSelector(state => state.product.products)
-  
+
 
 
   const { isOpenReferModal, isOpenContactModal, error } = useSelector((state) => state.contact);
 
   const handleContact = () => {
-    
+
     //dispatch(openContactModal());
   };
 
   const handleRefer = () => {
-    console.log(user)
     dispatch(openReferModal());
   };
 
@@ -140,13 +141,19 @@ export default function TeacherDetailsSummary({ cart, teacher, onAddCart, onGoto
     resort: "",
     duration: "MORNING",
     people: 1,
-    level: "BEGINNER"
+    level: "BEGINNER",
+    product: products[0]?.id ?? "",
   };
 
   useEffect(() => dispatch(getTeacherProductsById(id)), [id])
+  
   const methods = useForm({
     defaultValues,
   });
+
+  useEffect(() => {
+    setValue('product', products[0]?.id ?? "")
+  },[products])
 
   const handleCloseContactModal = () => {
     if (error === null)
@@ -212,7 +219,6 @@ export default function TeacherDetailsSummary({ cart, teacher, onAddCart, onGoto
   };
 
   const button = (user, isIndependent) => {
-    console.log(user)
     if (user.isAuthenticated) {
       return (
         <HoverButton
@@ -303,8 +309,11 @@ export default function TeacherDetailsSummary({ cart, teacher, onAddCart, onGoto
             ))}
           </RHFSelect>
         </Stack>
-
-
+        <Stack direction="row" justifyContent="flex-end" sx={{ mb: 3, mt: 2 }}>
+          <Typography variant="subtitle1" sx={{ mt: 0.5 }}>
+            {fCurrency(products.find((product) => Number(product.id) === Number(values.product))?.price ?? 0)}
+          </Typography>
+        </Stack>
         {/* <Stack direction="row" justifyContent="space-between" sx={{ mb: 3 }} justifyItems='center'>
           <Typography variant="subtitle1" sx={{ mt: 0.5 }}>
             {translate('teacherDetails.duration')}
@@ -374,9 +383,9 @@ export default function TeacherDetailsSummary({ cart, teacher, onAddCart, onGoto
           >
             Add to Cart
           </Button> */}
-          <Button 
-          component={RouterLink}
-          fullWidth
+          <Button
+            component={RouterLink}
+            fullWidth
             size="large"
             color="primary"
             sx={{ whiteSpace: 'nowrap' }}

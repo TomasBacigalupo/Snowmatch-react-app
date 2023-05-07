@@ -126,7 +126,7 @@
     "event": {
         "payed": "Cobrado",
         "pay": "Cobrar",
-        "information": "Informacion"
+        "information": "Info"
     },
     "school": {
         "clients": {
@@ -361,7 +361,12 @@
         "event_added": "Clase agendada",
         "book_lesson": "Reservar clase",
         "start_time": "De",
-        "end_time": "a"
+        "end_time": "a",
+        "summary": "Resumen",
+        "days":"Cantidad de días",
+       "subtotal": "Sub total:",
+       "sm_service": "Servicio SnowMatch:",
+       "total": "Total:"
     },
     "product": {
         "heading": {
@@ -433,7 +438,9 @@
             "booked": "Reservado",
             "lesson_booked": "Clase Reservada",
             "lesson_unbooked": "Clase liberada",
-            "continue": "Continuar"
+            "continue": "Continuar",
+            "more": "Más clases",
+            "buy_now": "Comprar ahora"
         },
         "add_new_product": "Crear",
         "private_full_day":"Privada día completo",

@@ -41,8 +41,8 @@ export default function CheckoutCart() {
 
   const isEmptyCart = cart.length === 0;
 
-  const handleDeleteCart = (eventIdx) => {
-    dispatch(deleteCart(eventIdx));
+  const handleDeleteCart = (eventId) => {
+    dispatch(deleteCart(eventId));
   };
 
   const handleNextStep = () => {

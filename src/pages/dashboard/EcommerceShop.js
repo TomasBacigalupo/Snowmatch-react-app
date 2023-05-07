@@ -53,14 +53,20 @@ export default function EcommerceShop({isGuest=false, teacherType="school"}) {
   const query = useQuery()
   const [openFilter, setOpenFilter] = useState(false);
 
-  const { teachers, sortBy, filters } = useSelector((state) => { return state.teachers })
+  const { teachers, sortBy, filters, teachersWithEvents } = useSelector((state) => { return state.teachers })
 
   useEffect(()=>{
-    dispatch(filterTeachers({resort: query.get('resort')}))
+    if(query.get('resort')){
+      dispatch(filterTeachers({ resort: query.get('resort') }))
+    }else if(filters.resort === ""){
+      dispatch(filterTeachers({ resort: 'Cerro Catedral' }))
+    }
+
   }, [])
 
   const filteredTeachers = applyFilter(teachers, sortBy, filters, teacherType);
 
+  const resortFromPath =  query.get('resort')
   const defaultValues = {
     rating: filters.rating,
     gender: filters.gender,
@@ -69,7 +75,7 @@ export default function EcommerceShop({isGuest=false, teacherType="school"}) {
     language: filters.language,
     from: filters.from,
     to: filters.to,
-    resort: query.get('resort'),
+    resort: resortFromPath !== null ? resortFromPath : filters.resort,
   };
 
   const methods = useForm({
@@ -201,10 +207,9 @@ export default function EcommerceShop({isGuest=false, teacherType="school"}) {
           )}
         </Stack>
         
-        <ShopTeacherList teachers={filteredTeachers} loading={!filteredTeachers.length && isDefault} />
-        <ShopOtherTeacherList teachers={[...filteredTeachers, ...filteredTeachers]} loading={!filteredTeachers.length && isDefault} />
+        <ShopTeacherList teachers={teachersWithEvents} loading={!filteredTeachers.length && isDefault} />
+        <ShopOtherTeacherList teachers={filteredTeachers} loading={!filteredTeachers.length && isDefault} />
 
-        
       </Container>
       <><br /></>
 

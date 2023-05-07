@@ -207,18 +207,14 @@ export default function PrivateNewEditForm({ isEdit, currentProduct, isHalfDay }
 
     const onSubmit = async (data) => {
         let _product = data
-        _product.events = events
-        _product.events.map((event) => (
-            {
-                ...event,
-                title: isHalfDay ? "PRIVATE_HALF_DAY" : "PRIVATE_FULL_DAY",
-                color: isHalfDay ? "#FFC83D" : "#FFC83A",
-                source: "PRODUCT",
-                type: "Product class",
-                price: data.price
-            }
-        )
-        )
+        _product.events = events.map((event) => ({
+            ...event,
+            title: isHalfDay ? "PRIVATE_HALF_DAY" : "PRIVATE_FULL_DAY",
+            color: isHalfDay ? "#FFC83D" : "#FFC83A",
+            source: "PRODUCT",
+            type: "Product class",
+            price: data.price
+        }))
 
         if (isHalfDay) {
             _product.name = "PRIVATE_HALF_DAY"
@@ -233,7 +229,7 @@ export default function PrivateNewEditForm({ isEdit, currentProduct, isHalfDay }
                 dispatch(createProduct(_product, false))
             } else {
                 dispatch(createProduct(_product, true))
-                window.location.reload()
+                setTimeout(() => window.location.reload(), 5000)
             }
         } else {
             if (user?.user?.role === 'SCHOOL_ADMIN') {
@@ -624,14 +620,14 @@ export default function PrivateNewEditForm({ isEdit, currentProduct, isHalfDay }
                     </Card>
                     <Grid xs={12} container justifyContent={'flex-end'}>
                         <Grid xs={isEdit ? 6 : 12} sx={{ p: 2 }} >
-                            <LoadingButton sx={{p:1}} fullWidth type="submit" variant="contained" size="large" loading={isSubmitting}>
+                            <LoadingButton sx={{ p: 1 }} fullWidth type="submit" variant="contained" size="large" loading={isSubmitting}>
                                 {!isEdit ? translate("product.create") : translate("product.save")}
                             </LoadingButton>
-                        </Grid> 
+                        </Grid>
                         {isEdit ? <Grid xs={6} sx={{ p: 2 }} >< LoadingButton sx={{ mY: 1 }} fullWidth variant="contained" color="error" size="large" loading={isLoading} onClick={handleDeleteProduct}>
                             {translate("product.delete")}
                         </LoadingButton> </Grid> : <></>}
-                    </Grid> 
+                    </Grid>
                 </Grid>
             </Grid>
         </FormProvider>

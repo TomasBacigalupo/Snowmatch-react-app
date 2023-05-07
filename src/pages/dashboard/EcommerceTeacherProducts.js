@@ -6,7 +6,7 @@ import { Container, Grid, Typography, Card, CardContent, Button, Box } from '@mu
 import { useDispatch, useSelector } from '../../redux/store';
 import { getTeacherProducts, getTeacherProductsById } from '../../redux/slices/product';
 // routes
-import { PATH_DASHBOARD } from '../../routes/paths';
+import { PATH_DASHBOARD, PATH_GUEST } from '../../routes/paths';
 // components
 import Page from '../../components/Page';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
@@ -15,6 +15,7 @@ import ProductSelectForm from 'src/sections/@dashboard/e-commerce/ProductSelectF
 import CartWidget from 'src/sections/@dashboard/e-commerce/CartWidget';
 import { getTeacherByID } from 'src/redux/slices/teachers';
 import LoadingScreen from 'src/components/LoadingScreen';
+import useAuth from 'src/hooks/useAuth';
 
 // ----------------------------------------------------------------------
 
@@ -25,6 +26,7 @@ export default function ProductSelect() {
     const { products } = useSelector((state) => state.product);
     const { teacher } = useSelector((state) => state.teachers);
     const { name, lastname } = teacher || { name: "", lastname: ""};
+    const {user} = useAuth();
     const { translate } = useLocales();
 
     useEffect(() => {
@@ -38,7 +40,7 @@ export default function ProductSelect() {
                 <HeaderBreadcrumbs
                     heading={translate("product.selection.heading")}
                     links={[
-                        { name: `${name} ${lastname}`, href: PATH_DASHBOARD.eCommerce.root },
+                        { name: `${name} ${lastname}`, href: user?.role === "TEACHER" ? PATH_DASHBOARD.eCommerce.root : PATH_GUEST.viewTeacher(id) },
                         { name: translate("product.selection.heading") },
                     ]}
                 />

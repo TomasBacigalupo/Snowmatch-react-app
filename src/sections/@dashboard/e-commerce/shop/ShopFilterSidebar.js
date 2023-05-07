@@ -96,8 +96,6 @@ export default function ShopFilterSidebar({ isOpen, onResetAll, onOpen, onClose 
               <Typography variant="subtitle1">{translate('filter.resort')}</Typography>
 
               <RHFSelect name="resort" label="Resort" placeholder="Resort">
-                <option value="test" />
-
                 {FILTER_RESORT_OPTIONS.map((country) => (
                   <optgroup label={country.category} key={country.category}>
                     {country.resorts.sort().map(r => (

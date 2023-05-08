@@ -1,11 +1,7 @@
 {
   "name": "SnowMatch",
   "author": "snowmatch.pro",
-<<<<<<< HEAD
-  "version": "3.13.0",
-=======
   "version": "4.1.0",
->>>>>>> 17eec4fe0b2ed74fddeab8c8b1eb8b9908a562ab
   "homepage": "https://snowmatch.pro",
   "description": "Javascript Version",
   "private": true,

@@ -167,6 +167,11 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
   }, [currentProduct]);
 
   useEffect(() => {
+    console.log(user)
+
+  }, [user]);
+
+  useEffect(() => {
     setEvents(events.map((event) => ({ ...event, title: values.name })))
   }, [values.name]);
 
@@ -221,14 +226,15 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
         description: "Event created for " + data.name + " product"
       }
     })
+    console.log(user)
     if (!isEdit) {
-      if (user?.user?.role === 'SCHOOL_ADMIN') {
+      if (user?.role === 'SCHOOL_ADMIN') {
         dispatch(createProduct(product, false))
       } else {
         dispatch(createProduct(product, true))
       }
     } else {
-      if (user?.user?.role === 'SCHOOL_ADMIN') {
+      if (user?.role === 'SCHOOL_ADMIN') {
         dispatch(editProduct(product, false, currentProduct.id))
       } else {
         dispatch(editProduct(product, true, currentProduct.id))

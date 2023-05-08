@@ -8,12 +8,12 @@ import PropTypes from 'prop-types';
 import * as Yup from 'yup';
 import { useSnackbar } from 'notistack';
 import { createRef, useEffect, useMemo, useRef, useState } from 'react';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { Card, Grid, Stack, Typography, Box, Button, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
+import { Card, Grid, Stack, Typography, Button } from '@mui/material';
 import { CalendarStyle, CalendarToolbar } from '../calendar';
 import { Check, ShoppingCart } from '@mui/icons-material';
 
@@ -22,12 +22,13 @@ import {
     FormProvider,
 } from '../../../components/hook-form';
 import { useDispatch, useSelector } from 'react-redux';
-import { useTranslation } from 'react-i18next';
 import useLocales from 'src/hooks/useLocales';
-import product, {  getProductEvents } from 'src/redux/slices/product';
+import { getProductEvents } from 'src/redux/slices/product';
 import useAuth from 'src/hooks/useAuth';
-import { addCart, getTeacherByID } from 'src/redux/slices/teachers';
-import { PATH_DASHBOARD, PATH_GUEST } from 'src/routes/paths';
+import { addCart, deleteCart } from 'src/redux/slices/teachers';
+import { PATH_GUEST } from 'src/routes/paths';
+import { fCurrency } from 'src/utils/formatNumber';
+import { da, fi } from 'date-fns/locale';
 // ----------------------------------------------------------------------
 
 
@@ -37,37 +38,32 @@ ProductSelectForm.propTypes = {
 };
 
 export default function ProductSelectForm({ currentProduct, currentTeacher }) {
-    
+
     const {
         description,
     } = currentProduct
 
-    const { events } = useSelector( state => state.teachers.checkout)
-    const { teacher } = useSelector( state => state.teachers.teacher)
+    const { events } = useSelector(state => state.teachers.checkout)
+    const { filters } = useSelector(state => state.teachers)
     const { success, error, isLoading } = useSelector(state => state.product)
 
     const calendarRef = useRef(null);
     const { user } = useAuth();
     const dispatch = useDispatch()
-    const [date, setDate] = useState(new Date());
+    const [date, setDate] = useState(filters.from);
     const { enqueueSnackbar } = useSnackbar();
     const [view, setView] = useState('listWeek');
     const { translate } = useLocales()
     const [availableEvents, setEvents] = useState([...currentProduct.events] || []);
     const trashRef = createRef()
-    
-    // State to keep track of whether the "How To" dialog is open or closed
-    const [isHowToDialogOpen, setHowToDialogOpen] = useState(true);
-    const [selectedEvents, setSelectedEvents] = useState([]);
 
-    // Event handler for closing the "How To" dialog
-    const handleCloseHowToDialog = () => {
-        setHowToDialogOpen(false);
-    };
-    
     useEffect(() => {
         dispatch(getProductEvents(currentProduct.id))
     }, [currentProduct])
+
+    useEffect(() => {
+        setDate(filters.from)
+    }, [filters.from])
 
 
     const NewProductSchema = Yup.object().shape({
@@ -277,6 +273,10 @@ export default function ProductSelectForm({ currentProduct, currentTeacher }) {
             }))
         }
 
+        const onDeleteFromCart = () => {
+            dispatch(deleteCart(currentEventId))
+        }
+
         return (
             <Button
                 fullWidth
@@ -285,7 +285,7 @@ export default function ProductSelectForm({ currentProduct, currentTeacher }) {
                         onAddCart()
                         enqueueSnackbar(translate('product.selection.lesson_booked'), success)
                     } else {
-                        setSelectedEvents(events => events.filter(e => e.id !== Number(event.event.id)))
+                        onDeleteFromCart()
                         enqueueSnackbar(translate('product.selection.lesson_unbooked'), success)
                     }
                 }}
@@ -302,10 +302,11 @@ export default function ProductSelectForm({ currentProduct, currentTeacher }) {
     return (
         <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
             <Grid container spacing={3}>
-
                 <Grid item xs={12} md={8}>
-
                     <Card sx={{ p: 3 }}>
+                        <Typography variant="h3" sx={{ color: 'text.secondary', fontStyle: 'italic' }}>
+                            {`${fCurrency(currentProduct.price)}`}
+                        </Typography>
                         <Typography variant="body1" sx={{ color: 'text.secondary', fontStyle: 'italic' }}>
                             {description}
                         </Typography>
@@ -322,9 +323,13 @@ export default function ProductSelectForm({ currentProduct, currentTeacher }) {
                                 <FullCalendar
                                     weekends
                                     editable
-                                    droppable
                                     selectable
-                                    events={availableEvents.map((event) => ({ ...event, textColor: '#ffffff' }))}
+                                    events={availableEvents.map((event) => ({
+                                        ...event,
+                                        start: new Date(event.start),
+                                        end: new Date(event.end),
+                                        textColor: '#ffffff'
+                                    }))}
                                     ref={calendarRef}
                                     rerenderDelay={10}
                                     initialDate={date}
@@ -346,14 +351,24 @@ export default function ProductSelectForm({ currentProduct, currentTeacher }) {
 
                 </Grid>
 
-                <Grid item xs={12} md={4}>
-                    <Stack spacing={3}>
-                        <Button 
-                        variant='contained'
-                        component={RouterLink}
-                        to={PATH_GUEST.checkout(currentTeacher.id)}
-                        > {translate('product.selection.continue')} </Button>
-                    </Stack>
+                <Grid item xs={12} md={4} container spacing={2}>
+                    <Grid item xs={12} md={6}>
+                        <Button
+                            fullWidth
+                            variant='contained'
+                            component={RouterLink}
+                            to={PATH_GUEST.checkout(currentTeacher.id)}
+                        > {translate('product.selection.buy_now')} </Button>
+                    </Grid>
+                    <Grid item xs={12} md={6}>
+                        <Button
+                            fullWidth
+                            variant='contained'
+                            color='warning'
+                            component={RouterLink}
+                            to={PATH_GUEST.viewTeacher(currentTeacher.id)}
+                        > {translate('product.selection.more')} </Button>
+                    </Grid>
                 </Grid>
             </Grid>
         </FormProvider>

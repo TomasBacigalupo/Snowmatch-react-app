@@ -11,6 +11,7 @@ import { fCurrency } from '../../../../utils/formatNumber';
 import Label from '../../../../components/Label';
 import Image from '../../../../components/Image';
 import { ColorPreview } from '../../../../components/color-utils';
+import { get } from 'lodash';
 
 // ----------------------------------------------------------------------
 
@@ -19,20 +20,39 @@ ShopProductCard.propTypes = {
 };
 
 export default function ShopProductCard({ product }) {
-  const { name, price, id, description } = product;
+  const { name, price, id, description, studentLevel } = product;
 
   const linkTo = PATH_DASHBOARD.eCommerce.editProduct(id);
 
   const getLevelColor = (level) => {
     switch (level) {
+      case 'FIRST_TIME':
+        return 'lightgreen';
       case 'BEGINNER':
-        return 'success';
+        return 'green';
       case 'INTERMEDIATE':
-        return 'info';
+        return 'blue';
       case 'ADVANCED':
-        return 'error';
+        return 'red';
       default:
-        return 'warning';
+        return 'black';
+      }
+  }
+
+  const getLevelLabel = (level) => {
+    switch (level) {
+      case 'FIRST_TIME':
+        return 'First Time';
+      case 'BEGINNER':
+        return 'Beginner';
+      case 'INTERMEDIATE':
+        return 'Intermediate';
+      case 'ADVANCED':
+        return 'Advanced';
+      case 'EXPERT':
+        return 'Expert'; 
+      default:
+        return 'All';
       }
   }
 
@@ -44,7 +64,7 @@ export default function ShopProductCard({ product }) {
           {"status" && (
             <Label
               variant="filled"
-              color={getLevelColor(product?.level)}
+              // color={getLevelColor(studentLevel)}
               sx={{
                 top: 16,
                 right: 16,
@@ -52,8 +72,11 @@ export default function ShopProductCard({ product }) {
                 position: 'absolute',
                 textTransform: 'uppercase',
               }}
+              style={{ 
+                color: 'white',
+                backgroundColor: getLevelColor(studentLevel) }}
             >
-              {product?.level}
+              {getLevelLabel(studentLevel)}
             </Label>
           )}
           {/* <Image alt={name} src={"cover"} ratio="1/1" /> */}

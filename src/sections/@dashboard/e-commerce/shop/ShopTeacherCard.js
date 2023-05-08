@@ -18,7 +18,7 @@ ShopTeacherCard.propTypes = {
 };
 
 export default function ShopTeacherCard({ teacher }) {
-  const { name, lastname, imageLink, information, email, resorts, id, events } = teacher;
+  const { name, lastname, imageLink, information, email, resorts, id, eventsList } = teacher;
   const { filters } = useSelector(state => state.teachers)
   const navigate = useNavigate();
   const [src, setSrc] = useState(imageLink)
@@ -53,12 +53,12 @@ export default function ShopTeacherCard({ teacher }) {
             {getResortToShow()}
           </Label>
         )}
-        {resorts && (
+        {eventsList && (
           <Label
             variant="filled"
             sx={{
-              top: 16,
-              right: 320,
+              top: 50,
+              right: 16,
               zIndex: 9,
               position: 'absolute',
               textTransform: 'uppercase',
@@ -66,7 +66,7 @@ export default function ShopTeacherCard({ teacher }) {
               bgcolor: '#FF5630'
             }}
           >
-            3 <EventAvailableIcon sx={{ p: 0.5, ml: 0.5 }} />
+            {eventsList.length} <EventAvailableIcon sx={{ p: 0.5, ml: 0.5 }} />
           </Label>
         )}
         <Image alt={name} src={src} ratio="1/1" onError={() => setSrc('/assets/notFound.jpeg')} />

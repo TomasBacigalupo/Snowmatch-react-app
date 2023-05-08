@@ -9,6 +9,7 @@ import axios from '../../utils/axios';
 //
 import { dispatch } from '../store';
 import { useSelector } from 'react-redux';
+import { from } from 'stylis';
 
 // ----------------------------------------------------------------------
 
@@ -31,7 +32,7 @@ const initialState = {
     language: [],
     from: new Date(),
     to: new Date(new Date().getTime() + (10 * 24 * 60 * 60 * 1000)),
-    resort: '',
+    resort: 'Cerro Catedral',
   },
   checkout: {
     activeStep: 0,
@@ -212,7 +213,7 @@ const slice = createSlice({
     },
 
     deleteCart(state, action) {
-      const updateCart = state.checkout.events.filter((event, idx) => idx !== action.payload);
+      const updateCart = state.checkout.events.filter(event => Number(event.id) !== action.payload);
 
       state.checkout.events = updateCart;
     },
@@ -396,9 +397,8 @@ export function getTeachers() {
 export function getTeachersWithEvents(filters) {
   return async () => {
     dispatch(slice.actions.startLoading());
-
     try {
-      const response = await axios.get(`/api/users/teacher/with_filters?startDate=${filters.from}&endDate=${filters.to}&resort=${filters.resort}`);
+      const response = await axios.get(`/api/users/teacher/with_filters?start=${filters.from?.toISOString().slice(0, -1) ?? ''}&end=${filters.to?.toISOString().slice(0, -1) ?? ''}&resort=${filters.resort ?? ''}`);
       const teachers = response.data;
 
       dispatch(slice.actions.getTeachersWithEventsSuccess(teachers));

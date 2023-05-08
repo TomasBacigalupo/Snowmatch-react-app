@@ -303,7 +303,7 @@ export default function CalendarForm({ event, range, onCancel, clients, members 
         ></Autocomplete>}
 
         {event?.students?.length > 0 && <Autocomplete
-          name="assigenedTeachersId" label={translate('calendar.form.assignedTeachers')}
+          name="assignedTeachersId" label={translate('calendar.form.assignedStudents')}
           multiple
           value={event?.students}
           options={{}}
@@ -316,7 +316,7 @@ export default function CalendarForm({ event, range, onCancel, clients, members 
           )}
           renderInput={(params) => (
             <RHFTextField {...params}
-              name="assigenedTeachersId" label="AssignedTeacher" />
+              name="assignedStudentId" label={translate('calendar.form.assignedStudents')} />
             // <TextField
             //   {...params}
             //   label="Client"

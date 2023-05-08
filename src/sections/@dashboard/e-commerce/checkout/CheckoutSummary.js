@@ -4,18 +4,19 @@ import {
   Box,
   Card,
   Stack,
-  Button,
+  // Button,
   Divider,
-  TextField,
+  // TextField,
   CardHeader,
   Typography,
   CardContent,
-  InputAdornment,
+  // InputAdornment,
 } from '@mui/material';
 // utils
 import { fCurrency } from '../../../../utils/formatNumber';
 // components
 import Iconify from '../../../../components/Iconify';
+import useLocales from 'src/hooks/useLocales';
 
 // ----------------------------------------------------------------------
 
@@ -41,34 +42,28 @@ export default function CheckoutSummary({
   enableEdit = true,
   enableDiscount = false,
 }) {
+  const {translate} = useLocales()
   const displayShipping = shipping !== null ? 'Free' : '-';
 
   return (
     <Card sx={{ mb: 3 }}>
       <CardHeader
-        title="Order Summary"
-        action={
-          enableEdit && (
-            <Button size="small" disabled={true} onClick={onEdit} startIcon={<Iconify icon={'eva:edit-fill'} />}>
-              Edit
-            </Button>
-          )
-        }
+        title={translate('checkout.summary')}
       />
 
       <CardContent>
         <Stack spacing={2}>
           <Stack direction="row" justifyContent="space-between">
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-              Days
+              {translate('checkout.days')}
             </Typography>
             <Typography variant="subtitle2">{totalEvents}</Typography>
           </Stack>
           <Stack direction="row" justifyContent="space-between">
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-              Sub Total
+              {translate('checkout.subtotal')}
             </Typography>
-            <Typography variant="subtitle2">{subtotal ? fCurrency(subtotal) : 'Deal with Pro'}</Typography>
+            <Typography variant="subtitle2">{subtotal ? fCurrency(subtotal) : translate('checkout.deal_with_pro')}</Typography>
           </Stack>
 
           <Stack direction="row" justifyContent="space-between">
@@ -80,15 +75,15 @@ export default function CheckoutSummary({
 
           <Stack direction="row" justifyContent="space-between">
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-              SM service
+              {translate('checkout.sm_service')}
             </Typography>
-            <Typography variant="subtitle2">Free</Typography>
+            <Typography variant="subtitle2">{translate('checkout.free')}</Typography>
           </Stack>
 
           <Divider />
 
           <Stack direction="row" justifyContent="space-between">
-            <Typography variant="subtitle1">Total</Typography>
+            <Typography variant="subtitle1">{translate('checkout.total')}</Typography>
             <Box sx={{ textAlign: 'right' }}>
               <Typography variant="subtitle1">
                 {fCurrency(total)}

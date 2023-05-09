@@ -197,7 +197,7 @@ export function getProductsByBusinessId(id) {
         dispatch(slice.actions.startLoading());
         try {
             const response = await axios.get(`/api/product/business/${id}`);
-            dispatch(slice.actions.getBusinessProductsSuccess(response.data));
+            dispatch(slice.actions.getProductsByBusinessSuccess(response.data));
         } catch (error) {
             dispatch(slice.actions.hasError(error));
         }

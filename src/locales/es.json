@@ -274,7 +274,16 @@
         "noTeachers": "Esta escuela no tiene profesores linkeados en SnowMatch",
         "lessons": "Clases",
         "contact_school": "Reservar Clase",
-        "noLessons": "Esta escuela no tiene clases linkeadas en SnowMatch"
+        "noLessons": "Esta escuela no tiene clases linkeadas en SnowMatch",
+        "kinder": "Niños",
+        "adult": "Adultos"
+    },
+    "notLinkedSchoolModal": {
+        "title": "Escuela no vinculada",
+        "message": "Esta escuela no tiene sus clases vinculadas en Snowmatch. Serás redirigido al sitio web oficial de la escuela.",
+        "adminsMessage": " * Si eres administrador de la escuela y deseas vincular tus clases, contáctanos en office@snowmatch.pro.",
+        "redirect": "Redirigirme",
+        "cancel": "Cancelar"
     },
     "conversation": {
         "not_valid": "Tu numero de telefono no esta validado, revisa WhatsApp y probá de nuevo!",

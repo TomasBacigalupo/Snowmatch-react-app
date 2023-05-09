@@ -9,17 +9,15 @@ import { PATH_DASHBOARD } from '../../../../routes/paths';
 import { fCurrency } from '../../../../utils/formatNumber';
 // components
 import Label from '../../../../components/Label';
-import Image from '../../../../components/Image';
-import { ColorPreview } from '../../../../components/color-utils';
-import { get } from 'lodash';
 
 // ----------------------------------------------------------------------
 
 ShopProductCard.propTypes = {
   product: PropTypes.object,
+  onClick: PropTypes.oneOfType([PropTypes.func, PropTypes.oneOf([null, undefined])])
 };
 
-export default function ShopProductCard({ product }) {
+export default function ShopProductCard({ product, onClick }) {
   const { name, price, id, description, studentLevel } = product;
 
   const linkTo = PATH_DASHBOARD.eCommerce.editProduct(id);
@@ -57,9 +55,8 @@ export default function ShopProductCard({ product }) {
   }
 
   return (
-    <Link to={linkTo} color="inherit" component={RouterLink}>
-      {console.log({ product })}
-      <Card sx={{ m: 1 }}>
+    <Link to={onClick ? '' : linkTo} sx={{m:0.5}} color="inherit" component={RouterLink}>
+      <Card sx={{ m: 0.5, minWidth: '250px', height: '100%'}} onClick={ onClick ? onClick : ()=>{}}>
         <Box sx={{ position: 'relative' }}>
           {"status" && (
             <Label
@@ -87,7 +84,7 @@ export default function ShopProductCard({ product }) {
           <Typography variant="subtitle2" noWrap>
             {name}
           </Typography>
-          <Typography variant="subtitle3" noWrap>
+          <Typography variant="subtitle3" >
             {description}
           </Typography>
           {/* </Link> */}

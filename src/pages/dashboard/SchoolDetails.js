@@ -21,6 +21,7 @@ import useLocales from 'src/hooks/useLocales';
 import { getBusiness, getMembersPublic, getProductsByBusinessId } from 'src/redux/slices/business';
 import { SchoolDetailsCarousel, SchoolDetailsSummary } from 'src/sections/@dashboard/e-commerce/school-details';
 import SchoolDetailsMembersList from 'src/sections/@dashboard/e-commerce/school-details/SchoolDetailsMembersList';
+import SchoolDetailsProductList from 'src/sections/@dashboard/e-commerce/school-details/SchoolDetailsProductList';
 
 // ----------------------------------------------------------------------
 
@@ -66,7 +67,7 @@ export default function EcommerceTeacherDetails({ isGuest = false }) {
   const { id = '' } = useParams();
   const { product, error, checkout } = useSelector((state) => state.product);
   const { translate } = useLocales()
-  const { business, teachers, isLoading } = useSelector((state) => state.business);
+  const { business, teachers, isLoading, products } = useSelector((state) => state.business);
   const { user } = useAuth();
 
 
@@ -123,9 +124,19 @@ export default function EcommerceTeacherDetails({ isGuest = false }) {
             <br></br>
             {/* <Grid container sx={{ my: 1 }}> */}
             <Typography variant='h4'>{translate("schoolDetails.lessons")}</Typography>
+
             <br></br>
-            {teachers && teachers.length > 0 ? (
-              <SchoolDetailsMembersList teachers={teachers} loading={isLoading}></SchoolDetailsMembersList>
+            {products && products.filter(p => Number(p.ageTo) < 18).length > 0&& (
+              <>
+                <Typography variant='h6'>{translate("schoolDetails.kinder")}</Typography>
+                <SchoolDetailsProductList products={products.filter(p => Number(p.ageTo) < 18)} loading={isLoading} siteUrl={business?.siteUrl}  />
+              </>
+            )}
+            {products && products.filter(p => Number(p.ageTo) >= 18).length > 0 ? (
+              <>
+                <Typography variant='h6'>{translate("schoolDetails.adult")}</Typography>
+                <SchoolDetailsProductList products={products.filter(p => Number(p.ageTo) >= 18)} loading={isLoading} />
+              </>
             ) : (
               <>
                 <Typography variant='body1'> {translate("schoolDetails.noLessons")}</Typography>
@@ -153,7 +164,7 @@ export default function EcommerceTeacherDetails({ isGuest = false }) {
                 {/* <Box sx={{ px: 3, bgcolor: 'background.neutral' }}>
                   <TabList onChange={(e, value) => setValue(value)}>
                     {/* <Tab disableRipple value="1" label="Description" /> */}
-                    {/* <Tab
+                {/* <Tab
                       disableRipple
                       value="2"
                       label={`Review (${teacher.rates.length})`}

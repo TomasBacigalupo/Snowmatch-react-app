@@ -124,7 +124,15 @@ export default function EcommerceTeacherDetails({ isGuest = false }) {
             {/* <Grid container sx={{ my: 1 }}> */}
             <Typography variant='h4'>{translate("schoolDetails.lessons")}</Typography>
             <br></br>
-            <SchoolDetailsMembersList teachers={teachers} loading={isLoading}></SchoolDetailsMembersList>
+            {teachers && teachers.length > 0 ? (
+              <SchoolDetailsMembersList teachers={teachers} loading={isLoading}></SchoolDetailsMembersList>
+            ) : (
+              <>
+                <Typography variant='body1'> {translate("schoolDetails.noLessons")}</Typography>
+                <Typography variant='body2'>* Si usted es administrador de esta escuela contáctese con office@snowmatch.pro para vincular sus ventas</Typography>
+              </>
+            )}
+
             {/* </Grid> */}
             <br></br>
             <br></br>
@@ -133,13 +141,16 @@ export default function EcommerceTeacherDetails({ isGuest = false }) {
             <br></br>
             {teachers && teachers.length > 0 ? (
               <SchoolDetailsMembersList teachers={teachers} loading={isLoading}></SchoolDetailsMembersList>
-            ) : <Typography variant='h6'> {translate("schoolDetails.noTeachers")}</Typography>}
+            ) : <>
+              <Typography variant='body1'> {translate("schoolDetails.noTeachers")}</Typography>
+              <Typography variant='body2'>* Si usted es administrador de esta escuela contáctese con office@snowmatch.pro para vincular sus profesores</Typography>
+            </>}
 
             {/* </Grid> */}
             <br></br>
             <Card>
               <TabContext value={value}>
-                <Box sx={{ px: 3, bgcolor: 'background.neutral' }}>
+                {/* <Box sx={{ px: 3, bgcolor: 'background.neutral' }}>
                   <TabList onChange={(e, value) => setValue(value)}>
                     {/* <Tab disableRipple value="1" label="Description" /> */}
                     {/* <Tab
@@ -147,11 +158,11 @@ export default function EcommerceTeacherDetails({ isGuest = false }) {
                       value="2"
                       label={`Review (${teacher.rates.length})`}
                       sx={{ '& .MuiTab-wrapper': { whiteSpace: 'nowrap' } }}
-                    /> */}
+                    /> 
                     <Tab disableRipple value="1" label={translate('schoolDetails.calendar')} />
 
                   </TabList>
-                </Box>
+                </Box> */}
 
                 <Divider />
 

@@ -182,7 +182,7 @@ export function getBusiness(id) {
     return async () => {
         dispatch(slice.actions.startLoading());
         try {
-            const response = await axios.get('/api/business/' + id);
+            const response = await axios.get(`/api/business/${id}`);
             dispatch(slice.actions.getBusinessSuccess(response.data));
         } catch (error) {
             dispatch(slice.actions.hasError(error));

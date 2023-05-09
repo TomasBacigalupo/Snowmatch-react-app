@@ -270,7 +270,10 @@
         "information": "Información",
         "description": "Descripción",
         "skills": "Skills",
-        "ourTeachers": "PROs de escuela"
+        "ourTeachers": "PROs de escuela",
+        "noTeachers": "Esta escuela no tiene profesores linkeados en SnowMatch",
+        "lessons": "Clases",
+        "contact_school": "Reservar Clase"
     },
     "conversation": {
         "not_valid": "Tu numero de telefono no esta validado, revisa WhatsApp y probá de nuevo!",

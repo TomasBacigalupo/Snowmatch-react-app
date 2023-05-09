@@ -21,13 +21,13 @@ SchoolCard.propTypes = {
 };
 
 export default function SchoolCard({ business }) {
-  const { name, imageLink, id, stars, level, information, email, state, resorts} = business;
+  const { name, imageS3, id, stars, level, information, email, state, resorts} = business;
 
   const navigate = useNavigate();
-  const [src, setSrc] = useState(imageLink)
+  const [src, setSrc] = useState(imageS3)
 
   const { isAuthenticated} = useAuth()
-  const linkTo =  isAuthenticated ? PATH_DASHBOARD.eCommerce.viewSchool(id) : PATH_GUEST.viewSchool(id) ;
+  const linkTo = isAuthenticated ? PATH_DASHBOARD.eCommerce.viewSchool(id) : PATH_GUEST.viewSchool(id) ;
 
   return (
     <Card onClick={()=>navigate(linkTo)}>

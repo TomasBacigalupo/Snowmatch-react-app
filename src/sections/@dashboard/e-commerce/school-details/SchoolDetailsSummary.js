@@ -19,7 +19,7 @@ import { FormProvider, RHFSelect } from '../../../../components/hook-form';
 import { DialogAnimate } from '../../../../components/animate';
 import { useDispatch, useSelector } from '../../../../redux/store';
 
-import { openContactModal, closeContactModal, openReferModal, closeReferModal} from '../../../../redux/slices/contact';
+import { openContactModal, closeContactModal, openReferModal, closeReferModal } from '../../../../redux/slices/contact';
 import ConnectWithoutContactIcon from '@mui/icons-material/ConnectWithoutContact';
 
 import FullCalendar from '@fullcalendar/react'; // => request placed at the top
@@ -37,6 +37,7 @@ import useLocales from 'src/hooks/useLocales';
 
 import useAuth from 'src/hooks/useAuth';
 import HoverButton from 'src/components/HoverButton';
+import { Shop, ShoppingCartOutlined } from '@mui/icons-material';
 
 
 
@@ -76,7 +77,7 @@ SchoolDetailsSummary.propTypes = {
 
 export default function SchoolDetailsSummary({ cart, business, onAddCart, onGotoStep, ...other }) {
   const theme = useTheme();
-  const {translate} = useLocales();
+  const { translate } = useLocales();
   const navigate = useNavigate();
 
   const dispatch = useDispatch();
@@ -96,7 +97,7 @@ export default function SchoolDetailsSummary({ cart, business, onAddCart, onGoto
     console.log(user)
     dispatch(openReferModal());
   };
-  
+
   const alreadyProduct = false;
 
   //const isMaxQuantity = cart.filter((item) => item.id === id).map((item) => item.quantity)[0] >= available;
@@ -112,11 +113,11 @@ export default function SchoolDetailsSummary({ cart, business, onAddCart, onGoto
   });
 
   const handleCloseContactModal = () => {
-    if(error === null)
+    if (error === null)
       dispatch(closeContactModal());
   };
   const handleCloseReferModal = () => {
-    if(error === null)
+    if (error === null)
       dispatch(closeReferModal());
   };
 
@@ -148,98 +149,116 @@ export default function SchoolDetailsSummary({ cart, business, onAddCart, onGoto
     }
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     console.log("business", business)
-  },[])
+  }, [])
 
-  const button = (user, isIndependent) =>{
+  const button = (user, isIndependent) => {
     console.log(user)
-    if(user.isAuthenticated){
+    if (user.isAuthenticated) {
       return (
-              <HoverButton
-                fullWidth
-                size="large"
-                color="primary"
-                variant="contained"
-            startIcon={<ConnectWithoutContactIcon/>}
-                onClick={handleRefer}
-                sx={{ whiteSpace: 'nowrap' }}
-              >
-                {isIndependent?translate("conversation.refer_class"):translate("conversation.contact_pro")}              
-                </HoverButton>
-)
+        <HoverButton
+          fullWidth
+          size="large"
+          color="primary"
+          variant="contained"
+          startIcon={<ConnectWithoutContactIcon />}
+          onClick={handleRefer}
+          sx={{ whiteSpace: 'nowrap' }}
+        >
+          {isIndependent ? translate("conversation.refer_class") : translate("conversation.contact_pro")}
+        </HoverButton>
+      )
 
     }
-    else{
-      return(
-              <HoverButton
-                fullWidth
-                size="large"
-                color="primary"
-                variant="contained"
+    else {
+      return (
+        <HoverButton
+          fullWidth
+          size="large"
+          color="primary"
+          variant="contained"
           startIcon={<ConnectWithoutContactIcon />}
-                onClick={handleContact}
-                sx={{ whiteSpace: 'nowrap' }}
-              >
-                {translate("conversation.contact_pro")}
+          onClick={handleContact}
+          sx={{ whiteSpace: 'nowrap' }}
+        >
+          {translate("conversation.contact_pro")}
 
-              </HoverButton>
-  
-)
+        </HoverButton>
+
+      )
     }
   }
 
+  const schoolButton = (user, isIndependent) => {
+    return (
+      <HoverButton
+        fullWidth
+        size="large"
+        color="primary"
+        variant="contained"
+        startIcon={<ShoppingCartOutlined/>}
+        onClick={() => { window.open(business.siteUrl) }}
+        sx={{ whiteSpace: 'nowrap' }}
+      >
+        {translate("schoolDetails.contact_school")}
+      </HoverButton>
+
+    )
+  }
+
+
   return (
     <RootStyle {...other}>
-        { (
-            <Typography
-            variant="overline"
-            sx={{
-                mt: 2,
-                mb: 1,
-                display: 'block',
-                color: 'success.main',
-            }}
-            >
-            {translate('schoolDetails.verified')}
-            </Typography>
-        )}
-
-        <Typography variant="h5" paragraph>
-          {business?.name }
+      {(
+        <Typography
+          variant="overline"
+          sx={{
+            mt: 2,
+            mb: 1,
+            display: 'block',
+            color: 'success.main',
+          }}
+        >
+          {translate('schoolDetails.verified')}
         </Typography>
+      )}
 
-        <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 2 }}>
-          {/* <Rating value={stars} precision={0.1} readOnly /> */}
-          {/* <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+      <Typography variant="h5" paragraph>
+        {business?.name}
+      </Typography>
+
+      <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 2 }}>
+        {/* <Rating value={stars} precision={0.1} readOnly /> */}
+        {/* <Typography variant="body2" sx={{ color: 'text.secondary' }}>
             ({fShortenNumber(rates.length)}
           {' '}reviews)
           </Typography> */}
-        </Stack>
+      </Stack>
 
-        {/* <Typography variant="h4" sx={{ mb: 3 }}>
+      {/* <Typography variant="h4" sx={{ mb: 3 }}>
           <Box component="span" sx={{ color: 'text.disabled', textDecoration: 'line-through' }}>
             {priceSale && fCurrency(priceSale)}
           </Box>
           &nbsp;{fCurrency(price)}
         </Typography> */}
 
-        <Divider sx={{ borderStyle: 'dashed' }} />
+      <Divider sx={{ borderStyle: 'dashed' }} />
 
-        {/* <TeacherSkills skills={skills} /> */}
+      {/* <TeacherSkills skills={skills} /> */}
 
 
-        <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ my: 3 }}>
-          <Typography variant="subtitle1" sx={{ mt: 0.5 }}>
+      <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ my: 3 }}>
+        <Typography variant="subtitle1" sx={{ mt: 0.5 }}>
           {translate('schoolDetails.information')}
-          </Typography>
-        </Stack>
-        <Typography variant="body1" sx={{ mt: 0.5 }} paragraph>
-            {business?.information}
         </Typography>
+      </Stack>
+      <Typography variant="body1" sx={{ mt: 0.5 }} paragraph>
+        {business?.information}
+      </Typography>
 
-        
-        {/* <Stack direction="row" justifyContent="space-between" sx={{ mb: 3 }}>
+
+      {/* <Stack direction="row" justifyContent="space-between" sx={{ mb: 3 }}>
           <Typography variant="subtitle1" sx={{ mt: 0.5 }}>
             Size
           </Typography>
@@ -265,13 +284,13 @@ export default function SchoolDetailsSummary({ cart, business, onAddCart, onGoto
           </RHFSelect>
         </Stack> */}
 
-        <Stack direction="row" justifyContent="space-between" sx={{ mb: 3 }}>
-          <Typography variant="subtitle1" sx={{ mt: 0.5 }}>
+      <Stack direction="row" justifyContent="space-between" sx={{ mb: 3 }}>
+        <Typography variant="subtitle1" sx={{ mt: 0.5 }}>
           {translate('schoolDetails.description')}
-          </Typography>
+        </Typography>
 
 
-          {/* <div>
+        {/* <div>
             <Incrementer
               name="quantity"
               quantity={values.quantity}
@@ -283,25 +302,25 @@ export default function SchoolDetailsSummary({ cart, business, onAddCart, onGoto
               Available: {available}
             </Typography>
           </div> */}
-        </Stack>
+      </Stack>
+      <Typography variant="body1" sx={{ mt: 0.5 }} paragraph>
+        {business?.description}
+      </Typography>
+
+      <Stack direction="row" spacing={2} sx={{ mt: 5 }}>
         <Typography variant="body1" sx={{ mt: 0.5 }} paragraph>
-            {business?.description}
+
+
         </Typography>
-        
-        <Stack direction="row" spacing={2} sx={{ mt: 5 }}>
-        <Typography variant="body1" sx={{ mt: 0.5 }} paragraph>
+      </Stack>
 
-          
-        </Typography>
-        </Stack>
+      <Divider sx={{ borderStyle: 'dashed' }} />
 
-        <Divider sx={{ borderStyle: 'dashed' }} />
-
-        <Stack direction="row" spacing={2} sx={{ mt: 5 }}>
+      <Stack direction="row" spacing={2} sx={{ mt: 5 }}>
 
 
 
-          {button(user)}
+        {schoolButton()}
 
         <DialogAnimate open={isOpenContactModal} onClose={handleCloseContactModal}>
           <DialogTitle>{translate("conversation.contact_pro")}</DialogTitle>
@@ -314,11 +333,11 @@ export default function SchoolDetailsSummary({ cart, business, onAddCart, onGoto
           {/* <ReferForm teacher={id} onCancel={handleCloseReferModal} isIndependent={(!school &&level>=3 && resorts?.includes('Cerro Catedral'))} /> */}
         </DialogAnimate>
 
-        </Stack>
+      </Stack>
 
-        <Stack alignItems="center" sx={{ mt: 3 }}>
-          {/* <SocialsButton initialColor links={{"igUrl":igUrl,"twUrl":twUrl,"fbUrl":fbUrl,"ytUrl":ytUrl,}}/> */}
-        </Stack>
+      <Stack alignItems="center" sx={{ mt: 3 }}>
+        {/* <SocialsButton initialColor links={{"igUrl":igUrl,"twUrl":twUrl,"fbUrl":fbUrl,"ytUrl":ytUrl,}}/> */}
+      </Stack>
     </RootStyle>
   );
 }

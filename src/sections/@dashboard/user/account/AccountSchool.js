@@ -85,7 +85,7 @@ export default function AccountGeneral() {
     });
 
     useEffect(() => {
-        dispatch(getBusiness(user?.administeredBusinessId))
+        dispatch(getBusiness(user?.administeredBusiness?.id))
     }, [user]);
 
     useEffect(() => {

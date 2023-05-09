@@ -108,7 +108,7 @@ export default function EcommerceTeacherDetails({ isGuest = false }) {
             <Card>
               <Grid container>
                 <Grid item xs={12} md={6} lg={7}>
-                  <SchoolDetailsCarousel business={{ images: [business?.imageLink] }} />
+                  <SchoolDetailsCarousel business={{ images: [business?.imageS3] }} />
                 </Grid>
                 <Grid item xs={12} md={6} lg={5}>
                   <SchoolDetailsSummary
@@ -122,9 +122,8 @@ export default function EcommerceTeacherDetails({ isGuest = false }) {
             </Card>
             <br></br>
             {/* <Grid container sx={{ my: 1 }}> */}
-            <Typography variant='h4'>Clases</Typography>
+            <Typography variant='h4'>{translate("schoolDetails.lessons")}</Typography>
             <br></br>
-
             <SchoolDetailsMembersList teachers={teachers} loading={isLoading}></SchoolDetailsMembersList>
             {/* </Grid> */}
             <br></br>
@@ -132,8 +131,10 @@ export default function EcommerceTeacherDetails({ isGuest = false }) {
             {/* <Grid container sx={{ my: 1 }}> */}
             <Typography variant='h4'> {translate("schoolDetails.ourTeachers")}</Typography>
             <br></br>
-
+            {teachers && teachers.length > 0 ? (
               <SchoolDetailsMembersList teachers={teachers} loading={isLoading}></SchoolDetailsMembersList>
+            ) : <Typography variant='h6'> {translate("schoolDetails.noTeachers")}</Typography>}
+
             {/* </Grid> */}
             <br></br>
             <Card>

@@ -110,6 +110,7 @@ export default function PrivateNewEditForm({ isEdit, currentProduct, isHalfDay }
     const [startDate, setStartDate] = useState(new Date());
     const [endDate, setEndDate] = useState(getDefaultEndDate());
     const [time, setTime] = useState(getDefaultStartTime());
+    const [lengthInMinutes, setLengthInMinutes] = useState(isHalfDay? 4*60 : 8*60);
     const [events, setEvents] = useState([])
     const [draggable, setDraggable] = useState()
     const draggableRef = createRef()
@@ -179,11 +180,11 @@ export default function PrivateNewEditForm({ isEdit, currentProduct, isHalfDay }
         let tmpEvents = events
         tmpEvents = tmpEvents.map((event) => {
             let d = new Date(event.start)
-            d.setTime(d.getTime() + values.lengthInMinutes * 60 * 1000)
+            d.setTime(d.getTime() + lengthInMinutes * 60 * 1000)
             return { ...event, end: d }
         })
         setEvents([...tmpEvents])
-    }, [values.lengthInMinutes]);
+    }, [lengthInMinutes]);
 
 
     useEffect(() => {
@@ -207,14 +208,35 @@ export default function PrivateNewEditForm({ isEdit, currentProduct, isHalfDay }
 
     const onSubmit = async (data) => {
         let _product = data
-        _product.events = events.map((event) => ({
-            ...event,
-            title: isHalfDay ? "PRIVATE_HALF_DAY" : "PRIVATE_FULL_DAY",
-            color: isHalfDay ? "#FFC83D" : "#FFC83A",
-            source: "PRODUCT",
-            type: "Product class",
-            price: data.price
-        }))
+        // _product.events = events.map((event) => ({
+        //     ...event,
+        //     title: isHalfDay ? "PRIVATE_HALF_DAY" : "PRIVATE_FULL_DAY",
+        //     color: isHalfDay ? "#FFC83D" : "#FFC83A",
+        //     source: "PRODUCT",
+        //     type: "Product class",
+        //     price: data.price
+        // }))
+
+        _product.events = events.map((event) => {
+            let start = event.start
+            let end = event.end
+            if ((start instanceof Date)) {
+                start.setMinutes(start.getMinutes() - start.getTimezoneOffset())
+            }
+            if ((end instanceof Date)) {
+                end.setMinutes(end.getMinutes() - end.getTimezoneOffset())
+            }
+            return {
+                ...event,
+                start: start,
+                end: end,
+                title: isHalfDay ? "PRIVATE_HALF_DAY" : "PRIVATE_FULL_DAY",
+                color: isHalfDay ? "#FFC83D" : "#FFC83A",
+                source: "PRODUCT",
+                type: "Product class",
+                price: data.price
+            }
+        })
 
         if (isHalfDay) {
             _product.name = "PRIVATE_HALF_DAY"
@@ -332,15 +354,13 @@ export default function PrivateNewEditForm({ isEdit, currentProduct, isHalfDay }
         newEvent.title = isHalfDay ? "PRIVATE_HALF_DAY" : "PRIVATE_FULL_DAY"
         let d = new Date(event.date)
         newEvent.start = new Date(event.date)
-        d.setTime(d.getTime() + 60 * 1000 * values.lengthInMinutes)
+        d.setTime(d.getTime() + 60 * 1000 * lengthInMinutes)
         newEvent.end = d
         newEvent.id = uuidv4()
         newEvent.textColor = '#3399ff'
 
         setEvents([...events, newEvent])
     }
-
-
 
     const handleDropEvent = async (eventInfo) => {
         try {
@@ -353,7 +373,7 @@ export default function PrivateNewEditForm({ isEdit, currentProduct, isHalfDay }
                 return false
             })
             let endDate = new Date()
-            endDate.setTime(eventInfo.event.start.getTime() + 60 * 1000 * values.lengthInMinutes)
+            endDate.setTime(eventInfo.event.start.getTime() + 60 * 1000 * lengthInMinutes)
             let event = {
                 title: eventInfo.event.title,
                 start: eventInfo.event.start,
@@ -383,8 +403,6 @@ export default function PrivateNewEditForm({ isEdit, currentProduct, isHalfDay }
         setStartDate(newValue);
     };
 
-
-
     const handleChangeEndDate = (newValue) => {
         setEndDate(newValue);
     };
@@ -401,22 +419,22 @@ export default function PrivateNewEditForm({ isEdit, currentProduct, isHalfDay }
                 e.id = uuidv4()
                 e.title = isHalfDay ? "PRIVATE_HALF_DAY" : "PRIVATE_FULL_DAY"
                 e.start = new Date(start)
-                e.start.setHours(getDefaultStartMorning().getHours())
-                e.start.setSeconds(getDefaultStartMorning().getSeconds())
-                e.start.setMinutes(getDefaultStartMorning().getMinutes())
+                e.start.setHours(time.getHours())
+                e.start.setSeconds(time.getSeconds())
+                e.start.setMinutes(time.getMinutes())
                 e.end = new Date(e.start)
                 e.type = "Product class"
-                e.end.setTime(e.end.getTime() + 60 * 1000 * (180 - 60))
+                e.end.setTime(e.end.getTime() + 60 * 1000 * lengthInMinutes)
                 e.textColor = '#3399ff'
                 let et = {}
                 et.id = uuidv4()
                 et.title = isHalfDay ? "PRIVATE_HALF_DAY" : "PRIVATE_FULL_DAY"
                 et.start = new Date(start)
-                et.start.setHours(getDefaultStartAfternoon().getHours())
-                et.start.setSeconds(getDefaultStartAfternoon().getSeconds())
-                et.start.setMinutes(getDefaultStartAfternoon().getMinutes())
+                et.start.setHours(time.getHours()+5)
+                et.start.setSeconds(time.getSeconds())
+                et.start.setMinutes(time.getMinutes())
                 et.end = new Date(et.start)
-                et.end.setTime(et.end.getTime() + 60 * 1000 * (180 - 60))
+                et.end.setTime(et.end.getTime() + 60 * 1000 * lengthInMinutes)
                 et.type = "Product class"
                 et.textColor = '#3399ff'
                 let ed = {}
@@ -529,6 +547,46 @@ export default function PrivateNewEditForm({ isEdit, currentProduct, isHalfDay }
                             </Card>
                         </Stack>
                     </Stack>
+                    <Card sx={{ p: 3, mt: 2 }} spacing={3}>
+                        <Stack spacing={3} mb={2}>
+                            <Typography variant="h3">{translate("product.generator")}</Typography>
+                            <ToggleButtonGroup fullWidth value={selectedDays} onChange={handelSelectDays}>
+                                {DAYS.map((day) => (
+                                    <ToggleButton color={"primary"} value={day.id} key={day.id}>{translate("product.date." + day.id)}</ToggleButton>
+                                ))}
+                            </ToggleButtonGroup>
+                            <Box
+                                sx={{
+                                    display: 'grid',
+                                    rowGap: 3,
+                                    columnGap: 2,
+                                    gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
+                                }}
+                            >
+                                <MobileDatePicker
+                                    label={translate("product.startDate")}
+                                    inputFormat="dd/MM/yyyy"
+                                    value={startDate}
+                                    onChange={handleChangeStartDate}
+                                    renderInput={(params) => <TextField {...params} />}
+                                />
+                                <MobileDatePicker
+                                    label={translate("product.endDate")}
+                                    inputFormat="dd/MM/yyyy"
+                                    value={endDate}
+                                    onChange={handleChangeEndDate}
+                                    renderInput={(params) => <TextField {...params} />}
+                                />
+                                <TimePicker
+                                    label={translate("product.startTime")}
+                                    value={time}
+                                    onChange={handleChangeTime}
+                                    renderInput={(params) => <TextField {...params} />}
+                                />
+                                <Button color="primary" variant="contained" onClick={handleGenerateEvents}>{translate("product.generateEvents")}</Button>
+                            </Box>
+                        </Stack>
+                    </Card>
                 </Grid>
                 <Grid item xs={12} >
                     <Card sx={{ p: 3 }}>
@@ -575,46 +633,6 @@ export default function PrivateNewEditForm({ isEdit, currentProduct, isHalfDay }
                             }}>
                                 <Button color="error" variant="contained" endIcon={<Iconify style={{ fontSize: '18px' }} icon={'eva:trash-2-outline'} />} ref={trashRef}>{translate("product.dropToDelete")}</Button>
                                 <Button color="error" variant="contained" endIcon={<Iconify style={{ fontSize: '18px' }} icon={'eva:trash-2-outline'} />} onClick={handleDeleteEvents}>{translate("product.deleteAll")}</Button>
-                            </Box>
-                        </Stack>
-                    </Card>
-                    <Card sx={{ p: 3, mt: 2 }} spacing={3}>
-                        <Stack spacing={3} mb={2}>
-                            <Typography variant="h3">{translate("product.generator")}</Typography>
-                            <ToggleButtonGroup fullWidth value={selectedDays} onChange={handelSelectDays}>
-                                {DAYS.map((day) => (
-                                    <ToggleButton color={"primary"} value={day.id} key={day.id}>{translate("product.date." + day.id)}</ToggleButton>
-                                ))}
-                            </ToggleButtonGroup>
-                            <Box
-                                sx={{
-                                    display: 'grid',
-                                    rowGap: 3,
-                                    columnGap: 2,
-                                    gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
-                                }}
-                            >
-                                <MobileDatePicker
-                                    label={translate("product.startDate")}
-                                    inputFormat="dd/MM/yyyy"
-                                    value={startDate}
-                                    onChange={handleChangeStartDate}
-                                    renderInput={(params) => <TextField {...params} />}
-                                />
-                                <MobileDatePicker
-                                    label={translate("product.endDate")}
-                                    inputFormat="dd/MM/yyyy"
-                                    value={endDate}
-                                    onChange={handleChangeEndDate}
-                                    renderInput={(params) => <TextField {...params} />}
-                                />
-                                <TimePicker
-                                    label={translate("product.startTime")}
-                                    value={time}
-                                    onChange={handleChangeTime}
-                                    renderInput={(params) => <TextField {...params} />}
-                                />
-                                <Button color="primary" variant="contained" onClick={handleGenerateEvents}>{translate("product.generateEvents")}</Button>
                             </Box>
                         </Stack>
                     </Card>

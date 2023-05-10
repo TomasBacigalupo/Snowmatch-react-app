@@ -90,7 +90,6 @@ export default function EcommerceTeacherDetails({ isGuest = false }) {
 
   return (
     <Page title={translate('schoolDetails.title')}>
-      {isGuest && (<><br /><br /><br /></>)}
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <HeaderBreadcrumbs
           heading={translate('schoolDetails.title')}

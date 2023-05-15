@@ -8,7 +8,7 @@ import { Grid, Button, Card } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 // redux
 import { useDispatch, useSelector } from '../../../../redux/store';
-import { onGotoStep, onBackStep, onNextStep, applyShipping, hireTeacher, cleanCart, setPaymentInfo, hireTeacherEvents, startPayment, completePayment } from '../../../../redux/slices/teachers';
+import { onGotoStep, onBackStep, onNextStep, applyShipping, hireTeacher, cleanCart, setPaymentInfo, hireTeacherEvents, startPayment, completePayment, getDollarValue } from '../../../../redux/slices/teachers';
 // components
 import Iconify from '../../../../components/Iconify';
 import { FormProvider } from '../../../../components/hook-form';
@@ -19,9 +19,12 @@ import CheckoutBillingInfo from './CheckoutBillingInfo';
 import CheckoutPaymentMethods from './CheckoutPaymentMethods';
 import CheckoutService from './CheckoutService';
 import { useState } from 'react';
-import { cardPayment, getAuthToken, getSplitToken, getToken } from '../../../../services/zenRise';
+import { cardPayment, getAuthToken, getCardEncryptedCard, getSplitToken, getToken } from '../../../../services/zenRise';
 import CardInput from './CardInput';
 import { useSnackbar } from 'notistack';
+import { el } from 'date-fns/locale';
+import ConfirmationDialog from './ConfirmationDialog';
+import useAuth from 'src/hooks/useAuth';
 
 // ----------------------------------------------------------------------
 
@@ -69,8 +72,25 @@ export default function CheckoutPayment() {
 
   const { checkout, teacher } = useSelector((state) => state.teachers);
 
+  const {zenriseClient, zenrisSecret} = teacher;
+
+
   const { total, discount, subtotal, shipping, events, card } = checkout;
-  const enqueueSnackbar = useSnackbar();
+  const {enqueueSnackbar} = useSnackbar();
+  const [dollar, setDollar] = useState(470);
+  const [confirmationDialog, setConfirmationDialog] = useState(true)
+  const {user} = useAuth()
+
+  useEffect(() => {
+    dispatch(getDollarValue((dollar) => {
+      if (dollar) {
+        console.log({dollar})
+        setDollar(dollar.rate)
+      }else{
+        enqueueSnackbar('Error getting dollar value', { variant: 'error' });
+      }
+    }))
+  },[])
 
 
   const handleNextStep = () => {
@@ -108,42 +128,18 @@ export default function CheckoutPayment() {
   } = methods;
 
   const onSubmit = async () => {
+    const encryptedCard = await getCardEncryptedCard(card);
     setLoading(true)
     try {
       dispatch(hireTeacherEvents(events, (succ) => {
         if (succ) {
           try {
-            dispatch(startPayment(events, (paymentData) => {
-              try {
-                cardPayment(card, 1000, []).then((res) => {
-                  if (res.status === 200) {
-                    dispatch(completePayment(paymentData.id, {
-                      zenriseId: res.result.paymentId,
-                      amount: res.result.amountPayed
-                    }))
-                    dispatch(setPaymentInfo(res.result))
-                    dispatch(cleanCart())
-                    handleNextStep();
-                  } else {
-                    setLoading(false)
-                    enqueueSnackbar('Payment failed', { variant: 'error' })
-                    //pago rechazado
-                    //TODO: call unhire
-
-                  }
-                }).catch((err) => {
-                  setLoading(false)
-                  enqueueSnackbar('Payment failed', { variant: 'error' })
-                  //pago rechazado
-                  //TODO: call unhire
-                })
-              } catch (err) {
-                setLoading(false)
-                enqueueSnackbar('Payment failed', { variant: 'error' })
-                //pago rechazado
-                //TODO: call unhire
-
-              }}))
+            dispatch(startPayment(events, encryptedCard, (paymentData) => {
+              debugger
+              dispatch(setPaymentInfo(paymentData))
+              dispatch(cleanCart())
+              handleNextStep();
+          }))
 
           } catch (error) {
             setLoading(false)
@@ -190,7 +186,7 @@ export default function CheckoutPayment() {
             Back
           </Button>
         </Grid>
-
+        <ConfirmationDialog open={confirmationDialog} onClose={()=> setConfirmationDialog(false)}/>
         <Grid item xs={12} md={4}>
           {/* <CheckoutBillingInfo onBackStep={handleBackStep} /> */}
 
@@ -203,7 +199,7 @@ export default function CheckoutPayment() {
             onEdit={() => handleGotoStep(0)}
           />
           <LoadingButton fullWidth size="large" type="submit" variant="contained" loading={loading}>
-            Complete Order
+            Pagar
           </LoadingButton>
         </Grid>
       </Grid>

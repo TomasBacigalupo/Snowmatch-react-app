@@ -17,6 +17,9 @@ import { fCurrency } from '../../../../utils/formatNumber';
 // components
 import Iconify from '../../../../components/Iconify';
 import useLocales from 'src/hooks/useLocales';
+import { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { getDollarValue } from 'src/redux/slices/teachers';
 
 // ----------------------------------------------------------------------
 
@@ -44,6 +47,11 @@ export default function CheckoutSummary({
 }) {
   const {translate} = useLocales()
   const displayShipping = shipping !== null ? 'Free' : '-';
+  const dispatch = useDispatch()
+  const [dollarValue, setDollarValue] = useState(470)
+  // useEffect(() => {
+  //   dispatch(getDollarValue((dollar) => { setDollarValue(Number(dollar.venta))}))
+  // },[])
 
   return (
     <Card sx={{ mb: 3 }}>
@@ -61,16 +69,16 @@ export default function CheckoutSummary({
           </Stack>
           <Stack direction="row" justifyContent="space-between">
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-              {translate('checkout.subtotal')}
+              Total: {/* {translate('checkout.subtotal')} */}
             </Typography>
             <Typography variant="subtitle2">{subtotal ? fCurrency(subtotal) : translate('checkout.deal_with_pro')}</Typography>
           </Stack>
 
           <Stack direction="row" justifyContent="space-between">
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-              Discount
+              Reserva (20%)
             </Typography>
-            <Typography variant="subtitle2">{discount ? fCurrency(-discount) : '-'}</Typography>
+            <Typography variant="subtitle2">{subtotal ? fCurrency(subtotal * 0.2) : 'free' }</Typography>
           </Stack>
 
           <Stack direction="row" justifyContent="space-between">
@@ -83,10 +91,13 @@ export default function CheckoutSummary({
           <Divider />
 
           <Stack direction="row" justifyContent="space-between">
-            <Typography variant="subtitle1">{translate('checkout.total')}</Typography>
+            <Typography variant="subtitle1">
+              Reserva en pesos:
+              {/* {translate('checkout.total')} */}
+              </Typography>
             <Box sx={{ textAlign: 'right' }}>
               <Typography variant="subtitle1">
-                {fCurrency(total)}
+                {subtotal ? fCurrency(subtotal * 0.2 * dollarValue): 'free'}
               </Typography>
             </Box>
           </Stack>

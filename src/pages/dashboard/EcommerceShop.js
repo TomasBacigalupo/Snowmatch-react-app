@@ -206,10 +206,9 @@ export default function EcommerceShop({isGuest=false, teacherType="school"}) {
             </>
           )}
         </Stack>
-        
-        <ShopTeacherList teachers={teachersWithEvents} loading={!filteredTeachers.length && isDefault} />
-        <ShopOtherTeacherList teachers={filteredTeachers} loading={!filteredTeachers.length && isDefault} />
-
+        {teacherType == "independent" && <ShopTeacherList teachers={teachersWithEvents} loading={!filteredTeachers.length && isDefault} />}
+        {teacherType == "independent" && <ShopOtherTeacherList teachers={filteredTeachers} loading={!filteredTeachers.length && isDefault} />}
+        {teacherType == "school" && <ShopTeacherList teachers={filteredTeachers} loading={!filteredTeachers.length && isDefault} />}
       </Container>
       <><br /></>
 
@@ -291,6 +290,7 @@ function applyFilter(teachers, sortBy, filters, teacherType) {
       return teacher.stars >= convertRating(filters.rating);
     });
   }
+
   if(teacherType=="independent"){
     teachers = teachers.filter(t=>!t.school && t.level>=3 && t.resorts?.includes("Cerro Catedral"))
   } else if(teacherType=="school"){

@@ -118,7 +118,7 @@ export default function CheckoutCart() {
           disabled={events.length === 0}
           onClick={handleNextStep}
         >
-          Check Out
+          Reservar Ahora
         </Button>
       </Grid>
     </Grid>

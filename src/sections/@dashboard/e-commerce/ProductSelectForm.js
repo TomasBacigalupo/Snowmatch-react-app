@@ -50,7 +50,7 @@ export default function ProductSelectForm({ currentProduct, currentTeacher }) {
     const calendarRef = useRef(null);
     const { user } = useAuth();
     const dispatch = useDispatch()
-    const [date, setDate] = useState(filters.from);
+    const [date, setDate] = useState(filters.from ?? new Date());
     const { enqueueSnackbar } = useSnackbar();
     const [view, setView] = useState('listWeek');
     const { translate } = useLocales()
@@ -326,8 +326,8 @@ export default function ProductSelectForm({ currentProduct, currentTeacher }) {
                                     selectable
                                     events={availableEvents.map((event) => ({
                                         ...event,
-                                        start: new Date(event.start),
-                                        end: new Date(event.end),
+                                        start: event.start,
+                                        end: event.end,
                                         textColor: '#ffffff'
                                     }))}
                                     ref={calendarRef}

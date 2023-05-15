@@ -54,7 +54,8 @@ const initialState = {
   topClients: [],
   totalClients: 0,
   conversations: [],
-  loadingRate: false
+  loadingRate: false,
+  dollar: 420
 };
 
 const slice = createSlice({
@@ -692,7 +693,8 @@ export function getTeacherByID(userId, callback) {
   return async () => {
     try {
       const resp = await axios.get(`api/users/byId/${userId}`)
-      callback(resp.data)
+      if(callback)
+        callback(resp.data)
     } catch (error) {
       console.error(error)
     }
@@ -732,10 +734,11 @@ export function cancelHireTeacherEvents(requestedEvents, callback) {
   }
 }
 
-export function startPayment(events, callBack){
+export function startPayment(events, encryptedCard, callBack){
+  debugger
   return async () =>{
     try{
-      const resp = await axios.post(`api/pay/startPayment`, events)
+      const resp = await axios.post(`api/pay/startPayment?holderName=Tomas&holderLastName=Bacigalupo`, {events: events, encryptedCardDto: encryptedCard})
       callBack(resp.data)
     } catch(e){
       callBack(false)
@@ -749,6 +752,18 @@ export function completePayment(id, zenrisePayment){
       const resp = await axios.put(`api/pay/${id}`, zenrisePayment)
     } catch(e){
       console.error(e)
+    }
+  }
+}
+
+// get updated dollar value
+export function getDollarValue(callback){
+  return async () =>{
+    try{
+      const resp = await axios.get(`/api/currency/exchangeRate?form=USD&to=ARS`)
+      callback(resp.data)
+    } catch(e){
+      callback(false)
     }
   }
 }

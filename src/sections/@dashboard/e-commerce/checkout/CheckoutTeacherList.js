@@ -50,8 +50,8 @@ export default function CheckoutTeacherList({ events, onDelete, onIncreaseQuanti
             <Table>
                 <TableHead>
                     <TableRow>
-                        <TableCell>Date</TableCell>
-                        <TableCell align="center">Price</TableCell>
+                        <TableCell>{translate('checkout.date')}</TableCell>
+                        <TableCell align="center">{translate('checkout.date')}</TableCell>
                         <TableCell align="right" />
                     </TableRow>
                 </TableHead>
@@ -70,7 +70,7 @@ export default function CheckoutTeacherList({ events, onDelete, onIncreaseQuanti
                                             </Typography>
                                             {/* start and end time od the event */}
                                             <Typography noWrap variant="body2" sx={{ color: 'text.secondary' }}>
-                                                {`${event.start.getHours()}:${event.start.getMinutes() < 10 ? '0' + event.start.getMinutes() : event.start.getMinutes()}`} ${translate('checkout.end_time')}  {`${event.end.getHours()}:${event.end.getMinutes() < 10 ? '0' + event.end.getMinutes() : event.end.getMinutes() }`}
+                                                {`${event.start.getHours()}:${event.start.getMinutes() < 10 ? '0' + event.start.getMinutes() : event.start.getMinutes()}`} {translate('checkout.end_time')}  {`${event.end.getHours()}:${event.end.getMinutes() < 10 ? '0' + event.end.getMinutes() : event.end.getMinutes() }`}
                                             </Typography>
                                         </Box>
                                     </Box>

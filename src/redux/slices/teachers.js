@@ -712,13 +712,16 @@ export function hireTeacher(teacherId, requestedEvents, callback){
   }
 }
 
-export function hireTeacherEvents(requestedEvents, callback) {
+export function hireTeacherEvents(events, encryptedCard, card, callback) {
   return async () => {
     try {
-      const resp = await axios.post(`api/hire/byEvents`, requestedEvents)
-      callback(true)
+      const resp = await axios.post(`api/hire?holderName=${card.name}&holderLastName=${card.name}`, {
+        events: events,
+        encryptedCardDto: encryptedCard
+      })
+      callback(resp)
     } catch (e) {
-      callback(false)
+      callback({ status: 500})
     }
   }
 }

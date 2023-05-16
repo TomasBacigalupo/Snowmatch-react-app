@@ -72,25 +72,25 @@ export default function CheckoutPayment() {
 
   const { checkout, teacher } = useSelector((state) => state.teachers);
 
-  const {zenriseClient, zenrisSecret} = teacher;
+  const { zenriseClient, zenrisSecret } = teacher;
 
 
   const { total, discount, subtotal, shipping, events, card } = checkout;
-  const {enqueueSnackbar} = useSnackbar();
+  const { enqueueSnackbar } = useSnackbar();
   const [dollar, setDollar] = useState(470);
   const [confirmationDialog, setConfirmationDialog] = useState(true)
-  const {user} = useAuth()
+  const { user } = useAuth()
 
   useEffect(() => {
     dispatch(getDollarValue((dollar) => {
       if (dollar) {
-        console.log({dollar})
+        console.log({ dollar })
         setDollar(dollar.rate)
-      }else{
+      } else {
         enqueueSnackbar('Error getting dollar value', { variant: 'error' });
       }
     }))
-  },[])
+  }, [])
 
 
   const handleNextStep = () => {
@@ -131,23 +131,11 @@ export default function CheckoutPayment() {
     const encryptedCard = await getCardEncryptedCard(card);
     setLoading(true)
     try {
-      dispatch(hireTeacherEvents(events, (succ) => {
-        if (succ) {
-          try {
-            dispatch(startPayment(events, encryptedCard, (paymentData) => {
-              debugger
-              dispatch(setPaymentInfo(paymentData))
-              dispatch(cleanCart())
-              handleNextStep();
-          }))
-
-          } catch (error) {
-            setLoading(false)
-            enqueueSnackbar('Payment failed', { variant: 'error' })
-            //pago rechazado
-            //TODO: call unhire
-          }
-
+      dispatch(hireTeacherEvents(events, encryptedCard, card, (response) => {
+        if (response.status === 200) {
+          dispatch(setPaymentInfo(response.data))
+          dispatch(cleanCart())
+          handleNextStep();
         } else {
           //TODO: avisar que no estan disponibles esos eventos que reintente buscar otras fechas
           enqueueSnackbar('Events had been booked', { variant: 'error' })
@@ -186,7 +174,7 @@ export default function CheckoutPayment() {
             Back
           </Button>
         </Grid>
-        <ConfirmationDialog open={confirmationDialog} onClose={()=> setConfirmationDialog(false)}/>
+        <ConfirmationDialog open={confirmationDialog} onClose={() => setConfirmationDialog(false)} />
         <Grid item xs={12} md={4}>
           {/* <CheckoutBillingInfo onBackStep={handleBackStep} /> */}
 

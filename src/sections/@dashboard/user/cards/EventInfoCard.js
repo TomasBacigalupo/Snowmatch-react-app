@@ -8,7 +8,7 @@ import useAuth from "src/hooks/useAuth";
 
 export default function EventInfoCard({ lesson }) {
     const { isStudent } = useAuth()
-    const { start, end, id, name, lastName, resort, people, payed } = lesson;
+    const { start, end, id, name, lastName, resort, people: maxStudents, payed } = lesson;
     const [toggle, setToogle] = useState(payed);
 
     return (
@@ -20,7 +20,7 @@ export default function EventInfoCard({ lesson }) {
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
                     <Iconify icon={'ic:outline-people'} sx={{ width: 16, height: 16, mr: 0.5, flexShrink: 0 }} />
                     <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
-                        {people}
+                        {maxStudents}
                     </Typography>
                 </Box>
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>

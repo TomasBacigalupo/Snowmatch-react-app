@@ -110,7 +110,7 @@ export default function PrivateNewEditForm({ isEdit, currentProduct, isHalfDay }
     const [startDate, setStartDate] = useState(new Date());
     const [endDate, setEndDate] = useState(getDefaultEndDate());
     const [time, setTime] = useState(getDefaultStartTime());
-    const [lengthInMinutes, setLengthInMinutes] = useState(isHalfDay? 4*60 : 8*60);
+    const [lengthInMinutes, setLengthInMinutes] = useState(isHalfDay? 3*60 : 8*60);
     const [events, setEvents] = useState([])
     const [draggable, setDraggable] = useState()
     const draggableRef = createRef()
@@ -216,7 +216,7 @@ export default function PrivateNewEditForm({ isEdit, currentProduct, isHalfDay }
         //     type: "Product class",
         //     price: data.price
         // }))
-
+        _product.maxStudents = 1
         _product.events = events.map((event) => {
             let start = event.start
             let end = event.end
@@ -234,7 +234,8 @@ export default function PrivateNewEditForm({ isEdit, currentProduct, isHalfDay }
                 color: isHalfDay ? "#FFC83D" : "#FFC83A",
                 source: "PRODUCT",
                 type: "Product class",
-                price: data.price
+                price: data.price,
+                maxStudents: 1
             }
         })
 
@@ -430,7 +431,7 @@ export default function PrivateNewEditForm({ isEdit, currentProduct, isHalfDay }
                 et.id = uuidv4()
                 et.title = isHalfDay ? "PRIVATE_HALF_DAY" : "PRIVATE_FULL_DAY"
                 et.start = new Date(start)
-                et.start.setHours(time.getHours()+5)
+                et.start.setHours(time.getHours()+lengthInMinutes/60 + 1)
                 et.start.setSeconds(time.getSeconds())
                 et.start.setMinutes(time.getMinutes())
                 et.end = new Date(et.start)

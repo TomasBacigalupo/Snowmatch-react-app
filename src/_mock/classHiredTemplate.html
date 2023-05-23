@@ -1,0 +1,77 @@
+<html>
+
+<head>
+    <title>Class Reservation and Payment Confirmation</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+        body {
+            font-family: 'Roboto', 'Arial', sans-serif;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            text-align: center;
+        }
+
+        h1 {
+            color: #00AB55;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+
+        .teacher {
+            font-weight: bold;
+        }
+
+        .amount {
+            color: #00AB55;
+        }
+
+        .message {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Successful Class Reservation and Payment Confirmation</h1>
+        <p>Dear ${userFullName},</p>
+
+        <p>We are pleased to inform you that your class reservation and payment have been successfully processed.</p>
+
+        <h2>Reservation Details:</h2>
+
+        <ul>
+            <list lessons as lesson>
+                <li>
+                    <span class="teacher">Teacher:</span> ${lesson.teacherName}<br>
+                    <span>Lesson Date:</span> ${lesson.lessonDate}<br>
+                    <span class="amount">Amount Paid:</span> ${lesson.amountPaid}<br>
+                </li>
+            </list>
+        </ul>
+
+        <p class="message">Thank you for choosing our services. We look forward to seeing you in the upcoming classes.
+        </p>
+
+        <p>Best regards,<br>
+            Your Organization</p>
+    </div>
+</body>
+
+</html>

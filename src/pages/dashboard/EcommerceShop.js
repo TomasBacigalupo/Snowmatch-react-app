@@ -202,6 +202,7 @@ export default function EcommerceShop({isGuest=false, teacherType="school"}) {
                 onRemoveRange={handleRemoveRange}
                 onRemoveResort={handleRemoveResort}
                 onResetAll={handleResetFilter}
+                onOpen={handleOpenFilter}
               />
             </>
           )}

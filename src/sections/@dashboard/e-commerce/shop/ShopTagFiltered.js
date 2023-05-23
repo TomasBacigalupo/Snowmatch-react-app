@@ -145,11 +145,11 @@ export default function ShopTagFiltered({
         </WrapperStyle>
       )}
 
-      {isShowReset && (
+      {/* {isShowReset && (
         <Button color="error" size="small" onClick={onResetAll} startIcon={<Iconify icon={'ic:round-clear-all'} />}>
           Clear All
         </Button>
-      )}
+      )} */}
     </RootStyle>
   );
 }

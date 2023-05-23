@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import React from 'react';
 // form
 import { Controller, useFormContext } from 'react-hook-form';
 // @mui
@@ -23,7 +24,7 @@ import Iconify from '../../../../components/Iconify';
 import Scrollbar from '../../../../components/Scrollbar';
 import { ColorManyPicker } from '../../../../components/color-utils';
 import { RHFMultiCheckbox, RHFRadioGroup, RHFTextField, RHFSelect } from '../../../../components/hook-form';
-import { MobileDatePicker } from '@mui/lab';
+import { MobileDatePicker, MobileDateRangePicker } from '@mui/lab';
 import useLocales from 'src/hooks/useLocales';
 import { FilterSharp } from '@mui/icons-material';
 import { ContourLayer } from 'deck.gl';
@@ -45,7 +46,7 @@ export const FILTER_LANGUAGE_OPTIONS = ['Español', 'English', 'Portugues', 'Ita
 
 export const FILTER_RESORT_OPTIONS = [
   { category: "Argentina", resorts: ['Aconcagua', 'Batea Mahuida', 'Calafate Mountain Park', 'Caviahue', 'Cerro Bayo', 'Cerro Castor', 'Cerro Catedral', 'Chapelco', 'La Hoya', 'Las Leñas', 'Las Pendientes', 'Los Penitentes', 'Los Puquios', 'Monte Bianco', 'Patagonia Heliski', 'Perito Moreno', 'Vallecitos'] },
-  { category: "Chile", resorts: ["Antillanca",  "Colorado", "Corralco", "El Fraile", "La Parva", "Las Araucarias", "Osorno", "Portillo", "Punta Arenas", "Valle Nevado", "Chillan"]},
+  { category: "Chile", resorts: ["Antillanca", "Colorado", "Corralco", "El Fraile", "La Parva", "Las Araucarias", "Osorno", "Portillo", "Punta Arenas", "Valle Nevado", "Chillan"] },
   { category: "United States", resorts: ["Aspen", "Aspen Highlands", "Beaver Creek", "Breckenridge", "Buttermilk", "Copper Mountain", "Crested Butte", "Cuchara Mountain", "Durango Mountain Resort", "Echo Mountain", "Eldora Mountain Resort", "Hesperus", "Howelsen Hill", "Irwin Catskiing by Eleven", "Kendall Mountain", "Keystone", "Loveland", "Monarch Ski Area", "Powderhorn", "Purgatory", "Silverton Mountain", "Ski Cooper", "Snowmass", "SolVista Golf and Ski Ranch (Silver Creek)", "Steamboat", "Sunlight Mountain Resort", "Telluride", "Vail", "Winter Park", "Wolf Creek Ski Area"] },
 ]
 
@@ -108,27 +109,6 @@ export default function ShopFilterSidebar({ isOpen, onResetAll, onOpen, onClose 
               </RHFSelect>
             </Stack>
             <Stack spacing={1}>
-              <Typography variant="subtitle1">{translate('filter.gender')}</Typography>
-              <RHFMultiCheckbox name="gender" options={FILTER_GENDER_OPTIONS} sx={{ width: 1 }} />
-            </Stack>
-
-            <Stack spacing={1}>
-              <Typography variant="subtitle1">{translate('filter.category')}</Typography>
-              <RHFMultiCheckbox name="category" options={FILTER_CATEGORY_OPTIONS} sx={{ width: 1 }} />
-            </Stack>
-
-
-            <Stack spacing={1}>
-              <Typography variant="subtitle1">{translate('filter.discipline')}</Typography>
-              <RHFMultiCheckbox name="discipline" options={FILTER_DISCIPLINE_OPTIONS} sx={{ width: 1 }} />
-            </Stack>
-
-            <Stack spacing={1}>
-              <Typography variant="subtitle1">{translate('filter.languages')}</Typography>
-              <RHFMultiCheckbox name="language" options={FILTER_LANGUAGE_OPTIONS} sx={{ width: 1 }} />
-            </Stack>
-
-            <Stack spacing={1}>
               <Typography variant="subtitle1">{translate('filter.range')}</Typography>
               <Controller
                 name="from"
@@ -160,6 +140,26 @@ export default function ShopFilterSidebar({ isOpen, onResetAll, onOpen, onClose 
                   />
                 )}
               />
+            </Stack>
+            <Stack spacing={1}>
+              <Typography variant="subtitle1">{translate('filter.gender')}</Typography>
+              <RHFMultiCheckbox name="gender" options={FILTER_GENDER_OPTIONS} sx={{ width: 1 }} />
+            </Stack>
+
+            <Stack spacing={1}>
+              <Typography variant="subtitle1">{translate('filter.category')}</Typography>
+              <RHFMultiCheckbox name="category" options={FILTER_CATEGORY_OPTIONS} sx={{ width: 1 }} />
+            </Stack>
+
+
+            <Stack spacing={1}>
+              <Typography variant="subtitle1">{translate('filter.discipline')}</Typography>
+              <RHFMultiCheckbox name="discipline" options={FILTER_DISCIPLINE_OPTIONS} sx={{ width: 1 }} />
+            </Stack>
+
+            <Stack spacing={1}>
+              <Typography variant="subtitle1">{translate('filter.languages')}</Typography>
+              <RHFMultiCheckbox name="language" options={FILTER_LANGUAGE_OPTIONS} sx={{ width: 1 }} />
             </Stack>
 
             <Stack spacing={1}>

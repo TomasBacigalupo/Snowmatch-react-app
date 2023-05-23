@@ -146,14 +146,14 @@ export default function TeacherDetailsSummary({ cart, teacher, onAddCart, onGoto
   };
 
   useEffect(() => dispatch(getTeacherProductsById(id)), [id])
-  
+
   const methods = useForm({
     defaultValues,
   });
 
   useEffect(() => {
     setValue('product', products[0]?.id ?? "")
-  },[products])
+  }, [products])
 
   const handleCloseContactModal = () => {
     if (error === null)
@@ -179,7 +179,7 @@ export default function TeacherDetailsSummary({ cart, teacher, onAddCart, onGoto
           lessonTime = 'MORNING'
         }
         const requestEvent = {
-          price: 9000,
+          price: 0,
           people: values.amount,
           lessonTime: lessonTime,
           date: new Date(dt),
@@ -194,6 +194,27 @@ export default function TeacherDetailsSummary({ cart, teacher, onAddCart, onGoto
     },
     [values],
   )
+
+  const handleSubmitSelectedDates = useCallback((dates) => {
+    setSelectDatesModal(false)
+    dates.forEach((date) => {
+      let lessonTime = values.duration
+      if (values.duration === 'HALF_DAY') {
+        lessonTime = 'MORNING'
+      }
+      const requestEvent = {
+        price: 0,
+        people: values.amount,
+        lessonTime: lessonTime,
+        date: date,
+        resort: values.resort
+      };
+      dispatch(addCart({
+        teacher: teacher,
+        event: requestEvent
+      }))
+    })
+  })
 
   const onSubmit = async (data) => {
     try {
@@ -295,8 +316,7 @@ export default function TeacherDetailsSummary({ cart, teacher, onAddCart, onGoto
             ))}
           </RHFSelect>
         </Stack>
-
-        <Stack direction="row" justifyContent="space-between" sx={{ mb: 3, mt: 2 }}>
+        {products?.length > 0 && <Stack direction="row" justifyContent="space-between" sx={{ mb: 3, mt: 2 }}>
           <RHFSelect
             name="product"
             size="small"
@@ -309,12 +329,13 @@ export default function TeacherDetailsSummary({ cart, teacher, onAddCart, onGoto
             ))}
           </RHFSelect>
         </Stack>
-        <Stack direction="row" justifyContent="flex-end" sx={{ mb: 3, mt: 2 }}>
+        }
+        {products?.length > 0 && <Stack direction="row" justifyContent="flex-end" sx={{ mb: 3, mt: 2 }}>
           <Typography variant="subtitle1" sx={{ mt: 0.5 }}>
-            {fCurrency(products.find((product) => Number(product.id) === Number(values.product))?.price ?? 0)}
+            USD{fCurrency(products.find((product) => Number(product.id) === Number(values.product))?.price ?? 0)}
           </Typography>
-        </Stack>
-        {/* <Stack direction="row" justifyContent="space-between" sx={{ mb: 3 }} justifyItems='center'>
+        </Stack>}
+        {products?.length === 0 && <Stack direction="row" justifyContent="space-between" sx={{ mb: 3 }} justifyItems='center'>
           <Typography variant="subtitle1" sx={{ mt: 0.5 }}>
             {translate('teacherDetails.duration')}
           </Typography>
@@ -332,7 +353,7 @@ export default function TeacherDetailsSummary({ cart, teacher, onAddCart, onGoto
               <option key="AFTERNOON" value="AFTERNOON">
                 {translate('checkout.afternoon')}
               </option>
-              <option key="FULLDAY" value="ALL_DAY">
+              <option key="FULLDAY" value="FULL_DAY">
                 {translate('checkout.allday')}
               </option>
             </RHFSelect>
@@ -349,7 +370,7 @@ export default function TeacherDetailsSummary({ cart, teacher, onAddCart, onGoto
             </option>
           </RHFSelect>
           )}
-        </Stack> */}
+        </Stack>}
 
         {/* <Stack direction="row" justifyContent="space-between" sx={{ mb: 3 }}>
           <Typography variant="subtitle1" sx={{ mt: 0.5 }}>
@@ -371,7 +392,7 @@ export default function TeacherDetailsSummary({ cart, teacher, onAddCart, onGoto
 
         <Stack direction="row" spacing={2} sx={{ mt: 5 }}>
 
-          {/* <Button
+          {products?.length === 0 && <Button
             fullWidth
             //disabled={hasLessons}
             size="large"
@@ -382,8 +403,8 @@ export default function TeacherDetailsSummary({ cart, teacher, onAddCart, onGoto
             sx={{ whiteSpace: 'nowrap' }}
           >
             Add to Cart
-          </Button> */}
-          <Button
+          </Button>}
+          {products?.length > 0 && <Button
             component={RouterLink}
             fullWidth
             size="large"
@@ -391,9 +412,9 @@ export default function TeacherDetailsSummary({ cart, teacher, onAddCart, onGoto
             sx={{ whiteSpace: 'nowrap' }}
             variant="contained" to={PATH_GUEST.viewTeacherProducts(id, watch("product"))}>
             {translate("conversation.select_dates")}
-          </Button>
+          </Button>}
 
-          {/* <HoverButton
+          {products?.length === 0 && <HoverButton
             fullWidth
             size="large"
             color="primary"
@@ -401,15 +422,25 @@ export default function TeacherDetailsSummary({ cart, teacher, onAddCart, onGoto
             // startIcon={<ConnectWithoutContactIcon />}
             //calendar Icon
             to={PATH_GUEST.viewTeacherProducts(id, watch("product"))}
-            onClick={handleContact}
+            //onClick={handleContact} //This is for contact modal
+            onClick={() => setSelectDatesModal(true)}
             sx={{ whiteSpace: 'nowrap' }}
           >
             {translate("conversation.select_dates")}
-          </HoverButton> */}
+          </HoverButton>}
 
           <DialogAnimate open={selectDatesModal} onClose={handleCloseContactModal}>
             <DialogTitle>{translate("conversation.select_dates")}</DialogTitle>
-            {flexibleTime ? <SelectRangeDates handleClose={() => setSelectDatesModal(false)} onSubmit={handleSubmitRange} /> : <SelectDates handleClose={() => setSelectDatesModal(false)} />}
+            {flexibleTime &&
+              <SelectRangeDates
+                handleClose={() => setSelectDatesModal(false)}
+                onSubmit={handleSubmitRange} />
+            }
+            {!flexibleTime &&
+              <SelectDates
+                onSubmit={handleSubmitSelectedDates}
+                handleClose={() => setSelectDatesModal(false)} />
+            }
           </DialogAnimate>
 
           <DialogAnimate open={isOpenContactModal} onClose={handleCloseContactModal}>

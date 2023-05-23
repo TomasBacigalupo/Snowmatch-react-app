@@ -6,6 +6,7 @@ import { Chip, Typography, Stack, Button } from '@mui/material';
 // components
 import Iconify from '../../../../components/Iconify';
 import useLocales from 'src/hooks/useLocales';
+import { useDispatch } from 'react-redux';
 
 // ----------------------------------------------------------------------
 
@@ -49,6 +50,7 @@ TeacherTagFiltered.propTypes = {
   onRemoveRange: PropTypes.func,
   onRemoveResort: PropTypes.func,
   onResetAll: PropTypes.func,
+  onOpen: PropTypes.func
 };
 
 export default function TeacherTagFiltered({
@@ -61,12 +63,14 @@ export default function TeacherTagFiltered({
   onRemoveLanguage,
   onRemoveRange,
   onRemoveResort,
-  onResetAll
+  onResetAll,
+  onOpen
 }) {
   const theme = useTheme();
   const {translate} = useLocales()
-
+  const dispatch = useDispatch();
   const { gender, category, discipline, rating, language, from, to, resort } = filters;
+
 
   return (
     <RootStyle>
@@ -137,7 +141,7 @@ export default function TeacherTagFiltered({
 
       {from && to && (
         <Stack direction="row" flexWrap="wrap" >
-          <Chip variant='outlined' size="small" label={from.getDate() + "/" + (from.getMonth() + 1) + "/" + from.getFullYear() + "-" + to.getDate() + "/" + (to.getMonth() + 1) + "/" + to.getFullYear()} onDelete={onRemoveRange} sx={{ m: 0.5 }} />
+          <Chip variant='outlined' size="small" label={from.getDate() + "/" + (from.getMonth() + 1) + "/" + from.getFullYear() + "-" + to.getDate() + "/" + (to.getMonth() + 1) + "/" + to.getFullYear()} sx={{ m: 0.5 }} onClick={onOpen}/>
         </Stack>
       )}
 
@@ -148,10 +152,10 @@ export default function TeacherTagFiltered({
       )}
 
 
-      {isShowReset && (
+      {/* {isShowReset && (
         <Button color="error" size="small" onClick={onResetAll} startIcon={<Iconify icon={'ic:round-delete'} />}>
         </Button>
-      )}
+      )} */}
     </RootStyle>
   );
 }

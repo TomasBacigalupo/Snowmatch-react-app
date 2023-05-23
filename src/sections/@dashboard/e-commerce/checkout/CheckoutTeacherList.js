@@ -45,13 +45,28 @@ CheckoutTeacherList.propTypes = {
 export default function CheckoutTeacherList({ events, onDelete, onIncreaseQuantity, onDecreaseQuantity }) {
     const {translate} = useLocales()
     const {teacher} = useSelector(state => state.teachers)
+    const getTimeToShow = (eventStart, eventEnd, event) => {
+        if(eventStart && eventEnd)
+            return `${eventStart.getHours()}:${eventStart.getMinutes() < 10 ? '0' + eventStart.getMinutes() : eventStart.getMinutes()} ${translate('checkout.end_time')} ${eventEnd.getHours()}:${eventEnd.getMinutes() < 10 ? '0' + eventEnd.getMinutes() : eventEnd.getMinutes()}`
+        switch(event?.lessonTime){
+            case 'MORNING':
+                return `${translate('checkout.morning')}`
+            case 'AFTERNOON':
+                return `${translate('checkout.afternoon')}`
+            case 'FULL_DAY':
+                return `${translate('checkout.full_day')}`
+            default:
+                return `${translate('checkout.full_day')}`
+
+        }
+    }
     return (
         <TableContainer >
-            <Table>
+            <Table sx={{mt:1}}>
                 <TableHead>
                     <TableRow>
                         <TableCell>{translate('checkout.date')}</TableCell>
-                        <TableCell align="center">{translate('checkout.date')}</TableCell>
+                        <TableCell align="center">{translate('checkout.price')}</TableCell>
                         <TableCell align="right" />
                     </TableRow>
                 </TableHead>
@@ -70,7 +85,7 @@ export default function CheckoutTeacherList({ events, onDelete, onIncreaseQuanti
                                             </Typography>
                                             {/* start and end time od the event */}
                                             <Typography noWrap variant="body2" sx={{ color: 'text.secondary' }}>
-                                                {`${event.start.getHours()}:${event.start.getMinutes() < 10 ? '0' + event.start.getMinutes() : event.start.getMinutes()}`} {translate('checkout.end_time')}  {`${event.end.getHours()}:${event.end.getMinutes() < 10 ? '0' + event.end.getMinutes() : event.end.getMinutes() }`}
+                                                {getTimeToShow(event.start, event.end, event)}
                                             </Typography>
                                         </Box>
                                     </Box>

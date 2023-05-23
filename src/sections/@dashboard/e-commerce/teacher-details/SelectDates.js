@@ -38,7 +38,7 @@ const CustomPickersDay = styled(PickersDay, {
     }),
 }));
 
-export default function SelectDates({ handleClose }) {
+export default function SelectDates({ handleClose, onSubmit }) {
     const { translate } = useLocales()
     const [selectedDate, setSelectedDate] = useState()
     const [selectTimeModal, setSelectTimeModal] = useState(false)
@@ -49,20 +49,11 @@ export default function SelectDates({ handleClose }) {
 
     tomorrow.setDate(tomorrow.getDate() + 1)
 
-
-    const handleChangeDate = (date) => {
-        setSelectedDate(date)
-        setSelectTimeModal(true)
-    }
-
     const renderWeekPickerDay = useCallback((date, _selectedDates, pickersDayProps) => {
         if (!date) {
             return <PickersDay {...pickersDayProps} onClick={() => console.log("clocked2")} />;
         }
 
-        const start = new Date()
-        const end = new Date()
-        console.log({ selectedDates })
         const dayIsBetween = selectedDates.length > 0 && selectedDates.find(_date => _date.getDate() === date.getDate()) !== undefined
         const isFirstDay = false
         const isLastDay = false
@@ -138,8 +129,12 @@ export default function SelectDates({ handleClose }) {
                 </Grid>
             </DialogContent>
             <DialogActions>
-                <Button fullWidth variant='outlined' onClick={handleClose}>{translate('general.cancel')}</Button>
-                <Button fullWidth variant='contained' onClick={handleClose}>{translate('general.done')}</Button>
+                <Button fullWidth variant='outlined' onClick={handleClose}>
+                    {translate('general.cancel')}
+                </Button>
+                <Button fullWidth variant='contained' onClick={() => onSubmit(selectedDates)}>
+                    {translate('general.done')}
+                </Button>
             </DialogActions>
         </React.Fragment>
 

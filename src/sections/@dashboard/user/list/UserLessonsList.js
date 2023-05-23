@@ -24,6 +24,7 @@ export default function UserLessonsList(){
                     <EventCard key={idx} lesson={lesson} />
                 </Grid>
             )}
+             
         </Grid>
     )
     

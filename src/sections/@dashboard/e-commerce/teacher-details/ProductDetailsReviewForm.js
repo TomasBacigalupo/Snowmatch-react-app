@@ -13,6 +13,7 @@ import useAuth from 'src/hooks/useAuth';
 import { useNavigate } from 'react-router';
 import { rateTeacherByID } from 'src/redux/slices/rates';
 import { useDispatch, useSelector } from 'src/redux/store';
+import useLocales from 'src/hooks/useLocales';
 
 // ----------------------------------------------------------------------
 
@@ -36,12 +37,13 @@ export default function ProductDetailsReviewForm({ onClose, id, teacherId, ...ot
 
   const dispatch = useDispatch()
   const {isSubmitting} = useSelector(state => state.rates)
+  const {translate} = useLocales() 
 
   const ReviewSchema = Yup.object().shape({
-    stars: Yup.mixed().required('Rating is required'),
-    comment: Yup.string().required('Comment is required'),
-    fun: Yup.string().required('Fun is requires'),
-    safety: Yup.string().required('Safety is requires')
+    stars: Yup.mixed().required(translate("reviewForm.ratingRequired")),
+    comment: Yup.string().required(translate("reviewForm.commentRequired")),
+    fun: Yup.string().required(translate("reviewForm.funRequired")),
+    safety: Yup.string().required(translate("reviewForm.safetyRequired"))
   });
 
   const defaultValues = {
@@ -66,24 +68,24 @@ export default function ProductDetailsReviewForm({ onClose, id, teacherId, ...ot
   const onSubmit = async (data) => {
     let fun, safe
     switch(data.fun){
-      case "Boring":
+      case "Aburrido":
         fun = 0
         break
-      case "Fun":
+      case "Divertido":
         fun = 1
         break
-      case "Extremely Fun":
+      case "Muy Divertido":
         fun = 2
         break
     }
     switch (data.safety) {
-      case "Not Safe":
+      case "No es Seguro":
         safe = 0
         break
-      case "Safe":
+      case "Seguro":
         safe = 1
         break
-      case "Extremely Safety":
+      case "Muy Seguro":
         safe = 2
         break
     }
@@ -109,14 +111,14 @@ export default function ProductDetailsReviewForm({ onClose, id, teacherId, ...ot
   return (
     <RootStyle {...other} id={id}>
       <Typography variant="subtitle1" gutterBottom>
-        Add Review
+        {translate("reviewForm.title")}
       </Typography>
 
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <Stack spacing={3}>
           <div>
             <Stack direction="row" flexWrap="wrap" alignItems="center" spacing={1.5}>
-              <Typography variant="body2">Your review about this product:</Typography>
+              <Typography variant="body2">{translate("reviewForm.description")}</Typography>
 
               <Controller
                 name="stars"
@@ -127,20 +129,20 @@ export default function ProductDetailsReviewForm({ onClose, id, teacherId, ...ot
             {!!errors.rating && <FormHelperText error> {errors.rating?.message}</FormHelperText>}
           </div>
 
-          <RHFTextField name="comment" label="Share a story or situation of your choice *" multiline rows={3} />
+          <RHFTextField name="comment" label={translate("reviewForm.comment")} multiline rows={3} />
 
-          <Typography variant="body2">Fun:</Typography>
-          <RHFRadioGroup name='fun' options={["Boring", 'Fun', "Extremely Fun"]}/>
+          <Typography variant="body2">{translate("reviewForm.fun")}:</Typography>
+          <RHFRadioGroup name='fun' options={["Aburrido", 'Divertido', "Muy Divertido"]}/>
 
-          <Typography variant="body2">Safety:</Typography>
-          <RHFRadioGroup name='safety' options={["Not Safe", 'Safe', "Extremely Safety"]} />
+          <Typography variant="body2">{translate("reviewForm.security")}</Typography>
+          <RHFRadioGroup name='safety' options={["No es Seguro", 'Seguro', "Muy Seguro"]} />
 
           <Stack direction="row" justifyContent="flex-end" spacing={1.5}>
             <Button color="inherit" variant="outlined" onClick={onCancel}>
-              Cancel
+              {translate("reviewForm.cancel")}
             </Button>
             <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-              Post review
+              {translate("reviewForm.rate")}
             </LoadingButton>
           </Stack>
         </Stack>

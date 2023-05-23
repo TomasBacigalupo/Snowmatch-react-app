@@ -4,7 +4,7 @@ import { MobileDateRangePicker } from '@mui/lab';
 import { Grid, Card, TextField, Typography, Box } from '@mui/material';
 //
 import { FormProvider, RHFMultiCheckbox, RHFSelect } from 'src/components/hook-form';
-import { FILTER_CATEGORY_OPTIONS, FILTER_DISCIPLINE_OPTIONS, FILTER_RESORT_OPTIONS } from '../@dashboard/e-commerce/shop/ShopFilterSidebar';
+import { FILTER_CATEGORY_OPTIONS, FILTER_RESORT_OPTIONS } from '../@dashboard/e-commerce/shop/ShopFilterSidebar';
 import { useDispatch } from 'react-redux';
 import { filterTeachers } from 'src/redux/slices/teachers';
 import { useNavigate } from 'react-router';
@@ -14,6 +14,7 @@ import HoverButton from 'src/components/HoverButton';
 import useAuth from 'src/hooks/useAuth';
 import { useTheme } from '@mui/material/styles';
 import React from 'react';
+import dayjs from 'dayjs';
 
 export default function HomeFilterTeachers() {
 
@@ -25,12 +26,15 @@ export default function HomeFilterTeachers() {
     const { translate } = useLocales()
 
 
-
+    const defaultRange = [
+        new Date('2023-06-20'),
+        new Date('2023-06-30'),
+    ]
     const defaultValues = {
         resort: 'Cerro Catedral',
-        range: [null, null],
-        from: "2023-06-01T03:00:00.000Z",
-        to: "2023-10-15T03:00:00.000Z",
+        range: defaultRange,
+        from: defaultRange[0],
+        to: defaultRange[1],
         gender: [],
         category: ["Ski"],
         language: [],
@@ -141,6 +145,7 @@ export default function HomeFilterTeachers() {
                                             <MobileDateRangePicker
                                                 {...field}
                                                 disablePast
+                                                defaultValue={[dayjs('2022-04-17'), dayjs('2022-04-21')]}
                                                 label={translate("landingPRO.start_date")}
                                                 inputFormat="dd/MM/yyyy"
                                                 renderInput={(startProps, endProps) => (

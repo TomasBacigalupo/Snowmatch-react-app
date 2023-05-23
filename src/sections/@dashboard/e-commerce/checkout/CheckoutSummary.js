@@ -71,14 +71,14 @@ export default function CheckoutSummary({
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
               Total: {/* {translate('checkout.subtotal')} */}
             </Typography>
-            <Typography variant="subtitle2">{subtotal ? fCurrency(subtotal) : translate('checkout.deal_with_pro')}</Typography>
+            <Typography variant="subtitle2">US{subtotal ? fCurrency(subtotal) : translate('checkout.deal_with_pro')}</Typography>
           </Stack>
 
           <Stack direction="row" justifyContent="space-between">
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-              Reserva (20%)
+              Reserva (50%)
             </Typography>
-            <Typography variant="subtitle2">{subtotal ? fCurrency(subtotal * 0.2) : 'free' }</Typography>
+            <Typography variant="subtitle2">{subtotal ? `US${fCurrency(subtotal * 0.5)}` : 'free' }</Typography>
           </Stack>
 
           <Stack direction="row" justifyContent="space-between">
@@ -97,7 +97,7 @@ export default function CheckoutSummary({
               </Typography>
             <Box sx={{ textAlign: 'right' }}>
               <Typography variant="subtitle1">
-                {subtotal ? fCurrency(subtotal * 0.2 * dollarValue): 'free'}
+                {subtotal ? fCurrency(subtotal * 0.5 * dollarValue): 'free'}
               </Typography>
             </Box>
           </Stack>

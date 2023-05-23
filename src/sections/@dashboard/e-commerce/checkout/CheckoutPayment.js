@@ -25,6 +25,7 @@ import { useSnackbar } from 'notistack';
 import { el } from 'date-fns/locale';
 import ConfirmationDialog from './ConfirmationDialog';
 import useAuth from 'src/hooks/useAuth';
+import useLocales from 'src/hooks/useLocales';
 
 // ----------------------------------------------------------------------
 
@@ -67,19 +68,18 @@ const CARDS_OPTIONS = [
 
 export default function CheckoutPayment() {
   const dispatch = useDispatch();
+  const {translate} = useLocales()
 
   const [loading, setLoading] = useState(false)
 
   const { checkout, teacher } = useSelector((state) => state.teachers);
 
-  const { zenriseClient, zenrisSecret } = teacher;
 
 
   const { total, discount, subtotal, shipping, events, card } = checkout;
   const { enqueueSnackbar } = useSnackbar();
   const [dollar, setDollar] = useState(470);
   const [confirmationDialog, setConfirmationDialog] = useState(true)
-  const { user } = useAuth()
 
   useEffect(() => {
     dispatch(getDollarValue((dollar) => {
@@ -171,7 +171,7 @@ export default function CheckoutPayment() {
             onClick={handleBackStep}
             startIcon={<Iconify icon={'eva:arrow-ios-back-fill'} />}
           >
-            Back
+            {translate("checkout.back")}
           </Button>
         </Grid>
         <ConfirmationDialog open={confirmationDialog} onClose={() => setConfirmationDialog(false)} />
@@ -187,7 +187,7 @@ export default function CheckoutPayment() {
             onEdit={() => handleGotoStep(0)}
           />
           <LoadingButton fullWidth size="large" type="submit" variant="contained" loading={loading}>
-            Pagar
+            {translate("checkout.pay")}
           </LoadingButton>
         </Grid>
       </Grid>

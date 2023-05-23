@@ -1,6 +1,6 @@
 import sum from 'lodash/sum';
 import { useState } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // @mui
 import { Grid, Card, Button, CardHeader, Typography, Box, DialogTitle } from '@mui/material';
 // redux
@@ -11,7 +11,7 @@ import {
   decreaseQuantity,
 } from '../../../../redux/slices/product';
 // routes
-import { PATH_DASHBOARD } from '../../../../routes/paths';
+import { PATH_DASHBOARD, PATH_GUEST } from '../../../../routes/paths';
 // components
 import Iconify from '../../../../components/Iconify';
 import Scrollbar from '../../../../components/Scrollbar';
@@ -22,17 +22,19 @@ import AddEventForm from './AddEventForm';
 import CheckoutSummary from './CheckoutSummary';
 import CheckoutTeacherList from './CheckoutTeacherList';
 import useLocales from 'src/hooks/useLocales';
-import { closeAddEventModal, openAddEventModal, deleteCart, onNextStep } from 'src/redux/slices/teachers';
+import { closeAddEventModal, openAddEventModal, deleteCart, onNextStep, hireTeacher } from 'src/redux/slices/teachers';
 import { CheckCircle } from '@mui/icons-material';
+import { useSnackbar } from 'notistack';
 
 // ----------------------------------------------------------------------
 
 export default function CheckoutCart() {
   const { translate } = useLocales()
   const [isOpenContactModal, setIsOpenContactModal] = useState(false)
+  const [loading, setLoading] = useState(false)
   const dispatch = useDispatch();
 
-  const { checkout } = useSelector((state) => state.teachers);
+  const { checkout, teacher } = useSelector((state) => state.teachers);
 
   const { cart, total, discount, subtotal, isOpenAddEventModal, events } = checkout;
   console.log({checkout})
@@ -41,12 +43,26 @@ export default function CheckoutCart() {
 
   const isEmptyCart = cart.length === 0;
 
+  const {enqueueSnackbar} = useSnackbar();
+
+  const navigate = useNavigate();
+
   const handleDeleteCart = (eventId) => {
     dispatch(deleteCart(eventId));
   };
 
   const handleNextStep = () => {
-    dispatch(onNextStep());
+    if(events && events[0]?.price === 0){
+      setLoading(true)
+      dispatch(hireTeacher(teacher.id, events, () =>{
+        setLoading(false)
+        
+        enqueueSnackbar(translate('checkout.free_event_hired'), { variant: 'success' });
+        navigate(PATH_GUEST.calculate);
+      }))
+    }else{
+      dispatch(onNextStep());
+    }
   };
 
   const handleIncreaseQuantity = (productId) => {
@@ -115,8 +131,9 @@ export default function CheckoutCart() {
           size="large"
           type="submit"
           variant="contained"
-          disabled={events.length === 0}
+          disabled={events.length === 0 || loading}
           onClick={handleNextStep}
+          loading={loading}
         >
           Reservar Ahora
         </Button>

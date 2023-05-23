@@ -393,11 +393,11 @@ export function getTeacherWithRates(email) {
   };
 }
 
-export function getRates(email, teacher) {
+export function getRates(id, teacher) {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      const ratesResponse = await axios.get(`/api/rate/getRates/${email}`);
+      const ratesResponse = await axios.get(`/api/rate/byId/${id}`);
       const dto = {
         "rates": ratesResponse.data,
         "teacher": teacher

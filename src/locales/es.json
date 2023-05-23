@@ -170,6 +170,21 @@
         "private_full_day": "Privada día completo",
         "group":"Grupales"
     },
+    "reviewForm":{
+        "title": "Calificar",
+        "description": "Deja tu calificación:",
+        "rate": "Calificacar",
+        "comment": "Comentario",
+        "cancel": "Cancelar",
+        "save": "Guardar",
+        "fun": "Diversión",
+        "seguridad": "Seguridad",
+        "ratingRequired": "La calificación es obligatoria",
+        "commentRequired": "El comentario es obligatorio",
+        "funRequired": "La diversión es obligatoria",
+        "safetyRequired": "La seguridad es obligatoria"
+
+    },
     "profile": {
         "tabs": {
             "profile": "Mi información",
@@ -201,14 +216,14 @@
         }
     },
     "filter": {
-        "gender": "Genero",
+        "gender": "Género",
         "resort": "Cerro",
         "category": "Categoría",
         "discipline": "Disciplina",
         "freeStyle": "FreeStyle",
         "alpine": "Alpino",
         "backCountry": "Travesía",
-        "languages": "Lenguajes",
+        "languages": "Idiomas",
         "range": "Fechas",
         "rating": "Puntuación",
         "filters": "Filtros",
@@ -286,9 +301,9 @@
         "cancel": "Cancelar"
     },
     "reservationDialog":{
-        "title":"Para confirmar tu reserva, pagá un 20% del importe total",
-        "content": "Una vez que confirmes la reserva, SnowMatch te cobrará un 20% del total de la clase. El monto restante lo deberás abonar directamente al instructor el día de la clase, al tipo de cambio vigente en ese momento.",
-        "cancelationMessage":"En caso de cancelación reprogramación, ponete en contacto con nuestro equipo.",
+        "title":"Para confirmar tu reserva, pagá un 50% del importe total",
+        "content": "Una vez que confirmes la reserva, ya contaras con un 50% del total de la clase abonado. El monto restante lo deberás abonar directamente al instructor el día de la clase, al tipo de cambio vigente en ese momento.",
+        "cancelationMessage":"En caso de cancelación reprogramación, ponete en contacto con nuestro equipo. office@snowmatch.pro",
         "confirm": "Confirmar"
     },
     "conversation": {
@@ -333,7 +348,7 @@
         "size": "Talle de zapatos",
         "sizeHelper": "Talle en EU ej: 37, 38, 39, 40...",
         "showResult": "Mostra este resultado en el rental",
-        "prev": "Atras",
+        "prev": "Atrás",
         "next": "Continuar",
         "ski": "Esquies",
         "skiResult": "Esquies desde {{from}}cm hasta {{to}}cm",
@@ -388,7 +403,10 @@
        "sm_service": "Servicio SnowMatch:",
        "total": "Total:",
        "date": "Fecha",
-       "price": "Precio"
+       "price": "Precio",
+       "free_event_hired": "Clase Reservada",
+       "back": "Volver",
+       "pay": "Pagar"
     },
     "product": {
         "heading": {
@@ -524,5 +542,15 @@
         "morning": "Mañana",
         "afternoon": "Tarde",
         "allday": "Día completo"
+    },
+
+    "cardInput":{
+        "title": "Datos de la tarjeta",
+        "name": "Nombre que figura en la tarjeta",
+        "expiry": "MM/AA",
+        "type":"DNI",
+        "id": "Documento",
+        "number": "Número de tarjeta",
+        "explain": "3/4 digitos del dorso de la tarjeta"
     }
 }

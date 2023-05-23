@@ -1,5 +1,5 @@
 import { StaticDateRangePicker } from "@mui/lab";
-import { Button, DialogActions, DialogContent, DialogTitle, Grid, TextField, Box, Typography } from "@mui/material";
+import { Button, DialogActions, DialogContent, Grid, TextField, Box, Typography } from "@mui/material";
 import React from "react";
 import { useState } from "react";
 import useLocales from "src/hooks/useLocales";

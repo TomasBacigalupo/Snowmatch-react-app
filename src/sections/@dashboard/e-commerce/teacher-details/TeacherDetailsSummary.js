@@ -140,7 +140,7 @@ export default function TeacherDetailsSummary({ cart, teacher, onAddCart, onGoto
     quantity: 1, //people
     resort: "",
     duration: "MORNING",
-    people: 1,
+    maxStudents: 1,
     level: "BEGINNER",
     product: products[0]?.id ?? "",
   };

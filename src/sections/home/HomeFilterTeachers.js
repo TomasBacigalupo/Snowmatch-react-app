@@ -13,10 +13,20 @@ import useLocales from 'src/hooks/useLocales';
 import HoverButton from 'src/components/HoverButton';
 import useAuth from 'src/hooks/useAuth';
 import { useTheme } from '@mui/material/styles';
-import React from 'react';
+import React, { useEffect } from 'react';
 import dayjs from 'dayjs';
+import ReactPixel from 'react-facebook-pixel';
+
 
 export default function HomeFilterTeachers() {
+
+    // const advancedMatching = { em: 'some@email.com' }; // optional, more info: https://developers.facebook.com/docs/facebook-pixel/advanced/advanced-matching
+    const options = {
+        autoConfig: true, // set pixel's autoConfig. More info: https://developers.facebook.com/docs/facebook-pixel/advanced/
+        debug: false, // enable logs
+    };
+
+    ReactPixel.init('1181423269092774', {}, options);
 
     const theme = useTheme()
     const dispatch = useDispatch()
@@ -90,6 +100,7 @@ export default function HomeFilterTeachers() {
     };
 
     const onSubmit = () => {
+       
         dispatch(filterTeachers({
             ...values,
             from: values.range[0],
@@ -113,6 +124,10 @@ export default function HomeFilterTeachers() {
 
     }
 
+    useEffect(() => {
+        ReactPixel.pageView(); // For tracking page view
+    })
+    
     return (
         <>
             <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
@@ -165,10 +180,10 @@ export default function HomeFilterTeachers() {
                                         )}
                                     />
                                 </Grid>
-                                <Grid item xs={6}>
+                                <Grid item xs={5}>
                                     <RHFMultiCheckbox name="category" options={FILTER_CATEGORY_OPTIONS} sx={{ width: 1 }} />
                                 </Grid>
-                                <Grid item xs={6}>
+                                <Grid item xs={7}>
                                     <HoverButton fullWidth type="submit" variant="contained" size="large" startIcon={<Iconify icon={'eva:flash-fill'} width={20} height={20} />}>
                                         {translate("landingPRO.match")}
                                     </HoverButton>

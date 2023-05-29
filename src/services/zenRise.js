@@ -1,10 +1,10 @@
-const SNOWMATCH_CLIENT = "010ae77f234713bc66c6c8294989630f.zen.api.client"
-const SNOWMATCH_SECRET = "E957Cd66D0C27e2F63e6e9325b05f79096afd22b62b52a0e1d7dd84f4784f811"
+const SNOWMATCH_CLIENT = ""
+const SNOWMATCH_SECRET = ""
 const api = true ? 'https://api.zenrise.io/v1' : 'https://api.zenrise.io/v1'
 
 export const getCardToken = async (card) => {
 
-    const zenrise = new window.Zenrise.Sdk('DEV');
+    const zenrise = new window.Zenrise.Sdk('PROD');
     const token = await zenrise.getCardToken({
         card_number: card.number,
         card_expiration_month: card.expiry.slice(0, 2),
@@ -23,7 +23,7 @@ export const getCardToken = async (card) => {
 
 export const getCardEncryptedCard = async (card) => {
 
-    const zenrise = new window.Zenrise.Sdk('DEV');
+    const zenrise = new window.Zenrise.Sdk('PROD');
     const token = await zenrise.getCardToken({
         card_number: card.number,
         card_expiration_month: card.expiry.slice(0, 2),

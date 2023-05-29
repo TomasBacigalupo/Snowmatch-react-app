@@ -13,6 +13,7 @@ import { useDispatch, useSelector } from 'src/redux/store';
 import { getRates } from 'src/redux/slices/product';
 import { useEffect } from 'react';
 import { useSnackbar } from 'notistack';
+import useLocales from 'src/hooks/useLocales';
 
 
 // ----------------------------------------------------------------------
@@ -44,6 +45,7 @@ TeacherDetailsReviewOverview.propTypes = {
 
 export default function TeacherDetailsReviewOverview({ teacher, onOpen }) {
 
+  const {translate} = useLocales()
   const { isTeacher, user } = useAuth();
   const { enqueueSnackbar } = useSnackbar()
   const { rates, isLoading } = useSelector(state => state.rates)
@@ -72,7 +74,7 @@ export default function TeacherDetailsReviewOverview({ teacher, onOpen }) {
     <Grid container>
       <GridStyle item xs={12} md={4}>
         <Typography variant="subtitle1" gutterBottom>
-          Average rating
+         {translate('teacherDetails.ratingAVG')}
         </Typography>
         <Typography variant="h2" gutterBottom sx={{ color: getStarsAvg() > 3 ? 'success.main' : 'error.main' }}>
           {getStarsAvg()}/5
@@ -114,7 +116,7 @@ export default function TeacherDetailsReviewOverview({ teacher, onOpen }) {
       {!isTeacher && <GridStyle item xs={12} md={4}>
         <Link href="#move_add_review" underline="none">
           <Button size="large" disable={isTeacher} onClick={onOpen} variant="outlined" startIcon={<Iconify icon={'eva:edit-2-fill'} />}>
-            Write your review
+            {translate('teacherDetails.write_review')}
           </Button>
         </Link>
       </GridStyle>}

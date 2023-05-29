@@ -177,7 +177,7 @@ export default function CheckoutConfirmation() {
                     </Box>
                     <Box sx={{ mb: 1 }}>
                         <Typography  sx={{ display: 'inline-block', minWidth: '100px' }}>Attendees: </Typography>
-                        <Typography variant='body2' sx={{ display: 'inline-block' }}>{selectedEvent?.people}</Typography>
+                        <Typography variant='body2' sx={{ display: 'inline-block' }}>{selectedEvent?.maxStudents}</Typography>
                     </Box>
                     <Box sx={{ mb: 1 }}>
                         <Typography  sx={{ display: 'inline-block', minWidth: '100px' }}>Level: </Typography>

@@ -49,7 +49,7 @@
         "clientDataDesc": "Todos tus datos son privados y estan protegidos por SnowMatch",
         "calendarOrg": "Organizá tus Clases",
         "calendarOrgDesc": "Establecé tus horarios disponibles y maneja tus clases.",
-        "match": "Match PROs",
+        "match": "Match PRO",
         "matchDesc": "Matchea con nuevos clientes y consegui clases cuando estas libre.",
         "independent": "PROs Independientes",
         "school": "PROs de Escuelas",
@@ -271,7 +271,9 @@
         "level": "Nivel",
         "duration": "Duración",
         "reviews": "Ranking",
-        "no_reviews": "No hay calificaciones"
+        "no_reviews": "No hay calificaciones",
+        "write_review": "Escribir calificación",
+        "ratingAVG": "Puntuación promedio"
     },
     "schoolDetails": {
         "title": "Detalles PRO school",
@@ -552,5 +554,15 @@
         "id": "Documento",
         "number": "Número de tarjeta",
         "explain": "3/4 digitos del dorso de la tarjeta"
+    },
+
+    "error": {
+        "card_number": "Error en numero de tarjeta",
+        "card_holder_name": "Error en nombre de tarjeta",
+        "card_expiration_month": "Error en fecha de vencimiento",
+        "card_cvc": "Error en codigo de seguridad",
+        "card_id": "Error en documento",
+        "expired card": "Tarjeta vencida",
+        "hire": "Los eventos ya no están disponibles"
     }
 }

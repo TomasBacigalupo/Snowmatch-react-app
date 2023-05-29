@@ -16,14 +16,13 @@ import { FormProvider, RHFEditor, RHFRadioGroup, RHFSelect, RHFTextField, RHFUpl
 
 //mock
 import { countries } from "src/_mock"
+import useLocales from 'src/hooks/useLocales';
 
 // ----------------------------------------------------------------------
 
 export default function RegisterForm() {
   const { register } = useAuth();
-
-  const isMountedRef = useIsMountedRef();
-
+  const {translate} = useLocales();
   const [showPassword, setShowPassword] = useState(false);
 
   const RegisterSchema = Yup.object().shape({
@@ -104,13 +103,13 @@ export default function RegisterForm() {
         {!!errors.afterSubmit && <Alert severity="error">{errors.afterSubmit.message}</Alert>}
 
         <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
-          <RHFTextField name="firstName" label="First name" />
-          <RHFTextField name="lastName" label="Last name" />
+          <RHFTextField name="firstName" label={translate('registerForm.name')} />
+          <RHFTextField name="lastName" label={translate('registerForm.lastName')} />
         </Stack>
 
-        <RHFTextField name="email" label="Email address" />
+        <RHFTextField name="email" label={translate('registerForm.email')} />
         <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
-          <RHFSelect name="countryCode" label="Country Code" placeholder="Country Code">
+          <RHFSelect name="countryCode" label={translate('registerForm.countryCode')} placeholder="Country Code">
             <option value="" />
             {countries.map((option) => (
               <option key={option.code} value={option.phone}>
@@ -118,13 +117,13 @@ export default function RegisterForm() {
               </option>
             ))}
           </RHFSelect>
-          <RHFTextField name="cellphone" label="Phone" />
+          <RHFTextField name="cellphone" label={translate('registerForm.phone')} />
         </Stack>
         
 
         <RHFTextField
           name="password"
-          label="Password"
+          label={translate('registerForm.password')}
           type={showPassword ? 'text' : 'password'}
           InputProps={{
             endAdornment: (
@@ -136,11 +135,11 @@ export default function RegisterForm() {
             ),
           }}
         />
-        <Typography variant="subtitle1">Instructor certification</Typography>
+        <Typography variant="subtitle1">{translate('registerForm.certification')}</Typography>
         <RHFRadioGroup name='entity' options={["AADIDESS", "PSIA", "ENISSCHAG"]}/>
         <RHFUploadSingleFile name="certificate" accept="image/*" maxSize={16000000} onDrop={handleDrop}/>
         <LoadingButton fullWidth size="large" type="submit" variant="contained" loading={isSubmitting} sx={{':hover':{color:'#3399FF'}}}>
-          Register
+          {translate('registerForm.register')}
         </LoadingButton>
       </Stack>
     </FormProvider>

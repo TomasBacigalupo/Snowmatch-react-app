@@ -412,5 +412,25 @@
     "feature5": "Control of ski lessons supply ",
     "feature6": "Plataforma de gestion de Escuela",
     "feature7": "Gestión relación laboral Instructores"
+  },
+  "auth": {
+    "haveAccount": "Already have an account?",
+    "login": "Login",
+    "getStartedFree": "Get started absolutely free.",
+    "registrationMessage": "By registering, I agree to SnowMatch",
+    "terms": "Terms of Service",
+    "and": "and",
+    "privacy": "Privacy Policy",
+    "notATeacher": "Not a teacher?"
+  },
+  "registerForm": {
+    "name": "First name",
+    "lastName": "Last name",
+    "email": "Email address",
+    "countryCode": "Country Code",
+    "password": "Password",
+    "phone": "Phone",
+    "certification": "Instructor certification",
+    "register": "Register"
   }
 }

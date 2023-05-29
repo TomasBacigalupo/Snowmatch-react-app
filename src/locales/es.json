@@ -555,7 +555,6 @@
         "number": "Número de tarjeta",
         "explain": "3/4 digitos del dorso de la tarjeta"
     },
-
     "error": {
         "card_number": "Error en numero de tarjeta",
         "card_holder_name": "Error en nombre de tarjeta",
@@ -564,5 +563,28 @@
         "card_id": "Error en documento",
         "expired card": "Tarjeta vencida",
         "hire": "Los eventos ya no están disponibles"
+    },
+    "lessons": {
+        "noFeatureLessons": "No hay proximas clases"
+    },
+    "auth":{
+        "haveAccount": "¿Ya tenés una cuenta?",
+        "login": "Ingresar",
+        "getStartedFree": "Comenzá totalmente gratis",
+        "registrationMessage": "Al registrarme, estoy de acuerdo con SnowMatch",
+        "terms": "Términos y Condiciones",
+        "and": "y",
+        "privacy": "Política de Privacidad",
+        "notATeacher": "¿Querés una clase?"
+    },
+    "registerForm":{
+        "name": "Nombre",
+        "lastName": "Apellido",
+        "email": "Email",
+        "password": "Contraseña",
+        "countryCode": "Codigo País",
+        "phone": "Teléfono",
+        "certification": "Certificación",
+        "register": "Registrarme"
     }
 }

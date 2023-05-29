@@ -35,12 +35,14 @@ export default function EventCard({ lesson }) {
                 <Typography variant="subtitle2" noWrap>
                     {isStudent ? `${owner.name} ${owner.lastname}` : `${student.name} ${student.lastname}`}
                 </Typography>
-                <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                    <Iconify icon={'eva:pin-fill'} sx={{ width: 16, height: 16, mr: 0.5, flexShrink: 0 }} />
-                    <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
-                        {resort}
-                    </Typography>
-                </Box>
+                {resort &&
+                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                        <Iconify icon={'eva:pin-fill'} sx={{ width: 16, height: 16, mr: 0.5, flexShrink: 0 }} />
+                        <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
+                            {resort}
+                        </Typography>
+                    </Box>
+                }
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
                     <Iconify icon={'material-symbols:calendar-month'} sx={{ width: 16, height: 16, mr: 0.5, flexShrink: 0 }} />
                     <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>

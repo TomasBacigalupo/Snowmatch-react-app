@@ -14,6 +14,7 @@ import Logo from '../../components/Logo';
 import Image from '../../components/Image';
 // sections
 import { RegisterForm } from '../../sections/auth/register';
+import useLocales from 'src/hooks/useLocales';
 
 // ----------------------------------------------------------------------
 
@@ -61,10 +62,8 @@ const ContentStyle = styled('div')(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 export default function Register() {
-  const { method } = useAuth();
-
+  const {translate} = useLocales()
   const smUp = useResponsive('up', 'sm');
-
   const mdUp = useResponsive('up', 'md');
 
   return (
@@ -74,12 +73,12 @@ export default function Register() {
           <Logo />
           {smUp && (
             <Typography variant="body2" sx={{ mt: { md: -2 } }} align="right">
-              Already have an account?{' '}
+              {translate("auth.haveAccount")}{' '}
               <Link variant="subtitle2" component={RouterLink} to={PATH_AUTH.login}>
-                Login
+                {translate("auth.login")}
               </Link>
               <><br /></>
-              Not a teacher? {''}
+              {translate("auth.notATeacher")} {''}
               <Link variant="subtitle2" component={RouterLink} to={PATH_GUEST.root}>
                 Match
               </Link>
@@ -106,7 +105,7 @@ export default function Register() {
             <Box sx={{ mb: 5, display: 'flex', alignItems: 'center' }}>
               <Box sx={{ flexGrow: 1 }}>
                 <Typography variant="h4" gutterBottom>
-                  Get started absolutely free.
+                  {translate("auth.getStartedFree")}
                 </Typography>
                 {/* <Typography sx={{ color: 'text.secondary' }}>Free forever. No credit card needed.</Typography> */}
               </Box>
@@ -124,22 +123,22 @@ export default function Register() {
             <RegisterForm />
 
             <Typography variant="body2" align="center" sx={{ color: 'text.secondary', mt: 3 }}>
-              By registering, I agree to SnowMatch&nbsp;
+              {translate("auth.registrationMessage")}&nbsp;
               <Link underline="always" color="text.primary" href="https://github.com/lpagn/snowmatchfiles/blob/main/Snow%20Match%20Terms%20of%20Service.pdf">
-                Terms of Service&nbsp;
+                {translate("auth.terms")}&nbsp;
               </Link>
-              and&nbsp;
+              {translate("auth.and")}&nbsp;
               <Link underline="always" color="text.primary" href="https://github.com/lpagn/snowmatchfiles/blob/main/Snow%20Match%20Privacy%20Policy.pdf">
-                Privacy Policy
+                {translate("auth.privacy")}
               </Link>
               .
             </Typography>
 
             {!smUp && (
               <Typography variant="body2" sx={{ mt: 3, textAlign: 'center' }}>
-                Already have an account?{' '}
+                {translate("auth.haveAccount")}{' '}
                 <Link variant="subtitle2" to={PATH_AUTH.login} component={RouterLink}>
-                  Login
+                  {translate("auth.login")}
                 </Link>
               </Typography>
             )}

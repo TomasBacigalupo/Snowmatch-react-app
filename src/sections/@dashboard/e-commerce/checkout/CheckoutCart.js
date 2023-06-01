@@ -25,6 +25,7 @@ import useLocales from 'src/hooks/useLocales';
 import { closeAddEventModal, openAddEventModal, deleteCart, onNextStep, hireTeacher } from 'src/redux/slices/teachers';
 import { CheckCircle } from '@mui/icons-material';
 import { useSnackbar } from 'notistack';
+import ReactPixel from 'react-facebook-pixel';
 
 // ----------------------------------------------------------------------
 
@@ -52,6 +53,14 @@ export default function CheckoutCart() {
   };
 
   const handleNextStep = () => {
+    ReactPixel.track('BookNow', {
+      content_name: teacher.name,
+      content_category: 'Teacher',
+      content_ids: [teacher.id],
+      content_type: 'product',
+      value: total,
+      currency: 'USD',
+    });
     if(events && events[0]?.price === 0){
       setLoading(true)
       dispatch(hireTeacher(teacher.id, events, () =>{

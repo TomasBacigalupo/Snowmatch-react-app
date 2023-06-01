@@ -211,5 +211,57 @@
         "validation_required":"¡Requer validação!",
         "validation_required_body":"você vai receber uma mensagem de validação por WhatsApp, ppode demorar uns minutos. Se não chega a mensagem, verifique seu numero e tente de novo",
         "close":"Fechar"
-      }
+    },
+    "checkout": {
+        "deal_with_pro": "Tratar com PRO",
+        "free": "Grátis",
+        "morning": "Manhã",
+        "afternoon": "Tarde",
+        "all_day": "Todo o dia",
+        "continue": "Continuar",
+        "event_added": "Evento adicionado",
+        "book_lesson": "Reservar aula"
+    },
+    "verify": {
+        "title": "Verifique seu email",
+        "description": "Você deve verificar seu email para continuar",
+        "reload": "Recarregar",
+        "logout": "Sair",
+        "send_email": "Enviar email de verificação"
+    },
+    "cardInput": {
+        "title": "Adicionar cartão",
+        "name": "Nome do titular",
+        "expiry": "Data de vencimento",
+        "type": "Tipo de cartão",
+        "id": "ID do cartão",
+        "number": "Número do cartão",
+        "explain": "Este cartão será usado para pagar as aulas que você reservar"
+    },
+    "selectTime": {
+        "morning": "Manhã",
+        "afternoon": "Tarde",
+        "allday": "Todo o dia"
+    },
+    "faqs": {
+        "title": "Perguntas Frequentes",
+        "question0": "O que é o SnowMatch?",
+        "answer0": "O SnowMatch é uma ferramenta para instrutores de esqui e snowboard que ajuda a organizar sua agenda de clientes, funciona como meio de pagamento e permite que você se conecte com centenas de alunos que estão buscando um instrutor diariamente. Os clientes podem avaliar seus serviços e você pode acessar estatísticas sobre seu desempenho.",
+        "question1": "Como funciona?",
+        "answer1": "O SnowMatch conecta você a clientes que estão procurando aulas de esqui ou snowboard usando tecnologia baseada em localização, nível de esqui, idioma e outros interesses configurados pelo usuário.<br/>Assim que o cliente encontra um instrutor que atende aos seus interesses, ele cadastra os dados do cartão bancário e ocorre o match. A partir desse momento, o SnowMatch coloca você em contato com o aluno por meio de um chat no WhatsApp para que possam combinar um ponto de encontro na montanha.<br/>Quando a aula termina, o dinheiro é creditado em sua conta.",
+        "question2": "Como faço para criar um usuário?",
+        "answer2": "É muito simples. Você só precisa preencher seus dados pessoais, enviar uma foto, fornecer suas informações profissionais (onde você ministra aulas, se é instrutor de esqui ou snowboard, seu certificado de instrutor) e ter um endereço de e-mail e uma conta bancária.",
+        "question3": "E se eu não tiver uma conta bancária?",
+        "answer3": "É indispensável que você tenha uma conta onde o dinheiro das aulas possa ser depositado. Por enquanto, o SnowMatch não permite pagamentos em dinheiro ou por qualquer outra modalidade.",
+        "question4": "Como funcionam os matches do SnowMatch?",
+        "answer4": "Os matches ocorrem quando um cliente encontra um instrutor que atende aos seus interesses e expectativas e, ao mesmo tempo, está disponível na data e horário desejados. Os instrutores não podem procurar clientes nem oferecer suas aulas, é o cliente quem realiza a busca.",
+        "question5": "Preciso confirmar a aula?",
+        "answer5": "Não é necessário. Se ocorrer o match, é porque você indicou que está disponível naquele dia e horário. Caso precise cancelar ou remarcar uma aula confirmada, entre em contato com o aluno através da aba 'Minhas Aulas'. Se você conhece algum instrutor interessado em dar aquela aula, pode recomendá-lo e ganhar dinheiro com isso.",
+        "question6": "E se eu não estiver disponível para dar aulas?",
+        "answer6": "Não tem problema. Você pode configurar seu perfil como indisponível, e ninguém poderá fazer match com você.",
+        "question7": "Quanto custa fazer parte do SnowMatch?",
+        "answer7": "Todas as ferramentas do SnowMatch são gratuitas. Será cobrada apenas uma comissão pelas transações feitas através da plataforma.<br/>A comissão será de 15% por aula nos casos em que o cliente chegar até você através da ferramenta.<br/>A comissão será de 5% se o cliente te conhecer fora do SnowMatche utilizar a plataforma apenas como meio de pagamento.<br/>Não haverá cobrança de comissão caso o contato com o cliente e a transação ocorram fora do SnowMatch, e você utilize apenas o calendário para agendar a aula.",
+        "question8": "Quais benefícios tenho ao fazer parte do SnowMatch?",
+        "answer8": "Acesse a aba PRO Deal do SnowMatch e conheça benefícios exclusivos para instrutores. Há descontos incríveis esperando por você."
+    }
 }

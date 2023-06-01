@@ -432,5 +432,26 @@
     "phone": "Phone",
     "certification": "Instructor certification",
     "register": "Register"
+  },
+  "faqs": {
+    "title": "Frequently Asked Questions",
+    "question0": "What is SnowMatch?",
+    "answer0": "SnowMatch is a tool for ski and snowboard instructors that helps you organize your client schedule, acts as a payment medium, and allows you to connect with hundreds of students who are actively seeking an instructor. Clients can rate your services, and you can access statistics about your performance.",
+    "question1": "How does it work?",
+    "answer1": "SnowMatch connects you with clients who are looking for ski or snowboard lessons using location-based technology, skiing level, language, and other user-defined interests.<br/>Once the client finds an instructor that matches their preferences, they provide their credit card information, and the match is made. From that point on, SnowMatch connects you with the student via WhatsApp chat to coordinate a meeting point on the mountain.<br/>When the lesson ends, the payment is credited to your account.",
+    "question2": "How do I create a user account?",
+    "answer2": "It's very simple. You just need to fill in your personal details, upload a photo, provide your professional information (where you teach, whether you're a ski or snowboard instructor, your instructor certification), and have an email and bank account.",
+    "question3": "What if I don't have a bank account?",
+    "answer3": "Having a bank account where lesson payments can be deposited is essential. Currently, SnowMatch does not support cash payments or any other payment methods.",
+    "question4": "How do SnowMatch matches work?",
+    "answer4": "Matches occur when a client finds an instructor who meets their interests and expectations, and at the same time is available on the required date and time. Instructors cannot actively search for clients or offer their lessons; it is the client who performs the search.",
+    "question5": "Do I need to confirm the lesson?",
+    "answer5": "No, it's not necessary. If a match occurs, it means you indicated your availability on that day and time. If you need to cancel or reschedule a confirmed lesson, get in touch with the student through the 'My Lessons' tab. If you know any instructor who is interested in teaching that lesson, you can recommend them and earn money for it.",
+    "question6": "What if I'm not available to teach?",
+    "answer6": "No problem. You can set your profile as unavailable, and no one will be able to match with you.",
+    "question7": "How much does it cost to be part of SnowMatch?",
+    "answer7": "All SnowMatch tools are free. A commission will only be charged for transactions made through the platform.<br/>The commission will be 15% per lesson when the client contacted you through the tool.<br/>The commission will be 5% if the client knows you outside of SnowMatch and only uses the platform as a payment medium.<br/>No commission will be charged if the contact with the client and the transaction occur outside of SnowMatch, and you only use the calendar to schedule the lesson.",
+    "question8": "What benefits do I have as a SnowMatch member?",
+    "answer8": "Visit the PRO Deal tab in SnowMatch and discover exclusive benefits for instructors. Amazing discounts are waiting for you."
   }
 }

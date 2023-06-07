@@ -23,10 +23,10 @@ export default function HomeFilterTeachers() {
     // const advancedMatching = { em: 'some@email.com' }; // optional, more info: https://developers.facebook.com/docs/facebook-pixel/advanced/advanced-matching
     const options = {
         autoConfig: true, // set pixel's autoConfig. More info: https://developers.facebook.com/docs/facebook-pixel/advanced/
-        debug: false, // enable logs
+        debug: process.env.REACT_APP_FACEBOOK_PIXEL_ID === "DEBUG", // enable logs
     };
 
-    ReactPixel.init('1181423269092774', {}, options);
+    ReactPixel.init(process.env.REACT_APP_FACEBOOK_PIXEL_ID, {}, options);
 
     const theme = useTheme()
     const dispatch = useDispatch()

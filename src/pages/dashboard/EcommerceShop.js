@@ -55,7 +55,9 @@ export default function EcommerceShop({isGuest=false, teacherType="school"}) {
 
   const { teachers, sortBy, filters, teachersWithEvents } = useSelector((state) => { return state.teachers })
 
-  ReactPixel.init('1181423269092774', {}, { autoConfig: true, debug: false });
+  ReactPixel.init(process.env.REACT_APP_FACEBOOK_PIXEL_ID, {}, { 
+    autoConfig: true,
+    debug: process.env.REACT_APP_FACEBOOK_PIXEL_ID === "DEBUG" });
 
   useEffect(()=>{
     if(query.get('resort')){

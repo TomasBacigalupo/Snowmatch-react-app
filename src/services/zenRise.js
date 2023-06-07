@@ -1,10 +1,10 @@
 const SNOWMATCH_CLIENT = ""
 const SNOWMATCH_SECRET = ""
-const api = true ? 'https://api.zenrise.io/v1' : 'https://api.zenrise.io/v1'
+const api = process.env.REACT_APP_ZENRISE_API
 
 export const getCardToken = async (card) => {
 
-    const zenrise = new window.Zenrise.Sdk('PROD');
+    const zenrise = new window.Zenrise.Sdk(process.env.REACT_APP_ZENRISE_ENCRYPTION_ENV);
     const token = await zenrise.getCardToken({
         card_number: card.number,
         card_expiration_month: card.expiry.slice(0, 2),
@@ -57,7 +57,7 @@ export const getAuthToken = async (client, secret) => {
 }
 
 export const getSplitToken = async (amount, partnersFee, contact, authToken) => {
-    const response = await fetch("https://dev.api.zenrise.io/v1/requests/simple/split", {
+    const response = await fetch(api, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",

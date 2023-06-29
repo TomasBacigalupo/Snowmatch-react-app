@@ -31,6 +31,26 @@
       "saveChanges": "Save Changes"
     }
   },
+  "home": {
+    "stats": {
+      "title": "Simple and secure",
+      "1": {
+        "total": "180",
+        "title": "Instructors",
+        "description": "Certified instructors"
+      },
+      "2": {
+        "total": "200",
+        "title": "Lessons",
+        "description": "Satisfied clients and instructors"
+      },
+      "3": {
+        "total": "10",
+        "title": "Mountains",
+        "description": "Instructors in Ski centers"
+      }
+    }
+  },
   "landingPRO": {
     "heroTitle0": "Are you an instructor?",
     "heroTitle1": "Take your job to",

@@ -6,6 +6,26 @@
     "heading":{
         "clientList": "Agenda de clientes"
     },
+    "home": {
+        "stats": {
+            "title": "Simples e seguro",
+            "1": {
+                "total": "180",
+                "title": "Instrutores",
+                "description": "Instrutores certificados"
+            },
+            "2": {
+                "total": "200",
+                "title": "Aulas",
+                "description": "Clientes e instrutores satisfeitos"
+            },
+            "3": {
+                "total": "10",
+                "title": "Montanhas",
+                "description": "Instrutores em centros de esqui"
+            }
+        }
+    },
     "general":{
         "AVAILABLE": "disponível",
         "UNAVAILABLE": "Ocupado",

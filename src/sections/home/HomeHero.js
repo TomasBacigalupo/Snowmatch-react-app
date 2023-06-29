@@ -1,8 +1,8 @@
 import { m } from 'framer-motion';
 import { Link as RouterLink } from 'react-router-dom';
 // @mui
-import { styled } from '@mui/material/styles';
-import { Button, Box, Link, Container, Typography, Stack, Grid, Select, Hidden } from '@mui/material';
+import { styled, useTheme } from '@mui/material/styles';
+import { Button, Box, Link, Container, Typography, Stack, Grid, Select, Hidden, Card, Avatar } from '@mui/material';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // components
@@ -20,6 +20,7 @@ import { FormProvider, RHFSelect } from 'src/components/hook-form';
 import HomeFilterTeachers from './HomeFilterTeachers';
 import HoverButton from 'src/components/HoverButton';
 
+
 // ----------------------------------------------------------------------
 
 const RootStyle = styled(m.div)(({ theme }) => ({
@@ -28,7 +29,7 @@ const RootStyle = styled(m.div)(({ theme }) => ({
   [theme.breakpoints.up('md')]: {
     top: 0,
     left: 0,
-    flex:1,
+    flex: 1,
     width: '100%',
     height: '100%',
     display: 'flex',
@@ -78,6 +79,7 @@ const HeroImgStyle = styled(m.div)(({ theme }) => ({
 export default function HomeHero() {
   const { translate } = useLocales()
   const [value, setValue] = useState(0);
+  const theme = useTheme()
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -125,7 +127,7 @@ export default function HomeHero() {
     console.log(data)
   }
   return (
-    <MotionContainer sx={{ height: '100vh'}}>
+    <MotionContainer sx={{ height: '100vh' }}>
       <RootStyle>
         {/* <HeroOverlayStyle
           alt="overlay"
@@ -137,57 +139,59 @@ export default function HomeHero() {
           <ContentStyle>
             <Grid container spacing={2}>
               <Hidden smUp>
-                <img src='/logo/snowmatch.png' sx={{height: '200px', width:'100%'}}/>
+                <img src='/logo/snowmatch.png' sx={{ height: '200px', width: '100%' }} />
               </Hidden>
               <Grid item xs={12} md={6.5}>
                 <HomeFilterTeachers />
               </Grid>
               <Hidden smDown>
                 <Grid item xs={12} md={5.5} >
-                  <m.div variants={varFade().inRight}>
-                    <Typography variant="h2" >
-                      {translate('landingPRO.heroTitle0')}
-                    </Typography>
-                    <Typography variant="h3" >
-                      {translate('landingPRO.heroTitle1')}
-                      {translate('landingPRO.heroTitle2')}<br />
-                      <Typography component="span" variant="h3" sx={{ color: 'primary.main' }}>
-                        SnowMatch
-                      </Typography>
-                    </Typography>
-                  </m.div>
+                  <Box display='flex' flexDirection='column' justifyContent='space-between'>
+                    <m.div variants={varFade().inRight}>
+                      <Typography variant='h3' sx={{ mb: 3 }}>Top Montains</Typography>
+                    </m.div>
+                    <Box>
+                      <Box display='flex' justifyContent='space-between' alignItems='center'>
+                        <m.div variants={varFade().inLeft}>
+                          <Box display='flex' alignItems='center' justifyItems='center' flexDirection='column'>
+                            <Avatar src='assets/resorts/icon-catedral.png' sx={{
+                              border: 'solid',
+                              borderColor: '#003366',
+                              height: '100px',
+                              width: '100px'
+                            }} />
+                            <Typography variant='h6'>Catedral</Typography>
+                          </Box>
+                        </m.div>
 
-                  <m.div variants={varFade().inRight}>
-
-                    <Typography >
-                      {translate('landingPRO.desc1')}
-                    </Typography>
-                    <Typography >
-                      {translate('landingPRO.desc2')}
-                    </Typography>
-                    <Typography>
-                      {translate('landingPRO.desc3')}
-                    </Typography>
-
-                  </m.div>
-                  <br />
-                  <m.div variants={varFade().inRight}>
-                    <HoverButton
-                      size="large"
-                      variant="contained"
-                      component={RouterLink}
-                      to={"/auth/register"}
-                      sx={{ marginBottom: '10px' }}
-                      startIcon={<Iconify icon={'eva:flash-fill'} width={20} height={20} />}
-                    >
-                      {translate('landingPRO.getStarted')}
-                    </HoverButton>
-                  </m.div>
+                        <m.div variants={varFade().inUp}>
+                          <Box display='flex' alignItems='center' justifyItems='center' flexDirection='column'>
+                            <Avatar src='assets/resorts/icon-chapelco.png' sx={{
+                              border: 'solid',
+                              borderColor: '#003366',
+                              height: '100px',
+                              width: '100px'
+                            }} />
+                            <Typography variant='h6'>Chapelco</Typography>
+                          </Box>
+                        </m.div>
+                        <m.div variants={varFade().inRight}>
+                          <Box display='flex' alignItems='center' justifyItems='center' flexDirection='column'>
+                            <Avatar src='assets/resorts/icon-bayo.png' sx={{
+                              border: 'solid',
+                              borderColor: '#003366',
+                              height: '100px',
+                              width: '100px'
+                            }} />
+                            <Typography variant='h6'>Bayo</Typography>
+                          </Box>
+                        </m.div>
+                      </Box>
+                    </Box>
+                  </Box>
                 </Grid>
               </Hidden>
               
-
-
             </Grid>
 
 

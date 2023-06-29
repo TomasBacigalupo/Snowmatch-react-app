@@ -351,6 +351,20 @@ export function getProductEvents(id) {
   };
 }
 
+export function getProductEventsByMonthAndYear(id, month, year) {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get(`/api/events/product/${id}?month=${month}&year=2023`);
+      dispatch(slice.actions.getProductEventsSuccess(response.data));
+      console.log(response)
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
 // ----------------------------------------------------------------------
 
 export function getTeacher(name) {

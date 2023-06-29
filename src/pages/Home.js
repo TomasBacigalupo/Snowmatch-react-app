@@ -10,6 +10,9 @@ import {
 } from '../sections/home';
 import useAuth from 'src/hooks/useAuth';
 import { useEffect } from 'react';
+import HomeStats from 'src/sections/home/HomeStats';
+import HomePartners from 'src/sections/home/HomePartners';
+import HomeStatsHero from 'src/sections/home/HomeStatsHero';
 
 // ----------------------------------------------------------------------
 
@@ -42,6 +45,8 @@ export default function HomePage() {
       <RootStyle>
         <HomeHero />
         <ContentStyle>
+          <HomeStatsHero/>
+          <HomePartners/>
           <HomeMinimal />
           <HomeAdvertisement />
           {/* <HomeMinimal />

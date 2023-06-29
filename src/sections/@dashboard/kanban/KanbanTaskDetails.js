@@ -276,7 +276,7 @@ export default function KanbanTaskDetails({ card, isOpen, onClose, onDeleteTask 
             </Stack>
           </Stack>
 
-          {comments.length > 0 && <KanbanTaskCommentList comments={comments} />}
+          {comments?.length > 0 && <KanbanTaskCommentList comments={comments} />}
         </Scrollbar>
 
         <Divider />

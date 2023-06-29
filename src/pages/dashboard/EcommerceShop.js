@@ -32,12 +32,10 @@ import useAuth from 'src/hooks/useAuth';
 import { useParams } from 'react-router';
 import useLocales from 'src/hooks/useLocales';
 import ShopOtherTeacherList from 'src/sections/@dashboard/e-commerce/shop/ShopOtherTeachersList';
-import ReactPixel from 'react-facebook-pixel';
 // ----------------------------------------------------------------------
 
 function useQuery() {
   const { search } = useLocation();
-
   return useMemo(() => new URLSearchParams(search), [search]);
 }
 
@@ -55,10 +53,6 @@ export default function EcommerceShop({isGuest=false, teacherType="school"}) {
 
   const { teachers, sortBy, filters, teachersWithEvents } = useSelector((state) => { return state.teachers })
 
-  ReactPixel.init(process.env.REACT_APP_FACEBOOK_PIXEL_ID, {}, { 
-    autoConfig: true,
-    debug: process.env.REACT_APP_FACEBOOK_PIXEL_ID === "DEBUG" });
-
   useEffect(()=>{
     if(query.get('resort')){
       dispatch(filterTeachers({ resort: query.get('resort') }))
@@ -68,21 +62,6 @@ export default function EcommerceShop({isGuest=false, teacherType="school"}) {
 
   }, [])
 
-  //track Search
-  useEffect(() => {
-    if (!user || (user && user.role === "STUDENT")) {
-      ReactPixel.track('Search', {
-        search_string: filters.resort,
-        contents: {
-          resort: filters.resort,
-          from: filters.from,
-          to: filters.to,
-          category: filters.category,
-        },
-        contentIds: teachersWithEvents.map((teacher) => teacher.name + " " + teacher.lastName),
-      });
-    }
-  }, [dispatch, filters, teachersWithEvents]);
 
   const filteredTeachers = applyFilter(teachers, sortBy, filters, teacherType);
 

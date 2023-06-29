@@ -5,6 +5,7 @@ import Label from '../../../components/Label';
 import SvgIconStyle from '../../../components/SvgIconStyle';
 import SchoolIcon from '@mui/icons-material/School';
 import DiscountIcon from '@mui/icons-material/Discount';
+import SnowmatchLogoWithGraduationHat from 'src/assets/graduationHat';
 
 // ----------------------------------------------------------------------
 
@@ -83,6 +84,7 @@ const navConfig = [
           },
         ],
       },
+      // {title: 'learning', path:'', icon: <SnowmatchLogoWithGraduationHat />},
       { title: 'discounts', path: PATH_DASHBOARD.general.discounts, icon: <DiscountIcon /> }
       // { title: 'chat', path: PATH_DASHBOARD.chat.root, icon: ICONS.chat },
 

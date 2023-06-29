@@ -28,6 +28,7 @@ import {
 } from '../../sections/@dashboard/e-commerce/teacher-details';
 import CartWidget from '../../sections/@dashboard/e-commerce/CartWidget';
 import useLocales from 'src/hooks/useLocales';
+import {trackViewTeacher} from 'src/services/facebook';
 // ----------------------------------------------------------------------
 
 const PRODUCT_DESCRIPTION = [
@@ -38,7 +39,7 @@ const PRODUCT_DESCRIPTION = [
   },
   {
     title: 'reply',
-    description: 'replyDescription' ,
+    description: 'replyDescription',
     icon: 'eva:clock-fill',
   },
   {
@@ -63,20 +64,20 @@ const IconWrapperStyle = styled('div')(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-export default function EcommerceTeacherDetails({isGuest = false}) {
-  
+export default function EcommerceTeacherDetails({ isGuest = false }) {
+
   const { themeStretch } = useSettings();
   const dispatch = useDispatch();
   const [value, setValue] = useState('0');
   const { id = '' } = useParams();
   const { product, error, checkout } = useSelector((state) => state.product);
-  const {translate} = useLocales()
-  const { teacher, isLoading } = useSelector( (state) => state.teachers);
+  const { translate } = useLocales()
+  const { teacher, isLoading } = useSelector((state) => state.teachers);
   const { user } = useAuth();
-  
-  
+
+
   useEffect(() => {
-    console.log({id})
+    console.log({ id })
     dispatch(getTeacherBiId(id));
   }, [dispatch, id]);
 
@@ -88,6 +89,12 @@ export default function EcommerceTeacherDetails({isGuest = false}) {
     dispatch(onGotoStep(step));
   };
 
+  useEffect(() => {
+    if (teacher && (!user || !user.role === 'TEACHER')) {
+      trackViewTeacher(teacher)
+    }
+  }, [teacher, user])
+
   return (
     <Page title={translate('teacherDetails.title')}>
       <Container maxWidth={themeStretch ? false : 'lg'}>
@@ -95,18 +102,18 @@ export default function EcommerceTeacherDetails({isGuest = false}) {
           heading={translate('teacherDetails.title')}
           links={[
             // !isGuest? { name: translate("breadcrumb.dashboard', href: PATH_DASHBOARD.root} : {name: 'Home', href: '/'},
-            !isGuest? { name: 'Match', href: PATH_DASHBOARD.eCommerce.shop,} : { name: 'Match', href: PATH_GUEST.root},
+            !isGuest ? { name: 'Match', href: PATH_DASHBOARD.eCommerce.shop, } : { name: 'Match', href: PATH_GUEST.root },
             { name: teacher?.name + ' ' + teacher?.lastname },
           ]
-        }
+          }
         />
         <CartWidget />
-        {!isLoading &&  teacher && (
+        {!isLoading && teacher && (
           <>
             <Card>
               <Grid container>
                 <Grid item xs={12} md={6} lg={7}>
-                  <TeacherDetailsCarousel teacher={{ images: [teacher?.imageLink]}} />
+                  <TeacherDetailsCarousel teacher={{ images: [teacher?.imageLink] }} />
                 </Grid>
                 <Grid item xs={12} md={6} lg={5}>
                   <TeacherDetailsSummary
@@ -118,7 +125,7 @@ export default function EcommerceTeacherDetails({isGuest = false}) {
                 </Grid>
               </Grid>
             </Card>
-          <Grid container sx={{ my: 1 }}>
+            <Grid container sx={{ my: 1 }}>
             </Grid>
             <Card>
               <TabContext value={value}>
@@ -130,7 +137,7 @@ export default function EcommerceTeacherDetails({isGuest = false}) {
                       icon={<Iconify icon={'material-symbols:rate-review'} width={20} height={20} />}
                       sx={{ '& .MuiTab-wrapper': { whiteSpace: 'nowrap' } }}
                     />
-                    <Tab value="1" icon={<Iconify icon={'material-symbols:calendar-month'} width={20} height={20} />} sx={{ maxWidth: 'fit-content' } }/>
+                    <Tab value="1" icon={<Iconify icon={'material-symbols:calendar-month'} width={20} height={20} />} sx={{ maxWidth: 'fit-content' }} />
                     <Tab value="2" icon={<Iconify icon={'mingcute:profile-line'} width={20} height={20} />} sx={{ maxWidth: 'fit-content' }} />
                   </TabList>
                 </Box>
@@ -172,7 +179,7 @@ export default function EcommerceTeacherDetails({isGuest = false}) {
                     <Typography variant="subtitle1" gutterBottom>
                       {translate("teacherDetails." + item.title)}
                     </Typography>
-                    <Typography sx={{ color: 'text.secondary' }}>{translate('teacherDetails.'+ item.description)}</Typography>
+                    <Typography sx={{ color: 'text.secondary' }}>{translate('teacherDetails.' + item.description)}</Typography>
                   </Box>
                 </Grid>
               ))}

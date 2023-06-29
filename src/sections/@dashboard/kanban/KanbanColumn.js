@@ -28,6 +28,7 @@ export default function KanbanColumn({ column, index, canRename, hasOptions }) {
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
   const { board } = useSelector((state) => state.kanban);
+  const calendar = useSelector((state) => state.calendar);
   const [open, setOpen] = useState(false);
 
   const { name, cardIds, id } = column;
@@ -88,6 +89,21 @@ export default function KanbanColumn({ column, index, canRename, hasOptions }) {
                       key={cardId}
                       onDeleteTask={handleDeleteTask}
                       card={board?.cards[cardId]}
+                      index={index}
+                    />
+                  ))}
+                  {calendar.events.map((event, index) => (
+                    <KanbanTaskCard
+                      key={index}
+                      onDeleteTask={handleDeleteTask}
+                      card={{
+                        ...event,
+                        name: event.title,
+                        assignee: event.clients,
+                        attachments: [],
+                        comments: [],
+                        due: [new Date(event.start), new Date(event.end)],
+                      }}
                       index={index}
                     />
                   ))}

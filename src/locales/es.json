@@ -6,6 +6,26 @@
     "heading": {
         "clientList": "Agenda de clientes"
     },
+    "home":{
+        "stats":{
+            "title": "Simple y seguro",
+            "1":{
+                "total": "180",
+                "title": "Instructores",
+                "description": "Instructores certificados"
+            },
+            "2": {
+                "total": "200",
+                "title": "Clases",
+                "description": "Clientes e instructores satisfechos"
+            },
+            "3": {
+                "total": "10",
+                "title": "Montañas",
+                "description": "Instructores en centros de Esqui"
+            }
+        }
+    },
     "general": {
         "cancel": "Cancelar",
         "AVAILABLE": "Disponible",
@@ -54,7 +74,7 @@
         "independent": "PROs Independientes",
         "school": "PROs de Escuelas",
         "getStartedToday": "¡Formá parte de SnowMatch!",
-        "find": "Matchea con el PRO que te hace falta...",
+        "find": "Encontrá tu clase ideal",
         "start_date": "Desde",
         "end_date": "Hasta"
     },
@@ -100,7 +120,8 @@
         "schools": "Escuelas",
         "for_school": "Para Escuelas",
         "group": "Grupales",
-        "private": "Privadas"           
+        "private": "Privadas",
+        "learning": "Capacitaciones"           
     },
     "calendar": {
         "name": "Calendario",

@@ -23,7 +23,7 @@ import {
 } from '../../../components/hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import useLocales from 'src/hooks/useLocales';
-import { getProductEvents } from 'src/redux/slices/product';
+import { getProductEvents, getProductEventsByMonthAndYear } from 'src/redux/slices/product';
 import useAuth from 'src/hooks/useAuth';
 import { addCart, deleteCart } from 'src/redux/slices/teachers';
 import { PATH_GUEST } from 'src/routes/paths';
@@ -35,7 +35,7 @@ import { da, fi } from 'date-fns/locale';
 ProductSelectForm.propTypes = {
     currentProduct: PropTypes.object,
     currentTeacher: PropTypes.object
-};
+}; 
 
 export default function ProductSelectForm({ currentProduct, currentTeacher }) {
 
@@ -51,6 +51,7 @@ export default function ProductSelectForm({ currentProduct, currentTeacher }) {
     const { user } = useAuth();
     const dispatch = useDispatch()
     const [date, setDate] = useState(filters.from ?? new Date());
+    const [month, setMonth] = useState(filters.from?.getMonth() ?? new Date().getMonth())
     const { enqueueSnackbar } = useSnackbar();
     const [view, setView] = useState('listWeek');
     const { translate } = useLocales()
@@ -58,12 +59,17 @@ export default function ProductSelectForm({ currentProduct, currentTeacher }) {
     const trashRef = createRef()
 
     useEffect(() => {
-        dispatch(getProductEvents(currentProduct.id))
-    }, [currentProduct])
-
-    useEffect(() => {
         setDate(filters.from)
     }, [filters.from])
+
+    useEffect( () => {
+        dispatch(getProductEventsByMonthAndYear(currentProduct.id, date?.getMonth(), date?.getYear()))
+    },[currentProduct, month])
+    
+    useEffect(()=>{
+        if(date.getMonth() != month)
+            setMonth(date.getMonth())
+    },[date])
 
 
     const NewProductSchema = Yup.object().shape({
@@ -118,11 +124,6 @@ export default function ProductSelectForm({ currentProduct, currentTeacher }) {
     const values = watch();
 
     useEffect(() => {
-
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [currentProduct]);
-
-    useEffect(() => {
         if (currentProduct != undefined)
             setEvents([...currentProduct?.events])
         else setEvents([])
@@ -131,7 +132,7 @@ export default function ProductSelectForm({ currentProduct, currentTeacher }) {
 
     useEffect(() => {
         setEvents(availableEvents.map((event) => ({ ...event, title: values.name })))
-    }, [values.name]);
+    }, [values.name, currentProduct.events]);
 
     useEffect(() => {
         console.log("currentProduct", currentProduct)

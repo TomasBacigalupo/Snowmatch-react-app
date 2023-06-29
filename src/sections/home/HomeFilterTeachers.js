@@ -16,6 +16,7 @@ import { useTheme } from '@mui/material/styles';
 import React, { useEffect } from 'react';
 import dayjs from 'dayjs';
 import ReactPixel from 'react-facebook-pixel';
+import {searchTeachers} from 'src/services/facebook';
 
 
 export default function HomeFilterTeachers() {
@@ -37,8 +38,8 @@ export default function HomeFilterTeachers() {
 
 
     const defaultRange = [
-        new Date('2023-06-20'),
-        new Date('2023-06-30'),
+        new Date(),
+        new Date(new Date().setDate(new Date().getDate() + 7)),
     ]
     const defaultValues = {
         resort: 'Cerro Catedral',
@@ -100,12 +101,17 @@ export default function HomeFilterTeachers() {
     };
 
     const onSubmit = () => {
-       
+        searchTeachers({
+            ...values,
+            from: values.range[0],
+            to: values.range[1]
+        })
         dispatch(filterTeachers({
             ...values,
             from: values.range[0],
             to: values.range[1]
         }))
+        
         if (values.resort === "Cerro Catedral") {
             if (isTeacher) {
                 navigate('/dashboard/e-commerce/independent?resort=Cerro Catedral')

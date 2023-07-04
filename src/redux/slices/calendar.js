@@ -250,7 +250,7 @@ export function createBusinessEvent(newEvent) {
   return async () => {
     //dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.post('/api/events/create/business', newEvent);
+      const response = await axios.post('/api/events/business', newEvent);
       dispatch(slice.actions.createEventSuccess(response.data));
       return response;
     } catch (error) {

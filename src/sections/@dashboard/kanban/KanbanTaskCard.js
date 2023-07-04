@@ -2,12 +2,13 @@ import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { Draggable } from 'react-beautiful-dnd';
 // @mui
-import { Paper, Typography, Box, Checkbox } from '@mui/material';
+import { Paper, Typography, Box, Checkbox, AvatarGroup, Avatar } from '@mui/material';
 // components
 import Image from '../../../components/Image';
 import Iconify from '../../../components/Iconify';
 //
 import KanbanTaskDetails from './KanbanTaskDetails';
+import { report } from 'process';
 
 // ----------------------------------------------------------------------
 
@@ -18,7 +19,7 @@ KanbanTaskCard.propTypes = {
 };
 
 export default function KanbanTaskCard({ card, onDeleteTask, index }) {
-  const { name, attachments, description } = card;
+  const { name, attachments, description, reporter } = card;
 
   const [openDetails, setOpenDetails] = useState(false);
 
@@ -94,7 +95,19 @@ export default function KanbanTaskCard({ card, onDeleteTask, index }) {
                 >
                   {description}
                 </Typography>
-              </Typography>
+              </Typography> 
+              {reporter &&
+                reporter.map((r) => (
+                  <Box display='flex' flexDirection='column' alignItems='center' justifyContent='center' sx={{ position: 'absolute', bottom: '10%', right: '10px' }}>
+                    <Avatar key={r.id} src={r.avatar} alt={`${r?.name} ${r?.lastname}`} />
+                    <Typography variant="body2" sx={{ textAlign: 'center' }}>
+                      {r.name} {r.lastname}
+                    </Typography>
+                  </Box>
+                  
+
+                ))
+             }
             </Box>
 
             <Checkbox

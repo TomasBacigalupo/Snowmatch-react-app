@@ -67,7 +67,8 @@ export default function KanbanColumnToolBar({ columnName, onDelete, onUpdate }) 
             typography: 'h6',
             fontWeight: 'fontWeightBold',
             '& .MuiOutlinedInput-notchedOutline': {
-              borderColor: 'transparent',
+              borderColor: 'none',
+              border: 'none',
             },
           }}
         />

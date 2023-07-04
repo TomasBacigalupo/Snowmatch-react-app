@@ -270,7 +270,8 @@ export default function CalendarForm({ event, range, onCancel, clients, members 
             // />
           )}
         />}
-
+        {console.log("members", members)}
+        {console.log("event", event)}
         {members?.length > 0 && event?.businessOwner !=null && event?.businessOwner != undefined && <Autocomplete
           disableCloseOnSelect
           multiple

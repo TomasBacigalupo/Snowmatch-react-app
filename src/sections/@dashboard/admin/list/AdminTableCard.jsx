@@ -1,0 +1,224 @@
+import PropTypes from 'prop-types';
+import { useState } from 'react';
+// @mui
+import { useTheme } from '@mui/material/styles';
+import { Avatar, Checkbox, TableRow, TableCell, Typography, MenuItem, Box, Card } from '@mui/material';
+// components
+import Label from '../../../../components/Label';
+import Iconify from '../../../../components/Iconify';
+import { TableMoreMenu } from '../../../../components/table';
+
+// ----------------------------------------------------------------------
+
+AdminTableCard.propTypes = {
+    row: PropTypes.object,
+    selected: PropTypes.bool,
+    onEditRow: PropTypes.func,
+    onSelectRow: PropTypes.func,
+    onDeleteRow: PropTypes.func,
+    onWapp: PropTypes.func,
+};
+
+export default function AdminTableCard({ row, selected, onEditRow, onSelectRow, onConfirmRow, onDeclineRow, onWapp }) {
+    const theme = useTheme();
+
+    const { name, lastname, imageLink, role, level, authorized, state, id, emailVerified } = row;
+
+    const [openMenu, setOpenMenuActions] = useState(null);
+
+    const handleOpenMenu = (event) => {
+        setOpenMenuActions(event.currentTarget);
+    };
+
+    const handleCloseMenu = () => {
+        setOpenMenuActions(null);
+    };
+
+    return (
+        <Card sx={{ width: '100%', my: 0.5, }}>
+            <Box display='flex' padding={2} flexDirection='column'>
+                <Box display='flex' justifyContent='space-between'>
+                    <Box display='flex' flexDirection='column'>
+                        <Box display='flex' alignItems='center'>
+                            <Typography variant='h4'>
+                                {`${name} ${lastname}`}
+                            </Typography>
+                            <Iconify
+                                //todo verificar que funcione con cambios de back
+                                icon={emailVerified ? 'eva:checkmark-circle-fill' : 'eva:clock-outline'}
+                                sx={{
+                                    mx: 1,
+                                    width: 20,
+                                    height: 20,
+                                    color: 'success.main',
+                                    ...(!emailVerified && { color: 'warning.main' }),
+                                }}
+                            />
+
+                        </Box>
+                        <Box>
+                            <Label
+                                variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
+                                color={(state === 'UNAVAILABLE' && 'error') || 'success'}
+                                sx={{ textTransform: 'capitalize' }}
+                            >
+                                {state}
+                            </Label>
+                        </Box>
+
+                    </Box>
+
+                    <TableMoreMenu
+                        open={openMenu}
+                        onOpen={handleOpenMenu}
+                        onClose={handleCloseMenu}
+                        actions={
+                            <>
+                                <MenuItem
+                                    onClick={() => {
+                                        onWapp();
+                                        handleCloseMenu();
+                                    }}
+                                >
+                                    <Iconify icon={'mdi:whatsapp'} />
+                                    Wapp
+                                </MenuItem>
+                                <MenuItem
+                                    onClick={() => {
+                                        onConfirmRow();
+                                        handleCloseMenu();
+                                    }}
+                                >
+                                    <Iconify icon={'eva:edit-fill'} />
+                                    Edit
+                                </MenuItem>
+                                <MenuItem
+                                    onClick={() => {
+                                        onDeclineRow();
+                                        handleCloseMenu();
+                                    }}
+                                    sx={{ color: 'error.main' }}
+                                >
+                                    <Iconify icon={'eva:trash-2-outline'} />
+                                    Decline
+                                </MenuItem>
+                            </>
+                        }
+                    />
+                </Box>
+                <Box ml={2} display='flex'>
+                    <Box flex='1'>
+                        <Typography >
+                            {`Id: ${id}`}
+                        </Typography>
+                        <Typography >
+                            {`Level: ${level}`}
+                        </Typography>
+                    </Box>
+                    <Box flex='1'>
+                        <Typography >
+                            {`Role: ${role}`}
+                        </Typography>
+                    </Box>
+                </Box>
+            </Box>
+        </Card>
+
+        // <TableRow hover selected={selected}>
+        //     <TableCell padding="checkbox">
+        //         <Checkbox checked={selected} onClick={onSelectRow} />
+        //     </TableCell>
+
+        //     <TableCell sx={{ display: 'flex', alignItems: 'center' }}>
+        //         <Avatar alt={name} src={"imageLink"} sx={{ mr: 2 }} />
+        //         <Typography variant="subtitle2" noWrap>
+        //             {name + " " + lastname}
+        //         </Typography>
+        //     </TableCell>
+        //     <TableCell align="left">
+        //         {id}
+        //     </TableCell>
+
+        //     <TableCell align="left">
+        //         {role}
+        //     </TableCell>
+
+        //     <TableCell align="left" sx={{ textTransform: 'capitalize' }}>
+        //         {level}
+        //     </TableCell>
+
+        //     <TableCell align="center">
+        //         <Iconify
+        //             //todo verificar que funcione con cambios de back
+        //             icon={authorized ? 'eva:checkmark-circle-fill' : 'eva:clock-outline'}
+        //             sx={{
+        //                 width: 20,
+        //                 height: 20,
+        //                 color: 'success.main',
+        //                 ...(!authorized && { color: 'warning.main' }),
+        //             }}
+        //         />
+        //     </TableCell>
+
+        //     <TableCell align="left">
+        //         <Label
+        //             variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
+        //             color={(state === 'UNAVAILABLE' && 'error') || 'success'}
+        //             sx={{ textTransform: 'capitalize' }}
+        //         >
+        //             {state}
+        //         </Label>
+        //     </TableCell>
+
+        //     <TableCell align="right">
+        //         <TableMoreMenu
+        //             open={openMenu}
+        //             onOpen={handleOpenMenu}
+        //             onClose={handleCloseMenu}
+        //             actions={
+        //                 <>
+        //                     {/* <MenuItem
+        //         onClick={() => {
+        //           onDeleteRow();
+        //           handleCloseMenu();
+        //         }}
+        //         sx={{ color: 'error.main' }}
+        //       >
+        //         <Iconify icon={'eva:trash-2-outline'} />
+        //         Delete
+        //       </MenuItem> */}
+        //                     {/* <MenuItem
+        //         onClick={() => {
+        //           onEditRow();
+        //           handleCloseMenu();
+        //         }}
+        //       >
+        //         <Iconify icon={'eva:edit-fill'} />
+        //         Edit
+        //       </MenuItem> */}
+        //                     <MenuItem
+        //                         onClick={() => {
+        //                             onConfirmRow();
+        //                             handleCloseMenu();
+        //                         }}
+        //                     >
+        //                         <Iconify icon={'eva:edit-fill'} />
+        //                         Edit
+        //                     </MenuItem>
+        //                     <MenuItem
+        //                         onClick={() => {
+        //                             onDeclineRow();
+        //                             handleCloseMenu();
+        //                         }}
+        //                         sx={{ color: 'error.main' }}
+        //                     >
+        //                         <Iconify icon={'eva:trash-2-outline'} />
+        //                         Decline
+        //                     </MenuItem>
+        //                 </>
+        //             }
+        //         />
+        //     </TableCell>
+        // </TableRow>
+    );
+}

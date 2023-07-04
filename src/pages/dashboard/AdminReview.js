@@ -18,7 +18,8 @@ import {
   TableContainer,
   TablePagination,
   FormControlLabel,
-  DialogTitle
+  DialogTitle,
+  Hidden
 } from '@mui/material';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
@@ -41,6 +42,7 @@ import { useDispatch, useSelector } from '../../redux/store';
 import { getTeachers, openModal, closeModal } from '../../redux/slices/admin'
 import { DialogAnimate } from '../../components/animate';
 import DeclineForm from '../../sections/@dashboard/admin/DeclineForm';
+import AdminTableCard from 'src/sections/@dashboard/admin/list/AdminTableCard';
 
 // ---------------------------------------------------------------------
 
@@ -137,6 +139,10 @@ export default function AdminReview() {
     navigate(PATH_DASHBOARD.admin.confirm(id));
   };
 
+  const handleContactWapp = (countryCode, cellphone, name) => {
+    window.open(`https://wa.me/${countryCode}${cellphone}?text=Hola ${name}, `, '_blank')
+  }
+
   const dataFiltered = applySortFilter({
     tableData,
     comparator: getComparator(order, orderBy),
@@ -173,7 +179,7 @@ export default function AdminReview() {
     setTableData(teachers ?? []);
   }, [teachers]);
 
-  useEffect(()=>{
+  useEffect(() => {
     dispatch(getTeachers(page, filterRole, filterName, filterLevel))
   }, [filterRole, filterName, filterLevel, page])
 
@@ -230,62 +236,80 @@ export default function AdminReview() {
           />
 
           <Scrollbar>
-            <TableContainer sx={{ minWidth: 800, position: 'relative' }}>
-              {selected.length > 0 && (
-                <TableSelectedActions
-                  dense={dense}
-                  numSelected={selected.length}
-                  rowCount={tableData.length}
-                  onSelectAllRows={(checked) =>
-                    onSelectAllRows(
-                      checked,
-                      tableData?.map((row) => row.id)
-                    )
-                  }
-                  actions={
-                    <Tooltip title="Delete">
-                      <IconButton color="primary" onClick={() => handleDeleteRows(selected)}>
-                        <Iconify icon={'eva:trash-2-outline'} />
-                      </IconButton>
-                    </Tooltip>
-                  }
-                />
-              )}
+            <Hidden smDown>
+              <TableContainer sx={{ minWidth: 800, position: 'relative' }}>
+                {selected.length > 0 && (
+                  <TableSelectedActions
+                    dense={dense}
+                    numSelected={selected.length}
+                    rowCount={tableData.length}
+                    onSelectAllRows={(checked) =>
+                      onSelectAllRows(
+                        checked,
+                        tableData?.map((row) => row.id)
+                      )
+                    }
+                    actions={
+                      <Tooltip title="Delete">
+                        <IconButton color="primary" onClick={() => handleDeleteRows(selected)}>
+                          <Iconify icon={'eva:trash-2-outline'} />
+                        </IconButton>
+                      </Tooltip>
+                    }
+                  />
+                )}
 
-              <Table size={dense ? 'small' : 'medium'}>
-                <TableHeadCustom
-                  order={order}
-                  orderBy={orderBy}
-                  headLabel={TABLE_HEAD}
-                  rowCount={tableData?.length ?? 0}
-                  numSelected={selected.length}
-                  onSort={onSort}
-                  onSelectAllRows={(checked) =>
-                    onSelectAllRows(
-                      checked,
-                      tableData?.map((row) => row.id)
-                    )
-                  }
-                />
+                <Table size={dense ? 'small' : 'medium'}>
+                  <TableHeadCustom
+                    order={order}
+                    orderBy={orderBy}
+                    headLabel={TABLE_HEAD}
+                    rowCount={tableData?.length ?? 0}
+                    numSelected={selected.length}
+                    onSort={onSort}
+                    onSelectAllRows={(checked) =>
+                      onSelectAllRows(
+                        checked,
+                        tableData?.map((row) => row.id)
+                      )
+                    }
+                  />
 
-                <TableBody>
-                  {tableData?.map((row) => (
-                    <AdminTableRow
-                      key={row.userId}
-                      row={row}
-                      selected={selected.includes(row.userId)}
-                      onSelectRow={() => onSelectRow(row.userId)}
-                      onEditRow={() => handleEditRow(row.id)}
-                      onConfirmRow={() => handleConfirmRow(row.id)}
-                      onDeclineRow={() => handleDeclineOpenModal(row.email)}
-                    />))}
+                  <TableBody>
+                    {tableData?.map((row) => (
+                      <AdminTableRow
+                        key={row.userId}
+                        row={row}
+                        selected={selected.includes(row.userId)}
+                        onSelectRow={() => onSelectRow(row.userId)}
+                        onEditRow={() => handleEditRow(row.id)}
+                        onConfirmRow={() => handleConfirmRow(row.id)}
+                        onDeclineRow={() => handleDeclineOpenModal(row.email)}
+                        onWapp={() => { handleContactWapp(row.countryCode, row.cellphone, row.name) }}
+                      />))}
 
-                  <TableEmptyRows height={denseHeight} emptyRows={0} />
+                    <TableEmptyRows height={denseHeight} emptyRows={0} />
 
-                  <TableNoData isNotFound={isNotFound} />
-                </TableBody>
-              </Table>
-            </TableContainer>
+                    <TableNoData isNotFound={isNotFound} />
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </Hidden>
+            <Hidden smUp>
+              {tableData?.map((row) => (
+                <AdminTableCard
+                  key={row.userId}
+                  row={row}
+                  selected={selected.includes(row.userId)}
+                  onSelectRow={() => onSelectRow(row.userId)}
+                  onEditRow={() => handleEditRow(row.id)}
+                  onConfirmRow={() => handleConfirmRow(row.id)}
+                  onDeclineRow={() => handleDeclineOpenModal(row.email)}
+                  onWapp={()=>{handleContactWapp(row.countryCode, row.cellphone, row.name)}}
+                />))}
+
+            </Hidden>
+
           </Scrollbar>
 
           <Box sx={{ position: 'relative' }}>
@@ -323,7 +347,7 @@ export default function AdminReview() {
 function applySortFilter({ tableData, comparator, filterName, filterStatus, filterRole }) {
   return tableData
   debugger
-  if(tableData.length === 0){
+  if (tableData.length === 0) {
     return tableData
   }
   const stabilizedThis = tableData?.map((el, index) => [el, index]);

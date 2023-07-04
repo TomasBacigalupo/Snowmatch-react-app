@@ -16,9 +16,10 @@ AdminTableRow.propTypes = {
   onEditRow: PropTypes.func,
   onSelectRow: PropTypes.func,
   onDeleteRow: PropTypes.func,
+  onWapp: PropTypes.func,
 };
 
-export default function AdminTableRow({ row, selected, onEditRow, onSelectRow, onConfirmRow, onDeclineRow }) {
+export default function AdminTableRow({ row, selected, onEditRow, onSelectRow, onConfirmRow, onDeclineRow, onWapp }) {
   const theme = useTheme();
 
   const { name, lastname, imageLink, role, level, authorized, state, id } = row;
@@ -106,6 +107,15 @@ export default function AdminTableRow({ row, selected, onEditRow, onSelectRow, o
                 <Iconify icon={'eva:edit-fill'} />
                 Edit
               </MenuItem> */}
+              <MenuItem
+                onClick={() => {
+                  onWapp();
+                  handleCloseMenu();
+                }}
+              >
+                <Iconify icon={'mdi:whatsapp'} />
+                Wapp
+              </MenuItem>
               <MenuItem
                 onClick={() => {
                   onConfirmRow();

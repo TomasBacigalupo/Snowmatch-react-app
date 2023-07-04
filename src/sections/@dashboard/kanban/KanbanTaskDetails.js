@@ -27,6 +27,8 @@ import KanbanTaskCommentList from './KanbanTaskCommentList';
 import KanbanTaskAttachments from './KanbanTaskAttachments';
 import KanbanTaskCommentInput from './KanbanTaskCommentInput';
 import { useDatePicker, DisplayTime } from './KanbanTaskAdd';
+import useLocales from 'src/hooks/useLocales';
+import { date } from 'yup';
 
 // ----------------------------------------------------------------------
 
@@ -55,8 +57,9 @@ export default function KanbanTaskDetails({ card, isOpen, onClose, onDeleteTask 
   const fileInputRef = useRef(null);
   const [taskCompleted, setTaskCompleted] = useState(card.completed);
   const [prioritize, setPrioritize] = useState('low');
+  const {translate} = useLocales();
 
-  const { name, description, due, assignee, attachments, comments } = card;
+  const { name, description, due, assignee, reporter, attachments, comments } = card;
 
   const {
     dueDate,
@@ -69,7 +72,7 @@ export default function KanbanTaskDetails({ card, isOpen, onClose, onDeleteTask 
     onOpenPicker,
     onClosePicker,
   } = useDatePicker({
-    date: due,
+    date: [new Date(due[0]), new Date(due[1])],
   });
 
   const handleAttach = () => {
@@ -86,6 +89,7 @@ export default function KanbanTaskDetails({ card, isOpen, onClose, onDeleteTask 
 
   return (
     <>
+    {console.log(due, dueDate)}
       <Drawer open={isOpen} onClose={onClose} anchor="right" PaperProps={{ sx: { width: { xs: 1, sm: 480 } } }}>
         <Stack p={2.5} direction="row" alignItems="center">
           {!isDesktop && (
@@ -154,7 +158,21 @@ export default function KanbanTaskDetails({ card, isOpen, onClose, onDeleteTask 
               }}
             />
             <Stack direction="row">
-              <LabelStyle sx={{ mt: 1.5 }}>Profesor</LabelStyle>
+              <LabelStyle sx={{ mt: 1.5 }}>{translate('kanban.teacher')}</LabelStyle>
+              <Stack direction="row" flexWrap="wrap" alignItems="center">
+                {reporter.map((user) => (
+                  <Avatar key={user.id} alt={user.name} src={user.avatar} sx={{ m: 0.5, width: 36, height: 36 }} />
+                ))}
+                <Tooltip title="Add assignee">
+                  <IconButtonAnimate sx={{ p: 1, ml: 0.5, border: (theme) => `dashed 1px ${theme.palette.divider}` }}>
+                    <Iconify icon={'eva:plus-fill'} width={20} height={20} />
+                  </IconButtonAnimate>
+                </Tooltip>
+              </Stack>
+            </Stack>
+
+            <Stack direction="row">
+              <LabelStyle sx={{ mt: 1.5 }}>{translate('kanban.guests')}</LabelStyle>
               <Stack direction="row" flexWrap="wrap" alignItems="center">
                 {assignee.map((user) => (
                   <Avatar key={user.id} alt={user.name} src={user.avatar} sx={{ m: 0.5, width: 36, height: 36 }} />

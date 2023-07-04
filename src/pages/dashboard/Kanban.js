@@ -22,9 +22,10 @@ export default function Kanban() {
 
   const { board } = useSelector((state) => state.kanban);
 
-  // useEffect(() => {
-  //   dispatch(getBoard());
-  // }, [dispatch]);
+  useEffect(() => {
+    dispatch(getBoard());
+    console.log('board', board);
+  }, [dispatch]);
 
   const onDragEnd = (result) => {
     // Reorder card

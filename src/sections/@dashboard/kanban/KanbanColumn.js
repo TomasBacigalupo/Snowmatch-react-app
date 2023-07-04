@@ -14,6 +14,7 @@ import Iconify from '../../../components/Iconify';
 import KanbanAddTask from './KanbanTaskAdd';
 import KanbanTaskCard from './KanbanTaskCard';
 import KanbanColumnToolBar from './KanbanColumnToolBar';
+import useLocales from 'src/hooks/useLocales';
 
 // ----------------------------------------------------------------------
 
@@ -30,6 +31,7 @@ export default function KanbanColumn({ column, index, canRename, hasOptions }) {
   const { board } = useSelector((state) => state.kanban);
   const calendar = useSelector((state) => state.calendar);
   const [open, setOpen] = useState(false);
+  const {translate} = useLocales();
 
   const { name, cardIds, id } = column;
 
@@ -79,7 +81,7 @@ export default function KanbanColumn({ column, index, canRename, hasOptions }) {
           sx={{ px: 2, bgcolor: 'grey.5008' }}
         >
           <Stack spacing={3} {...provided.dragHandleProps}>
-            <KanbanColumnToolBar columnName={name} onDelete={handleDeleteColumn} onUpdate={handleUpdateColumn} />
+            <KanbanColumnToolBar columnName={translate(`kanban.${name}`)} onDelete={handleDeleteColumn} onUpdate={handleUpdateColumn} />
 
             <Droppable droppableId={id} type="task">
               {(provided) => (

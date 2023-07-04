@@ -34,7 +34,7 @@ export default function ShopProductCard({ product, onClick }) {
         return 'red';
       default:
         return 'black';
-      }
+    }
   }
 
   const getLevelLabel = (level) => {
@@ -48,38 +48,38 @@ export default function ShopProductCard({ product, onClick }) {
       case 'ADVANCED':
         return 'Advanced';
       case 'EXPERT':
-        return 'Expert'; 
+        return 'Expert';
       default:
         return 'All';
-      }
+    }
   }
 
   return (
-    <Link to={onClick ? '' : linkTo} sx={{m:0.5}} color="inherit" component={RouterLink}>
-      <Card sx={{ m: 0.5, minWidth: '250px', height: '100%'}} onClick={ onClick ? onClick : ()=>{}}>
+    <Link to={onClick ? '' : linkTo} sx={{ m: 0.5 }} color="inherit" component={RouterLink}>
+      <Card sx={{ m: 0.5, minWidth: '250px', height: '100%' }} onClick={onClick ? onClick : () => { }}>
         <Box sx={{ position: 'relative' }}>
-          {"status" && (
-            <Label
-              variant="filled"
-              // color={getLevelColor(studentLevel)}
-              sx={{
-                top: 16,
-                right: 16,
-                zIndex: 9,
-                position: 'absolute',
-                textTransform: 'uppercase',
-              }}
-              style={{ 
-                color: 'white',
-                backgroundColor: getLevelColor(studentLevel) }}
-            >
-              {getLevelLabel(studentLevel)}
-            </Label>
-          )}
+          <Label
+            variant="filled"
+            // color={getLevelColor(studentLevel)}
+            sx={{
+              top: 16,
+              right: 16,
+              zIndex: 9,
+              position: 'absolute',
+              textTransform: 'uppercase',
+            }}
+            style={{
+              color: 'white',
+              backgroundColor: getLevelColor(studentLevel)
+            }}
+          >
+            {getLevelLabel(studentLevel)}
+          </Label>
+
           {/* <Image alt={name} src={"cover"} ratio="1/1" /> */}
         </Box>
 
-        <Stack spacing={2} sx={{ p: 3 }}>
+        <Stack spacing={2} sx={{ p: 3 , mt: 3, height: '100%'}}>
           {/* <Link to={linkTo} color="inherit" component={RouterLink}> */}
           <Typography variant="subtitle2" noWrap>
             {name}
@@ -89,9 +89,9 @@ export default function ShopProductCard({ product, onClick }) {
           </Typography>
           {/* </Link> */}
 
-          <Stack direction="row" alignItems="center" justifyContent="space-between">
+          <Stack direction="row" justifyContent="space-between" alignItems='flex-end'>
 
-            <Stack direction="row" spacing={0.5}>
+            <Stack direction="row" spacing={0.5} >
               {/* {priceSale && (
               <Typography component="span" sx={{ color: 'text.disabled', textDecoration: 'line-through' }}>
                 {fCurrency(priceSale)}

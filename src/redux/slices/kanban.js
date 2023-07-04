@@ -23,6 +23,7 @@ const initialState = {
         "id": "9d98ce30-3c51-4de3-8537-7a4b663ee3af",
         "name": "Jardin de nieve",
         "description": "Martes 17/08 10:00hs AM",
+        "reporter": [],
         "assignee": [
           {
             "id": "473d2720-341c-49bf-94ed-556999cf6ef7",
@@ -41,21 +42,21 @@ const initialState = {
     columns: [
       {
         "id": "8cd887ec-b3bc-11eb-8529-0242ac130003",
-        "name": "Clases a Completar",
+        "name": "today",
         "cardIds": [
           "9d98ce30-3c51-4de3-8537-7a4b663ee3af"
         ]
       },
       {
         "id": "23008a1f-ad94-4771-b85c-3566755afab7",
-        "name": "Clases Completas",
+        "name": "tomorrow",
         "cardIds": [
           
         ]
       },
       {
         "id": "37a9a747-f732-4587-a866-88d51c037641",
-        "name": "Clases Sin Profesor",
+        "name": "week",
         "cardIds": []
       },
       {
@@ -165,9 +166,45 @@ export function getBoard() {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get('/api/kanban/board');
-      dispatch(slice.actions.getBoardSuccess(response.data.board));
+      console.log('getBoard');
+      const response = await axios.get('/api/events/');
+      const events = response.data;
+      console.log(events);
+      const board = {
+        cards: events.map(e => ({
+          ...e,
+          reporter: e.assignedUsers,
+          assignee: [...e.students, ...e.clients],
+          name: e.title,
+          due: [new Date(e.start), new Date(e.end)],
+          attachments: [],
+          comments: [],
+          completed: e.payed
+
+        })),
+        columns: [
+          {
+            id: 0,
+            name: "today",
+            cardIds: events.filter(e => new Date(e.start).getDate() === new Date().getDate()).map(e => e.id)
+          },
+          {
+            id: 1,
+            name: "tomorrow",
+            cardIds: events.filter(e => e.start === new Date(new Date().getDate() + 1)).map(e => e.id)
+          },
+          {
+            id: 2,
+            name: "this_week",
+            cardIds: events.map(e => e.id)
+          },
+        ],
+        columnOrder: [0, 1, 2],
+      }
+      console.log(board);
+      dispatch(slice.actions.getBoardSuccess(board));
     } catch (error) {
+      console.log(error);
       dispatch(slice.actions.hasError(error));
     }
   };

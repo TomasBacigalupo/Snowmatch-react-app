@@ -47,6 +47,7 @@ export default function NotificationsPopover() {
   const { notifications } = useSelector(state => state.notifications)
   const totalUnread = notifications.filter((item) => item.unread === true).length;
 
+
   const handleOpen = (event) => {
     setOpen(event.currentTarget);
   };
@@ -119,18 +120,18 @@ export default function NotificationsPopover() {
             ))}
           </List>}
           {totalUnread < notifications.length &&
-          <List
-            disablePadding
-            subheader={
-              <ListSubheader disableSticky sx={{ py: 1, px: 2.5, typography: 'overline' }}>
-                {translate("notifications.old_title")}
-              </ListSubheader>
-            }
-          >
-            {notifications.filter(n => !n.unread).map((notification) => (
-              <NotificationItem key={notification.id} notification={notification} />
-            ))}
-          </List>}
+            <List
+              disablePadding
+              subheader={
+                <ListSubheader disableSticky sx={{ py: 1, px: 2.5, typography: 'overline' }}>
+                  {translate("notifications.old_title")}
+                </ListSubheader>
+              }
+            >
+              {notifications.filter(n => !n.unread).map((notification) => (
+                <NotificationItem key={notification.id} notification={notification} />
+              ))}
+            </List>}
         </Scrollbar>
 
         {/* <Divider sx={{ borderStyle: 'dashed' }} />
@@ -161,7 +162,12 @@ NotificationItem.propTypes = {
 
 function NotificationItem({ notification }) {
   const { translate } = useLocales()
-  const { avatar, title } = renderContent(notification, translate);
+  const { avatar, title, notifier } = renderContent(notification, translate);
+  const { cellphone, countryCode } = notifier;
+
+  const handleContactWhatsApp = () => {
+    window.open(`https://api.whatsapp.com/send?phone=+${countryCode}${cellphone}`, '_blank');
+  }
 
   return (
     <ListItemButton
@@ -173,6 +179,7 @@ function NotificationItem({ notification }) {
           bgcolor: 'action.selected',
         }),
       }}
+      onClick={handleContactWhatsApp}
     >
       <ListItemAvatar>
         <Avatar sx={{ bgcolor: 'background.neutral' }}>{avatar}</Avatar>
@@ -189,7 +196,7 @@ function NotificationItem({ notification }) {
               color: 'text.disabled',
             }}
           >
-            {notification.createdAt &&<Iconify icon="eva:clock-outline" sx={{ mr: 0.5, width: 16, height: 16 }} />}
+            {notification.createdAt && <Iconify icon="eva:clock-outline" sx={{ mr: 0.5, width: 16, height: 16 }} />}
             {notification.createdAt && fToNow(notification.createdAt)}
           </Typography>
         }
@@ -252,7 +259,8 @@ function renderContent(notification, translate) {
     };
   }
   return {
-    avatar: notification.avatar ? <img alt={notification.title} src={notification.avatar} /> : null,
+    avatar: notification?.avatar ? <img alt={notification.title} src={notification?.notifier?.imageLink} /> : null,
     title,
+    notifier: notification?.notifier
   };
 }

@@ -4,6 +4,7 @@ import { utcDateToLocalDate, utcToLocalDate } from 'src/utils/dateUtils';
 import axios from '../../utils/axios';
 //
 import { dispatch } from '../store';
+import { start } from 'nprogress';
 
 // ----------------------------------------------------------------------
 
@@ -37,8 +38,8 @@ const slice = createSlice({
     // GET EVENTS
     getEventsSuccess(state, action) {
       state.isLoading = false;
-      state.events = action.payload.map( e => {
-        if(e?.source === 'APP'){
+      state.events = action.payload.map(e => {
+        if (e?.source === 'APP') {
           return {
             ...e,
             title: `${e.name} ${e.lastName}`,
@@ -110,7 +111,7 @@ const slice = createSlice({
 
     // PAYED LESSON
     payLessonSuccess(state, action) {
-      const {eventId}  = action.payload
+      const { eventId } = action.payload
       state.isLoadingPayment = false;
       state.lesson = { ...state.lesson, payed: true }
       const updateEvents = state.events.map((_event, i) => {
@@ -130,7 +131,7 @@ const slice = createSlice({
     unpaidLessonSuccess(state, action) {
       const eventId = action.payload
       state.isLoadingPayment = false;
-      state.lesson = { ...state.lesson, payed: true};
+      state.lesson = { ...state.lesson, payed: true };
       const updateEvents = state.events.map((_event, i) => {
         if (_event.id === eventId) {
           return {
@@ -193,7 +194,51 @@ export function getEvents() {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.get('/api/events/');
-      dispatch(slice.actions.getEventsSuccess(response.data));
+      const events = response.data.map(e => {
+        const dateStart = new Date(e.start);
+        const dateEnd = new Date(e.end);
+        const utcOffset = dateStart.getTimezoneOffset() * 60000; // Get the UTC offset in milliseconds
+        const adjustedDateStart = new Date(dateStart.getTime() + utcOffset);
+        const adjustedDateEnd = new Date(dateEnd.getTime() + utcOffset);
+        if (e?.source === 'APP' && e.eventType === "CLASS"){
+          return {
+            ...e,
+            title: 'Match',
+            name: 'Clase Solicitada',
+            description: 'Un usuario ah solicitado una clase este dia',
+            price: 0,
+            start: adjustedDateStart,
+            end: adjustedDateEnd,
+            textColor: "#FFC107",
+            type: "App class"
+          };
+        }
+        if (e?.source === 'PRODUCT' && e.eventType === "CLASS") {
+          let title = e.title
+          if(e.title === 'PRIVATE_FULL_DAY'){
+            title = 'Clase privada día completo'
+          }
+          if(e.title === 'PRIVATE_HALF_DAY'){
+            title = 'Clase privada medio día'
+          }
+
+          return {
+            ...e,
+            title: title,
+            description: 'Evento creado a partir de un producto',
+            start: adjustedDateStart,
+            end: adjustedDateEnd,
+            textColor: "#00AB55",
+            type: "App class"
+          };
+        }
+        return {
+          ...e,
+          start: adjustedDateStart,
+          end: adjustedDateEnd  
+        };
+      })
+      dispatch(slice.actions.getEventsSuccess(events));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }
@@ -232,16 +277,28 @@ export function getLessonById(id) {
 
 export function createEvent(newEvent) {
   return async () => {
-    //dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.post('/api/events/create', newEvent);
-      dispatch(slice.actions.createEventSuccess(response.data));
+      const start = addUtcOffset(newEvent.start); // Adjust start time with UTC offset
+      const end = addUtcOffset(newEvent.end); // Adjust end time with UTC offset
+
+      const response = await axios.post('/api/events/create', {
+        ...newEvent,
+        start,
+        end
+      });
+      dispatch(slice.actions.createEventSuccess(newEvent));
       return response;
     } catch (error) {
-      //dispatch(slice.actions.hasError(error));
       return error;
     }
   };
+}
+
+function addUtcOffset(dateString) {
+  const date = new Date(dateString);
+  const utcOffset = date.getTimezoneOffset() * 60000; // Get the UTC offset in milliseconds
+  const adjustedDate = new Date(date.getTime() - utcOffset);
+  return adjustedDate.toISOString(); // Convert back to the ISO 8601 format for consistency
 }
 
 // ----------------------------------------------------------------------
@@ -267,7 +324,7 @@ export function updateEvent(eventId, updateEvent) {
     //dispatch(slice.actions.startLoading());
     try {
       const response = await axios.put(`/api/events/byId/${eventId}`, updateEvent);
-      dispatch(slice.actions.updateEventSuccess({...updateEvent, id: eventId}));
+      dispatch(slice.actions.updateEventSuccess({ ...updateEvent, id: eventId }));
       return response;
     } catch (error) {
       //dispatch(slice.actions.hasError(error));
@@ -283,7 +340,7 @@ export function updateBusinessEvent(eventId, updateEvent) {
     //dispatch(slice.actions.startLoading());
     try {
       const response = await axios.put(`/api/events/business`, updateEvent);
-      dispatch(slice.actions.updateEventSuccess({...updateEvent, id: eventId}));
+      dispatch(slice.actions.updateEventSuccess({ ...updateEvent, id: eventId }));
       return response;
     } catch (error) {
       //dispatch(slice.actions.hasError(error));
@@ -298,7 +355,7 @@ export function deleteEvent(eventId) {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      await axios.delete(`/api/events/byId/${ eventId }`);
+      await axios.delete(`/api/events/byId/${eventId}`);
       dispatch(slice.actions.deleteEventSuccess({ eventId }));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
@@ -312,7 +369,7 @@ export function deleteSchoolEvent(eventId) {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      await axios.delete(`/api/events/school/${ eventId }`);
+      await axios.delete(`/api/events/school/${eventId}`);
       dispatch(slice.actions.deleteEventSuccess({ eventId }));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
@@ -339,7 +396,7 @@ export function getUpcomingEvents() {
     try {
       const response = await axios.get('/api/events/');
 
-      const events = response.data.map( e => {
+      const events = response.data.map(e => {
         return {
           ...e,
           start: utcToLocalDate(e.start),
@@ -354,12 +411,12 @@ export function getUpcomingEvents() {
       totomorrow.setDate(totomorrow.getDate() + 2)
 
 
-      const a1 = events.filter(e => e.start.toDateString() === today.toDateString() || (e.start<=today && today<=e.end) || e.end.toDateString() === today.toDateString());
-      const a2 = events.filter(e => e.start.toDateString() === tomorrow.toDateString() || (e.start<=tomorrow && tomorrow<=e.end) || e.end.toDateString() === tomorrow.toDateString());
-      const a3 = events.filter(e => e.start.toDateString() === totomorrow.toDateString() || (e.start<=totomorrow && totomorrow<=e.end) || e.end.toDateString() === totomorrow.toDateString());
+      const a1 = events.filter(e => e.start.toDateString() === today.toDateString() || (e.start <= today && today <= e.end) || e.end.toDateString() === today.toDateString());
+      const a2 = events.filter(e => e.start.toDateString() === tomorrow.toDateString() || (e.start <= tomorrow && tomorrow <= e.end) || e.end.toDateString() === tomorrow.toDateString());
+      const a3 = events.filter(e => e.start.toDateString() === totomorrow.toDateString() || (e.start <= totomorrow && totomorrow <= e.end) || e.end.toDateString() === totomorrow.toDateString());
 
 
-      dispatch(slice.actions.getUpcomingEventsSuccess([a1,a2,a3]));
+      dispatch(slice.actions.getUpcomingEventsSuccess([a1, a2, a3]));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }

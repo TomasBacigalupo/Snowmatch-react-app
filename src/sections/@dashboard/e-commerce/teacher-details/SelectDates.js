@@ -63,7 +63,6 @@ export default function SelectDates({ handleClose, onSubmit }) {
             <CustomPickersDay
                 {...pickersDayProps}
                 onClick={(newValue) => {
-                    console.log('oase')
                     setDate(newValue);
 
                     if (selectedDates.find(d => d.getTime() === newValue.getTime())) {
@@ -72,7 +71,6 @@ export default function SelectDates({ handleClose, onSubmit }) {
 
                 }}
                 onDaySelect={(newValue) => {
-                    console.log('oase')
                     setDate(newValue);
 
                     if (selectedDates.find(d => d.getTime() === newValue.getTime())) {
@@ -99,13 +97,22 @@ export default function SelectDates({ handleClose, onSubmit }) {
                 <DialogContent>
                     <Grid container spacing={2} direction='row' justifyContent='center' paddingTop={2}>
                         <Grid item xs={6}>
-                            <Button variant='outlined' fullWidth onClick={() => setSelectTimeModal(false)}>{translate('selectTime.morning')}</Button>
+                            <Button variant='outlined' fullWidth onClick={() => {
+                                selectedDates[selectedDates.length - 1].setHours(9)
+                                setSelectTimeModal(false)
+                            }}>{translate('selectTime.morning')}</Button>
                         </Grid>
                         <Grid item xs={6}>
-                            <Button variant='outlined' fullWidth onClick={() => setSelectTimeModal(false)}>{translate('selectTime.afternoon')}</Button>
+                            <Button variant='outlined' fullWidth onClick={() => {
+                                selectedDates[selectedDates.length - 1].setHours(14)
+                                setSelectTimeModal(false)
+                            }}>{translate('selectTime.afternoon')}
+                            </Button>
                         </Grid>
                         <Grid item xs={12}>
-                            <Button variant='outlined' fullWidth onClick={() => setSelectTimeModal(false)}>{translate('selectTime.allday')}</Button>
+                            <Button variant='outlined' fullWidth onClick={() => {
+                                selectedDates[selectedDates.length - 1].setHours(9)
+                                setSelectTimeModal(false)}}>{translate('selectTime.allday')}</Button>
                         </Grid>
                     </Grid>
                 </DialogContent>

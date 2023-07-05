@@ -214,9 +214,10 @@ export default function Calendar() {
 
         <DialogAnimate open={isOpenModal} onClose={handleCloseModal}>
           <DialogTitle>{selectedEvent ? translate('calendar.editEvent') : translate('calendar.addEvent')}</DialogTitle>
-          {selectedEvent?.source === 'APP' ? 
-            <LessonForm event={selectedEvent || {}} range={selectedRange} onCancel={handleCloseModal} clients={clients} members={members || {}}/> : 
-            <CalendarForm event={selectedEvent || {}} range={selectedRange} onCancel={handleCloseModal} clients={clients} members={members || {}}/>}
+          {/* {selectedEvent?.source === 'APP' ? 
+            <LessonForm event={selectedEvent || {}} range={selectedRange} onCancel={handleCloseModal} clients={clients} members={members || {}}/> :  */}
+            <CalendarForm event={selectedEvent || {}} disabled={selectedEvent?.source === 'APP'}  range={selectedRange} onCancel={handleCloseModal} clients={clients} members={members || {}}/>
+            {/* } */}
           
         </DialogAnimate>
       </Container>

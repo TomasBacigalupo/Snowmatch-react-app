@@ -38,7 +38,7 @@ const COLOR_OPTIONS = [
 
 const getInitialValues = (event, range) => {
   const _event = {
-    type: 'App Class',
+    type: 'Own client class',
     title: '',
     description: '',
     textColor: '#1890FF',
@@ -60,9 +60,10 @@ CalendarForm.propTypes = {
   event: PropTypes.object,
   range: PropTypes.object,
   onCancel: PropTypes.func,
+  disabled: PropTypes.bool,
 };
 
-export default function CalendarForm({ event, range, onCancel, clients, members }) {
+export default function CalendarForm({ event, range, onCancel, clients, members, disabled = false  }) {
   const { enqueueSnackbar } = useSnackbar();
   const { translate } = useLocales()
   const [selectedClients, setSelectedClients] = useState([...event?.clients || []])
@@ -219,7 +220,7 @@ export default function CalendarForm({ event, range, onCancel, clients, members 
   const isDateError = isBefore(new Date(values.end), new Date(values.start));
 
   const TYPE_OPTION = [
-    { group: 'Class', classify: ['School class', 'Referred class', 'Own client class'] },
+    { group: 'Class', classify: ['School class', 'App class', 'Own client class'] },
     { group: 'Off', classify: ['Break', 'Training', 'Illness'] },
   ];
 
@@ -241,6 +242,7 @@ export default function CalendarForm({ event, range, onCancel, clients, members 
         </ToggleButtonGroup>}
 
         {clients?.length > 0 && <Autocomplete
+          disabled={disabled}
           multiple
           disableCloseOnSelect
           name="clientId" label={translate('calendar.form.client')}
@@ -259,25 +261,17 @@ export default function CalendarForm({ event, range, onCancel, clients, members 
 
           renderInput={(params) => (
             <RHFTextField {...params}
+              disabled={disabled}
               name="clientid" label="Client" />
-            // <TextField
-            //   {...params}
-            //   label="Client"
-            //   inputProps={{
-            //     ...params.inputProps,
-            //     autoComplete: 'new-password', // disable autocomplete and autofill
-            //   }}
-            // />
           )}
         />}
-        {console.log("members", members)}
-        {console.log("event", event)}
         {members?.length > 0 && event?.businessOwner !=null && event?.businessOwner != undefined && <Autocomplete
           disableCloseOnSelect
           multiple
-          name="assigenedTeachersId" label={translate('calendar.form.assignedTeachers')}
+          name="assigenedTeachersId" 
+          label={translate('calendar.form.assignedTeachers')}
           value={assignedUsers}
-          options={[...members].sort((a, b) => a?.name?.localeCompare(b?.name))}
+          options={[...members]?.sort((a, b) => a?.name?.localeCompare(b?.name)) ?? []}
           getOptionLabel={(m) => `${m?.name} ${m?.lastname}`}
           onChange={(event, value) => {
             setAssignedUsers([...value])
@@ -290,62 +284,50 @@ export default function CalendarForm({ event, range, onCancel, clients, members 
           )}
           renderInput={(params) => (
             <RHFTextField {...params}
-              name="assigenedTeachersId" label={translate('calendar.form.assignedTeachers')} />
-            // <TextField
-            //   {...params}
-            //   label="Client"
-            //   inputProps={{
-            //     ...params.inputProps,
-            //     autoComplete: 'new-password', // disable autocomplete and autofill
-            //   }}
-            // />
+              disabled={disabled}
+              name="assigenedTeachersId" 
+              label={translate('calendar.form.assignedTeachers')} />
           )}
 
-        ></Autocomplete>}
+        />}
 
         {event?.students?.length > 0 && <Autocomplete
           name="assignedTeachersId" label={translate('calendar.form.assignedStudents')}
           multiple
           value={event?.students}
-          options={{}}
+          options={[]}
           getOptionLabel={(m) => `${m?.name} ${m?.lastname}`}
           renderOption={(props, student) => (
             <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
               <Avatar sx={{ marginRight: '10px' }}>{`${student?.name[0]}${student?.lastname[0]}`}</Avatar>
-              {`${student.name} ${student.lastname}`}
+              {`${student?.name} ${student?.lastname}`}
             </Box>
           )}
           renderInput={(params) => (
             <RHFTextField {...params}
+              disabled={disabled}
               name="assignedStudentId" label={translate('calendar.form.assignedStudents')} />
-            // <TextField
-            //   {...params}
-            //   label="Client"
-            //   inputProps={{
-            //     ...params.inputProps,
-            //     autoComplete: 'new-password', // disable autocomplete and autofill
-            //   }}
-            // />
           )}
 
         ></Autocomplete>}
-        <RHFSelect name="type" label={translate('calendar.form.type')}>
-          {TYPE_OPTION.map((type) => (
+        <RHFSelect disabled={disabled} name="type" label={translate('calendar.form.type')}>
+          {TYPE_OPTION.map((type, i) => (
             <optgroup key={type.group} label={type.group}>
-              {type.classify.map((classify) => (
-                <option key={classify} value={classify}>
+              {type.classify.map((classify, idx) => (
+                <option key={classify} value={classify} disabled={ i === 0 && (idx === 0 || idx === 1)}>
                   {classify}
                 </option>
               ))}
             </optgroup>
           ))}
+          
         </RHFSelect>
-        <RHFTextField name="title" label={translate('calendar.form.title')} />
+        <RHFTextField disabled={disabled} name="title" label={translate('calendar.form.title')} />
 
-        <RHFTextField name="description" label={translate('calendar.form.description')} multiline rows={2} />
+        <RHFTextField disabled={disabled} name="description" label={translate('calendar.form.description')} multiline rows={2} />
 
         {values?.type && !['Break', 'Training', 'Illness'].find(p => p === values.type) && (
-          <RHFTextField name="price" label={translate('calendar.form.price')} />
+          <RHFTextField disabled={disabled} name="price" label={translate('calendar.form.price')} />
         )}
 
         <Controller
@@ -353,6 +335,7 @@ export default function CalendarForm({ event, range, onCancel, clients, members 
           control={control}
           render={({ field }) => (
             <MobileDateTimePicker
+              disabled={disabled}
               {...field}
               label={translate('calendar.form.startDate')}
               inputFormat="dd/MM/yyyy hh:mm a"
@@ -366,6 +349,7 @@ export default function CalendarForm({ event, range, onCancel, clients, members 
           control={control}
           render={({ field }) => (
             <MobileDateTimePicker
+              disabled={disabled}
               {...field}
               label={translate('calendar.form.endDate')}
               inputFormat="dd/MM/yyyy hh:mm a"
@@ -385,7 +369,7 @@ export default function CalendarForm({ event, range, onCancel, clients, members 
           name="textColor"
           control={control}
           render={({ field }) => (
-            <ColorSinglePicker value={field.value} onChange={field.onChange} colors={COLOR_OPTIONS} />
+            <ColorSinglePicker disabled={disabled} value={field.value} onChange={field.onChange} colors={COLOR_OPTIONS} />
           )}
         />
       </Stack>
@@ -404,7 +388,7 @@ export default function CalendarForm({ event, range, onCancel, clients, members 
           {translate('calendar.form.cancel')}
         </Button>
 
-        <LoadingButton type="submit" variant="contained" loading={isSubmitting} sx={{ ':hover': { color: '#3399FF' } }}>
+        <LoadingButton disabled={disabled} type="submit" variant="contained" loading={isSubmitting} sx={{ ':hover': { color: '#3399FF' } }}>
           {isCreating? translate('calendar.form.add') : translate('calendar.form.edit')}
         </LoadingButton>
       </DialogActions>

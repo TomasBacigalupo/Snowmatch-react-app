@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // @mui
-import { Box, Card, Link, Typography, Stack, Tooltip } from '@mui/material';
+import { Box, Card, Link, Typography, Stack, Tooltip, Rating } from '@mui/material';
 // routes
 import { PATH_DASHBOARD, PATH_GUEST } from '../../../../routes/paths';
 // components
@@ -18,7 +18,7 @@ ShopTeacherCard.propTypes = {
 };
 
 export default function ShopTeacherCard({ teacher }) {
-  const { name, lastname, imageLink, information, email, resorts, id, eventsList } = teacher;
+  const { name, lastname, imageLink, information, email, resorts, id, eventsList, stars } = teacher;
   const { filters } = useSelector(state => state.teachers)
   const navigate = useNavigate();
   const [src, setSrc] = useState(imageLink)
@@ -78,7 +78,7 @@ export default function ShopTeacherCard({ teacher }) {
             {name + " " + lastname}
           </Typography>
         </Link>
-
+        <Rating readOnly value={stars} precision={0.5} />
         <Stack direction="row" alignItems="center" justifyContent="space-between">
           <Typography component="span" sx={{ color: 'text.disabled', }}>
             {information}

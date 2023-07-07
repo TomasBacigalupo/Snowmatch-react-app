@@ -105,13 +105,13 @@ const slice = createSlice({
     // GET TEACHERS WITH EVENTS
     getTeachersWithEventsSuccess(state, action) {
       state.isLoading = false;
-      state.teachersWithEvents = action.payload;
+      state.teachersWithEvents = action.payload.sort((a, b) => b.stars - a.stars);
     },
 
     // GET PRODUCT
     getProductSuccess(state, action) {
       state.isLoading = false;
-      state.product = action.payload;
+      state.product = action.payload.sort((a, b) => b.stars - a.stars);
     },
 
     // GET TEACHER
@@ -384,7 +384,10 @@ export function getTeachers() {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.get('/api/users/teacher');
-      const teachers = response.data;
+      const teachers = response.data.map(t => ({
+        ...t,
+        stars: t.stars ? t.stars : 0
+      })).sort((a, b) => b.stars - a.stars);
 
       dispatch(slice.actions.getTeachersSuccess(teachers));
     } catch (error) {
@@ -400,8 +403,10 @@ export function getTeachersWithEvents(filters) {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.get(`/api/users/teacher/with_filters?start=${filters.from?.toISOString().slice(0, -1) ?? ''}&end=${filters.to?.toISOString().slice(0, -1) ?? ''}&resort=${filters.resort ?? ''}`);
-      const teachers = response.data;
-
+      const teachers = response.data.map(t=>({
+        ...t,
+        stars: t.stars ? t.stars : 0
+      })).sort((a, b) => b.stars - a.stars);
       dispatch(slice.actions.getTeachersWithEventsSuccess(teachers));
     } catch (error) {
       dispatch(slice.actions.hasError(error));

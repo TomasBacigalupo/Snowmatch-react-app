@@ -245,6 +245,7 @@ function checkOverlap(event,filter){
 
 function applyFilter(teachers, sortBy, filters, teacherType) {
 
+  teachers = orderBy(teachers, ['stars'], ['desc']);
   // SORT BY
   // if (sortBy === 'featured') {
   //   teachers = orderBy(teachers, ['sold'], ['desc']);
@@ -292,7 +293,7 @@ function applyFilter(teachers, sortBy, filters, teacherType) {
   }
 
   if(teacherType=="independent"){
-    teachers = teachers.filter(t=>!t.school && t.level>=3 && t.resorts?.includes("Cerro Catedral"))
+    teachers = teachers.filter(t=>!t.school && t.level>=3 && t.resorts?.includes("Cerro Catedral")).sort((a,b)=>a.name-b.name)
   } else if(teacherType=="school"){
     teachers = teachers.filter(t=>t.school || t.level<3 || !t.resorts?.includes("Cerro Catedral") )
   }

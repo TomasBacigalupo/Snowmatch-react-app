@@ -288,22 +288,13 @@ export default function TeacherDetailsSummary({ cart, teacher, onAddCart, onGoto
       <Typography variant="h5" paragraph>
         {name + " " + lastname}
       </Typography>
-
-      <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 2 }}>
-        <Rating value={stars} precision={0.1} readOnly />
-
-      </Stack>
       <TeacherSkills skills={skills} />
-
       <Divider sx={{ borderStyle: 'dashed' }} />
-
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-
         <Stack direction="row" justifyContent="space-between" sx={{ mb: 3, mt: 2 }}>
           <Typography variant="subtitle1" sx={{ mt: 0.5 }}>
             {translate('teacherDetails.resort')}
           </Typography>
-
           <RHFSelect
             name="resort"
             size="small"

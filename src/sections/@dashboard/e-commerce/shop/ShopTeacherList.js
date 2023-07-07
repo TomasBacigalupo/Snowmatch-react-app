@@ -5,6 +5,7 @@ import { Box } from '@mui/material';
 import { SkeletonProductItem } from '../../../../components/skeleton';
 //
 import ShopTeacherCard from './ShopTeacherCard';
+import { orderBy } from 'lodash';
 
 // ----------------------------------------------------------------------
 
@@ -14,6 +15,8 @@ ShopTeacherList.propTypes = {
 };
 
 export default function ShopTeacherList({ teachers, loading }) {
+  console.log(teachers);
+  console.log(orderBy(teachers, ['stars'], ['desc']).map((teacher) => teacher.stars));
   return (
     <Box
       sx={{

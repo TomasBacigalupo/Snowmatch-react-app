@@ -148,7 +148,7 @@ export default function HomeHero() {
                 <Grid item xs={12} md={5.5} >
                   <Box display='flex' flexDirection='column' justifyContent='space-between'>
                     <m.div variants={varFade().inRight}>
-                      <Typography variant='h3' sx={{ mb: 3 }}>Top Montains</Typography>
+                      <Typography variant='h3' sx={{ mb: 3 }}>Top Mountains</Typography>
                     </m.div>
                     <Box>
                       <Box display='flex' justifyContent='space-between' alignItems='center'>

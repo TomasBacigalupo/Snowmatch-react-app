@@ -74,6 +74,13 @@ export default function Router() {
       element: <MainLayout />
     },
     {
+      path: '/chapelco',
+      element: <MainLayout/>,
+      children: [
+        { path: 'instructores', element: <ChapelcoPro/> }
+      ]
+    },
+    {
       path: 'rental',
       element: (<GuestLayout />),
       children: [
@@ -346,6 +353,7 @@ const Payment = Loadable(lazy(() => import('../pages/Payment')));
 const Page500 = Loadable(lazy(() => import('../pages/Page500')));
 const NotFound = Loadable(lazy(() => import('../pages/Page404')));
 const PageVerify = Loadable(lazy(() => import('../pages/PageVerify')));
+const ChapelcoPro = Loadable(lazy(() => import('../pages/pro/ChapelcoPro')));
 
 //School
 const Products = Loadable(lazy(() => import('../pages/dashboard/Products')))

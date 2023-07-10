@@ -29,7 +29,7 @@ const LINKS = [
   {
     headline: 'Contact',
     children: [
-      { name: 'snowmatch@soluciones-moviles.com', href: '#' },
+      { name: 'office@snowmatch.pro', href: '#' },
       { name: 'San Martin de los Andes, Patagonia Argentina', href: '#' },
     ],
   },

@@ -13,7 +13,7 @@ import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
 import useLocales from 'src/hooks/useLocales';
 import ProductSelectForm from 'src/sections/@dashboard/e-commerce/ProductSelectForm';
 import CartWidget from 'src/sections/@dashboard/e-commerce/CartWidget';
-import { getTeacherByID } from 'src/redux/slices/teachers';
+import { getTeacherBiId, getTeacherByID } from 'src/redux/slices/teachers';
 import LoadingScreen from 'src/components/LoadingScreen';
 import useAuth from 'src/hooks/useAuth';
 
@@ -31,7 +31,7 @@ export default function ProductSelect() {
 
     useEffect(() => {
         dispatch(getTeacherProductsById(id));
-        dispatch(getTeacherByID(id));
+        dispatch(getTeacherBiId(id));
     }, [id, productId]);
 
     return (
@@ -46,11 +46,11 @@ export default function ProductSelect() {
                 />
                 <CartWidget />
                 {products && teacher ? (
-                    products.filter(p => p.id === Number(productId))[0] &&
+                    products.filter(p => Number(p.id) === Number(productId))[0] &&
                     <ProductSelectForm
                         currentTeacher={teacher}
                         isEdit={false}
-                        currentProduct={products.filter(p => p.id === Number(productId))[0]} />
+                        currentProduct={products.filter(p => Number(p.id) === Number(productId))[0]} />
                 ) : <LoadingScreen />
                 }
             </Container>

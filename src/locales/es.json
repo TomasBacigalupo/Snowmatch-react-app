@@ -301,7 +301,9 @@
         "reviews": "Ranking",
         "no_reviews": "No hay calificaciones",
         "write_review": "Escribir calificación",
-        "ratingAVG": "Puntuación promedio"
+        "ratingAVG": "Puntuación promedio",
+        "PRIVATE_FULL_DAY": "Clase privada de día completo (6 horas) para todos los niveles y edades.",
+        "PRIVATE_HALF_DAY": "Clase privada de medio día (3 horas). Desde iniciantes a expertos. Una buena forma de empezar o terminar el día."
     },
     "schoolDetails": {
         "title": "Detalles PRO school",

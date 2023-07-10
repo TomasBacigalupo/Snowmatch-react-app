@@ -23,17 +23,17 @@ import {
 } from '../../../components/hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import useLocales from 'src/hooks/useLocales';
-import { getProductEvents, getProductEventsByMonthAndYear } from 'src/redux/slices/product';
+import { getProductEventsByMonthAndYear } from 'src/redux/slices/product';
 import useAuth from 'src/hooks/useAuth';
 import { addCart, deleteCart } from 'src/redux/slices/teachers';
 import { PATH_GUEST } from 'src/routes/paths';
 import { fCurrency } from 'src/utils/formatNumber';
-import { da, fi } from 'date-fns/locale';
+import { set } from 'lodash';
 // ----------------------------------------------------------------------
 
 
 ProductSelectForm.propTypes = {
-    currentProduct: PropTypes.object,
+    productId: PropTypes.object,
     currentTeacher: PropTypes.object
 }; 
 
@@ -45,17 +45,16 @@ export default function ProductSelectForm({ currentProduct, currentTeacher }) {
 
     const { events } = useSelector(state => state.teachers.checkout)
     const { filters } = useSelector(state => state.teachers)
-    const { success, error, isLoading } = useSelector(state => state.product)
+    const { success, error, isLoading, product } = useSelector(state => state.product)
 
     const calendarRef = useRef(null);
-    const { user } = useAuth();
     const dispatch = useDispatch()
     const [date, setDate] = useState(filters.from ?? new Date());
     const [month, setMonth] = useState(filters.from?.getMonth() ?? new Date().getMonth())
     const { enqueueSnackbar } = useSnackbar();
     const [view, setView] = useState('listWeek');
     const { translate } = useLocales()
-    const [availableEvents, setEvents] = useState([...currentProduct.events] || []);
+    const [availableEvents, setEvents] = useState(product?.events ? [...product?.events] : []);
     const trashRef = createRef()
 
     useEffect(() => {
@@ -63,8 +62,21 @@ export default function ProductSelectForm({ currentProduct, currentTeacher }) {
     }, [filters.from])
 
     useEffect( () => {
-        dispatch(getProductEventsByMonthAndYear(currentProduct.id, date?.getMonth(), date?.getYear()))
+        dispatch(getProductEventsByMonthAndYear(currentProduct.id, date?.getMonth() + 1, date?.getYear()))
     },[currentProduct, month])
+
+    useEffect(() => {
+        setEvents([])
+    }, [currentProduct])
+
+    useEffect(() => {
+        let eventsToAdd = []
+        product?.events?.forEach((event) => { 
+            if(availableEvents.filter((e) => e.id == event.id).length == 0)
+                eventsToAdd.push(event)
+        })
+        setEvents([...availableEvents, ...eventsToAdd])
+    }, [product.events])
     
     useEffect(()=>{
         if(date.getMonth() != month)
@@ -76,7 +88,6 @@ export default function ProductSelectForm({ currentProduct, currentTeacher }) {
         name: Yup.string().required('Name is required').max(64, translate("product.name.max", { "max": 64 })),
         lengthInMinutes: Yup.number().required('Time is required').lessThan(1440, translate("product.time.max", { "max": 1440 })).moreThan(0, translate("product.time.min", { "min": 0 })),
         description: Yup.string().required('Description is required').max(256, translate("product.description.max", { "max": 256 })),
-        // images: Yup.array().min(1, 'Images is required', (value) => value !== ''),
         price: Yup.number().moreThan(0, translate("product.price.moreThan")),
         resort: Yup.string().required(translate("product.resort.required")),
         maxStudents: Yup.number().moreThan(0, translate("product.resort.moreThan")),
@@ -89,20 +100,17 @@ export default function ProductSelectForm({ currentProduct, currentTeacher }) {
         () => ({
             name: currentProduct?.name || '',
             description: currentProduct?.description || '',
-            // images: currentProduct?.images || [],
             maxStudents: currentProduct?.maxStudents || 10,
             ageFrom: currentProduct?.ageTo || 18,
             ageTo: currentProduct?.ageFrom || 80,
             price: currentProduct?.price || 0,
             priceSale: currentProduct?.priceSale || 0,
             lengthInMinutes: currentProduct?.lengthInMinutes || 60,
-            // tags: currentProduct?.tags || [TAGS_OPTION[0]],
             isMinors: currentProduct?.isMinors || false,
             saleConsecutive: currentProduct?.saleConsecutive || false,
             saleLastSpots: currentProduct?.saleLastSpots || false,
             resort: currentProduct?.resort || '',
         }),
-        // eslint-disable-next-line react-hooks/exhaustive-deps
         [currentProduct]
     );
 
@@ -112,31 +120,17 @@ export default function ProductSelectForm({ currentProduct, currentTeacher }) {
     });
 
     const {
-        reset,
         watch,
         control,
-        setValue,
-        getValues,
         handleSubmit,
         formState: { isSubmitting },
     } = methods;
 
     const values = watch();
-
-    useEffect(() => {
-        if (currentProduct != undefined)
-            setEvents([...currentProduct?.events])
-        else setEvents([])
-
-    }, [currentProduct]);
-
     useEffect(() => {
         setEvents(availableEvents.map((event) => ({ ...event, title: values.name })))
     }, [values.name, currentProduct.events]);
 
-    useEffect(() => {
-        console.log("currentProduct", currentProduct)
-    }, [currentProduct]);
 
 
     useEffect(() => {

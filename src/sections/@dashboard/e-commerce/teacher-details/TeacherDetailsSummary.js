@@ -92,6 +92,7 @@ export default function TeacherDetailsSummary({ cart, teacher, onAddCart, onGoto
   const handleChange = (event, value) => {
     setLessons(value);
   };
+  
   const products = useSelector(state => state.product.products)
 
 
@@ -168,6 +169,7 @@ export default function TeacherDetailsSummary({ cart, teacher, onAddCart, onGoto
   const { watch, control, setValue, handleSubmit } = methods;
 
   const values = watch();
+  const selectedProduct = products.find((product) => Number(product.id) === Number(values.product))
 
   const handleSubmitRange = useCallback(
     (range) => {
@@ -307,7 +309,8 @@ export default function TeacherDetailsSummary({ cart, teacher, onAddCart, onGoto
             ))}
           </RHFSelect>
         </Stack>
-        {products?.length > 0 && <Stack direction="row" justifyContent="space-between" sx={{ mb: 3, mt: 2 }}>
+        {products?.length > 0 && 
+        <Stack direction="row" justifyContent="space-between" sx={{ mb: 3, mt: 2 }}>
           <RHFSelect
             name="product"
             size="small"
@@ -321,9 +324,25 @@ export default function TeacherDetailsSummary({ cart, teacher, onAddCart, onGoto
           </RHFSelect>
         </Stack>
         }
+        {products?.length > 0 && values.product && 
+          <Stack direction="row" justifyContent="space-between" sx={{ mb: 3, mt: 2 }}>
+            <Typography variant="subtitle1" sx={{ mt: 0.5 }}>
+              {selectedProduct?.description}
+            </Typography>
+          </Stack>
+        }
+
+        {products?.length > 0 && values.product && !selectedProduct?.description && selectedProduct?.name  && 
+          <Stack direction="row" justifyContent="space-between" sx={{ mb: 3, mt: 2 }}>
+            <Typography variant="subtitle1" sx={{ mt: 0.5 }}>
+              {translate(`teacherDetails.${selectedProduct?.name}`)}
+            </Typography>
+          </Stack>
+        }
+
         {products?.length > 0 && <Stack direction="row" justifyContent="flex-end" sx={{ mb: 3, mt: 2 }}>
           <Typography variant="subtitle1" sx={{ mt: 0.5 }}>
-            USD{fCurrency(products.find((product) => Number(product.id) === Number(values.product))?.price ?? 0)}
+            USD{fCurrency(selectedProduct?.price ?? 0)}
           </Typography>
         </Stack>}
         {products?.length === 0 && <Stack direction="row" justifyContent="space-between" sx={{ mb: 3 }} justifyItems='center'>

@@ -13,7 +13,9 @@ const initialState = {
   isLoading: false,
   error: null,
   products: [],
-  product: null,
+  product: {
+    events: [],
+  },
   sortBy: null,
   filters: {
     gender: [],
@@ -356,7 +358,7 @@ export function getProductEventsByMonthAndYear(id, month, year) {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.get(`/api/events/product/${id}?month=${month}&year=2023`);
-      dispatch(slice.actions.getProductEventsSuccess(response.data));
+      dispatch(slice.actions.getProductEventsSuccess(response.data ?? []));
       console.log(response)
     } catch (error) {
       console.error(error);

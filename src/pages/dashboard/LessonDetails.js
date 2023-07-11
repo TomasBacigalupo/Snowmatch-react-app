@@ -36,6 +36,7 @@ import { getEvents, getLessonById } from 'src/redux/slices/calendar';
 import { CommentsDisabledOutlined } from '@mui/icons-material';
 import EventInfoCard from 'src/sections/@dashboard/user/cards/EventInfoCard';
 import { getTeacherByEmail } from 'src/redux/slices/teachers';
+import EventCard from 'src/sections/@dashboard/user/cards/EventCard';
 
 // ----------------------------------------------------------------------
 
@@ -101,15 +102,15 @@ export default function UserLessons() {
                         <EventInfoCard lesson={lesson}/>
                     </Grid>
                 </Grid>}
-                {!isLoading && isTeacher && lesson.student &&
+                {!isLoading && isTeacher && lesson?.students?.length > 0 &&
                     <Grid container spacing={2}>
                         <Grid item xs={12} md={6}>
                             <ContactCard
-                                user={lesson.student}
+                                user={lesson?.students[0]}
                             />
                         </Grid>
                         <Grid item xs={12} md={6}>
-                            <EventInfoCard lesson={lesson} />
+                            <EventCard lesson={lesson} showInfo={false}/>
                         </Grid>
                     </Grid>}
             </Container>

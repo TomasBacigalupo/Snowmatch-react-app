@@ -145,6 +145,52 @@ const slice = createSlice({
       state.events = updateEvents;
     },
 
+    //DECLINED LESSON SUCCESS
+    declinedLessonSuccess(state, action) {
+      const eventId = action.payload
+      state.isLoadingPayment = false;
+      state.lesson = { ...state.lesson, state: 'DECLINED' };
+      const updateEvents = state.events.map((_event, i) => {
+        if (_event.id === eventId) {
+          return {
+            ..._event,
+            state: 'DECLINED'
+          };
+        }
+        return _event;
+      });
+      state.isLoading = false;
+      state.events = updateEvents;
+    },
+
+    //ACCEPTED LESSON SUCCESS
+    acceptedLessonSuccess(state, action) {
+      const eventId = action.payload
+      state.isLoadingPayment = false;
+      state.lesson = { ...state.lesson, state: 'ACCEPTED' };
+      const updateEvents = state.events.map((_event, i) => {
+        if (_event.id === eventId) {
+          return {
+            ..._event,
+            state: 'ACCEPTED'
+          };
+        }
+        return _event;
+      });
+      const updatedLessons = state.lessons.map((_event, i) => {
+        if (_event.id === eventId) {
+          return {
+            ..._event,
+            state: 'ACCEPTED'
+          };
+        }
+        return _event;
+      });
+      state.lessons = updatedLessons;
+      state.isLoading = false;
+      state.events = updateEvents;
+    },
+
     // DELETE EVENT
     deleteEventSuccess(state, action) {
       const eventId = action.payload;
@@ -447,6 +493,30 @@ export function setPaid(eventId) {
     try {
       await axios.put(`/api/events/byId/${eventId}/pay`);
       dispatch(slice.actions.paidLessonSuccess({ eventId }));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+export function setAccepted(eventId){
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      await axios.put(`/api/events/lessons/${eventId}/accept`);
+      dispatch(slice.actions.acceptedLessonSuccess({ eventId }));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+export function setDeclined(eventId){
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      await axios.put(`/api/events/lessons/${eventId}/decline`);
+      dispatch(slice.actions.declinedLessonSuccess({ eventId }));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }

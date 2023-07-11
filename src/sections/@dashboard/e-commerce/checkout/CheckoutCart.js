@@ -48,8 +48,8 @@ export default function CheckoutCart() {
 
   const navigate = useNavigate();
 
-  const handleDeleteCart = (eventId) => {
-    dispatch(deleteCart(eventId));
+  const handleDeleteCart = (eventIdx) => {
+    dispatch(deleteCart(eventIdx));
   };
 
   const handleNextStep = () => {
@@ -67,7 +67,8 @@ export default function CheckoutCart() {
         setLoading(false)
         
         enqueueSnackbar(translate('checkout.free_event_hired'), { variant: 'success' });
-        navigate(PATH_GUEST.calculate);
+        navigate('/match/lessons', { replace: true });
+        dispatch(deleteCart(0))
       }))
     }else{
       dispatch(onNextStep());

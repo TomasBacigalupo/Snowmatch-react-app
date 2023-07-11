@@ -88,12 +88,13 @@ export default function TeacherDetailsSummary({ cart, teacher, onAddCart, onGoto
   const [view, setView] = useState('dayGridMonth');
   const [lessons, setLessons] = useState('me');
   const [selectDatesModal, setSelectDatesModal] = useState(false);
-  const [flexibleTime, setFlexibleTime] = useState(true);
+  const [flexibleTime, setFlexibleTime] = useState(false);
   const handleChange = (event, value) => {
     setLessons(value);
   };
-  
-  const products = useSelector(state => state.product.products)
+
+  // manotaso de ahogado no mostramos productos
+  const products = []//useSelector(state => state.product.products)
 
 
 
@@ -139,7 +140,7 @@ export default function TeacherDetailsSummary({ cart, teacher, onAddCart, onGoto
     state,
     lastname,
     quantity: 1, //people
-    resort: "",
+    resort: resorts[0] ?? "",
     duration: "MORNING",
     maxStudents: 1,
     level: "BEGINNER",
@@ -152,9 +153,10 @@ export default function TeacherDetailsSummary({ cart, teacher, onAddCart, onGoto
     defaultValues,
   });
 
-  useEffect(() => {
-    setValue('product', products[0]?.id ?? "")
-  }, [products])
+  // useEffect(() => {
+  //   if(products.length > 0)
+  //     setValue('product', products[0]?.id ?? "")
+  // }, [products])
 
   const handleCloseContactModal = () => {
     if (error === null)
@@ -200,21 +202,30 @@ export default function TeacherDetailsSummary({ cart, teacher, onAddCart, onGoto
   const handleSubmitSelectedDates = useCallback((dates) => {
     setSelectDatesModal(false)
     dates.forEach((date) => {
-      let lessonTime = values.duration
-      if (values.duration === 'HALF_DAY') {
-        lessonTime = 'MORNING'
+      let lessonTime = "MORNING"
+      if(new Date(date).getHours() === 14){
+        lessonTime = "AFTERNOON"
       }
+      if (new Date(date).getHours() === 9){
+        lessonTime = "MORNING"
+      }
+      if (new Date(date).getHours() === 8) {
+        lessonTime = "ALL_DAY"
+      }
+      debugger
       const requestEvent = {
         price: 0,
         people: values.amount,
         lessonTime: lessonTime,
         date: date,
-        resort: values.resort
+        resort: values.resort ?? resorts[0]
       };
       dispatch(addCart({
         teacher: teacher,
         event: requestEvent
       }))
+      onGotoStep(0);
+      navigate('hire');
     })
   })
 
@@ -346,13 +357,13 @@ export default function TeacherDetailsSummary({ cart, teacher, onAddCart, onGoto
           </Typography>
         </Stack>}
         {products?.length === 0 && <Stack direction="row" justifyContent="space-between" sx={{ mb: 3 }} justifyItems='center'>
-          <Typography variant="subtitle1" sx={{ mt: 0.5 }}>
+          {/* <Typography variant="subtitle1" sx={{ mt: 0.5 }}>
             {translate('teacherDetails.duration')}
-          </Typography>
-          <FormControlLabel label="Flexible" labelPlacement="start" control={
+          </Typography> */}
+          {/* <FormControlLabel label="Flexible" labelPlacement="start" control={
             <Checkbox checked={flexibleTime} onChange={(event) => setFlexibleTime(event.target.checked)} />
-          } />
-          {!flexibleTime ? (
+          } /> */}
+          {/* {!flexibleTime ? (
             <RHFSelect
               size='small'
               fullWidth={false}
@@ -379,7 +390,10 @@ export default function TeacherDetailsSummary({ cart, teacher, onAddCart, onGoto
               {translate('checkout.allday')}
             </option>
           </RHFSelect>
-          )}
+          )} */}
+          <Typography variant="subtitle" sx={{ mt: 0.5 }}>
+            {translate('teacherDetails.howToBook', { name: teacher.name})}
+          </Typography>
         </Stack>}
 
         {/* <Stack direction="row" justifyContent="space-between" sx={{ mb: 3 }}>
@@ -402,7 +416,7 @@ export default function TeacherDetailsSummary({ cart, teacher, onAddCart, onGoto
 
         <Stack direction="row" spacing={2} sx={{ mt: 5 }}>
 
-          {products?.length === 0 && <Button
+          {/* {products?.length === 0 && <Button
             fullWidth
             //disabled={hasLessons}
             size="large"
@@ -413,7 +427,8 @@ export default function TeacherDetailsSummary({ cart, teacher, onAddCart, onGoto
             sx={{ whiteSpace: 'nowrap' }}
           >
             Add to Cart
-          </Button>}
+          </Button>} */}
+         
           {products?.length > 0 && <Button
             component={RouterLink}
             fullWidth

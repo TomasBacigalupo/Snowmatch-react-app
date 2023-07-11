@@ -60,6 +60,7 @@ export default function CheckoutSummary({
       />
 
       <CardContent>
+        {subtotal >0 && (
         <Stack spacing={2}>
           <Stack direction="row" justifyContent="space-between">
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
@@ -67,6 +68,9 @@ export default function CheckoutSummary({
             </Typography>
             <Typography variant="subtitle2">{totalEvents}</Typography>
           </Stack>
+          
+
+          
           <Stack direction="row" justifyContent="space-between">
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
               Total: {/* {translate('checkout.subtotal')} */}
@@ -119,6 +123,17 @@ export default function CheckoutSummary({
             />
           )} */}
         </Stack>
+        )}
+        {!subtotal && (
+          <Stack spacing={2}>
+            <Stack direction="row" justifyContent="space-between">
+              <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                {translate('checkout.days')}
+              </Typography>
+              <Typography variant="subtitle2">{totalEvents}</Typography>
+            </Stack>
+          </Stack>
+        )}
       </CardContent>
     </Card>
   );

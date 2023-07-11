@@ -10,6 +10,7 @@ import axios from '../../utils/axios';
 import { dispatch } from '../store';
 import { useSelector } from 'react-redux';
 import { from } from 'stylis';
+import { id } from 'date-fns/locale';
 
 // ----------------------------------------------------------------------
 
@@ -214,7 +215,9 @@ const slice = createSlice({
     },
 
     deleteCart(state, action) {
-      const updateCart = state.checkout.events.filter(event => Number(event.id) !== action.payload);
+      //delete by idx
+      const updateCart = state.checkout.events.filter((event, idx)=> idx !== action.payload)
+      //const updateCart = state.checkout.events.filter(event => Number(event.id) !== Number(action.payload));
 
       state.checkout.events = updateCart;
     },

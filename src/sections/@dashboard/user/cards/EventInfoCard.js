@@ -5,17 +5,20 @@ import { formatDate } from "@fullcalendar/react";
 import { useNavigate } from "react-router";
 import { PATH_DASHBOARD } from "src/routes/paths";
 import useAuth from "src/hooks/useAuth";
+import useLocales from "src/hooks/useLocales";
 
 export default function EventInfoCard({ lesson }) {
     const { isStudent } = useAuth()
     const { start, end, id, name, lastName, resort, people: maxStudents, payed } = lesson;
     const [toggle, setToogle] = useState(payed);
+    const {translate} = useLocales()
 
     return (
         <Card sx={{ display: 'flex', alignItems: 'center', p: 3 }}>
+            {console.log({lesson})}
             <Box sx={{ flexGrow: 1, minWidth: 200, pl: 4, pr: 1 }}>
                 <Typography variant="subtitle2" noWrap>
-                    Event Information
+                    {translate('lessons.eventInformation')}
                 </Typography>
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
                     <Iconify icon={'ic:outline-people'} sx={{ width: 16, height: 16, mr: 0.5, flexShrink: 0 }} />
@@ -32,7 +35,7 @@ export default function EventInfoCard({ lesson }) {
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
                     <Iconify icon={'material-symbols:calendar-month'} sx={{ width: 16, height: 16, mr: 0.5, flexShrink: 0 }} />
                     <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
-                        {`${formatDate(start)}`}
+                        {`${start.toLocaleDateString('es-AR')}`}
                     </Typography>
                 </Box>
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>

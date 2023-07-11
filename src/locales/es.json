@@ -155,7 +155,12 @@
     "event": {
         "payed": "Cobrado",
         "pay": "Cobrar",
-        "information": "Info"
+        "information": "Info",
+        "pending": "Pendiente",
+        "accepted": "Aceptado",
+        "declined": "Rechazado",
+        "accept": "Aceptar",
+        "decline": "Rechazar"
     },
     "school": {
         "clients": {
@@ -295,7 +300,7 @@
         "description": "Info",
         "skills": "Skills",
         "people": "Personas",
-        "resort": "Cerro",
+        "resort": "Centro de Esquí",
         "level": "Nivel",
         "duration": "Duración",
         "reviews": "Ranking",
@@ -303,7 +308,8 @@
         "write_review": "Escribir calificación",
         "ratingAVG": "Puntuación promedio",
         "PRIVATE_FULL_DAY": "Clase privada de día completo (6 horas) para todos los niveles y edades.",
-        "PRIVATE_HALF_DAY": "Clase privada de medio día (3 horas). Desde iniciantes a expertos. Una buena forma de empezar o terminar el día."
+        "PRIVATE_HALF_DAY": "Clase privada de medio día (3 horas). Desde iniciantes a expertos. Una buena forma de empezar o terminar el día.",
+        "howToBook": "Solicita tu reserva de clases con {{name}}. Elige el día y horario que más te convenga y {{name}} te confirmará la disponibilidad. Un representante de SnowMatch se pondra en contacto para ayudarte a completar tu reserva."
     },
     "schoolDetails": {
         "title": "Detalles PRO school",
@@ -438,7 +444,8 @@
        "price": "Precio",
        "free_event_hired": "Clase Reservada",
        "back": "Volver",
-       "pay": "Pagar"
+       "pay": "Pagar",
+       "full_day": "Día completo"
     },
     "product": {
         "heading": {

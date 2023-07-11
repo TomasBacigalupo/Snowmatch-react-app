@@ -43,12 +43,12 @@ CheckoutTeacherList.propTypes = {
 };
 
 export default function CheckoutTeacherList({ events, onDelete, onIncreaseQuantity, onDecreaseQuantity }) {
-    const {translate} = useLocales()
-    const {teacher} = useSelector(state => state.teachers)
+    const { translate } = useLocales()
+    const { teacher } = useSelector(state => state.teachers)
     const getTimeToShow = (eventStart, eventEnd, event) => {
-        if(eventStart && eventEnd)
+        if (eventStart && eventEnd)
             return `${eventStart.getHours()}:${eventStart.getMinutes() < 10 ? '0' + eventStart.getMinutes() : eventStart.getMinutes()} ${translate('checkout.end_time')} ${eventEnd.getHours()}:${eventEnd.getMinutes() < 10 ? '0' + eventEnd.getMinutes() : eventEnd.getMinutes()}`
-        switch(event?.lessonTime){
+        switch (event?.lessonTime) {
             case 'MORNING':
                 return `${translate('checkout.morning')}`
             case 'AFTERNOON':
@@ -62,7 +62,7 @@ export default function CheckoutTeacherList({ events, onDelete, onIncreaseQuanti
     }
     return (
         <TableContainer >
-            <Table sx={{mt:1}}>
+            <Table sx={{ mt: 1 }}>
                 <TableHead>
                     <TableRow>
                         <TableCell>{translate('checkout.date')}</TableCell>
@@ -81,7 +81,11 @@ export default function CheckoutTeacherList({ events, onDelete, onIncreaseQuanti
                                         <Image alt="teacher Picture" src={teacher.imageLink} sx={{ width: 64, height: 64, borderRadius: 1.5, mr: 2 }} />
                                         <Box>
                                             <Typography noWrap variant="subtitle2" sx={{ maxWidth: 240 }}>
-                                                {formatDate(event.start)}
+                                                {/* date in argentina format */}
+                                                {event.date.toLocaleDateString('es-AR', {
+                                                    month: '2-digit',
+                                                    day: '2-digit',
+                                                })}
                                             </Typography>
                                             {/* start and end time od the event */}
                                             <Typography noWrap variant="body2" sx={{ color: 'text.secondary' }}>
@@ -94,7 +98,7 @@ export default function CheckoutTeacherList({ events, onDelete, onIncreaseQuanti
                                 <TableCell align="right">{price === 0 ? translate('checkout.deal_with_pro') : fCurrency(price)}</TableCell>
 
                                 <TableCell align="right">
-                                    <IconButton onClick={() => onDelete(id)}>
+                                    <IconButton onClick={() => onDelete(idx)}>
                                         <Iconify icon={'eva:trash-2-outline'} width={20} height={20} />
                                     </IconButton>
                                 </TableCell>

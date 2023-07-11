@@ -111,7 +111,7 @@ export default function SelectDates({ handleClose, onSubmit }) {
                         </Grid>
                         <Grid item xs={12}>
                             <Button variant='outlined' fullWidth onClick={() => {
-                                selectedDates[selectedDates.length - 1].setHours(9)
+                                selectedDates[selectedDates.length - 1].setHours(8)
                                 setSelectTimeModal(false)}}>{translate('selectTime.allday')}</Button>
                         </Grid>
                     </Grid>

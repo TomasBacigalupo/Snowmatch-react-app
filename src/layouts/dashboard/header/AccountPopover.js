@@ -24,6 +24,10 @@ const MENU_OPTIONS = [
     linkTo: PATH_DASHBOARD.user.profile,
   },
   {
+    label: 'Lessons',
+    linkTo: PATH_DASHBOARD.user.lessons,
+  },
+  {
     label: 'Settings',
     linkTo: PATH_DASHBOARD.user.account,
   },

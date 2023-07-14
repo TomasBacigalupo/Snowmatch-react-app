@@ -4,7 +4,7 @@ import { PATH_GUEST } from '../../../routes/paths';
 import Label from '../../../components/Label';
 import SvgIconStyle from '../../../components/SvgIconStyle';
 import SchoolIcon from '@mui/icons-material/School';
-
+import CastForEducationIcon from '@mui/icons-material/CastForEducation';
 // ----------------------------------------------------------------------
 
 const getIcon = (name) => <SvgIconStyle src={`/icons/${name}.svg`} sx={{ width: 1, height: 1 }} />;
@@ -24,7 +24,8 @@ const ICONS = {
   analytics: getIcon('ic_analytics'),
   dashboard: getIcon('ic_dashboard'),
   match: getIcon('ic_match'),
-  rental: getIcon('ic_rental')
+  rental: getIcon('ic_rental'),
+  protips: <CastForEducationIcon/>,
 };
 
 const navConfigGuest = [
@@ -47,7 +48,8 @@ const navConfigGuest = [
           { title: 'Independent', path: PATH_GUEST.independent },
           { title: 'Schools', path: PATH_GUEST.schools },
         ],
-      }
+      },
+      { title: 'protips', path: PATH_GUEST.protips, icon: ICONS.protips },
       // { title: 'chat', path: PATH_DASHBOARD.chat.root, icon: ICONS.chat },
      
       // { title: 'kanban', path: PATH_DASHBOARD.kanban, icon: ICONS.kanban },

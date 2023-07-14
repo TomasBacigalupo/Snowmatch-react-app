@@ -75,7 +75,7 @@ export default function ShopTeacherCard({ teacher }) {
       <Stack spacing={2} sx={{ p: 3 }}>
         <Link to={linkTo} color="inherit" component={RouterLink}>
           <Typography variant="subtitle2" noWrap>
-            {name + " " + lastname}
+            {name}
           </Typography>
         </Link>
         <Rating readOnly value={stars} precision={0.5} />

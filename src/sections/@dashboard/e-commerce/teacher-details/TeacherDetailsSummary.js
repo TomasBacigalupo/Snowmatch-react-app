@@ -299,7 +299,7 @@ export default function TeacherDetailsSummary({ cart, teacher, onAddCart, onGoto
   return (
     <RootStyle {...other}>
       <Typography variant="h5" paragraph>
-        {name + " " + lastname}
+        {name}
       </Typography>
       <TeacherSkills skills={skills} />
       <Divider sx={{ borderStyle: 'dashed' }} />

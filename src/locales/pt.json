@@ -208,7 +208,8 @@
         "warrantyDescription": "SnowMatch garante que está em conformidade com os regulamentos para ensinar",
         "information": "Informação",
         "description": "descrição",
-        "skills": "Habilidades"
+        "skills": "Habilidades",
+        "howToBook": "Selecione o dia e horário que mais lhe convém e solicite a reserva da aula. Um representante da SnowMatch entrará em contato com você para ajudá-lo(a) a concluir sua reserva, dependendo da disponibilidade do instrutor."
     },
 
     "conversation":{

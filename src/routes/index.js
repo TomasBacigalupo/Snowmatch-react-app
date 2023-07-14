@@ -129,6 +129,11 @@ export default function Router() {
     },
 
     {
+      element: (<GuestLayout />),
+      children: [ { path: 'protips', element: <BlogPosts /> }]
+    },
+
+    {
       path: 'shops',
       children: [
         { path: 'trown', element: <RedirectToShop url={"https://www.trown.com.ar"} /> },

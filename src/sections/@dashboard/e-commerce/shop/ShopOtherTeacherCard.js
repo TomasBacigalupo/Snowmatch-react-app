@@ -7,7 +7,7 @@ import { PATH_DASHBOARD, PATH_GUEST } from '../../../../routes/paths';
 // components
 import Image from '../../../../components/Image';
 import useAuth from 'src/hooks/useAuth';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSelector } from 'src/redux/store';
 
 // ----------------------------------------------------------------------
@@ -24,6 +24,9 @@ export default function ShopOtherTeacherCard({ teacher }) {
 
     const { isTeacher } = useAuth();
     const linkTo = isTeacher ? PATH_DASHBOARD.eCommerce.viewTeacher(id) : PATH_GUEST.viewTeacher(id);
+    useEffect(() => {
+        setSrc(imageLink);
+    }, [teacher]);
 
     const getResortToShow = () => {
         if (resorts && resorts?.length > 1) {

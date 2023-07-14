@@ -128,7 +128,8 @@
         "for_school": "Para Escuelas",
         "group": "Grupales",
         "private": "Privadas",
-        "learning": "Capacitaciones"           
+        "learning": "Capacitaciones",
+        "protips": "Pro Tips"
     },
     "calendar": {
         "name": "Calendario",
@@ -215,7 +216,8 @@
         "ratingRequired": "La calificación es obligatoria",
         "commentRequired": "El comentario es obligatorio",
         "funRequired": "La diversión es obligatoria",
-        "safetyRequired": "La seguridad es obligatoria"
+        "safetyRequired": "La seguridad es obligatoria",
+        "security": "Seguridad"
 
     },
     "profile": {
@@ -309,7 +311,7 @@
         "ratingAVG": "Puntuación promedio",
         "PRIVATE_FULL_DAY": "Clase privada de día completo (6 horas) para todos los niveles y edades.",
         "PRIVATE_HALF_DAY": "Clase privada de medio día (3 horas). Desde iniciantes a expertos. Una buena forma de empezar o terminar el día.",
-        "howToBook": "Solicita tu reserva de clases con {{name}}. Elige el día y horario que más te convenga y {{name}} te confirmará la disponibilidad. Un representante de SnowMatch se pondra en contacto para ayudarte a completar tu reserva."
+        "howToBook": "Seleccioná el día y horario que más te convenga y solicitá la reserva de la clase. Un representante de SnowMatch se pondrá en contacto con vos para ayudarte a completar tu reserva, dependiendo de la disponibilidad del instructor."
     },
     "schoolDetails": {
         "title": "Detalles PRO school",
@@ -623,5 +625,30 @@
         "phone": "Teléfono",
         "certification": "Certificación",
         "register": "Registrarme"
+    },
+    "proTips":{
+        "title": "Pro Tips",
+        "tips": {
+            "jaime": {
+                "title": "¿Cómo esquiar Bumps?",
+                "description": "¿Qué hacemos con los BUMPS? Los bumps (montículos de nieve que se forman en la pista) son muchas veces una pesadilla para principiantes y avanzados. Siguiendo este #PROTip de Jaime López garrido y SnowMatch vas a poder superarlos con facilidad."
+            },
+            "tomi": {
+                "title": "Posición Básica",
+                "description": "Corregir errores básicos al esquiar (como puede ser una mala posición), tiene un impacto positivo y directo en la manera en la que encaramos la pista 👉Tomás Soleño es instructor de esquí en Cerro Catedral, y tiene vasta experiencia enseñando."
+            },
+            "manu": {
+                "title": "Corto Paralelo",
+                "description": "⛷️ Conseguir vueltas cortas y prolijas es fundamental para realizar bajadas controladas en cualquier pista y con cualquier desnivel. 👉Manuel Gaite te explica cómo lograrlas. Manu es instructor de esquí en Aspen 🇺🇸 y en Cerro Chapelco 🇦🇷"
+            },
+            "chapi": {
+                "title": "¿Te animás a dar una vuelta por el SnowPark?",
+                "description": "👉Antes de ir, tené en cuenta estos 3️⃣ tips que nos trae Juan Chapitel, instructor de esquí en Chapelco. Respetar”: La palabra más importante si sos principiante (y sino, también). Respetar las señales, las velocidades y sobre todo su nivel."
+            },
+            "chapi2": {
+                "title": "¿Dónde van las manos?",
+                "description": "La posición de manos, hombros y cabeza. 👉Juan Chapitel nos trae un consejo MUY ÚTIL para aplicar en cualquier pista y con cualquier condición de nieve…🏔️ Conocedor de la montaña como pocos, Chapi es oriundo de San Martín de los Andes e instructor en Chapelco 🇦🇷"
+            }
+        }
     }
 }

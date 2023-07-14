@@ -102,7 +102,7 @@ export default function EcommerceTeacherDetails({ isGuest = false }) {
           heading={translate('teacherDetails.title')}
           links={[
             // !isGuest? { name: translate("breadcrumb.dashboard', href: PATH_DASHBOARD.root} : {name: 'Home', href: '/'},
-            !isGuest ? { name: 'Match', href: PATH_DASHBOARD.eCommerce.shop, } : { name: 'Match', href: PATH_GUEST.root },
+            !isGuest ? { name: 'Match', href: PATH_DASHBOARD.eCommerce.shop, } : { name: 'Match', href: PATH_GUEST.independent },
             { name: teacher?.name + ' ' + teacher?.lastname },
           ]
           }

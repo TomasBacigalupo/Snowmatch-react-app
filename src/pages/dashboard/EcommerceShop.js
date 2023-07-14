@@ -206,8 +206,10 @@ export default function EcommerceShop({isGuest=false, teacherType="school"}) {
             </>
           )}
         </Stack>
-        {teacherType == "independent" && <ShopTeacherList teachers={teachersWithEvents} loading={!filteredTeachers.length && isDefault} />}
-        {teacherType == "independent" && <ShopOtherTeacherList teachers={filteredTeachers} loading={!filteredTeachers.length && isDefault} />}
+        {/* manotaso de ahogado muestro todos */}
+        {/* {teacherType == "independent" && <ShopTeacherList teachers={teachersWithEvents} loading={!filteredTeachers.length && isDefault} />} */}
+        {teacherType == "independent" && <ShopTeacherList teachers={filteredTeachers?.filter(t => t.stars > 0)} loading={!filteredTeachers.length && isDefault} />}
+        {teacherType == "independent" && <ShopOtherTeacherList teachers={filteredTeachers?.filter(t => t.stars === 0 || !t.stars)} loading={!filteredTeachers.length && isDefault} />}
         {teacherType == "school" && <ShopTeacherList teachers={filteredTeachers} loading={!filteredTeachers.length && isDefault} />}
       </Container>
       <><br /></>

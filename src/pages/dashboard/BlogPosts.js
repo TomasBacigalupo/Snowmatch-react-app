@@ -9,7 +9,7 @@ import useIsMountedRef from '../../hooks/useIsMountedRef';
 // utils
 import axios from '../../utils/axios';
 // routes
-import { PATH_DASHBOARD } from '../../routes/paths';
+import { PATH_DASHBOARD, PATH_GUEST } from '../../routes/paths';
 // components
 import Page from '../../components/Page';
 import Iconify from '../../components/Iconify';
@@ -17,6 +17,7 @@ import { SkeletonPostItem } from '../../components/skeleton';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
 // sections
 import { BlogPostCard, BlogPostsSort, BlogPostsSearch } from '../../sections/@dashboard/blog';
+import useLocales from 'src/hooks/useLocales';
 
 // ----------------------------------------------------------------------
 
@@ -46,11 +47,94 @@ export default function BlogPosts() {
 
   const isMountedRef = useIsMountedRef();
 
-  const [posts, setPosts] = useState([]);
+  const [posts, setPosts] = useState([{
+    id: 1,
+    name: 'test',
+    description: 'test',
+    image: 'test',
+    view: 1,
+    createdAt: 'test',
+    updatedAt: 'test',
+    author: {
+      name: "Jaime",
+      avatarUrl: "https://image.snowmatch.pro/profile/248-7a4aae14-7db3-4074-a3a3-3b44b81e9538"
+    },
+    youtubeUrl: 'FUrHpKp7I_k',
+    title: 'proTips.tips.jaime.title',
+    description: 'proTips.tips.jaime.description',
+    createdAt: new Date().toString(),
+  }, {
+    id: 5,
+    name: 'test',
+    description: 'test',
+    image: 'test',
+    view: 1,
+    createdAt: 'test',
+    updatedAt: 'test',
+    author: {
+      name: "Chapi",
+      avatarUrl: "https://image.snowmatch.pro/profile/121-8b34533f-318d-479b-984d-f0b0d951f363"
+    },
+    youtubeUrl: 'GF8Dbap50VE',
+    title: 'proTips.tips.chapi2.title',
+    description: 'proTips.tips.chapi2.description',
+    createdAt: new Date().toString(),
+  }, {
+    id: 1,
+    name: 'test',
+    description: 'test',
+    image: 'test',
+    view: 1,
+    createdAt: 'test',
+    updatedAt: 'test',
+    author: {
+      name: "Tomi",
+      avatarUrl: "https://image.snowmatch.pro/profile/14-1b79994a-22e5-4eed-99b4-d4c93070a784"
+    },
+    youtubeUrl: 'abUomom9nMg',
+    title: 'proTips.tips.tomi.title',
+    description: 'proTips.tips.tomi.description',
+    createdAt: new Date().toString(),
+  }, {
+    id: 3,
+    name: 'test',
+    description: 'test',
+    image: 'test',
+    view: 1,
+    createdAt: 'test',
+    updatedAt: 'test',
+    author: {
+      name: "Manu",
+      avatarUrl: "https://image.snowmatch.pro/profile/121-8b34533f-318d-479b-984d-f0b0d951f363"
+    },
+    youtubeUrl: 'sX-8h-hS66U',
+    title: 'proTips.tips.manu.title',
+    description: 'proTips.tips.manu.description',
+    createdAt: new Date().toString(),
+  }, {
+    id: 4,
+    name: 'test',
+    description: 'test',
+    image: 'test',
+    view: 1,
+    createdAt: 'test',
+    updatedAt: 'test',
+    author: {
+      name: "Chapi",
+      avatarUrl: "https://image.snowmatch.pro/profile/121-8b34533f-318d-479b-984d-f0b0d951f363"
+    },
+    youtubeUrl: 'MAcD6sfsBTg',
+    title: 'proTips.tips.chapi.title',
+    description: 'proTips.tips.chapi.description',
+    createdAt: new Date().toString(),
+  }
+  ]);
 
   const [filters, setFilters] = useState('latest');
 
   const sortedPosts = applySort(posts, filters);
+
+  const { translate } = useLocales();
 
   const getAllPosts = useCallback(async () => {
     try {
@@ -75,27 +159,15 @@ export default function BlogPosts() {
   };
 
   return (
-    <Page title="Blog: Posts">
+    <Page title={translate('proTips.title')}>
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <HeaderBreadcrumbs
-          heading="Blog"
+          heading={translate('proTips.title')}
           links={[
-            { name: 'Dashboard', href: PATH_DASHBOARD.root },
-            { name: 'Blog', href: PATH_DASHBOARD.blog.root },
-            { name: 'Posts' },
+            { name: 'Match', href: PATH_GUEST.independent },
+            { name: translate('proTips.title') },
           ]}
-          action={
-            <Button
-              variant="contained"
-              component={RouterLink}
-              to={PATH_DASHBOARD.blog.new}
-              startIcon={<Iconify icon={'eva:plus-fill'} />}
-            >
-              New Post
-            </Button>
-          }
         />
-
         <Stack mb={5} direction="row" alignItems="center" justifyContent="space-between">
           <BlogPostsSearch />
           <BlogPostsSort query={filters} options={SORT_OPTIONS} onSort={handleChangeSort} />

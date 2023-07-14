@@ -8,6 +8,7 @@ const ROOTS_AUTH = '/auth';
 const ROOTS_DASHBOARD = '/dashboard';
 const ROOTS_FIND_A_PRO = '/match' ;
 const ROOTS_RENTAL = '/rental';
+const ROOTS_PRO_TIPS = '/protips';
 
 // ----------------------------------------------------------------------
 
@@ -32,7 +33,8 @@ export const PATH_GUEST = {
   viewSchool: (id) => path(ROOTS_FIND_A_PRO, `/schools/${id}`),
   rental: ROOTS_RENTAL,
   calculate: path(ROOTS_RENTAL, `/calculate`),
-  checkout: (id) => path(ROOTS_FIND_A_PRO, `/teacher/${id}/hire`)
+  checkout: (id) => path(ROOTS_FIND_A_PRO, `/teacher/${id}/hire`),
+  protips: ROOTS_PRO_TIPS,
 };
 
 export const PATH_PAGE = {

@@ -82,22 +82,31 @@ export default function EventCard({ lessons, showInfo = true }) {
                         </Typography>
                     </Box>
                 }
-                {showInfo && lessons.map((lesson, index) => (
+                {showInfo && lessons.map((lesson, index) => {
+                  const startHour = parseInt(lesson.start.toString().slice(16, 18));
+                  const endHour = parseInt(lesson.end.toString().slice(16, 18));
+                  let timePeriod;
+
+                  if (startHour === 6 && endHour === 9) {
+                    timePeriod = 'MORNING';
+                  } else if (startHour === 9 && endHour === 12) {
+                    timePeriod = 'AFTERNOON';
+                  } else {
+                    timePeriod = 'FULL DAY';
+                  }
+                  return (
                   <>
                     <Box sx={{ display: 'flex', alignItems: 'center' }}>
                         <Iconify icon={'material-symbols:calendar-month'} sx={{ width: 16, height: 16, mr: 0.5, flexShrink: 0 }} />
-                        <Typography variant="body2" sx={{ color: 'text.secondary', mr: 1 }} noWrap>
+                        <Typography variant="body2" sx={{ color: 'text.secondary', mr: 1, width: 40 }} noWrap>
                             {`${lesson.start.toLocaleDateString('es-AR', { month: '2-digit', day: '2-digit', })}`}
                         </Typography>
                         <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
-                            {(lesson.start.toString().slice(16, 18) === '06') && ((lesson.end.toString().slice(16, 18) === '09')) ? 'MORNING'
-                              : ((lesson.start.toString().slice(16, 18) === '09') && ((lesson.end.toString().slice(16, 18) === '12')) ?  'AFTERNOON'
-                                :
-                            'FULL DAY')}
+                            {timePeriod}
                         </Typography>
                     </Box>
                   </>
-                ))}
+                )})}
                 <Box display='flex' alignItems='center'>
                     {lessonState && lessonState === 'ACCEPTED' && <Iconify
                         icon={'eva:checkmark-circle-fill'}

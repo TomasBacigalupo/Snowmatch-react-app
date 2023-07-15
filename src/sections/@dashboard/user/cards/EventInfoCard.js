@@ -9,39 +9,59 @@ import useLocales from "src/hooks/useLocales";
 
 export default function EventInfoCard({ lesson }) {
     const { isStudent } = useAuth()
-    const { start, end, id, name, lastName, resort, people: maxStudents, payed } = lesson;
+    const { start, end, id, name, lastName, resort, people: maxStudents, payed, state } = lesson;
     const [toggle, setToogle] = useState(payed);
     const {translate} = useLocales()
+    const [lessonState, setLessonState] = useState(state)
 
     return (
         <Card sx={{ display: 'flex', alignItems: 'center', p: 3 }}>
-            {console.log({lesson})}
+            {/*{console.log({lesson})}*/}
             <Box sx={{ flexGrow: 1, minWidth: 200, pl: 4, pr: 1 }}>
                 <Typography variant="subtitle2" noWrap>
-                    {translate('lessons.eventInformation')}
+                    {lesson.owner ? `${lesson.owner.name}` : `${translate('generalApp.bookedLessons')}`}
                 </Typography>
-                <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                    <Iconify icon={'ic:outline-people'} sx={{ width: 16, height: 16, mr: 0.5, flexShrink: 0 }} />
-                    <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
-                        {maxStudents}
-                    </Typography>
-                </Box>
+                {maxStudents &&
+                  <Box sx={{display: 'flex', alignItems: 'center'}}>
+                      <Iconify icon={'ic:outline-people'} sx={{width: 16, height: 16, mr: 0.5, flexShrink: 0}}/>
+                      <Typography variant="body2" sx={{color: 'text.secondary'}} noWrap>
+                          {maxStudents}
+                      </Typography>
+                  </Box>
+                }
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
                     <Iconify icon={'eva:pin-fill'} sx={{ width: 16, height: 16, mr: 0.5, flexShrink: 0 }} />
                     <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
                         {resort}
                     </Typography>
                 </Box>
-                <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                    <Iconify icon={'material-symbols:calendar-month'} sx={{ width: 16, height: 16, mr: 0.5, flexShrink: 0 }} />
+                <Box display='flex' alignItems='center'>
+                    {lessonState && lessonState === 'ACCEPTED' && <Iconify
+                        icon={'eva:checkmark-circle-fill'}
+                        sx={{
+                            width: 16, height: 16, mr: 0.5, flexShrink: 0,
+                            color: 'success.main',
+
+                        }}
+                    />}
+                    {lessonState && lessonState === 'PENDING' && <Iconify
+                        icon={'eva:clock-outline'}
+                        sx={{
+                            width: 16, height: 16, mr: 0.5, flexShrink: 0,
+                            color: 'warning.main',
+                        }}
+                    />}
+                    {lessonState && lessonState === 'DECLINED' && <Iconify
+                        icon={'eva:close-circle-fill'}
+                        sx={{
+                            width: 16, height: 16, mr: 0.5, flexShrink: 0,
+                            color: 'error.main',
+                        }}
+                    />}
                     <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
-                        {`${start.toLocaleDateString('es-AR')}`}
-                    </Typography>
-                </Box>
-                <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                    <Iconify icon={'ic:outline-access-time'} sx={{ width: 16, height: 16, mr: 0.5, flexShrink: 0 }} />
-                    <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
-                        {`${start.toString().slice(16, 21)}hs a ${end.toString().slice(16, 21)}hs`}
+                        {lessonState && lessonState === 'ACCEPTED' && translate('event.accepted')}
+                        {lessonState && lessonState === 'PENDING' && translate('event.pending')}
+                        {lessonState && lessonState === 'DECLINED' && translate('event.declined')}
                     </Typography>
                 </Box>
             </Box>

@@ -17,21 +17,21 @@ EventCard.propTypes = {
     showInfo: PropTypes.bool,
 };
 
-export default function EventCard({ lesson, showInfo = true }) {
+export default function EventCard({ lessons, showInfo = true }) {
     const { translate } = useLocales()
     const dispatch = useDispatch()
     const { user, isStudent } = useAuth()
 
-    const { start, end, id, name, lastName, resort, payed, owner, students, state } = lesson;
-    const [payedState, setPayedState] = useState(payed)
+    const [{ start, end, id, name, lastName, resort, payed, owner, students, state }] = lessons;
+    const [payedState, setPayedState] = useState(lessons.every((lesson) => lesson.payed === lessons[0].payed) ? lessons[0].payed : false)
     const [openAcceptModal, setOpenAcceptModal] = useState(false)
     const [openDeclineModal, setOpenDeclineModal] = useState(false)
-    const [lessonState, setLessonState] = useState(state)
+    const [lessonState, setLessonState] = useState(lessons.every((lesson) => lesson.state === lessons[0].state) ? lessons[0].state : "PENDING")
     const navigate = useNavigate()
 
     const handlePay = () => {
         setPayedState(!payedState)
-        if (lesson.pay) {
+        if (lessons.every((lesson) => lesson.payed)) {
             dispatch(setUnpaid(id))
         } else {
             dispatch(setPaid(id))
@@ -51,12 +51,16 @@ export default function EventCard({ lesson, showInfo = true }) {
         setOpenDeclineModal(false)
     }
     const handleAcceptEvent = () => {
-        dispatch(setAccepted(id))
+        lessons.map((lesson) =>
+            dispatch(setAccepted(lesson.id))
+        )
         setLessonState("ACCEPTED")
         handleCloseAcceptModal()
     }
     const handleDeclineEvent = () => {
-        dispatch(setDeclined(id))
+        lessons.map((lesson) =>
+            dispatch(setDeclined(lesson.id))
+        )
         setLessonState("DECLINED")
         handleCloseDeclineModal()
     }
@@ -68,7 +72,7 @@ export default function EventCard({ lesson, showInfo = true }) {
             <Avatar alt={isStudent ? owner.name : students[0]?.name} src={'avatarUrl'} sx={{ width: 48, height: 48 }} />
             <Box sx={{ flexGrow: 1, minWidth: 200, pl: 2, pr: 1 }}>
                 <Typography variant="subtitle2" noWrap>
-                    {isStudent ? `${owner.name} ${owner.lastname}` : `${students[0]?.name} ${students[0]?.lastname}`}
+                    {isStudent ? `${owner.name} ${owner.lastname}` : `${students[0]?.name}`}
                 </Typography>
                 {resort &&
                     <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -78,18 +82,22 @@ export default function EventCard({ lesson, showInfo = true }) {
                         </Typography>
                     </Box>
                 }
-                <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                    <Iconify icon={'material-symbols:calendar-month'} sx={{ width: 16, height: 16, mr: 0.5, flexShrink: 0 }} />
-                    <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
-                        {`${start.toLocaleDateString('es-AR', { month: '2-digit', day: '2-digit', })}`}
-                    </Typography>
-                </Box>
-                <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                    <Iconify icon={'ic:outline-access-time'} sx={{ width: 16, height: 16, mr: 0.5, flexShrink: 0 }} />
-                    <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
-                        {`${start.toString().slice(16, 21)}hs a ${end.toString().slice(16, 21)}hs`}
-                    </Typography>
-                </Box>
+                {showInfo && lessons.map((lesson, index) => (
+                  <>
+                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                        <Iconify icon={'material-symbols:calendar-month'} sx={{ width: 16, height: 16, mr: 0.5, flexShrink: 0 }} />
+                        <Typography variant="body2" sx={{ color: 'text.secondary', mr: 1 }} noWrap>
+                            {`${lesson.start.toLocaleDateString('es-AR', { month: '2-digit', day: '2-digit', })}`}
+                        </Typography>
+                        <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
+                            {(lesson.start.toString().slice(16, 18) === '06') && ((lesson.end.toString().slice(16, 18) === '09')) ? 'MORNING'
+                              : ((lesson.start.toString().slice(16, 18) === '09') && ((lesson.end.toString().slice(16, 18) === '12')) ?  'AFTERNOON'
+                                :
+                            'FULL DAY')}
+                        </Typography>
+                    </Box>
+                  </>
+                ))}
                 <Box display='flex' alignItems='center'>
                     {lessonState && lessonState === 'ACCEPTED' && <Iconify
                         icon={'eva:checkmark-circle-fill'}
@@ -121,7 +129,7 @@ export default function EventCard({ lesson, showInfo = true }) {
                 </Box>
             </Box>
             <Box sx={{ flexGrow: 1, minWidth: 0, pl: 0, pr: 0 }} alignItems={'center'} justifyContent={'center'}>
-                {!isStudent && state === "ACCEPTED" && <Button
+                {/*{!isStudent && state === "ACCEPTED" && <Button
                     size="small"
                     onClick={handlePay}
                     variant={payed ? 'text' : 'outlined'}
@@ -134,9 +142,10 @@ export default function EventCard({ lesson, showInfo = true }) {
                     startIcon={payedState && <Iconify icon={'eva:checkmark-fill'} />}
                 >
                     {payedState ? translate('event.payed') : translate('event.pay')}
-                </Button>}
+                </Button>}*/}
                 {showInfo &&
                     <Button
+                        fullWidth
                         size="small"
                         onClick={() => {
                             navigate(`${isStudent ? '/match/lessons' : PATH_DASHBOARD.user.lessons}/${id}`)
@@ -149,11 +158,12 @@ export default function EventCard({ lesson, showInfo = true }) {
                         variant={'outlined'}
                         color={'primary'}
                         startIcon={<Iconify icon={'mdi:user'} />}
+                       // disabled={!(lessonState === 'ACCEPTED' )}
                     >
                         {translate('event.information')}
                     </Button>
                 }
-                {!isStudent && lessonState === "PENDING" &&
+                {!isStudent && lessonState === "PENDING" && showInfo &&
                     <Box >
                         <Button
                             fullWidth

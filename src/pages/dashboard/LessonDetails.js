@@ -110,7 +110,7 @@ export default function UserLessons() {
                             />
                         </Grid>
                         <Grid item xs={12} md={6}>
-                            <EventCard lesson={lesson} showInfo={false}/>
+                            <EventCard lessons={[lesson]} showInfo={false}/>
                         </Grid>
                     </Grid>}
             </Container>

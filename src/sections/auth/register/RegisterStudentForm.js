@@ -26,17 +26,38 @@ export default function RegisterStudentForm() {
 
     const [showPassword, setShowPassword] = useState(false);
 
-    const RegisterSchema = Yup.object().shape({
-        firstName: Yup.string().required('First name required'),
-        lastName: Yup.string().required('Last name required'),
-        email: Yup.string().email('Email must be a valid email address').required('Email is required'),
-        cellphone: Yup.string().required('Phone number required').matches(
-            "^[0-9]{10}$",
-            "Phone number is not valid"
-        ),
-        countryCode: Yup.string().required(),
-        password: Yup.string().required('Password is required'),
-    });
+const RegisterSchema = Yup.object().shape({
+  firstName: Yup.string().required('First name required'),
+  lastName: Yup.string().required('Last name required'),
+  email: Yup.string().email('Email must be a valid email address').required('Email is required'),
+  countryCode: Yup.string().required(),
+  cellphone: Yup.string().when(['countryCode'], (countryCode) => {
+    let regex;
+    let errorMessage;
+
+    if (countryCode === '56') {
+      // Define Chile regex and error message
+      regex = /^\d{9}$/;
+      errorMessage = 'Chilean cellphone number is not valid';
+    } else if (countryCode === '55') {
+      // Define Brasil regex and error message
+      regex = /^\d{11,12}$/;
+      errorMessage = 'Brazilian cellphone number is not valid';
+    } else if (countryCode === '54') {
+      // Define Argentina regex and error message
+      regex = /^\d{10}$/;
+      errorMessage = 'Argentinian cellphone number is not valid';
+    } else {
+      // Define Rest of the World regex and error message
+      regex = /^\d{10,11}$/;
+      errorMessage = 'Cellphone number is not valid';
+    }
+
+    return Yup.string().matches(regex, errorMessage);
+  }).required('Phone number required'),
+  password: Yup.string().required('Password is required'),
+});
+
 
     const [defaultValues, setDefaultValues] = useState({
         firstName: '',

@@ -35,18 +35,18 @@ const RegisterSchema = Yup.object().shape({
     let regex;
     let errorMessage;
 
-    if (countryCode === '56') {
-      // Define Chile regex and error message
-      regex = /^\d{9}$/;
-      errorMessage = 'Chilean cellphone number is not valid';
+    if (countryCode === '54') {
+      // Define Argentina regex and error message
+      regex = /^\d{10,11}$/;
+      errorMessage = 'Argentinian cellphone number is not valid';
     } else if (countryCode === '55') {
       // Define Brasil regex and error message
       regex = /^\d{11,12}$/;
       errorMessage = 'Brazilian cellphone number is not valid';
-    } else if (countryCode === '54') {
-      // Define Argentina regex and error message
-      regex = /^\d{10}$/;
-      errorMessage = 'Argentinian cellphone number is not valid';
+    } else if (countryCode === '56') {
+      // Define Chile regex and error message
+      regex = /^\d{9}$/;
+      errorMessage = 'Chilean cellphone number is not valid';
     } else {
       // Define Rest of the World regex and error message
       regex = /^\d{10,11}$/;

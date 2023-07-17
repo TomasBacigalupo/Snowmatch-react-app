@@ -28,7 +28,10 @@ export default function RegisterForm() {
   const RegisterSchema = Yup.object().shape({
     firstName: Yup.string().required('First name required'),
     lastName: Yup.string().required('Last name required'),
-    email: Yup.string().email('Email must be a valid email address').required('Email is required'),
+    email: Yup.string()
+      .transform((value, originalValue) => originalValue.toLowerCase())
+      .email('Email must be a valid email address')
+      .required('Email is required'),
     cellphone: Yup.string().required('Phone number required').matches(
       "^[0-9]{10}$",
       "Phone number is not valid"

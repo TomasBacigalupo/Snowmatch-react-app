@@ -1,0 +1,64 @@
+import * as React from 'react';
+import ToggleButton from '@mui/material/ToggleButton';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import { useDispatch, useSelector } from 'react-redux';
+import { setPremiumTeachers, setStandardTeachers } from 'src/redux/slices/teachers';
+
+export default function IndependentShop() {
+    const dispatch = useDispatch();
+    const { category } = useSelector((state) => state.teachers);
+
+    const handleChange = (
+        event,
+        category,
+    ) => {
+        if(category === 'standard'){
+            dispatch(setStandardTeachers())
+        } else {
+            dispatch(setPremiumTeachers())
+        }
+    };
+
+    return (
+        <ToggleButtonGroup
+            color="primary"
+            value={category}
+            exclusive
+            onChange={handleChange}
+            aria-label="Platform"
+            sx={{
+                width: '100%',
+                borderRadius: 10,
+                justifyContent: 'space-between',
+                marginBottom: 2,
+            }}
+        >
+            <ToggleButton
+                value="standard"
+                sx={{
+                    width: '100%',
+                    borderRadius: 10,
+                    justifyContent: 'center',
+                    '&.MuiButtonBase-root': {
+                        borderRadius: '100px !important',
+                    },
+                }}
+            >
+                Standard
+            </ToggleButton>
+            <ToggleButton 
+                value="premium"
+                sx={{
+                    width: '100%',
+                    borderRadius: 10,
+                    justifyContent: 'center',
+                    '&.MuiButtonBase-root': {
+                        borderRadius: '100px !important',
+                    },
+                }}
+            >
+                Premium
+            </ToggleButton>
+        </ToggleButtonGroup>
+    );
+}

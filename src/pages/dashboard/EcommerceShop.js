@@ -32,6 +32,7 @@ import useAuth from 'src/hooks/useAuth';
 import { useParams } from 'react-router';
 import useLocales from 'src/hooks/useLocales';
 import ShopOtherTeacherList from 'src/sections/@dashboard/e-commerce/shop/ShopOtherTeachersList';
+import IndependentShop from 'src/sections/@dashboard/e-commerce/shop/IndependentShop';
 // ----------------------------------------------------------------------
 
 function useQuery() {
@@ -41,22 +42,22 @@ function useQuery() {
 
 // ----------------------------------------------------------------------
 
-export default function EcommerceShop({isGuest=false, teacherType="school"}) {
+export default function EcommerceShop({ isGuest = false, teacherType = "school" }) {
 
   const { themeStretch } = useSettings();
-  const {translate} = useLocales()
+  const { translate } = useLocales()
   const dispatch = useDispatch();
   const { user } = useAuth();
   const isTeacher = user?.role === "TEACHER"
   const query = useQuery()
   const [openFilter, setOpenFilter] = useState(false);
 
-  const { teachers, sortBy, filters, teachersWithEvents } = useSelector((state) => { return state.teachers })
+  const { teachers, sortBy, filters, teachersWithEvents, category } = useSelector((state) => { return state.teachers })
 
-  useEffect(()=>{
-    if(query.get('resort')){
+  useEffect(() => {
+    if (query.get('resort')) {
       dispatch(filterTeachers({ resort: query.get('resort') }))
-    }else if(filters.resort === ""){
+    } else if (filters.resort === "") {
       dispatch(filterTeachers({ resort: 'Cerro Catedral' }))
     }
 
@@ -65,7 +66,7 @@ export default function EcommerceShop({isGuest=false, teacherType="school"}) {
 
   const filteredTeachers = applyFilter(teachers, sortBy, filters, teacherType);
 
-  const resortFromPath =  query.get('resort')
+  const resortFromPath = query.get('resort')
   const defaultValues = {
     rating: filters.rating,
     gender: filters.gender,
@@ -85,7 +86,7 @@ export default function EcommerceShop({isGuest=false, teacherType="school"}) {
 
   const values = watch();
 
- 
+
   const isDefault =
     !values.rating &&
     values.gender.length == 0 &&
@@ -97,7 +98,7 @@ export default function EcommerceShop({isGuest=false, teacherType="school"}) {
 
   useEffect(() => {
     dispatch(getTeachers());
-    dispatch(getTeachersWithEvents(filters));
+    //dispatch(getTeachersWithEvents(filters));
   }, [dispatch, filters]);
 
   useEffect(() => {
@@ -155,6 +156,7 @@ export default function EcommerceShop({isGuest=false, teacherType="school"}) {
   return (
     <Page title="Match">
       <Container maxWidth={themeStretch ? false : 'lg'}>
+        {teacherType === "independent" && <IndependentShop />}
         <Stack
           spacing={2}
           direction={{ xs: 'row', sm: 'row' }}
@@ -163,54 +165,64 @@ export default function EcommerceShop({isGuest=false, teacherType="school"}) {
           sx={{ mb: 2 }}
           xs={12}
         >
-          <Stack xs={12}>
-            <ShopProductSearch teachers={filteredTeachers} />
-          </Stack>
-          
-          {!isTeacher && <CartWidget /> }
-          
-          <Stack direction="row" spacing={1} flexShrink={0} sx={{ my: 1 }}>
-            <FormProvider methods={methods}>
-              <ShopFilterSidebar
-                onResetAll={handleResetFilter}
-                isOpen={openFilter}
-                onOpen={handleOpenFilter}
-                onClose={handleCloseFilter}
-              />
-            </FormProvider>
-            {/*<ShopProductSort />*/}
-          </Stack>
+          {(teacherType !== "independent" || category === "premium") &&
+            <>
+              <Stack xs={12}>
+                <ShopProductSearch teachers={filteredTeachers} />
+              </Stack>
+
+              {!isTeacher && <CartWidget />}
+
+              <Stack direction="row" spacing={1} flexShrink={0} sx={{ my: 1 }}>
+                <FormProvider methods={methods}>
+                  <ShopFilterSidebar
+                    onResetAll={handleResetFilter}
+                    isOpen={openFilter}
+                    onOpen={handleOpenFilter}
+                    onClose={handleCloseFilter}
+                  />
+                </FormProvider>
+                {/*<ShopProductSort />*/}
+              </Stack>
+            </>
+          }
+
         </Stack>
 
         <Stack sx={{ mb: 3 }}>
           {!isDefault && (
             <>
-              <Typography variant="body2" gutterBottom>
-                <strong>{filteredTeachers.length}</strong>
-                &nbsp;{translate('general.teachers_found')}
-              </Typography>
+              {(teacherType !== "independent" || category === "premium") &&
+                <Typography variant="body2" gutterBottom>
+                  <strong>{filteredTeachers.length}</strong>
+                  &nbsp;{translate('general.teachers_found')}
+                </Typography>
+              }
+              {(teacherType !== "independent" || category === "premium") &&
+                <TeacherTagFiltered
+                  filters={filters}
+                  isShowReset={!isDefault && !openFilter}
+                  onRemoveRating={handleRemoveRating}
+                  onRemoveGender={handleRemoveGender}
+                  onRemoveCategory={handleRemoveCategory}
+                  onRemoveDiscipline={handleRemoveDiscipline}
+                  onRemoveLanguage={handleRemoveLanguage}
+                  onRemoveRange={handleRemoveRange}
+                  onRemoveResort={handleRemoveResort}
+                  onResetAll={handleResetFilter}
+                  onOpen={handleOpenFilter}
+                />
+              }
 
-              <TeacherTagFiltered
-                filters={filters}
-                isShowReset={!isDefault && !openFilter}
-                onRemoveRating={handleRemoveRating}
-                onRemoveGender={handleRemoveGender}
-                onRemoveCategory={handleRemoveCategory}
-                onRemoveDiscipline={handleRemoveDiscipline}
-                onRemoveLanguage={handleRemoveLanguage}
-                onRemoveRange={handleRemoveRange}
-                onRemoveResort={handleRemoveResort}
-                onResetAll={handleResetFilter}
-                onOpen={handleOpenFilter}
-              />
+
             </>
           )}
         </Stack>
         {/* manotaso de ahogado muestro todos */}
         {/* {teacherType == "independent" && <ShopTeacherList teachers={teachersWithEvents} loading={!filteredTeachers.length && isDefault} />} */}
-        {teacherType == "independent" && <ShopTeacherList teachers={filteredTeachers?.filter(t => t.stars > 0)} loading={!filteredTeachers.length && isDefault} />}
-        {teacherType == "independent" && <ShopOtherTeacherList teachers={filteredTeachers?.filter(t => t.stars === 0 || !t.stars)} loading={!filteredTeachers.length && isDefault} />}
-        {teacherType == "school" && <ShopTeacherList teachers={filteredTeachers} loading={!filteredTeachers.length && isDefault} />}
+        {teacherType === "independent" && <ShopTeacherList teachers={filteredTeachers?.filter(t => category === "standard" ? t.id === 8 : (t.stars > 0 && t.id !== 8))} loading={!filteredTeachers.length && isDefault} />}
+        {teacherType === "independent" && category === "premium" && <ShopOtherTeacherList teachers={filteredTeachers?.filter(t => t.stars === 0 || !t.stars)} loading={!filteredTeachers.length && isDefault} />}
+        {teacherType === "school" && <ShopTeacherList teachers={filteredTeachers} loading={!filteredTeachers.length && isDefault} />}
       </Container>
       <><br /></>
 
@@ -220,7 +232,7 @@ export default function EcommerceShop({isGuest=false, teacherType="school"}) {
 
 // ----------------------------------------------------------------------
 
-function checkOverlap(event,filter){
+function checkOverlap(event, filter) {
 
   const filterFrom = new Date(filter.from.getFullYear(), filter.from.getMonth(), filter.from.getDate())
   const filterTo = new Date(filter.to.getFullYear(), filter.to.getMonth(), filter.to.getDate())
@@ -229,12 +241,12 @@ function checkOverlap(event,filter){
   //const filterTo = (filter.to.getDate()>=10?filter.to.getDate():"0"+(filter.to.getDate()))+"/"+((filter.to.getMonth()+1)>=10?filter.to.getMonth()+1:"0"+(filter.to.getMonth()+1))+"/"+filter.to.getFullYear();
   const temp1 = event.start.split("-")
   //const eventFrom = temp1[2].split("T")[0] + "/" + temp1[1] + "/" + temp1[0];
-  const eventFrom = new Date(temp1[0], temp1[1],temp1[2].split("T")[0])
-  eventFrom.setMonth(eventFrom.getMonth()-1)
+  const eventFrom = new Date(temp1[0], temp1[1], temp1[2].split("T")[0])
+  eventFrom.setMonth(eventFrom.getMonth() - 1)
   const temp2 = event.end.split("-")
   //const eventTo = temp2[2].split("T")[0] + "/" + temp2[1] + "/" + temp2[0];
-  const eventTo = new Date(temp2[0], temp2[1],temp2[2].split("T")[0])
-  eventTo.setMonth(eventTo.getMonth()-1)
+  const eventTo = new Date(temp2[0], temp2[1], temp2[2].split("T")[0])
+  eventTo.setMonth(eventTo.getMonth() - 1)
 
 
 
@@ -262,8 +274,8 @@ function applyFilter(teachers, sortBy, filters, teacherType) {
   //   teachers = orderBy(teachers, ['price'], ['asc']);
   // }
   // FILTER teacherS
-  if(filters.from && filters.to){
-    teachers = teachers.filter((teacher) => !teacher.events?.some((event) => checkOverlap(event,filters)));
+  if (filters.from && filters.to) {
+    teachers = teachers.filter((teacher) => !teacher.events?.some((event) => checkOverlap(event, filters)));
   }
 
   if (filters.gender.length > 0) {
@@ -294,10 +306,10 @@ function applyFilter(teachers, sortBy, filters, teacherType) {
     });
   }
 
-  if(teacherType=="independent"){
-    teachers = teachers.filter(t=>!t.school && t.level>=3 && t.resorts?.includes("Cerro Catedral")).sort((a,b)=>a.name-b.name)
-  } else if(teacherType=="school"){
-    teachers = teachers.filter(t=>t.school || t.level<3 || !t.resorts?.includes("Cerro Catedral") )
+  if (teacherType == "independent") {
+    teachers = teachers.filter(t => !t.school && t.level >= 3 && t.resorts?.includes("Cerro Catedral")).sort((a, b) => a.name - b.name)
+  } else if (teacherType == "school") {
+    teachers = teachers.filter(t => t.school || t.level < 3 || !t.resorts?.includes("Cerro Catedral"))
   }
   return teachers;
 }

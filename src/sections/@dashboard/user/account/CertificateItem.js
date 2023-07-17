@@ -43,7 +43,6 @@ export default function CertificateItem({ title, imageLink, status, certificateI
                         <Grid item xs={mobile ?? 4}>
                             <Typography style={styles.title} variant="h4">{title}</Typography>
                         </Grid>
-                        {console.log({ status })}
                         <Grid item xs={mobile ?? 4}>
                             {(status === 'VERIFIED' || status === 'REJECTED') && (
                                 <Button

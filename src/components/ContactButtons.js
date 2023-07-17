@@ -17,7 +17,6 @@ ContactButton.propTypes = {
 
 export default function ContactButton({ initialColor = false, simple = true, links = {}, sx, ...other }) {
     const theme = useTheme()
-    console.log({links})
     const SOCIALS = [
         {
             name: 'Phone',

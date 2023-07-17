@@ -286,6 +286,7 @@ export default function AdminReview() {
                         onConfirmRow={() => handleConfirmRow(row.id)}
                         onDeclineRow={() => handleDeclineOpenModal(row.email)}
                         onWapp={() => { handleContactWapp(row.countryCode, row.cellphone, row.name) }}
+                        onEvents={() => { navigate(PATH_DASHBOARD.admin.events(row.id)) }}
                       />))}
 
                     <TableEmptyRows height={denseHeight} emptyRows={0} />
@@ -306,6 +307,7 @@ export default function AdminReview() {
                   onConfirmRow={() => handleConfirmRow(row.id)}
                   onDeclineRow={() => handleDeclineOpenModal(row.email)}
                   onWapp={()=>{handleContactWapp(row.countryCode, row.cellphone, row.name)}}
+                  onEvents={() => { navigate(PATH_DASHBOARD.admin.events(row.id)) }}
                 />))}
 
             </Hidden>
@@ -346,7 +348,7 @@ export default function AdminReview() {
 
 function applySortFilter({ tableData, comparator, filterName, filterStatus, filterRole }) {
   return tableData
-  debugger
+  
   if (tableData.length === 0) {
     return tableData
   }

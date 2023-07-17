@@ -45,7 +45,6 @@ RHFUploadSingleFile.propTypes = {
 
 export function RHFUploadSingleFile({ name, ...other }) {
   const { control } = useFormContext();
-  console.log({ control })
   return (
     <Controller
       name={name}

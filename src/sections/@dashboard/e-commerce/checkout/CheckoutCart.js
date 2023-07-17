@@ -38,7 +38,6 @@ export default function CheckoutCart() {
   const { checkout, teacher } = useSelector((state) => state.teachers);
 
   const { cart, total, discount, subtotal, isOpenAddEventModal, events } = checkout;
-  console.log({checkout})
 
   const totalItems = sum(cart.map((item) => 1));
 

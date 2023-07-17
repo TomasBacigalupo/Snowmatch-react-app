@@ -17,9 +17,10 @@ AdminTableRow.propTypes = {
   onSelectRow: PropTypes.func,
   onDeleteRow: PropTypes.func,
   onWapp: PropTypes.func,
+  onEvents: PropTypes.func,
 };
 
-export default function AdminTableRow({ row, selected, onEditRow, onSelectRow, onConfirmRow, onDeclineRow, onWapp }) {
+export default function AdminTableRow({ row, selected, onEditRow, onSelectRow, onConfirmRow, onDeclineRow, onWapp, onEvents }) {
   const theme = useTheme();
 
   const { name, lastname, imageLink, role, level, authorized, state, id } = row;
@@ -107,6 +108,15 @@ export default function AdminTableRow({ row, selected, onEditRow, onSelectRow, o
                 <Iconify icon={'eva:edit-fill'} />
                 Edit
               </MenuItem> */}
+              <MenuItem
+                onClick={() => {
+                  onEvents();
+                  handleCloseMenu();
+                }}
+              >
+                <Iconify icon={'eva:calendar-fill'} />
+                Events
+              </MenuItem>
               <MenuItem
                 onClick={() => {
                   onWapp();

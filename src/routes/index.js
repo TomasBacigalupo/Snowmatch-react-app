@@ -23,7 +23,7 @@ import ReviewTeacher from 'src/pages/dashboard/ReviewTeacher';
 
 const Loadable = (Component) => (props) => {
   // eslint-disable-next-line react-hooks/rules-of-hooks
-  const { pathname } = useLocation();  
+  const { pathname } = useLocation();
   return (
     <Suspense fallback={<LoadingScreen isDashboard={pathname.includes('/dashboard')} />}>
       <Component {...props} />
@@ -75,9 +75,9 @@ export default function Router() {
     },
     {
       path: '/chapelco',
-      element: <MainLayout/>,
+      element: <MainLayout />,
       children: [
-        { path: 'instructores', element: <ChapelcoPro/> }
+        { path: 'instructores', element: <ChapelcoPro /> }
       ]
     },
     {
@@ -97,30 +97,30 @@ export default function Router() {
       ),
       children: [
         { element: <Navigate to={'/match/school/:resort'} replace />, index: true },
-        { path: '*', element: <EcommerceShop isGuest={true} teacherType="school"/> },
-        { path: 'independent', element: <EcommerceShop isGuest={true} teacherType="independent"/> },
-        { path: 'school', element: <EcommerceShop isGuest={true} teacherType="school"/> },
-        { path: 'teacher/:id', element: <EcommerceTeacherDetails isGuest={true}/> },
-        { path: 'teacher/:id/products/:productId', element: <EcommerceTeacherProducts/> },
-        { path: 'schools/:id', element: <SchoolDetails isGuest={true}/> },
-        { path: 'schools', element: <SchoolList teacherType="school"/> },
+        { path: '*', element: <EcommerceShop isGuest={true} teacherType="school" /> },
+        { path: 'independent', element: <EcommerceShop isGuest={true} teacherType="independent" /> },
+        { path: 'school', element: <EcommerceShop isGuest={true} teacherType="school" /> },
+        { path: 'teacher/:id', element: <EcommerceTeacherDetails isGuest={true} /> },
+        { path: 'teacher/:id/products/:productId', element: <EcommerceTeacherProducts /> },
+        { path: 'schools/:id', element: <SchoolDetails isGuest={true} /> },
+        { path: 'schools', element: <SchoolList teacherType="school" /> },
         // { path: '*', element: <EcommerceShop isGuest={true} teacherType="school" /> },
         // { path: 'independent', element: <EcommerceShop isGuest={true} teacherType="independent" /> },
         // { path: 'school', element: <EcommerceShop isGuest={true} teacherType="school" /> },
         {
           path: 'teacher/:id', element:
-              <EcommerceTeacherDetails isGuest={true} />
+            <EcommerceTeacherDetails isGuest={true} />
         },
         {
           path: 'teacher/:id/review', element:
             <AuthGuard>
-              <ReviewTeacher/>
+              <ReviewTeacher />
             </AuthGuard>
         },
         {
           path: 'teacher/:id/hire', element:
             <AuthGuard>
-              <EcommerceCheckoutTeacher/>
+              <EcommerceCheckoutTeacher />
             </AuthGuard>
         },
         { path: 'lessons', element: <UserLessons /> },
@@ -130,7 +130,7 @@ export default function Router() {
 
     {
       element: (<GuestLayout />),
-      children: [ { path: 'protips', element: <BlogPosts /> }]
+      children: [{ path: 'protips', element: <BlogPosts /> }]
     },
 
     {
@@ -168,8 +168,8 @@ export default function Router() {
             { element: <Navigate to="/dashboard/e-commerce/shop" replace />, index: true },
             { path: 'shop', element: <EcommerceShop /> },
             { path: 'shop/independent', element: <EcommerceShop teacherType="independent" /> },
-            { path: 'shop/school', element: <EcommerceShop teacherType="school"/> },
-            { path: 'shop/schools', element: <SchoolList teacherType="school"/> },
+            { path: 'shop/school', element: <EcommerceShop teacherType="school" /> },
+            { path: 'shop/schools', element: <SchoolList teacherType="school" /> },
             { path: 'school/:id', element: <SchoolDetails /> },
             { path: 'shop/school', element: <EcommerceShop teacherType="school" /> },
             { path: 'teacher/:id', element: <EcommerceTeacherDetails /> },
@@ -195,7 +195,7 @@ export default function Router() {
             { path: 'account', element: <UserAccount /> },
             { path: 'reviews', element: <UserReviews /> },
             { path: 'lessons', element: <UserLessons /> },
-            { path: 'lessons/:eventId', element: <LessonDetails/> },
+            { path: 'lessons/:eventId', element: <LessonDetails /> },
           ],
         },
         {
@@ -245,6 +245,7 @@ export default function Router() {
             { element: <Navigate to="/dashboard/admin/review" replace />, index: true },
             { path: 'review', element: <AdminReview /> },
             { path: ':id/confirm', element: <AdminConfirm /> },
+            { path: ':id/events', element: <AdminUserEvents /> },
           ],
         },
       ],
@@ -338,6 +339,7 @@ const LessonDetails = Loadable(lazy(() => import('src/pages/dashboard/LessonDeta
 // ADMIN
 const AdminReview = Loadable(lazy(() => import('../pages/dashboard/AdminReview')));
 const AdminConfirm = Loadable(lazy(() => import('../pages/dashboard/AdminConfirm')));
+const AdminUserEvents = Loadable(lazy(() => import('../pages/dashboard/AdminUserEvents')));
 
 
 // APP

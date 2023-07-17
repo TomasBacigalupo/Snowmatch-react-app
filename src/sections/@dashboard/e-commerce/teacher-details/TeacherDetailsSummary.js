@@ -212,7 +212,6 @@ export default function TeacherDetailsSummary({ cart, teacher, onAddCart, onGoto
       if (new Date(date).getHours() === 8) {
         lessonTime = "ALL_DAY"
       }
-      debugger
       const requestEvent = {
         price: 0,
         people: values.amount,

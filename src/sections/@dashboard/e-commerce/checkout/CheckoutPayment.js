@@ -41,7 +41,6 @@ export default function CheckoutPayment() {
   useEffect(() => {
     dispatch(getDollarValue((dollar) => {
       if (dollar) {
-        console.log({ dollar })
         setDollar(dollar.rate)
       } else {
         enqueueSnackbar('Error getting dollar value', { variant: 'error' });
@@ -105,7 +104,6 @@ export default function CheckoutPayment() {
         setLoading(false)
       }
     } catch (error) {
-      debugger
       if (error?.response?.data?.error_type === 'invalid_request_error') {
         error?.response?.data?.validation_errors?.forEach((error) => {
           enqueueSnackbar(translate("error." + error.param), { variant: 'error' })

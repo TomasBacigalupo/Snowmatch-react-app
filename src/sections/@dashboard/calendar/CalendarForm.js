@@ -11,7 +11,7 @@ import { Box, Stack, Button, Tooltip, TextField, IconButton, DialogActions, Togg
 import { LoadingButton, MobileDateTimePicker } from '@mui/lab';
 // redux
 import { useDispatch } from '../../../redux/store';
-import { createEvent, updateEvent, deleteEvent, createBusinessEvent, updateBusinessEvent, deleteSchoolEvent, } from '../../../redux/slices/calendar';
+import { createEvent, updateEvent, deleteEvent, createBusinessEvent, updateBusinessEvent, deleteSchoolEvent, updateEventByUserIdAndEventId, createEventByUserId, deleteEventByUserId, } from '../../../redux/slices/calendar';
 // components
 import Iconify from '../../../components/Iconify';
 import { ColorSinglePicker } from '../../../components/color-utils';
@@ -22,6 +22,9 @@ import { Autocomplete } from '@mui/material';
 import useLocales from 'src/hooks/useLocales';
 //User for is admin
 import useAuth from 'src/hooks/useAuth';
+import { useParams } from 'react-router';
+import { use } from 'i18next';
+import AdminEventInfo from './AdminEventInfo';
 
 
 // ----------------------------------------------------------------------
@@ -44,7 +47,7 @@ const getInitialValues = (event, range) => {
     textColor: '#1890FF',
     start: range ? new Date(range.start) : new Date(),
     end: range ? new Date(range.end) : new Date(),
-    price: null
+    price: event?.price ?? null,
   };
 
   if (event || range) {
@@ -63,13 +66,16 @@ CalendarForm.propTypes = {
   disabled: PropTypes.bool,
 };
 
-export default function CalendarForm({ event, range, onCancel, clients, members, disabled = false  }) {
+export default function CalendarForm({ event, range, onCancel, clients, members, disabled = false }) {
   const { enqueueSnackbar } = useSnackbar();
   const { translate } = useLocales()
   const [selectedClients, setSelectedClients] = useState([...event?.clients || []])
   const [assignedUsers, setAssignedUsers] = useState([...event?.assignedUsers || []])
   const [isCreating, setIsCreating] = useState(false)
   const [classType, setClassType] = useState('teacher');
+  const user = useAuth()
+  const { id } = useParams()
+
 
   const dispatch = useDispatch();
 
@@ -113,7 +119,8 @@ export default function CalendarForm({ event, range, onCancel, clients, members,
           };
           break
         default:
-          newEvent = {...event,
+          newEvent = {
+            ...event,
             title: data.title,
             description: data.description,
             textColor: data.textColor,
@@ -122,7 +129,7 @@ export default function CalendarForm({ event, range, onCancel, clients, members,
             type: data.type,
             price: data.price === null ? undefined : data.price,
             assignedUsers: assignedUsers,
-            clients: selectedClients, 
+            clients: selectedClients,
             id: event.id
           };
       }
@@ -132,8 +139,13 @@ export default function CalendarForm({ event, range, onCancel, clients, members,
       var snackbar;
       if (event.id) {
         if (classType === 'teacher') {
-          func = updateEvent(event.id, newEvent);
-          snackbar = 'Update success!'
+          if (user?.user?.role === 'ADMIN') {
+            func = updateEventByUserIdAndEventId(event.owner.id, event.id, newEvent);
+            snackbar = 'Update success!'
+          } else {
+            func = updateEvent(event.id, newEvent);
+            snackbar = 'Update success!'
+          }
         }
         else if (classType === 'school') {
           func = updateBusinessEvent(event.id, newEvent);
@@ -141,14 +153,20 @@ export default function CalendarForm({ event, range, onCancel, clients, members,
         }
       }
       else {
-        if (classType === 'teacher') {
-          func = createEvent(newEvent);
+        if (user?.user?.role === 'ADMIN') {
+          dispatch(createEventByUserId(id, newEvent));
           snackbar = 'Create success!'
+        } else {
+          if (classType === 'teacher') {
+            func = createEvent(newEvent);
+            snackbar = 'Create success!'
+          }
         } if (classType === 'school') {
           func = createBusinessEvent(newEvent);
           snackbar = 'Create success!'
         }
       }
+
       const response = dispatch(func);
 
       if (response.messages) {
@@ -173,8 +191,14 @@ export default function CalendarForm({ event, range, onCancel, clients, members,
     if (!event.id) return;
     try {
       onCancel();
-      dispatch(deleteEvent(event.id));
-      enqueueSnackbar('Delete success!');
+      if (user.user.role === 'ADMIN') {
+        dispatch(deleteEventByUserId(event.owner.id, event.id));
+        enqueueSnackbar('Delete success!');
+      } else {
+        dispatch(deleteEvent(event.id));
+        enqueueSnackbar('Delete success!');
+      }
+
     } catch (error) {
       console.error(error);
     }
@@ -182,21 +206,25 @@ export default function CalendarForm({ event, range, onCancel, clients, members,
 
 
   useEffect(() => {
-    if(event?.owner !== null && event?.owner!=undefined){
+    if (event?.owner !== null && event?.owner != undefined) {
       setClassType('teacher')
-    } 
-    else if( event?.businessOwner !== null && event?.businessOwner!=undefined){
+    } else if (event?.businessOwner !== null && event?.businessOwner != undefined) {
       setClassType('school')
-    }
-    else if (user?.user?.role === 'TEACHER') {
+    } else if (user?.user?.role === 'TEACHER') {
       setClassType('teacher')
     } else {
       setClassType('school')
     }
+
+
+    if (user.user.role === 'ADMIN') {
+      setClassType('teacher')
+    }
+
   }, []);
 
   useEffect(() => {
-    setIsCreating(event==={})
+    setIsCreating(event === {})
   }, [event]);
 
   useEffect(() => {
@@ -224,7 +252,7 @@ export default function CalendarForm({ event, range, onCancel, clients, members,
     { group: 'Off', classify: ['Break', 'Training', 'Illness'] },
   ];
 
-  const user = useAuth()
+
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
@@ -240,6 +268,8 @@ export default function CalendarForm({ event, range, onCancel, clients, members,
           <ToggleButton value="teacher">{translate('calendar.form.teacher')}</ToggleButton>
           <ToggleButton value="school">{translate('calendar.form.school')}</ToggleButton>
         </ToggleButtonGroup>}
+
+        {user?.user?.role === 'ADMIN' && classType === 'teacher' && <AdminEventInfo event={event} />}
 
         {clients?.length > 0 && <Autocomplete
           disabled={disabled}
@@ -265,10 +295,10 @@ export default function CalendarForm({ event, range, onCancel, clients, members,
               name="clientid" label="Client" />
           )}
         />}
-        {members?.length > 0 && event?.businessOwner !=null && event?.businessOwner != undefined && <Autocomplete
+        {members?.length > 0 && event?.businessOwner != null && event?.businessOwner != undefined && <Autocomplete
           disableCloseOnSelect
           multiple
-          name="assigenedTeachersId" 
+          name="assigenedTeachersId"
           label={translate('calendar.form.assignedTeachers')}
           value={assignedUsers}
           options={[...members]?.sort((a, b) => a?.name?.localeCompare(b?.name)) ?? []}
@@ -285,7 +315,7 @@ export default function CalendarForm({ event, range, onCancel, clients, members,
           renderInput={(params) => (
             <RHFTextField {...params}
               disabled={disabled}
-              name="assigenedTeachersId" 
+              name="assigenedTeachersId"
               label={translate('calendar.form.assignedTeachers')} />
           )}
 
@@ -314,13 +344,13 @@ export default function CalendarForm({ event, range, onCancel, clients, members,
           {TYPE_OPTION.map((type, i) => (
             <optgroup key={type.group} label={type.group}>
               {type.classify.map((classify, idx) => (
-                <option key={classify} value={classify} disabled={ i === 0 && (idx === 0 || idx === 1)}>
+                <option key={classify} value={classify} disabled={user.user.role !== 'ADMIN' ? (i === 0 && (idx === 0 || idx === 1)) : false}>
                   {classify}
                 </option>
               ))}
             </optgroup>
           ))}
-          
+
         </RHFSelect>
         <RHFTextField disabled={disabled} name="title" label={translate('calendar.form.title')} />
 
@@ -389,7 +419,7 @@ export default function CalendarForm({ event, range, onCancel, clients, members,
         </Button>
 
         <LoadingButton disabled={disabled} type="submit" variant="contained" loading={isSubmitting} sx={{ ':hover': { color: '#3399FF' } }}>
-          {isCreating? translate('calendar.form.add') : translate('calendar.form.edit')}
+          {isCreating ? translate('calendar.form.add') : translate('calendar.form.edit')}
         </LoadingButton>
       </DialogActions>
     </FormProvider>

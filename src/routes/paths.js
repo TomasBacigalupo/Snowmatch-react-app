@@ -134,7 +134,8 @@ export const PATH_DASHBOARD = {
   admin: {
     root: path(ROOTS_DASHBOARD, '/admin'),
     review: path(ROOTS_DASHBOARD, '/admin/review'),
-    confirm: (id) => path(ROOTS_DASHBOARD, `/admin/${id}/confirm`)
+    confirm: (id) => path(ROOTS_DASHBOARD, `/admin/${id}/confirm`),
+    events: (id) => path(ROOTS_DASHBOARD, `/admin/${id}/events`)
   }
 };
 

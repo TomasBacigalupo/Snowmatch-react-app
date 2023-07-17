@@ -97,8 +97,6 @@ export default function AccountGeneral() {
       ...data
     }
 
-    console.log({ data })
-
     var endpoint = "";
     if (value.state) {
       value.state = 'AVAILABLE'

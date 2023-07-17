@@ -17,9 +17,10 @@ AdminTableCard.propTypes = {
     onSelectRow: PropTypes.func,
     onDeleteRow: PropTypes.func,
     onWapp: PropTypes.func,
+    onEvents: PropTypes.func,
 };
 
-export default function AdminTableCard({ row, selected, onEditRow, onSelectRow, onConfirmRow, onDeclineRow, onWapp }) {
+export default function AdminTableCard({ row, selected, onEditRow, onSelectRow, onConfirmRow, onDeclineRow, onWapp, onEvents }) {
     const theme = useTheme();
 
     const { name, lastname, imageLink, role, level, authorized, state, id, emailVerified } = row;
@@ -74,6 +75,15 @@ export default function AdminTableCard({ row, selected, onEditRow, onSelectRow, 
                         onClose={handleCloseMenu}
                         actions={
                             <>
+                                <MenuItem
+                                    onClick={() => {
+                                        onEvents();
+                                        handleCloseMenu();
+                                    }}
+                                >
+                                    <Iconify icon={'eva:calendar-fill'} />
+                                    Events
+                                </MenuItem>
                                 <MenuItem
                                     onClick={() => {
                                         onWapp();

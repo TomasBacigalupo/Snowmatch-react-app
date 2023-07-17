@@ -15,7 +15,6 @@ RoleBasedGuard.propTypes = {
 
 const useCurrentRole = () => {
   const { user } = useAuth()
-  console.log({user})
   const role = user?.role ? user.role : 'GUEST';
   return role;
 };

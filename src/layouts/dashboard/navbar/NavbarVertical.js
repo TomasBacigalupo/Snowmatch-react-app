@@ -121,7 +121,6 @@ export default function NavbarVertical({ isOpenSidebar, onCloseSidebar, isGuest,
   const user = useAuth()
 
   useEffect(() => {
-    console.log({navConfig})
     if (user?.user?.role === 'ADMIN') {
         navConfig.push({
           subheader: 'Admin',

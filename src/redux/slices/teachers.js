@@ -23,6 +23,7 @@ const initialState = {
   teachersWithEvents: [],
   teacher: null,
   rates: [],
+  category: 'standard',
   product: null,
   sortBy: null,
   filters: {
@@ -63,6 +64,16 @@ const slice = createSlice({
   name: 'teacher',
   initialState,
   reducers: {
+
+    // SET PREMIUM TEACHERS
+    setPremiumTeachers(state) {
+      state.category = 'premium';
+    },
+
+    // SET STANDARD TEACHERS
+    setStandardTeachers(state) {
+      state.category = 'standard';
+    },
 
     // CLOSE CLINIC MODAL
     closeClinicModal(state) {
@@ -349,7 +360,9 @@ export const {
   cleanCart,
   addCard,
   setPaymentInfo,
-  resetFilters
+  resetFilters,
+  setPremiumTeachers,
+  setStandardTeachers
 } = slice.actions;
 
 // ----------------------------------------------------------------------
@@ -746,7 +759,6 @@ export function cancelHireTeacherEvents(requestedEvents, callback) {
 }
 
 export function startPayment(events, encryptedCard, callBack){
-  debugger
   return async () =>{
     try{
       const resp = await axios.post(`api/pay/startPayment?holderName=Tomas&holderLastName=Bacigalupo`, {events: events, encryptedCardDto: encryptedCard})

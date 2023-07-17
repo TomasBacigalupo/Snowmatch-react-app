@@ -15,7 +15,6 @@ export default function AccountDocuments() {
 
     return (
         <Grid container >
-            {console.log({ user })}
             <Grid item xs={12}>
                 <Typography variant='h3'>Certificates</Typography>
             </Grid>

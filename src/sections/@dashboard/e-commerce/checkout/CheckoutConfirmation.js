@@ -34,7 +34,6 @@ FriendCard.propTypes = {
 };
 
 function FriendCard({ friend, onClick, events }) {
-    console.log({friend})
     const { name, imageLink, lastname } = friend;
     return (
         <Card

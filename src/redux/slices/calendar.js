@@ -42,7 +42,7 @@ const slice = createSlice({
         if (e?.source === 'APP') {
           return {
             ...e,
-            title: `${e.name} ${e.lastName}`,
+            // title: `${e.name} ${e.lastname}`,
             start: utcToLocalDate(e.start),
             end: utcToLocalDate(e.end)
           };
@@ -193,8 +193,7 @@ const slice = createSlice({
 
     // DELETE EVENT
     deleteEventSuccess(state, action) {
-      const eventId = action.payload;
-      
+      const {eventId} = action.payload;
       const deleteEvent = state.events.filter((event) =>{ 
         return event.id !== eventId});
       state.events = deleteEvent;
@@ -251,13 +250,13 @@ export function getEvents() {
         if (e?.source === 'APP' && e.eventType === "CLASS"){
           return {
             ...e,
-            title: 'Match',
+            title: e.title ?? 'Match',
             name: 'Clase Solicitada',
-            description: 'Un usuario ah solicitado una clase este dia',
-            price: 0,
+            description: e.description ?? 'Un usuario ah solicitado una clase este dia',
+            price: e.price ?? 0,
             start: adjustedDateStart,
             end: adjustedDateEnd,
-            textColor: "#FFC107",
+            textColor: e.textColor ?? "#FFC107",
             type: "App class"
           };
         }
@@ -381,6 +380,34 @@ export function updateEvent(eventId, updateEvent) {
   };
 }
 
+export function updateEventByUserIdAndEventId(userId, eventId, updatedEvent){
+  return async () => {
+    //dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.put(`/api/admin/user/${userId}/event/${eventId}`, updatedEvent);
+      dispatch(slice.actions.updateEventSuccess({ ...updateEvent, id: eventId }));
+      return response;
+    } catch (error) {
+      //dispatch(slice.actions.hasError(error));
+      return error;
+    }
+  };
+}
+
+export function createEventByUserId(userId, event) {
+  return async () => {
+    //dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.post(`/api/admin/user/${userId}/event`, event);
+      dispatch(slice.actions.createEventSuccess(response.data));
+      return response;
+    } catch (error) {
+      //dispatch(slice.actions.hasError(error));
+      return error;
+    }
+  };
+}
+
 // ----------------------------------------------------------------------
 
 export function updateBusinessEvent(eventId, updateEvent) {
@@ -404,6 +431,20 @@ export function deleteEvent(eventId) {
     dispatch(slice.actions.startLoading());
     try {
       await axios.delete(`/api/events/byId/${eventId}`);
+      dispatch(slice.actions.deleteEventSuccess({ eventId }));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+// ----------------------------------------------------------------------
+
+export function deleteEventByUserId(userId, eventId) {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      await axios.delete(`/api/admin/user/${userId}/event/${eventId}`);
       dispatch(slice.actions.deleteEventSuccess({ eventId }));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
@@ -517,6 +558,64 @@ export function setDeclined(eventId){
     try {
       await axios.put(`/api/events/lessons/${eventId}/decline`);
       dispatch(slice.actions.declinedLessonSuccess({ eventId }));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+export function getEventsByUserId(id) {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get(`/api/admin/user/${id}/event?page=1&size=300`);
+      
+      const events = response.data.map(e => {
+        const dateStart = new Date(e.start);
+        const dateEnd = new Date(e.end);
+        const utcOffset = dateStart.getTimezoneOffset() * 60000; // Get the UTC offset in milliseconds
+        const adjustedDateStart = new Date(dateStart.getTime() + utcOffset);
+        const adjustedDateEnd = new Date(dateEnd.getTime() + utcOffset);
+        if (e?.source === 'APP' && e.eventType === "CLASS") {
+          debugger
+          return {
+            ...e,
+            title: e.title ?? 'Match',
+            name: 'Clase Solicitada',
+            description: e.description ?? 'Un usuario ah solicitado una clase este dia',
+            start: adjustedDateStart,
+            end: adjustedDateEnd,
+            textColor: e.textColor ?? "#FFC107",
+            type: "App class",
+            price: Number(e.price)
+          };
+        }
+        if (e?.source === 'PRODUCT' && e.eventType === "CLASS") {
+          let title = e.title
+          if (e.title === 'PRIVATE_FULL_DAY') {
+            title = 'Clase privada día completo'
+          }
+          if (e.title === 'PRIVATE_HALF_DAY') {
+            title = 'Clase privada medio día'
+          }
+
+          return {
+            ...e,
+            title: title,
+            description: 'Evento creado a partir de un producto',
+            start: adjustedDateStart,
+            end: adjustedDateEnd,
+            textColor: "#00AB55",
+            type: "App class"
+          };
+        }
+        return {
+          ...e,
+          start: adjustedDateStart,
+          end: adjustedDateEnd
+        };
+      })
+      dispatch(slice.actions.getEventsSuccess(events));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }

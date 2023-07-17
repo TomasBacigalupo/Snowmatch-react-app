@@ -16,7 +16,6 @@ export default function EventInfoCard({ lesson }) {
 
     return (
         <Card sx={{ display: 'flex', alignItems: 'center', p: 3 }}>
-            {/*{console.log({lesson})}*/}
             <Box sx={{ flexGrow: 1, minWidth: 200, pl: 4, pr: 1 }}>
                 <Typography variant="subtitle2" noWrap>
                     {lesson.owner ? `${lesson.owner.name}` : `${translate('generalApp.bookedLessons')}`}

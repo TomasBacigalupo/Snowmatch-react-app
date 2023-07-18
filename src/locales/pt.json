@@ -209,7 +209,8 @@
         "information": "Informação",
         "description": "descrição",
         "skills": "Habilidades",
-        "howToBook": "Selecione o dia e horário que mais lhe convém e solicite a reserva da aula. Um representante da SnowMatch entrará em contato com você para ajudá-lo(a) a concluir sua reserva, dependendo da disponibilidade do instrutor."
+        "howToBookCatedral": "Selecione o dia e horário que mais lhe convém e solicite a reserva da aula. Um representante da SnowMatch entrará em contato com você para ajudá-lo(a) a concluir sua reserva, dependendo da disponibilidade do instrutor.",
+        "howToBookRest": "Selecione o dia e horário que mais lhe convém e faça a reserva da aula. Uma vez que sua solicitação seja aceita pelo instrutor, ambos terão acesso às informações necessárias para entrar em contato diretamente. Você poderá consultar os preços e confirmar todos os detalhes da aula com o instrutor."
     },
 
     "conversation":{

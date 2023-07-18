@@ -311,7 +311,8 @@
         "ratingAVG": "Puntuación promedio",
         "PRIVATE_FULL_DAY": "Clase privada de día completo (6 horas) para todos los niveles y edades.",
         "PRIVATE_HALF_DAY": "Clase privada de medio día (3 horas). Desde iniciantes a expertos. Una buena forma de empezar o terminar el día.",
-        "howToBook": "Seleccioná el día y horario que más te convenga y solicitá la reserva de la clase. Un representante de SnowMatch se pondrá en contacto con vos para ayudarte a completar tu reserva, dependiendo de la disponibilidad del instructor."
+        "howToBookCatedral": "Seleccioná el día y horario que más te convenga y solicitá la reserva de la clase. Un representante de SnowMatch se pondrá en contacto con vos para ayudarte a completar tu reserva, dependiendo de la disponibilidad del instructor.",
+        "howToBookRest": "Seleccioná el día y horario que más te convenga y solicitá la reserva de la clase. Una vez que tu solicitud sea aceptada por el instructor, ambos tendrán acceso a la información necesaria para ponerse en contacto directamente. Podrás consultar los precios y confirmar todos los detalles de la clase con el instructor."
     },
     "schoolDetails": {
         "title": "Detalles PRO school",

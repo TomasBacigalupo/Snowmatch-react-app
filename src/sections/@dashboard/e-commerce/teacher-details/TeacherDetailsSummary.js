@@ -391,10 +391,10 @@ export default function TeacherDetailsSummary({ cart, teacher, onAddCart, onGoto
           </RHFSelect>
           )} */}
           <Typography variant="subtitle" sx={{ mt: 0.5 }}>
-            {translate('teacherDetails.howToBook', { name: teacher.name})}
+            {values?.resort !== "Cerro Catedral" ? translate('teacherDetails.howToBookRest') : translate('teacherDetails.howToBookCatedral', { name: teacher.name})}
           </Typography>
-        </Stack>}
 
+        </Stack>}
         {/* <Stack direction="row" justifyContent="space-between" sx={{ mb: 3 }}>
           <Typography variant="subtitle1" sx={{ mt: 0.5 }}>
             {translate('teacherDetails.people')}

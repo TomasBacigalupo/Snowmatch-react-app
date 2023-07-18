@@ -167,7 +167,7 @@ export default function EventCard({ lessons, showInfo = true }) {
                         variant={'outlined'}
                         color={'primary'}
                         startIcon={<Iconify icon={'mdi:user'} />}
-                        disabled={!(lessonState === 'ACCEPTED' && payed )}
+                        disabled={!(lessonState === 'ACCEPTED' && (payed || resort !== 'Cerro Catedral') ) }
                     >
                         {translate('event.information')}
                     </Button>

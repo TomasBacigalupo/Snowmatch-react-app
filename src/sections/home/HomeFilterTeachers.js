@@ -191,12 +191,15 @@ export default function HomeFilterTeachers() {
                                 </Grid>
                                 <Grid item xs={7}>
                                     <HoverButton fullWidth type="submit" variant="contained" size="large" startIcon={<Iconify icon={'eva:flash-fill'} width={20} height={20} />}>
-                                        {translate("landingPRO.match")}
+                                        {translate("landingPRO.search")}
                                     </HoverButton>
                                 </Grid>
 
                             </Grid>
                         </Card>
+                    </Grid>
+                    <Grid item xs={12} md={9} justifyContent='center'>
+                        <Typography variant="h5" sx={{ color: theme.typography.color, mt:1 }}> {translate("landingPRO.slogan")} </Typography>
                     </Grid>
                 </Grid>
             </FormProvider>

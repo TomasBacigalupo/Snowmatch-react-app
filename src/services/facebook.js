@@ -34,3 +34,21 @@ export const searchTeachers = (filters) => {
     });
 }
 
+export const premiumLesson = () => {
+    ReactPixel.init(process.env.REACT_APP_FACEBOOK_PIXEL_ID, {}, {
+        autoConfig: true,
+        debug: process.env.REACT_APP_FACEBOOK_PIXEL_ID === "DEBUG"
+    });
+
+    ReactPixel.track('Premium');
+}
+
+export const standardLesson = () => {
+    ReactPixel.init(process.env.REACT_APP_FACEBOOK_PIXEL_ID, {}, {
+        autoConfig: true,
+        debug: process.env.REACT_APP_FACEBOOK_PIXEL_ID === "DEBUG"
+    });
+
+    ReactPixel.track('Standard');
+}
+

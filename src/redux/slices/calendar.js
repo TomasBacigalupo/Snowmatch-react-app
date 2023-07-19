@@ -88,16 +88,12 @@ const slice = createSlice({
     createEventSuccess(state, action) {
       const newEvent = action.payload;
       state.isLoading = false;
-      state.events = [...state.events, {
-        ...newEvent,
-        start: utcToLocalDate(newEvent.start),
-        end: utcToLocalDate(newEvent.end)
-
-      }];
+      state.events = [...state.events, newEvent];
     },
 
     // UPDATE EVENT
     updateEventSuccess(state, action) {
+      debugger
       const event = action.payload;
       const updateEvents = state.events.map((_event, i) => {
         if (_event.id === event.id) {
@@ -368,10 +364,12 @@ export function createBusinessEvent(newEvent) {
 
 export function updateEvent(eventId, updateEvent) {
   return async () => {
+    const start = addUtcOffset(updateEvent.start); // Adjust start time with UTC offset
+    const end = addUtcOffset(updateEvent.end); // Adjust end time with UTC offset
     //dispatch(slice.actions.startLoading());
     try {
       const response = await axios.put(`/api/events/byId/${eventId}`, updateEvent);
-      dispatch(slice.actions.updateEventSuccess({ ...updateEvent, id: eventId }));
+      dispatch(slice.actions.updateEventSuccess({ ...updateEvent, id: eventId, start, end }));
       return response;
     } catch (error) {
       //dispatch(slice.actions.hasError(error));
@@ -381,11 +379,13 @@ export function updateEvent(eventId, updateEvent) {
 }
 
 export function updateEventByUserIdAndEventId(userId, eventId, updatedEvent){
+  const start = addUtcOffset(updatedEvent.start); // Adjust start time with UTC offset
+  const end = addUtcOffset(updatedEvent.end); // Adjust end time with UTC offset
   return async () => {
     //dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.put(`/api/admin/user/${userId}/event/${eventId}`, updatedEvent);
-      dispatch(slice.actions.updateEventSuccess({ ...updateEvent, id: eventId }));
+      const response = await axios.put(`/api/admin/user/${userId}/event/${eventId}`, {...updatedEvent, start, end});
+      dispatch(slice.actions.updateEventSuccess({ ...updatedEvent, id: eventId }));
       return response;
     } catch (error) {
       //dispatch(slice.actions.hasError(error));

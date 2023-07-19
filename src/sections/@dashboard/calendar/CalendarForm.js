@@ -15,7 +15,7 @@ import { createEvent, updateEvent, deleteEvent, createBusinessEvent, updateBusin
 // components
 import Iconify from '../../../components/Iconify';
 import { ColorSinglePicker } from '../../../components/color-utils';
-import { FormProvider, RHFTextField, RHFSwitch, RHFSelect } from '../../../components/hook-form';
+import { FormProvider, RHFTextField, RHFSwitch, RHFSelect, RHFCheckbox } from '../../../components/hook-form';
 import { useEffect, useState } from 'react';
 import { Avatar } from '@mui/material';
 import { Autocomplete } from '@mui/material';
@@ -25,6 +25,9 @@ import useAuth from 'src/hooks/useAuth';
 import { useParams } from 'react-router';
 import { use } from 'i18next';
 import AdminEventInfo from './AdminEventInfo';
+import { getTeacher, getTeachers } from 'src/redux/slices/admin';
+import { useSelector } from 'react-redux';
+import { SKI_RESORTS } from 'src/utils/constants';
 
 
 // ----------------------------------------------------------------------
@@ -48,6 +51,7 @@ const getInitialValues = (event, range) => {
     start: range ? new Date(range.start) : new Date(),
     end: range ? new Date(range.end) : new Date(),
     price: event?.price ?? null,
+    assignedStudents: event?.students ?? [],
   };
 
   if (event || range) {
@@ -71,16 +75,20 @@ export default function CalendarForm({ event, range, onCancel, clients, members,
   const { translate } = useLocales()
   const [selectedClients, setSelectedClients] = useState([...event?.clients || []])
   const [assignedUsers, setAssignedUsers] = useState([...event?.assignedUsers || []])
-  const [isCreating, setIsCreating] = useState(false)
+  const [assignedStudents, setAssignedStudents] = useState([...event?.students || []])
+  const [state, setState] = useState(event?.state || 'PENDING')
+  
   const [classType, setClassType] = useState('teacher');
   const user = useAuth()
   const { id } = useParams()
+  const isCreating = !event?.id;
+  const { teachers } = useSelector((state) => state.admin)
 
 
   const dispatch = useDispatch();
 
   const EventSchema = Yup.object().shape({
-    title: Yup.string().max(255).required('Title is required'),
+    title: Yup.string().max(255).min(3).required('Title is required'),
     type: Yup.string().max(255).required('Title is required'),
     description: Yup.string().max(5000),
   });
@@ -140,7 +148,13 @@ export default function CalendarForm({ event, range, onCancel, clients, members,
       if (event.id) {
         if (classType === 'teacher') {
           if (user?.user?.role === 'ADMIN') {
-            func = updateEventByUserIdAndEventId(event.owner.id, event.id, newEvent);
+            func = updateEventByUserIdAndEventId(event.owner.id, event.id, {
+              ...newEvent,
+              students: assignedStudents?.map((u) => ({ id: u.id })),
+              state: state,
+              payed: data.payed,
+              resort: data.resort
+            });
             snackbar = 'Update success!'
           } else {
             func = updateEvent(event.id, newEvent);
@@ -223,14 +237,6 @@ export default function CalendarForm({ event, range, onCancel, clients, members,
 
   }, []);
 
-  useEffect(() => {
-    setIsCreating(event === {})
-  }, [event]);
-
-  useEffect(() => {
-    console.log("event", event)
-    console.log("members", members)
-  }, [event]);
 
   const handleSchoolChange = (onChangeEvent, newAlignment) => {
     if (event?.id !== null || event?.id != undefined) {
@@ -251,7 +257,6 @@ export default function CalendarForm({ event, range, onCancel, clients, members,
     { group: 'Class', classify: ['School class', 'App class', 'Own client class'] },
     { group: 'Off', classify: ['Break', 'Training', 'Illness'] },
   ];
-
 
 
   return (
@@ -321,11 +326,48 @@ export default function CalendarForm({ event, range, onCancel, clients, members,
 
         />}
 
-        {event?.students?.length > 0 && <Autocomplete
-          name="assignedTeachersId" label={translate('calendar.form.assignedStudents')}
+        {user?.user?.role === 'ADMIN' && <Autocomplete
+          name="assignedStudents" label={translate('calendar.form.assignedStudents')}
+          multiple
+          value={assignedStudents}
+          options={teachers}
+          getOptionLabel={(m) => `${m?.name} ${m?.lastname}`}
+          onChange={(event, value) => {
+            setAssignedStudents([...value])
+          }}
+          renderOption={(props, student) => (
+            <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+              <Avatar sx={{ marginRight: '10px' }}>{`${student?.name[0]}${student?.lastname[0]}`}</Avatar>
+              {`${student?.name} ${student?.lastname}`}
+            </Box>
+          )}
+          renderInput={(params) => (
+            <RHFTextField {...params}
+              disabled={disabled}
+              name="assignedStudents" label={translate('calendar.form.assignedStudents')} />
+          )}
+
+          onInputChange={(event, value, reason) => {
+            console.log("value", value)
+            console.log("reason", reason)
+            console.log("event", event)
+            dispatch(getTeachers(0, "STUDENT", value, 0))
+          }}
+        />}
+        {user?.user?.role === 'ADMIN' && <RHFSelect name='resort' label='Resort' onChange={(e) => {
+          setValue('resort', e.target.value)
+        }}>
+          {SKI_RESORTS.map((resort, i) => (
+            <option key={resort.title} value={resort.title}>
+              {resort.title}
+            </option>
+          ))}
+        </RHFSelect>}
+        {event?.students?.length > 0 && user?.user?.role !== 'ADMIN' && <Autocomplete
+          name="assignedStudentsId" label={translate('calendar.form.assignedStudents')}
           multiple
           value={event?.students}
-          options={[]}
+          options={teachers}
           getOptionLabel={(m) => `${m?.name} ${m?.lastname}`}
           renderOption={(props, student) => (
             <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
@@ -340,6 +382,27 @@ export default function CalendarForm({ event, range, onCancel, clients, members,
           )}
 
         ></Autocomplete>}
+        {user.user.role === 'ADMIN' &&
+          <RHFSelect
+            name='state'
+            label='State'
+            onChange={(e) => {
+              setState(e.target.value)
+              setValue('state', e.target.value)
+            }
+            }
+          >
+            <option key="PENDING" value="PENDING" >
+              PENDING
+            </option>
+            <option key="ACCEPTED" value="ACCEPTED" >
+              ACCEPTED
+            </option>
+            <option key="DECLINED" value="DECLINED" >
+              DECLINED
+            </option>
+          </RHFSelect>
+        }
         <RHFSelect disabled={disabled} name="type" label={translate('calendar.form.type')}>
           {TYPE_OPTION.map((type, i) => (
             <optgroup key={type.group} label={type.group}>
@@ -402,6 +465,7 @@ export default function CalendarForm({ event, range, onCancel, clients, members,
             <ColorSinglePicker disabled={disabled} value={field.value} onChange={field.onChange} colors={COLOR_OPTIONS} />
           )}
         />
+        <RHFCheckbox name='payed' label='Payed' disabled={user.user.role !== 'ADMIN'} />
       </Stack>
 
       <DialogActions>

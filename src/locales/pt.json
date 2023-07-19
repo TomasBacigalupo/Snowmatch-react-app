@@ -69,7 +69,9 @@
         "getStartedToday": "¡Forme parte de SnowMatch!",
         "find": "Matchee com o PRO que você precise...",
         "start_date":"Desde",
-        "end_date":"Até"
+        "end_date":"Até",
+        "search": "Buscar",
+        "slogan": "Evite filas e aproveite a montanha"
     },
     "menu": {
         "general": "General",

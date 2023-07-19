@@ -3,6 +3,7 @@ import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import { useDispatch, useSelector } from 'react-redux';
 import { setPremiumTeachers, setStandardTeachers } from 'src/redux/slices/teachers';
+import { premiumLesson, standardLesson } from 'src/services/facebook';
 
 export default function IndependentShop() {
     const dispatch = useDispatch();
@@ -13,8 +14,10 @@ export default function IndependentShop() {
         category,
     ) => {
         if(category === 'standard'){
+            standardLesson()
             dispatch(setStandardTeachers())
         } else {
+            premiumLesson()
             dispatch(setPremiumTeachers())
         }
     };

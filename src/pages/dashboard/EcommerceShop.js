@@ -33,6 +33,7 @@ import { useParams } from 'react-router';
 import useLocales from 'src/hooks/useLocales';
 import ShopOtherTeacherList from 'src/sections/@dashboard/e-commerce/shop/ShopOtherTeachersList';
 import IndependentShop from 'src/sections/@dashboard/e-commerce/shop/IndependentShop';
+import ShopStandardProducts from 'src/sections/@dashboard/e-commerce/shop/ShopStandardProducts';
 // ----------------------------------------------------------------------
 
 function useQuery() {
@@ -52,7 +53,7 @@ export default function EcommerceShop({ isGuest = false, teacherType = "school" 
   const query = useQuery()
   const [openFilter, setOpenFilter] = useState(false);
 
-  const { teachers, sortBy, filters, teachersWithEvents, category } = useSelector((state) => { return state.teachers })
+  const { teachers, sortBy, filters, teachersWithEvents, category, isLoading } = useSelector((state) => { return state.teachers })
 
   useEffect(() => {
     if (query.get('resort')) {
@@ -220,8 +221,9 @@ export default function EcommerceShop({ isGuest = false, teacherType = "school" 
         </Stack>
         {/* manotaso de ahogado muestro todos */}
         {/* {teacherType == "independent" && <ShopTeacherList teachers={teachersWithEvents} loading={!filteredTeachers.length && isDefault} />} */}
-        {teacherType === "independent" && <ShopTeacherList teachers={filteredTeachers?.filter(t => category === "standard" ? t.id === 8 : (t.stars > 0 && t.id !== 8))} loading={!filteredTeachers.length && isDefault} />}
-        {teacherType === "independent" && category === "premium" && <ShopOtherTeacherList teachers={filteredTeachers?.filter(t => t.stars === 0 || !t.stars)} loading={!filteredTeachers.length && isDefault} />}
+        {teacherType === "independent" && category === "standard" && <ShopStandardProducts teachers={filteredTeachers?.filter(t => t.id === 8)} loading={ isLoading } />}
+        {teacherType === "independent" && category === "premium" && <ShopTeacherList teachers={filteredTeachers?.filter(t => (t.stars > 0 && t.id !== 8))} loading={isLoading} />}
+        {teacherType === "independent" && category === "premium" && <ShopOtherTeacherList teachers={filteredTeachers?.filter(t => t.stars === 0 || !t.stars)} loading={isLoading} />}
         {teacherType === "school" && <ShopTeacherList teachers={filteredTeachers} loading={!filteredTeachers.length && isDefault} />}
       </Container>
       <><br /></>

@@ -83,7 +83,9 @@
         "getStartedToday": "¡Formá parte de SnowMatch!",
         "find": "Encontrá tu clase ideal",
         "start_date": "Desde",
-        "end_date": "Hasta"
+        "end_date": "Hasta",
+        "search":"Buscar",
+        "slogan": "Evita las colas y disfruta de la montaña de forma segura"
     },
     "menu": {
         "general": "General",
@@ -427,6 +429,7 @@
         "info": "Vamos a contactar al Pro y ponerlo en contacto con usted a la brevedad. Cualquier consulta no dude en contactarnos. "
     },
     "checkout": {
+        "privates": "Clase Privada",
         "deal_with_pro": "Arregle con el PRO",
         "free": "Gratis",
         "morning": "Mañana",

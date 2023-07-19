@@ -15,8 +15,6 @@ ShopTeacherList.propTypes = {
 };
 
 export default function ShopTeacherList({ teachers, loading }) {
-  console.log(teachers);
-  console.log(orderBy(teachers, ['stars'], ['desc']).map((teacher) => teacher.stars));
   return (
     <Box
       sx={{

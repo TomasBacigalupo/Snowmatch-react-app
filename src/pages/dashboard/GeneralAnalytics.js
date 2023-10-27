@@ -25,30 +25,17 @@ export default function GeneralAnalytics() {
   return (
     <Page title="General: Analytics">
       <Container maxWidth={themeStretch ? false : 'xl'}>
-        <Typography variant="h4" sx={{ mb: 5 }}>
-          Hi, Welcome back
+        <Typography variant="h4" sx={{ mb: 5, textAlign: 'center' }}>
+          SnowMatch Season 2023 Argentina
         </Typography>
 
         <Grid container spacing={3}>
           <Grid item xs={12} sm={6} md={3}>
-            <AnalyticsWidgetSummary title="Weekly Sales" total={714000} icon={'ant-design:android-filled'} />
+            <AnalyticsWidgetSummary title="Season Bookings" total={378} icon={'ant-design:android-filled'} />
           </Grid>
 
           <Grid item xs={12} sm={6} md={3}>
-            <AnalyticsWidgetSummary title="New Users" total={1352831} color="info" icon={'ant-design:apple-filled'} />
-          </Grid>
-
-          <Grid item xs={12} sm={6} md={3}>
-            <AnalyticsWidgetSummary
-              title="Item Orders"
-              total={1723315}
-              color="warning"
-              icon={'ant-design:windows-filled'}
-            />
-          </Grid>
-
-          <Grid item xs={12} sm={6} md={3}>
-            <AnalyticsWidgetSummary title="Bug Reports" total={234} color="error" icon={'ant-design:bug-filled'} />
+            <AnalyticsWidgetSummary title="Total Clients" total={400} color="info" icon={'ant-design:apple-filled'} />
           </Grid>
 
           <Grid item xs={12} md={6} lg={8}>

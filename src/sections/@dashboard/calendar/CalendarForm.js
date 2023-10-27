@@ -28,6 +28,7 @@ import AdminEventInfo from './AdminEventInfo';
 import { getTeacher, getTeachers } from 'src/redux/slices/admin';
 import { useSelector } from 'react-redux';
 import { SKI_RESORTS } from 'src/utils/constants';
+import dayjs from 'dayjs';
 
 
 // ----------------------------------------------------------------------
@@ -43,14 +44,16 @@ const COLOR_OPTIONS = [
 ];
 
 const getInitialValues = (event, range) => {
+  console.log("event", event)
+  console.log("range", range)
   const _event = {
     type: 'Own client class',
     title: '',
     description: '',
     textColor: '#1890FF',
-    start: range ? new Date(range.start) : new Date(),
-    end: range ? new Date(range.end) : new Date(),
-    price: event?.price ?? null,
+    start: range ? dayjs(range.start).hour(9) : new Date(),
+    end: range ? dayjs(range.end).subtract(1,'day').hour(18) : new Date(),
+    price: event?.price ?? 0,
     assignedStudents: event?.students ?? [],
   };
 
@@ -90,7 +93,8 @@ export default function CalendarForm({ event, range, onCancel, clients, members,
   const EventSchema = Yup.object().shape({
     title: Yup.string().max(255).min(3).required('Title is required'),
     type: Yup.string().max(255).required('Title is required'),
-    description: Yup.string().max(5000),
+    description: Yup.string().max(5000).required('Description is required'),
+    price: Yup.number().min(0).max(1000000).required('Description is required'),
   });
 
   const methods = useForm({
@@ -124,6 +128,7 @@ export default function CalendarForm({ event, range, onCancel, clients, members,
             start: data.start,
             end: data.end,
             type: data.type,
+            price: 0,
           };
           break
         default:

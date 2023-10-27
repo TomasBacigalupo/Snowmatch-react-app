@@ -88,7 +88,13 @@ const slice = createSlice({
     createEventSuccess(state, action) {
       const newEvent = action.payload;
       state.isLoading = false;
-      state.events = [...state.events, newEvent];
+      console.log(newEvent)
+      console.log(state.events)
+      state.events = [...state.events, {
+        ...newEvent,
+        start: newEvent.start.toDate(),
+        end: newEvent.end.toDate()
+      }];
     },
 
     // UPDATE EVENT
@@ -97,7 +103,11 @@ const slice = createSlice({
       const event = action.payload;
       const updateEvents = state.events.map((_event, i) => {
         if (_event.id === event.id) {
-          return event;
+          return {
+            ...event,
+            start: event.start.toDate(),
+            end: event.end.toDate()
+          };
         }
         return _event;
       });
@@ -189,9 +199,10 @@ const slice = createSlice({
 
     // DELETE EVENT
     deleteEventSuccess(state, action) {
-      const {eventId} = action.payload;
-      const deleteEvent = state.events.filter((event) =>{ 
-        return event.id !== eventId});
+      const { eventId } = action.payload;
+      const deleteEvent = state.events.filter((event) => {
+        return event.id !== eventId
+      });
       state.events = deleteEvent;
     },
 
@@ -243,7 +254,7 @@ export function getEvents() {
         const utcOffset = dateStart.getTimezoneOffset() * 60000; // Get the UTC offset in milliseconds
         const adjustedDateStart = new Date(dateStart.getTime() + utcOffset);
         const adjustedDateEnd = new Date(dateEnd.getTime() + utcOffset);
-        if (e?.source === 'APP' && e.eventType === "CLASS"){
+        if (e?.source === 'APP' && e.eventType === "CLASS") {
           return {
             ...e,
             title: e.title ?? 'Match',
@@ -258,10 +269,10 @@ export function getEvents() {
         }
         if (e?.source === 'PRODUCT' && e.eventType === "CLASS") {
           let title = e.title
-          if(e.title === 'PRIVATE_FULL_DAY'){
+          if (e.title === 'PRIVATE_FULL_DAY') {
             title = 'Clase privada día completo'
           }
-          if(e.title === 'PRIVATE_HALF_DAY'){
+          if (e.title === 'PRIVATE_HALF_DAY') {
             title = 'Clase privada medio día'
           }
 
@@ -278,7 +289,7 @@ export function getEvents() {
         return {
           ...e,
           start: adjustedDateStart,
-          end: adjustedDateEnd  
+          end: adjustedDateEnd
         };
       })
       dispatch(slice.actions.getEventsSuccess(events));
@@ -368,7 +379,11 @@ export function updateEvent(eventId, updateEvent) {
     const end = addUtcOffset(updateEvent.end); // Adjust end time with UTC offset
     //dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.put(`/api/events/byId/${eventId}`, updateEvent);
+      const response = await axios.put(`/api/events/byId/${eventId}`, {
+        ...updateEvent,
+        start,
+        end
+      });
       dispatch(slice.actions.updateEventSuccess({ ...updateEvent, id: eventId, start, end }));
       return response;
     } catch (error) {
@@ -378,13 +393,13 @@ export function updateEvent(eventId, updateEvent) {
   };
 }
 
-export function updateEventByUserIdAndEventId(userId, eventId, updatedEvent){
+export function updateEventByUserIdAndEventId(userId, eventId, updatedEvent) {
   const start = addUtcOffset(updatedEvent.start); // Adjust start time with UTC offset
   const end = addUtcOffset(updatedEvent.end); // Adjust end time with UTC offset
   return async () => {
     //dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.put(`/api/admin/user/${userId}/event/${eventId}`, {...updatedEvent, start, end});
+      const response = await axios.put(`/api/admin/user/${userId}/event/${eventId}`, { ...updatedEvent, start, end });
       dispatch(slice.actions.updateEventSuccess({ ...updatedEvent, id: eventId }));
       return response;
     } catch (error) {
@@ -540,7 +555,7 @@ export function setPaid(eventId) {
   };
 }
 
-export function setAccepted(eventId){
+export function setAccepted(eventId) {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
@@ -552,7 +567,7 @@ export function setAccepted(eventId){
   };
 }
 
-export function setDeclined(eventId){
+export function setDeclined(eventId) {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
@@ -569,7 +584,7 @@ export function getEventsByUserId(id) {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.get(`/api/admin/user/${id}/event?page=1&size=300`);
-      
+
       const events = response.data.map(e => {
         const dateStart = new Date(e.start);
         const dateEnd = new Date(e.end);

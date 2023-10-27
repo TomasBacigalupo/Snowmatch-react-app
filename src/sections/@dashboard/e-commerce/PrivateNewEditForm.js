@@ -49,7 +49,7 @@ const DAYS = [
 ]
 
 const getDefaultEndDate = () => {
-    let d = new Date
+    let d = new Date()
     d.setDate(new Date().getDate() + 1)
     return d
 }

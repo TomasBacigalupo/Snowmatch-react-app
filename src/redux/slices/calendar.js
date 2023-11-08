@@ -338,7 +338,7 @@ export function createEvent(newEvent) {
       const response = await axios.post('/api/events/create', {
         ...newEvent,
         start,
-        end
+        end,
       });
       dispatch(slice.actions.createEventSuccess(newEvent));
       return response;

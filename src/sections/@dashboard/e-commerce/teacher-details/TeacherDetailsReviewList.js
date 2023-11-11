@@ -15,12 +15,13 @@ import useLocales from 'src/hooks/useLocales';
 
 TeacherDetailsReviewList.propTypes = {
   teacher: PropTypes.object,
+  horizontal: PropTypes.bool
 };
 
-export default function TeacherDetailsReviewList({ teacher }) {
+export default function TeacherDetailsReviewList({ teacher, horizontal = false }) {
 
-  const {translate} = useLocales()
-  const {rates, isLoading, totalPages} = useSelector((state) => state.rates)
+  const { translate } = useLocales()
+  const { rates, isLoading, totalPages } = useSelector((state) => state.rates)
   const dispatch = useDispatch()
   const [page, setPage] = useState(0)
 
@@ -28,31 +29,45 @@ export default function TeacherDetailsReviewList({ teacher }) {
     dispatch(getRates(teacher.id, page, 5))
   }, [dispatch, page])
 
+  if (horizontal) {
+    return (
+      <Box sx={{ pt: 3, px: 2, pb: 0, overflowX: 'auto' }}>
+        <List disablePadding sx={{ display: 'flex', flexDirection: 'row', gap: 2 }}>
+          {rates?.map((rate) => (
+            <ReviewItem key={rate.id} review={rate} />
+          ))}
+        </List>
+      </Box>
+    );
+  }
+
   return (
     <Box sx={{ pt: 3, px: 2, pb: 5 }}>
-      {isLoading && <CircularProgress/>}
+      {isLoading && <Box display='flex' justifyContent='center' width='100%'>
+        <CircularProgress />
+      </Box>}
       {rates?.length === 0 && (
         <Typography>{translate("teacherDetails.no_reviews")}</Typography>
       )}
-      {!isLoading &&(
+      {!isLoading && (
         <List disablePadding>
           {rates?.map((rate) => (
-             <ReviewItem key={rate.id} review={rate} />
+            <ReviewItem key={rate.id} review={rate} />
           ))}
         </List>
       )}
       {!isLoading && rates?.length !== 0 &&
-      <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-        <Pagination 
-          count={totalPages}
-        onChange={(event, page) =>{
-          setPage(page-1)
-        }}
-        page={page+1}
-        color="primary" />
-      </Box>
+        <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+          <Pagination
+            count={totalPages}
+            onChange={(event, page) => {
+              setPage(page - 1)
+            }}
+            page={page + 1}
+            color="primary" />
+        </Box>
       }
-      
+
     </Box>
   );
 }
@@ -65,7 +80,7 @@ ReviewItem.propTypes = {
 
 function ReviewItem({ review }) {
 
-  const { raterName, raterLastname, rateDate, comment,  imageLink, isPurchased, stars } = review;
+  const { raterName, raterLastname, rateDate, comment, imageLink, isPurchased, stars } = review;
 
   return (
     <>

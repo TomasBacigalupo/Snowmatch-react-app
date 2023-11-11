@@ -193,12 +193,7 @@ export default function EcommerceTeacherDetails({ isGuest = false }) {
                     <Divider />
                   </Box>
                   <TimeDetails />
-                  <Box mx={2} >
-                    <Divider />
-                  </Box>
-
                   <MobileSelectDays />
-
                 </Hidden>
               </Grid>
             </Grid>

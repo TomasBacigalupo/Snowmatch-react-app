@@ -26,7 +26,7 @@ import {
 
 // ----------------------------------------------------------------------
 
-const STEPS = [ 'Confirmation', 'Payment'];
+const STEPS = [ 'Confirmation', 'Teacher Approve', 'Payment'];
 
 const QontoConnector = styled(StepConnector)(({ theme }) => ({
   top: 10,

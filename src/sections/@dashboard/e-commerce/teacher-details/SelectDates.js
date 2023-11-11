@@ -112,29 +112,27 @@ export default function SelectDates({ handleClose, onSubmit }) {
                         <Grid item xs={12}>
                             <Button variant='outlined' fullWidth onClick={() => {
                                 selectedDates[selectedDates.length - 1].setHours(8)
-                                setSelectTimeModal(false)}}>{translate('selectTime.allday')}</Button>
+                                setSelectTimeModal(false)
+                            }}>{translate('selectTime.allday')}</Button>
                         </Grid>
                     </Grid>
                 </DialogContent>
             </DialogAnimate>
-            <DialogContent>
-                <Grid container>
-                    <Grid item xs={12}>
-                        <StaticDatePicker
-                            displayStaticWrapperAs="mobile"
-                            value={"dae"}
-                            showToolbar={false}
-                            renderDay={renderWeekPickerDay}
-                            renderInput={(params) => <TextField {...params} />}
-                            inputFormat="'Week of' MMM d"
-                        />
-                    </Grid>
-                    <Grid item xs={12}>
-                        <Typography>{`${translate('general.total_days')}: ${selectedDates.length}`}</Typography>
-                    </Grid>
-
+            <Grid container width={'100%'} height={'100%'}>
+                <Grid item xs={12} width={'100%'} height={'100%'}>
+                    <StaticDatePicker
+                        showToolbar={false}
+                        renderDay={renderWeekPickerDay}
+                        renderInput={(params) => <TextField {...params} />}
+                        inputFormat="'Week of' MMM d"
+                    />
                 </Grid>
-            </DialogContent>
+                <Grid item xs={12} pl={3}>
+                    <Typography>{`${translate('general.total_days')}: ${selectedDates.length}`}</Typography>
+                </Grid>
+
+            </Grid>
+
             <DialogActions>
                 <Button fullWidth variant='outlined' onClick={handleClose}>
                     {translate('general.cancel')}

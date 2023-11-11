@@ -42,11 +42,11 @@ export default function TeacherDetailsReview({ teacher, openForm = false }) {
       <TeacherDetailsReviewOverview teacher={teacher} onOpen={handleOpenReviewBox} />
 
       <Divider />
-      
-      <Collapse in={reviewBox}>
+      {/* Review Form */}
+      {/* <Collapse in={reviewBox}>
         <ProductDetailsReviewForm onClose={handleCloseReviewBox} id="move_add_review" teacherId={teacher.id}/>
         <Divider />
-      </Collapse>
+      </Collapse> */}
 
       <TeacherDetailsReviewList teacher={teacher} />
     </>

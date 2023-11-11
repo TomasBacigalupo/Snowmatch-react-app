@@ -213,7 +213,7 @@ export default function TeacherDetailsSummary({ cart, teacher, onAddCart, onGoto
         lessonTime = "ALL_DAY"
       }
       const requestEvent = {
-        price: 0,
+        price: 50,
         people: values.amount,
         lessonTime: lessonTime,
         date: date,

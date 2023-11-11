@@ -11,3 +11,8 @@ export { default as TeacherDetailsReviewOverview } from './TeacherDetailsReviewO
 export { default as ContactForm } from './ContactForm'
 export { default as ReferForm } from './ReferForm'
 export { default as TeacherDetailsCalendar } from './TeacherDetailsCalendar'
+export { default as TeacherDetailsMobileCalendar } from './TeacherDetailsMobileCalendar'
+export { default as Policies } from './Policies';
+export { default as TimeDetails } from './TimeDetails';
+export { default as TeacherDetailsMobileReview } from './TeacherDetailsMobileReview';
+export { default as MobileSelectDays } from './MobileSelectDays';

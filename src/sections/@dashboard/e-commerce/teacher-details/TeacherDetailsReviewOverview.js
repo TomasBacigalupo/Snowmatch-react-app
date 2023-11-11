@@ -113,13 +113,14 @@ export default function TeacherDetailsReviewOverview({ teacher, onOpen }) {
             Copy my review Link
           </Button>
         </GridStyle>}
-      {!isTeacher && <GridStyle item xs={12} md={4}>
+        {/* OPEN REVIEW FORM */}
+      {/* {!isTeacher && <GridStyle item xs={12} md={4}>
         <Link href="#move_add_review" underline="none">
           <Button size="large" disable={isTeacher} onClick={onOpen} variant="outlined" startIcon={<Iconify icon={'eva:edit-2-fill'} />}>
             {translate('teacherDetails.write_review')}
           </Button>
         </Link>
-      </GridStyle>}
+      </GridStyle>} */}
 
     </Grid>
   );

@@ -52,7 +52,7 @@ const getInitialValues = (event, range) => {
     description: '',
     textColor: '#1890FF',
     start: range ? dayjs(range.start).hour(9) : new Date(),
-    end: range ? dayjs(range.end).subtract(1,'day').hour(18) : new Date(),
+    end: range ? dayjs(range.end).subtract(1, 'day').hour(18) : new Date(),
     price: event?.price ?? 0,
     assignedStudents: event?.students ?? [],
   };
@@ -80,7 +80,7 @@ export default function CalendarForm({ event, range, onCancel, clients, members,
   const [assignedUsers, setAssignedUsers] = useState([...event?.assignedUsers || []])
   const [assignedStudents, setAssignedStudents] = useState([...event?.students || []])
   const [state, setState] = useState(event?.state || 'PENDING')
-  
+
   const [classType, setClassType] = useState('teacher');
   const user = useAuth()
   const { id } = useParams()

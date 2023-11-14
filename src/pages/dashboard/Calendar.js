@@ -28,6 +28,7 @@ import useLocales from 'src/hooks/useLocales';
 import HoverButton from 'src/components/HoverButton';
 import LessonForm from 'src/sections/@dashboard/calendar/LessonForm';
 import { getBusinessMembers } from 'src/redux/slices/business';
+import CalendarDayForm from 'src/sections/@dashboard/calendar/CalendarDayForm';
 
 // ----------------------------------------------------------------------
 
@@ -213,12 +214,12 @@ export default function Calendar() {
         </Card>
 
         <DialogAnimate open={isOpenModal} onClose={handleCloseModal}>
-          <DialogTitle>{selectedEvent ? translate('calendar.editEvent') : translate('calendar.addEvent')}</DialogTitle>
+          <DialogTitle>{selectedEvent ? translate('calendar.editEvent') : new Date(selectedRange?.start).toDateString()}</DialogTitle>
           {/* {selectedEvent?.source === 'APP' ? 
             <LessonForm event={selectedEvent || {}} range={selectedRange} onCancel={handleCloseModal} clients={clients} members={members || {}}/> :  */}
-            <CalendarForm event={selectedEvent || {}} disabled={selectedEvent?.source === 'APP'}  range={selectedRange} onCancel={handleCloseModal} clients={clients} members={members || {}}/>
+            {selectedEvent && <CalendarForm event={selectedEvent || {}} disabled={selectedEvent?.source === 'APP'}  range={selectedRange} onCancel={handleCloseModal} clients={clients} members={members || {}}/>}
             {/* } */}
-          
+            {!selectedEvent &&<CalendarDayForm event={selectedEvent || {}} disabled={selectedEvent?.source === 'APP'}  range={selectedRange} onCancel={handleCloseModal} clients={clients} members={members || {}}/>}
         </DialogAnimate>
       </Container>
     </Page>

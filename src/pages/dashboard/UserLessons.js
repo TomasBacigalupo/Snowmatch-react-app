@@ -31,24 +31,34 @@ import CertificateItem from 'src/sections/@dashboard/user/account/CertificateIte
 import UserLessonsList from 'src/sections/@dashboard/user/list/UserLessonsList';
 import { dispatch, useDispatch } from 'src/redux/store';
 import { getEvents, getLessons } from 'src/redux/slices/calendar';
+import { getBookings } from 'src/redux/slices/bookings';
 
 // ----------------------------------------------------------------------
 
-const TabsWrapperStyle = styled('div')(({ theme }) => ({
-    zIndex: 9,
-    bottom: 0,
-    width: '100%',
-    display: 'flex',
-    position: 'absolute',
-    backgroundColor: theme.palette.background.paper,
-    [theme.breakpoints.up('sm')]: {
-        justifyContent: 'center',
-    },
-    [theme.breakpoints.up('md')]: {
-        justifyContent: 'flex-end',
-        paddingRight: theme.spacing(3),
+const CustomTab = styled(Tab)(({ theme }) => ({
+    border: `1px solid ${theme.palette.divider}`,
+    paddingLeft: theme.spacing(2),
+    paddingRight: theme.spacing(2),
+    minWidth: 'auto', // Adjust as needed
+    borderRadius: '40px',
+    '&.Mui-selected': {
+        backgroundColor: 'transparent',
+        border: `1px solid black`,
     },
 }));
+
+const TabsWrapperStyle = styled('div')(({ theme }) => ({
+    zIndex: 9,
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'flex-start',
+    position: 'relative',
+    backgroundColor: 'white',
+    '& .MuiTabs-indicator': {
+        backgroundColor: 'transparent', // Set the color of the indicator to white
+    }
+}));
+
 
 // ----------------------------------------------------------------------
 
@@ -59,7 +69,7 @@ export default function UserLessons() {
 
     const { translate } = useLocales()
 
-    const { currentTab, onChangeTab } = useTabs('profile');
+    const { currentTab, onChangeTab } = useTabs('pending');
 
     const [findFriends, setFindFriends] = useState('');
 
@@ -71,38 +81,33 @@ export default function UserLessons() {
     };
 
     useEffect(() => {
-        dispatch(getLessons())
+        dispatch(getBookings())
     }, [dispatch])
+
+    useEffect(()=>{
+        
+    }, [currentTab])
 
     return (
         <Page title="User: Lessons">
             <Container maxWidth={themeStretch ? false : 'lg'}>
-                {isTeacher && <HeaderBreadcrumbs
-                    heading={translate("breadcrumb.lessons")}
-                    links={[
-                        { name: translate("breadcrumb.dashboard"), href: PATH_DASHBOARD.root },
-                        { name: translate("breadcrumb.lessons") },
-                    ]}
-                />}
-
-                {isStudent && <HeaderBreadcrumbs
-                    heading={translate("breadcrumb.lessons")}
-                    links={[
-                        { name: 'Match', href: PATH_GUEST.root },
-                        { name: translate("breadcrumb.lessons") },
-                    ]}
-                />}
-                <Card
-                    sx={{
-                        mb: 3,
-                        position: 'relative',
-                        padding:'2px'
-                    }}
-                >
-                    <UserLessonsList/>
-                </Card>
-
-
+                {/* Lessons chips filter */}
+                <Box sx={{ mb: 2 }}>
+                    <TabsWrapperStyle>
+                        <Tabs
+                            value={currentTab}
+                            scrollButtons='none'
+                            variant="scrollable"
+                            allowScrollButtonsMobile
+                            onChange={onChangeTab}
+                        >
+                            <CustomTab label={translate("lessons.upcoming")} value="upcoming" />
+                            <CustomTab label={translate("lessons.pending")} value="pending" />
+                            <CustomTab label={translate("lessons.all")} value="all" />
+                        </Tabs>
+                    </TabsWrapperStyle>
+                </Box>
+                <UserLessonsList />
             </Container>
         </Page>
     );

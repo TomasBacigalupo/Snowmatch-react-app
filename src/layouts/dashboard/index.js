@@ -65,7 +65,7 @@ function DashboardLayout() {
           sx={{
             px: { lg: 2 },
             pt: {
-              xs: `${HEADER.MOBILE_HEIGHT + 24}px`,
+              xs: `${HEADER.MOBILE_HEIGHT + 30}px`,
               lg: `${HEADER.DASHBOARD_DESKTOP_HEIGHT + 80}px`,
             },
             pb: {

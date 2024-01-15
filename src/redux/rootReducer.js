@@ -16,6 +16,7 @@ import discountReducer from './slices/discount';
 import businessReducer from './slices/business';
 import rateReducer from './slices/rates';
 import configReducer from './slices/config';
+import bookingReducer from './slices/bookings';
 
 
 // ----------------------------------------------------------------------
@@ -48,7 +49,8 @@ const rootReducer = combineReducers({
   discounts: discountReducer,
   business: businessReducer,
   rates: rateReducer,
-  config: configReducer
+  config: configReducer,
+  bookings: bookingReducer,
 });
 
 export { rootPersistConfig, rootReducer };

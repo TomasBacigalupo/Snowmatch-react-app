@@ -608,7 +608,11 @@
         "hire": "Los eventos ya no están disponibles"
     },
     "lessons": {
-        "noFeatureLessons": "No hay proximas clases"
+        "noFeatureLessons": "No hay proximas clases",
+        "all": "Todas",
+        "upcoming": "Próximas",
+        "past": "Pasadas",
+        "pending": "Pendientes"
     },
     "auth":{
         "haveAccount": "¿Ya tenés una cuenta?",

@@ -315,6 +315,20 @@ export function getLessons() {
 
 // ----------------------------------------------------------------------
 
+export function getBookings() {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get('/api/events/lessons');
+      dispatch(slice.actions.getLessonsSuccess(response.data));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+// ----------------------------------------------------------------------
+
 export function getLessonById(id) {
   return async () => {
     dispatch(slice.actions.startLoading());

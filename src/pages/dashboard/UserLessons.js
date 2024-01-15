@@ -84,13 +84,21 @@ export default function UserLessons() {
         dispatch(getBookings())
     }, [dispatch])
 
-    useEffect(()=>{
-        
-    }, [currentTab])
-
     return (
         <Page title="User: Lessons">
             <Container maxWidth={themeStretch ? false : 'lg'}>
+                {isTeacher && <HeaderBreadcrumbs
+                    heading={translate("breadcrumb.lessons")}
+                    sx={{ my: 1, mt: 0 }}
+                />}
+
+                {isStudent && <HeaderBreadcrumbs
+                    heading={translate("breadcrumb.lessons")}
+                    links={[
+                        { name: 'Match', href: PATH_GUEST.root },
+                        { name: translate("breadcrumb.lessons") },
+                    ]}
+                />}
                 {/* Lessons chips filter */}
                 <Box sx={{ mb: 2 }}>
                     <TabsWrapperStyle>

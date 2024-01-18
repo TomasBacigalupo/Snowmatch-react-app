@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import { useState } from "react";
-import { Typography, Box, Card, Button, Avatar, Divider } from "@mui/material";
+import { Typography, Box, Card, Button, Avatar, Divider, TextField } from "@mui/material";
 import Iconify from "src/components/Iconify";
 import { formatDate } from "@fullcalendar/react";
 import { useNavigate } from "react-router";
@@ -169,7 +169,7 @@ export default function BookingCard({ booking, showInfo = true }) {
                             Detalles de la reserva
                         </Typography>
                         <Box mb={2}>
-                            <Typography sx={{fontSize: '20px'}}>
+                            <Typography sx={{ fontSize: '20px' }}>
                                 {`Cantidad de días`}
                             </Typography>
                             <Typography variant="body1" paragraph>
@@ -178,7 +178,7 @@ export default function BookingCard({ booking, showInfo = true }) {
                             <Divider />
                         </Box>
                         <Box mb={2}>
-                            <Typography sx={{fontSize: '20px'}}>
+                            <Typography sx={{ fontSize: '20px' }}>
                                 {`Horarios`}
                             </Typography>
                             <Typography variant="body1" paragraph>
@@ -187,7 +187,7 @@ export default function BookingCard({ booking, showInfo = true }) {
                             <Divider />
                         </Box>
                         <Box>
-                            <Typography sx={{fontSize: '20px'}}>
+                            <Typography sx={{ fontSize: '20px' }}>
                                 {`Alumnos`}
                             </Typography>
                             <Typography variant="body1" paragraph>
@@ -209,8 +209,70 @@ export default function BookingCard({ booking, showInfo = true }) {
                     </Grid>
                     <Grid item xs={12}>
                         <Typography variant="h3" paragraph>
+                            Notas
+                        </Typography>
+                        <Box display='flex' flexDirection='column'>
+                            <TextField minRows={3} rows={3}/>
+                            <Button variant="outlined" sx={{ mt: 2, py: 1 }} onClick={() => navigate(PATH_DASHBOARD.user.profile)}>
+                                Guardar
+                            </Button>
+                        </Box>
+
+                    </Grid>
+                    <Grid item xs={12}>
+                        <Divider sx={{ borderBottomWidth: 8, }} />
+                    </Grid>
+                    <Grid item xs={12}>
+                        <Typography variant="h3" paragraph>
                             Soporte
                         </Typography>
+                        {/* option to contact via email to support@snowmatch.pro */}
+                        <Box display='flex' justifyContent='space-between' alignItems='center'>
+                            <Box display='flex' justifyContent='flex-start' alignItems='center'>
+                                <Iconify icon={'material-symbols:health-and-safety-outline'} width={25} height={25} mr={2} />
+                                <Typography sx={{ fontSize: '20px' }} alignItems='center'>
+                                    Ayuda con seguridad
+                                </Typography>
+                            </Box>
+
+                            <Iconify icon={'material-symbols:chevron-right'} width={25} height={25} />
+                        </Box>
+                        <Divider sx={{ my: 2 }} />
+                        <Box display='flex' justifyContent='space-between' alignItems='center'>
+                            <Box display='flex' justifyContent='flex-start' alignItems='center'>
+                                <Iconify icon={'material-symbols:edit-outline'} width={25} height={25} mr={2} />
+                                <Typography sx={{ fontSize: '20px' }} alignItems='center'>
+                                    Cambiar Reserva
+                                </Typography>
+                            </Box>
+
+                            <Iconify icon={'material-symbols:chevron-right'} width={25} height={25} />
+                        </Box>
+                        <Divider sx={{ my: 2 }} />
+                        <Box onClick={() => navigate('/faqs')} display='flex' justifyContent='space-between' alignItems='center'>
+                            <Box display='flex' justifyContent='flex-start' alignItems='center'>
+                                <Iconify icon={'material-symbols:help-outline-rounded'} width={25} height={25} mr={2} />
+                                <Typography sx={{ fontSize: '20px' }} alignItems='center'>
+                                    Centro de ayuda
+                                </Typography>
+                            </Box>
+
+                            <Iconify icon={'material-symbols:chevron-right'} width={25} height={25} />
+                        </Box>
+                        <Divider sx={{ my: 2 }} />
+                        <Box display='flex' justifyContent='space-between' alignItems='center'>
+                            <Box display='flex' justifyContent='flex-start' alignItems='center'>
+                                <Iconify icon={'flat-color-icons:cancel'} width={25} height={25} mr={2} />
+                                <Typography sx={{ fontSize: '20px' }} alignItems='center'>
+                                    Cancelar reserva
+                                </Typography>
+                            </Box>
+                            <Iconify icon={'material-symbols:chevron-right'} width={25} height={25} />
+                        </Box>
+                        <Typography variant='body2' flex='1' px={4}>
+                            si usted cancela la reserva será penalizado y podría ser suspendido de la plataforma
+                        </Typography>
+
                     </Grid>
                 </Grid>
             </Drawer>

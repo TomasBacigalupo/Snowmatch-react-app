@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { Grid, Button, Card } from '@mui/material';
+import { Grid, Button, Card, Hidden } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 // redux
 import { useDispatch, useSelector } from '../../../../redux/store';
@@ -110,41 +110,44 @@ export default function CheckoutPayment() {
         })
       }
     }
-};
+  };
 
-return (
-  <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-    <Grid container spacing={3}>
-      <Grid item xs={12} md={8}>
-        {/* <CheckoutService onApplyShipping={handleApplyShipping} deliveryOptions={SERVICE_OPTIONS} /> */}
-        {/* <CheckoutPaymentMethods cardOptions={CARDS_OPTIONS} paymentOptions={PAYMENT_OPTIONS} /> */}
-        <Card sx={{ my: 3 }}><CardInput /></Card>
-        <Button
-          size="small"
-          color="inherit"
-          onClick={handleBackStep}
-          startIcon={<Iconify icon={'eva:arrow-ios-back-fill'} />}
-        >
-          {translate("checkout.back")}
-        </Button>
-      </Grid>
-      <ConfirmationDialog open={confirmationDialog} onClose={() => setConfirmationDialog(false)} />
-      <Grid item xs={12} md={4}>
-        {/* <CheckoutBillingInfo onBackStep={handleBackStep} /> */}
+  return (
+    <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+      <Grid container spacing={0}>
+        <Grid item xs={12} md={8}>
+          {/* <CheckoutService onApplyShipping={handleApplyShipping} deliveryOptions={SERVICE_OPTIONS} /> */}
+          {/* <CheckoutPaymentMethods cardOptions={CARDS_OPTIONS} paymentOptions={PAYMENT_OPTIONS} /> */}
+          <Card sx={{ my: 3 }}><CardInput /></Card>
+          <Hidden smDown>
+            <Button
+              size="small"
+              color="inherit"
+              onClick={handleBackStep}
+              startIcon={<Iconify icon={'eva:arrow-ios-back-fill'} />}
+            >
+              {translate("checkout.back")}
+            </Button>
+          </Hidden>
 
-        <CheckoutSummary
-          enableEdit
-          total={total}
-          subtotal={subtotal}
-          discount={discount}
-          shipping={shipping}
-          onEdit={() => handleGotoStep(0)}
-        />
-        <LoadingButton fullWidth size="large" type="submit" variant="contained" loading={loading}>
-          {translate("checkout.pay")}
-        </LoadingButton>
+        </Grid>
+        <ConfirmationDialog open={confirmationDialog} onClose={() => setConfirmationDialog(false)} />
+        <Grid item xs={12} md={4}>
+          {/* <CheckoutBillingInfo onBackStep={handleBackStep} /> */}
+
+          <CheckoutSummary
+            enableEdit
+            total={total}
+            subtotal={subtotal}
+            discount={discount}
+            shipping={shipping}
+            onEdit={() => handleGotoStep(0)}
+          />
+          <LoadingButton fullWidth size="large" type="submit" variant="contained" loading={loading}>
+            {translate("checkout.pay")}
+          </LoadingButton>
+        </Grid>
       </Grid>
-    </Grid>
-  </FormProvider>
-);
+    </FormProvider>
+  );
 }

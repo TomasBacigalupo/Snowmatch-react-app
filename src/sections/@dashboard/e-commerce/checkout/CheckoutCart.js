@@ -2,7 +2,7 @@ import sum from 'lodash/sum';
 import { useState } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // @mui
-import { Grid, Card, Button, CardHeader, Typography, Box, DialogTitle } from '@mui/material';
+import { Grid, Card, Button, CardHeader, Typography, Box, DialogTitle, Hidden } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../../../redux/store';
 import {
@@ -43,7 +43,7 @@ export default function CheckoutCart() {
 
   const isEmptyCart = cart.length === 0;
 
-  const {enqueueSnackbar} = useSnackbar();
+  const { enqueueSnackbar } = useSnackbar();
 
   const navigate = useNavigate();
 
@@ -60,16 +60,16 @@ export default function CheckoutCart() {
       value: total,
       currency: 'USD',
     });
-    if(events && events[0]?.price === 0){
+    if (events && events[0]?.price === 0) {
       setLoading(true)
-      dispatch(hireTeacher(teacher.id, events, () =>{
+      dispatch(hireTeacher(teacher.id, events, () => {
         setLoading(false)
-        
+
         enqueueSnackbar(translate('checkout.free_event_hired'), { variant: 'success' });
         navigate('/match/lessons', { replace: true });
         dispatch(deleteCart(0))
       }))
-    }else{
+    } else {
       dispatch(onNextStep());
     }
   };
@@ -92,7 +92,7 @@ export default function CheckoutCart() {
   return (
     <Grid container spacing={3}>
       <Grid item xs={12} md={8}>
-        <Card sx={{ mb: 3 }}>
+        <Card sx={{ mb: 1, borderRadius: '0px' }}>
           {!isEmptyCart ? (
             <Scrollbar>
               <CheckoutTeacherList
@@ -120,33 +120,34 @@ export default function CheckoutCart() {
 
           <DialogAnimate open={isOpenAddEventModal} onClose={handleCloseContactModal}>
             <DialogTitle>{translate("conversation.contact_pro")}</DialogTitle>
-            <AddEventForm onCancel={() => { dispatch(closeAddEventModal())}}/>
+            <AddEventForm onCancel={() => { dispatch(closeAddEventModal()) }} />
           </DialogAnimate>
-
         </Card>
       </Grid>
+      <Hidden smDown>
 
-      <Grid item xs={12} md={4}>
-        <CheckoutSummary
-          enableDiscount
-          totalEvents={events.length}
-          total={total}
-          discount={discount}
-          subtotal={subtotal}
-          onApplyDiscount={handleApplyDiscount}
-        />
-        <Button
-          fullWidth
-          size="large"
-          type="submit"
-          variant="contained"
-          disabled={events.length === 0 || loading}
-          onClick={handleNextStep}
-          loading={loading}
-        >
-          Reservar Ahora
-        </Button>
-      </Grid>
+        <Grid item xs={12} md={4}>
+          <CheckoutSummary
+            enableDiscount
+            totalEvents={events.length}
+            total={total}
+            discount={discount}
+            subtotal={subtotal}
+            onApplyDiscount={handleApplyDiscount}
+          />
+          <Button
+            fullWidth
+            size="large"
+            type="submit"
+            variant="contained"
+            disabled={events.length === 0 || loading}
+            onClick={handleNextStep}
+            loading={loading}
+          >
+            Reservar Ahora
+          </Button>
+        </Grid>
+      </Hidden>
     </Grid>
   );
 }

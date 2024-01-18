@@ -23,6 +23,8 @@ import {
   CheckoutOrderComplete,
   CheckoutConfirmation,
 } from '../../sections/@dashboard/e-commerce/checkout';
+import CheckoutMessage from 'src/sections/@dashboard/e-commerce/checkout/CheckoutMessage';
+import CheckoutGuests from 'src/sections/@dashboard/e-commerce/checkout/CheckoutGuests';
 
 // ----------------------------------------------------------------------
 
@@ -98,8 +100,8 @@ export default function EcommerceCheckoutTeacher() {
 
   return (
     <Page title="Teacher: Match">
-      <Container maxWidth={themeStretch ? false : 'lg'}>
-        <Grid container justifyContent={isComplete ? 'center' : 'flex-start'}>
+      {/* <Container maxWidth={themeStretch ? false : 'lg'}> */}
+        {/* <Grid container justifyContent={isComplete ? 'center' : 'flex-start'}>
           <Grid item xs={12} md={8} sx={{ mb: 5 }}>
             <Stepper alternativeLabel activeStep={activeStep} connector={<QontoConnector />}>
               {STEPS.map((label) => (
@@ -119,17 +121,21 @@ export default function EcommerceCheckoutTeacher() {
               ))}
             </Stepper>
           </Grid>
-        </Grid>
+        </Grid> */}
 
-        {!isComplete ? (
+        {/* {!isComplete ? (
           <>
             {activeStep === 0 && <CheckoutCart />}
             {activeStep === 1 && <CheckoutPayment />}
           </>
         ) : (
           <CheckoutOrderComplete open={isComplete} />
-        )}
-      </Container>
+        )} */}
+        <CheckoutCart />
+        <CheckoutMessage />
+        <CheckoutGuests />
+        <CheckoutPayment />
+      {/* </Container> */}
     </Page>
   );
 }

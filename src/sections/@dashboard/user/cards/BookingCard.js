@@ -153,6 +153,12 @@ export default function BookingCard({ booking, showInfo = true }) {
                                     Verificado
                                 </Typography>
                             </Box>
+                            <Box display='flex' flex={1} alignItems='center' border='solid' borderRadius={1} padding={2} borderColor='gray' my={2}>
+                                <Typography variant="body1">
+                                    {`${booking?.userComment}`}
+                                </Typography>
+                            </Box>
+                            
                             <Button variant="outlined" sx={{ mt: 2, py: 1 }} onClick={() => navigate(PATH_GUEST + '/' + booking?.student?.id)}>
                                 Mensaje
                             </Button>
@@ -186,12 +192,21 @@ export default function BookingCard({ booking, showInfo = true }) {
                             </Typography>
                             <Divider />
                         </Box>
-                        <Box>
+                        <Box mb={2}>
                             <Typography sx={{ fontSize: '20px' }}>
-                                {`Alumnos`}
+                                {`Adultos`}
                             </Typography>
                             <Typography variant="body1" paragraph>
-                                {`${booking?.eventList.length} alumnos`}
+                                {`${booking?.adults} adultos`}
+                            </Typography>
+                            <Divider />
+                        </Box>
+                        <Box>
+                            <Typography sx={{ fontSize: '20px' }}>
+                                {`Niños`}
+                            </Typography>
+                            <Typography variant="body1" paragraph>
+                                {`${booking?.children} niños`}
                             </Typography>
                             <Divider />
                         </Box>
@@ -212,7 +227,7 @@ export default function BookingCard({ booking, showInfo = true }) {
                             Notas
                         </Typography>
                         <Box display='flex' flexDirection='column'>
-                            <TextField minRows={3} rows={3}/>
+                            <TextField minRows={3} rows={3} />
                             <Button variant="outlined" sx={{ mt: 2, py: 1 }} onClick={() => navigate(PATH_DASHBOARD.user.profile)}>
                                 Guardar
                             </Button>

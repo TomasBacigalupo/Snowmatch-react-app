@@ -4,6 +4,7 @@ import { set } from "lodash";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import Iconify from "src/components/Iconify";
+import { useDispatch } from "src/redux/store";
 
 const CheckoutGuests = () => {
     const { t } = useTranslation();
@@ -11,6 +12,7 @@ const CheckoutGuests = () => {
     const [children, setChildren] = useState(0);
     const [adults, setAdults] = useState(1);
     const [open, setOpen] = useState(false);
+    const dispatch = useDispatch();
 
     const handleAddGuests = () => {
         setGuests(guests + 1)
@@ -24,21 +26,25 @@ const CheckoutGuests = () => {
 
     const handleAddAdults = () => {
         setAdults(adults + 1)
+        dispatch(setAdults(adults + 1))
     }
 
     const handleRemoveAdults = () => {
         if (adults > 0) {
             setAdults(adults - 1)
+            dispatch(setAdults(adults - 1))
         }
     }
 
     const handleAddChildren = () => {
         setChildren(children + 1)
+        dispatch(setChildren(children + 1))
     }
 
     const handleRemoveChildren = () => {
         if (children > 0) {
             setChildren(children - 1)
+            dispatch(setChildren(children - 1))
         }
     }
 

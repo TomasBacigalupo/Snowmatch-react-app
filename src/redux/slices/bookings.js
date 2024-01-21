@@ -17,6 +17,9 @@ const initialState = {
     selectedBookingId: null,
     pendingBookings: [],
     upcomingBookings: [],
+    message: null,
+    adults: 1,
+    children: 0,
 };
 
 const slice = createSlice({
@@ -175,6 +178,22 @@ const slice = createSlice({
             state.isOpenModal = true;
             state.selectedEventId = eventId;
         },
+
+        // CHANGE MESSAGE
+        changeMessage(state, action) {
+            const message = action.payload;
+            state.message = message;
+        },
+
+        changeAdults(state, action) {
+            const adults = action.payload;
+            state.adults = adults;
+        },
+
+        changeChildren(state, action) {
+            const children = action.payload;
+            state.children = children;
+        }
     },
 });
 
@@ -182,7 +201,7 @@ const slice = createSlice({
 export default slice.reducer;
 
 // Actions
-export const { openModal, closeModal, selectEvent } = slice.actions;
+export const { openModal, closeModal, selectEvent, changeMessage } = slice.actions;
 
 // ----------------------------------------------------------------------
 
@@ -353,6 +372,49 @@ export function setAccepted(eventId) {
         try {
             await axios.put(`/api/events/lessons/${eventId}/accept`);
             dispatch(slice.actions.acceptedLessonSuccess({ eventId }));
+        } catch (error) {
+            dispatch(slice.actions.hasError(error));
+        }
+    };
+}
+
+export function createBooking(teacherId, message, children, adults, events, totalPrice) {
+    return async () => {
+        dispatch(slice.actions.startLoading());
+        try {
+            await axios.post(`/api/bookings`, {
+                teacherId: teacherId,
+                userComment: message,
+                events: events.map(e => {
+                    if(e.lessonTime === 'AFTERNOON'){
+
+                        return {
+                            ...e,
+                            start: utcToLocalDate(new Date(e.date).setHours(14, 0, 0, 0)),
+                            end: utcToLocalDate(new Date(e.date).setHours(17, 0, 0, 0)),
+                            lessonTime: 'AFTERNOON'
+                        }
+                    }
+                    if(e.lessonTime === 'MORNING'){
+                        return {
+                            ...e,
+                            start: utcToLocalDate(new Date(e.date).setHours(10, 0, 0, 0)),
+                            end: utcToLocalDate(new Date(e.date).setHours(13, 0, 0, 0)),
+                            lessonTime: 'MORNING'
+                        }
+                    }
+                    return {
+                        ...e,
+                        start: utcToLocalDate(new Date(e.date).setHours(10, 0, 0, 0)),
+                        end: utcToLocalDate(new Date(e.date).setHours(17, 0, 0, 0)),
+                    }
+                }),
+                children: children,
+                adults: adults,
+                totalPrice: totalPrice,
+                payedReservation: totalPrice * 0.2,
+            });
+            dispatch(slice.actions.createBookingSuccess());
         } catch (error) {
             dispatch(slice.actions.hasError(error));
         }

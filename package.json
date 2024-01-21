@@ -57,6 +57,7 @@
     "@fullcalendar/timeline": "^5.10.1",
     "@hookform/resolvers": "^2.8.8",
     "@iconify/react": "^3.1.4",
+    "@mercadopago/sdk-react": "^0.0.16",
     "@mui/icons-material": "^5.5.1",
     "@mui/lab": "^5.0.0-alpha.72",
     "@mui/material": "^5.5.0",

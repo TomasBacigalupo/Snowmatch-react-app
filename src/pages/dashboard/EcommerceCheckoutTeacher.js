@@ -2,33 +2,33 @@ import PropTypes from 'prop-types';
 import { useEffect } from 'react';
 // @mui
 import { styled } from '@mui/material/styles';
-import { Box, Grid, Step, Stepper, Container, StepLabel, StepConnector, DialogTitle, ToggleButtonGroup, ToggleButton } from '@mui/material';
+import { Box, StepConnector, Button } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
 import { getCart, createBilling } from '../../redux/slices/teachers';
-// routes
-import { PATH_GUEST } from '../../routes/paths';
 // hooks
 import useIsMountedRef from '../../hooks/useIsMountedRef';
 import useSettings from '../../hooks/useSettings';
 // components
 import Page from '../../components/Page';
 import Iconify from '../../components/Iconify';
-import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
 
 // sections
 import {
   CheckoutCart,
-  CheckoutPayment,
-  CheckoutOrderComplete,
-  CheckoutConfirmation,
+  CheckoutSummary,
 } from '../../sections/@dashboard/e-commerce/checkout';
 import CheckoutMessage from 'src/sections/@dashboard/e-commerce/checkout/CheckoutMessage';
 import CheckoutGuests from 'src/sections/@dashboard/e-commerce/checkout/CheckoutGuests';
+import { Payment } from '@mercadopago/sdk-react';
+
+import { initMercadoPago } from '@mercadopago/sdk-react';
+import { createBooking } from 'src/redux/slices/bookings';
+initMercadoPago('TEST-88fbbb89-cc56-4432-a225-f27e4dab2a7c');
 
 // ----------------------------------------------------------------------
 
-const STEPS = [ 'Confirmation', 'Teacher Approve', 'Payment'];
+const STEPS = ['Confirmation', 'Teacher Approve', 'Payment'];
 
 const QontoConnector = styled(StepConnector)(({ theme }) => ({
   top: 10,
@@ -84,8 +84,11 @@ export default function EcommerceCheckoutTeacher() {
   const dispatch = useDispatch();
   const isMountedRef = useIsMountedRef();
   const { checkout } = useSelector((state) => state.teachers);
+  const { message, children, adults } = useSelector((state) => state.bookings);
   const { cart, billing, activeStep, events } = checkout;
   const isComplete = activeStep === STEPS.length;
+
+  const { total, discount, subtotal, shipping, card } = checkout;
   useEffect(() => {
     if (isMountedRef.current) {
       dispatch(getCart(events));
@@ -98,10 +101,77 @@ export default function EcommerceCheckoutTeacher() {
     }
   }, [dispatch, activeStep]);
 
+  const initialization = {
+    amount: 100,
+    preferenceId: "1645436634-309d1017-108d-4648-a729-4acd4d431637",
+  };
+
+  const customization = {
+    visual: {
+      hidePaymentButton: true,
+      hideFormTitle: true,
+    },
+    paymentMethods: {
+      creditCard: "all",
+      debitCard: "all",
+      bankTransfer: "all",
+      atm: "all",
+      wallet_purchase: "all",
+      maxInstallments: 2
+    },
+  };
+
+  const onSubmit = async (
+    { selectedPaymentMethod, formData }
+  ) => {
+    // callback called when clicking the submit data button
+    return new Promise((resolve, reject) => {
+      fetch("/process_payment", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      })
+        .then((response) => response.json())
+        .then((response) => {
+          // receive payment result
+          resolve();
+        })
+        .catch((error) => {
+          // handle error response when trying to create payment
+          reject();
+        });
+    });
+  };
+
+  const onError = async (error) => {
+    // callback called for all Brick error cases
+    console.log(error);
+  };
+
+  const onReady = async () => {
+    /*
+      Callback called when Brick is ready.
+      Here you can hide loadings from your site, for example.
+    */
+  };
+
+  const handleBook = () => {
+    dispatch(createBooking(
+      1,
+      message,
+      children,
+      adults,
+      events,
+      total
+    ));
+  }
+
   return (
     <Page title="Teacher: Match">
       {/* <Container maxWidth={themeStretch ? false : 'lg'}> */}
-        {/* <Grid container justifyContent={isComplete ? 'center' : 'flex-start'}>
+      {/* <Grid container justifyContent={isComplete ? 'center' : 'flex-start'}>
           <Grid item xs={12} md={8} sx={{ mb: 5 }}>
             <Stepper alternativeLabel activeStep={activeStep} connector={<QontoConnector />}>
               {STEPS.map((label) => (
@@ -123,7 +193,7 @@ export default function EcommerceCheckoutTeacher() {
           </Grid>
         </Grid> */}
 
-        {/* {!isComplete ? (
+      {/* {!isComplete ? (
           <>
             {activeStep === 0 && <CheckoutCart />}
             {activeStep === 1 && <CheckoutPayment />}
@@ -131,10 +201,29 @@ export default function EcommerceCheckoutTeacher() {
         ) : (
           <CheckoutOrderComplete open={isComplete} />
         )} */}
-        <CheckoutCart />
-        <CheckoutMessage />
-        <CheckoutGuests />
-        <CheckoutPayment />
+      <CheckoutCart />
+      <CheckoutMessage />
+      <CheckoutGuests />
+      <Box marginTop={2}>
+        <Payment
+          initialization={initialization}
+          customization={customization}
+          onSubmit={onSubmit}
+          onReady={onReady}
+          onError={onError}
+        />
+      </Box>
+      <CheckoutSummary
+        enableEdit
+        total={total}
+        subtotal={subtotal}
+        discount={discount}
+        shipping={shipping}
+        onEdit={() => { }}
+      />
+      <Box marginTop={2} marginX={1}>
+        <Button onClick={handleBook} variant='contained' fullWidth style={{ m: 2 }}> Pagar </Button>
+      </Box>
       {/* </Container> */}
     </Page>
   );

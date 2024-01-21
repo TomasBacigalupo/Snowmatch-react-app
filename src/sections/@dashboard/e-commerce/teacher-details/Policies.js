@@ -11,7 +11,7 @@ const Policies = () => {
             <Grid container justifyContent={'center'} alignItems={'center'} onClick={() => setOpen(true)}>
                 <Grid item xs={10} pl={3} pt={3} pb={3}>
                     <Typography variant="h4" gutterBottom>
-                        Plítica de Cancelación
+                        Política de Cancelación
                     </Typography>
                     <Typography variant="body1" paragraph>
                         Antes de hacer la reserva, asegurate de que la política de cancelación del instructor te convenga.
@@ -43,7 +43,7 @@ const Policies = () => {
                 <Grid p={2} spacing={3}>
                     <Grid item xs={12}>
                         <Typography variant="h3" gutterBottom>
-                            Plítica de Cancelación
+                            Política de Cancelación
                         </Typography>
                     </Grid>
                     <Grid item xs={12}>

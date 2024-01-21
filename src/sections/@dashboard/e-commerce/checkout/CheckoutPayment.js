@@ -20,6 +20,10 @@ import CardInput from './CardInput';
 import { useSnackbar } from 'notistack';
 import ConfirmationDialog from './ConfirmationDialog';
 import useLocales from 'src/hooks/useLocales';
+import { Payment } from '@mercadopago/sdk-react';
+
+import { initMercadoPago } from '@mercadopago/sdk-react';
+initMercadoPago('TEST-88fbbb89-cc56-4432-a225-f27e4dab2a7c');
 
 // ----------------------------------------------------------------------
 
@@ -83,7 +87,7 @@ export default function CheckoutPayment() {
     handleSubmit,
   } = methods;
 
-  const onSubmit = async () => {
+  const onSubmit2 = async () => {
     try {
       const encryptedCard = await getCardEncryptedCard(card);
       console.log("me2", { encryptedCard });
@@ -112,13 +116,67 @@ export default function CheckoutPayment() {
     }
   };
 
+const initialization = {
+  amount: 100,
+  preferenceId: "1645436634-942c5c47-d997-4122-8327-5b4ed0b471b7",
+ };
+ const customization = {
+  paymentMethods: {
+    ticket: "all",
+    creditCard: "all",
+    debitCard: "all",
+    mercadoPago: "all",
+  },
+ };
+ const onSubmit = async (
+  { selectedPaymentMethod, formData }
+ ) => {
+  // callback called when clicking the submit data button
+  return new Promise((resolve, reject) => {
+    fetch("/process_payment", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formData),
+    })
+      .then((response) => response.json())
+      .then((response) => {
+        // receive payment result
+        resolve();
+      })
+      .catch((error) => {
+        // handle error response when trying to create payment
+        reject();
+      });
+  });
+ };
+ const onError = async (error) => {
+  // callback called for all Brick error cases
+  console.log(error);
+ };
+ const onReady = async () => {
+  /*
+    Callback called when Brick is ready.
+    Here you can hide loadings from your site, for example.
+  */
+ };
+ 
+
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Grid container spacing={0}>
         <Grid item xs={12} md={8}>
           {/* <CheckoutService onApplyShipping={handleApplyShipping} deliveryOptions={SERVICE_OPTIONS} /> */}
           {/* <CheckoutPaymentMethods cardOptions={CARDS_OPTIONS} paymentOptions={PAYMENT_OPTIONS} /> */}
-          <Card sx={{ my: 3 }}><CardInput /></Card>
+          {/* <Card sx={{ my: 3 }}><CardInput /></Card> */}
+          <Payment
+            initialization={initialization}
+            customization={customization}
+            onSubmit={onSubmit}
+            onReady={onReady}
+            onError={onError}
+          />
           <Hidden smDown>
             <Button
               size="small"

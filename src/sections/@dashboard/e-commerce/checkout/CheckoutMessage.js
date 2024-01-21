@@ -26,6 +26,7 @@ import { closeAddEventModal, openAddEventModal, deleteCart, onNextStep, hireTeac
 import { CheckCircle } from '@mui/icons-material';
 import { useSnackbar } from 'notistack';
 import ReactPixel from 'react-facebook-pixel';
+import { changeMessage } from 'src/redux/slices/bookings';
 
 // ----------------------------------------------------------------------
 
@@ -36,6 +37,7 @@ export default function CheckoutMessage() {
     const dispatch = useDispatch();
 
     const { checkout, teacher } = useSelector((state) => state.teachers);
+    const { message } = useSelector((state) => state.bookings);
 
     const { cart, total, discount, subtotal, isOpenAddEventModal, events } = checkout;
 
@@ -89,6 +91,9 @@ export default function CheckoutMessage() {
     const handleCloseContactModal = () => {
         dispatch(closeAddEventModal())
     }
+    const handleChangeMessage = (e) => {
+        dispatch(changeMessage(e.target.value))
+    }
     return (
         <Card sx={{ p: 3, mb: 1, borderRadius: '0px' }}>
             <Grid container spacing={2}>
@@ -98,10 +103,13 @@ export default function CheckoutMessage() {
                     </Typography>
                 </Grid>
                 <Grid item xs={12}>
-                    <Typography variant="body2" sx={{ mb: 3 }}>
+                    <Typography variant="body2" sx={{ mb: 3 }} >
                         ¿Qué te gustaría aprender? ¿Cuáles son tus objetivos? ¿Qué te gustaría mejorar?
                     </Typography>
-                    <TextField multiline minRows={3} rows={3} fullWidth />
+                    <TextField onChange={handleChangeMessage} placeholder='Quiero ir a pistas negras!!' multiline minRows={3} rows={3} fullWidth inputProps={{ maxLength: 255 }} />
+                    <Typography variant="body2" sx={{ mt: 1, px: 1 }}>
+                        {`${message?.length ?? 0}/255`}
+                    </Typography>
                 </Grid>
 
             </Grid>

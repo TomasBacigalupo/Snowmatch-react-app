@@ -70,6 +70,59 @@ export default function BookingCard({ booking, showInfo = true }) {
         handleCloseDeclineModal()
     }
 
+    const renderBookingStateLabel = () => {
+        if (booking.state === 'PENDING') {
+            return (
+                <Typography variant="body2" color="primary" sx={{ fontWeight: 1000 }}>
+                    Confirmación pendiente
+                </Typography> 
+            )
+        }
+        if (booking.state === 'ACCEPTED') {
+            return (
+                <Typography variant="body2" sx={{ fontWeight: 1000 }}>
+                    Reserva confirmada
+                </Typography> 
+            )
+        }
+        if (booking.state === 'DECLINED') {
+            return (
+                <Typography variant="body2" color="error" sx={{ fontWeight: 1000 }}>
+                    Reserva rechazada
+                </Typography> 
+            )
+        }   
+    }
+
+    const renderTimes = () => {
+        const sortedEvents = [...booking.eventList];
+        return sortedEvents.sort((a,b) => new Date(a) < new Date(b)).map((event) => {
+            const start = new Date(event.start);
+            const end = new Date(event.end);
+            
+            if(start.getHours() === 10 && end.getHours() === 13) {
+                return (
+                    <Typography variant="body1" paragraph>
+                        {`${formatDate(start, { month: 'short', day: 'numeric' })} - Mañana`}
+                    </Typography>
+                )
+            }
+            if(start.getHours() === 14 && end.getHours() === 17) {
+                return (
+                    <Typography variant="body1" paragraph>
+                        {`${formatDate(start, { month: 'short', day: 'numeric' })} - Tarde`}
+                    </Typography>
+                )
+            }
+            return (
+                <Typography variant="body1" paragraph>
+                    {start.getHours()}
+                    {`Todo el día`}
+                </Typography>
+            )
+        })
+    }
+
 
     return (
         <>
@@ -78,20 +131,18 @@ export default function BookingCard({ booking, showInfo = true }) {
                 sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', p: 2 }}>
                 <Box display='flex' justifyContent='space-between' width={'100%'} flexGrow={1}>
                     <Box>
-                        <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                            {booking.state}
-                        </Typography>
+                        {renderBookingStateLabel()}
                         <Typography variant="h5" sx={{ mb: 0.5 }}>
                             {isStudent ? booking?.teacher?.name : booking?.student?.name}
                         </Typography>
                         <Typography variant="h5" sx={{ color: 'text.secondary' }}>
-                            {formatDate(booking.eventList[0].start, { month: 'short', day: 'numeric' })} - {formatDate(booking.eventList[0].end, { month: new Date(booking.eventList[0].end).getMonth() === new Date(booking.eventList[0].start).getMonth() ? undefined : 'short', day: 'numeric' })}
+                            {formatDate(booking.eventList[0].start, { month: 'short', day: 'numeric' })} - {formatDate(booking.eventList[booking.eventList.length - 1].end, { month: new Date(booking.eventList[0].end).getMonth() === new Date(booking.eventList[0].start).getMonth() ? undefined : 'short', day: 'numeric' })}
                         </Typography>
                     </Box>
                     <Avatar alt={isStudent ? booking?.teacher?.name : booking?.student?.name} src={'avatarUrl'} sx={{ width: 40, height: 40 }} />
                 </Box>
                 {isPending && <Box display='flex' flex={1} width='100%' flexGrow={1}>
-                    <Button fullWidth variant="outlined" sx={{ mt: 2, py: 1, mr: 2, color: 'black', borderColor:'black' }} onClick={() => { }}>
+                    <Button fullWidth variant="outlined" sx={{ mt: 2, py: 1, mr: 2, color: 'black', borderColor: 'black' }} onClick={() => { }}>
                         Rechazar
                     </Button>
                     <Button fullWidth variant="contained" sx={{ mt: 2, py: 1 }} onClick={() => { }}>
@@ -140,7 +191,7 @@ export default function BookingCard({ booking, showInfo = true }) {
                                     {isStudent ? booking?.teacher?.name : booking?.student?.name}
                                 </Typography>
                                 <Typography variant="h5" sx={{ color: 'text.secondary' }}>
-                                    {formatDate(booking.eventList[0].start, { month: 'short', day: 'numeric' })} - {formatDate(booking.eventList[0].end, { month: new Date(booking.eventList[0].end).getMonth() === new Date(booking.eventList[0].start).getMonth() ? undefined : 'short', day: 'numeric' })}
+                                    {formatDate(booking.eventList[0].start, { month: 'short', day: 'numeric' })} - {formatDate(booking.eventList[booking.eventList.length - 1].end, { month: new Date(booking.eventList[0].end).getMonth() === new Date(booking.eventList[0].start).getMonth() ? undefined : 'short', day: 'numeric' })}
                                 </Typography>
                             </Box>
                             <Avatar alt={isStudent ? booking?.teacher?.name : booking?.student?.name} src={'avatarUrl'} sx={{ width: 40, height: 40 }} />
@@ -153,10 +204,10 @@ export default function BookingCard({ booking, showInfo = true }) {
                             </Grid>
                             <Grid item xs={12}>
                                 <Box display='flex' flex={1} width='100%' flexGrow={1}>
-                                    <Button fullWidth variant="outlined" sx={{ mt: 2, py: 1, mr: 2, color: 'black', borderColor:'black' }} onClick={() => { }}>
+                                    <Button fullWidth variant="outlined" sx={{ mt: 2, py: 1, mr: 2, color: 'black', borderColor: 'black' }} onClick={() => { }}>
                                         Rechazar
                                     </Button>
-                                    <Button fullWidth variant="contained" sx={{ mt: 2, py: 1}} onClick={() => { }}>
+                                    <Button fullWidth variant="contained" sx={{ mt: 2, py: 1 }} onClick={() => { }}>
                                         Aprobar
                                     </Button>
                                 </Box>
@@ -190,10 +241,10 @@ export default function BookingCard({ booking, showInfo = true }) {
                                 </Typography>
                             </Box>
 
-                            <Button variant="outlined" sx={{ mt: 2, py: 1, color: 'black', borderColor:'black' }} onClick={() => navigate(PATH_GUEST + '/' + booking?.student?.id)}>
+                            <Button variant="outlined" sx={{ mt: 2, py: 1, color: 'black', borderColor: 'black' }} onClick={() => navigate(PATH_GUEST + '/' + booking?.student?.id)}>
                                 Mensaje
                             </Button>
-                            <Button variant="outlined" sx={{ mt: 2, py: 1, color: 'black', borderColor:'black' }} onClick={() => navigate(PATH_DASHBOARD.user.profile)}>
+                            <Button variant="outlined" sx={{ mt: 2, py: 1, color: 'black', borderColor: 'black' }} onClick={() => navigate(PATH_DASHBOARD.user.profile)}>
                                 Llamar
                             </Button>
                         </Box>
@@ -218,9 +269,7 @@ export default function BookingCard({ booking, showInfo = true }) {
                             <Typography sx={{ fontSize: '20px' }}>
                                 {`Horarios`}
                             </Typography>
-                            <Typography variant="body1" paragraph>
-                                {`${booking?.eventList.length} días`}
-                            </Typography>
+                            {renderTimes()}
                             <Divider />
                         </Box>
                         <Box mb={2}>
@@ -259,7 +308,7 @@ export default function BookingCard({ booking, showInfo = true }) {
                         </Typography>
                         <Box display='flex' flexDirection='column'>
                             <TextField minRows={3} rows={3} />
-                            <Button variant="outlined" sx={{ mt: 2, py: 1, color: 'black', borderColor:'black' }} onClick={() => navigate(PATH_DASHBOARD.user.profile)}>
+                            <Button variant="outlined" sx={{ mt: 2, py: 1, color: 'black', borderColor: 'black' }} onClick={() => navigate(PATH_DASHBOARD.user.profile)}>
                                 Guardar
                             </Button>
                         </Box>

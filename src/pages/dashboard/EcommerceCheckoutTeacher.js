@@ -23,7 +23,7 @@ import CheckoutGuests from 'src/sections/@dashboard/e-commerce/checkout/Checkout
 import { Payment } from '@mercadopago/sdk-react';
 
 import { initMercadoPago } from '@mercadopago/sdk-react';
-import { createBooking } from 'src/redux/slices/bookings';
+import { bookingAndPay, createBooking } from 'src/redux/slices/bookings';
 initMercadoPago('TEST-88fbbb89-cc56-4432-a225-f27e4dab2a7c');
 
 // ----------------------------------------------------------------------
@@ -108,7 +108,7 @@ export default function EcommerceCheckoutTeacher() {
 
   const customization = {
     visual: {
-      hidePaymentButton: true,
+      // hidePaymentButton: true,
       hideFormTitle: true,
     },
     paymentMethods: {
@@ -124,24 +124,38 @@ export default function EcommerceCheckoutTeacher() {
   const onSubmit = async (
     { selectedPaymentMethod, formData }
   ) => {
+
+    
+
     // callback called when clicking the submit data button
     return new Promise((resolve, reject) => {
-      fetch("/process_payment", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      })
-        .then((response) => response.json())
-        .then((response) => {
-          // receive payment result
-          resolve();
-        })
-        .catch((error) => {
-          // handle error response when trying to create payment
-          reject();
-        });
+      dispatch(bookingAndPay(
+        1,
+        message,
+        children,
+        adults,
+        events,
+        total,
+        formData
+      ));
+      console.log(JSON.stringify(formData));  
+      // fetch("/process_payment", {
+      //   method: "POST",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //   },
+      //   body: JSON.stringify(formData),
+      // })
+      //   .then((response) => response.json())
+      //   .then((response) => {
+      //     // receive payment result
+      //     console.log(response);
+      //     resolve();
+      //   })
+      //   .catch((error) => {
+      //     // handle error response when trying to create payment
+      //     reject();
+      //   });
     });
   };
 
@@ -222,7 +236,10 @@ export default function EcommerceCheckoutTeacher() {
         onEdit={() => { }}
       />
       <Box marginTop={2} marginX={1}>
-        <Button onClick={handleBook} variant='contained' fullWidth style={{ m: 2 }}> Pagar </Button>
+        <Button onClick={handleBook} variant='contained' fullWidth style={{ m: 2 }}> Book </Button>
+      </Box>
+      <Box marginTop={2} marginX={1}>
+        <Button onClick={onSubmit} variant='contained' fullWidth style={{ m: 2 }}> Book And Pay </Button>
       </Box>
       {/* </Container> */}
     </Page>

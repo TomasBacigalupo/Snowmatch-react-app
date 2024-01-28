@@ -97,8 +97,8 @@ export default function BookingCard({ booking, showInfo = true }) {
     const renderTimes = () => {
         const sortedEvents = [...booking.eventList];
         return sortedEvents.sort((a,b) => new Date(a) < new Date(b)).map((event) => {
-            const start = new Date(event.start);
-            const end = new Date(event.end);
+            const start = new Date(event?.start);
+            const end = new Date(event?.end);
             
             if(start.getHours() === 10 && end.getHours() === 13) {
                 return (
@@ -136,7 +136,7 @@ export default function BookingCard({ booking, showInfo = true }) {
                             {isStudent ? booking?.teacher?.name : booking?.student?.name}
                         </Typography>
                         <Typography variant="h5" sx={{ color: 'text.secondary' }}>
-                            {formatDate(booking.eventList[0].start, { month: 'short', day: 'numeric' })} - {formatDate(booking.eventList[booking.eventList.length - 1].end, { month: new Date(booking.eventList[0].end).getMonth() === new Date(booking.eventList[0].start).getMonth() ? undefined : 'short', day: 'numeric' })}
+                            {formatDate(booking.eventList[0]?.start, { month: 'short', day: 'numeric' })} - {formatDate(booking.eventList[booking.eventList.length - 1]?.end, { month: new Date(booking.eventList[0]?.end).getMonth() === new Date(booking.eventList[0]?.start).getMonth() ? undefined : 'short', day: 'numeric' })}
                         </Typography>
                     </Box>
                     <Avatar alt={isStudent ? booking?.teacher?.name : booking?.student?.name} src={'avatarUrl'} sx={{ width: 40, height: 40 }} />
@@ -191,7 +191,7 @@ export default function BookingCard({ booking, showInfo = true }) {
                                     {isStudent ? booking?.teacher?.name : booking?.student?.name}
                                 </Typography>
                                 <Typography variant="h5" sx={{ color: 'text.secondary' }}>
-                                    {formatDate(booking.eventList[0].start, { month: 'short', day: 'numeric' })} - {formatDate(booking.eventList[booking.eventList.length - 1].end, { month: new Date(booking.eventList[0].end).getMonth() === new Date(booking.eventList[0].start).getMonth() ? undefined : 'short', day: 'numeric' })}
+                                    {formatDate(booking.eventList[0]?.start, { month: 'short', day: 'numeric' })} - {formatDate(booking.eventList[booking.eventList.length - 1]?.end, { month: new Date(booking.eventList[0]?.end).getMonth() === new Date(booking.eventList[0]?.start).getMonth() ? undefined : 'short', day: 'numeric' })}
                                 </Typography>
                             </Box>
                             <Avatar alt={isStudent ? booking?.teacher?.name : booking?.student?.name} src={'avatarUrl'} sx={{ width: 40, height: 40 }} />

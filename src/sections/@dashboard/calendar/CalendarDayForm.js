@@ -8,7 +8,7 @@ import { useForm, Controller, useWatch } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { Box, Stack, Button, Tooltip, TextField, IconButton, DialogActions, ToggleButton, ToggleButtonGroup, Paper, Typography, Grid } from '@mui/material';
-import { LoadingButton, MobileDateTimePicker } from '@mui/lab';
+import { DateRangePicker, LoadingButton, MobileDateRangePicker, MobileDateTimePicker } from '@mui/lab';
 // redux
 import { useDispatch } from '../../../redux/store';
 import { createEvent, updateEvent, deleteEvent, createBusinessEvent, updateBusinessEvent, deleteSchoolEvent, updateEventByUserIdAndEventId, createEventByUserId, deleteEventByUserId, } from '../../../redux/slices/calendar';
@@ -16,7 +16,7 @@ import { createEvent, updateEvent, deleteEvent, createBusinessEvent, updateBusin
 import Iconify from '../../../components/Iconify';
 import { ColorSinglePicker } from '../../../components/color-utils';
 import { FormProvider, RHFTextField, RHFSwitch, RHFSelect, RHFCheckbox } from '../../../components/hook-form';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Avatar } from '@mui/material';
 import { Autocomplete } from '@mui/material';
 import useLocales from 'src/hooks/useLocales';
@@ -321,9 +321,26 @@ export default function CalendarDayForm({ event, range, onCancel, clients, membe
             Asignar Cliente
           </ToggleButton>
         </ToggleButtonGroup>
+        <Box>
+          <MobileDateRangePicker
+            startText="Desde"
+            endText="Hasta"
+            value={[values.start, values.end]}
+            onChange={(newValue) => {
+              setValue('start', newValue[0]);
+              setValue('end', newValue[1]);
+            }}
+            renderInput={(startProps, endProps) => (
+              <React.Fragment>
+                <RHFTextField {...startProps} disabled={disabled} />
+                <Box sx={{ mx: 1 }}> - </Box>
+                <RHFTextField {...endProps} disabled={disabled} />
+              </React.Fragment>
+            )}
+          />
+        </Box>
         {block === 'block' && <>
             <Grid spacing={2} direction={{ xs: 'column', md: 'column ' }}>
-
               <Paper
                 onClick={() => {
                   setTimeSelected('ALL_DAY')

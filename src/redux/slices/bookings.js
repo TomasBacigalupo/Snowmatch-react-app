@@ -421,6 +421,48 @@ export function createBooking(teacherId, message, children, adults, events, tota
     };
 }
 
+export function bookingAndPay(teacherId, message, children, adults, events, totalPrice, formData) {
+    return async () => {
+        dispatch(slice.actions.startLoading());
+        try {
+            await axios.post(`/api/bookings/bookAndPay?amount=${formData.transaction_amount}&token=${formData.token}&holderEmail=${formData.payer.email}&holderIdType=${formData.payer.identification.type}&holderId=${formData.payer.identification.number}&paymentMethodId=${formData.payment_method_id}`, {
+                teacherId: teacherId,
+                userComment: message,
+                events: events.map(e => {
+                    if(e.lessonTime === 'AFTERNOON'){
+                        return {
+                            ...e,
+                            start: utcToLocalDate(new Date(e.date).setHours(14, 0, 0, 0)),
+                            end: utcToLocalDate(new Date(e.date).setHours(17, 0, 0, 0)),
+                            lessonTime: 'AFTERNOON'
+                        }
+                    }
+                    if(e.lessonTime === 'MORNING'){
+                        return {
+                            ...e,
+                            start: utcToLocalDate(new Date(e.date).setHours(10, 0, 0, 0)),
+                            end: utcToLocalDate(new Date(e.date).setHours(13, 0, 0, 0)),
+                            lessonTime: 'MORNING'
+                        }
+                    }
+                    return {
+                        ...e,
+                        start: utcToLocalDate(new Date(e.date).setHours(10, 0, 0, 0)),
+                        end: utcToLocalDate(new Date(e.date).setHours(17, 0, 0, 0)),
+                    }
+                }),
+                children: children,
+                adults: adults,
+                totalPrice: totalPrice,
+                payedReservation: totalPrice * 0.2,
+            });
+            dispatch(slice.actions.createBookingSuccess());
+        } catch (error) {
+            dispatch(slice.actions.hasError(error));
+        }
+    };
+}
+
 export function setDeclined(eventId) {
     return async () => {
         dispatch(slice.actions.startLoading());

@@ -24,15 +24,15 @@ const MobileSelectDays = () => {
                 container justifyContent={'center'} alignItems={'center'} onClick={() => setOpen(true)}>
                 <Grid item xs={6} pl={2} pt={1} pb={1} justifyContent='center' textAlign='left'>
                     <Typography variant="h4" width='100%'>
-                        Reservá ahora!
+                        $50
                     </Typography>
                     <Typography variant="body" width='100%'>
-                        Hay clases disponibles.
+                        Medio día 3 horas
                     </Typography>
 
                 </Grid>
                 <Grid item xs={6} px={2} py={3}>
-                    <Button variant='contained' fullWidth onClick={() => setOpen(true)}>
+                    <Button variant='contained' sx={{p:2}} fullWidth onClick={() => setOpen(true)}>
                         Seleccionar Días
                     </Button>
                 </Grid>

@@ -14,6 +14,7 @@ import ConfirmDeclineModal from "../modals/ConfirmDeclineModal";
 import React from 'react';
 import Drawer from '@mui/material/Drawer';
 import { Grid, IconButton } from '@mui/material';
+import { acceptAndPay } from 'src/redux/slices/bookings';
 
 BookingCard.propTypes = {
     booking: PropTypes.object,
@@ -68,6 +69,10 @@ export default function BookingCard({ booking, showInfo = true }) {
         // )
         // setLessonState("DECLINED")
         handleCloseDeclineModal()
+    }
+
+    const handleAccept = () => {
+        dispatch(acceptAndPay(booking.id));
     }
 
     const renderBookingStateLabel = () => {
@@ -145,7 +150,7 @@ export default function BookingCard({ booking, showInfo = true }) {
                     <Button fullWidth variant="outlined" sx={{ mt: 2, py: 1, mr: 2, color: 'black', borderColor: 'black' }} onClick={() => { }}>
                         Rechazar
                     </Button>
-                    <Button fullWidth variant="contained" sx={{ mt: 2, py: 1 }} onClick={() => { }}>
+                    <Button fullWidth variant="contained" sx={{ mt: 2, py: 1 }} onClick={handleAccept}>
                         Aprobar
                     </Button>
                 </Box>}
@@ -207,7 +212,7 @@ export default function BookingCard({ booking, showInfo = true }) {
                                     <Button fullWidth variant="outlined" sx={{ mt: 2, py: 1, mr: 2, color: 'black', borderColor: 'black' }} onClick={() => { }}>
                                         Rechazar
                                     </Button>
-                                    <Button fullWidth variant="contained" sx={{ mt: 2, py: 1 }} onClick={() => { }}>
+                                    <Button fullWidth variant="contained" sx={{ mt: 2, py: 1 }} onClick={handleAccept}>
                                         Aprobar
                                     </Button>
                                 </Box>

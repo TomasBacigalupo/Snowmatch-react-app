@@ -463,6 +463,18 @@ export function bookingAndPay(teacherId, message, children, adults, events, tota
     };
 }
 
+export function acceptAndPay(bookingId) {
+    return async () => {
+        dispatch(slice.actions.startLoading());
+        try {
+            await axios.post(`/api/bookings/bookAndPay/accept/${bookingId}`);
+            dispatch(slice.actions.acceptBookingSuccess());
+        } catch (error) {
+            dispatch(slice.actions.hasError(error));
+        }
+    };
+}
+
 export function setDeclined(eventId) {
     return async () => {
         dispatch(slice.actions.startLoading());

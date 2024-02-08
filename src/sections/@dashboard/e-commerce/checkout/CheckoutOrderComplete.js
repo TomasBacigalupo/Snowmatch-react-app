@@ -33,7 +33,7 @@ export default function CheckoutOrderComplete({ ...other }) {
   const dispatch = useDispatch();
   const {translate} = useLocales();
 
-  const {paymentId} = useSelector(state => state.teachers.checkout.paymentInfo)
+  const {paymentId} = useSelector(state => state.bookings)
 
   const handleResetStep = () => {
     dispatch(resetCart());

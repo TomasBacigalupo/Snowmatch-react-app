@@ -16,6 +16,7 @@ import Iconify from '../../components/Iconify';
 // sections
 import {
   CheckoutCart,
+  CheckoutOrderComplete,
   CheckoutSummary,
 } from '../../sections/@dashboard/e-commerce/checkout';
 import CheckoutMessage from 'src/sections/@dashboard/e-commerce/checkout/CheckoutMessage';
@@ -23,7 +24,7 @@ import CheckoutGuests from 'src/sections/@dashboard/e-commerce/checkout/Checkout
 import { Payment } from '@mercadopago/sdk-react';
 
 import { initMercadoPago } from '@mercadopago/sdk-react';
-import { bookingAndPay, createBooking } from 'src/redux/slices/bookings';
+import { bookingAndPay, bookingPending, createBooking } from 'src/redux/slices/bookings';
 initMercadoPago('TEST-88fbbb89-cc56-4432-a225-f27e4dab2a7c');
 
 // ----------------------------------------------------------------------
@@ -84,7 +85,7 @@ export default function EcommerceCheckoutTeacher() {
   const dispatch = useDispatch();
   const isMountedRef = useIsMountedRef();
   const { checkout } = useSelector((state) => state.teachers);
-  const { message, children, adults } = useSelector((state) => state.bookings);
+  const { message, children, adults, bookSuccess } = useSelector((state) => state.bookings);
   const { cart, billing, activeStep, events } = checkout;
   const isComplete = activeStep === STEPS.length;
 
@@ -94,6 +95,9 @@ export default function EcommerceCheckoutTeacher() {
       dispatch(getCart(events));
     }
   }, [dispatch, isMountedRef, cart]);
+  useEffect(() => {
+    dispatch(bookingPending());
+  }, [dispatch]);
 
   useEffect(() => {
     if (activeStep === 1) {
@@ -124,9 +128,6 @@ export default function EcommerceCheckoutTeacher() {
   const onSubmit = async (
     { selectedPaymentMethod, formData }
   ) => {
-
-    
-
     // callback called when clicking the submit data button
     return new Promise((resolve, reject) => {
       dispatch(bookingAndPay(
@@ -138,7 +139,7 @@ export default function EcommerceCheckoutTeacher() {
         total,
         formData
       ));
-      console.log(JSON.stringify(formData));  
+      console.log(JSON.stringify(formData));
       // fetch("/process_payment", {
       //   method: "POST",
       //   headers: {
@@ -219,6 +220,16 @@ export default function EcommerceCheckoutTeacher() {
       <CheckoutMessage />
       <CheckoutGuests />
       <Box marginTop={2}>
+        <CheckoutSummary
+          enableEdit
+          total={total}
+          subtotal={subtotal}
+          discount={discount}
+          shipping={shipping}
+          onEdit={() => { }}
+        />
+      </Box>
+      <Box marginTop={2}>
         <Payment
           initialization={initialization}
           customization={customization}
@@ -227,20 +238,13 @@ export default function EcommerceCheckoutTeacher() {
           onError={onError}
         />
       </Box>
-      <CheckoutSummary
-        enableEdit
-        total={total}
-        subtotal={subtotal}
-        discount={discount}
-        shipping={shipping}
-        onEdit={() => { }}
-      />
-      <Box marginTop={2} marginX={1}>
+      <CheckoutOrderComplete open={bookSuccess} />
+      {/* <Box marginTop={2} marginX={1}>
         <Button onClick={handleBook} variant='contained' fullWidth style={{ m: 2 }}> Book </Button>
       </Box>
       <Box marginTop={2} marginX={1}>
         <Button onClick={onSubmit} variant='contained' fullWidth style={{ m: 2 }}> Book And Pay </Button>
-      </Box>
+      </Box> */}
       {/* </Container> */}
     </Page>
   );

@@ -80,39 +80,39 @@ export default function BookingCard({ booking, showInfo = true }) {
             return (
                 <Typography variant="body2" color="primary" sx={{ fontWeight: 1000 }}>
                     Confirmación pendiente
-                </Typography> 
+                </Typography>
             )
         }
         if (booking.state === 'ACCEPTED') {
             return (
                 <Typography variant="body2" sx={{ fontWeight: 1000 }}>
                     Reserva confirmada
-                </Typography> 
+                </Typography>
             )
         }
         if (booking.state === 'DECLINED') {
             return (
                 <Typography variant="body2" color="error" sx={{ fontWeight: 1000 }}>
                     Reserva rechazada
-                </Typography> 
+                </Typography>
             )
-        }   
+        }
     }
 
     const renderTimes = () => {
         const sortedEvents = [...booking.eventList];
-        return sortedEvents.sort((a,b) => new Date(a) < new Date(b)).map((event) => {
+        return sortedEvents.sort((a, b) => new Date(a) < new Date(b)).map((event) => {
             const start = new Date(event?.start);
             const end = new Date(event?.end);
-            
-            if(start.getHours() === 10 && end.getHours() === 13) {
+
+            if (start.getHours() === 10 && end.getHours() === 13) {
                 return (
                     <Typography variant="body1" paragraph>
                         {`${formatDate(start, { month: 'short', day: 'numeric' })} - Mañana`}
                     </Typography>
                 )
             }
-            if(start.getHours() === 14 && end.getHours() === 17) {
+            if (start.getHours() === 14 && end.getHours() === 17) {
                 return (
                     <Typography variant="body1" paragraph>
                         {`${formatDate(start, { month: 'short', day: 'numeric' })} - Tarde`}
@@ -144,7 +144,7 @@ export default function BookingCard({ booking, showInfo = true }) {
                             {formatDate(booking.eventList[0]?.start, { month: 'short', day: 'numeric' })} - {formatDate(booking.eventList[booking.eventList.length - 1]?.end, { month: new Date(booking.eventList[0]?.end).getMonth() === new Date(booking.eventList[0]?.start).getMonth() ? undefined : 'short', day: 'numeric' })}
                         </Typography>
                     </Box>
-                    <Avatar alt={isStudent ? booking?.teacher?.name : booking?.student?.name} src={'avatarUrl'} sx={{ width: 40, height: 40 }} />
+                    <Avatar alt={isStudent ? booking?.teacher?.name : booking?.student?.name} src={isStudent ? booking.teacher.imageS3 : booking.student.imageS3 } sx={{ width: 40, height: 40 }} />
                 </Box>
                 {isPending && <Box display='flex' flex={1} width='100%' flexGrow={1}>
                     <Button fullWidth variant="outlined" sx={{ mt: 2, py: 1, mr: 2, color: 'black', borderColor: 'black' }} onClick={() => { }}>
@@ -199,7 +199,7 @@ export default function BookingCard({ booking, showInfo = true }) {
                                     {formatDate(booking.eventList[0]?.start, { month: 'short', day: 'numeric' })} - {formatDate(booking.eventList[booking.eventList.length - 1]?.end, { month: new Date(booking.eventList[0]?.end).getMonth() === new Date(booking.eventList[0]?.start).getMonth() ? undefined : 'short', day: 'numeric' })}
                                 </Typography>
                             </Box>
-                            <Avatar alt={isStudent ? booking?.teacher?.name : booking?.student?.name} src={'avatarUrl'} sx={{ width: 40, height: 40 }} />
+                            <Avatar alt={isStudent ? booking?.teacher?.name : booking?.student?.name} src={isStudent ? booking.teacher.imageS3 : booking.student.imageS3 } sx={{ width: 40, height: 40 }} />
                         </Box>
                     </Grid>
                     {isPending && (
@@ -225,13 +225,13 @@ export default function BookingCard({ booking, showInfo = true }) {
                     </Grid>
                     <Grid item xs={12}>
                         <Typography variant="h3" paragraph>
-                            Sobre {booking?.student?.name}
+                            Sobre {isStudent ? booking?.teacher.name : booking?.student?.name}
                         </Typography>
                         <Box display='flex' flexDirection='column'>
                             <Box display='flex' flex={1} alignItems='center' mb={1}>
                                 <Iconify icon={'material-symbols-light:account-circle-outline'} width={40} height={40} />
                                 <Typography variant="body1" paragraph ml={2} mb={0}>
-                                    {`${booking?.student?.name} ${booking?.student?.lastname}`}
+                                    {`${isStudent ? booking?.teacher?.name : booking?.student?.name} ${isStudent ? booking?.teacher?.lastname : booking?.student?.lastname}`}
                                 </Typography>
                             </Box>
                             <Box display='flex' flex={1} alignItems='center'>
@@ -299,10 +299,49 @@ export default function BookingCard({ booking, showInfo = true }) {
                     <Grid item xs={12}>
                         <Divider sx={{ borderBottomWidth: 8, }} />
                     </Grid>
-                    <Grid item xs={12}>
-                        <Typography variant="h3" paragraph>
-                            Detalles del pago
-                        </Typography>
+                    <Grid item xs={12} container justifyContent='space-between'>
+                        <Grid item xs={12}>
+                            <Typography variant="h3" paragraph>
+                                Detalles del pago
+                            </Typography>
+                        </Grid>
+                        <Grid item xs={6} >
+                            <Typography variant="body1" paragraph>
+                                {`Clase`}
+                            </Typography>
+                        </Grid>
+                        <Grid item xs={6} sx={{ textAlign: 'end' }}>
+                            <Typography variant="body1" paragraph>
+                                {`$100`}
+                            </Typography>
+                        </Grid>
+                        <Grid item xs={6} >
+                            <Typography variant="body1" paragraph>
+                                {`Comisión del cliente (10%)`}
+                            </Typography>
+                        </Grid>
+                        <Grid item xs={6} sx={{ textAlign: 'end' }}>
+                            <Typography variant="body1" paragraph>
+                                {`-$10`}
+                            </Typography>
+                        </Grid>
+                        <Grid item xs={12} >
+                            <Divider sx={{
+                                borderBottomWidth: 2,
+                                mb:1
+                            }} />
+                        </Grid>
+
+                        <Grid item xs={6} >
+                            <Typography variant="body1" paragraph>
+                                {`Total a cobrar`}
+                            </Typography>
+                        </Grid>
+                        <Grid item xs={6} sx={{ textAlign: 'end' }}>
+                            <Typography variant="body1" paragraph>
+                                {`$90`}
+                            </Typography>
+                        </Grid>
                     </Grid>
                     <Grid item xs={12}>
                         <Divider sx={{ borderBottomWidth: 8, }} />

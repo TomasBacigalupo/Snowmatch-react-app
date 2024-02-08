@@ -650,3 +650,21 @@ export function getEventsByUserId(id) {
     }
   };
 }
+
+export function blockDays(from, to,lessonTime, note) {
+  console.log(from, to,lessonTime, note)
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      await axios.post(`/api/events/block`,{
+        from,
+        to,
+        lessonTime,
+        note
+      });
+      dispatch(slice.actions.declinedLessonSuccess({  }));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}

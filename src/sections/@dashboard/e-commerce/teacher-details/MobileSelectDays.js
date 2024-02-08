@@ -1,13 +1,45 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import Drawer from '@mui/material/Drawer';
 import Typography from '@mui/material/Typography';
 import { Grid, IconButton } from '@mui/material';
 import Iconify from 'src/components/Iconify';
 import Button from '@mui/material/Button';
 import SelectDates from './SelectDates';
+import { addCart } from 'src/redux/slices/teachers';
+import { useNavigate } from 'react-router';
+import { useDispatch } from 'react-redux';
 
-const MobileSelectDays = () => {
+const MobileSelectDays = ({teacher}) => {
     const [open, setOpen] = React.useState(false);
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const handleSubmitSelectedDates = useCallback((dates) => {
+        dates.forEach((date) => {
+          let lessonTime = "MORNING"
+          if(new Date(date).getHours() === 14){
+            lessonTime = "AFTERNOON"
+          }
+          if (new Date(date).getHours() === 9){
+            lessonTime = "MORNING"
+          }
+          if (new Date(date).getHours() === 8) {
+            lessonTime = "ALL_DAY"
+          }
+          const requestEvent = {
+            price: 50,
+            people: 1,
+            lessonTime: lessonTime,
+            date: date,
+            resort: 'Catedral'
+          };
+          dispatch(addCart({
+            teacher: teacher,
+            event: requestEvent
+          }))
+          
+          navigate('hire');
+        })
+      })
     return (
         <>
             <Grid
@@ -63,7 +95,10 @@ const MobileSelectDays = () => {
                             Elige los días que quieras tener clases con este instructor.
                         </Typography>
                     </Grid>
-                    <SelectDates handleClose={() => setOpen(false)} />
+                    <SelectDates 
+                    handleClose={() => setOpen(false)}
+                    onSubmit={handleSubmitSelectedDates}
+                     />
                 </Grid>
             </Drawer>
         </>

@@ -11,7 +11,7 @@ import { Box, Stack, Button, Tooltip, TextField, IconButton, DialogActions, Togg
 import { DateRangePicker, LoadingButton, MobileDateRangePicker, MobileDateTimePicker } from '@mui/lab';
 // redux
 import { useDispatch } from '../../../redux/store';
-import { createEvent, updateEvent, deleteEvent, createBusinessEvent, updateBusinessEvent, deleteSchoolEvent, updateEventByUserIdAndEventId, createEventByUserId, deleteEventByUserId, } from '../../../redux/slices/calendar';
+import { createEvent, updateEvent, deleteEvent, createBusinessEvent, updateBusinessEvent, deleteSchoolEvent, updateEventByUserIdAndEventId, createEventByUserId, deleteEventByUserId, blockDays, } from '../../../redux/slices/calendar';
 // components
 import Iconify from '../../../components/Iconify';
 import { ColorSinglePicker } from '../../../components/color-utils';
@@ -44,8 +44,6 @@ const COLOR_OPTIONS = [
 ];
 
 const getInitialValues = (event, range) => {
-  console.log("event", event)
-  console.log("range", range)
   const _event = {
     type: 'Own client class',
     title: '',
@@ -105,11 +103,21 @@ export default function CalendarDayForm({ event, range, onCancel, clients, membe
   const dispatch = useDispatch();
 
   const EventSchema = Yup.object().shape({
-    title: Yup.string().max(255).min(3).required('Title is required'),
-    type: Yup.string().max(255).required('Title is required'),
-    description: Yup.string().max(5000).required('Description is required'),
-    price: Yup.number().min(0).max(1000000).required('Description is required'),
+    // title: Yup.string().max(255).min(3).required('Title is required'),
+    // type: Yup.string().max(255).required('Title is required'),
+    // description: Yup.string().max(5000).required('Description is required'),
+    // price: Yup.number().min(0).max(1000000).required('Description is required'),
   });
+
+  const handleBlock = () => {
+    console.log('block')
+    dispatch(blockDays(
+      values.start,
+      values.end,
+      timeSelected,
+      "Bloqueado por el instructor"
+    ))
+  }
 
   const methods = useForm({
     resolver: yupResolver(EventSchema),
@@ -127,6 +135,7 @@ export default function CalendarDayForm({ event, range, onCancel, clients, membe
   } = methods;
 
   const onSubmit = async (data) => {
+
     console.log(data)
 
     try {
@@ -279,7 +288,7 @@ export default function CalendarDayForm({ event, range, onCancel, clients, membe
 
 
   return (
-    <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+    <FormProvider methods={methods} onSubmit={handleSubmit(handleBlock)}>
       <Stack spacing={3} sx={{ p: 3 }}>
         <ToggleButtonGroup
           color="primary"
@@ -551,7 +560,9 @@ export default function CalendarDayForm({ event, range, onCancel, clients, membe
           {translate('calendar.form.cancel')}
         </Button>
 
-        <LoadingButton fullWidth disabled={disabled} type="submit" variant="contained" loading={isSubmitting} sx={{ ':hover': { color: '#3399FF' } }}>
+        <LoadingButton fullWidth disabled={disabled} 
+        // type="submit" 
+        variant="contained" loading={isSubmitting} sx={{ ':hover': { color: '#3399FF' } }} onClick={handleBlock}>
           {block === 'block' ? 'Bloquear' : 'Asignar'}
         </LoadingButton>
       </DialogActions>

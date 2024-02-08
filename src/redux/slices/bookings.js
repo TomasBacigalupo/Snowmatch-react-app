@@ -20,6 +20,7 @@ const initialState = {
     message: null,
     adults: 1,
     children: 0,
+    bookSuccess: false,
 };
 
 const slice = createSlice({
@@ -193,6 +194,16 @@ const slice = createSlice({
         changeChildren(state, action) {
             const children = action.payload;
             state.children = children;
+        },
+
+        createBookingSuccess(state, action) {
+            state.isLoading = false;
+            state.bookSuccess = true;
+        },
+        
+        bookingPending(state, action) {
+            state.isLoading = false;
+            state.bookSuccess = false;
         }
     },
 });
@@ -201,15 +212,15 @@ const slice = createSlice({
 export default slice.reducer;
 
 // Actions
-export const { openModal, closeModal, selectEvent, changeMessage } = slice.actions;
+export const { openModal, closeModal, selectEvent, changeMessage, bookingPending } = slice.actions;
 
 // ----------------------------------------------------------------------
 
-export function getBookings() {
+export function getBookings(state) {
     return async () => {
         dispatch(slice.actions.startLoading());
         try {
-            const response = await axios.get('/api/bookings');
+            const response = await axios.get(`/api/bookings?state=${state}`);
             const bookings = response.data
             dispatch(slice.actions.getBookingsSuccess(bookings));
         } catch (error) {

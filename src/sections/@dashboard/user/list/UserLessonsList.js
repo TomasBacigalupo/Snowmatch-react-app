@@ -7,13 +7,14 @@ import useLocales from "src/hooks/useLocales";
 import { Typography } from "@mui/material";
 import useAuth from "../../../../hooks/useAuth";
 import BookingCard from "../cards/BookingCard";
+import { SkeletonBooking, SkeletonConversationItem, SkeletonPost, SkeletonPostItem, SkeletonProduct } from "src/components/skeleton";
 
 const date = new Date()
 date.toLocaleString()
 
 export default function UserLessonsList() {
   const dispatch = useDispatch();
-  const { bookings } = useSelector((state) => state.bookings);
+  const { bookings, isLoading } = useSelector((state) => state.bookings);
   const { translate } = useLocales();
   const { user, isStudent } = useAuth()
 
@@ -21,14 +22,29 @@ export default function UserLessonsList() {
 
   return (
     <Grid container spacing={2}>
-      {bookings.map(booking => {
+      {/* show skelleton if is loading */}
+      {isLoading && [0, 1, 2, 3, 4, 5, 6, 7, 8].map((index) => (
+        <Grid key={index} item xs={12} md={6}>
+          <SkeletonBooking />
+        </Grid>
+      ))}
+
+      {/* show bookings */}
+      {!isLoading && bookings.map(booking => {
         return (
           <Grid item xs={12} md={6} key={booking.id}>
             <BookingCard key={booking.id} booking={booking} />
           </Grid>
-        )}
+        )
+      }
       )}
-      
+
+      {!isLoading && bookings.length === 0 && 
+      <Box p={2}>
+        <Typography variant="h6">{translate('noBookings')}</Typography>
+      </Box>
+      }
+
     </Grid>
   );
 }

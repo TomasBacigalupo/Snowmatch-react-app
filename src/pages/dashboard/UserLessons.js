@@ -80,9 +80,12 @@ export default function UserLessons() {
         setFindFriends(value);
     };
 
-    useEffect(() => {
-        dispatch(getBookings())
-    }, [dispatch])
+    useEffect(() => {        
+        if(currentTab === 'pending')
+            dispatch(getBookings("PENDING"))
+        else if(currentTab === 'upcoming')
+            dispatch(getBookings("ACCEPTED"))
+    }, [dispatch, currentTab])
 
     return (
         <Page title="User: Lessons">

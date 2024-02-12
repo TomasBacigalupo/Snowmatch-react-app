@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 // @mui
 import { Divider, Collapse } from '@mui/material';
 //
@@ -15,6 +15,9 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import timelinePlugin from '@fullcalendar/timeline';
 import interactionPlugin from '@fullcalendar/interaction';
+import { useDispatch, useSelector } from 'react-redux';
+import { getEventsByUserId } from 'src/redux/slices/calendar';
+import { getEventsByTeacherId } from 'src/redux/slices/bookings';
 
 // ----------------------------------------------------------------------
 
@@ -41,11 +44,19 @@ TeacherDetailsMobileCalendar.propTypes = {
 };
 
 export default function TeacherDetailsMobileCalendar({ teacher }) {
-  const { events } = teacher;
-
+  const { events } = useSelector(state => state.bookings);
+  const dispatch = useDispatch();
   const [view, setView] = useState('dayGridMonth');
   const [date, setDate] = useState(new Date());
     const calendarRef = useRef(null);
+  useEffect(() => {
+    dispatch(getEventsByTeacherId(teacher.id, date.getMonth()+1));
+  },[dispatch, teacher])
+  useEffect(() => {
+    console.log({events})
+  },[events])
+
+  
 
 
   const handleClickToday = () => {

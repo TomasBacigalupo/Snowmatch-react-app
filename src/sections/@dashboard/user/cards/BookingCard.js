@@ -34,6 +34,7 @@ export default function BookingCard({ booking, showInfo = true }) {
     const navigate = useNavigate()
 
     const isPending = booking.state === 'PENDING';
+    const isAccepted = booking.state === 'ACCEPTED';
 
     const handlePay = () => {
         // setPayedState(!payedState)
@@ -121,12 +122,28 @@ export default function BookingCard({ booking, showInfo = true }) {
             }
             return (
                 <Typography variant="body1" paragraph>
-                    {start.getHours()}
-                    {`Todo el día`}
+                    {`Desde las ${start.getHours()} - Todo el día`}
                 </Typography>
             )
         })
     }
+    const handleMessage = () => {
+        //open whats app to user
+        if (isStudent) {
+            window.open(`https://api.whatsapp.com/send?phone=${booking?.teacher?.phone}`, '_blank');
+        } else {
+            window.open(`https://api.whatsapp.com/send?phone=${booking?.student?.phone}`, '_blank');
+        }
+    };
+
+    const handleCall = () => {
+        //open phone app to user
+        if (isStudent) {
+            window.open(`tel:${booking?.teacher?.phone}`, '_blank');
+        } else {
+            window.open(`tel:${booking?.student?.phone}`, '_blank');
+        }
+    };
 
 
     return (
@@ -144,15 +161,24 @@ export default function BookingCard({ booking, showInfo = true }) {
                             {formatDate(booking.eventList[0]?.start, { month: 'short', day: 'numeric' })} - {formatDate(booking.eventList[booking.eventList.length - 1]?.end, { month: new Date(booking.eventList[0]?.end).getMonth() === new Date(booking.eventList[0]?.start).getMonth() ? undefined : 'short', day: 'numeric' })}
                         </Typography>
                     </Box>
-                    <Avatar alt={isStudent ? booking?.teacher?.name : booking?.student?.name} src={isStudent ? booking.teacher.imageS3 : booking.student.imageS3 } sx={{ width: 40, height: 40 }} />
+                    <Avatar alt={isStudent ? booking?.teacher?.name : booking?.student?.name} src={isStudent ? booking.teacher.imageS3 : booking.student.imageS3} sx={{ width: 40, height: 40 }} />
                 </Box>
-                {isPending && <Box display='flex' flex={1} width='100%' flexGrow={1}>
+                {isPending && !isStudent && <Box display='flex' flex={1} width='100%' flexGrow={1}>
                     <Button fullWidth variant="outlined" sx={{ mt: 2, py: 1, mr: 2, color: 'black', borderColor: 'black' }} onClick={() => { }}>
                         Rechazar
                     </Button>
                     <Button fullWidth variant="contained" sx={{ mt: 2, py: 1 }} onClick={handleAccept}>
                         Aprobar
                     </Button>
+                </Box>}
+                {isAccepted && isStudent && <Box display='flex' flex={1} width='100%' flexDirection='column' flexGrow={1}>
+                    <Button fullWidth variant="outlined" sx={{ mt: 2, py: 1, mr: 2, color: 'black', borderColor: 'black' }} onClick={handleMessage}>
+                        Mensaje
+                    </Button>
+                    <Button fullWidth variant="outlined" sx={{ mt: 2, py: 1, color: 'black', borderColor: 'black' }} onClick={handleCall}>
+                        Llamar
+                    </Button>
+                    <Typography variant='body2'>{booking.teacher.phone}</Typography>
                 </Box>}
 
             </Card>
@@ -199,10 +225,10 @@ export default function BookingCard({ booking, showInfo = true }) {
                                     {formatDate(booking.eventList[0]?.start, { month: 'short', day: 'numeric' })} - {formatDate(booking.eventList[booking.eventList.length - 1]?.end, { month: new Date(booking.eventList[0]?.end).getMonth() === new Date(booking.eventList[0]?.start).getMonth() ? undefined : 'short', day: 'numeric' })}
                                 </Typography>
                             </Box>
-                            <Avatar alt={isStudent ? booking?.teacher?.name : booking?.student?.name} src={isStudent ? booking.teacher.imageS3 : booking.student.imageS3 } sx={{ width: 40, height: 40 }} />
+                            <Avatar alt={isStudent ? booking?.teacher?.name : booking?.student?.name} src={isStudent ? booking.teacher.imageS3 : booking.student.imageS3} sx={{ width: 40, height: 40 }} />
                         </Box>
                     </Grid>
-                    {isPending && (
+                    {isPending  && !isStudent && (
                         <>
                             <Grid item xs={12}>
                                 <Divider />
@@ -246,10 +272,10 @@ export default function BookingCard({ booking, showInfo = true }) {
                                 </Typography>
                             </Box>
 
-                            <Button variant="outlined" sx={{ mt: 2, py: 1, color: 'black', borderColor: 'black' }} onClick={() => navigate(PATH_GUEST + '/' + booking?.student?.id)}>
+                            <Button fullWidth variant="outlined" sx={{ mt: 2, py: 1, mr: 2, color: 'black', borderColor: 'black' }} onClick={handleMessage}>
                                 Mensaje
                             </Button>
-                            <Button variant="outlined" sx={{ mt: 2, py: 1, color: 'black', borderColor: 'black' }} onClick={() => navigate(PATH_DASHBOARD.user.profile)}>
+                            <Button fullWidth variant="outlined" sx={{ mt: 2, py: 1, color: 'black', borderColor: 'black' }} onClick={handleCall}>
                                 Llamar
                             </Button>
                         </Box>
@@ -328,7 +354,7 @@ export default function BookingCard({ booking, showInfo = true }) {
                         <Grid item xs={12} >
                             <Divider sx={{
                                 borderBottomWidth: 2,
-                                mb:1
+                                mb: 1
                             }} />
                         </Grid>
 

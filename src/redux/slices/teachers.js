@@ -194,10 +194,11 @@ const slice = createSlice({
     // CHECKOUT
     getCart(state, action) {
       const events = action.payload;
-      const subtotal = sum(events.map((event) => event.price));
+      const subtotal = sum(events.map((event) => (event.price + event.bookingPrice)));
       const discount = events.length === 0 ? 0 : state.checkout.discount;
       const shipping = events.length === 0 ? 0 : state.checkout.shipping;
       const billing = events.length === 0 ? null : state.checkout.billing;
+      const bookingPrice = sum(events.map((event) => event.bookingPrice));
       
       state.checkout.events = events;
       state.checkout.discount = discount;
@@ -205,6 +206,7 @@ const slice = createSlice({
       state.checkout.billing = billing;
       state.checkout.subtotal = subtotal;
       state.checkout.total = subtotal * 1.03;
+      state.checkout.bookingPrice = bookingPrice;
     },
 
     addCart(state, action) {

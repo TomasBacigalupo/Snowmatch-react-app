@@ -4,21 +4,23 @@ import Typography from '@mui/material/Typography';
 import { Grid, IconButton } from '@mui/material';
 import Iconify from 'src/components/Iconify';
 import Button from '@mui/material/Button';
+import useLocales from 'src/hooks/useLocales';
 
 const TimeDetails = () => {
+    const { translate } = useLocales();
     const [open, setOpen] = React.useState(false);
+
     return (
         <>
             <Grid container justifyContent={'center'} alignItems={'center'} onClick={() => setOpen(true)}>
                 <Grid item xs={12} p={3}>
                     <Typography variant="h4" gutterBottom>
-                        Normas de la Clase
+                        {translate('lessonTime.title')}
                     </Typography>
                     <Typography variant="body1" paragraph>
-                        Este instructor ofrece los siguientes horarios para sus clases:<br />
-                        Mañana: 9:30am - 12:30pm <br />
-                        Tarde: 2:30pm - 5:30pm <br />
-                        Día: 9:30am - 5:30pm
+                    {translate('lessonTime.morningTime')}<br />
+                            {translate('lessonTime.afternoonTime')}<br />
+                            {translate('lessonTime.allDayTime')}
                     </Typography>
                     <Button onClick={() => setOpen(true)} sx={{
                         padding: '0px',
@@ -28,7 +30,7 @@ const TimeDetails = () => {
                             textDecoration: 'none', // Remove underline on hover if desired
                         },
                     }}>
-                        Más información
+                        {translate('lessonTime.moreInfo')} 
                     </Button>
                 </Grid>
             </Grid>
@@ -47,28 +49,27 @@ const TimeDetails = () => {
                     </Grid>
                     <Grid item xs={12} p={2}>
                         <Typography variant="h4" gutterBottom>
-                            Normas de la Clase
+                            {translate('lessonTime.title')}
                         </Typography>
                     </Grid>
                     <Grid item xs={12} p={2}>
                         <Typography variant="h6" paragraph>
-                            Turno Mañana: 9:30am - 12:30pm.
+                            {translate('lessonTime.morningTime')}
                         </Typography>
                         <Typography variant="body1" paragraph>
-                            El profesor va a estar esperandote el dia de tu clase en el punto de encuentro a las 9:30am. Si llegas tarde, el profesor esperará 15 minutos y luego se irá. No se hará reembolso.
+                            {translate('lessonTime.morningTimeDescription')}
                         </Typography>
                         <Typography variant="h6" paragraph>
-                            Turno Tarde: 2:30pm - 5:30pm.
+                            {translate('lessonTime.afternoonTime')}
                         </Typography>
                         <Typography variant="body1" paragraph>
-                            El profesor va a estar esperandote el dia de tu clase en el punto de encuentro a las 2:30pm. Si llegas tarde, el profesor esperará 15 minutos y luego se irá. No se hará reembolso.
+                            {translate('lessonTime.afternoonTimeDescription')}
                         </Typography>
                         <Typography variant="h6" paragraph>
-                            Día Completo: 9:30am - 5:30pm.
+                            {translate('lessonTime.allDayTime')}
                         </Typography>
                         <Typography variant="body1" paragraph>
-                            El profesor va a estar esperandote el dia de tu clase en el punto de encuentro a las 9:30am. Si llegas tarde, el profesor esperará 15 minutos y luego se irá. No se hará reembolso.
-                            Esta modalidad cuenta con un recreo para almorzar de 1 hora. El profesor te va a indicar el horario del mismo.
+                            {translate('lessonTime.allDayTimeDescrpition')}
                         </Typography>
                     </Grid>
                 </Grid>

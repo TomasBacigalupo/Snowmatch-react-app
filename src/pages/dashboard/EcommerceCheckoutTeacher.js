@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 // @mui
 import { styled } from '@mui/material/styles';
 import { Box, StepConnector, Button } from '@mui/material';
@@ -86,7 +86,7 @@ export default function EcommerceCheckoutTeacher() {
   const isMountedRef = useIsMountedRef();
   const { checkout } = useSelector((state) => state.teachers);
   const { message, children, adults, bookSuccess } = useSelector((state) => state.bookings);
-  const { cart, billing, activeStep, events } = checkout;
+  const { cart, billing, activeStep, events, bookingPrice } = checkout;
   const isComplete = activeStep === STEPS.length;
 
   const { total, discount, subtotal, shipping, card } = checkout;
@@ -105,12 +105,12 @@ export default function EcommerceCheckoutTeacher() {
     }
   }, [dispatch, activeStep]);
 
-  const initialization = {
-    amount: 100,
+  const [initialization, setInitialization] = useState({
+    amount: bookingPrice,
     preferenceId: "1645436634-309d1017-108d-4648-a729-4acd4d431637",
-  };
+  });
 
-  const customization = {
+  const [customization, setCustomization] = useState({
     visual: {
       // hidePaymentButton: true,
       hideFormTitle: true,
@@ -123,7 +123,29 @@ export default function EcommerceCheckoutTeacher() {
       wallet_purchase: "all",
       maxInstallments: 2
     },
-  };
+  });
+
+  useEffect(() =>{
+    setInitialization({
+      amount: bookingPrice,
+      preferenceId: "1645436634-309d1017-108d-4648-a729-4acd4d431637",
+    });
+    console.log("pase")
+    setCustomization({
+      visual: {
+        // hidePaymentButton: true,
+        hideFormTitle: true,
+      },
+      paymentMethods: {
+        creditCard: "all",
+        debitCard: "all",
+        bankTransfer: "all",
+        atm: "all",
+        wallet_purchase: "all",
+        maxInstallments: 2
+      },
+    })
+}, [bookingPrice]);
 
   const onSubmit = async (
     { selectedPaymentMethod, formData }
@@ -227,16 +249,18 @@ export default function EcommerceCheckoutTeacher() {
           discount={discount}
           shipping={shipping}
           onEdit={() => { }}
+          bookingPrice={bookingPrice}
         />
       </Box>
       <Box marginTop={2}>
-        <Payment
-          initialization={initialization}
-          customization={customization}
-          onSubmit={onSubmit}
-          onReady={onReady}
-          onError={onError}
-        />
+        {bookingPrice > 0 &&
+          <Payment
+            initialization={initialization}
+            customization={customization}
+            onSubmit={onSubmit}
+            onReady={onReady}
+            onError={onError}
+          />}
       </Box>
       <CheckoutOrderComplete open={bookSuccess} />
       {/* <Box marginTop={2} marginX={1}>

@@ -221,7 +221,7 @@ export default function EcommerceShop({ isGuest = false, teacherType = "school" 
         </Stack>
         {/* manotaso de ahogado muestro todos */}
         {/* {teacherType == "independent" && <ShopTeacherList teachers={teachersWithEvents} loading={!filteredTeachers.length && isDefault} />} */}
-        {teacherType === "independent" && category === "standard" && <ShopStandardProducts teachers={filteredTeachers?.filter(t => t.id === 8)} loading={ isLoading } />}
+        {teacherType === "independent" && category === "standard" && <ShopStandardProducts teachers={filteredTeachers} loading={ isLoading } />}
         {teacherType === "independent" && category === "premium" && <ShopTeacherList teachers={filteredTeachers?.filter(t => (t.stars > 0 && t.id !== 8))} loading={isLoading} />}
         {teacherType === "independent" && category === "premium" && <ShopOtherTeacherList teachers={filteredTeachers?.filter(t => t.stars === 0 || !t.stars)} loading={isLoading} />}
         {teacherType === "school" && <ShopTeacherList teachers={filteredTeachers} loading={!filteredTeachers.length && isDefault} />}

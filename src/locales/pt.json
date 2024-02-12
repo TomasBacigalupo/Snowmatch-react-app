@@ -3,7 +3,7 @@
         "title": "",
         "introduction": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
     },
-    "heading":{
+    "heading": {
         "clientList": "Agenda de clientes"
     },
     "home": {
@@ -26,26 +26,26 @@
             }
         }
     },
-    "general":{
+    "general": {
         "AVAILABLE": "disponível",
         "UNAVAILABLE": "Ocupado",
-        "form":{
+        "form": {
             "name": "Nome",
             "lastName": "Sobrenome",
-            "cellphone":"Telefone",
-            "country":"Nacionalidade",
+            "cellphone": "Telefone",
+            "country": "Nacionalidade",
             "countryCode": "Codigo do país",
             "email": "Email",
             "gender": "Gênero",
             "male": "Masculino",
             "female": "Femenino",
             "disciplines": "Disciplinas",
-            "languages":"Idiomas",
+            "languages": "Idiomas",
             "school": "Escola",
             "resorts": "Centro de esqui que da aulas",
             "skills": "Extras",
             "quickInformation": "Breve descrição",
-            "description":"descrição",
+            "description": "descrição",
             "available": "Estou disponível",
             "saveChanges": "salvar alterações"
         }
@@ -68,8 +68,8 @@
         "school": "PROs de Escolas",
         "getStartedToday": "¡Forme parte de SnowMatch!",
         "find": "Matchee com o PRO que você precise...",
-        "start_date":"Desde",
-        "end_date":"Até",
+        "start_date": "Desde",
+        "end_date": "Até",
         "search": "Buscar",
         "slogan": "Evite filas e aproveite a montanha"
     },
@@ -86,7 +86,7 @@
         "account": "Editar perfil",
         "new client": "Adicionar cliente",
         "user": "Meu perfil",
-        "overview":"Estadísticas",
+        "overview": "Estadísticas",
         "school": "minha escola",
         "Schools": "Escolas",
         "Independent": "Independentes",
@@ -97,11 +97,11 @@
         "newEvent": "Criar evento",
         "editEvent": "Editar evento",
         "addEvent": "Criar evento",
-        "form":{
+        "form": {
             "startDate": "Desde",
             "endDate": "Até",
             "description": "Descrição",
-            "client":"Cliente",
+            "client": "Cliente",
             "type": "Motivo",
             "title": "Título",
             "price": "preço",
@@ -109,10 +109,10 @@
             "add": "Criar"
         }
     },
-    "school":{
-        "clients":{
+    "school": {
+        "clients": {
             "newClient": "Adicionar cliente",
-            "form":{
+            "form": {
                 "createANewClient": "Adicionar Cliente",
                 "editClient": "Editar Cliente",
                 "level": "Nivel",
@@ -120,39 +120,39 @@
                 "INTERMEDIATE": "Intermedio",
                 "ADVANCED": "Avançado",
                 "EXPERT": "Experto",
-                "doesTip":"¿Deixa gorjeta?",
+                "doesTip": "¿Deixa gorjeta?",
                 "usualTip": "gorjeta habitual",
                 "hobbies": "Hobbies",
-                "work":"Trabalha em...",
-                "family":"Família",
+                "work": "Trabalha em...",
+                "family": "Família",
                 "staysAt": "Se hospeda em...",
                 "resorts": "Centros de esqui",
                 "notes": "Notas",
-                "isRenting":"¿Aluga equipamento de esqui?"
+                "isRenting": "¿Aluga equipamento de esqui?"
             }
         }
     },
-    "breadcrumb":{
+    "breadcrumb": {
         "dashboard": "Estatisticas",
         "profile": "Meu perfil",
         "account": "Minha informação",
         "accountSettings": "Configurações da conta",
         "editProfile": "Editar meu perfil",
-        "school":"Escpla",
+        "school": "Escpla",
         "agenda": "Agenda"
     },
-    "profile":{
-        "tabs":{
+    "profile": {
+        "tabs": {
             "profile": "Minha informação"
         },
         "clients": "Clientes",
         "level": "Nivel do instrutor",
         "information": "Informação",
-        "description":"Descrição",
+        "description": "Descrição",
         "skills": "Habilidades",
         "about": "Sobre mim",
         "underReview": "Sobre revisão",
-        "proAt":"PRO em "
+        "proAt": "PRO em "
     },
     "accountSocialLinks": {
         "igUserName": "Nome de usuario de Instagram",
@@ -161,14 +161,14 @@
         "ytUserName": "ID de canal de YouTube",
         "saveChanges": "salvar alterações"
     },
-    "account":{
-        "tabs":{
+    "account": {
+        "tabs": {
             "general": "Minha informação",
             "social_links": "Minhas redes sociais"
         }
     },
-    "filter":{
-        "gender":"Genero",
+    "filter": {
+        "gender": "Genero",
         "resort": "Colina",
         "category": "Categoria",
         "discipline": "Disciplina",
@@ -181,25 +181,25 @@
         "filters": "Filtros",
         "clearAll": "Limpar filtros"
     },
-    "accountPopover":{
+    "accountPopover": {
         "Profile": "Meu Perfil",
         "Settings": "Configurações",
         "SignUpAsAPRO": "Quero ser PRO",
         "LogIn": "Conecte-se",
-        "logOut":"Sair",
+        "logOut": "Sair",
         "help": "Ajuda"
     },
-    "generalApp":{
+    "generalApp": {
         "totalLessons": "Aulas",
         "totalIncome": "Ingresos",
         "totalClients": "Clientes",
         "lessonsAnalytics": "Estadisticas de aulas",
         "noScheduledEvents": "Não tem eventos agendados",
         "welcomeBack": "Bem-vindo, ",
-        "lookingBestTeacher":"¿Você esta procurando ao melhor PRO para seu cliente?",
+        "lookingBestTeacher": "¿Você esta procurando ao melhor PRO para seu cliente?",
         "topClients": "Ranking de Clientes"
     },
-    "teacherDetails":{
+    "teacherDetails": {
         "title": "Detalhes PRO",
         "calendar": "Calendário",
         "verified": "Professor Verificado e Aprovado",
@@ -214,27 +214,26 @@
         "howToBookCatedral": "Selecione o dia e horário que mais lhe convém e solicite a reserva da aula. Um representante da SnowMatch entrará em contato com você para ajudá-lo(a) a concluir sua reserva, dependendo da disponibilidade do instrutor.",
         "howToBookRest": "Selecione o dia e horário que mais lhe convém e faça a reserva da aula. Uma vez que sua solicitação seja aceita pelo instrutor, ambos terão acesso às informações necessárias para entrar em contato diretamente. Você poderá consultar os preços e confirmar todos os detalhes da aula com o instrutor."
     },
-
-    "conversation":{
-        "not_valid":"Seu numero de telefone nao esta validado, verifique WhatsApp e intente de novo",
-        "message_sent":"¡mensagem enviado, pronto entrarão em contato com você!",
-        "age":"Idade do cliente",
-        "age2":"Idade",
-        "level":"Nivel do cliente",
-        "tips":"¿usualmente deixa gorjeta?",
-        "commission":"Comissão",
-        "activity":"Atividade",
-        "amount":"quantidade de pessoas",
-        "duration":"duração",
-        "classdate":"Data",
-        "days":"Quantidade de dias",
-        "cancel":"Cancelar",
-        "contact":"Contactar",
-        "refer_class":"Referir aula",
-        "contact_pro":"Contactar PRO",
-        "validation_required":"¡Requer validação!",
-        "validation_required_body":"você vai receber uma mensagem de validação por WhatsApp, ppode demorar uns minutos. Se não chega a mensagem, verifique seu numero e tente de novo",
-        "close":"Fechar"
+    "conversation": {
+        "not_valid": "Seu numero de telefone nao esta validado, verifique WhatsApp e intente de novo",
+        "message_sent": "¡mensagem enviado, pronto entrarão em contato com você!",
+        "age": "Idade do cliente",
+        "age2": "Idade",
+        "level": "Nivel do cliente",
+        "tips": "¿usualmente deixa gorjeta?",
+        "commission": "Comissão",
+        "activity": "Atividade",
+        "amount": "quantidade de pessoas",
+        "duration": "duração",
+        "classdate": "Data",
+        "days": "Quantidade de dias",
+        "cancel": "Cancelar",
+        "contact": "Contactar",
+        "refer_class": "Referir aula",
+        "contact_pro": "Contactar PRO",
+        "validation_required": "¡Requer validação!",
+        "validation_required_body": "você vai receber uma mensagem de validação por WhatsApp, ppode demorar uns minutos. Se não chega a mensagem, verifique seu numero e tente de novo",
+        "close": "Fechar"
     },
     "checkout": {
         "deal_with_pro": "Tratar com PRO",
@@ -244,7 +243,30 @@
         "all_day": "Todo o dia",
         "continue": "Continuar",
         "event_added": "Evento adicionado",
-        "book_lesson": "Reservar aula"
+        "book_lesson": "Reservar aula",
+        "message": "Conte-nos um pouco mais",
+        "message_description": "O que você gostaria de aprender? Quais são seus objetivos? O que você gostaria de melhorar?",
+        "message_placeholder": "Ex: Eu gostaria de melhorar minha técnica paralela e aprender a esquiar na neve em pó.",
+        "guests": "Esquiadores",
+        "skiers": "Esquiadores",
+        "guests_description": "As aulas de esqui são para grupos de até 4 pessoas. Se forem mais de 4, haverá uma taxa adicional de 20 US por pessoa.",
+        "guests_adulsts": "Adultos",
+        "guests_adulsts_description": "Idade acima de 13 anos",
+        "guests_children": "Crianças",
+        "guests_children_description": "De 4 a 13 anos",
+        "edit": "Editar",
+        "guestsTitle": "Quantos esquiadores?",
+        "cancel": "Cancelar",
+        "save": "Salvar",
+        "selectDays": "Selecione os dias",
+        "selectDaysDescription": "Selecione os dias que você gostaria de reservar",
+        "halfDay3Hours": "Meio dia (3 horas)",
+        "allDayTitle": "Todo o dia",
+        "allDayDescription": "A aula começa às 10 da manhã e dura 6 horas",
+        "morningTitle": "Manhã",
+        "morningDescription": "A aula começa às 10 da manhã e dura 3 horas",
+        "afternoonTitle": "Tarde",
+        "afternoonDescription": "A aula começa às 2 da tarde e dura 3 horas"
     },
     "verify": {
         "title": "Verifique seu email",
@@ -287,5 +309,23 @@
         "answer7": "Todas as ferramentas do SnowMatch são gratuitas. Será cobrada apenas uma comissão pelas transações feitas através da plataforma.<br/>A comissão será de 15% por aula nos casos em que o cliente chegar até você através da ferramenta.<br/>A comissão será de 5% se o cliente te conhecer fora do SnowMatche utilizar a plataforma apenas como meio de pagamento.<br/>Não haverá cobrança de comissão caso o contato com o cliente e a transação ocorram fora do SnowMatch, e você utilize apenas o calendário para agendar a aula.",
         "question8": "Quais benefícios tenho ao fazer parte do SnowMatch?",
         "answer8": "Acesse a aba PRO Deal do SnowMatch e conheça benefícios exclusivos para instrutores. Há descontos incríveis esperando por você."
+    },
+    "policy": {
+        "title": "Política de Cancelamento",
+        "helper": "Antes de fazer a reserva, certifique-se de que a política de cancelamento do instrutor é adequada para você.",
+        "strict": "Estrita",
+        "strictDescription": "Este instrutor tem uma política de cancelamento estrita. Se você cancelar sua reserva com menos de 15 dias de antecedência, não será feito reembolso.",
+        "strictDescriptionRefound": "No caso de cancelamento com mais de 15 dias de antecedência, será feito um reembolso de 50%."
+    },
+    "lessonTime": {
+        "title": "Regras da Aula",
+        "descriptionShort": "Este instrutor oferece os seguintes horários para suas aulas:\nManhã: 9:30 - 12:30\nTarde: 14:30 - 17:30\nDia inteiro: 9:30 - 17:30",
+        "moreInfo": "Mais informações",
+        "morningTime": "Turno da manhã: 9:30 - 12:30",
+        "morningTimeDescription": "O professor estará esperando por você no ponto de encontro às 9:30 no dia da sua aula. Se você se atrasar, o professor esperará 15 minutos e depois partirá. Nenhum reembolso será feito.",
+        "afternoonTime": "Turno da tarde: 14:30 - 17:30",
+        "afternoonTimeDescription": "O professor estará esperando por você no ponto de encontro às 14:30 no dia da sua aula. Se você se atrasar, o professor esperará 15 minutos e depois partirá. Nenhum reembolso será feito.",
+        "allDayTime": "Dia inteiro: 9:30 - 17:30",
+        "allDayTimeDescrpition": "O professor estará esperando por você no ponto de encontro às 9:30 no dia da sua aula. Se você se atrasar, o professor esperará 15 minutos e depois partirá. Nenhum reembolso será feito. Esta modalidade inclui uma pausa para almoço de 1 hora. O professor indicará o horário para isso."
     }
 }

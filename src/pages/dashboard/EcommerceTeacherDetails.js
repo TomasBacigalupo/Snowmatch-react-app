@@ -179,7 +179,7 @@ export default function EcommerceTeacherDetails({ isGuest = false }) {
                       Mira la disponibilidad del instructor en el calendario.
                     </Typography>
                     </Box>
-                    <TeacherDetailsMobileCalendar teacher={teacher} />
+                    <TeacherDetailsMobileCalendar  onClick={()=>{console.log('clicked')}} teacher={teacher} />
                   </Box>
                   <Box mx={2} >
                     <Divider />

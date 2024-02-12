@@ -1,10 +1,10 @@
 {
-    "kanban":{
+    "kanban": {
         "today": "Hoy",
         "tomorrow": "Mañana",
         "this_week": "Esta semana",
         "guests": "Clientes",
-        "teacher":"Profesor"    
+        "teacher": "Profesor"
     },
     "demo": {
         "title": "English",
@@ -13,10 +13,10 @@
     "heading": {
         "clientList": "Agenda de clientes"
     },
-    "home":{
-        "stats":{
+    "home": {
+        "stats": {
             "title": "Simple y seguro",
-            "1":{
+            "1": {
                 "total": "180",
                 "title": "Instructores",
                 "description": "Instructores certificados"
@@ -84,7 +84,7 @@
         "find": "Encontrá tu clase ideal",
         "start_date": "Desde",
         "end_date": "Hasta",
-        "search":"Buscar",
+        "search": "Buscar",
         "slogan": "Evita las colas y disfruta de la montaña de forma segura"
     },
     "menu": {
@@ -123,8 +123,8 @@
         "reviews": "Mis Calificaciones",
         "lessons": "Mis Clases",
         "privates": "Privadas",
-        "halfDay":"Medio día",
-        "fullDay":"Día completo",
+        "halfDay": "Medio día",
+        "fullDay": "Día completo",
         "independent": "Independientes",
         "schools": "Escuelas",
         "for_school": "Para Escuelas",
@@ -204,9 +204,9 @@
         "lesson_details": "Detalles de la clase",
         "private_half_day": "Privada medio día",
         "private_full_day": "Privada día completo",
-        "group":"Grupales"
+        "group": "Grupales"
     },
-    "reviewForm":{
+    "reviewForm": {
         "title": "Calificar",
         "description": "Deja tu calificación:",
         "rate": "Calificacar",
@@ -220,7 +220,6 @@
         "funRequired": "La diversión es obligatoria",
         "safetyRequired": "La seguridad es obligatoria",
         "security": "Seguridad"
-
     },
     "profile": {
         "tabs": {
@@ -343,10 +342,10 @@
         "redirect": "Redirigirme",
         "cancel": "Cancelar"
     },
-    "reservationDialog":{
-        "title":"Para confirmar tu reserva, pagá un 50% del importe total",
+    "reservationDialog": {
+        "title": "Para confirmar tu reserva, pagá un 50% del importe total",
         "content": "Una vez que confirmes la reserva, ya contaras con un 50% del total de la clase abonado. El monto restante lo deberás abonar directamente al instructor el día de la clase, al tipo de cambio vigente en ese momento.",
-        "cancelationMessage":"En caso de cancelación reprogramación, ponete en contacto con nuestro equipo. office@snowmatch.pro",
+        "cancelationMessage": "En caso de cancelación reprogramación, ponete en contacto con nuestro equipo. office@snowmatch.pro",
         "confirm": "Confirmar"
     },
     "conversation": {
@@ -442,16 +441,39 @@
         "start_time": "De",
         "end_time": "a",
         "summary": "Resumen",
-        "days":"Cantidad de días",
-       "subtotal": "Sub total:",
-       "sm_service": "Servicio SnowMatch:",
-       "total": "Total:",
-       "date": "Fecha",
-       "price": "Precio",
-       "free_event_hired": "Clase Reservada",
-       "back": "Volver",
-       "pay": "Pagar",
-       "full_day": "Día completo"
+        "days": "Cantidad de días",
+        "subtotal": "Sub total:",
+        "sm_service": "Servicio SnowMatch:",
+        "total": "Total:",
+        "date": "Fecha",
+        "price": "Precio",
+        "free_event_hired": "Clase Reservada",
+        "back": "Volver",
+        "pay": "Pagar",
+        "full_day": "Día completo",
+        "message": "Contanos un poco más",
+        "message_description": "¿Qué te gustaría aprender? ¿Cuáles son tus objetivos? ¿Qué te gustaría mejorar?",
+        "message_placeholder": "Ej: Me gustaría mejorar mi técnica de paralelo, y aprender a esquiar en nieve polvo.",
+        "guests": "Esquiadores",
+        "skiers": "Esquiadores",
+        "guests_description": "Las clases de esquí son para grupos de hasta 4 personas. Si son más de 4, tendra un cargo adicional por persona de 20 US.",
+        "guests_adulsts": "Adultos",
+        "guests_adulsts_description": "Edad más de 13 años",
+        "guests_children": "Niños",
+        "guests_children_description": "De 4 a 13 años",
+        "edit": "Editar",
+        "guestsTitle": "Información del grupo",
+        "cancel": "Cancelar",
+        "save": "Guardar",
+        "selectDays": "Seleccionar días",
+        "selectDaysDescription": "Elige los días que quieras tener clases con este instructor.",
+        "halfDay3Hours": "Medio día 3 horas",
+        "allDayTitle": "Todo el día",
+        "allDayDescription": "La clase comienza a las 10 de la mañana y dura 6 horas. Tenés un recreo para comer ;)",
+        "morningTitle": "Por la Mañana",
+        "morningDescription": "La clase comienza a las 10 de la mañana y dura 3 horas",
+        "afternoonTitle": "Por la Tarde",
+        "afternoonDescription": "La clase comienza a las 14 de la tarde y dura 3 horas"
     },
     "product": {
         "heading": {
@@ -517,7 +539,7 @@
         "save": "Guardar porducto",
         "delete": "Eliminar producto",
         "no_products": "No hay productos",
-        "selection":{
+        "selection": {
             "heading": "Seleccionar clases",
             "add_to_cart": "Reservar",
             "booked": "Reservado",
@@ -528,8 +550,8 @@
             "buy_now": "Comprar ahora"
         },
         "add_new_product": "Crear",
-        "private_full_day":"Privada día completo",
-        "private_half_day":"Privada medio día",
+        "private_full_day": "Privada día completo",
+        "private_half_day": "Privada medio día",
         "title": "Producto"
     },
     "verify": {
@@ -583,17 +605,16 @@
             "hired": "Match! Quieren disfrutar de la montaña con vos."
         }
     },
-    "selectTime":{
+    "selectTime": {
         "morning": "Mañana",
         "afternoon": "Tarde",
         "allday": "Día completo"
     },
-
-    "cardInput":{
+    "cardInput": {
         "title": "Datos de la tarjeta",
         "name": "Nombre que figura en la tarjeta",
         "expiry": "MM/AA",
-        "type":"DNI",
+        "type": "DNI",
         "id": "Documento",
         "number": "Número de tarjeta",
         "explain": "3/4 digitos del dorso de la tarjeta"
@@ -614,7 +635,7 @@
         "past": "Pasadas",
         "pending": "Pendientes"
     },
-    "auth":{
+    "auth": {
         "haveAccount": "¿Ya tenés una cuenta?",
         "login": "Ingresar",
         "getStartedFree": "Comenzá totalmente gratis",
@@ -624,7 +645,7 @@
         "privacy": "Política de Privacidad",
         "notATeacher": "¿Querés una clase?"
     },
-    "registerForm":{
+    "registerForm": {
         "name": "Nombre",
         "lastName": "Apellido",
         "email": "Email",
@@ -634,7 +655,7 @@
         "certification": "Certificación",
         "register": "Registrarme"
     },
-    "proTips":{
+    "proTips": {
         "title": "Pro Tips",
         "tips": {
             "jaime": {
@@ -658,5 +679,23 @@
                 "description": "La posición de manos, hombros y cabeza. 👉Juan Chapitel nos trae un consejo MUY ÚTIL para aplicar en cualquier pista y con cualquier condición de nieve…🏔️ Conocedor de la montaña como pocos, Chapi es oriundo de San Martín de los Andes e instructor en Chapelco 🇦🇷"
             }
         }
+    },
+    "policy": {
+        "title": "Política de Cancelación",
+        "helper": "Antes de hacer la reserva, asegurate de que la política de cancelación del instructor te convenga.",
+        "strict": "Estricta",
+        "strictDescription": "Este instructor tiene un política de cancelación estricta. Si cancelas tu reserva con menos de 15 días de anticipación, no se hará reembolso.",
+        "strictDescriptionRefound": "En caso de cancelar con mas de 15 dias de anticipación, se hará un reembolso del 50%."
+    },
+    "lessonTime": {
+        "title": "Normas de la Clase",
+        "descriptionShort":"Este instructor ofrece los siguientes horarios para sus clases:\nMañana: 9: 30am - 12: 30pm\nTarde: 2: 30pm - 5: 30pm\nDía: 9: 30am - 5: 30pm",
+        "moreInfo": "Más información",
+        "morningTime": "Turno Mañana: 9:30am - 12:30pm.",
+        "morningTimeDescription": "El profesor va a estar esperandote el dia de tu clase en el punto de encuentro a las 9:30am. Si llegas tarde, el profesor esperará 15 minutos y luego se irá. No se hará reembolso.",
+        "afternoonTime": "Turno Tarde: 2:30pm - 5:30pm.",
+        "afternoonTimeDescription":"El profesor va a estar esperandote el dia de tu clase en el punto de encuentro a las 2:30pm. Si llegas tarde, el profesor esperará 15 minutos y luego se irá. No se hará reembolso.",
+        "allDayTime": "Día Completo: 9:30am - 5:30pm.",
+        "allDayTimeDescrpition":"El profesor va a estar esperandote el dia de tu clase en el punto de encuentro a las 9:30am. Si llegas tarde, el profesor esperará 15 minutos y luego se irá. No se hará reembolso. Esta modalidad cuenta con un recreo para almorzar de 1 hora. El profesor te va a indicar el horario del mismo."
     }
 }

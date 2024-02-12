@@ -32,6 +32,7 @@ CheckoutSummary.propTypes = {
   enableEdit: PropTypes.bool,
   onApplyDiscount: PropTypes.func,
   enableDiscount: PropTypes.bool,
+  bookingPrice: PropTypes.number,
 };
 
 export default function CheckoutSummary({
@@ -44,6 +45,7 @@ export default function CheckoutSummary({
   onApplyDiscount,
   enableEdit = true,
   enableDiscount = false,
+  bookingPrice
 }) {
   const {translate} = useLocales()
   const displayShipping = shipping !== null ? 'Free' : '-';
@@ -80,17 +82,19 @@ export default function CheckoutSummary({
 
           <Stack direction="row" justifyContent="space-between">
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-              Reserva (50%)
+              Pago al inicio de clase
             </Typography>
-            <Typography variant="subtitle2">{subtotal ? `US${fCurrency(subtotal * 0.5)}` : 'free' }</Typography>
+            <Typography variant="subtitle2">US{fCurrency(subtotal-bookingPrice)}</Typography>
           </Stack>
 
           <Stack direction="row" justifyContent="space-between">
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-              {translate('checkout.sm_service')}
+              Reserva
             </Typography>
-            <Typography variant="subtitle2">{translate('checkout.free')}</Typography>
+            <Typography variant="subtitle2">{bookingPrice ? `US${fCurrency(bookingPrice)}` : 'free' }</Typography>
           </Stack>
+
+          
 
           <Divider />
 

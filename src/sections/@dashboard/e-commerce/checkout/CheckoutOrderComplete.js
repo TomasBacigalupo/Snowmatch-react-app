@@ -37,7 +37,7 @@ export default function CheckoutOrderComplete({ ...other }) {
 
   const handleResetStep = () => {
     dispatch(resetCart());
-    navigate(PATH_GUEST.school);
+    navigate(PATH_GUEST.protips);
   };
 
   const downloadPDFStep = () => {
@@ -69,7 +69,7 @@ export default function CheckoutOrderComplete({ ...other }) {
 
         <Stack direction={{ xs: 'column-reverse', sm: 'row' }} justifyContent="space-between" spacing={2}>
           <Button color="inherit" onClick={handleResetStep} startIcon={<Iconify icon={'eva:arrow-ios-back-fill'} />}>
-            {translate('checkout.continue')}
+            Ver típs para mi clase
           </Button>
           {/* <Button
             variant="contained"

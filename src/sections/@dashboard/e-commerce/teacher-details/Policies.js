@@ -3,18 +3,20 @@ import Drawer from '@mui/material/Drawer';
 import Typography from '@mui/material/Typography';
 import { Grid, IconButton, Box } from '@mui/material';
 import Iconify from 'src/components/Iconify';
+import useLocales from 'src/hooks/useLocales';
 
 const Policies = () => {
+    const {translate} = useLocales();
     const [open, setOpen] = React.useState(false);
     return (
         <>
             <Grid container justifyContent={'center'} alignItems={'center'} onClick={() => setOpen(true)}>
                 <Grid item xs={10} pl={3} pt={3} pb={3}>
                     <Typography variant="h4" gutterBottom>
-                        Política de Cancelación
+                    {translate('policy.title')}
                     </Typography>
                     <Typography variant="body1" paragraph>
-                        Antes de hacer la reserva, asegurate de que la política de cancelación del instructor te convenga.
+                    {translate('policy.helper')}
                     </Typography>
                 </Grid>
                 <Grid item xs={2} p={3}>
@@ -43,22 +45,22 @@ const Policies = () => {
                 <Grid p={2} spacing={3}>
                     <Grid item xs={12}>
                         <Typography variant="h3" gutterBottom>
-                            Política de Cancelación
+                            {translate('policy.title')}
                         </Typography>
                     </Grid>
                     <Grid item xs={12}>
                         <Typography variant="h6" gutterBottom>
-                            Estricta
+                        {translate('policy.strict')}
                         </Typography>
                     </Grid>
                     <Grid item xs={12}>
                         <Typography variant="body1" paragraph>
-                            Este instructor tiene un política de cancelación estricta. Si cancelas tu reserva con menos de 15 días de anticipación, no se hará reembolso.
+                        {translate('policy.strictDescription')}
                         </Typography>
                     </Grid>
                     <Grid item xs={12}>
                         <Typography variant="body1" paragraph>
-                            En caso de cancelar con mas de 15 dias de anticipación, se hará un reembolso del 50%.
+                        {translate('policy.strictDescriptionRefound')}
                         </Typography>
                     </Grid>
                 </Grid>

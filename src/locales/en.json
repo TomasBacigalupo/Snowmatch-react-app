@@ -114,7 +114,7 @@
     "editEvent": "Edit Event",
     "addEvent": "Add Event",
     "form": {
-      "assignedTeachers" : "Assigned teachers",
+      "assignedTeachers": "Assigned teachers",
       "teacher": "Teacher",
       "school": "School",
       "startDate": "Start Date",
@@ -132,7 +132,7 @@
   "event": {
     "payed": "Payed",
     "pay": "Pay",
-    "information":"Information"
+    "information": "Information"
   },
   "school": {
     "clients": {
@@ -351,7 +351,30 @@
     "all_day": "All Day",
     "continue": "Continue to find Pros",
     "event_added": "Lesson booked",
-    "book_lesson": "Book"
+    "book_lesson": "Book",
+    "message": "Tell us a bit more",
+    "message_description": "What would you like to learn? What are your goals? What would you like to improve?",
+    "message_placeholder": "Eg: I would like to improve my parallel technique, and learn to ski in powder snow.",
+    "guests": "Skiers",
+    "skiers": "Skiers",
+    "guests_description": "Ski lessons are for groups of up to 4 people. If there are more than 4, there will be an additional charge of 20 US per person.",
+    "guests_adulsts": "Adults",
+    "guests_adulsts_description": "Age over 13 years",
+    "guests_children": "Children",
+    "guests_children_description": "From 4 to 13 years old",
+    "edit": "Edit",
+    "guestsTitle": "Group information",
+    "cancel": "Cancel",
+    "save": "Save",
+    "selectDays": "Select days",
+    "selectDaysDescription": "Select the days you want to book",
+    "halfDay3Hours": "Half day (3 hours)",
+    "allDayTitle": "All Day",
+    "allDayDescription": "The class starts at 10 am and lasts 6 hours",
+    "morningTitle": "Morning",
+    "morningDescription": "The class starts at 10 am and lasts 3 hours",
+    "afternoonTitle": "Afternoon",
+    "afternoonDescription": "The class starts at 2 pm and lasts 3 hours"
   },
   "product": {
     "heading": {
@@ -383,7 +406,7 @@
     "studentLevel": {
       "value": "Student level",
       "required": "Student level is required"
-  },
+    },
     "maxStudents": {
       "value": "Max capacity",
       "moreThan": "There should be at least one student"
@@ -476,5 +499,23 @@
     "answer7": "All SnowMatch tools are free. A commission will only be charged for transactions made through the platform.<br/>The commission will be 15% per lesson when the client contacted you through the tool.<br/>The commission will be 5% if the client knows you outside of SnowMatch and only uses the platform as a payment medium.<br/>No commission will be charged if the contact with the client and the transaction occur outside of SnowMatch, and you only use the calendar to schedule the lesson.",
     "question8": "What benefits do I have as a SnowMatch member?",
     "answer8": "Visit the PRO Deal tab in SnowMatch and discover exclusive benefits for instructors. Amazing discounts are waiting for you."
-  }
+  },
+  "policy": {
+      "title": "Cancellation Policy",
+      "helper": "Before making the reservation, make sure the instructor's cancellation policy suits you.",
+      "strict": "Strict",
+      "strictDescription": "This instructor has a strict cancellation policy. If you cancel your reservation less than 15 days in advance, no refund will be made.",
+      "strictDescriptionRefound": "In case of cancellation more than 15 days in advance, a 50% refund will be made."
+    },
+    "lessonTime": {
+        "title": "Class Rules",
+        "descriptionShort":"This instructor offers the following schedules for his classes:\nMorning: 9:30am - 12:30pm\nAfternoon: 2:30pm - 5:30pm\nDay: 9:30am - 5:30pm",
+        "moreInfo": "More information",
+        "morningTime": "Morning Shift: 9:30am - 12:30pm.",
+        "morningTimeDescription": "The teacher will be waiting for you on the day of your class at the meeting point at 9:30am. If you are late, the teacher will wait 15 minutes and then leave. No refund will be made.",
+        "afternoonTime": "Afternoon Shift: 2:30pm - 5:30pm.",
+        "afternoonTimeDescription":"The teacher will be waiting for you on the day of your class at the meeting point at 2:30pm. If you are late, the teacher will wait 15 minutes and then leave. No refund will be made.",
+        "allDayTime": "Full Day: 9:30am - 5:30pm.",
+        "allDayTimeDescrpition":"The teacher will be waiting for you on the day of your class at the meeting point at 9:30am. If you are late, the teacher will wait 15 minutes and then leave. No refund will be made. This modality includes a 1-hour lunch break. The teacher will indicate the schedule for it."
+      }
 }

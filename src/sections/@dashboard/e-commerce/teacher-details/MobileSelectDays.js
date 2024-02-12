@@ -8,38 +8,50 @@ import SelectDates from './SelectDates';
 import { addCart } from 'src/redux/slices/teachers';
 import { useNavigate } from 'react-router';
 import { useDispatch } from 'react-redux';
+import { BookingReservationStats } from '../../general/booking';
+import useLocales from 'src/hooks/useLocales';
 
-const MobileSelectDays = ({teacher}) => {
+const MobileSelectDays = ({ teacher }) => {
+    const { translate } = useLocales();
     const [open, setOpen] = React.useState(false);
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const handleSubmitSelectedDates = useCallback((dates) => {
         dates.forEach((date) => {
-          let lessonTime = "MORNING"
-          if(new Date(date).getHours() === 14){
-            lessonTime = "AFTERNOON"
-          }
-          if (new Date(date).getHours() === 9){
-            lessonTime = "MORNING"
-          }
-          if (new Date(date).getHours() === 8) {
-            lessonTime = "ALL_DAY"
-          }
-          const requestEvent = {
-            price: 50,
-            people: 1,
-            lessonTime: lessonTime,
-            date: date,
-            resort: 'Catedral'
-          };
-          dispatch(addCart({
-            teacher: teacher,
-            event: requestEvent
-          }))
-          
-          navigate('hire');
+            let lessonTime = "MORNING"
+            let price = 0
+            let bookingPrice = 0
+            if (new Date(date).getHours() === 14) {
+                lessonTime = "AFTERNOON"
+                price = 180
+                bookingPrice = 18
+            }
+            if (new Date(date).getHours() === 9) {
+                lessonTime = "MORNING"
+                price = 180
+                bookingPrice = 18
+            }
+            if (new Date(date).getHours() === 8) {
+                lessonTime = "ALL_DAY"
+                price = 300
+                bookingPrice = 30
+            }
+            const requestEvent = {
+                price: price,
+                bookingPrice: bookingPrice,
+                people: 1,
+                lessonTime: lessonTime,
+                date: date,
+                resort: 'Catedral'
+            };
+            dispatch(addCart({
+                teacher: teacher,
+                event: requestEvent
+            }))
+
+            navigate('hire');
         })
-      })
+    })
     return (
         <>
             <Grid
@@ -59,13 +71,13 @@ const MobileSelectDays = ({teacher}) => {
                         $50
                     </Typography>
                     <Typography variant="body" width='100%'>
-                        Medio día 3 horas
+                        {translate('checkout.halfDay3Hours')}
                     </Typography>
 
                 </Grid>
                 <Grid item xs={6} px={2} py={3}>
-                    <Button variant='contained' sx={{p:2}} fullWidth onClick={() => setOpen(true)}>
-                        Seleccionar Días
+                    <Button variant='contained' sx={{ p: 2 }} fullWidth onClick={() => setOpen(true)}>
+                        {translate('checkout.selectDays')}
                     </Button>
                 </Grid>
             </Grid>
@@ -89,16 +101,16 @@ const MobileSelectDays = ({teacher}) => {
                     </Grid>
                     <Grid item xs={12} p={2} pb={0} mb={0}>
                         <Typography variant="h4">
-                            Selecciona tus días de clases
+                            {translate('checkout.selectDays')}
                         </Typography>
                         <Typography variant="body">
-                            Elige los días que quieras tener clases con este instructor.
+                            {translate('checkout.selectDaysDescription')}
                         </Typography>
                     </Grid>
-                    <SelectDates 
-                    handleClose={() => setOpen(false)}
-                    onSubmit={handleSubmitSelectedDates}
-                     />
+                    <SelectDates
+                        handleClose={() => setOpen(false)}
+                        onSubmit={handleSubmitSelectedDates}
+                    />
                 </Grid>
             </Drawer>
         </>

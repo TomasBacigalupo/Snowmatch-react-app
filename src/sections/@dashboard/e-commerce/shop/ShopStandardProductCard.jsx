@@ -16,15 +16,15 @@ import useLocales from 'src/hooks/useLocales';
 // ----------------------------------------------------------------------
 
 ShopStandardProductCard.propTypes = {
-    teacher: PropTypes.object,
+    standardProduct: PropTypes.object,
 };
 
-export default function ShopStandardProductCard({ teacher }) {
-    const { name, lastname, imageLink, information, email, resorts, id, eventsList, stars } = teacher;
+export default function ShopStandardProductCard({ standardProduct }) {
+    const { name, imageLink, information, resorts, id, people, price, priceBefore } = standardProduct;
     const { filters } = useSelector(state => state.teachers)
     const navigate = useNavigate();
     const [src, setSrc] = useState(imageLink)
-    const {translate} = useLocales()
+    const { translate } = useLocales()
 
     const { isTeacher } = useAuth()
     const linkTo = isTeacher ? PATH_DASHBOARD.eCommerce.viewTeacher(id) : PATH_GUEST.viewTeacher(id);
@@ -47,23 +47,29 @@ export default function ShopStandardProductCard({ teacher }) {
 
             <Stack spacing={2} sx={{ p: 3 }}>
                 <Stack direction="row" spacing={0.5}>
-                    <Typography component="span" sx={{ color: 'text.disabled', textDecoration: 'line-through' }}>
-                        $USD 150
+                    <Typography variant='h5' component="span" >
+                        {name}
                     </Typography>
-                    <Typography variant="subtitle1"> $USD 130</Typography>
-                    
+
+                </Stack>
+                <Stack direction="row" spacing={0.5}>
+                    <Typography component="span" sx={{ color: 'text.disabled', textDecoration: 'line-through' }}>
+                        $USD {priceBefore}
+                    </Typography>
+                    <Typography variant="subtitle1"> $USD {price}</Typography>
+
                 </Stack>
                 <Stack direction="row" alignItems="center" spacing={1}>
-                   {information}
+                    {information}
                 </Stack>
                 {/* Persons */}
                 <Stack direction="row" alignItems="center" spacing={1}>
                     <Iconify icon="mdi:account-group" width={20} height={20} />
                     <Typography component="span" sx={{ color: 'text.disabled', }}>
-                        1-5
+                        {people}
                     </Typography>
                 </Stack>
-                
+
             </Stack>
         </Card>
     );

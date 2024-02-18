@@ -10,6 +10,7 @@ import { start } from 'nprogress';
 
 const initialState = {
     isLoading: false,
+    loadingPayment: false,
     error: null,
     bookings: [],
     booking: null,
@@ -31,6 +32,10 @@ const slice = createSlice({
         // START LOADING
         startLoading(state) {
             state.isLoading = true;
+        },
+
+        startLoadingPayment(state) {
+            state.loadingPayment = true;
         },
 
         // HAS ERROR
@@ -199,6 +204,7 @@ const slice = createSlice({
 
         createBookingSuccess(state, action) {
             state.isLoading = false;
+            state.loadingPayment = false;
             state.bookSuccess = true;
         },
         
@@ -210,7 +216,8 @@ const slice = createSlice({
         getEventsSuccess(state, action) {
             state.isLoading = false;
             state.events = action.payload;
-        }
+        },
+
     },
 });
 
@@ -441,7 +448,7 @@ export function createBooking(teacherId, message, children, adults, events, tota
 export function bookingAndPay(teacherId, message, children, adults, events, totalPrice, formData) {
     return async () => {
         console.log({formData})
-        dispatch(slice.actions.startLoading());
+        dispatch(slice.actions.startLoadingPayment());
         try {
             await axios.post(`/api/bookings/bookAndPay?amount=${formData.transaction_amount}&token=${formData.token}&holderEmail=${formData.payer.email}&holderIdType=${formData.payer.identification.type}&holderId=${formData.payer.identification.number}&paymentMethodId=${formData.payment_method_id}&installments=${formData.installments}`, {
                 teacherId: teacherId,

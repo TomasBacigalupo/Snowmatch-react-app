@@ -313,7 +313,11 @@
         "PRIVATE_FULL_DAY": "Clase privada de día completo (6 horas) para todos los niveles y edades.",
         "PRIVATE_HALF_DAY": "Clase privada de medio día (3 horas). Desde iniciantes a expertos. Una buena forma de empezar o terminar el día.",
         "howToBookCatedral": "Seleccioná el día y horario que más te convenga y solicitá la reserva de la clase. Un representante de SnowMatch se pondrá en contacto con vos para ayudarte a completar tu reserva, dependiendo de la disponibilidad del instructor.",
-        "howToBookRest": "Seleccioná el día y horario que más te convenga y solicitá la reserva de la clase. Una vez que tu solicitud sea aceptada por el instructor, ambos tendrán acceso a la información necesaria para ponerse en contacto directamente. Podrás consultar los precios y confirmar todos los detalles de la clase con el instructor."
+        "howToBookRest": "Seleccioná el día y horario que más te convenga y solicitá la reserva de la clase. Una vez que tu solicitud sea aceptada por el instructor, ambos tendrán acceso a la información necesaria para ponerse en contacto directamente. Podrás consultar los precios y confirmar todos los detalles de la clase con el instructor.",
+        "ocupation": {
+            "title":"Ocupacion del Instructor",
+            "description": "Mira la disponibilidad del instructor en el calendario."
+        }
     },
     "schoolDetails": {
         "title": "Detalles PRO school",
@@ -633,27 +637,57 @@
         "all": "Todas",
         "upcoming": "Próximas",
         "past": "Pasadas",
-        "pending": "Pendientes"
+        "pending": "Pendientes",
+        "noBookings_teacher": "Tranquilo, estamos trabajndo para que estes lleno de clases.",
+        "noBookings": "No hay clases reservadas"
     },
     "auth": {
         "haveAccount": "¿Ya tenés una cuenta?",
+        "areYouTeacher": "¿Sos un instructor?",
         "login": "Ingresar",
         "getStartedFree": "Comenzá totalmente gratis",
         "registrationMessage": "Al registrarme, estoy de acuerdo con SnowMatch",
         "terms": "Términos y Condiciones",
         "and": "y",
         "privacy": "Política de Privacidad",
-        "notATeacher": "¿Querés una clase?"
+        "notATeacher": "¿Querés una clase?",
+        "signInToSnowmatch": "Bienvenido a SnowMatch",
+        "signInToSnowmatchDetails": "Ingresá con tu cuenta de SnowMatch",
+        "dontHaveAccount": "¿No tenés una cuenta?",
+        "getStarted": "Comenzá",
+        "registerTeacher": "Quiero trabajar con SnowMatch",
+        "registerTitle": "Registrarme",
+        "registerDescription": "Completá tus datos para registrarte"
     },
     "registerForm": {
         "name": "Nombre",
+        "nameRequired": "El nombre es obligatorio",
         "lastName": "Apellido",
+        "lastNameRequired": "El apellido es obligatorio",
         "email": "Email",
+        "emailInvalird":"El email debe ser valido",
+        "emailRequired":"El email es obligatorio",
         "password": "Contraseña",
+        "passwordRequired":"La contraseña es obligatoria",
         "countryCode": "Codigo País",
         "phone": "Teléfono",
         "certification": "Certificación",
         "register": "Registrarme"
+    },
+    "loginForm": {
+        "name": "Nombre",
+        "lastName": "Apellido",
+        "email": "Email",
+        "emailInvalird":"El email debe ser valido",
+        "emailRequired":"El email es obligatorio",
+        "password": "Contraseña",
+        "passwordRequired":"La contraseña es obligatoria",
+        "countryCode": "Codigo País",
+        "phone": "Teléfono",
+        "certification": "Certificación",
+        "register": "Registrarme",
+        "forgotPassword": "Olvidé mi contraseña",
+        "rememberMe": "Recordarme"
     },
     "proTips": {
         "title": "Pro Tips",
@@ -698,4 +732,5 @@
         "allDayTime": "Día Completo: 9:30am - 5:30pm.",
         "allDayTimeDescrpition":"El profesor va a estar esperandote el dia de tu clase en el punto de encuentro a las 9:30am. Si llegas tarde, el profesor esperará 15 minutos y luego se irá. No se hará reembolso. Esta modalidad cuenta con un recreo para almorzar de 1 hora. El profesor te va a indicar el horario del mismo."
     }
+    
 }

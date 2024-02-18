@@ -26,7 +26,7 @@ const Loadable = (Component) => (props) => {
   const { pathname } = useLocation();
   return (
     <Suspense fallback={<LoadingScreen isDashboard={pathname.includes('/dashboard')} />}>
-      <Component {...props} />
+        <Component {...props} />
     </Suspense>
   );
 };

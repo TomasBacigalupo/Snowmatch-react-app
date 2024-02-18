@@ -16,20 +16,22 @@ import { FormProvider, RHFEditor, RHFRadioGroup, RHFSelect, RHFTextField, RHFUpl
 
 //mock
 import { countries } from "src/_mock"
+import useLocales from 'src/hooks/useLocales';
 
 // ----------------------------------------------------------------------
 
 export default function RegisterStudentForm() {
     const { register } = useAuth();
+    const {translate} = useLocales();
 
     const isMountedRef = useIsMountedRef();
 
     const [showPassword, setShowPassword] = useState(false);
 
 const RegisterSchema = Yup.object().shape({
-  firstName: Yup.string().required('First name required'),
-  lastName: Yup.string().required('Last name required'),
-  email: Yup.string().email('Email must be a valid email address').required('Email is required'),
+  firstName: Yup.string().required(translate('registerForm.nameRequired')),
+  lastName: Yup.string().required(translate('registerForm.lastNameRequired')),
+  email: Yup.string().email(translate('registerForm.emailInvalid')).required(translate('registerForm.emailRequired')),
   countryCode: Yup.string().required(),
   cellphone: Yup.string().when(['countryCode'], (countryCode) => {
     let regex;
@@ -55,7 +57,7 @@ const RegisterSchema = Yup.object().shape({
 
     return Yup.string().matches(regex, errorMessage);
   }).required('Phone number required'),
-  password: Yup.string().required('Password is required'),
+  password: Yup.string().required(translate('registerForm.passwordRequired')),
 });
 
 
@@ -113,13 +115,13 @@ const RegisterSchema = Yup.object().shape({
                 {!!errors.afterSubmit && <Alert severity="error">{errors.afterSubmit.message}</Alert>}
 
                 <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
-                    <RHFTextField name="firstName" label="First name" />
-                    <RHFTextField name="lastName" label="Last name" />
+                    <RHFTextField name="firstName" label={translate('registerForm.name')} />
+                    <RHFTextField name="lastName" label={translate('registerForm.lastName')} />
                 </Stack>
 
-                <RHFTextField name="email" label="Email address" />
+                <RHFTextField name="email" label="Email" />
                 <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
-                    <RHFSelect name="countryCode" label="Country Code" placeholder="Country Code">
+                    <RHFSelect name="countryCode" label={translate('registerForm.countryCode')} placeholder="Country Code">
                         <option value="" />
                         {countries.map((option) => (
                             <option key={option.code} value={option.phone}>
@@ -127,13 +129,13 @@ const RegisterSchema = Yup.object().shape({
                             </option>
                         ))}
                     </RHFSelect>
-                    <RHFTextField name="cellphone" label="Phone" />
+                    <RHFTextField name="cellphone" label={translate('registerForm.phone')} />
                 </Stack>
 
 
                 <RHFTextField
                     name="password"
-                    label="Password"
+                    label={translate('registerForm.password')}
                     type={showPassword ? 'text' : 'password'}
                     InputProps={{
                         endAdornment: (
@@ -146,7 +148,7 @@ const RegisterSchema = Yup.object().shape({
                     }}
                 />
                 <LoadingButton fullWidth size="large" type="submit" variant="contained" loading={isSubmitting} sx={{ ':hover': { color: '#3399FF' } }}>
-                    Register
+                   {translate('registerForm.register')}
                 </LoadingButton>
             </Stack>
         </FormProvider>

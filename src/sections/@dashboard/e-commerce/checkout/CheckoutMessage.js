@@ -40,6 +40,7 @@ export default function CheckoutMessage() {
 
     const { checkout, teacher } = useSelector((state) => state.teachers);
     const { message } = useSelector((state) => state.bookings);
+    const [totalCharacters, setTotalCharacters] = useState(message?.length)
 
     const { cart, total, discount, subtotal, isOpenAddEventModal, events } = checkout;
 
@@ -99,6 +100,7 @@ export default function CheckoutMessage() {
     );
     const handleChangeMessage = (e) => {
         debouncedChangeMessage(e.target.value)
+        setTotalCharacters(e.target.value.length)
     }
     return (
         <Card sx={{ p: 3, mb: 1, borderRadius: '0px' }}>
@@ -114,7 +116,7 @@ export default function CheckoutMessage() {
                     </Typography>
                     <TextField onChange={handleChangeMessage} placeholder={translate('checkout.message_placeholder')} multiline minRows={3} rows={3} fullWidth inputProps={{ maxLength: 255 }} />
                     <Typography variant="body2" sx={{ mt: 1, px: 1 }}>
-                        {`${message?.length ?? 0}/255`}
+                        {`${totalCharacters ?? 0}/255`}
                     </Typography>
                 </Grid>
 

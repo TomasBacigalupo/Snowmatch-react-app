@@ -212,7 +212,11 @@
         "description": "descrição",
         "skills": "Habilidades",
         "howToBookCatedral": "Selecione o dia e horário que mais lhe convém e solicite a reserva da aula. Um representante da SnowMatch entrará em contato com você para ajudá-lo(a) a concluir sua reserva, dependendo da disponibilidade do instrutor.",
-        "howToBookRest": "Selecione o dia e horário que mais lhe convém e faça a reserva da aula. Uma vez que sua solicitação seja aceita pelo instrutor, ambos terão acesso às informações necessárias para entrar em contato diretamente. Você poderá consultar os preços e confirmar todos os detalhes da aula com o instrutor."
+        "howToBookRest": "Selecione o dia e horário que mais lhe convém e faça a reserva da aula. Uma vez que sua solicitação seja aceita pelo instrutor, ambos terão acesso às informações necessárias para entrar em contato diretamente. Você poderá consultar os preços e confirmar todos os detalhes da aula com o instrutor.",
+        "ocupation": {
+            "title": "Ocupação do instrutor",
+            "description": "O instrutor está disponível para dar aulas, verificar a disponibilidade."
+        }
     },
     "conversation": {
         "not_valid": "Seu numero de telefone nao esta validado, verifique WhatsApp e intente de novo",

@@ -6,7 +6,10 @@ const config: CapacitorConfig = {
   webDir: 'build',
   server: {
     androidScheme: 'https'
-  }
+  },
+  ios: {
+    "contentInset": "always",
+  },
 };
 
 export default config;

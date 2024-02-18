@@ -253,7 +253,11 @@
     "information": "Information",
     "description": "Description",
     "skills": "Skills",
-    "howToBook": "Select the day and time that suits you best and request the class reservation. A SnowMatch representative will contact you to assist you in completing your reservation, depending on instructor availability."
+    "howToBook": "Select the day and time that suits you best and request the class reservation. A SnowMatch representative will contact you to assist you in completing your reservation, depending on instructor availability.",
+    "ocupation": {
+      "title": "Instructor calendar",
+      "description": "Check the calendar to see the available days and hours of the instructor"
+    }
   },
   "schoolDetails": {
     "title": "PRO school details",
@@ -501,21 +505,21 @@
     "answer8": "Visit the PRO Deal tab in SnowMatch and discover exclusive benefits for instructors. Amazing discounts are waiting for you."
   },
   "policy": {
-      "title": "Cancellation Policy",
-      "helper": "Before making the reservation, make sure the instructor's cancellation policy suits you.",
-      "strict": "Strict",
-      "strictDescription": "This instructor has a strict cancellation policy. If you cancel your reservation less than 15 days in advance, no refund will be made.",
-      "strictDescriptionRefound": "In case of cancellation more than 15 days in advance, a 50% refund will be made."
-    },
-    "lessonTime": {
-        "title": "Class Rules",
-        "descriptionShort":"This instructor offers the following schedules for his classes:\nMorning: 9:30am - 12:30pm\nAfternoon: 2:30pm - 5:30pm\nDay: 9:30am - 5:30pm",
-        "moreInfo": "More information",
-        "morningTime": "Morning Shift: 9:30am - 12:30pm.",
-        "morningTimeDescription": "The teacher will be waiting for you on the day of your class at the meeting point at 9:30am. If you are late, the teacher will wait 15 minutes and then leave. No refund will be made.",
-        "afternoonTime": "Afternoon Shift: 2:30pm - 5:30pm.",
-        "afternoonTimeDescription":"The teacher will be waiting for you on the day of your class at the meeting point at 2:30pm. If you are late, the teacher will wait 15 minutes and then leave. No refund will be made.",
-        "allDayTime": "Full Day: 9:30am - 5:30pm.",
-        "allDayTimeDescrpition":"The teacher will be waiting for you on the day of your class at the meeting point at 9:30am. If you are late, the teacher will wait 15 minutes and then leave. No refund will be made. This modality includes a 1-hour lunch break. The teacher will indicate the schedule for it."
-      }
+    "title": "Cancellation Policy",
+    "helper": "Before making the reservation, make sure the instructor's cancellation policy suits you.",
+    "strict": "Strict",
+    "strictDescription": "This instructor has a strict cancellation policy. If you cancel your reservation less than 15 days in advance, no refund will be made.",
+    "strictDescriptionRefound": "In case of cancellation more than 15 days in advance, a 50% refund will be made."
+  },
+  "lessonTime": {
+    "title": "Class Rules",
+    "descriptionShort": "This instructor offers the following schedules for his classes:\nMorning: 9:30am - 12:30pm\nAfternoon: 2:30pm - 5:30pm\nDay: 9:30am - 5:30pm",
+    "moreInfo": "More information",
+    "morningTime": "Morning Shift: 9:30am - 12:30pm.",
+    "morningTimeDescription": "The teacher will be waiting for you on the day of your class at the meeting point at 9:30am. If you are late, the teacher will wait 15 minutes and then leave. No refund will be made.",
+    "afternoonTime": "Afternoon Shift: 2:30pm - 5:30pm.",
+    "afternoonTimeDescription": "The teacher will be waiting for you on the day of your class at the meeting point at 2:30pm. If you are late, the teacher will wait 15 minutes and then leave. No refund will be made.",
+    "allDayTime": "Full Day: 9:30am - 5:30pm.",
+    "allDayTimeDescrpition": "The teacher will be waiting for you on the day of your class at the meeting point at 9:30am. If you are late, the teacher will wait 15 minutes and then leave. No refund will be made. This modality includes a 1-hour lunch break. The teacher will indicate the schedule for it."
+  }
 }

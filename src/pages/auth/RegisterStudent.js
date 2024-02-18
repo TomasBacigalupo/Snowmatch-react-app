@@ -14,6 +14,7 @@ import Logo from '../../components/Logo';
 import Image from '../../components/Image';
 // sections
 import { RegisterStudentForm } from '../../sections/auth/register';
+import useLocales from 'src/hooks/useLocales';
 
 // ----------------------------------------------------------------------
 
@@ -62,10 +63,11 @@ const ContentStyle = styled('div')(({ theme }) => ({
 
 export default function RegisterStudent() {
     const { method } = useAuth();
-
+    const {translate} = useLocales();
     const smUp = useResponsive('up', 'sm');
 
     const mdUp = useResponsive('up', 'md');
+
 
     return (
         <Page title="Register">
@@ -74,14 +76,14 @@ export default function RegisterStudent() {
                     <Logo />
                     {smUp && (
                         <Typography variant="body2" sx={{ mt: { md: -2 } }} align="right">
-                            Already have an account?{' '}
+                            {translate('auth.haveAccount')}{' '}
                             <Link variant="subtitle2" component={RouterLink} to={PATH_AUTH.login}>
-                                Login
+                                {translate('auth.login')}
                             </Link>
                             <><br /></>
-                            Are you a teacher? {''}
+                            {translate('auth.areYouTeacher')} {''}
                             <Link variant="subtitle2" component={RouterLink} to={PATH_AUTH.register}>
-                                create teacher account
+                                {translate('auth.registerTeacher')}
                             </Link>
                         </Typography>
                     )}
@@ -106,9 +108,9 @@ export default function RegisterStudent() {
                         <Box sx={{ mb: 5, display: 'flex', alignItems: 'center' }}>
                             <Box sx={{ flexGrow: 1 }}>
                                 <Typography variant="h4" gutterBottom>
-                                    Get started absolutely free.
+                                    {translate('auth.registerTitle')}
                                 </Typography>
-                                {/* <Typography sx={{ color: 'text.secondary' }}>Free forever. No credit card needed.</Typography> */}
+                                <Typography sx={{ color: 'text.secondary' }}>{translate('auth.registerDescription')}</Typography>
                             </Box>
                             {/* <Tooltip title={capitalCase(method)}>
                 <>
@@ -124,13 +126,13 @@ export default function RegisterStudent() {
                         <RegisterStudentForm />
 
                         <Typography variant="body2" align="center" sx={{ color: 'text.secondary', mt: 3 }}>
-                            By registering, I agree to SnowMatch&nbsp;
+                        {translate('auth.registrationMessage')}&nbsp;
                             <Link underline="always" color="text.primary" href="https://github.com/lpagn/snowmatchfiles/blob/main/Snow%20Match%20Terms%20of%20Service.pdf">
-                                Terms of Service&nbsp;
+                                {translate('auth.terms')}&nbsp;
                             </Link>
-                            and&nbsp;
+                            {translate('auth.and')}&nbsp;
                             <Link underline="always" color="text.primary" href="https://github.com/lpagn/snowmatchfiles/blob/main/Snow%20Match%20Privacy%20Policy.pdf">
-                                Privacy Policy
+                            {translate('auth.privacy')}
                             </Link>
                             .
                         </Typography>

@@ -14,6 +14,7 @@ import Logo from '../../components/Logo';
 import Image from '../../components/Image';
 // sections
 import { LoginForm } from '../../sections/auth/login';
+import useLocales from 'src/hooks/useLocales';
 
 // ----------------------------------------------------------------------
 
@@ -67,6 +68,8 @@ export default function Login() {
 
   const mdUp = useResponsive('up', 'md');
 
+  const {translate} = useLocales();
+
   return (
     <Page title="Login">
       <RootStyle>
@@ -74,12 +77,12 @@ export default function Login() {
           <Logo />
           {smUp && (
             <Typography variant="body2" sx={{ mt: { md: -2 } }} align="right">
-              Don’t have an account? {''}
+              {translate('auth.haveAccount')} {''}
               <Link variant="subtitle2" component={RouterLink} to={PATH_AUTH.registerStudent}>
-                Get started
+                {translate('auth.getStartedFree')}
               </Link>
               <><br /></>
-              Not a teacher? {''}
+              {translate('auth.notATeacher')} {''}
               <Link variant="subtitle2" component={RouterLink} to={PATH_GUEST.root}>
                 Match
               </Link>
@@ -104,9 +107,9 @@ export default function Login() {
             <Stack direction="row" alignItems="center" sx={{ mb: 5 }}>
               <Box sx={{ flexGrow: 1 }}>
                 <Typography variant="h4" gutterBottom>
-                  Sign in to SnowMatch
+                  {translate('auth.signInToSnowmatch')}
                 </Typography>
-                <Typography sx={{ color: 'text.secondary' }}>Enter your details below.</Typography>
+                <Typography sx={{ color: 'text.secondary' }}>{translate('auth.signInToSnowmatchDetails')}</Typography>
               </Box>
 
               {/* <Tooltip title={capitalCase(method)} placement="right">
@@ -128,9 +131,9 @@ export default function Login() {
 
 
             <Typography variant="body2" align="center" sx={{ mt: 3 }}>
-              Don’t have an account?{' '}
+              {translate('auth.dontHaveAccount')}{' '}
               <Link variant="subtitle2" component={RouterLink} to={PATH_AUTH.registerStudent}>
-                Get started
+                {translate('auth.getStarted')}
               </Link>
             </Typography>
           </ContentStyle>

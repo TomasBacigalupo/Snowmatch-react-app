@@ -114,7 +114,7 @@ export default function SelectDates({ handleClose, onSubmit }) {
                         <Grid item xs={12}>
                             <Paper
                                 onClick={() => {
-                                    selectedDates[selectedDates.length - 1].setHours(10)
+                                    selectedDates[selectedDates.length - 1].setHours(9)
                                     setSelectTimeModal(false)
                                 }}
                                 sx={{
@@ -168,7 +168,7 @@ export default function SelectDates({ handleClose, onSubmit }) {
                         <Grid item xs={12}>
                             <Paper
                                 onClick={() => {
-                                    selectedDates[selectedDates.length - 1].setHours(10)
+                                    selectedDates[selectedDates.length - 1].setHours(8)
                                     setSelectTimeModal(false)
                                 }}
                                 sx={{
@@ -197,6 +197,7 @@ export default function SelectDates({ handleClose, onSubmit }) {
             <Grid container width={'100%'} height={'100%'}>
                 <Grid item xs={12} width={'100%'} height={'100%'}>
                     <StaticDatePicker
+                        onChange={()=>{}}
                         disabledDates={events.map(e => new Date(e.start))}
                         shouldDisableDate={(date) => events.some(e => isSameDay(date, new Date(e.start)))}
                         showToolbar={false}

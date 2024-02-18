@@ -12,6 +12,7 @@ import useSettings from '../../hooks/useSettings';
 // components
 import Page from '../../components/Page';
 import Iconify from '../../components/Iconify';
+import LoadingScreen from '../../components/LoadingScreen';
 
 // sections
 import {
@@ -85,7 +86,7 @@ export default function EcommerceCheckoutTeacher() {
   const dispatch = useDispatch();
   const isMountedRef = useIsMountedRef();
   const { checkout } = useSelector((state) => state.teachers);
-  const { message, children, adults, bookSuccess } = useSelector((state) => state.bookings);
+  const { message, children, adults, bookSuccess, loadingPayment } = useSelector((state) => state.bookings);
   const { cart, billing, activeStep, events, bookingPrice } = checkout;
   const isComplete = activeStep === STEPS.length;
 
@@ -125,7 +126,7 @@ export default function EcommerceCheckoutTeacher() {
     },
   });
 
-  useEffect(() =>{
+  useEffect(() => {
     setInitialization({
       amount: bookingPrice,
       preferenceId: "1645436634-309d1017-108d-4648-a729-4acd4d431637",
@@ -145,7 +146,7 @@ export default function EcommerceCheckoutTeacher() {
         maxInstallments: 2
       },
     })
-}, [bookingPrice]);
+  }, [bookingPrice]);
 
   const onSubmit = async (
     { selectedPaymentMethod, formData }
@@ -205,10 +206,13 @@ export default function EcommerceCheckoutTeacher() {
     ));
   }
 
-  return (
-    <Page title="Teacher: Match">
-      {/* <Container maxWidth={themeStretch ? false : 'lg'}> */}
-      {/* <Grid container justifyContent={isComplete ? 'center' : 'flex-start'}>
+  if (loadingPayment) {
+    return <LoadingScreen />
+  } else {
+    return (
+      <Page title="Teacher: Match">
+        {/* <Container maxWidth={themeStretch ? false : 'lg'}> */}
+        {/* <Grid container justifyContent={isComplete ? 'center' : 'flex-start'}>
           <Grid item xs={12} md={8} sx={{ mb: 5 }}>
             <Stepper alternativeLabel activeStep={activeStep} connector={<QontoConnector />}>
               {STEPS.map((label) => (
@@ -230,7 +234,7 @@ export default function EcommerceCheckoutTeacher() {
           </Grid>
         </Grid> */}
 
-      {/* {!isComplete ? (
+        {/* {!isComplete ? (
           <>
             {activeStep === 0 && <CheckoutCart />}
             {activeStep === 1 && <CheckoutPayment />}
@@ -238,38 +242,40 @@ export default function EcommerceCheckoutTeacher() {
         ) : (
           <CheckoutOrderComplete open={isComplete} />
         )} */}
-      <CheckoutCart />
-      <CheckoutMessage />
-      <CheckoutGuests />
-      <Box marginTop={2}>
-        <CheckoutSummary
-          enableEdit
-          total={total}
-          subtotal={subtotal}
-          discount={discount}
-          shipping={shipping}
-          onEdit={() => { }}
-          bookingPrice={bookingPrice}
-        />
-      </Box>
-      <Box marginTop={2}>
-        {bookingPrice > 0 &&
-          <Payment
-            initialization={initialization}
-            customization={customization}
-            onSubmit={onSubmit}
-            onReady={onReady}
-            onError={onError}
-          />}
-      </Box>
-      <CheckoutOrderComplete open={bookSuccess} />
-      {/* <Box marginTop={2} marginX={1}>
+        <CheckoutCart />
+        <CheckoutMessage />
+        <CheckoutGuests />
+        <Box marginTop={2}>
+          <CheckoutSummary
+            enableEdit
+            total={total}
+            subtotal={subtotal}
+            discount={discount}
+            shipping={shipping}
+            onEdit={() => { }}
+            bookingPrice={bookingPrice}
+          />
+        </Box>
+        <Box marginTop={2}>
+          {bookingPrice > 0 &&
+            <Payment
+              initialization={initialization}
+              customization={customization}
+              onSubmit={onSubmit}
+              onReady={onReady}
+              onError={onError}
+            />}
+        </Box>
+        <CheckoutOrderComplete open={bookSuccess} />
+        {/* <Box marginTop={2} marginX={1}>
         <Button onClick={handleBook} variant='contained' fullWidth style={{ m: 2 }}> Book </Button>
-      </Box>
-      <Box marginTop={2} marginX={1}>
-        <Button onClick={onSubmit} variant='contained' fullWidth style={{ m: 2 }}> Book And Pay </Button>
-      </Box> */}
-      {/* </Container> */}
-    </Page>
-  );
+          </Box>*/}
+        {bookingPrice > 0 &&
+          <Box marginTop={2} marginX={1}>
+            <Button onClick={onSubmit} variant='contained' fullWidth style={{ m: 2 }}> Book And Pay </Button>
+          </Box>}
+        {/* </Container> */}
+      </Page>
+    );
+  }
 }

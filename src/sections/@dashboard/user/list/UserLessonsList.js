@@ -41,7 +41,7 @@ export default function UserLessonsList() {
 
       {!isLoading && bookings.length === 0 && 
       <Box p={2}>
-        <Typography variant="h6">{translate('noBookings')}</Typography>
+        <Typography variant="h6">{translate(`lessons.noBookings${isStudent ? '' : '_teacher'}`)}</Typography>
       </Box>
       }
 

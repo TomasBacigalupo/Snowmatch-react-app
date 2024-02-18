@@ -63,7 +63,7 @@ ReactDOM.render(
             <SettingsProvider>
               <CollapseDrawerProvider>
                 <BrowserRouter>
-                  <App />
+                <App />
                 </BrowserRouter>
               </CollapseDrawerProvider>
             </SettingsProvider>

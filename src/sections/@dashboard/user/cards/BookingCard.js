@@ -15,6 +15,8 @@ import React from 'react';
 import Drawer from '@mui/material/Drawer';
 import { Grid, IconButton } from '@mui/material';
 import { acceptAndPay } from 'src/redux/slices/bookings';
+import ProductDetailsReviewForm from '../../e-commerce/teacher-details/ProductDetailsReviewForm';
+import ProductDetailsReviewFormMobile from '../../e-commerce/teacher-details/ProductDetailsReviewFormMobile';
 
 BookingCard.propTypes = {
     booking: PropTypes.object,
@@ -30,7 +32,8 @@ export default function BookingCard({ booking, showInfo = true }) {
     const [openAcceptModal, setOpenAcceptModal] = useState(false)
     const [openDeclineModal, setOpenDeclineModal] = useState(false)
     const [lessonState, setLessonState] = useState(booking.state)
-    const [open, setOpen] = React.useState(false)
+    const [open, setOpen] = React.useState(false);
+    const [rateOpen, setRateOpen] = React.useState(false);
     const navigate = useNavigate()
 
     const isPending = booking.state === 'PENDING';
@@ -127,6 +130,7 @@ export default function BookingCard({ booking, showInfo = true }) {
             )
         })
     }
+
     const handleMessage = () => {
         //open whats app to user
         if (isStudent) {
@@ -180,7 +184,11 @@ export default function BookingCard({ booking, showInfo = true }) {
                     </Button>
                     <Typography variant='body2'>{booking.teacher.phone}</Typography>
                 </Box>}
-
+                {isAccepted && isStudent && new Date(booking.eventList[0]?.start) < new Date() && <Box display='flex' flex={1} width='100%' flexDirection='column' flexGrow={1}>
+                    <Button fullWidth variant="outlined" sx={{ mt: 2, py: 1, mr: 2, color: 'black', borderColor: 'black' }} onClick={() => setRateOpen(true)}>
+                        Rate
+                    </Button>
+                </Box>}
             </Card>
 
             <Drawer
@@ -228,7 +236,7 @@ export default function BookingCard({ booking, showInfo = true }) {
                             <Avatar alt={isStudent ? booking?.teacher?.name : booking?.student?.name} src={isStudent ? booking.teacher.imageS3 : booking.student.imageS3} sx={{ width: 40, height: 40 }} />
                         </Box>
                     </Grid>
-                    {isPending  && !isStudent && (
+                    {isPending && !isStudent && (
                         <>
                             <Grid item xs={12}>
                                 <Divider />
@@ -438,6 +446,77 @@ export default function BookingCard({ booking, showInfo = true }) {
                             si usted cancela la reserva será penalizado y podría ser suspendido de la plataforma
                         </Typography>
 
+                    </Grid>
+                </Grid>
+            </Drawer>
+            <Drawer
+                anchor="bottom"
+                open={rateOpen}
+                onClose={() => setRateOpen(false)}
+                sx={{
+                    '& .MuiDrawer-paper': {
+                        boxSizing: 'border-box', width: '100%', paddingBottom: 2, borderTopLeftRadius: '12px',  // Adjust the value as needed
+                        borderTopRightRadius: '12px',
+                        height: '95%',
+                        marginTop: '20px',
+                        paddingX: 1
+                    }
+                }}
+            >
+                <Box mt={1}>
+                    <IconButton onClick={() => setRateOpen(false)}>
+                        <Iconify icon={'line-md:close-circle'} width={25} height={25} />
+                    </IconButton>
+                </Box>
+                <Grid container p={2} spacing={3}>
+                    <Grid item xs={12}>
+                        <Typography variant="h2" gutterBottom>
+                            Rate your lesson
+                        </Typography>
+                    </Grid>
+                    <Grid item xs={12}>
+                        <Divider sx={{ pt: 2 }} />
+                    </Grid>
+                    <Grid item xs={12} >
+                        <Box
+                            sx={{ display: 'flex', justifyContent: 'space-between', p: 2 }}>
+                            <Box >
+                                <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                                    {booking.state}
+                                </Typography>
+                                <Typography variant="h5" sx={{ mb: 0.5 }}>
+                                    {isStudent ? booking?.teacher?.name : booking?.student?.name}
+                                </Typography>
+                                <Typography variant="h5" sx={{ color: 'text.secondary' }}>
+                                    {formatDate(booking.eventList[0]?.start, { month: 'short', day: 'numeric' })} - {formatDate(booking.eventList[booking.eventList.length - 1]?.end, { month: new Date(booking.eventList[0]?.end).getMonth() === new Date(booking.eventList[0]?.start).getMonth() ? undefined : 'short', day: 'numeric' })}
+                                </Typography>
+                            </Box>
+                            <Avatar alt={isStudent ? booking?.teacher?.name : booking?.student?.name} src={isStudent ? booking.teacher.imageS3 : booking.student.imageS3} sx={{ width: 40, height: 40 }} />
+                        </Box>
+                    </Grid>
+                    {isPending && !isStudent && (
+                        <>
+                            <Grid item xs={12}>
+                                <Divider />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <Box display='flex' flex={1} width='100%' flexGrow={1}>
+                                    <Button fullWidth variant="outlined" sx={{ mt: 2, py: 1, mr: 2, color: 'black', borderColor: 'black' }} onClick={() => { }}>
+                                        Rechazar
+                                    </Button>
+                                    <Button fullWidth variant="contained" sx={{ mt: 2, py: 1 }} onClick={handleAccept}>
+                                        Aprobar
+                                    </Button>
+                                </Box>
+                            </Grid>
+                        </>
+                    )}
+
+                    <Grid item xs={12}>
+                        <Divider sx={{ borderBottomWidth: 8, }} />
+                    </Grid>
+                    <Grid item xs={12}>
+                        <ProductDetailsReviewFormMobile onClose={() => { }} id="move_add_review" teacherId={booking?.teacher.id} />
                     </Grid>
                 </Grid>
             </Drawer>

@@ -172,14 +172,14 @@ export default function EcommerceTeacherDetails({ isGuest = false }) {
                   </Box>
                   <Box mt={3}>
                     <Box px={2} pt={2}>
-                    <Typography variant="h4" gutterBottom>
-                      Ocupacion del Instructor
-                    </Typography>
-                    <Typography variant="body1" paragraph>
-                      Mira la disponibilidad del instructor en el calendario.
-                    </Typography>
+                      <Typography variant="h4" gutterBottom>
+                        {translate('teacherDetails.ocupation.title')}
+                      </Typography>
+                      <Typography variant="body1" paragraph>
+                        {translate('teacherDetails.ocupation.description')}
+                      </Typography>
                     </Box>
-                    <TeacherDetailsMobileCalendar  onClick={()=>{console.log('clicked')}} teacher={teacher} />
+                    <TeacherDetailsMobileCalendar teacher={teacher} />
                   </Box>
                   <Box mx={2} >
                     <Divider />
@@ -193,7 +193,7 @@ export default function EcommerceTeacherDetails({ isGuest = false }) {
                     <Divider />
                   </Box>
                   <TimeDetails />
-                  <MobileSelectDays teacher={teacher}/>
+                  <MobileSelectDays teacher={teacher} />
                 </Hidden>
               </Grid>
             </Grid>

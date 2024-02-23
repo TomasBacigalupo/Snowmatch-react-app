@@ -1,16 +1,12 @@
-import { CalendarPicker, MobileDatePicker, PickersDay, StaticDatePicker } from "@mui/lab";
+import { PickersDay, StaticDatePicker } from "@mui/lab";
 import { Button, DialogActions, DialogContent, DialogTitle, Grid, TextField, Box, Typography, Paper } from "@mui/material";
 import React, { useEffect } from "react";
 import { useState } from "react";
-import { Controller } from "react-hook-form";
 import { DialogAnimate } from "src/components/animate";
 import useLocales from "src/hooks/useLocales";
-import DatePicker from "react-multi-date-picker";
-import DatePanel from "react-multi-date-picker/plugins/date_panel"
 import { styled } from '@mui/material/styles';
 import { useCallback } from "react";
-import { endOfDay, isBefore, isSameDay } from "date-fns";
-import { ButtonBase } from '@mui/material';
+import { isSameDay } from "date-fns";
 import { getEventsByTeacherId } from "src/redux/slices/bookings";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -48,22 +44,17 @@ export default function SelectDates({ handleClose, onSubmit }) {
     const dispatch = useDispatch();
     const { events } = useSelector(state => state.bookings);
     const { teacher } = useSelector(state => state.teachers)
-    const [selectedDate, setSelectedDate] = useState()
     const [selectTimeModal, setSelectTimeModal] = useState(false)
     const [date, setDate] = useState(new Date())
     const [selectedDates, setDates] = useState([])
-    const today = new Date()
     const tomorrow = new Date()
+    tomorrow.setDate(tomorrow.getDate() + 1)
+    const hasPrice = teacher.level >=3 && teacher.resorts?.include( 'Cerro Catedral');
+    
     useEffect(() => {
         dispatch(getEventsByTeacherId(teacher.id, date.getMonth() + 1));
     }, [dispatch, teacher])
-    useEffect(() => {
-        console.log({ events })
-    }, [events])
-
-
-    tomorrow.setDate(tomorrow.getDate() + 1)
-
+    
     const renderWeekPickerDay = useCallback((date, _selectedDates, pickersDayProps) => {
         if (!date) {
             return <PickersDay {...pickersDayProps} onClick={() => console.log("clocked2")} />;
@@ -121,15 +112,13 @@ export default function SelectDates({ handleClose, onSubmit }) {
                                     p: 3,
                                     width: 1,
                                     my: 2,
-
                                     border: (theme) => `solid 1px ${theme.palette.grey[500_32]}`,
-
                                 }}
                             >
                                 {/* picture or icon */}
                                 <Typography
                                     // color={timeSelected === 'ALL_DAY' ? 'primary' : ''}
-                                    variant="h6">{translate('checkout.morningTitle')} $US 180</Typography>
+                                    variant="h6">{translate('checkout.morningTitle')} {hasPrice && '$US 180'}</Typography>
 
                                 <Typography
                                     // color={timeSelected === 'ALL_DAY' ? 'primary' : ''} 
@@ -155,7 +144,7 @@ export default function SelectDates({ handleClose, onSubmit }) {
                                 {/* picture or icon */}
                                 <Typography
                                     // color={timeSelected === 'ALL_DAY' ? 'primary' : ''}
-                                    variant="h6">{translate('checkout.afternoonTitle')} $US 180
+                                    variant="h6">{translate('checkout.afternoonTitle')} {hasPrice && '$US 180'}
                                 </Typography>
 
                                 <Typography
@@ -183,7 +172,7 @@ export default function SelectDates({ handleClose, onSubmit }) {
                                 {/* picture or icon */}
                                 <Typography
                                     // color={timeSelected === 'ALL_DAY' ? 'primary' : ''}
-                                    variant="h6">{translate('checkout.allDayTitle')} $US 300</Typography>
+                                    variant="h6">{translate('checkout.allDayTitle')} {hasPrice && '$US 300'}</Typography>
 
                                 <Typography
                                     // color={timeSelected === 'ALL_DAY' ? 'primary' : ''} 

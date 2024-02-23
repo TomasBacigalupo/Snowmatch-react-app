@@ -131,6 +131,7 @@ export default function NavbarVertical({ isOpenSidebar, onCloseSidebar, isGuest,
             icon: ICONS.user,
             children: [
               { title: 'review teachers', path: PATH_DASHBOARD.admin.review },
+              { title: 'review bookings', path: PATH_DASHBOARD.admin.bookings },
             ],
           }]})
     }

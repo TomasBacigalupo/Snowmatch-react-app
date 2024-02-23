@@ -159,9 +159,9 @@ export default function EcommerceTeacherDetails({ isGuest = false }) {
                             <Typography variant="subtitle1" gutterBottom>
                               {translate("teacherDetails." + item.title)}
                             </Typography>
-
-                            <Typography sx={{ color: 'text.secondary' }}>{translate('teacherDetails.' + item.description)}</Typography>
-
+                            <Typography sx={{ color: 'text.secondary' }}>
+                              {translate('teacherDetails.' + item.description)}
+                            </Typography>
                           </Box>
                         </Box>
                       </Grid>

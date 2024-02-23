@@ -8,7 +8,6 @@ import SelectDates from './SelectDates';
 import { addCart } from 'src/redux/slices/teachers';
 import { useNavigate } from 'react-router';
 import { useDispatch } from 'react-redux';
-import { BookingReservationStats } from '../../general/booking';
 import useLocales from 'src/hooks/useLocales';
 
 const MobileSelectDays = ({ teacher }) => {
@@ -68,12 +67,11 @@ const MobileSelectDays = ({ teacher }) => {
                 container justifyContent={'center'} alignItems={'center'} onClick={() => setOpen(true)}>
                 <Grid item xs={6} pl={2} pt={1} pb={1} justifyContent='center' textAlign='left'>
                     <Typography variant="h4" width='100%'>
-                        $50
+                        {teacher.level >= 3 && teacher.resort === 'Cerro Catedral' ? '$180' : 'Contactár'}
                     </Typography>
                     <Typography variant="body" width='100%'>
-                        {translate('checkout.halfDay3Hours')}
+                        {teacher.level >= 3 && teacher.resort === 'Cerro Catedral' && translate('checkout.halfDay3Hours')}
                     </Typography>
-
                 </Grid>
                 <Grid item xs={6} px={2} py={3}>
                     <Button variant='contained' sx={{ p: 2 }} fullWidth onClick={() => setOpen(true)}>

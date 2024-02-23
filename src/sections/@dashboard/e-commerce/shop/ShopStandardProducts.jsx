@@ -7,6 +7,7 @@ import { SkeletonProductItem } from '../../../../components/skeleton';
 import ShopTeacherCard from './ShopTeacherCard';
 import { orderBy } from 'lodash';
 import ShopStandardProductCard from './ShopStandardProductCard';
+import useLocales from 'src/hooks/useLocales';
 
 // ----------------------------------------------------------------------
 
@@ -16,6 +17,7 @@ ShopStandardProducts.propTypes = {
 };
 
 export default function ShopStandardProducts({ teachers, loading }) {
+    const { translate } = useLocales();
     return (
         <Box
             sx={{
@@ -30,9 +32,9 @@ export default function ShopStandardProducts({ teachers, loading }) {
             }}
         >
             {(loading ? [...Array(1)] : [{
-                name: "Parejas",
+                name: translate("standardProduct.title.couples"),
                 imageLink: "https://images.unsplash.com/photo-1612836812163-3c2c3e4d4a0b",
-                information: "Si estas con tu pareja y quieren aprender juntos, esta es la opción para ustedes. No se peleen :)",
+                information: translate("standardProduct.description.couples"),
                 resorts: ["resort1", "resort2"],
                 id: 1,
                 people: 2,

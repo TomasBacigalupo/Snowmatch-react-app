@@ -116,6 +116,7 @@
         "newProduct": "Nueva Clase",
         "admin": "Administrador",
         "review teachers": "Revisar Pros",
+        "review bookings": "Revisar Bookings",
         "school_teachers": "profesores de escuela",
         "pending_teachers": "profesores pendientes",
         "my_teachers": "mis profesores",
@@ -131,7 +132,8 @@
         "group": "Grupales",
         "private": "Privadas",
         "learning": "Capacitaciones",
-        "protips": "Pro Tips"
+        "protips": "Pro Tips",
+        "rent": "Alquilar"
     },
     "calendar": {
         "name": "Calendario",
@@ -315,7 +317,7 @@
         "howToBookCatedral": "Seleccioná el día y horario que más te convenga y solicitá la reserva de la clase. Un representante de SnowMatch se pondrá en contacto con vos para ayudarte a completar tu reserva, dependiendo de la disponibilidad del instructor.",
         "howToBookRest": "Seleccioná el día y horario que más te convenga y solicitá la reserva de la clase. Una vez que tu solicitud sea aceptada por el instructor, ambos tendrán acceso a la información necesaria para ponerse en contacto directamente. Podrás consultar los precios y confirmar todos los detalles de la clase con el instructor.",
         "ocupation": {
-            "title":"Ocupacion del Instructor",
+            "title": "Ocupacion del Instructor",
             "description": "Mira la disponibilidad del instructor en el calendario."
         }
     },
@@ -665,10 +667,10 @@
         "lastName": "Apellido",
         "lastNameRequired": "El apellido es obligatorio",
         "email": "Email",
-        "emailInvalird":"El email debe ser valido",
-        "emailRequired":"El email es obligatorio",
+        "emailInvalird": "El email debe ser valido",
+        "emailRequired": "El email es obligatorio",
         "password": "Contraseña",
-        "passwordRequired":"La contraseña es obligatoria",
+        "passwordRequired": "La contraseña es obligatoria",
         "countryCode": "Codigo País",
         "phone": "Teléfono",
         "certification": "Certificación",
@@ -678,10 +680,10 @@
         "name": "Nombre",
         "lastName": "Apellido",
         "email": "Email",
-        "emailInvalird":"El email debe ser valido",
-        "emailRequired":"El email es obligatorio",
+        "emailInvalird": "El email debe ser valido",
+        "emailRequired": "El email es obligatorio",
         "password": "Contraseña",
-        "passwordRequired":"La contraseña es obligatoria",
+        "passwordRequired": "La contraseña es obligatoria",
         "countryCode": "Codigo País",
         "phone": "Teléfono",
         "certification": "Certificación",
@@ -723,14 +725,31 @@
     },
     "lessonTime": {
         "title": "Normas de la Clase",
-        "descriptionShort":"Este instructor ofrece los siguientes horarios para sus clases:\nMañana: 9: 30am - 12: 30pm\nTarde: 2: 30pm - 5: 30pm\nDía: 9: 30am - 5: 30pm",
+        "descriptionShort": "Este instructor ofrece los siguientes horarios para sus clases:\nMañana: 9: 30am - 12: 30pm\nTarde: 2: 30pm - 5: 30pm\nDía: 9: 30am - 5: 30pm",
         "moreInfo": "Más información",
         "morningTime": "Turno Mañana: 9:30am - 12:30pm.",
         "morningTimeDescription": "El profesor va a estar esperandote el dia de tu clase en el punto de encuentro a las 9:30am. Si llegas tarde, el profesor esperará 15 minutos y luego se irá. No se hará reembolso.",
         "afternoonTime": "Turno Tarde: 2:30pm - 5:30pm.",
-        "afternoonTimeDescription":"El profesor va a estar esperandote el dia de tu clase en el punto de encuentro a las 2:30pm. Si llegas tarde, el profesor esperará 15 minutos y luego se irá. No se hará reembolso.",
+        "afternoonTimeDescription": "El profesor va a estar esperandote el dia de tu clase en el punto de encuentro a las 2:30pm. Si llegas tarde, el profesor esperará 15 minutos y luego se irá. No se hará reembolso.",
         "allDayTime": "Día Completo: 9:30am - 5:30pm.",
-        "allDayTimeDescrpition":"El profesor va a estar esperandote el dia de tu clase en el punto de encuentro a las 9:30am. Si llegas tarde, el profesor esperará 15 minutos y luego se irá. No se hará reembolso. Esta modalidad cuenta con un recreo para almorzar de 1 hora. El profesor te va a indicar el horario del mismo."
+        "allDayTimeDescrpition": "El profesor va a estar esperandote el dia de tu clase en el punto de encuentro a las 9:30am. Si llegas tarde, el profesor esperará 15 minutos y luego se irá. No se hará reembolso. Esta modalidad cuenta con un recreo para almorzar de 1 hora. El profesor te va a indicar el horario del mismo."
+    },
+    "standardProduct": {
+        "title": {
+            "couples": "Parejas",
+            "friends": "Amigos",
+            "family": "Familia",
+            "group": "Grupo",
+            "pro": "Avanzados",
+            "kidst": "Niños"
+        },
+        "description": {
+            "couples": "Si estas con tu pareja y quieren aprender juntos, esta es la opción para ustedes. No se peleen :)",
+            "friends": "Clases para amigos",
+            "family": "Clases para familias",
+            "group": "Clases grupales",
+            "pro": "Clases para avanzados",
+            "kidst": "Clases para niños"
+        }
     }
-    
 }

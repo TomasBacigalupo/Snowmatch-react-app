@@ -244,6 +244,7 @@ export default function Router() {
           children: [
             { element: <Navigate to="/dashboard/admin/review" replace />, index: true },
             { path: 'review', element: <AdminReview /> },
+            { path: 'bookings', element: <AdminReviewBookings /> },
             { path: ':id/confirm', element: <AdminConfirm /> },
             { path: ':id/events', element: <AdminUserEvents /> },
           ],
@@ -338,6 +339,7 @@ const LessonDetails = Loadable(lazy(() => import('src/pages/dashboard/LessonDeta
 
 // ADMIN
 const AdminReview = Loadable(lazy(() => import('../pages/dashboard/AdminReview')));
+const AdminReviewBookings = Loadable(lazy(() => import('../pages/dashboard/AdminReviewBookings')));
 const AdminConfirm = Loadable(lazy(() => import('../pages/dashboard/AdminConfirm')));
 const AdminUserEvents = Loadable(lazy(() => import('../pages/dashboard/AdminUserEvents')));
 

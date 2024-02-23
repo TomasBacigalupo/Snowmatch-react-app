@@ -65,6 +65,7 @@ const navConfigGuest = [
         icon: ICONS.rental,
         children: [
           { title: 'calculate', path: PATH_GUEST.calculate },
+          { title: 'rent', path: PATH_GUEST.calculate },
         ],
       }
       // { title: 'chat', path: PATH_DASHBOARD.chat.root, icon: ICONS.chat },

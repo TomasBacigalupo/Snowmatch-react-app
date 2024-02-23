@@ -13,6 +13,7 @@ const initialState = {
   isLoading: false,
   error: null,
   teachers: [],
+  bookings: [],
   teacher: null,
   isOpenModal: false,
   selectedEmail: '',
@@ -49,6 +50,12 @@ const slice = createSlice({
       state.isLoading = false;
       state.teacher = action.payload;
     },
+
+    getBookingsSuccess(state, action) {
+      state.isLoading = false;
+      state.bookings = action.payload;
+    },
+
     openModal(state, email) {
       state.isOpenModal = true;
       state.selectedEmail = email.payload;
@@ -78,6 +85,18 @@ export function getTeachers(page, role, name, level) {
     try {
       const response = await axios.get(`/api/admin/filter?page=${page}&role=${role}&level=${level}&name=${name}`);
       dispatch(slice.actions.getTeachersSuccess(response.data));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+export function getBookings(page, role, name, level) {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get(`/api/admin/bookings/filter?page=${page}&state=${role}`);
+      dispatch(slice.actions.getBookingsSuccess(response.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }

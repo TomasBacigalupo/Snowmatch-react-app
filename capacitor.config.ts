@@ -5,10 +5,7 @@ const config: CapacitorConfig = {
   appName: 'SnowMatch',
   webDir: 'build',
   server: {
-    androidScheme: 'https'
-  },
-  ios: {
-    "contentInset": "always",
+    androidScheme: 'https',
   },
 };
 

@@ -8,10 +8,10 @@ import { useForm, Controller, useWatch } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { Box, Stack, Button, Tooltip, TextField, IconButton, DialogActions, ToggleButton, ToggleButtonGroup, Paper, Typography, Grid } from '@mui/material';
-import { DateRangePicker, LoadingButton, MobileDateRangePicker, MobileDateTimePicker } from '@mui/lab';
+import { DateRangePicker, LoadingButton, MobileDatePicker, MobileDateTimePicker } from '@mui/lab';
 // redux
 import { useDispatch } from '../../../redux/store';
-import { createEvent, updateEvent, deleteEvent, createBusinessEvent, updateBusinessEvent, deleteSchoolEvent, updateEventByUserIdAndEventId, createEventByUserId, deleteEventByUserId, blockDays, } from '../../../redux/slices/calendar';
+import { createEvent, updateEvent, deleteEvent, createBusinessEvent, updateBusinessEvent, deleteSchoolEvent, updateEventByUserIdAndEventId, createEventByUserId, deleteEventByUserId, blockDays, assignDays, } from '../../../redux/slices/calendar';
 // components
 import Iconify from '../../../components/Iconify';
 import { ColorSinglePicker } from '../../../components/color-utils';
@@ -110,13 +110,26 @@ export default function CalendarDayForm({ event, range, onCancel, clients, membe
   });
 
   const handleBlock = () => {
-    console.log('block')
     dispatch(blockDays(
       values.start,
-      values.end,
+      values.start,
       timeSelected,
       "Bloqueado por el instructor"
     ))
+    enqueueSnackbar("Calendario bloqueado");
+    onCancel();
+  }
+
+  const handleAssign = () => {
+    dispatch(assignDays(
+      values.start,
+      values.start,
+      timeSelected,
+      "Asignada por el  instructor",
+      selectedClients
+    ))
+    enqueueSnackbar("Clase Asignada");
+    onCancel();
   }
 
   const methods = useForm({
@@ -331,21 +344,13 @@ export default function CalendarDayForm({ event, range, onCancel, clients, membe
           </ToggleButton>
         </ToggleButtonGroup>
         <Box>
-          <MobileDateRangePicker
-            startText="Desde"
-            endText="Hasta"
-            value={[values.start, values.end]}
+          <MobileDatePicker
+            label="Día"
+            value={values.start}
             onChange={(newValue) => {
-              setValue('start', newValue[0]);
-              setValue('end', newValue[1]);
+              setValue('start', newValue);
             }}
-            renderInput={(startProps, endProps) => (
-              <React.Fragment>
-                <RHFTextField {...startProps} disabled={disabled} />
-                <Box sx={{ mx: 1 }}> - </Box>
-                <RHFTextField {...endProps} disabled={disabled} />
-              </React.Fragment>
-            )}
+            renderInput={(params) => <TextField {...params} fullWidth/>}
           />
         </Box>
         {block === 'block' && <>
@@ -562,7 +567,7 @@ export default function CalendarDayForm({ event, range, onCancel, clients, membe
 
         <LoadingButton fullWidth disabled={disabled} 
         // type="submit" 
-        variant="contained" loading={isSubmitting} sx={{ ':hover': { color: '#3399FF' } }} onClick={handleBlock}>
+        variant="contained" loading={isSubmitting} sx={{ ':hover': { color: '#3399FF' } }} onClick={block === 'block' ? handleBlock : handleAssign}>
           {block === 'block' ? 'Bloquear' : 'Asignar'}
         </LoadingButton>
       </DialogActions>

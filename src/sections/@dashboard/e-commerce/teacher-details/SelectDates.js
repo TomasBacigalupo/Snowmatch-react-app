@@ -49,7 +49,7 @@ export default function SelectDates({ handleClose, onSubmit }) {
     const [selectedDates, setDates] = useState([])
     const tomorrow = new Date()
     tomorrow.setDate(tomorrow.getDate() + 1)
-    const hasPrice = teacher.level >=3 && teacher.resorts?.include( 'Cerro Catedral');
+    const hasPrice = teacher.level >=3 && teacher?.resorts?.find(resort => resort === 'Cerro Catedral');
     
     useEffect(() => {
         dispatch(getEventsByTeacherId(teacher.id, date.getMonth() + 1));

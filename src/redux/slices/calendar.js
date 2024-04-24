@@ -656,13 +656,32 @@ export function blockDays(from, to,lessonTime, note) {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      await axios.post(`/api/events/block`,{
+      const createdEvent  = await axios.post(`/api/events/block`,{
         from,
         to,
         lessonTime,
         note
       });
-      dispatch(slice.actions.declinedLessonSuccess({  }));
+      console.log({createdEvent})
+      dispatch(slice.actions.createEventSuccess({ start: from, end: to, title: createdEvent.data.title, textColor: createdEvent.data.textColor }));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+export function assignDays(from, to,lessonTime, note, selectedClients) {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    console.log({selectedClients})
+    try {
+      const createdEvent = await axios.post(`/api/events/assign`,{
+        from,
+        to,
+        lessonTime,
+        clientId: selectedClients[0].id
+      });
+      console.log({createdEvent})
+      dispatch(slice.actions.createEventSuccess({ start: from, end: to, title: createdEvent.data.title, textColor: createdEvent.data.textColor }));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }

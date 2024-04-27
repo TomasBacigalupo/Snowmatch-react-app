@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import Drawer from '@mui/material/Drawer';
 import Typography from '@mui/material/Typography';
 import { Grid, IconButton } from '@mui/material';
@@ -10,9 +10,9 @@ import { useNavigate } from 'react-router';
 import { useDispatch } from 'react-redux';
 import useLocales from 'src/hooks/useLocales';
 
-const MobileSelectDays = ({ teacher }) => {
+const MobileSelectDays = ({ teacher, isOpen, closeFather }) => {
     const { translate } = useLocales();
-    const [open, setOpen] = React.useState(false);
+    const [open, setOpen] = React.useState(isOpen);
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const handleSubmitSelectedDates = useCallback((dates) => {
@@ -51,6 +51,11 @@ const MobileSelectDays = ({ teacher }) => {
             navigate('hire');
         })
     })
+
+    useEffect(() => {
+        setOpen(isOpen)
+    }, [isOpen])
+
     return (
         <>
             <Grid
@@ -83,7 +88,12 @@ const MobileSelectDays = ({ teacher }) => {
             <Drawer
                 anchor="bottom"
                 open={open}
-                onClose={() => setOpen(false)}
+                onClose={() => {
+                    setOpen(false)
+                    if (closeFather) {
+                        closeFather()
+                    }
+                }}
                 sx={{
                     '& .MuiDrawer-paper': {
                         boxSizing: 'border-box', width: '100%', paddingBottom: 2, borderTopLeftRadius: '12px',  // Adjust the value as needed
@@ -93,7 +103,12 @@ const MobileSelectDays = ({ teacher }) => {
             >
                 <Grid>
                     <Grid item xs={12} p={2}>
-                        <IconButton onClick={() => setOpen(false)}>
+                        <IconButton onClick={() => {
+                            setOpen(false)
+                            if (closeFather) {
+                                closeFather()
+                            }
+                        }}>
                             <Iconify icon={'ic:round-close'} width={20} height={20} />
                         </IconButton>
                     </Grid>
@@ -106,7 +121,11 @@ const MobileSelectDays = ({ teacher }) => {
                         </Typography>
                     </Grid>
                     <SelectDates
-                        handleClose={() => setOpen(false)}
+                        handleClose={() => {
+                            if(closeFather){
+                                closeFather()
+                            }
+                            setOpen(false)}}
                         onSubmit={handleSubmitSelectedDates}
                     />
                 </Grid>

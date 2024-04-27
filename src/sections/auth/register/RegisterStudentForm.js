@@ -30,7 +30,6 @@ export default function RegisterStudentForm() {
 
 const RegisterSchema = Yup.object().shape({
   firstName: Yup.string().required(translate('registerForm.nameRequired')),
-  lastName: Yup.string().required(translate('registerForm.lastNameRequired')),
   email: Yup.string().email(translate('registerForm.emailInvalid')).required(translate('registerForm.emailRequired')),
   countryCode: Yup.string().required(),
   cellphone: Yup.string().when(['countryCode'], (countryCode) => {
@@ -63,7 +62,6 @@ const RegisterSchema = Yup.object().shape({
 
     const [defaultValues, setDefaultValues] = useState({
         firstName: '',
-        lastName: '',
         email: '',
         password: '',
         countryCode: '54',
@@ -91,7 +89,7 @@ const RegisterSchema = Yup.object().shape({
                 data.email,
                 data.password,
                 data.firstName,
-                data.lastName,
+                "   ",
                 data.countryCode,
                 data.cellphone,
                 data.entity,
@@ -116,7 +114,7 @@ const RegisterSchema = Yup.object().shape({
 
                 <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
                     <RHFTextField name="firstName" label={translate('registerForm.name')} />
-                    <RHFTextField name="lastName" label={translate('registerForm.lastName')} />
+                    {/* <RHFTextField name="lastName" label={translate('registerForm.lastName')} /> */}
                 </Stack>
 
                 <RHFTextField name="email" label="Email" />

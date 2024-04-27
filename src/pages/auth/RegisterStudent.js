@@ -92,7 +92,7 @@ export default function RegisterStudent() {
                 {mdUp && (
                     <SectionStyle>
                         <Typography variant="h3" sx={{ px: 5, mt: 10, mb: 5 }}>
-                            Learn quick, fast and safe with SnowMatch
+                        {translate('auth.learnMessage')}
                         </Typography>
                         {/* <Image
                             visibleByDefault
@@ -139,9 +139,9 @@ export default function RegisterStudent() {
 
                         {!smUp && (
                             <Typography variant="body2" sx={{ mt: 3, textAlign: 'center' }}>
-                                Already have an account?{' '}
+                                {translate('auth.haveAccount')}{' '}
                                 <Link variant="subtitle2" to={PATH_AUTH.login} component={RouterLink}>
-                                    Login
+                                {translate('auth.login')}
                                 </Link>
                             </Typography>
                         )}

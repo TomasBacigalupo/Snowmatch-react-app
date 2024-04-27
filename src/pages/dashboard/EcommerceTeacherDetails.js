@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 // @mui
 import { alpha, styled } from '@mui/material/styles';
-import { Box, Tab, Card, Grid, Divider, Container, Typography, Hidden } from '@mui/material';
+import { Box, Tab, Card, Grid, Divider, Container, Typography, Hidden, Button } from '@mui/material';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
@@ -92,6 +92,7 @@ export default function EcommerceTeacherDetails({ isGuest = false }) {
   const { translate } = useLocales()
   const { teacher, isLoading } = useSelector((state) => state.teachers);
   const { user } = useAuth();
+  const [isOpen, setIsOpen] = useState(false);
 
 
   useEffect(() => {
@@ -179,7 +180,9 @@ export default function EcommerceTeacherDetails({ isGuest = false }) {
                         {translate('teacherDetails.ocupation.description')}
                       </Typography>
                     </Box>
-                    <TeacherDetailsMobileCalendar teacher={teacher} />
+                    <Box onClick={() => setIsOpen(true)}>
+                      <TeacherDetailsMobileCalendar teacher={teacher}/>
+                    </Box>
                   </Box>
                   <Box mx={2} >
                     <Divider />
@@ -193,7 +196,7 @@ export default function EcommerceTeacherDetails({ isGuest = false }) {
                     <Divider />
                   </Box>
                   <TimeDetails />
-                  <MobileSelectDays teacher={teacher} />
+                  <MobileSelectDays teacher={teacher} isOpen={isOpen} closeFather={() => setIsOpen(false)} />
                 </Hidden>
               </Grid>
             </Grid>

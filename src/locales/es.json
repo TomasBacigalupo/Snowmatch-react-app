@@ -659,7 +659,8 @@
         "getStarted": "Comenzá",
         "registerTeacher": "Quiero trabajar con SnowMatch",
         "registerTitle": "Registrarme",
-        "registerDescription": "Completá tus datos para registrarte"
+        "registerDescription": "Completá tus datos para registrarte",
+        "learnMessage": "Aprendé a esquiar con SnowMatch"
     },
     "registerForm": {
         "name": "Nombre",

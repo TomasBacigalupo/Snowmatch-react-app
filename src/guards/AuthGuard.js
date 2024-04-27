@@ -14,6 +14,8 @@ import { PATH_DASHBOARD } from 'src/routes/paths';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'src/redux/store';
 import { setRequestedRoute } from 'src/redux/slices/config';
+import Register from 'src/pages/auth/Register';
+import RegisterStudent from 'src/pages/auth/RegisterStudent';
 
 // ----------------------------------------------------------------------
 
@@ -50,6 +52,9 @@ export default function AuthGuard({ children }) {
     dispatch(setRequestedRoute(requestedLocation))
     if (pathname !== requestedLocation) {
       setRequestedLocation(pathname);
+    }
+    if(pathname?.includes('match')){
+      return <RegisterStudent />;
     }
     return <Login />;
   }

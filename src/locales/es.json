@@ -752,5 +752,9 @@
             "pro": "Clases para avanzados",
             "kidst": "Clases para niños"
         }
+    },
+    "products": {
+      "group": "Grupales",
+      "private": "exclusivas"
     }
 }

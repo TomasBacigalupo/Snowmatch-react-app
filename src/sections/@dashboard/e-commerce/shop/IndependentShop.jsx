@@ -4,16 +4,17 @@ import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import { useDispatch, useSelector } from 'react-redux';
 import { setPremiumTeachers, setStandardTeachers } from 'src/redux/slices/teachers';
 import { premiumLesson, standardLesson } from 'src/services/facebook';
-
+import useLocales from 'src/hooks/useLocales';
 export default function IndependentShop() {
     const dispatch = useDispatch();
     const { category } = useSelector((state) => state.teachers);
+    const { translate } = useLocales();
 
     const handleChange = (
         event,
         category,
     ) => {
-        if(category === 'standard'){
+        if (category === 'standard') {
             standardLesson()
             dispatch(setStandardTeachers())
         } else {
@@ -47,9 +48,9 @@ export default function IndependentShop() {
                     },
                 }}
             >
-                Standard
+                {translate('products.group')}
             </ToggleButton>
-            <ToggleButton 
+            <ToggleButton
                 value="premium"
                 sx={{
                     width: '100%',
@@ -60,7 +61,7 @@ export default function IndependentShop() {
                     },
                 }}
             >
-                Premium
+                {translate('products.private')}
             </ToggleButton>
         </ToggleButtonGroup>
     );

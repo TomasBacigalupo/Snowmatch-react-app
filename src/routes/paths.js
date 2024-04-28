@@ -31,6 +31,7 @@ export const PATH_GUEST = {
   viewTeacherProducts: (id, productId) => path(ROOTS_FIND_A_PRO, `/teacher/${id}/products/${productId}`),
   schools: path(ROOTS_FIND_A_PRO, `/schools`),
   viewSchool: (id) => path(ROOTS_FIND_A_PRO, `/schools/${id}`),
+  viewSchoolProducts: (id, productId) => path(ROOTS_FIND_A_PRO, `/school/${id}/products/${productId}`),
   rental: ROOTS_RENTAL,
   calculate: path(ROOTS_RENTAL, `/calculate`),
   checkout: (id) => path(ROOTS_FIND_A_PRO, `/teacher/${id}/hire`),

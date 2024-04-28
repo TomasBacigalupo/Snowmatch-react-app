@@ -61,9 +61,10 @@ ShopFilterSidebar.propTypes = {
   onResetAll: PropTypes.func,
   onOpen: PropTypes.func,
   onClose: PropTypes.func,
+  isIndependant: PropTypes.bool
 };
 
-export default function ShopFilterSidebar({ isOpen, onResetAll, onOpen, onClose }) {
+export default function ShopFilterSidebar({ isOpen, onResetAll, onOpen, onClose, isIndependant }) {
   const { control } = useFormContext();
   const { translate } = useLocales()
   return (
@@ -96,7 +97,7 @@ export default function ShopFilterSidebar({ isOpen, onResetAll, onOpen, onClose 
             <Stack spacing={1}>
               <Typography variant="subtitle1">{translate('filter.resort')}</Typography>
 
-              <RHFSelect name="resort" label="Resort" placeholder="Resort">
+              <RHFSelect name="resort" label="Resort" placeholder="Resort" disabled={isIndependant}>
                 {FILTER_RESORT_OPTIONS.map((country) => (
                   <optgroup label={country.category} key={country.category}>
                     {country.resorts.sort().map(r => (

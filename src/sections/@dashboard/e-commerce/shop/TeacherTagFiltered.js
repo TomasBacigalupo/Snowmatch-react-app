@@ -50,7 +50,8 @@ TeacherTagFiltered.propTypes = {
   onRemoveRange: PropTypes.func,
   onRemoveResort: PropTypes.func,
   onResetAll: PropTypes.func,
-  onOpen: PropTypes.func
+  onOpen: PropTypes.func,
+  isIndependant: PropTypes.bool
 };
 
 export default function TeacherTagFiltered({
@@ -64,7 +65,8 @@ export default function TeacherTagFiltered({
   onRemoveRange,
   onRemoveResort,
   onResetAll,
-  onOpen
+  onOpen,
+  isIndependant
 }) {
   const theme = useTheme();
   const {translate} = useLocales()
@@ -147,7 +149,7 @@ export default function TeacherTagFiltered({
 
       {resort && (
         <Stack direction="row" flexWrap="wrap" >
-          <Chip variant='outlined' size="small" label={resort} onDelete={onRemoveResort} sx={{ m: 0.5 }} />
+          <Chip disabled={isIndependant} variant='outlined' size="small" label={resort} onDelete={onRemoveResort} sx={{ m: 0.5 }} />
         </Stack>
       )}
 

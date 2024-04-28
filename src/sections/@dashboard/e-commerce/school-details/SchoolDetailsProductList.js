@@ -32,7 +32,7 @@ export default function SchoolDetailsProductList({ products, loading, siteUrl })
                 },
             }}
         >
-            <SchoolNotLinkedDialog open={open} onClose={()=> setOpen(false)} siteUrl={siteUrl}/>
+            {/* <SchoolNotLinkedDialog open={open} onClose={()=> setOpen(false)} siteUrl={siteUrl}/> */}
             <Box
                 sx={{
                     display: 'grid',
@@ -49,7 +49,7 @@ export default function SchoolDetailsProductList({ products, loading, siteUrl })
             >
                 {(loading ? [...Array(12)] : products).map((product, index) =>
                     product ? (
-                        <ShopProductCard key={index} product={product} onClick={() => setOpen(true)} />
+                        <ShopProductCard key={index} product={product} />
                     ) : (
                         <SkeletonProductItem key={index} />
                     )

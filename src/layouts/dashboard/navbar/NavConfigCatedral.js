@@ -28,7 +28,7 @@ const ICONS = {
   protips: <CastForEducationIcon/>,
 };
 
-const navConfigGuest = [
+const navConfigGuestCatedral = [
 
   // MANAGEMENT
   // ----------------------------------------------------------------------
@@ -43,11 +43,9 @@ const navConfigGuest = [
         title: 'match',
         path: PATH_GUEST.root,
         icon: ICONS.match,
-        children: [
-          { title: 'school_teachers', path: PATH_GUEST.school },
-          { title: 'Independent', path: PATH_GUEST.independent },
+        path: PATH_GUEST.independent
           // { title: 'Schools', path: PATH_GUEST.schools },
-        ],
+        ,
       },
       { title: 'protips', path: PATH_GUEST.protips, icon: ICONS.protips },
       // { title: 'chat', path: PATH_DASHBOARD.chat.root, icon: ICONS.chat },
@@ -75,4 +73,4 @@ const navConfigGuest = [
   },
 ];
 
-export default navConfigGuest;
+export default navConfigGuestCatedral;

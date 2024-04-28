@@ -522,5 +522,9 @@
     "afternoonTimeDescription": "The teacher will be waiting for you on the day of your class at the meeting point at 2:30pm. If you are late, the teacher will wait 15 minutes and then leave. No refund will be made.",
     "allDayTime": "Full Day: 9:30am - 5:30pm.",
     "allDayTimeDescrpition": "The teacher will be waiting for you on the day of your class at the meeting point at 9:30am. If you are late, the teacher will wait 15 minutes and then leave. No refund will be made. This modality includes a 1-hour lunch break. The teacher will indicate the schedule for it."
+  },
+  "products": {
+    "group": "Group",
+    "private": "exclusive"
   }
 }

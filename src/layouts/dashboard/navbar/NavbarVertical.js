@@ -25,6 +25,8 @@ import useAuth from 'src/hooks/useAuth';
 import { PATH_DASHBOARD } from '../../../routes/paths';
 import SvgIconStyle from '../../../components/SvgIconStyle';
 import SchoolIcon from '@mui/icons-material/School';
+import { useSelector } from 'react-redux';
+import navConfigGuestCatedral from './NavConfigCatedral';
 // ----------------------------------------------------------------------
 
 const RootStyle = styled('div')(({ theme }) => ({
@@ -69,12 +71,16 @@ export default function NavbarVertical({ isOpenSidebar, onCloseSidebar, isGuest,
   const { pathname } = useLocation();
 
   const isDesktop = useResponsive('up', 'lg');
+  //check if catedral
+  const { filters } = useSelector((state) => { return state.teachers })
+  const { resort } = filters
+
 
 
   const { isCollapse, collapseClick, collapseHover, onToggleCollapse, onHoverEnter, onHoverLeave } =
     useCollapseDrawer();
 
-  const config = isGuest ? navConfigGuest : navConfig;
+  const config = isGuest ? resort === "Cerro Catedral" ? navConfigGuestCatedral :navConfigGuest : navConfig;
 
   useEffect(() => {
     if (isOpenSidebar) {

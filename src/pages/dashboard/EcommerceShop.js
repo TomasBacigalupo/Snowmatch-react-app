@@ -169,7 +169,7 @@ export default function EcommerceShop({ isGuest = false, teacherType = "school" 
           {(teacherType !== "independent" || category === "premium") &&
             <>
               <Stack xs={12}>
-                <ShopProductSearch teachers={filteredTeachers} />
+                <ShopProductSearch teachers={filteredTeachers}/>
               </Stack>
 
               {!isTeacher && <CartWidget />}
@@ -181,6 +181,7 @@ export default function EcommerceShop({ isGuest = false, teacherType = "school" 
                     isOpen={openFilter}
                     onOpen={handleOpenFilter}
                     onClose={handleCloseFilter}
+                    isIndependant={teacherType === "independent"}
                   />
                 </FormProvider>
                 {/*<ShopProductSort />*/}
@@ -212,6 +213,7 @@ export default function EcommerceShop({ isGuest = false, teacherType = "school" 
                   onRemoveResort={handleRemoveResort}
                   onResetAll={handleResetFilter}
                   onOpen={handleOpenFilter}
+                  isIndependant={teacherType === "independent"}
                 />
               }
 

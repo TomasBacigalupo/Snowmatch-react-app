@@ -184,7 +184,7 @@ export default function BookingCard({ booking, showInfo = true }) {
                     </Button>
                     <Typography variant='body2'>{booking.teacher.phone}</Typography>
                 </Box>}
-                {isAccepted && isStudent && new Date(booking.eventList[0]?.start) < new Date() && <Box display='flex' flex={1} width='100%' flexDirection='column' flexGrow={1}>
+                {isAccepted && isStudent && !booking.rate && new Date(booking.eventList[0]?.start) < new Date() && <Box display='flex' flex={1} width='100%' flexDirection='column' flexGrow={1}>
                     <Button fullWidth variant="outlined" sx={{ mt: 2, py: 1, mr: 2, color: 'black', borderColor: 'black' }} onClick={() => setRateOpen(true)}>
                         Rate
                     </Button>
@@ -516,7 +516,9 @@ export default function BookingCard({ booking, showInfo = true }) {
                         <Divider sx={{ borderBottomWidth: 8, }} />
                     </Grid>
                     <Grid item xs={12}>
-                        <ProductDetailsReviewFormMobile onClose={() => { }} id="move_add_review" teacherId={booking?.teacher.id} />
+                        <ProductDetailsReviewFormMobile onClose={() => {
+                            setRateOpen(false)
+                        }} id="move_add_review" teacherId={booking?.teacher.id} bookingId={booking.id}/>
                     </Grid>
                 </Grid>
             </Drawer>

@@ -26,10 +26,11 @@ const RootStyle = styled('div')(({ theme }) => ({
 ProductDetailsReviewFormMobile.propTypes = {
   onClose: PropTypes.func,
   id: PropTypes.string,
-  teacherId: PropTypes.number
+  teacherId: PropTypes.number,
+  bookingId: PropTypes.number,
 };
 
-export default function ProductDetailsReviewFormMobile({ onClose, id, teacherId, ...other }) {
+export default function ProductDetailsReviewFormMobile({ onClose, id, teacherId, bookingId, ...other }) {
 
 
   const dispatch = useDispatch()
@@ -91,7 +92,8 @@ export default function ProductDetailsReviewFormMobile({ onClose, id, teacherId,
         ...data,
         fun: fun,
         safe: safe,
-        stars: Number(data.stars)
+        stars: Number(data.stars),
+        bookingId: bookingId,
       }))
       onClose();
     } catch (error) {

@@ -49,6 +49,7 @@ export const PATH_PAGE = {
   faqs: '/faqs',
   page404: '/404',
   page500: '/500',
+  accessDenied: '/access-denied',
   components: '/components',
 };
 

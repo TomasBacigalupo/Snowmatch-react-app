@@ -263,6 +263,7 @@ export default function Router() {
         { path: 'payment', element: <Payment /> },
         { path: '500', element: <Page500 /> },
         { path: '404', element: <NotFound /> },
+        { path: 'access-denied', element: <AccessDenied /> },
         { path: 'verify-email', element: <PageVerify /> },
         { path: '*', element: <Navigate to="/404" replace /> },
       ],
@@ -361,6 +362,7 @@ const Pricing = Loadable(lazy(() => import('../pages/Pricing')));
 const Payment = Loadable(lazy(() => import('../pages/Payment')));
 const Page500 = Loadable(lazy(() => import('../pages/Page500')));
 const NotFound = Loadable(lazy(() => import('../pages/Page404')));
+const AccessDenied = Loadable(lazy(() => import('../pages/AccessDenied')));
 const PageVerify = Loadable(lazy(() => import('../pages/PageVerify')));
 const ChapelcoPro = Loadable(lazy(() => import('../pages/pro/ChapelcoPro')));
 

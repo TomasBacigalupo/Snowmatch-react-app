@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'src/redux/store';
 import { setRequestedRoute } from 'src/redux/slices/config';
 import { Navigate } from 'react-router';
 import { useSnackbar } from 'notistack';
+import AccessDenied from 'src/pages/AccessDenied';
 
 // ----------------------------------------------------------------------
 
@@ -34,24 +35,15 @@ export default function RoleBasedGuard({ accessibleRoles, children }) {
 
   
 
-  if (!accessibleRoles.includes(currentRole)) {
+  if (!accessibleRoles.includes(currentRole)) { 
+    enqueueSnackbar('You should not be here', { variant: 'error' })
     if (isStudent) {
-      enqueueSnackbar('You should not be here', { variant: 'error' })
       return <Navigate to={'/'} />
     }
-
     if (isTeacher) {
-      enqueueSnackbar('You should not be here', { variant: 'error' })
       return <Navigate to={'/dashboard'} />
     }
-    return (
-      <Container>
-        <Alert severity="error">
-          <AlertTitle>Permission Denied</AlertTitle>
-          You do not have permission to access this page
-        </Alert>
-      </Container>
-    );
+    return <Navigate to={'/access-denied'} />
   }
 
   return <>{children}</>;

@@ -78,6 +78,7 @@ export default function CalendarDayForm({ event, range, onCancel, clients, membe
   const [assignedUsers, setAssignedUsers] = useState([...event?.assignedUsers || []])
   const [assignedStudents, setAssignedStudents] = useState([...event?.students || []])
   const [state, setState] = useState(event?.state || 'PENDING')
+  const [isDisabled, setIsDisabled] = useState(disabled)
 
   const [classType, setClassType] = useState('teacher');
   const user = useAuth()
@@ -86,7 +87,7 @@ export default function CalendarDayForm({ event, range, onCancel, clients, membe
   const { teachers } = useSelector((state) => state.admin)
 
   const [block, setBlock] = useState('block')
-  const [timeSelected, setTimeSelected] = useState()
+  const [timeSelected, setTimeSelected] = useState(null)
 
   const handleChange = (
     event,
@@ -565,7 +566,7 @@ export default function CalendarDayForm({ event, range, onCancel, clients, membe
           {translate('calendar.form.cancel')}
         </Button>
 
-        <LoadingButton fullWidth disabled={disabled} 
+        <LoadingButton fullWidth disabled={disabled || timeSelected === null} 
         // type="submit" 
         variant="contained" loading={isSubmitting} sx={{ ':hover': { color: '#3399FF' } }} onClick={block === 'block' ? handleBlock : handleAssign}>
           {block === 'block' ? 'Bloquear' : 'Asignar'}

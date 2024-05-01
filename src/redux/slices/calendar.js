@@ -5,6 +5,7 @@ import axios from '../../utils/axios';
 //
 import { dispatch } from '../store';
 import { start } from 'nprogress';
+import dayjs from 'dayjs';
 
 // ----------------------------------------------------------------------
 
@@ -651,37 +652,48 @@ export function getEventsByUserId(id) {
   };
 }
 
-export function blockDays(from, to,lessonTime, note) {
-  console.log(from, to,lessonTime, note)
+export function blockDays(from, to, lessonTime, note) {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      const createdEvent  = await axios.post(`/api/events/block`,{
+      const createdEvent = await axios.post(`/api/events/block`, {
         from,
         to,
         lessonTime,
         note
       });
-      console.log({createdEvent})
-      dispatch(slice.actions.createEventSuccess({ start: from, end: to, title: createdEvent.data.title, textColor: createdEvent.data.textColor }));
+      dispatch(slice.actions.createEventSuccess({
+        start: lessonTime === "AFTERNOON" ? dayjs(from).set('hour', 14): dayjs(from).set('hour', 9),
+        end: lessonTime === "MORNING" ? dayjs(to).set('hour', 13): dayjs(to).set('hour', 17),
+        title: createdEvent.data.title,
+        description: "Bloqueado por el instructor",
+        clients: [],
+        assignedUsers: [],
+        students: [],
+        textColor: createdEvent.data.textColor,
+        id: createdEvent.data.id
+      }));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }
   };
 }
-export function assignDays(from, to,lessonTime, note, selectedClients) {
+export function assignDays(from, to, lessonTime, note, selectedClients) {
   return async () => {
     dispatch(slice.actions.startLoading());
-    console.log({selectedClients})
+    console.log({ selectedClients })
     try {
-      const createdEvent = await axios.post(`/api/events/assign`,{
+      const createdEvent = await axios.post(`/api/events/assign`, {
         from,
         to,
         lessonTime,
         clientId: selectedClients[0].id
       });
-      console.log({createdEvent})
-      dispatch(slice.actions.createEventSuccess({ start: from, end: to, title: createdEvent.data.title, textColor: createdEvent.data.textColor }));
+      console.log({ createdEvent })
+      dispatch(slice.actions.createEventSuccess({ id: createdEvent.data.id, 
+        start: lessonTime === "AFTERNOON" ? dayjs(from).set('hour', 14): dayjs(from).set('hour', 9),
+        end: lessonTime === "MORNING" ? dayjs(to).set('hour', 13): dayjs(to).set('hour', 17),
+        title: createdEvent.data.title, textColor: createdEvent.data.textColor }));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }

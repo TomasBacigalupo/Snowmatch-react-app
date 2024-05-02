@@ -39,7 +39,7 @@ import { TableEmptyRows, TableHeadCustom, TableNoData, TableSelectedActions } fr
 import { AdminTableToolbar, AdminTableRow } from '../../sections/@dashboard/admin/list';
 //cosas de fede
 import { useDispatch, useSelector } from '../../redux/store';
-import { getTeachers, openModal, closeModal, getBooking, getBookings } from '../../redux/slices/admin'
+import { getTeachers, openModal, closeModal, getBooking, getBookings, openEditBookingModal } from '../../redux/slices/admin'
 import { DialogAnimate } from '../../components/animate';
 import DeclineForm from '../../sections/@dashboard/admin/DeclineForm';
 import AdminTableCard from 'src/sections/@dashboard/admin/list/AdminTableCard';
@@ -136,7 +136,7 @@ export default function AdminReviewBookings() {
   };
 
   const handleEditRow = (id) => {
-    navigate(PATH_DASHBOARD.user.edit(paramCase(id)));
+    dispatch(openEditBookingModal(id));
   };
 
   const handleConfirmRow = (id) => {
@@ -164,7 +164,7 @@ export default function AdminReviewBookings() {
 
   const dispatch = useDispatch();
 
-  const { teachers, isOpenModal, selectedEmail, bookings } = useSelector((state) => { return state.admin });
+  const { teachers, isOpenModal, isOpenEditBookingModal, selectedEmail, bookings } = useSelector((state) => { return state.admin });
 
   const [reqPage, setReqPage] = useState(0);
 
@@ -334,6 +334,13 @@ export default function AdminReviewBookings() {
         </Card>
         <DialogAnimate open={isOpenModal} onClose={handleDeclineCloseModal}>
           <DialogTitle>{'Seguro que queres declinar?'}</DialogTitle>
+          <DeclineForm
+            email={selectedEmail}
+            onCancel={handleDeclineCloseModal}
+          ></DeclineForm>
+        </DialogAnimate>
+        <DialogAnimate open={isOpenEditBookingModal} onClose={handleDeclineCloseModal}>
+          <DialogTitle>{'Seguro que queres Editar esta reserva?'}</DialogTitle>
           <DeclineForm
             email={selectedEmail}
             onCancel={handleDeclineCloseModal}

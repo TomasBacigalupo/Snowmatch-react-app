@@ -5,9 +5,12 @@ import { Box } from '@mui/material';
 import { SkeletonProductItem } from '../../../../components/skeleton';
 //
 import ShopTeacherCard from './ShopTeacherCard';
-import { orderBy } from 'lodash';
+import { get, orderBy } from 'lodash';
 import ShopStandardProductCard from './ShopStandardProductCard';
 import useLocales from 'src/hooks/useLocales';
+import { useDispatch, useSelector } from 'react-redux';
+import { useEffect } from 'react';
+import { getProductsByBusinessId } from 'src/redux/slices/business';
 
 // ----------------------------------------------------------------------
 
@@ -16,8 +19,17 @@ ShopStandardProducts.propTypes = {
     loading: PropTypes.bool,
 };
 
-export default function ShopStandardProducts({ teachers, loading }) {
+export default function ShopStandardProducts({ loading }) {
     const { translate } = useLocales();
+    const dispatch = useDispatch();
+    const {products} = useSelector((state) => state.business);
+    useEffect(() => {
+        dispatch(getProductsByBusinessId(1));
+        console.log(products);
+    }, []);
+    useEffect(() => {
+        console.log(products);
+    }, [products]);
     return (
         <Box
             sx={{

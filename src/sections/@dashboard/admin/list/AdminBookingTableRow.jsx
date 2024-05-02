@@ -105,7 +105,7 @@ export default function AdminBookingTableRow({ row, selected, onEditRow, onSelec
                                 }}
                             >
                                 <Iconify icon={'eva:calendar-fill'} />
-                                Events
+                                Ver clases en el calendario
                             </MenuItem>
                             <MenuItem
                                 onClick={() => {
@@ -114,16 +114,16 @@ export default function AdminBookingTableRow({ row, selected, onEditRow, onSelec
                                 }}
                             >
                                 <Iconify icon={'mdi:whatsapp'} />
-                                Wapp
+                                Contactár por Whats app
                             </MenuItem>
                             <MenuItem
                                 onClick={() => {
-                                    onConfirmRow();
+                                    onEditRow();
                                     handleCloseMenu();
                                 }}
                             >
                                 <Iconify icon={'eva:edit-fill'} />
-                                Edit
+                                Editar
                             </MenuItem>
                             <MenuItem
                                 onClick={() => {
@@ -133,7 +133,7 @@ export default function AdminBookingTableRow({ row, selected, onEditRow, onSelec
                                 sx={{ color: 'error.main' }}
                             >
                                 <Iconify icon={'eva:trash-2-outline'} />
-                                Decline
+                                Eliminar
                             </MenuItem>
                         </>
                     }

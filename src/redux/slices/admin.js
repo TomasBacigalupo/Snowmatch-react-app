@@ -16,6 +16,8 @@ const initialState = {
   bookings: [],
   teacher: null,
   isOpenModal: false,
+  isOpenEditBookingModal: false,
+  booking: null,
   selectedEmail: '',
   documents: [],
 };
@@ -56,9 +58,19 @@ const slice = createSlice({
       state.bookings = action.payload;
     },
 
+    getBookingsSuccess(state, action) {
+      state.isLoading = false;
+      state.booking = action.payload;
+    },
+
     openModal(state, email) {
       state.isOpenModal = true;
       state.selectedEmail = email.payload;
+    },
+
+    openEditBookingModal(state, action) {
+      state.isOpenEditBookingModal = true;
+      state.selectedBooking = action.payload;
     },
 
     // CLOSE MODAL
@@ -75,7 +87,7 @@ export default slice.reducer;
 // Actions
 // export const {
 // } = slice.actions;
-export const { openModal, closeModal, getSelectedEmail } = slice.actions;
+export const { openModal, closeModal, getSelectedEmail, openEditBookingModal } = slice.actions;
 
 // ----------------------------------------------------------------------
 
@@ -182,5 +194,18 @@ export function getTeacherDocuments(id) {
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }
+  };
+}
+
+export function getBooking(bookingId) {
+  return async () => {
+      dispatch(slice.actions.startLoading());
+      try {
+          const response = await axios.get(`/api/bookings/{bookingId}`);
+          const bookings = response.data
+          dispatch(slice.actions.getBookingSuccess(bookings));
+      } catch (error) {
+          dispatch(slice.actions.hasError(error));
+      }
   };
 }

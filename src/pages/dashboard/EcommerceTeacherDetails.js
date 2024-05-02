@@ -88,7 +88,7 @@ export default function EcommerceTeacherDetails({ isGuest = false }) {
   const dispatch = useDispatch();
   const [value, setValue] = useState('0');
   const { id = '' } = useParams();
-  const { product, error, checkout } = useSelector((state) => state.product);
+  const { checkout } = useSelector((state) => state.product);
   const { translate } = useLocales()
   const { teacher, isLoading } = useSelector((state) => state.teachers);
   const { user } = useAuth();

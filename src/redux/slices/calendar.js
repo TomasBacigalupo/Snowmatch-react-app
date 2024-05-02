@@ -657,8 +657,8 @@ export function blockDays(from, to, lessonTime, note) {
     dispatch(slice.actions.startLoading());
     try {
       const createdEvent = await axios.post(`/api/events/block`, {
-        from,
-        to,
+        from: lessonTime === "AFTERNOON" ? dayjs(from).set('hour', 14): dayjs(from).set('hour', 9),
+        to: lessonTime === "MORNING" ? dayjs(to).set('hour', 13): dayjs(to).set('hour', 17),
         lessonTime,
         note
       });

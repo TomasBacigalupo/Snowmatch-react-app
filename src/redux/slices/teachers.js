@@ -123,7 +123,7 @@ const slice = createSlice({
     // GET PRODUCT
     getProductSuccess(state, action) {
       state.isLoading = false;
-      state.product = action.payload.sort((a, b) => b.stars - a.stars);
+      state.product = action.payload;
     },
 
     // GET TEACHER
@@ -434,14 +434,12 @@ export function getTeachersWithEvents(filters) {
 
 // ----------------------------------------------------------------------
 
-export function getProduct(name) {
+export function getProduct(id) {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get('/api/products/product', {
-        params: { name },
-      });
-      dispatch(slice.actions.getProductSuccess(response.data.product));
+      const response = await axios.get(`/api/product/${id}`);
+      dispatch(slice.actions.getProductSuccess(response.data));
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error));

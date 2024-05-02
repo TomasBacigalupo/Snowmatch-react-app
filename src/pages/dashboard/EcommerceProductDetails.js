@@ -7,7 +7,7 @@ import { Box, Tab, Card, Grid, Divider, Container, Typography, Hidden, Button } 
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
-import { getTeacherWithRates, addCart, onGotoStep, getTeacherBiId } from '../../redux/slices/teachers';
+import { getTeacherWithRates, addCart, onGotoStep, getTeacherBiId, getProduct } from '../../redux/slices/teachers';
 // routes
 import { PATH_DASHBOARD, PATH_GUEST } from '../../routes/paths';
 // hooks
@@ -88,19 +88,19 @@ export default function EcommerceTeacherDetails({ isGuest = false }) {
   const dispatch = useDispatch();
   const [value, setValue] = useState('0');
   const { id = '' } = useParams();
-  const { product, error, checkout } = useSelector((state) => state.product);
+  const { checkout } = useSelector((state) => state.product);
   const { translate } = useLocales()
-  const { teacher, isLoading } = useSelector((state) => state.teachers);
+  const { isLoading, product } = useSelector((state) => state.teachers);
   const { user } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
 
 
   useEffect(() => {
-    dispatch(getTeacherBiId(id));
+    dispatch(getProduct(id));
   }, [dispatch, id]);
 
-  const handleAddCart = (teacher) => {
-    dispatch(addCart(teacher));
+  const handleAddCart = (product) => {
+    dispatch(addCart(product));
   };
 
   const handleGotoStep = (step) => {
@@ -108,10 +108,15 @@ export default function EcommerceTeacherDetails({ isGuest = false }) {
   };
 
   useEffect(() => {
-    if (teacher && (!user || !user.role === 'TEACHER')) {
-      trackViewTeacher(teacher)
+    if (product && (!user || !user.role === 'TEACHER')) {
+      trackViewTeacher(product)
     }
-  }, [teacher, user])
+  }, [product, user])
+
+  useEffect(() => {
+    console.log('product', product)
+  }, [product]);
+
 
   return (
     <Page title={translate('teacherDetails.title')}>
@@ -121,30 +126,30 @@ export default function EcommerceTeacherDetails({ isGuest = false }) {
           links={[
             // !isGuest? { name: translate("breadcrumb.dashboard', href: PATH_DASHBOARD.root} : {name: 'Home', href: '/'},
             !isGuest ? { name: 'Match', href: PATH_DASHBOARD.eCommerce.shop, } : { name: 'Match', href: PATH_GUEST.independent },
-            { name: teacher?.name + ' ' + teacher?.lastname },
+            { name: product?.title},
           ]
           }
         />
         <CartWidget />
-        {!isLoading && teacher && (
+        {!isLoading && product && (
           <>
             <Grid container p={0}>
               <Grid item xs={12} md={6} lg={7}>
-                <TeacherDetailsCarousel teacher={{ images: [teacher?.imageLink] }} />
+                <TeacherDetailsCarousel teacher={{ images: [product?.imageLink] }} />
               </Grid>
               <Grid item xs={12} md={6} lg={5}>
                 <TeacherDetailsSummary
-                  teacher={teacher}
+                  teacher={product}
                   cart={checkout.cart}
                   onAddCart={handleAddCart}
                   onGotoStep={handleGotoStep}
                 />
                 <Hidden smUp>
                   <Grid item xs={12} p={3}>
-                    <Markdown children={teacher.information} />
+                    <Markdown children={product.description} />
                   </Grid>
                   <Grid item xs={12} p={3}>
-                    <Markdown children={teacher.description} />
+                    <Markdown children={product.description} />
                   </Grid>
                   <Box mx={2} >
                     <Divider />
@@ -181,13 +186,13 @@ export default function EcommerceTeacherDetails({ isGuest = false }) {
                       </Typography>
                     </Box>
                     <Box onClick={() => setIsOpen(true)}>
-                      <TeacherDetailsMobileCalendar teacher={teacher}/>
+                      <TeacherDetailsMobileCalendar teacher={product} />
                     </Box>
                   </Box>
                   <Box mx={2} >
                     <Divider />
                   </Box>
-                  <TeacherDetailsMobileReview teacher={teacher} />
+                  <TeacherDetailsMobileReview teacher={product} />
                   <Box mx={2} >
                     <Divider />
                   </Box>
@@ -196,7 +201,7 @@ export default function EcommerceTeacherDetails({ isGuest = false }) {
                     <Divider />
                   </Box>
                   <TimeDetails />
-                  <MobileSelectDays teacher={teacher} isOpen={isOpen} closeFather={() => setIsOpen(false)} />
+                  <MobileSelectDays teacher={product} isOpen={isOpen} closeFather={() => setIsOpen(false)} />
                 </Hidden>
               </Grid>
             </Grid>
@@ -221,17 +226,17 @@ export default function EcommerceTeacherDetails({ isGuest = false }) {
                   <Divider />
 
                   <TabPanel value="0">
-                    <TeacherDetailsReview teacher={teacher} />
+                    <TeacherDetailsReview teacher={product} />
                   </TabPanel>
                   <TabPanel value="1">
-                    <TeacherDetailsCalendar teacher={teacher} />
+                    <TeacherDetailsCalendar teacher={product} />
                   </TabPanel>
                   <TabPanel value="2">
                     <Box sx={{ p: 3 }}>
-                      <Markdown children={teacher.information} />
+                      <Markdown children={product.description} />
                     </Box>
                     <Box sx={{ p: 3 }}>
-                      <Markdown children={teacher.description} />
+                      <Markdown children={product.description} />
                     </Box>
                   </TabPanel>
                   {/* <TabPanel value="2">

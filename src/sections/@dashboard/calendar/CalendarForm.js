@@ -351,7 +351,7 @@ export default function CalendarForm({ event, range, onCancel, clients, members,
               disabled={disabled}
               name="assignedStudents" label={translate('calendar.form.assignedStudents')} />
           )}
-
+          disabled={classType === 'teacher'}
           onInputChange={(event, value, reason) => {
             console.log("value", value)
             console.log("reason", reason)

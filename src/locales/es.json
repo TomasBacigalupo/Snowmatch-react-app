@@ -141,8 +141,8 @@
         "editEvent": "Editar Evento",
         "addEvent": "Crear Evento",
         "form": {
-            "assignedTeachers": "Profesores Assignados",
-            "assignedStudents": "Estudiantes Assignados",
+            "assignedTeachers": "Profesores Asignados",
+            "assignedStudents": "Alumnos Asignados",
             "teacher": "Profesor",
             "school": "Escuela",
             "startDate": "Desde",

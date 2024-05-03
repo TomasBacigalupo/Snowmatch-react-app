@@ -558,7 +558,8 @@
         "add_new_product": "Crear",
         "private_full_day": "Privada día completo",
         "private_half_day": "Privada medio día",
-        "title": "Producto"
+        "title": "Producto",
+        "events": "Eventos"
     },
     "verify": {
         "title": "Verifique su Mail",

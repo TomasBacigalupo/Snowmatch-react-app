@@ -598,21 +598,23 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
                 }}
               >
                 <Typography>{translate("product.events")}</Typography>
-                <div
-                  className="fc-event"
-                  title={values.name}
-                  id={uuidv4()}
-                  style={{
-                    padding: "10px",
-                    margin: '5px',
-                    height: "auto",
-                    maxHeight: "-webkit-fill-available",
-                    background: '#3399ff',
-                    borderRadius: '5px'
-                  }}
-                >
-                  <Typography color='black'>{values.name + "‎"} </Typography>
-                </div>
+                {values.name === '' ? <></> : 
+                  <div
+                    className="fc-event"
+                    title={values.name}
+                    id={uuidv4()}
+                    style={{
+                      padding: "10px",
+                      margin: '5px',
+                      height: "auto",
+                      maxHeight: "-webkit-fill-available",
+                      background: '#3399ff',
+                      borderRadius: '5px'
+                    }}
+                  >
+                    <Typography color='black'>{values.name + "‎"} </Typography>
+                  </div>
+                }   
               </div>
             </Card>
             <LoadingButton type="submit" variant="contained" size="large" loading={isSubmitting}>

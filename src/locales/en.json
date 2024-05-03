@@ -443,7 +443,8 @@
     "create": "Create product",
     "save": "Save product",
     "delete": "Delete product",
-    "title": "Product"
+    "title": "Product",
+    "events": "Events"
   },
   "verify": {
     "title": "Verify your Mail",

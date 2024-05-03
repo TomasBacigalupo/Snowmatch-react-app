@@ -4,19 +4,21 @@ import PropTypes from 'prop-types';
 AdminEventInfo.propTypes = {
     event: PropTypes.object,
 };
-export default function AdminEventInfo({event}){  
+export default function AdminEventInfo({event}){
      console.log(event) 
     return (
         <Stack>
         <Typography>
-            {event?.students ? event.students[0]?.name + ' ' + event.students[0]?.lastname : '' } - {event?.owner?.name} {event?.owner?.lastname}
+            {event?.clients?.length > 0 ? event.clients[0]?.name + ' ' + event.clients[0]?.lastname + ' - ' : ' ' } {event?.owner?.name} {event?.owner?.lastname}
         </Typography>
         <Typography>
             {event?.resort}
         </Typography>
-        <Typography>
+        {//events do not have a status
+        /*<Typography>
             State: {event?.status}
-        </Typography>
+        </Typography>*/
+        }
         </Stack>
     )
 

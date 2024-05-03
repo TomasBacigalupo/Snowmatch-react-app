@@ -598,7 +598,7 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
                 }}
               >
                 <Typography>{translate("product.events")}</Typography>
-                {values.name === '' ? <></> : 
+                {values.name !== '' && 
                   <div
                     className="fc-event"
                     title={values.name}

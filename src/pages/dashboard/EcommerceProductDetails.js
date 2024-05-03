@@ -154,35 +154,16 @@ export default function EcommerceTeacherDetails({ isGuest = false }) {
                   <Box mx={2} >
                     <Divider />
                   </Box>
-                  <Grid container>
-                    {PRODUCT_DESCRIPTION.map((item) => (
-                      <Grid item xs={12} md={4} key={item.title} width={'100%'}>
-                        <Box display='flex' alignItems='flex-start' sx={{ my: 2, ml: 2, width: '100%', textAlign: 'start' }}>
-                          <Box><IconWrapperMobileStyle>
-                            <Iconify icon={item.icon} width={16} height={16} />
-                          </IconWrapperMobileStyle></Box>
-                          <Box ml={2}>
-                            <Typography variant="subtitle1" gutterBottom>
-                              {translate("teacherDetails." + item.title)}
-                            </Typography>
-                            <Typography sx={{ color: 'text.secondary' }}>
-                              {translate('teacherDetails.' + item.description)}
-                            </Typography>
-                          </Box>
-                        </Box>
-                      </Grid>
-                    ))}
-                  </Grid>
                   <Box mx={2} >
                     <Divider />
                   </Box>
                   <Box mt={3}>
                     <Box px={2} pt={2}>
                       <Typography variant="h4" gutterBottom>
-                        {translate('teacherDetails.ocupation.title')}
+                        {translate('productDetails.ocupation.title')}
                       </Typography>
                       <Typography variant="body1" paragraph>
-                        {translate('teacherDetails.ocupation.description')}
+                        {translate('productDetails.ocupation.description')}
                       </Typography>
                     </Box>
                     <Box onClick={() => setIsOpen(true)}>

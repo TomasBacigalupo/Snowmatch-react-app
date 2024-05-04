@@ -790,3 +790,27 @@ export function getDollarValue(callback){
     }
   }
 }
+
+export function calculatePrice(product, totalDays, time)
+{
+  console.log('product', product)
+  const price = product?.price ?? 0;
+  let discountedPrice = price;
+  if( totalDays === 3 ){
+    discountedPrice = price * 0.9;
+  }
+
+  if( totalDays === 5 ){
+    discountedPrice = price * 0.8;
+  }
+
+  if( totalDays > 5 ){
+    discountedPrice = price * 0.7;
+  }
+
+  if(time === 'FULL_DAY'){
+    return discountedPrice * 1.9;
+  }
+
+  return discountedPrice;
+}

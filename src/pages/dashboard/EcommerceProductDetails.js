@@ -182,7 +182,7 @@ export default function EcommerceTeacherDetails({ isGuest = false }) {
                     <Divider />
                   </Box>
                   <TimeDetails />
-                  <MobileSelectDays teacher={product} isOpen={isOpen} closeFather={() => setIsOpen(false)} isRange={true}/>
+                  <MobileSelectDays product={product} teacher={product} isOpen={isOpen} closeFather={() => setIsOpen(false)} isRange={true}/>
                 </Hidden>
               </Grid>
             </Grid>

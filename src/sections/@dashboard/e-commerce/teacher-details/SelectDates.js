@@ -10,6 +10,7 @@ import { isSameDay } from "date-fns";
 import { getEventsByTeacherId } from "src/redux/slices/bookings";
 import { useDispatch, useSelector } from "react-redux";
 import dayjs from 'dayjs';
+import { calculatePrice } from "src/redux/slices/teachers";
 
 
 const CustomPickersDay = styled(PickersDay, {
@@ -40,7 +41,7 @@ const CustomPickersDay = styled(PickersDay, {
     }),
 }));
 
-export default function SelectDates({ handleClose, onSubmit, isRange }) {
+export default function SelectDates({ handleClose, onSubmit, isRange, product }) {
     const { translate } = useLocales()
     const dispatch = useDispatch();
     const { events } = useSelector(state => state.bookings);
@@ -104,7 +105,7 @@ export default function SelectDates({ handleClose, onSubmit, isRange }) {
 
         // Parse the start and end dates
         const start = newRange[0];
-        const end =  newRange[1];
+        const end = newRange[1];
 
         // Generate a list of dates between the start and end dates
         const dateList = [];
@@ -116,11 +117,39 @@ export default function SelectDates({ handleClose, onSubmit, isRange }) {
 
         // Add each date to the selected dates list
         dateList.forEach((date) => {
-            selectedDates.push(date.toISOString().split('T')[0]);
+            selectedDates.push(date);
         });
 
+        if (selectedDates.length > 0) {
+            setSelectTimeModal(true)
+        }
         // Now selectedDates array contains all the dates between the range
         setDates(selectedDates)
+    }
+
+    const morningSelected = () => {
+        if (!isRange) {
+            selectedDates[selectedDates.length - 1].setHours(9)
+        } else {
+            selectedDates.map(date => date.setHours(9))
+        }
+        setSelectTimeModal(false)
+    }
+    const afternoonSelected = () => {
+        if (!isRange) {
+            selectedDates[selectedDates.length - 1].setHours(14)
+        } else {
+            selectedDates.map(date => date.setHours(14))
+        }
+        setSelectTimeModal(false)
+    }
+    const allDaySelected = () => {
+        if (!isRange) {
+            selectedDates[selectedDates.length - 1].setHours(8)
+        } else {
+            selectedDates.map(date => date.setHours(8))
+        }
+        setSelectTimeModal(false)
     }
 
     return (
@@ -131,10 +160,7 @@ export default function SelectDates({ handleClose, onSubmit, isRange }) {
                     <Grid container spacing={2} direction='row' justifyContent='center' paddingTop={2}>
                         <Grid item xs={12}>
                             <Paper
-                                onClick={() => {
-                                    selectedDates[selectedDates.length - 1].setHours(9)
-                                    setSelectTimeModal(false)
-                                }}
+                                onClick={morningSelected}
                                 sx={{
                                     p: 3,
                                     width: 1,
@@ -144,21 +170,23 @@ export default function SelectDates({ handleClose, onSubmit, isRange }) {
                             >
                                 {/* picture or icon */}
                                 <Typography
-                                    // color={timeSelected === 'ALL_DAY' ? 'primary' : ''}
-                                    variant="h6">{translate('checkout.morningTitle')} {hasPrice && '$US 180'}</Typography>
-
+                                    variant="h6">
+                                    {translate('checkout.morningTitle')} {isRange ? `$${calculatePrice(product, selectedDates.length, 'MORNING')}` : hasPrice && '$US 180'}
+                                </Typography>
                                 <Typography
-                                    // color={timeSelected === 'ALL_DAY' ? 'primary' : ''} 
-                                    variant="subtitle2">{translate('checkout.morningDescription')}</Typography>
-
+                                    variant="subtitle2">
+                                    {translate('checkout.morningDescription')}
+                                </Typography>
+                                {isRange && <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                                    <Typography variant="subtitle" sx={{ textAlign: 'end', flex: '1 1 auto' }}>
+                                        {isRange ? `$${calculatePrice(product, selectedDates.length, 'MORNING') * selectedDates.length} total` : (hasPrice && '$US 180')}
+                                    </Typography>
+                                </Box>}
                             </Paper>
                         </Grid>
                         <Grid item xs={12}>
                             <Paper
-                                onClick={() => {
-                                    selectedDates[selectedDates.length - 1].setHours(14)
-                                    setSelectTimeModal(false)
-                                }}
+                                onClick={afternoonSelected}
                                 sx={{
                                     p: 3,
                                     width: 1,
@@ -171,40 +199,44 @@ export default function SelectDates({ handleClose, onSubmit, isRange }) {
                                 {/* picture or icon */}
                                 <Typography
                                     // color={timeSelected === 'ALL_DAY' ? 'primary' : ''}
-                                    variant="h6">{translate('checkout.afternoonTitle')} {hasPrice && '$US 180'}
+                                    variant="h6">{translate('checkout.afternoonTitle')} {isRange ? `$${calculatePrice(product, selectedDates.length, 'AFTERNOON')}` : hasPrice && '$US 180'}
                                 </Typography>
-
                                 <Typography
                                     // color={timeSelected === 'ALL_DAY' ? 'primary' : ''} 
                                     variant="subtitle2">{translate('checkout.afternoonDescription')}
                                 </Typography>
-
+                                {isRange && <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                                    <Typography variant="subtitle" sx={{ textAlign: 'end', flex: '1 1 auto' }}>
+                                        {isRange ? `$${calculatePrice(product, selectedDates.length, 'AFTERNOON') * selectedDates.length} total` : hasPrice && '$US 180'}
+                                    </Typography>
+                                </Box>}
                             </Paper>
                         </Grid>
                         <Grid item xs={12}>
                             <Paper
-                                onClick={() => {
-                                    selectedDates[selectedDates.length - 1].setHours(8)
-                                    setSelectTimeModal(false)
-                                }}
+                                onClick={allDaySelected}
                                 sx={{
                                     p: 3,
                                     width: 1,
                                     my: 2,
-
                                     border: (theme) => `solid 1px ${theme.palette.grey[500_32]}`,
-
                                 }}
                             >
                                 {/* picture or icon */}
                                 <Typography
-                                    // color={timeSelected === 'ALL_DAY' ? 'primary' : ''}
-                                    variant="h6">{translate('checkout.allDayTitle')} {hasPrice && '$US 300'}</Typography>
-
+                                    variant="h6">
+                                    {translate('checkout.allDayTitle')}
+                                    {isRange ? ` $${calculatePrice(product, selectedDates.length, 'FULL_DAY')}` : hasPrice && '$US 180'}
+                                </Typography>
                                 <Typography
-                                    // color={timeSelected === 'ALL_DAY' ? 'primary' : ''} 
-                                    variant="subtitle2">{translate('checkout.allDayDescription')}</Typography>
-
+                                    variant="subtitle2">
+                                    {translate('checkout.allDayDescription')}
+                                </Typography>
+                                {isRange && <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                                    <Typography variant="subtitle" sx={{ textAlign: 'end', flex: '1 1 auto' }}>
+                                        {isRange ? `$${calculatePrice(product, selectedDates.length, 'FULL_DAY') * selectedDates.length} total` : hasPrice && '$US 180'}
+                                    </Typography>
+                                </Box>}
                             </Paper>
                         </Grid>
                     </Grid>

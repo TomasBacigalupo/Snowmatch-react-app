@@ -78,7 +78,7 @@ export default function CheckoutTeacherList({ events, onDelete, onIncreaseQuanti
                             <TableRow key={idx}>
                                 <TableCell>
                                     <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                                        <Image alt="teacher Picture" src={teacher.imageLink} sx={{ width: 64, height: 64, borderRadius: 1.5, mr: 2 }} />
+                                        <Image alt="teacher Picture" src={teacher?.imageLink} sx={{ width: 64, height: 64, borderRadius: 1.5, mr: 2 }} />
                                         <Box>
                                             <Typography noWrap variant="subtitle2" sx={{ maxWidth: 240 }}>
                                                 {/* date in argentina format */}

@@ -10,7 +10,7 @@ import { useNavigate } from 'react-router';
 import { useDispatch } from 'react-redux';
 import useLocales from 'src/hooks/useLocales';
 
-const MobileSelectDays = ({ teacher, isOpen, closeFather, isRange }) => {
+const MobileSelectDays = ({ product, teacher, isOpen, closeFather, isRange }) => {
     const { translate } = useLocales();
     const [open, setOpen] = React.useState(isOpen);
     const dispatch = useDispatch();
@@ -121,6 +121,7 @@ const MobileSelectDays = ({ teacher, isOpen, closeFather, isRange }) => {
                         </Typography>
                     </Grid>
                     <SelectDates
+                        product={product}
                         isRange={isRange}
                         handleClose={() => {
                             if(closeFather){

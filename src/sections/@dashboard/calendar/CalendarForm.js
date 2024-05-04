@@ -433,7 +433,7 @@ export default function CalendarForm({ event, range, onCancel, clients, members,
           control={control}
           render={({ field }) => (
             <MobileDateTimePicker
-              disabled={disabled}
+              disabled={disabled || classType === 'school'}
               {...field}
               label={translate('calendar.form.startDate')}
               inputFormat="dd/MM/yyyy hh:mm a"
@@ -447,7 +447,7 @@ export default function CalendarForm({ event, range, onCancel, clients, members,
           control={control}
           render={({ field }) => (
             <MobileDateTimePicker
-              disabled={disabled}
+              disabled={disabled || classType === 'school'}
               {...field}
               label={translate('calendar.form.endDate')}
               inputFormat="dd/MM/yyyy hh:mm a"

@@ -1,4 +1,4 @@
-import { PickersDay, StaticDatePicker } from "@mui/lab";
+import { PickersDay, StaticDatePicker, StaticDateRangePicker } from "@mui/lab";
 import { Button, DialogActions, DialogContent, DialogTitle, Grid, TextField, Box, Typography, Paper } from "@mui/material";
 import React, { useEffect } from "react";
 import { useState } from "react";
@@ -9,6 +9,7 @@ import { useCallback } from "react";
 import { isSameDay } from "date-fns";
 import { getEventsByTeacherId } from "src/redux/slices/bookings";
 import { useDispatch, useSelector } from "react-redux";
+import dayjs from 'dayjs';
 
 
 const CustomPickersDay = styled(PickersDay, {
@@ -39,22 +40,24 @@ const CustomPickersDay = styled(PickersDay, {
     }),
 }));
 
-export default function SelectDates({ handleClose, onSubmit }) {
+export default function SelectDates({ handleClose, onSubmit, isRange }) {
     const { translate } = useLocales()
     const dispatch = useDispatch();
     const { events } = useSelector(state => state.bookings);
-    const { teacher } = useSelector(state => state.teachers)
+    const { teacher } = useSelector(state => state.teachers);
+    const { from, to } = useSelector(state => state.teachers.filters);
     const [selectTimeModal, setSelectTimeModal] = useState(false)
     const [date, setDate] = useState(new Date())
     const [selectedDates, setDates] = useState([])
     const tomorrow = new Date()
     tomorrow.setDate(tomorrow.getDate() + 1)
-    const hasPrice = teacher.level >=3 && teacher?.resorts?.find(resort => resort === 'Cerro Catedral');
-    
+    const hasPrice = teacher?.level >= 3 && teacher?.resorts?.find(resort => resort === 'Cerro Catedral');
+    const [range, setRange] = useState([from, to]);
+
     useEffect(() => {
-        dispatch(getEventsByTeacherId(teacher.id, date.getMonth() + 1));
+        dispatch(getEventsByTeacherId(teacher?.id, date.getMonth() + 1));
     }, [dispatch, teacher])
-    
+
     const renderWeekPickerDay = useCallback((date, _selectedDates, pickersDayProps) => {
         if (!date) {
             return <PickersDay {...pickersDayProps} onClick={() => console.log("clocked2")} />;
@@ -95,6 +98,30 @@ export default function SelectDates({ handleClose, onSubmit }) {
             />
         );
     }, [selectedDates]);
+
+    const handleChangeRange = (newRange) => {
+        const selectedDates = [];
+
+        // Parse the start and end dates
+        const start = newRange[0];
+        const end =  newRange[1];
+
+        // Generate a list of dates between the start and end dates
+        const dateList = [];
+        let currentDate = new Date(start);
+        while (currentDate <= end) {
+            dateList.push(new Date(currentDate));
+            currentDate.setDate(currentDate.getDate() + 1);
+        }
+
+        // Add each date to the selected dates list
+        dateList.forEach((date) => {
+            selectedDates.push(date.toISOString().split('T')[0]);
+        });
+
+        // Now selectedDates array contains all the dates between the range
+        setDates(selectedDates)
+    }
 
     return (
         <React.Fragment>
@@ -185,8 +212,8 @@ export default function SelectDates({ handleClose, onSubmit }) {
             </DialogAnimate>
             <Grid container width={'100%'} height={'100%'}>
                 <Grid item xs={12} width={'100%'} height={'100%'}>
-                    <StaticDatePicker
-                        onChange={()=>{}}
+                    {!isRange && <StaticDatePicker
+                        onChange={() => { }}
                         disabledDates={events.map(e => new Date(e.start))}
                         shouldDisableDate={(date) => events.some(e => isSameDay(date, new Date(e.start)))}
                         showToolbar={false}
@@ -196,7 +223,15 @@ export default function SelectDates({ handleClose, onSubmit }) {
                         disableHighlightToday={false}
                         disablePast
                     // shouldDisableDate={(date) => isBefore(date, endOfDay(new Date()))}
-                    />
+                    />}
+                    {isRange && <StaticDateRangePicker
+                        onChange={handleChangeRange}
+                        disabledDates={events.map(e => new Date(e.start))}
+                        shouldDisableDate={(date) => events.some(e => isSameDay(date, new Date(e.start)))}
+                        showToolbar={false}
+                        value={range}
+                        defaultValue={range}
+                    />}
                 </Grid>
                 <Grid item xs={12} pl={3}>
                     <Typography>{`${translate('general.total_days')}: ${selectedDates.length}`}</Typography>

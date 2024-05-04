@@ -10,7 +10,7 @@ import { useNavigate } from 'react-router';
 import { useDispatch } from 'react-redux';
 import useLocales from 'src/hooks/useLocales';
 
-const MobileSelectDays = ({ teacher, isOpen, closeFather }) => {
+const MobileSelectDays = ({ teacher, isOpen, closeFather, isRange }) => {
     const { translate } = useLocales();
     const [open, setOpen] = React.useState(isOpen);
     const dispatch = useDispatch();
@@ -72,10 +72,10 @@ const MobileSelectDays = ({ teacher, isOpen, closeFather }) => {
                 container justifyContent={'center'} alignItems={'center'} onClick={() => setOpen(true)}>
                 <Grid item xs={6} pl={2} pt={1} pb={1} justifyContent='center' textAlign='left'>
                     <Typography variant="h4" width='100%'>
-                        {teacher.level >= 3 && teacher.resort === 'Cerro Catedral' ? '$180' : 'Contactár'}
+                        {teacher?.level >= 3 && teacher.resort === 'Cerro Catedral' ? '$180' : 'Contactár'}
                     </Typography>
                     <Typography variant="body" width='100%'>
-                        {teacher.level >= 3 && teacher.resort === 'Cerro Catedral' && translate('checkout.halfDay3Hours')}
+                        {teacher?.level >= 3 && teacher.resort === 'Cerro Catedral' && translate('checkout.halfDay3Hours')}
                     </Typography>
                 </Grid>
                 <Grid item xs={6} px={2} py={3}>
@@ -121,6 +121,7 @@ const MobileSelectDays = ({ teacher, isOpen, closeFather }) => {
                         </Typography>
                     </Grid>
                     <SelectDates
+                        isRange={isRange}
                         handleClose={() => {
                             if(closeFather){
                                 closeFather()

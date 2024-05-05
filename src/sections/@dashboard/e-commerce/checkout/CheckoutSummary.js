@@ -4,13 +4,13 @@ import {
   Box,
   Card,
   Stack,
-  // Button,
+  Button,
   Divider,
-  // TextField,
+  TextField,
   CardHeader,
   Typography,
   CardContent,
-  // InputAdornment,
+  InputAdornment,
 } from '@mui/material';
 // utils
 import { fCurrency } from '../../../../utils/formatNumber';
@@ -77,22 +77,22 @@ export default function CheckoutSummary({
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
               Total: {/* {translate('checkout.subtotal')} */}
             </Typography>
-            <Typography variant="subtitle2">US{subtotal ? fCurrency(subtotal) : translate('checkout.deal_with_pro')}</Typography>
+            <Typography variant="subtitle2">{subtotal ? fCurrency(subtotal) : translate('checkout.deal_with_pro')}</Typography>
           </Stack>
 
           <Stack direction="row" justifyContent="space-between">
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
               Pago al inicio de clase
             </Typography>
-            <Typography variant="subtitle2">US{fCurrency(subtotal-bookingPrice)}</Typography>
+            <Typography variant="subtitle2">{fCurrency(subtotal-bookingPrice)}</Typography>
           </Stack>
 
-          <Stack direction="row" justifyContent="space-between">
+          {/* <Stack direction="row" justifyContent="space-between">
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
               Reserva
             </Typography>
-            <Typography variant="subtitle2">{bookingPrice ? `US${fCurrency(bookingPrice)}` : 'free' }</Typography>
-          </Stack>
+            <Typography variant="subtitle2">{bookingPrice ? `${fCurrency(bookingPrice)}` : 'free' }</Typography>
+          </Stack> */}
 
           
 
@@ -100,17 +100,16 @@ export default function CheckoutSummary({
 
           <Stack direction="row" justifyContent="space-between">
             <Typography variant="subtitle1">
-              Reserva en pesos:
-              {/* {translate('checkout.total')} */}
+              {translate('checkout.total')}
               </Typography>
             <Box sx={{ textAlign: 'right' }}>
               <Typography variant="subtitle1">
-                {subtotal ? fCurrency(subtotal * 0.5 * dollarValue): 'free'}
+                {subtotal ? fCurrency(subtotal): 'free'}
               </Typography>
             </Box>
           </Stack>
 
-          {/* {enableDiscount && onApplyDiscount && (
+          {enableDiscount && onApplyDiscount && (
             <TextField
               fullWidth
               placeholder="Discount codes / Gifts"
@@ -125,7 +124,7 @@ export default function CheckoutSummary({
                 ),
               }}
             />
-          )} */}
+          )}
         </Stack>
         )}
         {!subtotal && (

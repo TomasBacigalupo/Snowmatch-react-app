@@ -103,11 +103,7 @@ const slice = createSlice({
       const event = action.payload;
       const updateEvents = state.events.map((_event, i) => {
         if (_event.id === event.id) {
-          return {
-            ...event,
-            start: event.start.toDate(),
-            end: event.end.toDate()
-          };
+          return event
         }
         return _event;
       });

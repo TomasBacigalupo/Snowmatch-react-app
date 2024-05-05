@@ -11,6 +11,7 @@ import { getEventsByTeacherId } from "src/redux/slices/bookings";
 import { useDispatch, useSelector } from "react-redux";
 import dayjs from 'dayjs';
 import { calculatePrice } from "src/redux/slices/teachers";
+import { fCurrency } from "src/utils/formatNumber";
 
 
 const CustomPickersDay = styled(PickersDay, {
@@ -171,7 +172,7 @@ export default function SelectDates({ handleClose, onSubmit, isRange, product })
                                 {/* picture or icon */}
                                 <Typography
                                     variant="h6">
-                                    {translate('checkout.morningTitle')} {isRange ? `$${calculatePrice(product, selectedDates.length, 'MORNING')}` : hasPrice && '$US 180'}
+                                    {translate('checkout.morningTitle')} {isRange ? `${fCurrency(calculatePrice(product, selectedDates.length, 'MORNING'))}` : hasPrice && '$US 180'}
                                 </Typography>
                                 <Typography
                                     variant="subtitle2">
@@ -179,7 +180,7 @@ export default function SelectDates({ handleClose, onSubmit, isRange, product })
                                 </Typography>
                                 {isRange && <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                                     <Typography variant="subtitle" sx={{ textAlign: 'end', flex: '1 1 auto' }}>
-                                        {isRange ? `$${calculatePrice(product, selectedDates.length, 'MORNING') * selectedDates.length} total` : (hasPrice && '$US 180')}
+                                        {isRange ? `${fCurrency(calculatePrice(product, selectedDates.length, 'MORNING') * selectedDates.length)} total` : (hasPrice && '$US 180')}
                                     </Typography>
                                 </Box>}
                             </Paper>
@@ -199,7 +200,7 @@ export default function SelectDates({ handleClose, onSubmit, isRange, product })
                                 {/* picture or icon */}
                                 <Typography
                                     // color={timeSelected === 'ALL_DAY' ? 'primary' : ''}
-                                    variant="h6">{translate('checkout.afternoonTitle')} {isRange ? `$${calculatePrice(product, selectedDates.length, 'AFTERNOON')}` : hasPrice && '$US 180'}
+                                    variant="h6">{translate('checkout.afternoonTitle')} {isRange ? `${fCurrency(calculatePrice(product, selectedDates.length, 'AFTERNOON'))}` : hasPrice && '$US 180'}
                                 </Typography>
                                 <Typography
                                     // color={timeSelected === 'ALL_DAY' ? 'primary' : ''} 
@@ -207,7 +208,7 @@ export default function SelectDates({ handleClose, onSubmit, isRange, product })
                                 </Typography>
                                 {isRange && <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                                     <Typography variant="subtitle" sx={{ textAlign: 'end', flex: '1 1 auto' }}>
-                                        {isRange ? `$${calculatePrice(product, selectedDates.length, 'AFTERNOON') * selectedDates.length} total` : hasPrice && '$US 180'}
+                                        {isRange ? `${fCurrency(calculatePrice(product, selectedDates.length, 'AFTERNOON') * selectedDates.length)} total` : hasPrice && '$US 180'}
                                     </Typography>
                                 </Box>}
                             </Paper>
@@ -226,7 +227,7 @@ export default function SelectDates({ handleClose, onSubmit, isRange, product })
                                 <Typography
                                     variant="h6">
                                     {translate('checkout.allDayTitle')}
-                                    {isRange ? ` $${calculatePrice(product, selectedDates.length, 'FULL_DAY')}` : hasPrice && '$US 180'}
+                                    {isRange ? ` ${fCurrency(calculatePrice(product, selectedDates.length, 'FULL_DAY'))}` : hasPrice && '$US 180'}
                                 </Typography>
                                 <Typography
                                     variant="subtitle2">
@@ -234,7 +235,7 @@ export default function SelectDates({ handleClose, onSubmit, isRange, product })
                                 </Typography>
                                 {isRange && <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                                     <Typography variant="subtitle" sx={{ textAlign: 'end', flex: '1 1 auto' }}>
-                                        {isRange ? `$${calculatePrice(product, selectedDates.length, 'FULL_DAY') * selectedDates.length} total` : hasPrice && '$US 180'}
+                                        {isRange ? `${fCurrency(calculatePrice(product, selectedDates.length, 'FULL_DAY') * selectedDates.length)} total` : hasPrice && '$US 180'}
                                     </Typography>
                                 </Box>}
                             </Paper>
@@ -263,6 +264,7 @@ export default function SelectDates({ handleClose, onSubmit, isRange, product })
                         showToolbar={false}
                         value={range}
                         defaultValue={range}
+                        disablePast={true}
                     />}
                 </Grid>
                 <Grid item xs={12} pl={3}>

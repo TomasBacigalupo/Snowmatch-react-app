@@ -5,7 +5,7 @@ import { styled } from '@mui/material/styles';
 import { Box, StepConnector, Button } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
-import { getCart, createBilling } from '../../redux/slices/teachers';
+import { getCart, createBilling, calculatePrice } from '../../redux/slices/teachers';
 // hooks
 import useIsMountedRef from '../../hooks/useIsMountedRef';
 import useSettings from '../../hooks/useSettings';
@@ -89,11 +89,13 @@ export default function EcommerceCheckoutProduct() {
     const isMountedRef = useIsMountedRef();
     const { checkout } = useSelector((state) => state.teachers);
     const { message, children, adults, bookSuccess, loadingPayment } = useSelector((state) => state.bookings);
+    const { product } = useSelector((state) => state.teachers);
     const { cart, billing, activeStep, events, bookingPrice } = checkout;
     const isComplete = activeStep === STEPS.length;
     const { user } = useAuth();
 
-    const { total, discount, subtotal, shipping, card } = checkout;
+    const {  discount, subtotal, shipping, card } = checkout;
+    const total = calculatePrice(product, checkout.events.length)
     useEffect(() => {
         if (isMountedRef.current) {
             dispatch(getCart(events));

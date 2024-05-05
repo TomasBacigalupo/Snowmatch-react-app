@@ -13,6 +13,7 @@ import { useSelector } from 'src/redux/store';
 import EventAvailableIcon from '@mui/icons-material/EventAvailable';
 import Iconify from 'src/components/Iconify';
 import useLocales from 'src/hooks/useLocales';
+import { fCurrency } from 'src/utils/formatNumber';
 // ----------------------------------------------------------------------
 
 ShopStandardProductCard.propTypes = {
@@ -70,30 +71,30 @@ export default function ShopStandardProductCard({ standardProduct }) {
                 <Stack spacing={0}>
                     <Stack direction="row" spacing={0.5}>
                         {hasDiscount && <Typography component="span" sx={{ color: 'text.disabled', textDecoration: 'line-through' }}>
-                            ${price}
+                            {fCurrency(price)}
                         </Typography>}
                         <Typography variant="subtitle1">
-                            ${calculatePriceWithDiscount(price)} <Typography component="span" >
+                            {fCurrency(calculatePriceWithDiscount(price))} <Typography component="span" >
                                 1/2 día
                             </Typography>
                         </Typography>
                         <Typography variant="subtitle1">
                             <Typography component="span" sx={{ color: 'text.disabled', textDecoration: 'underline' }}>
-                                {`$${calculatePriceWithDiscount(price) * totalDays} total`}
+                                {`${fCurrency(calculatePriceWithDiscount(price) * totalDays)} total`}
                             </Typography>
                         </Typography>
 
                     </Stack>
                     <Stack direction="row" spacing={0.5}>
                         {hasDiscount && <Typography component="span" sx={{ color: 'text.disabled', textDecoration: 'line-through' }}>
-                            ${price * 2}
+                            {fCurrency(price * 2)}
                         </Typography>}
                         <Typography variant="subtitle1">
-                            ${calculatePriceWithDiscount(price) * 2}<Typography component="span" > día</Typography>
+                            {fCurrency(calculatePriceWithDiscount(price) * 2)}<Typography component="span" > día</Typography>
                         </Typography>
                         <Typography variant="subtitle1">
                             <Typography component="span" sx={{ color: 'text.disabled', textDecoration: 'underline' }}>
-                                {`$${calculatePriceWithDiscount(price) * 2 * totalDays} total`}
+                                {`${fCurrency(calculatePriceWithDiscount(price) * 2 * totalDays)} total`}
                             </Typography>
                         </Typography>
                     </Stack>

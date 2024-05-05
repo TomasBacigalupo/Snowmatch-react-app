@@ -5,7 +5,7 @@ import { Grid, IconButton } from '@mui/material';
 import Iconify from 'src/components/Iconify';
 import Button from '@mui/material/Button';
 import SelectDates from './SelectDates';
-import { addCart } from 'src/redux/slices/teachers';
+import { addCart, calculatePrice } from 'src/redux/slices/teachers';
 import { useNavigate } from 'react-router';
 import { useDispatch } from 'react-redux';
 import useLocales from 'src/hooks/useLocales';
@@ -16,40 +16,78 @@ const MobileSelectDays = ({ product, teacher, isOpen, closeFather, isRange }) =>
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const handleSubmitSelectedDates = useCallback((dates) => {
-        dates.forEach((date) => {
-            let lessonTime = "MORNING"
-            let price = 0
-            let bookingPrice = 0
-            if (new Date(date).getHours() === 14) {
-                lessonTime = "AFTERNOON"
-                price = 180
-                bookingPrice = 18
-            }
-            if (new Date(date).getHours() === 9) {
-                lessonTime = "MORNING"
-                price = 180
-                bookingPrice = 18
-            }
-            if (new Date(date).getHours() === 8) {
-                lessonTime = "ALL_DAY"
-                price = 300
-                bookingPrice = 30
-            }
-            const requestEvent = {
-                price: price,
-                bookingPrice: bookingPrice,
-                people: 1,
-                lessonTime: lessonTime,
-                date: date,
-                resort: 'Catedral'
-            };
-            dispatch(addCart({
-                teacher: teacher,
-                event: requestEvent
-            }))
-
-            navigate('hire');
-        })
+        if(!product && !isRange){
+            dates.forEach((date) => {
+                let lessonTime = "MORNING"
+                let price = 0
+                let bookingPrice = 0
+                if (new Date(date).getHours() === 14) {
+                    lessonTime = "AFTERNOON"
+                    price = 180
+                    bookingPrice = 18
+                }
+                if (new Date(date).getHours() === 9) {
+                    lessonTime = "MORNING"
+                    price = 180
+                    bookingPrice = 18
+                }
+                if (new Date(date).getHours() === 8) {
+                    lessonTime = "ALL_DAY"
+                    price = 300
+                    bookingPrice = 30
+                }
+                const requestEvent = {
+                    price: price,
+                    bookingPrice: bookingPrice,
+                    people: 1,
+                    lessonTime: lessonTime,
+                    date: date,
+                    resort: 'Catedral'
+                };
+                dispatch(addCart({
+                    teacher: teacher,
+                    event: requestEvent
+                }))
+    
+                navigate('hire');
+            })
+        }else{
+            dates.forEach((date) => {
+                let lessonTime = "MORNING"
+                let price = 0
+                let bookingPrice = 0
+                if (new Date(date).getHours() === 14) {
+                    lessonTime = "AFTERNOON"
+                    price = calculatePrice(product, 1, "AFTERNOON")
+                    bookingPrice = 18
+                }
+                if (new Date(date).getHours() === 9) {
+                    lessonTime = "MORNING"
+                    price = calculatePrice(product, 1, "MORNING")
+                    bookingPrice = 18
+                }
+                if (new Date(date).getHours() === 8) {
+                    lessonTime = "ALL_DAY"
+                    price = calculatePrice(product, 1, "FULL_DAY")
+                    bookingPrice = 30
+                }
+                const requestEvent = {
+                    price: price,
+                    bookingPrice: bookingPrice,
+                    people: 1,
+                    lessonTime: lessonTime,
+                    date: date,
+                    resort: 'Catedral'
+                };
+                dispatch(addCart({
+                    teacher: teacher,
+                    event: requestEvent
+                }))
+    
+                navigate('hire');
+            })
+        }
+        
     })
 
     useEffect(() => {

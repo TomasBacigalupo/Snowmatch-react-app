@@ -23,6 +23,7 @@ const initialState = {
     children: 0,
     bookSuccess: false,
     events: [],
+    assignedStudents: [],
 };
 
 const slice = createSlice({
@@ -201,7 +202,9 @@ const slice = createSlice({
             const children = action.payload;
             state.children = children;
         },
-
+        changeAsignedStudents(state, action) {
+            state.assignedStudents = action.payload;
+        },
         createBookingSuccess(state, action) {
             state.isLoading = false;
             state.loadingPayment = false;
@@ -225,7 +228,7 @@ const slice = createSlice({
 export default slice.reducer;
 
 // Actions
-export const { openModal, closeModal, selectEvent, changeMessage, bookingPending } = slice.actions;
+export const { openModal, closeModal, selectEvent, changeMessage, bookingPending, changeAsignedStudents } = slice.actions;
 
 // ----------------------------------------------------------------------
 

@@ -26,7 +26,7 @@ const Loadable = (Component) => (props) => {
   const { pathname } = useLocation();
   return (
     <Suspense fallback={<LoadingScreen isDashboard={pathname.includes('/dashboard')} />}>
-        <Component {...props} />
+      <Component {...props} />
     </Suspense>
   );
 };
@@ -123,6 +123,11 @@ export default function Router() {
             <AuthGuard>
               <EcommerceCheckoutTeacher />
             </AuthGuard>
+        },
+        {
+          path: 'product/:id/hire', element: <AuthGuard>
+            <EcommerceCheckoutProduct />
+          </AuthGuard>
         },
         { path: 'lessons', element: <UserLessons /> },
         { path: 'lessons/:eventId', element: <LessonDetails /> },
@@ -315,6 +320,7 @@ const PrivateProductHalf = Loadable(lazy(() => import('../pages/dashboard/Privat
 
 // TEACHER ECOMMERCE
 const EcommerceCheckoutTeacher = Loadable(lazy(() => import('../pages/dashboard/EcommerceCheckoutTeacher')));
+const EcommerceCheckoutProduct = Loadable(lazy(() => import('../pages/dashboard/EcommerceCheckoutProduct.js')));
 
 // INVOICE
 const InvoiceList = Loadable(lazy(() => import('../pages/dashboard/InvoiceList')));

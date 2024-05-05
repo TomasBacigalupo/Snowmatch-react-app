@@ -279,7 +279,6 @@ export function getEvents() {
           return {
             ...e,
             title: title,
-            description: 'Evento creado a partir de un producto',
             start: adjustedDateStart,
             end: adjustedDateEnd,
             textColor: "#00AB55",
@@ -631,7 +630,6 @@ export function getEventsByUserId(id) {
           return {
             ...e,
             title: title,
-            description: 'Evento creado a partir de un producto',
             start: adjustedDateStart,
             end: adjustedDateEnd,
             textColor: "#00AB55",

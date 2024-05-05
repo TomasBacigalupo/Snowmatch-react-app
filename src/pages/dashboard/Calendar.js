@@ -44,7 +44,6 @@ const selectedEventSelector = (state) => {
 export default function Calendar() {
   const {translate} = useLocales()
   const { themeStretch } = useSettings();
-
   const dispatch = useDispatch();
 
   const isDesktop = useResponsive('up', 'sm');
@@ -215,12 +214,12 @@ export default function Calendar() {
         </Card>
 
         <DialogAnimate open={isOpenModal} onClose={handleCloseModal}>
-          <DialogTitle>{selectedEvent ? translate('calendar.editEvent') : new Date(selectedRange?.start).toDateString()}</DialogTitle>
+          <DialogTitle>{selectedEvent ? `${translate('calendar.editEvent')} - ${selectedEvent.id}` : new Date(selectedRange?.start).toDateString()}</DialogTitle>
           {/* {selectedEvent?.source === 'APP' ? 
             <LessonForm event={selectedEvent || {}} range={selectedRange} onCancel={handleCloseModal} clients={clients} members={members || {}}/> :  */}
             {selectedEvent && <CalendarForm event={selectedEvent || {}} disabled={selectedEvent?.source === 'APP'}  range={selectedRange} onCancel={handleCloseModal} clients={clients} members={members || {}}/>}
             {/* } */}
-            {!selectedEvent &&<CalendarDayForm event={selectedEvent || {}} disabled={selectedEvent?.source === 'APP'}  range={selectedRange} onCancel={handleCloseModal} clients={clients} members={members || {}}/>}
+            {!selectedEvent && <CalendarDayForm event={selectedEvent || {}} disabled={selectedEvent?.source === 'APP'}  range={selectedRange} onCancel={handleCloseModal} clients={clients} members={members || {}}/>}
         </DialogAnimate>
       </Container>
     </Page>

@@ -285,10 +285,11 @@ export default function CalendarForm({ event, range, onCancel, clients, members,
           disabled={disabled}
           multiple
           disableCloseOnSelect
-          name="clientId" label={translate('calendar.form.client')}
+          name="clientId" 
+          label={translate('calendar.form.client')}
           value={selectedClients}
           options={[...clients].sort((a, b) => a?.name?.localeCompare(b?.name))}
-          getOptionLabel={(c) => `${c?.name} ${c?.lastname}`}
+          getOptionLabel={(c) => `${c?.name} ${c?.lastname} ${c.level}`}
           onChange={(event, value) => {
             setSelectedClients([...value])
           }}
@@ -305,7 +306,8 @@ export default function CalendarForm({ event, range, onCancel, clients, members,
               name="clientid" label="Client" />
           )}
         />}
-        {members?.length > 0 && event?.businessOwner != null && event?.businessOwner != undefined && <Autocomplete
+        {classType === 'school' && <Autocomplete
+          disabled={(!members?.length > 0 && event?.businessOwner != null && event?.businessOwner != undefined)}
           disableCloseOnSelect
           multiple
           name="assigenedTeachersId"
@@ -331,19 +333,19 @@ export default function CalendarForm({ event, range, onCancel, clients, members,
 
         />}
 
-        {user?.user?.role === 'ADMIN' && <Autocomplete
+        {classType === 'school' && <Autocomplete
           name="assignedStudents" label={translate('calendar.form.assignedStudents')}
           multiple
           value={assignedStudents}
           options={teachers}
-          getOptionLabel={(m) => `${m?.name} ${m?.lastname}`}
+          getOptionLabel={(m) => `${m?.name} ${m?.lastname} ${m.level}`}
           onChange={(event, value) => {
             setAssignedStudents([...value])
           }}
           renderOption={(props, student) => (
             <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
               <Avatar sx={{ marginRight: '10px' }}>{`${student?.name[0]}${student?.lastname[0]}`}</Avatar>
-              {`${student?.name} ${student?.lastname}`}
+              {`${student?.name} ${student?.lastname} ${student.level}`}
             </Box>
           )}
           renderInput={(params) => (
@@ -424,7 +426,7 @@ export default function CalendarForm({ event, range, onCancel, clients, members,
 
         <RHFTextField disabled={disabled} name="description" label={translate('calendar.form.description')} multiline rows={2} />
 
-        {values?.type && !['Break', 'Training', 'Illness'].find(p => p === values.type) && (
+        {classType != 'school' && values?.type && !['Break', 'Training', 'Illness'].find(p => p === values.type) && (
           <RHFTextField disabled={disabled} name="price" label={translate('calendar.form.price')} />
         )}
 
@@ -470,7 +472,7 @@ export default function CalendarForm({ event, range, onCancel, clients, members,
             <ColorSinglePicker disabled={disabled} value={field.value} onChange={field.onChange} colors={COLOR_OPTIONS} />
           )}
         />
-        <RHFCheckbox name='payed' label='Payed' disabled={user.user.role !== 'ADMIN'} />
+        {/* <RHFCheckbox name='payed' label='Payed' disabled={user.user.role !== 'ADMIN'} /> */}
       </Stack>
 
       <DialogActions>

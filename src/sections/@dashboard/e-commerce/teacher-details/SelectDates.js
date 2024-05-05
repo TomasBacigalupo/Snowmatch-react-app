@@ -258,8 +258,8 @@ export default function SelectDates({ handleClose, onSubmit, isRange, product })
                     />}
                     {isRange && <StaticDateRangePicker
                         onChange={handleChangeRange}
-                        disabledDates={events.map(e => new Date(e.start))}
-                        shouldDisableDate={(date) => events.some(e => isSameDay(date, new Date(e.start)))}
+                        // disabledDates={events.map(e => new Date(e.start))}
+                        shouldDisableDate={(date) => !events.some(e => isSameDay(date, new Date(e.start)))}
                         showToolbar={false}
                         value={range}
                         defaultValue={range}

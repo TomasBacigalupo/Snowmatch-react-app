@@ -167,7 +167,7 @@ export default function EcommerceTeacherDetails({ isGuest = false }) {
                       </Typography>
                     </Box>
                     <Box onClick={() => setIsOpen(true)}>
-                      <TeacherDetailsMobileCalendar teacher={product} />
+                      <TeacherDetailsMobileCalendar isProduct={true} teacher={product} />
                     </Box>
                   </Box>
                   <Box mx={2} >

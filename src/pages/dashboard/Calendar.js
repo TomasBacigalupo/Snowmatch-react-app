@@ -11,7 +11,7 @@ import { useState, useRef, useEffect } from 'react';
 import { Card, Button, Container, DialogTitle } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
-import { getEvents, openModal, closeModal, updateEvent, selectEvent, selectRange } from '../../redux/slices/calendar';
+import { getEvents, openModal, closeModal, updateEvent, selectEvent, selectRange, getEventsByDate } from '../../redux/slices/calendar';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // hooks
@@ -61,10 +61,14 @@ export default function Calendar() {
   const { clients } = useSelector((state) => state.clients);
 
   useEffect(() => {
-    dispatch(getEvents())
+    dispatch(getEventsByDate(date))
     dispatch(getClients())
     dispatch(getBusinessMembers())
   }, [dispatch]);
+
+  useEffect(() => {
+    dispatch(getEventsByDate(date))
+  }, [date]);
 
   useEffect(() => {
     const calendarEl = calendarRef.current;
@@ -88,7 +92,7 @@ export default function Calendar() {
   const handleChangeView = (newView) => {
     const calendarEl = calendarRef.current;
     if (calendarEl) {
-      const calendarApi = calendarEl.getApi();
+      const calendarApi = calendarEl.getApi(); 
       calendarApi.changeView(newView);
       setView(newView);
     }

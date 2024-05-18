@@ -28,6 +28,8 @@ import { initMercadoPago } from '@mercadopago/sdk-react';
 import { bookingAndPay, bookingPending, changeAsignedStudents, createBooking } from 'src/redux/slices/bookings';
 import CheckoutProductGuests from 'src/sections/@dashboard/e-commerce/checkout/CheckoutProductGuests';
 import useAuth from 'src/hooks/useAuth';
+import CheckoutProductShare from 'src/sections/@dashboard/e-commerce/checkout/CheckoutProductShare';
+import { sum } from 'lodash';
 initMercadoPago('TEST-88fbbb89-cc56-4432-a225-f27e4dab2a7c');
 
 // ----------------------------------------------------------------------
@@ -90,9 +92,10 @@ export default function EcommerceCheckoutProduct() {
     const { checkout } = useSelector((state) => state.teachers);
     const { message, children, adults, bookSuccess, loadingPayment } = useSelector((state) => state.bookings);
     const { product } = useSelector((state) => state.teachers);
-    const { cart, billing, activeStep, events, bookingPrice } = checkout;
+    const { cart, billing, activeStep, events } = checkout;
     const isComplete = activeStep === STEPS.length;
     const { user } = useAuth();
+    const bookingPrice = sum(events.map((event) => event.price));
 
     const {  discount, subtotal, shipping, card } = checkout;
     const total = calculatePrice(product, checkout.events.length)
@@ -260,13 +263,14 @@ export default function EcommerceCheckoutProduct() {
                 <Box marginTop={2}>
                     <CheckoutSummary
                         enableEdit
-                        total={total}
-                        subtotal={subtotal}
-                        discount={discount}
+                        total={bookingPrice}
+                        totalEvents={events.length}
+                        subtotal={bookingPrice}
+                        discount={0}
                         shipping={shipping}
                         onEdit={() => { }}
                         bookingPrice={bookingPrice}
-                    />
+                    /> 
                 </Box>
                 <Box marginTop={2}>
                     {bookingPrice > 0 &&
@@ -282,10 +286,10 @@ export default function EcommerceCheckoutProduct() {
                 {/* <Box marginTop={2} marginX={1}>
         <Button onClick={handleBook} variant='contained' fullWidth style={{ m: 2 }}> Book </Button>
           </Box>*/}
-                {bookingPrice > 0 &&
+                {/* {bookingPrice > 0 &&
                     <Box marginTop={2} marginX={1}>
                         <Button onClick={onSubmit} variant='contained' fullWidth style={{ m: 2 }}> Book And Pay </Button>
-                    </Box>}
+                    </Box>} */}
                 {/* </Container> */}
             </Page>
         );

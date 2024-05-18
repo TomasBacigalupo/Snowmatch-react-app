@@ -26,6 +26,7 @@ import { Payment } from '@mercadopago/sdk-react';
 
 import { initMercadoPago } from '@mercadopago/sdk-react';
 import { bookingAndPay, bookingPending, createBooking } from 'src/redux/slices/bookings';
+import { sum } from 'lodash';
 initMercadoPago('TEST-88fbbb89-cc56-4432-a225-f27e4dab2a7c');
 
 // ----------------------------------------------------------------------
@@ -87,7 +88,8 @@ export default function EcommerceCheckoutTeacher() {
   const isMountedRef = useIsMountedRef();
   const { checkout } = useSelector((state) => state.teachers);
   const { message, children, adults, bookSuccess, loadingPayment } = useSelector((state) => state.bookings);
-  const { cart, billing, activeStep, events, bookingPrice } = checkout;
+  const { cart, billing, activeStep, events } = checkout;
+  const bookingPrice = sum(events.map((event) => event.price));
   const isComplete = activeStep === STEPS.length;
 
   const { total, discount, subtotal, shipping, card } = checkout;

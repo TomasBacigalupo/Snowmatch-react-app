@@ -1,7 +1,7 @@
 {
   "name": "SnowMatch",
   "author": "snowmatch.pro",
-  "version": "7.1.117",
+  "version": "8.0.0",
   "homepage": "https://snowmatch.pro",
   "description": "Javascript Version",
   "private": true,
@@ -63,6 +63,7 @@
     "@mui/icons-material": "^5.5.1",
     "@mui/lab": "^5.0.0-alpha.72",
     "@mui/material": "^5.5.0",
+    "@mui/system": "^5.15.15",
     "@mui/x-data-grid": "^5.6.1",
     "@mui/x-date-pickers": "^5.0.0-alpha.7",
     "@react-pdf/renderer": "^2.1.1",

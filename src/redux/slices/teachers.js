@@ -35,6 +35,7 @@ const initialState = {
     from: new Date(),
     to: new Date(new Date().getTime() + (10 * 24 * 60 * 60 * 1000)),
     resort: 'Cerro Catedral',
+    level: 5
   },
   checkout: {
     activeStep: 0,
@@ -78,7 +79,13 @@ const slice = createSlice({
     // CLOSE CLINIC MODAL
     closeClinicModal(state) {
       state.openClinicModal = false;
-      
+
+    },
+
+    // change level
+    setLevel(state, action) {
+      state.filters.level = action.payload;
+
     },
 
     // CLOSE EVENT MODAL
@@ -199,7 +206,7 @@ const slice = createSlice({
       const shipping = events.length === 0 ? 0 : state.checkout.shipping;
       const billing = events.length === 0 ? null : state.checkout.billing;
       const bookingPrice = sum(events.map((event) => event.bookingPrice));
-      
+
       state.checkout.events = events;
       state.checkout.discount = discount;
       state.checkout.shipping = shipping;
@@ -210,32 +217,35 @@ const slice = createSlice({
     },
 
     addCart(state, action) {
-      const {teacher, event} = action.payload;
-      if(teacher){
+      const { teacher, event } = action.payload;
+      if (teacher) {
         state.checkout.teacher = teacher;
       }
       // business logic to set price
       state.checkout.cart = [...state.checkout.cart, teacher];
       state.checkout.events = [...state.checkout.events, event];
       state.checkout.total = state.checkout.total + event.price * 1.03
-      state.checkout.subtotal = state.checkout.subtotal + event.price
+      state.checkout.subtotal = state.checkout.subtotal + event.price;
+      debugger
+      state.checkout.bookingPrice = sum(state.checkout.events.map((event) => event.price));
+      debugger
       state.checkout.cart = uniqBy([...state.checkout.cart, teacher], 'id');
     },
 
-    addCard(state, action){
+    addCard(state, action) {
       const card = action.payload
       state.checkout.card = card
     },
 
     deleteCart(state, action) {
       //delete by idx
-      const updateCart = state.checkout.events.filter((event, idx)=> idx !== action.payload)
+      const updateCart = state.checkout.events.filter((event, idx) => idx !== action.payload)
       //const updateCart = state.checkout.events.filter(event => Number(event.id) !== Number(action.payload));
 
       state.checkout.events = updateCart;
     },
 
-    cleanCart(state, action){
+    cleanCart(state, action) {
       state.checkout.events = []
     },
 
@@ -317,16 +327,16 @@ const slice = createSlice({
 
     // SUCCESS RATE
     onRateSuccess(state, action) {
-      const {teacherId} = action.payload;
+      const { teacherId } = action.payload;
       state.teacher = state.teachers.map(teacher => {
-        if(teacherId === teacher.id){
+        if (teacherId === teacher.id) {
           return {
             ...teacher,
             rated: true
           }
         }
         return teacher
-        }
+      }
       )
       state.loadingRate = false
     },
@@ -364,7 +374,8 @@ export const {
   setPaymentInfo,
   resetFilters,
   setPremiumTeachers,
-  setStandardTeachers
+  setStandardTeachers,
+  setLevel
 } = slice.actions;
 
 // ----------------------------------------------------------------------
@@ -421,7 +432,7 @@ export function getTeachersWithEvents(filters) {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.get(`/api/users/teacher/with_filters?start=${filters.from?.toISOString().slice(0, -1) ?? ''}&end=${filters.to?.toISOString().slice(0, -1) ?? ''}&resort=${filters.resort ?? ''}`);
-      const teachers = response.data.map(t=>({
+      const teachers = response.data.map(t => ({
         ...t,
         stars: t.stars ? t.stars : 0
       })).sort((a, b) => b.stars - a.stars);
@@ -502,15 +513,15 @@ export function getTeacherWithRates(email) {
       axios.get(teacherRequest).then(r => {
         const teacher = r.data;
         const dto = {
-            "rates": [],
-            "teacher": teacher
+          "rates": [],
+          "teacher": teacher
         }
-          if (dto.teacher.events) {
-            dto.teacher.events = merge(dto.teacher.events.sort(function (a, b) { return new Date(a.start) - new Date(b.start) }))
-          }
-          dispatch(slice.actions.getTeacherWithRatesSuccess(dto));
+        if (dto.teacher.events) {
+          dto.teacher.events = merge(dto.teacher.events.sort(function (a, b) { return new Date(a.start) - new Date(b.start) }))
+        }
+        dispatch(slice.actions.getTeacherWithRatesSuccess(dto));
       })
-      
+
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error));
@@ -698,11 +709,11 @@ export function changePassword(password, repeatPassword, token, callback) {
   return async () => {
     try {
       await axios.put(`api/userPersonalDataVerification/changePassword/${token}`,
-       {
-         password: password,
-         repeatPassword: repeatPassword
-       })
-       callback()
+        {
+          password: password,
+          repeatPassword: repeatPassword
+        })
+      callback()
     } catch (error) {
       console.error(error)
       callback()
@@ -714,7 +725,7 @@ export function getTeacherByID(userId, callback) {
   return async () => {
     try {
       const resp = await axios.get(`api/users/byId/${userId}`)
-      if(callback)
+      if (callback)
         callback(resp.data)
     } catch (error) {
       console.error(error)
@@ -722,12 +733,12 @@ export function getTeacherByID(userId, callback) {
   }
 }
 
-export function hireTeacher(teacherId, requestedEvents, callback){
-  return async () =>{
-    try{
+export function hireTeacher(teacherId, requestedEvents, callback) {
+  return async () => {
+    try {
       const resp = await axios.post(`api/hire/byId/${teacherId}`, requestedEvents)
       callback(true)
-    } catch(e){
+    } catch (e) {
       callback(false)
     }
   }
@@ -742,7 +753,7 @@ export function hireTeacherEvents(events, encryptedCard, card, callback) {
       })
       callback(resp)
     } catch (e) {
-      callback({ status: 500})
+      callback({ status: 500 })
     }
   }
 }
@@ -758,57 +769,80 @@ export function cancelHireTeacherEvents(requestedEvents, callback) {
   }
 }
 
-export function startPayment(events, encryptedCard, callBack){
-  return async () =>{
-    try{
-      const resp = await axios.post(`api/pay/startPayment?holderName=Tomas&holderLastName=Bacigalupo`, {events: events, encryptedCardDto: encryptedCard})
+export function startPayment(events, encryptedCard, callBack) {
+  return async () => {
+    try {
+      const resp = await axios.post(`api/pay/startPayment?holderName=Tomas&holderLastName=Bacigalupo`, { events: events, encryptedCardDto: encryptedCard })
       callBack(resp.data)
-    } catch(e){
+    } catch (e) {
       callBack(false)
     }
   }
 }
 
-export function completePayment(id, zenrisePayment){
-  return async () =>{
-    try{
+export function completePayment(id, zenrisePayment) {
+  return async () => {
+    try {
       const resp = await axios.put(`api/pay/${id}`, zenrisePayment)
-    } catch(e){
+    } catch (e) {
       console.error(e)
     }
   }
 }
 
 // get updated dollar value
-export function getDollarValue(callback){
-  return async () =>{
-    try{
+export function getDollarValue(callback) {
+  return async () => {
+    try {
       const resp = await axios.get(`/api/currency/exchangeRate?form=USD&to=ARS`)
       callback(resp.data)
-    } catch(e){
+    } catch (e) {
       callback(false)
     }
   }
 }
 
-export function calculatePrice(product, totalDays, time)
-{
-  console.log('product', product)
+export function calculatePrice(product, totalDays, time) {
   const price = product?.price ?? 0;
   let discountedPrice = price;
-  if( totalDays === 3 ){
+  if (time === 'FULL_DAY') {
+    return discountedPrice * 2;
+  }
+  return discountedPrice;
+}
+
+export function calculateRequestedPrice(teacher, totalDays, time) {
+  const level = teacher.level;
+  let price = 0;
+  if (level === 1) {
+    price = 159000 / 1.9;
+  }
+  if (level === 2) {
+    price = 219000 / 1.9;
+  }
+  if (level === 3) {
+    price = 299000 / 1.9;
+  }
+  if (level === 4) {
+    price = 399000 / 1.9;
+  }
+  if (level === 5) {
+    price = 419000 / 1.9;
+  }
+  let discountedPrice = price;
+  if (totalDays === 3) {
     discountedPrice = price * 0.9;
   }
 
-  if( totalDays === 5 ){
+  if (totalDays === 5) {
     discountedPrice = price * 0.8;
   }
 
-  if( totalDays > 5 ){
+  if (totalDays > 5) {
     discountedPrice = price * 0.7;
   }
 
-  if(time === 'FULL_DAY'){
+  if (time === 'FULL_DAY') {
     return discountedPrice * 1.9;
   }
 

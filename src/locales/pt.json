@@ -333,7 +333,10 @@
         "allDayTimeDescrpition": "O professor estará esperando por você no ponto de encontro às 9:30 no dia da sua aula. Se você se atrasar, o professor esperará 15 minutos e depois partirá. Nenhum reembolso será feito. Esta modalidade inclui uma pausa para almoço de 1 hora. O professor indicará o horário para isso."
     },
     "products": {
-      "group": "group",
-      "private": "Exclusive"
+      "group": "Grupo",
+      "private": "Privado",
+      "experiences": "Experiências",
+      "lessons": "Aulas",
+      "experienceTitle": "Experiências Catedral"
     }
 }

@@ -293,7 +293,7 @@
         "thanLastMonth": "respecto mes anterior"
     },
     "teacherDetails": {
-        "title": "Detalles PRO",
+        "title": "Clase Privada",
         "calendar": "Calendario",
         "verified": "Profesor Verificado y Aprobado",
         "reply": "Activo a Match",
@@ -756,6 +756,9 @@
     },
     "products": {
       "group": "Grupales",
-      "private": "exclusivas"
+      "private": "exclusivas",
+      "experiences": "Experiencias",
+      "lessons": "Clases Personalizadas",
+      "experienceTitle": "Experiencia en Catedral"
     }
 }

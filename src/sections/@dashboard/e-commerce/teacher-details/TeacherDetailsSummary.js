@@ -73,10 +73,11 @@ TeacherDetailsSummary.propTypes = {
     totalRating: PropTypes.number,
     totalReview: PropTypes.number,
     events: PropTypes.array,
+    isProduct: PropTypes.bool,
   }),
 };
 
-export default function TeacherDetailsSummary({ cart, teacher, onAddCart, onGotoStep, ...other }) {
+export default function TeacherDetailsSummary({ isProduct, cart, teacher, onAddCart, onGotoStep, ...other }) {
   const theme = useTheme();
   const { translate } = useLocales();
   const navigate = useNavigate();
@@ -303,7 +304,7 @@ export default function TeacherDetailsSummary({ cart, teacher, onAddCart, onGoto
       <TeacherSkills skills={skills} />
       <Divider sx={{ borderStyle: 'dashed' }} />
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-        <Stack direction="row" justifyContent="space-between" sx={{ mb: 3, mt: 2 }}>
+        { !isProduct && <Stack direction="row" justifyContent="space-between" sx={{ mb: 3, mt: 2 }}>
           <Typography variant="subtitle1" sx={{ mt: 0.5 }}>
             {translate('teacherDetails.resort')}
           </Typography>
@@ -318,7 +319,7 @@ export default function TeacherDetailsSummary({ cart, teacher, onAddCart, onGoto
               </option>
             ))}
           </RHFSelect>
-        </Stack>
+        </Stack>}
         {products?.length > 0 && 
         <Stack direction="row" justifyContent="space-between" sx={{ mb: 3, mt: 2 }}>
           <RHFSelect

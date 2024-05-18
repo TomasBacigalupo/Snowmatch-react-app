@@ -7,3 +7,4 @@ export { default as SkeletonKanbanColumn } from './SkeletonKanbanColumn';
 export { default as SkeletonMailSidebarItem } from './SkeletonMailSidebarItem';
 export { default as SkeletonConversationItem } from './SkeletonConversationItem';
 export { default as SkeletonBooking } from './SkeletonBooking';
+export { default as SkeletonProductCategory } from './SkeletonProductCategory';

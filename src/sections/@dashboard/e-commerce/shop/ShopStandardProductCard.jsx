@@ -41,64 +41,21 @@ export default function ShopStandardProductCard({ standardProduct }) {
     }
 
     const calculatePriceWithDiscount = (price) => {
-        if (totalDays > 2) {
-            return price * 0.9
-        }
-        if (totalDays > 3) {
-            return price * 0.8
-        }
         return price
     }
 
-    const hasDiscount = totalDays > 2
+    const hasDiscount = totalDays > 100
 
     return (
         <Card onClick={() => navigate(linkTo)}>
-            {console.log('product', standardProduct)}
-            {console.log('filters', filters)}
             <Box sx={{ position: 'relative' }}>
                 <Image alt={name} src={src} ratio="1/1" onError={() => setSrc('/assets/notFound.jpeg')} />
             </Box>
-
-
-            <Stack spacing={2} sx={{ p: 3 }}>
+            <Stack spacing={2} sx={{ p: 2 }}>
                 <Stack direction="row" spacing={0.5}>
                     <Typography variant='h5' component="span" >
                         {name}
                     </Typography>
-
-                </Stack>
-                <Stack spacing={0}>
-                    <Stack direction="row" spacing={0.5}>
-                        {hasDiscount && <Typography component="span" sx={{ color: 'text.disabled', textDecoration: 'line-through' }}>
-                            {fCurrency(price)}
-                        </Typography>}
-                        <Typography variant="subtitle1">
-                            {fCurrency(calculatePriceWithDiscount(price))} <Typography component="span" >
-                                1/2 día
-                            </Typography>
-                        </Typography>
-                        <Typography variant="subtitle1">
-                            <Typography component="span" sx={{ color: 'text.disabled', textDecoration: 'underline' }}>
-                                {`${fCurrency(calculatePriceWithDiscount(price) * totalDays)} total`}
-                            </Typography>
-                        </Typography>
-
-                    </Stack>
-                    <Stack direction="row" spacing={0.5}>
-                        {hasDiscount && <Typography component="span" sx={{ color: 'text.disabled', textDecoration: 'line-through' }}>
-                            {fCurrency(price * 2)}
-                        </Typography>}
-                        <Typography variant="subtitle1">
-                            {fCurrency(calculatePriceWithDiscount(price) * 2)}<Typography component="span" > día</Typography>
-                        </Typography>
-                        <Typography variant="subtitle1">
-                            <Typography component="span" sx={{ color: 'text.disabled', textDecoration: 'underline' }}>
-                                {`${fCurrency(calculatePriceWithDiscount(price) * 2 * totalDays)} total`}
-                            </Typography>
-                        </Typography>
-                    </Stack>
-
                 </Stack>
                 <Stack direction="row" alignItems="center" spacing={1}>
                     {description}
@@ -110,7 +67,18 @@ export default function ShopStandardProductCard({ standardProduct }) {
                         {ageFrom} - {ageTo} años
                     </Typography>
                 </Stack>
-
+                <Stack spacing={0}>
+                    <Stack direction="col" spacing={0.5}>
+                        {hasDiscount && <Typography component="span" sx={{ color: 'text.disabled', textDecoration: 'line-through' }}>
+                            {fCurrency(price)}
+                        </Typography>}
+                        <Typography variant="subtitle1">
+                            {fCurrency(calculatePriceWithDiscount(price))} <Typography component="span" >
+                                /3hs
+                            </Typography>
+                        </Typography>
+                    </Stack>
+                </Stack>
             </Stack>
         </Card>
     );

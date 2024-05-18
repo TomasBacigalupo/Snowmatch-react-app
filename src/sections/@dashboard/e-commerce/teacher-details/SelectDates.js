@@ -10,7 +10,7 @@ import { isSameDay } from "date-fns";
 import { getEventsByTeacherId } from "src/redux/slices/bookings";
 import { useDispatch, useSelector } from "react-redux";
 import dayjs from 'dayjs';
-import { calculatePrice } from "src/redux/slices/teachers";
+import { calculatePrice, calculateRequestedPrice } from "src/redux/slices/teachers";
 import { fCurrency } from "src/utils/formatNumber";
 
 
@@ -55,6 +55,8 @@ export default function SelectDates({ handleClose, onSubmit, isRange, product })
     tomorrow.setDate(tomorrow.getDate() + 1)
     const hasPrice = teacher?.level >= 3 && teacher?.resorts?.find(resort => resort === 'Cerro Catedral');
     const [range, setRange] = useState([from, to]);
+    //calculate total days between to and from
+    const totalDays = Math.floor((to - from) / (1000 * 60 * 60 * 24));
 
     useEffect(() => {
         dispatch(getEventsByTeacherId(teacher?.id, date.getMonth() + 1));
@@ -172,7 +174,7 @@ export default function SelectDates({ handleClose, onSubmit, isRange, product })
                                 {/* picture or icon */}
                                 <Typography
                                     variant="h6">
-                                    {translate('checkout.morningTitle')} {isRange ? `${fCurrency(calculatePrice(product, selectedDates.length, 'MORNING'))}` : hasPrice && '$US 180'}
+                                    {translate('checkout.morningTitle')} {isRange ? `${fCurrency(calculatePrice(product, selectedDates.length, 'MORNING'))}` : hasPrice && fCurrency(calculateRequestedPrice(teacher, totalDays, 'MORNING'))}
                                 </Typography>
                                 <Typography
                                     variant="subtitle2">
@@ -200,10 +202,10 @@ export default function SelectDates({ handleClose, onSubmit, isRange, product })
                                 {/* picture or icon */}
                                 <Typography
                                     // color={timeSelected === 'ALL_DAY' ? 'primary' : ''}
-                                    variant="h6">{translate('checkout.afternoonTitle')} {isRange ? `${fCurrency(calculatePrice(product, selectedDates.length, 'AFTERNOON'))}` : hasPrice && '$US 180'}
+                                    variant="h6">{translate('checkout.afternoonTitle')} {isRange ? `${fCurrency(calculatePrice(product, selectedDates.length, 'AFTERNOON'))}` : hasPrice && fCurrency(calculateRequestedPrice(teacher, totalDays, 'AFTERNOON'))}
                                 </Typography>
                                 <Typography
-                                    // color={timeSelected === 'ALL_DAY' ? 'primary' : ''} 
+                                    // color={timeSelected === 'ALL_DAY' ? 'primary' : ''}  
                                     variant="subtitle2">{translate('checkout.afternoonDescription')}
                                 </Typography>
                                 {isRange && <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -227,7 +229,7 @@ export default function SelectDates({ handleClose, onSubmit, isRange, product })
                                 <Typography
                                     variant="h6">
                                     {translate('checkout.allDayTitle')}
-                                    {isRange ? ` ${fCurrency(calculatePrice(product, selectedDates.length, 'FULL_DAY'))}` : hasPrice && '$US 180'}
+                                    {isRange ? ` ${fCurrency(calculatePrice(product, selectedDates.length, 'FULL_DAY'))}` : hasPrice && fCurrency(calculateRequestedPrice(teacher, totalDays, 'FULL_DAY'))}
                                 </Typography>
                                 <Typography
                                     variant="subtitle2">
@@ -235,7 +237,7 @@ export default function SelectDates({ handleClose, onSubmit, isRange, product })
                                 </Typography>
                                 {isRange && <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                                     <Typography variant="subtitle" sx={{ textAlign: 'end', flex: '1 1 auto' }}>
-                                        {isRange ? `${fCurrency(calculatePrice(product, selectedDates.length, 'FULL_DAY') * selectedDates.length)} total` : hasPrice && '$US 180'}
+                                        {isRange ? `${fCurrency(calculatePrice(product, selectedDates.length, 'FULL_DAY') * selectedDates.length)} total` : hasPrice && fCurrency(calculateRequestedPrice(teacher, totalDays, 'FULL_DAY'))}
                                     </Typography>
                                 </Box>}
                             </Paper>

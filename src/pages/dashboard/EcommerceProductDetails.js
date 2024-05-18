@@ -119,14 +119,14 @@ export default function EcommerceTeacherDetails({ isGuest = false }) {
 
 
   return (
-    <Page title={translate('teacherDetails.title')}>
+    <Page title={translate('products.experienceTitle')}>
       <Container maxWidth={themeStretch ? false : 'lg'} p={0}>
         <HeaderBreadcrumbs
-          heading={translate('teacherDetails.title')}
+          heading={translate('products.experienceTitle')}
           links={[
             // !isGuest? { name: translate("breadcrumb.dashboard', href: PATH_DASHBOARD.root} : {name: 'Home', href: '/'},
-            !isGuest ? { name: 'Match', href: PATH_DASHBOARD.eCommerce.shop, } : { name: 'Match', href: PATH_GUEST.independent },
-            { name: product?.title},
+            !isGuest ? { name: translate('products.experiences'), href: PATH_GUEST.independent, } : { name: 'Match', href: PATH_GUEST.independent },
+            { name: product?.name},
           ]
           }
         />
@@ -135,7 +135,7 @@ export default function EcommerceTeacherDetails({ isGuest = false }) {
           <>
             <Grid container p={0}>
               <Grid item xs={12} md={6} lg={7}>
-                <TeacherDetailsCarousel teacher={{ images: [product?.imageLink] }} />
+                <TeacherDetailsCarousel teacher={{ images: [product?.imageLink] }}  />
               </Grid>
               <Grid item xs={12} md={6} lg={5}>
                 <TeacherDetailsSummary
@@ -143,6 +143,7 @@ export default function EcommerceTeacherDetails({ isGuest = false }) {
                   cart={checkout.cart}
                   onAddCart={handleAddCart}
                   onGotoStep={handleGotoStep}
+                  isProduct={true}
                 />
                 <Hidden smUp>
                   <Grid item xs={12} p={3}>
@@ -182,7 +183,7 @@ export default function EcommerceTeacherDetails({ isGuest = false }) {
                     <Divider />
                   </Box>
                   <TimeDetails />
-                  <MobileSelectDays product={product} teacher={product} isOpen={isOpen} closeFather={() => setIsOpen(false)} isRange={true}/>
+                  <MobileSelectDays product={product} teacher={product} isOpen={isOpen} closeFather={() => setIsOpen(false)} isRange={false}/>
                 </Hidden>
               </Grid>
             </Grid>

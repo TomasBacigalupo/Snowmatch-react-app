@@ -73,19 +73,19 @@ export default function CheckoutSummary({
           
 
           
-          <Stack direction="row" justifyContent="space-between">
+          {/* <Stack direction="row" justifyContent="space-between">
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-              Total: {/* {translate('checkout.subtotal')} */}
+              Total: {translate('checkout.subtotal')} 
             </Typography>
             <Typography variant="subtitle2">{subtotal ? fCurrency(subtotal) : translate('checkout.deal_with_pro')}</Typography>
-          </Stack>
+          </Stack> */}
 
-          <Stack direction="row" justifyContent="space-between">
+          {/* <Stack direction="row" justifyContent="space-between">
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
               Pago al inicio de clase
             </Typography>
             <Typography variant="subtitle2">{fCurrency(subtotal-bookingPrice)}</Typography>
-          </Stack>
+          </Stack> */}
 
           {/* <Stack direction="row" justifyContent="space-between">
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>

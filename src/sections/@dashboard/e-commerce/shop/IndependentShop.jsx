@@ -48,7 +48,7 @@ export default function IndependentShop() {
                     },
                 }}
             >
-                {translate('products.group')}
+                {translate('products.experiences')}
             </ToggleButton>
             <ToggleButton
                 value="premium"
@@ -61,7 +61,7 @@ export default function IndependentShop() {
                     },
                 }}
             >
-                {translate('products.private')}
+                {translate('products.lessons')}
             </ToggleButton>
         </ToggleButtonGroup>
     );

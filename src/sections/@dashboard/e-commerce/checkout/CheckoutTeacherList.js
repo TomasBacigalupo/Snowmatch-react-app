@@ -95,7 +95,7 @@ export default function CheckoutTeacherList({ events, onDelete, onIncreaseQuanti
                                     </Box>
                                 </TableCell>
 
-                                <TableCell align="right">{price === 0 ? translate('checkout.deal_with_pro') : fCurrency(price+bookingPrice)}</TableCell>
+                                <TableCell align="right">{price === 0 ? translate('checkout.deal_with_pro') : fCurrency(price)}</TableCell>
 
                                 <TableCell align="right">
                                     <IconButton onClick={() => onDelete(idx)}>

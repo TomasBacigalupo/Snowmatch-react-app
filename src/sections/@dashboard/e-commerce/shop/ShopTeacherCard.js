@@ -18,7 +18,7 @@ ShopTeacherCard.propTypes = {
 };
 
 export default function ShopTeacherCard({ teacher }) {
-  const { name, lastname, imageLink, information, email, resorts, id, eventsList, stars } = teacher;
+  const { name, lastname, imageLink, information, email, resorts, id, eventsList, stars, level } = teacher;
   const { filters } = useSelector(state => state.teachers)
   const navigate = useNavigate();
   const [src, setSrc] = useState(imageLink)
@@ -50,7 +50,8 @@ export default function ShopTeacherCard({ teacher }) {
               bgcolor: '#99FFFF'
             }}
           >
-            {getResortToShow()}
+            {/* {getResortToShow()} */}
+            {level}
           </Label>
         )}
         {eventsList && (

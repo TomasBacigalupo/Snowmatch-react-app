@@ -34,6 +34,7 @@ import useLocales from 'src/hooks/useLocales';
 import ShopOtherTeacherList from 'src/sections/@dashboard/e-commerce/shop/ShopOtherTeachersList';
 import IndependentShop from 'src/sections/@dashboard/e-commerce/shop/IndependentShop';
 import ShopStandardProducts from 'src/sections/@dashboard/e-commerce/shop/ShopStandardProducts';
+import AirbnbFilters from 'src/sections/@dashboard/e-commerce/shop/AirbnbFilters';
 // ----------------------------------------------------------------------
 
 function useQuery() {
@@ -158,6 +159,7 @@ export default function EcommerceShop({ isGuest = false, teacherType = "school" 
     <Page title="Match">
       <Container maxWidth={themeStretch ? false : 'lg'}>
         {teacherType === "independent" && <IndependentShop />}
+        {teacherType === "independent" && category === "premium" && <AirbnbFilters />}
         <Stack
           spacing={2}
           direction={{ xs: 'row', sm: 'row' }}
@@ -172,7 +174,7 @@ export default function EcommerceShop({ isGuest = false, teacherType = "school" 
                 <ShopProductSearch teachers={filteredTeachers}/>
               </Stack>
 
-              {!isTeacher && <CartWidget />}
+              {/* {!isTeacher && <CartWidget />} */}
 
               <Stack direction="row" spacing={1} flexShrink={0} sx={{ my: 1 }}>
                 <FormProvider methods={methods}>
@@ -200,7 +202,7 @@ export default function EcommerceShop({ isGuest = false, teacherType = "school" 
                   &nbsp;{translate('general.teachers_found')}
                 </Typography>
               }
-              {(teacherType !== "independent" || category === "premium") &&
+              {(teacherType !== "independent") &&
                 <TeacherTagFiltered
                   filters={filters}
                   isShowReset={!isDefault && !openFilter}
@@ -311,7 +313,7 @@ function applyFilter(teachers, sortBy, filters, teacherType) {
   }
 
   if (teacherType == "independent") {
-    teachers = teachers.filter(t => !t.school && t.level >= 3 && t.resorts?.includes("Cerro Catedral")).sort((a, b) => a.name - b.name)
+    teachers = teachers.filter(t => !t.school && t.resorts?.includes("Cerro Catedral")).sort((a, b) => a.name - b.name).filter((teacher) => teacher.level === filters.level);
   } else if (teacherType == "school") {
     teachers = teachers.filter(t => t.school || t.level < 3 || !t.resorts?.includes("Cerro Catedral"))
   }

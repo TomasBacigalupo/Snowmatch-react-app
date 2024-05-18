@@ -5,91 +5,87 @@ import { Grid, IconButton } from '@mui/material';
 import Iconify from 'src/components/Iconify';
 import Button from '@mui/material/Button';
 import SelectDates from './SelectDates';
-import { addCart, calculatePrice } from 'src/redux/slices/teachers';
+import { addCart, calculatePrice, calculateRequestedPrice } from 'src/redux/slices/teachers';
 import { useNavigate } from 'react-router';
 import { useDispatch } from 'react-redux';
 import useLocales from 'src/hooks/useLocales';
+import { useSelector } from 'src/redux/store';
+import { fCurrency } from 'src/utils/formatNumber';
 
 const MobileSelectDays = ({ product, teacher, isOpen, closeFather, isRange }) => {
     const { translate } = useLocales();
+    const { filters } = useSelector((state) => state.teachers);
+    const { from, to } = filters;
     const [open, setOpen] = React.useState(isOpen);
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const isIndependant = teacher?.resort === 'Cerro Catedral';
     const handleSubmitSelectedDates = useCallback((dates) => {
-        if(!product && !isRange){
+        if (!product && !isRange) {
             dates.forEach((date) => {
                 let lessonTime = "MORNING"
                 let price = 0
                 let bookingPrice = 0
                 if (new Date(date).getHours() === 14) {
                     lessonTime = "AFTERNOON"
-                    price = 180
-                    bookingPrice = 18
+                    price = calculateRequestedPrice(teacher, 1, "AFTERNOON")
                 }
                 if (new Date(date).getHours() === 9) {
                     lessonTime = "MORNING"
-                    price = 180
-                    bookingPrice = 18
+                    price = calculateRequestedPrice(teacher, 1, "MORNING")
                 }
                 if (new Date(date).getHours() === 8) {
                     lessonTime = "ALL_DAY"
-                    price = 300
-                    bookingPrice = 30
+                    price = calculateRequestedPrice(teacher, 1, "FULL_DAY")
                 }
                 const requestEvent = {
                     price: price,
-                    bookingPrice: bookingPrice,
                     people: 1,
                     lessonTime: lessonTime,
                     date: date,
-                    resort: 'Catedral'
+                    resort: 'Cerro Catedral'
                 };
                 dispatch(addCart({
                     teacher: teacher,
                     event: requestEvent
                 }))
-    
+
                 navigate('hire');
             })
-        }else{
+        } else {
             dates.forEach((date) => {
                 let lessonTime = "MORNING"
                 let price = 0
-                let bookingPrice = 0
                 if (new Date(date).getHours() === 14) {
                     lessonTime = "AFTERNOON"
                     price = calculatePrice(product, 1, "AFTERNOON")
-                    bookingPrice = 18
                 }
                 if (new Date(date).getHours() === 9) {
                     lessonTime = "MORNING"
                     price = calculatePrice(product, 1, "MORNING")
-                    bookingPrice = 18
                 }
                 if (new Date(date).getHours() === 8) {
                     lessonTime = "ALL_DAY"
                     price = calculatePrice(product, 1, "FULL_DAY")
-                    bookingPrice = 30
                 }
                 const requestEvent = {
                     price: price,
-                    bookingPrice: bookingPrice,
                     people: 1,
                     lessonTime: lessonTime,
                     date: date,
-                    resort: 'Catedral'
+                    resort: 'Cerro Catedral'
                 };
                 dispatch(addCart({
-                    teacher: teacher,
+                    product: product,
                     event: requestEvent
                 }))
-    
                 navigate('hire');
             })
         }
-        
-    })
 
+    })
+    //calculate total days between to and from
+    const totalDays = Math.floor((to - from) / (1000 * 60 * 60 * 24));
     useEffect(() => {
         setOpen(isOpen)
     }, [isOpen])
@@ -110,10 +106,12 @@ const MobileSelectDays = ({ product, teacher, isOpen, closeFather, isRange }) =>
                 container justifyContent={'center'} alignItems={'center'} onClick={() => setOpen(true)}>
                 <Grid item xs={6} pl={2} pt={1} pb={1} justifyContent='center' textAlign='left'>
                     <Typography variant="h4" width='100%'>
-                        {teacher?.level >= 3 && teacher.resort === 'Cerro Catedral' ? '$180' : 'Contactár'}
+                        {isIndependant && !product && fCurrency(calculateRequestedPrice(teacher, totalDays, 'MORNING'))}
+                        {product && fCurrency(calculatePrice(product, totalDays, 'MORNING'))}
+                        {!isIndependant && !product && 'Contactar'}
                     </Typography>
                     <Typography variant="body" width='100%'>
-                        {teacher?.level >= 3 && teacher.resort === 'Cerro Catedral' && translate('checkout.halfDay3Hours')}
+                        {(isIndependant || product) && translate('checkout.halfDay3Hours')}
                     </Typography>
                 </Grid>
                 <Grid item xs={6} px={2} py={3}>
@@ -162,10 +160,11 @@ const MobileSelectDays = ({ product, teacher, isOpen, closeFather, isRange }) =>
                         product={product}
                         isRange={isRange}
                         handleClose={() => {
-                            if(closeFather){
+                            if (closeFather) {
                                 closeFather()
                             }
-                            setOpen(false)}}
+                            setOpen(false)
+                        }}
                         onSubmit={handleSubmitSelectedDates}
                     />
                 </Grid>

@@ -526,6 +526,9 @@
   },
   "products": {
     "group": "Group",
-    "private": "exclusive"
+    "private": "exclusive",
+    "experiences": "Experiences",
+    "lessons":"Lessons",
+    "experienceTitle": "Experience in Catedral"
   }
 }

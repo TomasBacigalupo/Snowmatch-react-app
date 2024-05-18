@@ -6,7 +6,7 @@ export function fCurrency(number) {
   return number.toLocaleString('es-ar', {
     style: 'currency',
     currency: 'ARS',
-    minimumFractionDigits: 2
+    minimumFractionDigits: 0
   })
 }
 

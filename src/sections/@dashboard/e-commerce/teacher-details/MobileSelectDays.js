@@ -19,7 +19,8 @@ const MobileSelectDays = ({ product, teacher, isOpen, closeFather, isRange }) =>
     const [open, setOpen] = React.useState(isOpen);
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const isIndependant = teacher?.resort === 'Cerro Catedral';
+    debugger
+    const isIndependant = teacher?.resorts?.includes('Cerro Catedral');
     const handleSubmitSelectedDates = useCallback((dates) => {
         if (!product && !isRange) {
             dates.forEach((date) => {

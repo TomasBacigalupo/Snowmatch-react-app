@@ -160,18 +160,19 @@ export default function EcommerceShop({ isGuest = false, teacherType = "school" 
       <Container maxWidth={themeStretch ? false : 'lg'}>
         {teacherType === "independent" && <IndependentShop />}
         {teacherType === "independent" && category === "premium" && <AirbnbFilters />}
-        <Stack
-          spacing={2}
-          direction={{ xs: 'row', sm: 'row' }}
-          alignItems={{ sm: 'center' }}
-          justifyContent="space-between"
-          sx={{ mb: 2 }}
-          xs={12}
-        >
-          {(teacherType !== "independent" || category === "premium") &&
+        {(teacherType !== "independent" || category === "premium") &&
+          <Stack
+            spacing={{ xs: 0, sm: 3 }}
+            direction={{ xs: 'row', sm: 'row' }}
+            alignItems={{ sm: 'center' }}
+            justifyContent="space-between"
+            sx={{ mb: 2 }}
+            xs={12}
+          >
+
             <>
               <Stack xs={12}>
-                <ShopProductSearch teachers={filteredTeachers}/>
+                <ShopProductSearch teachers={filteredTeachers} />
               </Stack>
 
               {/* {!isTeacher && <CartWidget />} */}
@@ -189,12 +190,13 @@ export default function EcommerceShop({ isGuest = false, teacherType = "school" 
                 {/*<ShopProductSort />*/}
               </Stack>
             </>
-          }
 
-        </Stack>
 
-        <Stack sx={{ mb: 3 }}>
-          {!isDefault && (
+          </Stack>
+        }
+        {!isDefault && (
+          <Stack sx={{ mb: 3 }}>
+
             <>
               {(teacherType !== "independent" || category === "premium") &&
                 <Typography variant="body2" gutterBottom>
@@ -218,14 +220,12 @@ export default function EcommerceShop({ isGuest = false, teacherType = "school" 
                   isIndependant={teacherType === "independent"}
                 />
               }
-
-
             </>
-          )}
-        </Stack>
+          </Stack>
+        )}
         {/* manotaso de ahogado muestro todos */}
         {/* {teacherType == "independent" && <ShopTeacherList teachers={teachersWithEvents} loading={!filteredTeachers.length && isDefault} />} */}
-        {teacherType === "independent" && category === "standard" && <ShopStandardProducts teachers={filteredTeachers} loading={ isLoading } />}
+        {teacherType === "independent" && category === "standard" && <ShopStandardProducts teachers={filteredTeachers} loading={isLoading} />}
         {teacherType === "independent" && category === "premium" && <ShopTeacherList teachers={filteredTeachers?.filter(t => (t.stars > 0 && t.id !== 8))} loading={isLoading} />}
         {teacherType === "independent" && category === "premium" && <ShopOtherTeacherList teachers={filteredTeachers?.filter(t => t.stars === 0 || !t.stars)} loading={isLoading} />}
         {teacherType === "school" && <ShopTeacherList teachers={filteredTeachers} loading={!filteredTeachers.length && isDefault} />}

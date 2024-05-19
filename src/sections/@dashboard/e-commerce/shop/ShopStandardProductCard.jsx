@@ -47,18 +47,19 @@ export default function ShopStandardProductCard({ standardProduct }) {
     const hasDiscount = totalDays > 100
 
     return (
-        <Card onClick={() => navigate(linkTo)}>
+        <Box onClick={() => navigate(linkTo)}>
             <Box sx={{ position: 'relative' }}>
-                <Image alt={name} src={src} ratio="1/1" onError={() => setSrc('/assets/notFound.jpeg')} />
+                <Image alt={name} src={"https://image.snowmatch.pro/profile/8.png"}//src} 
+                ratio="1/1" onError={() => setSrc('/assets/notFound.jpeg')} sx={{borderRadius: '10px'}}/>
             </Box>
-            <Stack spacing={2} sx={{ p: 2 }}>
+            <Stack sx={{ pt: 1}}>
                 <Stack direction="row" spacing={0.5}>
                     <Typography variant='h5' component="span" >
                         {name}
                     </Typography>
                 </Stack>
                 <Stack direction="row" alignItems="center" spacing={1}>
-                    {description}
+                <Typography variant='body2'>{description}</Typography>
                 </Stack>
                 {/* Persons */}
                 <Stack direction="row" alignItems="center" spacing={1}>
@@ -80,6 +81,6 @@ export default function ShopStandardProductCard({ standardProduct }) {
                     </Stack>
                 </Stack>
             </Stack>
-        </Card>
+        </Box>
     );
 }

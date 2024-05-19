@@ -21,7 +21,7 @@ export default function ShopTeacherList({ teachers, loading }) {
         display: 'grid',
         gap: 3,
         gridTemplateColumns: {
-          xs: 'repeat(2, 1fr)',
+          xs: 'repeat(1, 1fr)',
           sm: 'repeat(2, 1fr)',
           md: 'repeat(3, 1fr)',
           lg: 'repeat(4, 1fr)',

@@ -1,21 +1,21 @@
 import React from 'react';
-import { Box, Typography, IconButton, Paper } from '@mui/material';
-import { Star, StarBorder, Grade, GradeOutlined, GradeTwoTone } from '@mui/icons-material';
+import { Box, Typography, IconButton } from '@mui/material';
 import { useDispatch, useSelector } from 'src/redux/store';
 import { setLevel } from 'src/redux/slices/teachers';
+import Iconify from 'src/components/Iconify';
 
 const AirbnbFilters = () => {
     const { filters } = useSelector((state) => state.teachers);
     const dispatch = useDispatch();
     const { level } = filters;
     const filtersOptions = [
-        { name: 'Super Instructores', icon: <Star />, level: 5 },
-        { name: 'Cracks', icon: <StarBorder />, level: 4 },
-        { name: 'Profesionales', icon: <Grade />, level: 3 },
-        { name: 'Certificados', icon: <GradeOutlined />, level: 2 },
+        { name: 'Super Instructores', icon: <Iconify icon="mdi:crown-circle-outline" />, level: 5 },
+        { name: 'Cracks', icon: <Iconify icon="mdi:trophy-outline"/>, level: 4 },
+        { name: 'Profesionales', icon: <Iconify icon="mdi:medal-outline" />, level: 3 },
+        { name: 'Certificados', icon: <Iconify icon="ph:person-simple-ski-fill" />, level: 2 },
     ];
     return (
-        <Box sx={{ display: 'flex', overflowX: 'auto', padding: '8px 0', scrollbarWidth: 'none' }}>
+        <Box sx={{ display: 'flex', overflowX: 'auto', scrollbarWidth: 'none' }}>
             {filtersOptions.map((filter, index) => (
                 <Box
                     key={index}

@@ -34,15 +34,15 @@ export default function IndependentShop() {
                 width: '100%',
                 borderRadius: 10,
                 justifyContent: 'space-between',
-                marginBottom: 2,
             }}
         >
             <ToggleButton
                 value="standard"
                 sx={{
                     width: '100%',
-                    borderRadius: 10,
+                    borderRadius: 15,
                     justifyContent: 'center',
+                    fontSize: '0.75rem',
                     '&.MuiButtonBase-root': {
                         borderRadius: '100px !important',
                     },
@@ -54,8 +54,9 @@ export default function IndependentShop() {
                 value="premium"
                 sx={{
                     width: '100%',
-                    borderRadius: 10,
+                    borderRadius: 15,
                     justifyContent: 'center',
+                    fontSize: '0.75rem',
                     '&.MuiButtonBase-root': {
                         borderRadius: '100px !important',
                     },

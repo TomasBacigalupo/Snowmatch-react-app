@@ -11,6 +11,7 @@ import useAuth from 'src/hooks/useAuth';
 import { useState } from 'react';
 import { useSelector } from 'src/redux/store';
 import EventAvailableIcon from '@mui/icons-material/EventAvailable';
+import { borderRadius } from '@mui/system';
 // ----------------------------------------------------------------------
 
 ShopTeacherCard.propTypes = {
@@ -36,7 +37,7 @@ export default function ShopTeacherCard({ teacher }) {
   }
 
   return (
-    <Card onClick={() => navigate(linkTo)}>
+    <Box onClick={() => navigate(linkTo)}>
       <Box sx={{ position: 'relative' }}>
         {resorts && (
           <Label
@@ -70,22 +71,24 @@ export default function ShopTeacherCard({ teacher }) {
             {eventsList.length} <EventAvailableIcon sx={{ p: 0.5, ml: 0.5 }} />
           </Label>
         )}
-        <Image alt={name} src={src} ratio="1/1" onError={() => setSrc('/assets/notFound.jpeg')} />
+        <Image alt={name} src={src} ratio="1/1" onError={() => setSrc('/assets/notFound.jpeg')} sx={{ borderRadius: '16px' }} />
       </Box>
 
-      <Stack spacing={2} sx={{ p: 3 }}>
-        <Link to={linkTo} color="inherit" component={RouterLink}>
-          <Typography variant="subtitle2" noWrap>
-            {name}
-          </Typography>
-        </Link>
-        <Rating readOnly value={stars} precision={0.5} />
+      <Stack spacing={1} sx={{ pt: 1, px: 1 }}>
+        <Box display='flex' justifyContent='space-between' alignItems='center'>
+          <Link to={linkTo} color="inherit" component={RouterLink}>
+            <Typography variant="subtitle1" noWrap>
+              {name}
+            </Typography>
+          </Link>
+          <Rating readOnly value={stars} precision={0.5} />
+        </Box>
         <Stack direction="row" alignItems="center" justifyContent="space-between">
           <Typography component="span" sx={{ color: 'text.disabled', }}>
             {information}
           </Typography>
         </Stack>
       </Stack>
-    </Card>
+    </Box>
   );
 }

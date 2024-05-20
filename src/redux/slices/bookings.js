@@ -81,7 +81,6 @@ const slice = createSlice({
 
         // UPDATE EVENT
         updateEventSuccess(state, action) {
-            debugger
             const event = action.payload;
             const updateEvents = state.events.map((_event, i) => {
                 if (_event.id === event.id) {
@@ -528,7 +527,6 @@ export function getEventsByUserId(id) {
                 const adjustedDateStart = new Date(dateStart.getTime() + utcOffset);
                 const adjustedDateEnd = new Date(dateEnd.getTime() + utcOffset);
                 if (e?.source === 'APP' && e.eventType === "CLASS") {
-                    debugger
                     return {
                         ...e,
                         title: e.title ?? 'Match',

@@ -9,7 +9,7 @@ const AirbnbFilters = () => {
     const dispatch = useDispatch();
     const { level } = filters;
     const filtersOptions = [
-        { name: 'Super Instructores', icon: <Iconify icon="mdi:crown-circle-outline" />, level: 5 },
+        { name: 'Super Pros', icon: <Iconify icon="mdi:crown-circle-outline" />, level: 5 },
         { name: 'Cracks', icon: <Iconify icon="mdi:trophy-outline"/>, level: 4 },
         { name: 'Profesionales', icon: <Iconify icon="mdi:medal-outline" />, level: 3 },
         { name: 'Certificados', icon: <Iconify icon="ph:person-simple-ski-fill" />, level: 2 },
@@ -40,7 +40,7 @@ const AirbnbFilters = () => {
                     }}>
                         {filter.icon}
                     </IconButton>
-                    <Typography variant="body2" textAlign="center"
+                    <Typography variant="body2" textAlign="center" noWrap
                         color={`${filter.level === level ? 'primary.main' : 'disabled'}`}>
                         {filter.name}
                     </Typography>

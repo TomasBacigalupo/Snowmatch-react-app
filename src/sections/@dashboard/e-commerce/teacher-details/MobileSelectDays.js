@@ -19,14 +19,12 @@ const MobileSelectDays = ({ product, teacher, isOpen, closeFather, isRange }) =>
     const [open, setOpen] = React.useState(isOpen);
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    debugger
     const isIndependant = teacher?.resorts?.includes('Cerro Catedral');
     const handleSubmitSelectedDates = useCallback((dates) => {
         if (!product && !isRange) {
             dates.forEach((date) => {
                 let lessonTime = "MORNING"
                 let price = 0
-                let bookingPrice = 0
                 if (new Date(date).getHours() === 14) {
                     lessonTime = "AFTERNOON"
                     price = calculateRequestedPrice(teacher, 1, "AFTERNOON")

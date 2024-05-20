@@ -29,7 +29,9 @@ import { getTeacher, getTeachers } from 'src/redux/slices/admin';
 import { useSelector } from 'react-redux';
 import { SKI_RESORTS } from 'src/utils/constants';
 import dayjs from 'dayjs';
-
+import { styled } from '@mui/system';
+import Chip from '@mui/material/Chip';
+import { slice } from 'lodash';
 
 // ----------------------------------------------------------------------
 
@@ -256,6 +258,13 @@ export default function CalendarForm({ event, range, onCancel, clients, members,
 
   const values = watch();
 
+  const getClientColor = (client) => {
+    const level = client?.level;
+    if (level === 'BEGINNER') return '#FF4842';
+    if (level === 'INTERMEDIATE') return '#1890FF';
+    if (level === 'ADVANCED') return '#54D62C';
+  }
+
   const isDateError = isBefore(new Date(values.end), new Date(values.start));
 
   const TYPE_OPTION = [
@@ -285,7 +294,7 @@ export default function CalendarForm({ event, range, onCancel, clients, members,
           disabled={disabled}
           multiple
           disableCloseOnSelect
-          name="clientId" 
+          name="clientId"
           label={translate('calendar.form.client')}
           value={selectedClients}
           options={[...clients].sort((a, b) => a?.name?.localeCompare(b?.name))}
@@ -293,8 +302,16 @@ export default function CalendarForm({ event, range, onCancel, clients, members,
           onChange={(event, value) => {
             setSelectedClients([...value])
           }}
+          renderTags={(tagValue, getTagProps) => (
+            tagValue.map((option, index) => (
+              <Chip
+                variant='outlined'
+                label={`${option.name} ${option.lastname} ${option?.level?.slice(0, 3)}`}
+                sx={{ borderColor: getClientColor(option) }}
+              />
+            )))}
           renderOption={(props, client) => (
-            <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+            <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 }, backgroundColor: getClientColor(client) }} {...props}>
               <Avatar sx={{ marginRight: '10px' }}>{`${client?.name[0]}${client?.lastname[0]}`}</Avatar>
               {`${client.name} ${client.lastname}`}
             </Box>
@@ -435,7 +452,7 @@ export default function CalendarForm({ event, range, onCancel, clients, members,
           control={control}
           render={({ field }) => (
             <MobileDateTimePicker
-              disabled={disabled || classType === 'school'}
+              disabled={true}
               {...field}
               label={translate('calendar.form.startDate')}
               inputFormat="dd/MM/yyyy hh:mm a"
@@ -449,7 +466,7 @@ export default function CalendarForm({ event, range, onCancel, clients, members,
           control={control}
           render={({ field }) => (
             <MobileDateTimePicker
-              disabled={disabled || classType === 'school'}
+              disabled={true}
               {...field}
               label={translate('calendar.form.endDate')}
               inputFormat="dd/MM/yyyy hh:mm a"

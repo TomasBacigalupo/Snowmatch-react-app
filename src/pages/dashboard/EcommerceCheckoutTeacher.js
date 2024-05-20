@@ -250,8 +250,9 @@ export default function EcommerceCheckoutTeacher() {
         <Box marginTop={2}>
           <CheckoutSummary
             enableEdit
-            total={total}
-            subtotal={subtotal}
+            total={bookingPrice}
+            totalEvents={events.length}
+            subtotal={bookingPrice}
             discount={discount}
             shipping={shipping}
             onEdit={() => { }}
@@ -272,7 +273,7 @@ export default function EcommerceCheckoutTeacher() {
         {/* <Box marginTop={2} marginX={1}>
         <Button onClick={handleBook} variant='contained' fullWidth style={{ m: 2 }}> Book </Button>
           </Box>*/}
-        {bookingPrice > 0 &&
+        {bookingPrice < 0 &&
           <Box marginTop={2} marginX={1}>
             <Button onClick={onSubmit} variant='contained' fullWidth style={{ m: 2 }}> Book And Pay </Button>
           </Box>}

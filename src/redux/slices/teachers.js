@@ -226,9 +226,7 @@ const slice = createSlice({
       state.checkout.events = [...state.checkout.events, event];
       state.checkout.total = state.checkout.total + event.price * 1.03
       state.checkout.subtotal = state.checkout.subtotal + event.price;
-      debugger
       state.checkout.bookingPrice = sum(state.checkout.events.map((event) => event.price));
-      debugger
       state.checkout.cart = uniqBy([...state.checkout.cart, teacher], 'id');
     },
 
@@ -815,35 +813,23 @@ export function calculateRequestedPrice(teacher, totalDays, time) {
   const level = teacher.level;
   let price = 0;
   if (level === 1) {
-    price = 159000 / 1.9;
+    price = 159000 / 2;
   }
   if (level === 2) {
-    price = 219000 / 1.9;
+    price = 219000 / 2;
   }
   if (level === 3) {
-    price = 299000 / 1.9;
+    price = 299000 / 2;
   }
   if (level === 4) {
-    price = 399000 / 1.9;
+    price = 399000 / 2;
   }
   if (level === 5) {
-    price = 419000 / 1.9;
+    price = 419000 / 2;
   }
   let discountedPrice = price;
-  if (totalDays === 3) {
-    discountedPrice = price * 0.9;
-  }
-
-  if (totalDays === 5) {
-    discountedPrice = price * 0.8;
-  }
-
-  if (totalDays > 5) {
-    discountedPrice = price * 0.7;
-  }
-
   if (time === 'FULL_DAY') {
-    return discountedPrice * 1.9;
+    return discountedPrice * 2;
   }
 
   return discountedPrice;

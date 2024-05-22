@@ -731,9 +731,9 @@
         "moreInfo": "Más información",
         "morningTime": "Turno Mañana: 9:30am - 12:30pm.",
         "morningTimeDescription": "El profesor va a estar esperandote el dia de tu clase en el punto de encuentro a las 9:30am. Si llegas tarde, el profesor esperará 15 minutos y luego se irá. No se hará reembolso.",
-        "afternoonTime": "Turno Tarde: 2:30pm - 5:30pm.",
+        "afternoonTime": "Turno Tarde: 1:30pm - 4:30pm.",
         "afternoonTimeDescription": "El profesor va a estar esperandote el dia de tu clase en el punto de encuentro a las 2:30pm. Si llegas tarde, el profesor esperará 15 minutos y luego se irá. No se hará reembolso.",
-        "allDayTime": "Día Completo: 9:30am - 5:30pm.",
+        "allDayTime": "Día Completo: 9:30am - 4:30pm.",
         "allDayTimeDescrpition": "El profesor va a estar esperandote el dia de tu clase en el punto de encuentro a las 9:30am. Si llegas tarde, el profesor esperará 15 minutos y luego se irá. No se hará reembolso. Esta modalidad cuenta con un recreo para almorzar de 1 hora. El profesor te va a indicar el horario del mismo."
     },
     "standardProduct": {

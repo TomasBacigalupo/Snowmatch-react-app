@@ -15,7 +15,7 @@ const FaqsDetails = ({id}) => {
         <>
             <Grid container justifyContent={'center'} alignItems={'center'} onClick={() => setOpen(true)} >
                 <Grid item xs={12} py={3}>
-                    <Typography variant="h4" px={3} gutterBottom>
+                    <Typography variant="h4" fullwdth textAlign='center' gutterBottom>
                         Preguntas frecuentes
                     </Typography>
                     <ProductFaqsList id={id}/>

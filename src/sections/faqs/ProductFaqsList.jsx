@@ -38,7 +38,7 @@ const QuestionTypography = styled(Typography)(({ theme }) => ({
 
 export default function FaqsList({ id }) {
   const { translate } = useLocales();
-  const questions = [0, 1, 2, 3];
+  const questions = [0, 1];
   
   return (
     <>
@@ -48,9 +48,9 @@ export default function FaqsList({ id }) {
             expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" width="20px" height="20px" />}
           >
             <Trans>
-            <QuestionTypography variant="subtitle1">
+            <Typography variant="subtitle1">
                 {translate(`product.${id}.faqs.${i}.question`)}
-              </QuestionTypography>
+              </Typography>
             </Trans>
           </AccordionSummary>
           <AccordionDetails>

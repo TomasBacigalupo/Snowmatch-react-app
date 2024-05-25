@@ -56,7 +56,7 @@ export default function ShopStandardProducts({ loading }) {
                 product={products.find(product => product.id === 145)}
                 level='bronze'
             />}
-            {!loading && <Typography variant='h5'>Experiencias</Typography>}
+            <Typography variant='h5'>Experiencias</Typography>
             <Box
                 sx={{
                     display: 'grid',
@@ -69,7 +69,7 @@ export default function ShopStandardProducts({ loading }) {
                     },
                 }}
             >
-                {loading ? [...Array(1)] : products.filter(product => ![143, 144, 145].includes(product.id)).map((product, index) =>
+                {loading ? [...Array(5)].map((product, index) => <SkeletonProductItem key={index} />) : products.filter(product => ![143, 144, 145].includes(product.id)).map((product, index) =>
                     product ? <ShopStandardProductCard key={index} standardProduct={product} /> : <SkeletonProductItem key={index} />
                 )}
             </Box>

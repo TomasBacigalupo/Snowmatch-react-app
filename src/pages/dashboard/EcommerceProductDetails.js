@@ -1,15 +1,14 @@
-import { sentenceCase } from 'change-case';
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 // @mui
 import { alpha, styled } from '@mui/material/styles';
-import { Box, Tab, Card, Grid, Divider, Container, Typography, Hidden, Button } from '@mui/material';
+import { Box, Tab, Card, Grid, Divider, Container, Typography, Hidden } from '@mui/material';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
-import { getTeacherWithRates, addCart, onGotoStep, getTeacherBiId, getProduct } from '../../redux/slices/teachers';
+import { addCart, onGotoStep, getProduct } from '../../redux/slices/teachers';
 // routes
-import { PATH_DASHBOARD, PATH_GUEST } from '../../routes/paths';
+import { PATH_GUEST } from '../../routes/paths';
 // hooks
 import useSettings from '../../hooks/useSettings';
 // components
@@ -35,7 +34,6 @@ import { trackViewTeacher } from 'src/services/facebook';
 import Policies from '../../sections/@dashboard/e-commerce/teacher-details/Policies'
 import TimeDetails from 'src/sections/@dashboard/e-commerce/teacher-details/TimeDetails';
 import { useTranslation } from 'react-i18next';
-import { ProductFaqsList } from 'src/sections/faqs';
 import FaqsDetails from 'src/sections/@dashboard/e-commerce/teacher-details/FaqsDetails';
 // ----------------------------------------------------------------------
 
@@ -123,7 +121,9 @@ export default function EcommerceTeacherDetails({ isGuest = false }) {
 
 
   return (
-    <Page title={translate('products.experienceTitle')}>
+    <Page title={translate('products.experienceTitle')} meta={
+      <meta name="og:description" content={translate(`product.${id}.metaDescription`)} />
+    }>
       <Container maxWidth={themeStretch ? false : 'lg'} p={0}>
         <HeaderBreadcrumbs
           heading={translate('products.experienceTitle')}
@@ -159,34 +159,37 @@ export default function EcommerceTeacherDetails({ isGuest = false }) {
                   <Box mx={2} >
                     <Divider />
                   </Box>
-                  <Box mx={2} >
+                  <Box mx={2} width='100%' >
                     <Divider />
                   </Box>
                   <Box mt={3}>
                     <Box px={2} pt={2}>
                       <Typography variant="h4" gutterBottom>
-                        {translate('productDetails.ocupation.title')}
+                        {translate('product.ocupationTitle')}
                       </Typography>
                       <Typography variant="body1" paragraph>
-                        {translate('productDetails.ocupation.description')}
+                        {translate('product.ocupationDescription')}
                       </Typography>
                     </Box>
                     <Box onClick={() => setIsOpen(true)}>
                       <TeacherDetailsMobileCalendar isProduct={true} teacher={product} />
                     </Box>
                   </Box>
-                  <Box mx={2} >
+                  <Box mx={2} width='100%'>
                     <Divider />
                   </Box>
-                  <TeacherDetailsMobileReview teacher={product} />
-                  <Box mx={2} >
+                  {/* <TeacherDetailsMobileReview teacher={product} /> */}
+                  <Box mx={2} width='100%' >
                     <Divider />
                   </Box>
                   <Policies />
-                  <Box mx={2} >
+                  <Box mx={2} width='100%'>
                     <Divider />
                   </Box>
                   <TimeDetails />
+                  <Box mx={2} width='100%' >
+                    <Divider />
+                  </Box>
                   <FaqsDetails id={product.id} />
                   <MobileSelectDays product={product} teacher={product} isOpen={isOpen} closeFather={() => setIsOpen(false)} isRange={false} />
                 </Hidden>

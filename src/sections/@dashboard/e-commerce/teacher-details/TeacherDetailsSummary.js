@@ -302,7 +302,6 @@ export default function TeacherDetailsSummary({ isProduct, cart, teacher, onAddC
         {name}
       </Typography>
       <TeacherSkills skills={skills} />
-      <Divider sx={{ borderStyle: 'dashed' }} />
       {/* <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         { !isProduct && <Stack direction="row" justifyContent="space-between" sx={{ mb: 3, mt: 2 }}>
           <Typography variant="subtitle1" sx={{ mt: 0.5 }}>

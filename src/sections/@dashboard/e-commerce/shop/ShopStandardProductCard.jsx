@@ -14,6 +14,7 @@ import EventAvailableIcon from '@mui/icons-material/EventAvailable';
 import Iconify from 'src/components/Iconify';
 import useLocales from 'src/hooks/useLocales';
 import { fCurrency } from 'src/utils/formatNumber';
+import { useTranslation } from 'react-i18next';
 // ----------------------------------------------------------------------
 
 ShopStandardProductCard.propTypes = {
@@ -26,7 +27,7 @@ export default function ShopStandardProductCard({ standardProduct }) {
     const { from, to } = filters;
     const navigate = useNavigate();
     const [src, setSrc] = useState(imageLink)
-    const { translate } = useLocales()
+    const { t } = useTranslation();
 
     const { isTeacher } = useAuth()
     const linkTo = isTeacher ? PATH_DASHBOARD.eCommerce.viewProduct(id) : PATH_GUEST.viewProduct(id);
@@ -49,17 +50,17 @@ export default function ShopStandardProductCard({ standardProduct }) {
     return (
         <Box onClick={() => navigate(linkTo)}>
             <Box sx={{ position: 'relative' }}>
-                <Image alt={name} src={"https://image.snowmatch.pro/profile/8.png"}//src} 
-                ratio="1/1" onError={() => setSrc('/assets/notFound.jpeg')} sx={{borderRadius: '10px'}}/>
+                <Image alt={name} src={src}
+                    ratio="1/1" onError={() => setSrc('/assets/notFound.jpeg')} sx={{ borderRadius: '10px' }} />
             </Box>
-            <Stack sx={{ pt: 1}}>
+            <Stack sx={{ pt: 1 }}>
                 <Stack direction="row" spacing={0.5}>
                     <Typography variant='h5' component="span" >
                         {name}
                     </Typography>
                 </Stack>
                 <Stack direction="row" alignItems="center" spacing={1}>
-                <Typography variant='body2'>{description}</Typography>
+                    <Typography variant='body2'>{t(`product.${id}.descriptionPreview`)}</Typography>
                 </Stack>
                 {/* Persons */}
                 <Stack direction="row" alignItems="center" spacing={1}>

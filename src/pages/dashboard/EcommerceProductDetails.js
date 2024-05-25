@@ -34,6 +34,9 @@ import useLocales from 'src/hooks/useLocales';
 import { trackViewTeacher } from 'src/services/facebook';
 import Policies from '../../sections/@dashboard/e-commerce/teacher-details/Policies'
 import TimeDetails from 'src/sections/@dashboard/e-commerce/teacher-details/TimeDetails';
+import { useTranslation } from 'react-i18next';
+import { ProductFaqsList } from 'src/sections/faqs';
+import FaqsDetails from 'src/sections/@dashboard/e-commerce/teacher-details/FaqsDetails';
 // ----------------------------------------------------------------------
 
 const PRODUCT_DESCRIPTION = [
@@ -93,6 +96,7 @@ export default function EcommerceTeacherDetails({ isGuest = false }) {
   const { isLoading, product } = useSelector((state) => state.teachers);
   const { user } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
+  const { t } = useTranslation();
 
 
   useEffect(() => {
@@ -126,31 +130,31 @@ export default function EcommerceTeacherDetails({ isGuest = false }) {
           links={[
             // !isGuest? { name: translate("breadcrumb.dashboard', href: PATH_DASHBOARD.root} : {name: 'Home', href: '/'},
             !isGuest ? { name: translate('products.experiences'), href: PATH_GUEST.independent, } : { name: 'Match', href: PATH_GUEST.independent },
-            { name: product?.name},
+            { name: product?.name },
           ]
           }
         />
         <CartWidget />
         {!isLoading && product && (
           <>
-            <Grid container p={0}>
+            <Grid container>
               <Grid item xs={12} md={6} lg={7}>
-                <TeacherDetailsCarousel teacher={{ images: [product?.imageLink] }}  />
+                <TeacherDetailsCarousel teacher={{ images: [product?.imageLink] }} />
               </Grid>
-              <Grid item xs={12} md={6} lg={5}>
+              <Grid item xs={12} md={6} lg={5} container spacing={1} >
                 <TeacherDetailsSummary
-                  teacher={product}
+                  teacher={{
+                    ...product,
+                    description: t(`product.${product.id}.description`),
+                  }}
                   cart={checkout.cart}
                   onAddCart={handleAddCart}
                   onGotoStep={handleGotoStep}
                   isProduct={true}
                 />
                 <Hidden smUp>
-                  <Grid item xs={12} p={3}>
-                    <Markdown children={product.description} />
-                  </Grid>
-                  <Grid item xs={12} p={3}>
-                    <Markdown children={product.description} />
+                  <Grid item xs={12} p={3} ml={2}>
+                    <Markdown children={t(`product.${product.id}.description`)} />
                   </Grid>
                   <Box mx={2} >
                     <Divider />
@@ -183,7 +187,8 @@ export default function EcommerceTeacherDetails({ isGuest = false }) {
                     <Divider />
                   </Box>
                   <TimeDetails />
-                  <MobileSelectDays product={product} teacher={product} isOpen={isOpen} closeFather={() => setIsOpen(false)} isRange={false}/>
+                  <FaqsDetails id={product.id} />
+                  <MobileSelectDays product={product} teacher={product} isOpen={isOpen} closeFather={() => setIsOpen(false)} isRange={false} />
                 </Hidden>
               </Grid>
             </Grid>

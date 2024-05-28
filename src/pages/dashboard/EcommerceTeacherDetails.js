@@ -130,7 +130,7 @@ export default function EcommerceTeacherDetails({ isGuest = false }) {
           <>
             <Grid container p={0}>
               <Grid item xs={12} md={6} lg={7}>
-                <TeacherDetailsCarousel teacher={{ images: [teacher?.imageLink] }} />
+                <TeacherDetailsCarousel teacher={{ images: [teacher?.imageLink], name: teacher?.name }} />
               </Grid>
               <Grid item xs={12} md={6} lg={5}>
                 <TeacherDetailsSummary

@@ -302,8 +302,7 @@ export default function TeacherDetailsSummary({ isProduct, cart, teacher, onAddC
         {name}
       </Typography>
       <TeacherSkills skills={skills} />
-      <Divider sx={{ borderStyle: 'dashed' }} />
-      <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+      {/* <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         { !isProduct && <Stack direction="row" justifyContent="space-between" sx={{ mb: 3, mt: 2 }}>
           <Typography variant="subtitle1" sx={{ mt: 0.5 }}>
             {translate('teacherDetails.resort')}
@@ -357,13 +356,13 @@ export default function TeacherDetailsSummary({ isProduct, cart, teacher, onAddC
           </Typography>
         </Stack>}
         {products?.length === 0 && <Stack direction="row" justifyContent="space-between" sx={{ mb: 3 }} justifyItems='center'>
-          {/* <Typography variant="subtitle1" sx={{ mt: 0.5 }}>
+          <Typography variant="subtitle1" sx={{ mt: 0.5 }}>
             {translate('teacherDetails.duration')}
-          </Typography> */}
-          {/* <FormControlLabel label="Flexible" labelPlacement="start" control={
+          </Typography>
+          <FormControlLabel label="Flexible" labelPlacement="start" control={
             <Checkbox checked={flexibleTime} onChange={(event) => setFlexibleTime(event.target.checked)} />
-          } /> */}
-          {/* {!flexibleTime ? (
+          } />
+          {!flexibleTime ? (
             <RHFSelect
               size='small'
               fullWidth={false}
@@ -390,13 +389,13 @@ export default function TeacherDetailsSummary({ isProduct, cart, teacher, onAddC
               {translate('checkout.allday')}
             </option>
           </RHFSelect>
-          )} */}
+          )}
           <Typography variant="subtitle" sx={{ mt: 0.5 }}>
-            {values?.resort !== "Cerro Catedral" ? translate('teacherDetails.howToBookRest') : translate('teacherDetails.howToBookCatedral', { name: teacher.name})}
+            {values?.resort !== "Cerro Catedral" && translate('teacherDetails.howToBookRest')}
           </Typography>
 
         </Stack>}
-        {/* <Stack direction="row" justifyContent="space-between" sx={{ mb: 3 }}>
+        <Stack direction="row" justifyContent="space-between" sx={{ mb: 3 }}>
           <Typography variant="subtitle1" sx={{ mt: 0.5 }}>
             {translate('teacherDetails.people')}
           </Typography>
@@ -412,11 +411,11 @@ export default function TeacherDetailsSummary({ isProduct, cart, teacher, onAddC
               Available: {9}
             </Typography>
           </div>
-        </Stack> */}
+        </Stack>
 
         <Stack direction="row" spacing={2} sx={{ mt: 5 }}>
 
-          {/* {products?.length === 0 && <Button
+          {products?.length === 0 && <Button
             fullWidth
             //disabled={hasLessons}
             size="large"
@@ -427,7 +426,7 @@ export default function TeacherDetailsSummary({ isProduct, cart, teacher, onAddC
             sx={{ whiteSpace: 'nowrap' }}
           >
             Add to Cart
-          </Button>} */}
+          </Button>}
          
           {products?.length > 0 && <Button
             component={RouterLink}
@@ -478,7 +477,7 @@ export default function TeacherDetailsSummary({ isProduct, cart, teacher, onAddC
             <ReferForm teacher={id} onCancel={handleCloseReferModal} isIndependent={(!school && level >= 3 && resorts?.includes('Cerro Catedral'))} />
           </DialogAnimate>
         </Stack>
-      </FormProvider>
+      </FormProvider> */}
     </RootStyle>
   );
 }

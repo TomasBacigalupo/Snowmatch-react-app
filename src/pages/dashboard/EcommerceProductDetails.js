@@ -1,15 +1,14 @@
-import { sentenceCase } from 'change-case';
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 // @mui
 import { alpha, styled } from '@mui/material/styles';
-import { Box, Tab, Card, Grid, Divider, Container, Typography, Hidden, Button } from '@mui/material';
+import { Box, Tab, Card, Grid, Divider, Container, Typography, Hidden } from '@mui/material';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
-import { getTeacherWithRates, addCart, onGotoStep, getTeacherBiId, getProduct } from '../../redux/slices/teachers';
+import { addCart, onGotoStep, getProduct } from '../../redux/slices/teachers';
 // routes
-import { PATH_DASHBOARD, PATH_GUEST } from '../../routes/paths';
+import { PATH_GUEST } from '../../routes/paths';
 // hooks
 import useSettings from '../../hooks/useSettings';
 // components
@@ -34,6 +33,8 @@ import useLocales from 'src/hooks/useLocales';
 import { trackViewTeacher } from 'src/services/facebook';
 import Policies from '../../sections/@dashboard/e-commerce/teacher-details/Policies'
 import TimeDetails from 'src/sections/@dashboard/e-commerce/teacher-details/TimeDetails';
+import { useTranslation } from 'react-i18next';
+import FaqsDetails from 'src/sections/@dashboard/e-commerce/teacher-details/FaqsDetails';
 // ----------------------------------------------------------------------
 
 const PRODUCT_DESCRIPTION = [
@@ -93,6 +94,7 @@ export default function EcommerceTeacherDetails({ isGuest = false }) {
   const { isLoading, product } = useSelector((state) => state.teachers);
   const { user } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
+  const { t } = useTranslation();
 
 
   useEffect(() => {
@@ -119,71 +121,77 @@ export default function EcommerceTeacherDetails({ isGuest = false }) {
 
 
   return (
-    <Page title={translate('products.experienceTitle')}>
+    <Page title={translate('products.experienceTitle')} meta={
+      <meta name="og:description" content={translate(`product.${id}.metaDescription`)} />
+    }>
       <Container maxWidth={themeStretch ? false : 'lg'} p={0}>
         <HeaderBreadcrumbs
           heading={translate('products.experienceTitle')}
           links={[
             // !isGuest? { name: translate("breadcrumb.dashboard', href: PATH_DASHBOARD.root} : {name: 'Home', href: '/'},
             !isGuest ? { name: translate('products.experiences'), href: PATH_GUEST.independent, } : { name: 'Match', href: PATH_GUEST.independent },
-            { name: product?.name},
+            { name: product?.name },
           ]
           }
         />
         <CartWidget />
         {!isLoading && product && (
           <>
-            <Grid container p={0}>
+            <Grid container>
               <Grid item xs={12} md={6} lg={7}>
                 <TeacherDetailsCarousel teacher={{ images: [product?.imageLink], name: product?.name }}  />
               </Grid>
-              <Grid item xs={12} md={6} lg={5}>
+              <Grid item xs={12} md={6} lg={5} container spacing={1} >
                 <TeacherDetailsSummary
-                  teacher={product}
+                  teacher={{
+                    ...product,
+                    description: t(`product.${product.id}.description`),
+                  }}
                   cart={checkout.cart}
                   onAddCart={handleAddCart}
                   onGotoStep={handleGotoStep}
                   isProduct={true}
                 />
                 <Hidden smUp>
-                  <Grid item xs={12} p={3}>
-                    <Markdown children={product.description} />
-                  </Grid>
-                  <Grid item xs={12} p={3}>
-                    <Markdown children={product.description} />
+                  <Grid item xs={12} p={3} ml={2}>
+                    <Markdown children={t(`product.${product.id}.description`)} />
                   </Grid>
                   <Box mx={2} >
                     <Divider />
                   </Box>
-                  <Box mx={2} >
+                  <Box mx={2} width='100%' >
                     <Divider />
                   </Box>
                   <Box mt={3}>
                     <Box px={2} pt={2}>
                       <Typography variant="h4" gutterBottom>
-                        {translate('productDetails.ocupation.title')}
+                        {translate('product.ocupationTitle')}
                       </Typography>
                       <Typography variant="body1" paragraph>
-                        {translate('productDetails.ocupation.description')}
+                        {translate('product.ocupationDescription')}
                       </Typography>
                     </Box>
                     <Box onClick={() => setIsOpen(true)}>
                       <TeacherDetailsMobileCalendar isProduct={true} teacher={product} />
                     </Box>
                   </Box>
-                  <Box mx={2} >
+                  <Box mx={2} width='100%'>
                     <Divider />
                   </Box>
-                  <TeacherDetailsMobileReview teacher={product} />
-                  <Box mx={2} >
+                  {/* <TeacherDetailsMobileReview teacher={product} /> */}
+                  <Box mx={2} width='100%' >
                     <Divider />
                   </Box>
                   <Policies />
-                  <Box mx={2} >
+                  <Box mx={2} width='100%'>
                     <Divider />
                   </Box>
                   <TimeDetails />
-                  <MobileSelectDays product={product} teacher={product} isOpen={isOpen} closeFather={() => setIsOpen(false)} isRange={false}/>
+                  <Box mx={2} width='100%' >
+                    <Divider />
+                  </Box>
+                  <FaqsDetails id={product.id} />
+                  <MobileSelectDays product={product} teacher={product} isOpen={isOpen} closeFather={() => setIsOpen(false)} isRange={false} />
                 </Hidden>
               </Grid>
             </Grid>

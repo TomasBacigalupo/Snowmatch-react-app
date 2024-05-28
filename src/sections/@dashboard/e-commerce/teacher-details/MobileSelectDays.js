@@ -42,7 +42,8 @@ const MobileSelectDays = ({ product, teacher, isOpen, closeFather, isRange }) =>
                     people: 1,
                     lessonTime: lessonTime,
                     date: date,
-                    resort: 'Cerro Catedral'
+                    resort: 'Cerro Catedral',
+                    teacherId: teacher.id
                 };
                 dispatch(addCart({
                     teacher: teacher,

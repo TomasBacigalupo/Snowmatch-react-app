@@ -156,7 +156,7 @@ export default function EcommerceCheckoutTeacher() {
     // callback called when clicking the submit data button
     return new Promise((resolve, reject) => {
       dispatch(bookingAndPay(
-        1,
+        events[0].teacherId,
         message,
         children,
         adults,

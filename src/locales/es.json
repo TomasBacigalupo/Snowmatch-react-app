@@ -559,7 +559,55 @@
         "private_full_day": "Privada día completo",
         "private_half_day": "Privada medio día",
         "title": "Producto",
-        "events": "Eventos"
+        "events": "Eventos",
+        "143": {
+            "metaTitle": "SnowMatchX | La mejor clase de ski en Catedral",
+            "metaDesc": "Llevá tu experiencia en la nieve a otro nivel con nuestros instructores seleccionados.",
+            "descriptionPreview": "Experiencia única con instructores seleccionados (49 c.)",
+            "title": "SnowMatchX | La mejor clase de esquí en Catedral",
+            "description": "SnowMatchX es mucho más que una clase de ski. Es una experiencia en la montaña <b>con uno de nuestros instructores Nivel 5,</b> el rango más alto que otorga la Asociación Argentina de Instructores de Esquí y Snowboard (AADIDESS).\nEn esta lección vas a aprender a <b>esquiar en el Cerro Catedral</b> con las instrucciones y consejos de los <b>profesores top de nuestra escuela.</b> <br/><br/>No importa dónde estés parado (tengas o no experiencia), <b>¡animate a dar el salto!</b>"
+        },
+        "144": {
+            "metaTitle": "Clase de ski en Catedral para intermedios",
+            "metaDesc": "Para alumnos con una o dos experiencias previas en la nieve. Aprendé a bajar pistas rojas y negras.",
+            "descriptionPreview": "Corregí errores básicos y bajá pistas negras.",
+            "title": "SnowMatchX | La mejor clase de esquí en Catedral",
+            "description": "La <b>clase de ski para intermedios</b> está orientada a aquellas personas que esquiaron al menos una o dos veces, es decir, que tienen una noción básica del deporte, pero que quieren seguir mejorando.<br/>Con esta clase <b>vas a corregir los típicos errores de principiantes,</b> como malas posturas y gestos erróneos. <b>Podrás dejar atrás las pistas azules, y pasar a las rojas y negras.</b>"
+        },
+        "145": {
+            "metaTitle": "Clase de ski en Catedral para principiantes",
+            "metaDesc": " Para alumnos sin experiencia previa en la nieve. Da los primeros pasos en el mundo del ski con esta clase.",
+            "descriptionPreview": "Introducción al mundo del ski desde cero.",
+            "title": "SnowMatchX | La mejor clase de esquí en Catedral",
+            "description": "La <b>clase de ski para principiantes</b> te dará las herramientas básicas para que puedas <b>iniciarte en el mundo del ski si no tenés experiencia previa.</b> Comprenderás la teoría más importante para poder deslizarte en tus esquíes sin problemas.<br/>Con esta lección para primerizos aprenderás los gestos iniciales del deporte, tales <b>como frenar en cuña, doblar en pendiente y enderezar la postura.</b><br/> Si tenés buena progresión, al final de clase podrás empezar a <b>bajar por pistas verdes y con poca pendiente. ¿Te animás?</br>"
+        },
+        "146": {
+            "metaTitle": "Clínica de Esquí de Pista",
+            "metaDescription": "Para esquiadores intermedios y/o avanzados que quieren mejorar su nivel de esquí en pista y perfeccionar su técnica.",
+            "descriptionPreview": "Impulsá tu nivel en pista. Intermedios/avanzados.",
+            "description": "La Clínica de Esquí de Pista es una clase diseñada para esquiadores intermedios y avanzados, que ya esquían regularmente y tienen conocimiento del deporte. Apunta a perfeccionar la técnica, corregir errores e incorporar gestos positivos que mejorarán la experiencia en la montaña.</br>Si podés esquiar por todo tipo de pistas, pero querés ganar confianza, eliminar movimientos erróneos y potenciar tu nivel, no lo dudes más: estás en el lugar correcto. <b>¡Convertite en un experto!</b>",
+            "faqs": {
+                "0": {
+                    "question": "¿Puedo tomar esta clase en familia o con amigos?",
+                    "answer": "Si.  Tené en cuenta que no pueden ser más de 5 miembros y procurá que todos tengan un nivel de esquí similar, para que todos puedan disfrutar y aprender a la vez. De igual manera, también tenemos clases de esquí para familias, pensadas especialmente para grupos familiares."
+                },
+                "1": {
+                    "question": "¿Puedo tomar la clase si no tengo experiencia en esquí?",
+                    "answer": "No. Esta es una clase para experimentados. Si eres principiante en el esquí debes tomar una de nuestras clases de esquí para principiantes."
+                }
+            }
+        },
+        "149": {
+            "descriptionPreview": "Impulsá tu nivel en pista. Intermedios/avanzados."
+        },
+        "147": {
+            "descriptionPreview": "Impulsá tu nivel en pista. Intermedios/avanzados."
+        },
+        "148": {
+            "descriptionPreview": "Impulsá tu nivel en pista. Intermedios/avanzados."
+        },
+        "ocupationTitle": "Calendario de disponibilidad",
+        "ocupationDescription": "Días para disfrutar de la experiencia."
     },
     "verify": {
         "title": "Verifique su Mail",
@@ -730,11 +778,11 @@
         "descriptionShort": "Este instructor ofrece los siguientes horarios para sus clases:\nMañana: 9: 30am - 12: 30pm\nTarde: 2: 30pm - 5: 30pm\nDía: 9: 30am - 5: 30pm",
         "moreInfo": "Más información",
         "morningTime": "Turno Mañana: 9:30am - 12:30pm.",
-        "morningTimeDescription": "El profesor va a estar esperandote el dia de tu clase en el punto de encuentro a las 9:30am. Si llegas tarde, el profesor esperará 15 minutos y luego se irá. No se hará reembolso.",
-        "afternoonTime": "Turno Tarde: 2:30pm - 5:30pm.",
-        "afternoonTimeDescription": "El profesor va a estar esperandote el dia de tu clase en el punto de encuentro a las 2:30pm. Si llegas tarde, el profesor esperará 15 minutos y luego se irá. No se hará reembolso.",
-        "allDayTime": "Día Completo: 9:30am - 5:30pm.",
-        "allDayTimeDescrpition": "El profesor va a estar esperandote el dia de tu clase en el punto de encuentro a las 9:30am. Si llegas tarde, el profesor esperará 15 minutos y luego se irá. No se hará reembolso. Esta modalidad cuenta con un recreo para almorzar de 1 hora. El profesor te va a indicar el horario del mismo."
+        "morningTimeDescription": "El profesor va a estar esperandote el dia de tu clase en el punto de encuentro a las 9:30am. Si llegas tarde, el profesor te esperará hasta que termine la clase y luego se irá. No se hará reembolso.",
+        "afternoonTime": "Turno Tarde: 1:30pm - 4:30pm.",
+        "afternoonTimeDescription": "El profesor va a estar esperandote el dia de tu clase en el punto de encuentro a las 2:30pm. Si llegas tarde, el profesor te esperará hasta que termine la clase y luego se irá. No se hará reembolso.",
+        "allDayTime": "Día Completo: 9:30am - 4:30pm.",
+        "allDayTimeDescrpition": "El profesor va a estar esperandote el dia de tu clase en el punto de encuentro a las 9:30am. Si llegas tarde, el profesor te esperará hasta que termine la clase y luego se irá. No se hará reembolso. Esta modalidad cuenta con un recreo para almorzar de 1 hora. El profesor te va a indicar el horario del mismo."
     },
     "standardProduct": {
         "title": {
@@ -755,10 +803,10 @@
         }
     },
     "products": {
-      "group": "Grupales",
-      "private": "exclusivas",
-      "experiences": "Experiencias",
-      "lessons": "Clases Personalizadas",
-      "experienceTitle": "Experiencia en Catedral"
+        "group": "Grupales",
+        "private": "exclusivas",
+        "experiences": "Experiencias",
+        "lessons": "Clases Personalizadas",
+        "experienceTitle": "Experiencia en Catedral"
     }
 }

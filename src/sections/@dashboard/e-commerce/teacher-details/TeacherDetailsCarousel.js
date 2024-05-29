@@ -7,7 +7,7 @@ import { Box } from '@mui/material';
 //
 import Image from '../../../../components/Image';
 import LightboxModal from '../../../../components/LightboxModal';
-import { CarouselArrowIndex } from '../../../../components/carousel';
+import ShareButton from 'src/components/ShareButton';
 
 // ----------------------------------------------------------------------
 
@@ -18,6 +18,7 @@ const RootStyle = styled('div')(({ theme }) => ({
     float: theme.direction === 'rtl' ? 'right' : 'left',
     '&:focus': { outline: 'none' },
   },
+  position: 'relative',
 }));
 
 // ----------------------------------------------------------------------
@@ -35,7 +36,7 @@ export default function TeacherDetailsCarousel({ teacher }) {
 
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  const [source, setSource] = useState(teacher.images[0])
+  const [source, setSource] = useState(teacher.images[0]);
 
   const [nav1, setNav1] = useState();
 
@@ -95,77 +96,22 @@ export default function TeacherDetailsCarousel({ teacher }) {
     <RootStyle>
       <Box sx={{ p: 1 }}>
         <Box sx={{ zIndex: 0, borderRadius: 2, overflow: 'hidden', position: 'relative' }}>
-          {/* <Slider {...settings1} asNavFor={nav2} ref={slider1}> */}
-            {teacher.images.map((img) => (
-              <Image
-                onError={()=>setSource('/assets/notFound.jpeg')}
-                key={source}
-                alt="large image"
-                src={source}
-                ratio="1/1"
-                onClick={() => handleOpenLightbox(source)}
-                sx={{ cursor: 'zoom-in' }}
-              />
-            ))}
-          {/* </Slider> */}
-          {/* <CarouselArrowIndex
-            index={currentIndex}
-            total={teacher.images.length}
-            onNext={handleNext}
-            onPrevious={handlePrevious}
-          /> */}
+          {teacher.images.map((img) => (
+            <Image
+              onError={() => setSource('/assets/notFound.jpeg')}
+              key={source}
+              alt="large image"
+              src={source}
+              ratio="1/1"
+              onClick={() => handleOpenLightbox(source)}
+              sx={{ cursor: 'zoom-in' }}
+            />
+          ))}
+          <Box sx={{ position: 'absolute', top: 8, right: 8 }}>
+            <ShareButton teacherName={teacher.name} />
+          </Box>
         </Box>
       </Box>
-
-      {/* <Box
-        sx={{
-          my: 3,
-          mx: 'auto',
-          '& .slick-current .isActive': { opacity: 1 },
-          ...(teacher.images.length === 1 && { maxWidth: THUMB_SIZE * 1 + 16 }),
-          ...(teacher.images.length === 2 && { maxWidth: THUMB_SIZE * 2 + 32 }),
-          ...(teacher.images.length === 3 && { maxWidth: THUMB_SIZE * 3 + 48 }),
-          ...(teacher.images.length === 4 && { maxWidth: THUMB_SIZE * 3 + 48 }),
-          ...(teacher.images.length >= 5 && { maxWidth: THUMB_SIZE * 6 }),
-          ...(teacher.images.length > 2 && {
-            position: 'relative',
-            '&:before, &:after': {
-              top: 0,
-              zIndex: 9,
-              content: "''",
-              height: '100%',
-              position: 'absolute',
-              width: (THUMB_SIZE * 2) / 3,
-              backgroundImage: (theme) =>
-                `linear-gradient(to left, ${alpha(theme.palette.background.paper, 0)} 0%, ${
-                  theme.palette.background.paper
-                } 100%)`,
-            },
-            '&:after': { right: 0, transform: 'scaleX(-1)' },
-          }),
-        }}
-      >
-        // {/* <Slider {...settings2} asNavFor={nav1} ref={slider2}> 
-          {teacher.images.map((img, index) => (
-            <Box key={img} sx={{ px: 0.75 }}>
-              <Image
-                disabledEffect
-                alt="thumb image"
-                src={img}
-                sx={{
-                  width: THUMB_SIZE,
-                  height: THUMB_SIZE,
-                  borderRadius: 1.5,
-                  cursor: 'pointer',
-                  ...(currentIndex === index && {
-                    border: (theme) => `solid 3px ${theme.palette.primary.main}`,
-                  }),
-                }}
-              />
-            </Box>
-          ))}
-        </Slider>
-      </Box> */}
 
       <LightboxModal
         images={imagesLightbox}

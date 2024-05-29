@@ -24,6 +24,7 @@ const initialState = {
     bookSuccess: false,
     events: [],
     assignedStudents: [],
+    preferenceId:'',
 };
 
 const slice = createSlice({
@@ -63,7 +64,7 @@ const slice = createSlice({
             state.booking = action.payload;
         },
 
-        
+
 
 
         // CREATE EVENT
@@ -186,6 +187,13 @@ const slice = createSlice({
             state.selectedEventId = eventId;
         },
 
+        // CRATED PREFERENCE
+        cratePreferenceSuccess(state, action) {
+            const preferenceId = action.payload;
+            state.preferenceId = preferenceId;
+            state.loadingPayment = false
+        },
+
         // CHANGE MESSAGE
         changeMessage(state, action) {
             const message = action.payload;
@@ -209,7 +217,7 @@ const slice = createSlice({
             state.loadingPayment = false;
             state.bookSuccess = true;
         },
-        
+
         bookingPending(state, action) {
             state.isLoading = false;
             state.bookSuccess = false;
@@ -412,7 +420,7 @@ export function createBooking(teacherId, message, children, adults, events, tota
                 teacherId: teacherId,
                 userComment: message,
                 events: events.map(e => {
-                    if(e.lessonTime === 'AFTERNOON'){
+                    if (e.lessonTime === 'AFTERNOON') {
 
                         return {
                             ...e,
@@ -421,7 +429,7 @@ export function createBooking(teacherId, message, children, adults, events, tota
                             lessonTime: 'AFTERNOON'
                         }
                     }
-                    if(e.lessonTime === 'MORNING'){
+                    if (e.lessonTime === 'MORNING') {
                         return {
                             ...e,
                             start: utcToLocalDate(new Date(e.date).setHours(10, 0, 0, 0)),
@@ -449,14 +457,14 @@ export function createBooking(teacherId, message, children, adults, events, tota
 
 export function bookingAndPay(teacherId, message, children, adults, events, totalPrice, formData) {
     return async () => {
-        console.log({formData})
+        console.log({ formData })
         dispatch(slice.actions.startLoadingPayment());
         try {
             await axios.post(`/api/bookings/bookAndPay?amount=${formData.transaction_amount}&token=${formData.token}&holderEmail=${formData.payer.email}&holderIdType=${formData.payer.identification.type}&holderId=${formData.payer.identification.number}&paymentMethodId=${formData.payment_method_id}&installments=${formData.installments}`, {
                 teacherId: teacherId,
                 userComment: message,
                 events: events.map(e => {
-                    if(e.lessonTime === 'AFTERNOON'){
+                    if (e.lessonTime === 'AFTERNOON') {
                         return {
                             ...e,
                             start: utcToLocalDate(new Date(e.date).setHours(14, 0, 0, 0)),
@@ -464,7 +472,7 @@ export function bookingAndPay(teacherId, message, children, adults, events, tota
                             lessonTime: 'AFTERNOON'
                         }
                     }
-                    if(e.lessonTime === 'MORNING'){
+                    if (e.lessonTime === 'MORNING') {
                         return {
                             ...e,
                             start: utcToLocalDate(new Date(e.date).setHours(10, 0, 0, 0)),
@@ -584,7 +592,7 @@ export function getEventsByTeacherId(id, month) {
                 const adjustedDateStart = new Date(dateStart.getTime() + utcOffset);
                 const adjustedDateEnd = new Date(dateEnd.getTime() + utcOffset);
                 if (e?.source === 'APP' && e.eventType === "CLASS") {
-                    
+
                     return {
                         ...e,
                         title: 'Match',
@@ -623,6 +631,43 @@ export function getEventsByTeacherId(id, month) {
                 };
             })
             dispatch(slice.actions.getEventsSuccess(events));
+        } catch (error) {
+            dispatch(slice.actions.hasError(error));
+        }
+    };
+}
+
+export function createPreference(teacherId, events) {
+    return async () => {
+        dispatch(slice.actions.startLoading());
+        try {
+            const response = await axios.post(`/api/pay/createPreference`, {
+                teacherId: teacherId,
+                events: events.map(e => {
+                    if (e.lessonTime === 'AFTERNOON') {
+                        return {
+                            ...e,
+                            start: utcToLocalDate(new Date(e.date).setHours(14, 0, 0, 0)),
+                            end: utcToLocalDate(new Date(e.date).setHours(17, 0, 0, 0)),
+                            lessonTime: 'AFTERNOON'
+                        }
+                    }
+                    if (e.lessonTime === 'MORNING') {
+                        return {
+                            ...e,
+                            start: utcToLocalDate(new Date(e.date).setHours(10, 0, 0, 0)),
+                            end: utcToLocalDate(new Date(e.date).setHours(13, 0, 0, 0)),
+                            lessonTime: 'MORNING'
+                        }
+                    }
+                    return {
+                        ...e,
+                        start: utcToLocalDate(new Date(e.date).setHours(10, 0, 0, 0)),
+                        end: utcToLocalDate(new Date(e.date).setHours(17, 0, 0, 0)),
+                    }
+                })
+            });
+            dispatch(slice.actions.cratePreferenceSuccess(response.data));
         } catch (error) {
             dispatch(slice.actions.hasError(error));
         }

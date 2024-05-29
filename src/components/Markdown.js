@@ -14,6 +14,7 @@ const MarkdownStyle = styled('div')(({ theme }) => {
 
   return {
     // List
+    textAlign: 'justify',
     '& ul, & ol': {
       ...theme.typography.body1,
       paddingLeft: theme.spacing(5),

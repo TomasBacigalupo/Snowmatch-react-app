@@ -25,7 +25,7 @@ import CheckoutGuests from 'src/sections/@dashboard/e-commerce/checkout/Checkout
 import { Payment } from '@mercadopago/sdk-react';
 
 import { initMercadoPago } from '@mercadopago/sdk-react';
-import { bookingAndPay, bookingPending, createBooking } from 'src/redux/slices/bookings';
+import { bookingAndPay, bookingPending, createBooking, createPreference } from 'src/redux/slices/bookings';
 import { sum } from 'lodash';
 initMercadoPago('TEST-88fbbb89-cc56-4432-a225-f27e4dab2a7c');
 
@@ -87,7 +87,7 @@ export default function EcommerceCheckoutTeacher() {
   const dispatch = useDispatch();
   const isMountedRef = useIsMountedRef();
   const { checkout } = useSelector((state) => state.teachers);
-  const { message, children, adults, bookSuccess, loadingPayment } = useSelector((state) => state.bookings);
+  const { message, children, adults, bookSuccess, loadingPayment, preferenceId } = useSelector((state) => state.bookings);
   const { cart, billing, activeStep, events } = checkout;
   const bookingPrice = sum(events.map((event) => event.price));
   const isComplete = activeStep === STEPS.length;
@@ -101,6 +101,10 @@ export default function EcommerceCheckoutTeacher() {
   useEffect(() => {
     dispatch(bookingPending());
   }, [dispatch]);
+  useEffect(() => {
+    dispatch(bookingPending());
+    dispatch(createPreference(events[0].teacherId, events))
+  }, [dispatch, events]);
 
   useEffect(() => {
     if (activeStep === 1) {
@@ -110,7 +114,7 @@ export default function EcommerceCheckoutTeacher() {
 
   const [initialization, setInitialization] = useState({
     amount: bookingPrice,
-    preferenceId: "1645436634-309d1017-108d-4648-a729-4acd4d431637",
+    preferenceId: preferenceId,
   });
 
   const [customization, setCustomization] = useState({
@@ -131,7 +135,7 @@ export default function EcommerceCheckoutTeacher() {
   useEffect(() => {
     setInitialization({
       amount: bookingPrice,
-      preferenceId: "1645436634-309d1017-108d-4648-a729-4acd4d431637",
+      preferenceId: preferenceId,
     });
     console.log("pase")
     setCustomization({

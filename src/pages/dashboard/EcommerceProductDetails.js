@@ -2,7 +2,7 @@ import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 // @mui
 import { alpha, styled } from '@mui/material/styles';
-import { Box, Tab, Card, Grid, Divider, Container, Typography, Hidden } from '@mui/material';
+import { Box, Tab, Card, Grid, Divider, Container, Typography, Hidden, Button } from '@mui/material';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
@@ -35,6 +35,8 @@ import Policies from '../../sections/@dashboard/e-commerce/teacher-details/Polic
 import TimeDetails from 'src/sections/@dashboard/e-commerce/teacher-details/TimeDetails';
 import { useTranslation } from 'react-i18next';
 import FaqsDetails from 'src/sections/@dashboard/e-commerce/teacher-details/FaqsDetails';
+import { Description } from '@mui/icons-material';
+import DescriptionDetails from 'src/sections/@dashboard/e-commerce/teacher-details/DescriptionDetails';
 // ----------------------------------------------------------------------
 
 const PRODUCT_DESCRIPTION = [
@@ -95,6 +97,11 @@ export default function EcommerceTeacherDetails({ isGuest = false }) {
   const { user } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const { t } = useTranslation();
+  const [showFullDescription, setShowFullDescription] = useState(false);
+
+  const toggleDescription = () => {
+    setShowFullDescription(!showFullDescription);
+  };
 
 
   useEffect(() => {
@@ -153,9 +160,8 @@ export default function EcommerceTeacherDetails({ isGuest = false }) {
                   isProduct={true}
                 />
                 <Hidden smUp>
-                  <Grid item xs={12} p={3} ml={2}>
-                    <Markdown children={t(`product.${product.id}.description`)} />
-                  </Grid>
+
+                  <DescriptionDetails id={product.id} />
                   <Box mx={2} >
                     <Divider />
                   </Box>

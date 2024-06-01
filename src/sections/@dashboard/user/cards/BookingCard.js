@@ -17,6 +17,7 @@ import { Grid, IconButton } from '@mui/material';
 import { acceptAndPay } from 'src/redux/slices/bookings';
 import ProductDetailsReviewForm from '../../e-commerce/teacher-details/ProductDetailsReviewForm';
 import ProductDetailsReviewFormMobile from '../../e-commerce/teacher-details/ProductDetailsReviewFormMobile';
+import { fCurrency } from 'src/utils/formatNumber';
 
 BookingCard.propTypes = {
     booking: PropTypes.object,
@@ -346,17 +347,37 @@ export default function BookingCard({ booking, showInfo = true }) {
                         </Grid>
                         <Grid item xs={6} sx={{ textAlign: 'end' }}>
                             <Typography variant="body1" paragraph>
-                                {`$100`}
+                                {fCurrency(booking.price)}
                             </Typography>
                         </Grid>
                         <Grid item xs={6} >
                             <Typography variant="body1" paragraph>
-                                {`Comisión del cliente (10%)`}
+                                {`Impuesto IVA (22%)`}
                             </Typography>
                         </Grid>
                         <Grid item xs={6} sx={{ textAlign: 'end' }}>
                             <Typography variant="body1" paragraph>
-                                {`-$10`}
+                                {fCurrency(booking.price * 0.16)}
+                            </Typography>
+                        </Grid>
+                        <Grid item xs={6} >
+                            <Typography variant="body1" paragraph>
+                                {`Gastos de pago (6%)`}
+                            </Typography>
+                        </Grid>
+                        <Grid item xs={6} sx={{ textAlign: 'end' }}>
+                            <Typography variant="body1" paragraph>
+                                {fCurrency(booking.price * 0.06)}
+                            </Typography>
+                        </Grid>
+                        <Grid item xs={6} >
+                            <Typography variant="body1" paragraph>
+                                {`Comisión del cliente (30%)`}
+                            </Typography>
+                        </Grid>
+                        <Grid item xs={6} sx={{ textAlign: 'end' }}>
+                            <Typography variant="body1" paragraph>
+                                {fCurrency(booking.price * 0.3)}
                             </Typography>
                         </Grid>
                         <Grid item xs={12} >
@@ -373,7 +394,7 @@ export default function BookingCard({ booking, showInfo = true }) {
                         </Grid>
                         <Grid item xs={6} sx={{ textAlign: 'end' }}>
                             <Typography variant="body1" paragraph>
-                                {`$90`}
+                                {fCurrency(booking.price * 0.4)}
                             </Typography>
                         </Grid>
                     </Grid>
@@ -518,7 +539,7 @@ export default function BookingCard({ booking, showInfo = true }) {
                     <Grid item xs={12}>
                         <ProductDetailsReviewFormMobile onClose={() => {
                             setRateOpen(false)
-                        }} id="move_add_review" teacherId={booking?.teacher.id} bookingId={booking.id}/>
+                        }} id="move_add_review" teacherId={booking?.teacher.id} bookingId={booking.id} />
                     </Grid>
                 </Grid>
             </Drawer>

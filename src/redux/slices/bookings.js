@@ -46,6 +46,12 @@ const slice = createSlice({
             state.error = action.payload;
         },
 
+        acceptBookingSuccess(state, action) {
+            const bookinId = action.payload;
+            state.pendingBookings = state.pendingBookings.filter((booking) => booking.id !== bookinId);
+            state.isLoading = false;
+        },
+
         // GET BOOKINGS
         getBookingsSuccess(state, action) {
             state.isLoading = false;
@@ -503,7 +509,7 @@ export function acceptAndPay(bookingId) {
         dispatch(slice.actions.startLoading());
         try {
             await axios.post(`/api/bookings/bookAndPay/accept/${bookingId}`);
-            dispatch(slice.actions.acceptBookingSuccess());
+            dispatch(slice.actions.acceptBookingSuccess(bookingId));
         } catch (error) {
             dispatch(slice.actions.hasError(error));
         }

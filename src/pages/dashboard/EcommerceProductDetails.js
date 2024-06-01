@@ -37,6 +37,7 @@ import { useTranslation } from 'react-i18next';
 import FaqsDetails from 'src/sections/@dashboard/e-commerce/teacher-details/FaqsDetails';
 import { Description } from '@mui/icons-material';
 import DescriptionDetails from 'src/sections/@dashboard/e-commerce/teacher-details/DescriptionDetails';
+import TechDetails from 'src/sections/@dashboard/e-commerce/teacher-details/TechDetails';
 // ----------------------------------------------------------------------
 
 const PRODUCT_DESCRIPTION = [
@@ -146,22 +147,20 @@ export default function EcommerceTeacherDetails({ isGuest = false }) {
           <>
             <Grid container>
               <Grid item xs={12} md={6} lg={7}>
-                <TeacherDetailsCarousel teacher={{ images: [product?.imageLink], name: product?.name }}  />
+                <TeacherDetailsCarousel teacher={{ images: [product?.imageLink], name: product?.name }} />
               </Grid>
               <Grid item xs={12} md={6} lg={5} container spacing={1} >
-                <TeacherDetailsSummary
-                  teacher={{
-                    ...product,
-                    description: t(`product.${product.id}.description`),
-                  }}
-                  cart={checkout.cart}
-                  onAddCart={handleAddCart}
-                  onGotoStep={handleGotoStep}
-                  isProduct={true}
-                />
                 <Hidden smUp>
+                  <Box mx={3} width='100%' mt={1} mb={2}>
+                  <Typography variant='h6'>{product.name}</Typography>
+                  </Box>
 
+                  <TechDetails id={product.id} />
+                  <Box mx={2} width='100%' mt={2}>
+                    <Divider />
+                  </Box>
                   <DescriptionDetails id={product.id} />
+
                   <Box mx={2} >
                     <Divider />
                   </Box>

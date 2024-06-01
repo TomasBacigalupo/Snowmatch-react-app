@@ -3,7 +3,7 @@ import orderBy from 'lodash/orderBy';
 // form
 import { useForm } from 'react-hook-form';
 // @mui
-import { Container, Typography, Stack } from '@mui/material';
+import { Container, Typography, Stack, Drawer, Button } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
 import { getTeachers, filterTeachers, getTeachersWithEvents, resetFilters } from '../../redux/slices/teachers';
@@ -79,6 +79,7 @@ export default function EcommerceShop({ isGuest = false, teacherType = "school" 
     to: filters.to,
     resort: resortFromPath !== null ? resortFromPath : filters.resort,
   };
+  
 
   const methods = useForm({
     defaultValues,
@@ -160,6 +161,7 @@ export default function EcommerceShop({ isGuest = false, teacherType = "school" 
       <Container maxWidth={themeStretch ? false : 'lg'}>
         {teacherType === "independent" && <IndependentShop />}
         {teacherType === "independent" && category === "premium" && <AirbnbFilters />}
+
         {(teacherType !== "independent" || category === "premium") &&
           <Stack
             spacing={{ xs: 0, sm: 3 }}

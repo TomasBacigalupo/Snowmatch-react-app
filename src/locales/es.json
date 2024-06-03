@@ -568,7 +568,33 @@
             "description": "SnowMatchX es mucho más que una clase de ski. Es una experiencia en la montaña <b>con uno de nuestros instructores Nivel 5,</b> el rango más alto que otorga la Asociación Argentina de Instructores de Esquí y Snowboard (AADIDESS).\nEn esta lección vas a aprender a <b>esquiar en el Cerro Catedral</b> con las instrucciones y consejos de los <b>profesores top de nuestra escuela.</b> <br/><br/>No importa dónde estés parado (tengas o no experiencia), <b>¡animate a dar el salto!</b>",
             "skiLevel": "Todos los niveles",
             "totalStudents": "Máximo 4 alumnos",
-            "meetingPoint": "Base Cerro Catedral"
+            "meetingPoint": "Base Cerro Catedral",
+            "faqs": {
+                "0": {
+                    "question": "¿Cuál es la diferencia de esta clase respecto a las demás?",
+                    "answer": "El gran diferencial de la clase SnowMatchX es la oportunidad de tener una lección íntima y personal con uno de los instructores top de la escuela, con experiencia en los mejores centros de esquí del mundo y con lo más altos estándares de la Asociación Argentina de Instructores (AADIDESS)."
+                },
+                "1": {
+                    "question": "¿El precio que figura es por persona o por el total de la clase?",
+                    "answer": "El precio es por el total de la clase, sin importar el número de participantes (el máximo de alumnos por clase es 5)."
+                },
+                "2": {
+                    "question": "¿Qué pasa si las condiciones meteorológicas no son adecuadas para esquiar?",
+                    "answer": "En caso de condiciones meteorológicas adversas, te contactaremos para reprogramar la clase."
+                },
+                "3": {
+                    "question": "¿Qué debo hacer si tengo una condición médica?",
+                    "answer": "En ese caso deberás consultar con tu médico si estás en condiciones de tomar la clase. Es recomendable informar al instructor antes de iniciar la clase sobre alguna lesión previa."
+                },
+                "4": {
+                    "question": "¿Qué equipo necesito para la clase?",
+                    "answer": "Se recomienda ver el pronóstico del tiempo antes de ir a la montaña. Traer ropa de abrigo adecuada para la nieve, casco, antiparras y guantes. Si no tenés esquíes, botas y bastones, los podés alquilar en algún rental de la base."
+                },
+                "5": {
+                    "question": "¿Cómo llego al punto de encuentro en el Cerro Catedral?",
+                    "answer": "El SnowMatch Point está ubicado en la base del Cerro Catedral, a 17 kilómetros del centro de San Carlos de Bariloche. Podés llegar a Catedral en transporte público, taxi o auto particular. "
+                }
+            }
         },
         "144": {
             "metaTitle": "Clase de ski en Catedral para intermedios",
@@ -578,7 +604,33 @@
             "description": "La <b>clase de ski para intermedios</b> está orientada a aquellas personas que esquiaron al menos una o dos veces, es decir, que tienen una noción básica del deporte, pero que quieren seguir mejorando.<br/>Con esta clase <b>vas a corregir los típicos errores de principiantes,</b> como malas posturas y gestos erróneos. <b>Podrás dejar atrás las pistas azules, y pasar a las rojas y negras.</b>",
             "skiLevel": "Intermedios/Avanzados",
             "totalStudents": "Entre 1 y 5 personas",
-            "meetingPoint": "Base Cerro Catedral"
+            "meetingPoint": "Base Cerro Catedral",
+            "faqs": {
+                "0": {
+                    "question": "¿Es posible progresar rápidamente en una sola clase?",
+                    "answer": "Si, aunque el grado de progresión dependerá de cada alumno. Luego de tomar esta clase estarás capacitado para esquiar por las pistas verdes y azules del centro de esquí."
+                },
+                "1": {
+                    "question": "¿El precio que figura es por persona o por el total de la clase?",
+                    "answer": "El precio es por el total de la clase, sin importar el número de participantes (el máximo de alumnos por clase es 5)."
+                },
+                "2": {
+                    "question": "¿Qué pasa si las condiciones meteorológicas no son adecuadas para esquiar?",
+                    "answer": "En caso de condiciones meteorológicas adversas, te contactaremos para reprogramar la clase."
+                },
+                "3": {
+                    "question": "¿Qué debo hacer si tengo una condición médica?",
+                    "answer": "En ese caso deberás consultar con tu médico si estás en condiciones de tomar la clase. Es recomendable informar al instructor antes de iniciar la clase sobre alguna lesión previa."
+                },
+                "4": {
+                    "question": "¿Qué equipo necesito para la clase?",
+                    "answer": "Se recomienda ver el pronóstico del tiempo antes de ir a la montaña. Traer ropa de abrigo adecuada para la nieve, casco, antiparras y guantes. Si no tenés esquíes, botas y bastones, los podés alquilar en algún rental de la base."
+                },
+                "5": {
+                    "question": "¿Cómo llego al punto de encuentro en el Cerro Catedral?",
+                    "answer": "El SnowMatch Point está ubicado en la base del Cerro Catedral, a 17 kilómetros del centro de San Carlos de Bariloche. Podés llegar a Catedral en transporte público, taxi o auto particular. "
+                }
+            }
         },
         "145": {
             "metaTitle": "Clase de ski en Catedral para principiantes",
@@ -588,7 +640,33 @@
             "description": "La <b>clase de ski para principiantes</b> te dará las herramientas básicas para que puedas <b>iniciarte en el mundo del ski si no tenés experiencia previa.</b> Comprenderás la teoría más importante para poder deslizarte en tus esquíes sin problemas.<br/>Con esta lección para primerizos aprenderás los gestos iniciales del deporte, tales <b>como frenar en cuña, doblar en pendiente y enderezar la postura.</b><br/> Si tenés buena progresión, al final de clase podrás empezar a <b>bajar por pistas verdes y con poca pendiente. ¿Te animás?</br>",
             "skiLevel": "Prinicipiantes",
             "totalStudents": "Entre 1 y 5 personas",
-            "meetingPoint": "Base Cerro Catedral"
+            "meetingPoint": "Base Cerro Catedral",
+            "faqs": {
+                "0": {
+                    "question": "¿Es posible progresar rápidamente en una sola clase?",
+                    "answer": "Si, aunque el grado de progresión dependerá de cada alumno. Luego de tomar esta clase estarás capacitado para esquiar por las pistas más sencillas del centro de esquí, como magic carpet, pistas verdes y caminitos."
+                },
+                "1": {
+                    "question": "¿El precio que figura es por persona o por el total de la clase?",
+                    "answer": "El precio es por el total de la clase, sin importar el número de participantes (el máximo de alumnos por clase es 5)."
+                },
+                "2": {
+                    "question": "¿Qué pasa si las condiciones meteorológicas no son adecuadas para esquiar?",
+                    "answer": "En caso de condiciones meteorológicas adversas, te contactaremos para reprogramar la clase."
+                },
+                "3": {
+                    "question": "¿Qué debo hacer si tengo una condición médica?",
+                    "answer": "En ese caso deberás consultar con tu médico si estás en condiciones de tomar la clase. Es recomendable informar al instructor antes de iniciar la clase sobre alguna lesión previa."
+                },
+                "4": {
+                    "question": "¿Qué equipo necesito para la clase?",
+                    "answer": "Se recomienda ver el pronóstico del tiempo antes de ir a la montaña. Traer ropa de abrigo adecuada para la nieve, casco, antiparras y guantes. Si no tenés esquíes, botas y bastones, los podés alquilar en algún rental de la base."
+                },
+                "5": {
+                    "question": "¿Cómo llego al punto de encuentro en el Cerro Catedral?",
+                    "answer": "El SnowMatch Point está ubicado en la base del Cerro Catedral, a 17 kilómetros del centro de San Carlos de Bariloche. Podés llegar a Catedral en transporte público, taxi o auto particular. "
+                }
+            }
         },
         "146": {
             "metaTitle": "Clínica de Esquí de Pista",
@@ -601,8 +679,24 @@
                     "answer": "Si.  Tené en cuenta que no pueden ser más de 5 miembros y procurá que todos tengan un nivel de esquí similar, para que todos puedan disfrutar y aprender a la vez. De igual manera, también tenemos clases de esquí para familias, pensadas especialmente para grupos familiares."
                 },
                 "1": {
-                    "question": "¿Puedo tomar la clase si no tengo experiencia en esquí?",
-                    "answer": "No. Esta es una clase para experimentados. Si eres principiante en el esquí debes tomar una de nuestras clases de esquí para principiantes."
+                    "question": "¿El precio que figura es por persona o por el total de la clase?",
+                    "answer": "El precio es por el total de la clase, sin importar el número de participantes (el máximo de alumnos por clase es 5)."
+                },
+                "2": {
+                    "question": "¿Qué pasa si las condiciones meteorológicas no son adecuadas para esquiar?",
+                    "answer": "En caso de condiciones meteorológicas adversas, te contactaremos para reprogramar la clase."
+                },
+                "3": {
+                    "question": "¿Qué debo hacer si tengo una condición médica?",
+                    "answer": "En ese caso deberás consultar con tu médico si estás en condiciones de tomar la clase. Es recomendable informar al instructor antes de iniciar la clase sobre alguna lesión previa."
+                },
+                "4": {
+                    "question": "¿Qué equipo necesito para la clase?",
+                    "answer": "Se recomienda ver el pronóstico del tiempo antes de ir a la montaña. Traer ropa de abrigo adecuada para la nieve, casco, antiparras y guantes. Si no tenés esquíes, botas y bastones, los podés alquilar en algún rental de la base."
+                },
+                "5": {
+                    "question": "¿Cómo llego al punto de encuentro en el Cerro Catedral?",
+                    "answer": "El SnowMatch Point está ubicado en la base del Cerro Catedral, a 17 kilómetros del centro de San Carlos de Bariloche. Podés llegar a Catedral en transporte público, taxi o auto particular. "
                 }
             },
             "skiLevel": "Intermedios/Avanzados",
@@ -614,21 +708,99 @@
             "description": "La clase de <b>freeride (estilo libre)</b> es una increíble experiencia fuera de pista, orientada a los esquiadores amantes de la aventura y del contacto con la naturaleza. El instructor te enseñará y te llevará a esquiar por alucinantes <b>bosques nevados y nieve onda sin pisar*.</b><br/>Además, te explicará <b>la técnica para que puedas esquiar en lugares con “bumps”</b> (montículos de nieve que se forman en la pista), y domines todo tipo de bajadas.<br/>En este curso aprenderás las <b>nociones básicas del freeride</b>, para que puedas disfrutar de este estilo de forma divertida y sin peligro. Con una progresión acorde, <b>al finalizar estarás capacitado para esquiar en cualquier condición y tipo de nieve y pendiente.</b><br/>*<i>Las actividades realizadas durante la clase dependerán de las condiciones meteorológicas y de la montaña ese día.</i>",
             "skiLevel": "Intermedios/Avanzados",
             "totalStudents": "Entre 1 y 5 personas",
-            "meetingPoint": "Base Cerro Catedral"
+            "meetingPoint": "Base Cerro Catedral",
+            "faqs": {
+                "0": {
+                    "question": "¿Puedo tomar esta clase en familia o con amigos?",
+                    "answer": "Si.  Tené en cuenta que no pueden ser más de 5 miembros y procurá que todos tengan un nivel de esquí similar, para que todos puedan disfrutar y aprender a la vez. De igual manera, también tenemos clases de esquí para familias, pensadas especialmente para grupos familiares."
+                },
+                "1": {
+                    "question": "¿El precio que figura es por persona o por el total de la clase?",
+                    "answer": "El precio es por el total de la clase, sin importar el número de participantes (el máximo de alumnos por clase es 5)."
+                },
+                "2": {
+                    "question": "¿Qué pasa si las condiciones meteorológicas no son adecuadas para esquiar?",
+                    "answer": "En caso de condiciones meteorológicas adversas, te contactaremos para reprogramar la clase."
+                },
+                "3": {
+                    "question": "¿Qué debo hacer si tengo una condición médica?",
+                    "answer": "En ese caso deberás consultar con tu médico si estás en condiciones de tomar la clase. Es recomendable informar al instructor antes de iniciar la clase sobre alguna lesión previa."
+                },
+                "4": {
+                    "question": "¿Qué equipo necesito para la clase?",
+                    "answer": "Se recomienda ver el pronóstico del tiempo antes de ir a la montaña. Traer ropa de abrigo adecuada para la nieve, casco, antiparras y guantes. Si no tenés esquíes, botas y bastones, los podés alquilar en algún rental de la base."
+                },
+                "5": {
+                    "question": "¿Cómo llego al punto de encuentro en el Cerro Catedral?",
+                    "answer": "El SnowMatch Point está ubicado en la base del Cerro Catedral, a 17 kilómetros del centro de San Carlos de Bariloche. Podés llegar a Catedral en transporte público, taxi o auto particular. "
+                }
+            }
         },
         "147": {
             "descriptionPreview": "Clase grupal con amigos o familia. Cualquier nivel.",
             "description": "La <b>clase de ski para familias y/o amigos</b> es la mejor opción para esquiar en el Cerro Catedral si <b>querés disfrutar de la montaña en grupo.</b> La clase pone el foco en el aprendizaje y la progresión de cada alumno, aunque <b>sin descuidar la diversión y el disfrute.</b><br/>Además de perfeccionar sus habilidades en la nieve, los participantes tienen la oportunidad de <b>sumergirse en la majestuosidad de la montaña, conocer lugares únicos, frenar a tomarse fotos y crear recuerdos inolvidables</b> acompañados por un instructor experto que se volverá un guía de montaña.<br/>La meta principal es <b>combinar el aprendizaje con la experiencia de disfrutar la montaña en grupo.</b> Después de todo, no queremos ser profesionales… ¡sino pasarla bien!",
             "skiLevel": "Todos los niveles",
             "totalStudents": "Entre 1 y 5 personas",
-            "meetingPoint": "Base Cerro Catedral"
+            "meetingPoint": "Base Cerro Catedral",
+            "faqs": {
+                "0": {
+                    "question": "¿Cuál es la diferencia de esta clase respecto a las demás?",
+                    "answer": "Con la experiencia de ski en familia, además de aprender y corregir tu nivel de ski, podrás disfrutar de un excelente día en la montaña, descubrir las mejores pistas y no perder tiempo haciendo colas innecesarias."
+                },
+                "1": {
+                    "question": "¿El precio que figura es por persona o por el total de la clase?",
+                    "answer": "El precio es por el total de la clase, sin importar el número de participantes (el máximo de alumnos por clase es 5)."
+                },
+                "2": {
+                    "question": "¿Qué pasa si las condiciones meteorológicas no son adecuadas para esquiar?",
+                    "answer": "En caso de condiciones meteorológicas adversas, te contactaremos para reprogramar la clase."
+                },
+                "3": {
+                    "question": "¿Qué debo hacer si tengo una condición médica?",
+                    "answer": "En ese caso deberás consultar con tu médico si estás en condiciones de tomar la clase. Es recomendable informar al instructor antes de iniciar la clase sobre alguna lesión previa."
+                },
+                "4": {
+                    "question": "¿Qué equipo necesito para la clase?",
+                    "answer": "Se recomienda ver el pronóstico del tiempo antes de ir a la montaña. Traer ropa de abrigo adecuada para la nieve, casco, antiparras y guantes. Si no tenés esquíes, botas y bastones, los podés alquilar en algún rental de la base."
+                },
+                "5": {
+                    "question": "¿Cómo llego al punto de encuentro en el Cerro Catedral?",
+                    "answer": "El SnowMatch Point está ubicado en la base del Cerro Catedral, a 17 kilómetros del centro de San Carlos de Bariloche. Podés llegar a Catedral en transporte público, taxi o auto particular. "
+                }
+            }
         },
         "148": {
             "descriptionPreview": "Los primeros pasos en la nieve. Niños de 4 a 12 años.",
             "description": "La <b>clase de ski para niños/as</b> es una <b>experiencia de aprendizaje y juego</b> para los más chicos de la familia. Con profes <b>especialistas en trabajo con infancias,</b> el curso combina momentos lúdicos y recreativos en la nieve, con enseñanza básica del ski.<br/>Los alumnos entrarán en contacto con la nieve, aprenderán a ponerse y sacarse los esquíes, a <b>deslizarse en lugares con poca pendiente</b> y a disfrutar entre risas y juegos de los divertidísimos caminitos de montaña.",
             "skiLevel": "Intermedios/Avanzados",
             "totalStudents": "Entre 1 y 5 personas",
-            "meetingPoint": "Base Cerro Catedral"
+            "meetingPoint": "Base Cerro Catedral",
+            "faqs": {
+                "0": {
+                    "question": "¿Puedo tomar esta clase en familia o con amigos?",
+                    "answer": "Si.  Tené en cuenta que no pueden ser más de 5 miembros y procurá que todos tengan un nivel de esquí similar, para que todos puedan disfrutar y aprender a la vez. De igual manera, también tenemos clases de esquí para familias, pensadas especialmente para grupos familiares."
+                },
+                "1": {
+                    "question": "¿El precio que figura es por persona o por el total de la clase?",
+                    "answer": "El precio es por el total de la clase, sin importar el número de participantes (el máximo de alumnos por clase es 5)."
+                },
+                "2": {
+                    "question": "¿Qué pasa si las condiciones meteorológicas no son adecuadas para esquiar?",
+                    "answer": "En caso de condiciones meteorológicas adversas, te contactaremos para reprogramar la clase."
+                },
+                "3": {
+                    "question": "¿Qué debo hacer si tengo una condición médica?",
+                    "answer": "En ese caso deberás consultar con tu médico si estás en condiciones de tomar la clase. Es recomendable informar al instructor antes de iniciar la clase sobre alguna lesión previa."
+                },
+                "4": {
+                    "question": "¿Qué equipo necesito para la clase?",
+                    "answer": "Se recomienda ver el pronóstico del tiempo antes de ir a la montaña. Traer ropa de abrigo adecuada para la nieve, casco, antiparras y guantes. Si no tenés esquíes, botas y bastones, los podés alquilar en algún rental de la base."
+                },
+                "5": {
+                    "question": "¿Cómo llego al punto de encuentro en el Cerro Catedral?",
+                    "answer": "El SnowMatch Point está ubicado en la base del Cerro Catedral, a 17 kilómetros del centro de San Carlos de Bariloche. Podés llegar a Catedral en transporte público, taxi o auto particular. "
+                }
+            }
         },
         "skiLevel": "Nivel",
         "totalStudents": "Participantes",
@@ -838,31 +1010,31 @@
         "lessons": "Clases Personalizadas",
         "experienceTitle": "Experiencia en Catedral"
     },
-    "more":{
+    "more": {
         "5": {
             "button": "Saber mas sobre Super Pros",
             "title": "Super Pros",
-            "description": "Instructores nivel 5 super capacitados y con años de exoeriencia"
+            "description": "Tomar clases con un instructor de esquí Nivel 5 garantiza una enseñanza de élite, basada en la Técnica Argentina de Esquí y Snowboard. Este nivel asegura que el instructor puede adaptarse a las necesidades de cualquier alumno, tanto en clases individuales como grupales, ofreciendo la máxima seguridad y efectividad.<br/><br/>Además, un instructor Nivel 5 es formador y evaluador de profesores de esquí de todos los niveles, asegurando un conocimiento profundo y actualizado. Su reconocimiento internacional y su rol en la formación de otros instructores aseguran que recibirás la mejor instrucción posible, con técnicas de vanguardia y un enfoque pedagógico superior."
         },
         "4": {
             "button": "Saber mas sobre Cracks",
             "title": "Cracks",
-            "description": "Instructores nivel 4 con años de experiencia y capacitación"
+            "description": "Tomar clases con un instructor de esquí Nivel 4 asegura la enseñanza más avanzada y completa, basada en la Técnica Argentina de Esquí y Snowboard. Este nivel permite al instructor adaptarse a las necesidades de cualquier alumno, ya sea en clases individuales o grupales, garantizando siempre la máxima seguridad.<br/><br/>Además, el instructor Nivel 4 es un demostrador oficial de la técnica de esquí de la asociación, reconocido internacionalmente. Esto no solo garantiza su capacidad para enseñar, sino también para demostrar y perfeccionar las técnicas de esquí a nivel profesional. Puedes confiar en recibir la mejor instrucción y asesoramiento especializado en tus clases."
         },
         "3": {
             "button": "Saber mas sobre Profesionales",
             "title": "Instructores Profesionales",
-            "description": "Instructores nivel 3 con años de experiencia y capacitación"
+            "description": "Tomar clases con un instructor de esquí Nivel 3 te asegura una enseñanza integral basada en la Técnica Argentina de Esquí y Snowboard, abarcando toda la progresión metodológica. Este nivel garantiza que el instructor puede adaptarse a las necesidades y condiciones de cualquier alumno, tanto en clases individuales como grupales.<br/><br/>Además, los instructores Nivel 3 están reconocidos internacionalmente por la I.S.I.A, lo que certifica su máxima competencia y capacidad para dirigir una escuela de deportes invernales. Pueden trabajar dentro de escuelas y clubes reconocidos o de forma independiente, ofreciendo la mejor calidad de enseñanza y seguridad en cada clase."
         },
         "2": {
             "button": "Certificados",
             "title": "Certificados",
-            "description": "Instructores nivel 2 con años de experiencia y capacitación"
+            "description": "Tomar clases con un instructor de esquí Nivel 2 te garantiza una enseñanza basada en la Técnica Argentina de Esquí y Snowboard. Este nivel asegura que el instructor puede enseñar desde principiantes hasta avanzados, adaptándose a las necesidades y condiciones de cada alumno, ya sean niños o adultos, en clases individuales o grupales."
         },
         "1": {
             "button": "Saber mas sobre Pros",
             "title": "Certificados",
-            "description": "Instructores nivel 1 con años de experiencia y capacitación"
+            "description": "Tomar clases con un instructor de esquí Nivel 1 es beneficioso porque están capacitados para enseñar tanto a niños como a adultos, individualmente o en grupo. Utilizan principios técnicos y metodológicos basados en la Técnica Argentina de Esquí y Snowboard, asegurando que los alumnos alcancen los objetivos hasta el nivel intermedio 4.<br/><br/>Además, los instructores Nivel 1 adaptan el terreno de las pistas balizadas a las condiciones psicofísicas del alumno, garantizando así la seguridad durante las lecciones. Su certificación es reconocida por todas las escuelas y clubes de esquí, permitiéndoles desempeñar su actividad dentro de estos entornos de manera profesional."
         }
     }
 }

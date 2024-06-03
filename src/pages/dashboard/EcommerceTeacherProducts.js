@@ -44,7 +44,6 @@ export default function ProductSelect() {
                         { name: translate("product.selection.heading") },
                     ]}
                 />
-                <CartWidget />
                 {products && teacher ? (
                     products.filter(p => Number(p.id) === Number(productId))[0] &&
                     <ProductSelectForm

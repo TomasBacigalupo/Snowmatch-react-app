@@ -27,26 +27,13 @@ import { Payment } from '@mercadopago/sdk-react';
 import { initMercadoPago } from '@mercadopago/sdk-react';
 import { bookingAndPay, bookingPending, createBooking, createPreference } from 'src/redux/slices/bookings';
 import { sum } from 'lodash';
-initMercadoPago('TEST-88fbbb89-cc56-4432-a225-f27e4dab2a7c');
+
+import ReactPixel from 'react-facebook-pixel';
+initMercadoPago('TEST-88fbbb89-cc56-4432-a225-f27e4dab2a7c', { locale: 'es-AR' });
 
 // ----------------------------------------------------------------------
 
 const STEPS = ['Confirmation', 'Teacher Approve', 'Payment'];
-
-const QontoConnector = styled(StepConnector)(({ theme }) => ({
-  top: 10,
-  left: 'calc(-50% + 20px)',
-  right: 'calc(50% + 20px)',
-  '& .MuiStepConnector-line': {
-    borderTopWidth: 2,
-    borderColor: theme.palette.divider,
-  },
-  '&.Mui-active, &.Mui-completed': {
-    '& .MuiStepConnector-line': {
-      borderColor: theme.palette.primary.main,
-    },
-  },
-}));
 
 QontoStepIcon.propTypes = {
   active: PropTypes.bool,
@@ -86,12 +73,12 @@ export default function EcommerceCheckoutTeacher() {
   const { themeStretch } = useSettings();
   const dispatch = useDispatch();
   const isMountedRef = useIsMountedRef();
-  const { checkout } = useSelector((state) => state.teachers);
-  const { message, children, adults, bookSuccess, loadingPayment, preferenceId } = useSelector((state) => state.bookings);
+  const { checkout, teacher } = useSelector((state) => state.teachers);
+
+  const { message, children, adults, bookSuccess, loadingPayment, preferenceId, createBookingError } = useSelector((state) => state.bookings);
   const { cart, billing, activeStep, events } = checkout;
   const bookingPrice = sum(events.map((event) => event.price));
   const isComplete = activeStep === STEPS.length;
-
   const { total, discount, subtotal, shipping, card } = checkout;
   useEffect(() => {
     if (isMountedRef.current) {
@@ -121,6 +108,7 @@ export default function EcommerceCheckoutTeacher() {
     visual: {
       // hidePaymentButton: true,
       hideFormTitle: true,
+
     },
     paymentMethods: {
       creditCard: "all",
@@ -157,6 +145,14 @@ export default function EcommerceCheckoutTeacher() {
   const onSubmit = async (
     { selectedPaymentMethod, formData }
   ) => {
+    ReactPixel.track('BookNow', {
+      content_name: "Required Class",
+      content_category: 'Teacher',
+      content_ids: [events[0].teacherId],
+      content_type: 'product',
+      value: total,
+      currency: 'USD',
+    });
     // callback called when clicking the submit data button
     return new Promise((resolve, reject) => {
       dispatch(bookingAndPay(
@@ -169,23 +165,6 @@ export default function EcommerceCheckoutTeacher() {
         formData
       ));
       console.log(JSON.stringify(formData));
-      // fetch("/process_payment", {
-      //   method: "POST",
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //   },
-      //   body: JSON.stringify(formData),
-      // })
-      //   .then((response) => response.json())
-      //   .then((response) => {
-      //     // receive payment result
-      //     console.log(response);
-      //     resolve();
-      //   })
-      //   .catch((error) => {
-      //     // handle error response when trying to create payment
-      //     reject();
-      //   });
     });
   };
 
@@ -217,37 +196,6 @@ export default function EcommerceCheckoutTeacher() {
   } else {
     return (
       <Page title="Teacher: Match">
-        {/* <Container maxWidth={themeStretch ? false : 'lg'}> */}
-        {/* <Grid container justifyContent={isComplete ? 'center' : 'flex-start'}>
-          <Grid item xs={12} md={8} sx={{ mb: 5 }}>
-            <Stepper alternativeLabel activeStep={activeStep} connector={<QontoConnector />}>
-              {STEPS.map((label) => (
-                <Step key={label}>
-                  <StepLabel
-                    StepIconComponent={QontoStepIcon}
-                    sx={{
-                      '& .MuiStepLabel-label': {
-                        typography: 'subtitle2',
-                        color: 'text.disabled',
-                      },
-                    }}
-                  >
-                    {label}
-                  </StepLabel>
-                </Step>
-              ))}
-            </Stepper>
-          </Grid>
-        </Grid> */}
-
-        {/* {!isComplete ? (
-          <>
-            {activeStep === 0 && <CheckoutCart />}
-            {activeStep === 1 && <CheckoutPayment />}
-          </>
-        ) : (
-          <CheckoutOrderComplete open={isComplete} />
-        )} */}
         <CheckoutCart />
         <CheckoutMessage />
         <CheckoutGuests />
@@ -264,7 +212,7 @@ export default function EcommerceCheckoutTeacher() {
           />
         </Box>
         <Box marginTop={2}>
-          {bookingPrice > 0 &&
+          {bookingPrice > 0 && preferenceId && !createBookingError &&
             <Payment
               initialization={initialization}
               customization={customization}
@@ -274,14 +222,28 @@ export default function EcommerceCheckoutTeacher() {
             />}
         </Box>
         <CheckoutOrderComplete open={bookSuccess} />
-        {/* <Box marginTop={2} marginX={1}>
-        <Button onClick={handleBook} variant='contained' fullWidth style={{ m: 2 }}> Book </Button>
-          </Box>*/}
         {bookingPrice < 0 &&
           <Box marginTop={2} marginX={1}>
             <Button onClick={onSubmit} variant='contained' fullWidth style={{ m: 2 }}> Book And Pay </Button>
           </Box>}
-        {/* </Container> */}
+        {createBookingError && (
+          <Box marginTop={2} marginX={3}>
+            <Button variant="contained" fullWidth onClick={() => {
+              window.open('https://wa.me/5492944367197', '_blank');
+            }}>
+              Terminar mi compra por WhatsApp
+            </Button>
+          </Box>
+        )}
+
+        <Box marginTop={2}>
+          {bookingPrice === 0 && teacher && <Button variant="contained" fullWidth onClick={() => {
+            window.open(`https://wa.me/${teacher?.countryCode}${teacher?.cellphone}`, '_blank');
+          }}>
+            Contactar al profesor
+          </Button>}
+        </Box>
+
       </Page>
     );
   }

@@ -25,6 +25,7 @@ const initialState = {
     events: [],
     assignedStudents: [],
     preferenceId:'',
+    createBookingError: false,
 };
 
 const slice = createSlice({
@@ -222,6 +223,12 @@ const slice = createSlice({
             state.isLoading = false;
             state.loadingPayment = false;
             state.bookSuccess = true;
+        },
+        createBookingError(state, action) {
+            state.isLoading = false;
+            state.loadingPayment = false;
+            state.bookSuccess = false;
+            state.createBookingError = true;
         },
 
         bookingPending(state, action) {
@@ -499,7 +506,7 @@ export function bookingAndPay(teacherId, message, children, adults, events, tota
             });
             dispatch(slice.actions.createBookingSuccess());
         } catch (error) {
-            dispatch(slice.actions.hasError(error));
+            dispatch(slice.actions.createBookingError(error));
         }
     };
 }

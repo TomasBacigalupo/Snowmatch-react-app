@@ -18,6 +18,7 @@ import { acceptAndPay } from 'src/redux/slices/bookings';
 import ProductDetailsReviewForm from '../../e-commerce/teacher-details/ProductDetailsReviewForm';
 import ProductDetailsReviewFormMobile from '../../e-commerce/teacher-details/ProductDetailsReviewFormMobile';
 import { fCurrency } from 'src/utils/formatNumber';
+import { calculateTotalHours, getComissionByLevel, getPayByHoursLevel, getPayByLevel } from 'src/redux/slices/teachers';
 
 BookingCard.propTypes = {
     booking: PropTypes.object,
@@ -352,32 +353,44 @@ export default function BookingCard({ booking, showInfo = true }) {
                         </Grid>
                         <Grid item xs={6} >
                             <Typography variant="body1" paragraph>
-                                {`Impuesto IVA (22%)`}
+                                {`Impuesto IVA (21%)`}
                             </Typography>
                         </Grid>
                         <Grid item xs={6} sx={{ textAlign: 'end' }}>
                             <Typography variant="body1" paragraph>
-                                {fCurrency(booking.price * 0.16)}
+                                {fCurrency(booking.price / 1.21 * 0.21)}
                             </Typography>
                         </Grid>
                         <Grid item xs={6} >
                             <Typography variant="body1" paragraph>
-                                {`Gastos de pago (6%)`}
+                                {`Gastos de pago (5%)`}
                             </Typography>
                         </Grid>
                         <Grid item xs={6} sx={{ textAlign: 'end' }}>
                             <Typography variant="body1" paragraph>
-                                {fCurrency(booking.price * 0.06)}
+                                {fCurrency(booking.price * 0.05)}
                             </Typography>
                         </Grid>
                         <Grid item xs={6} >
                             <Typography variant="body1" paragraph>
-                                {`Comisión del cliente (30%)`}
+                                {`Impuestos Brutos`}
                             </Typography>
                         </Grid>
                         <Grid item xs={6} sx={{ textAlign: 'end' }}>
                             <Typography variant="body1" paragraph>
-                                {fCurrency(booking.price * 0.3)}
+                                {fCurrency(
+                                    (booking.price - (booking.price /1.21*0.21)) * 0.035
+                                )}
+                            </Typography>
+                        </Grid>
+                        <Grid item xs={6} >
+                            <Typography variant="body1" paragraph>
+                                {`Comisión SnowMatch`}
+                            </Typography>
+                        </Grid>
+                        <Grid item xs={6} sx={{ textAlign: 'end' }}>
+                            <Typography variant="body1" paragraph>
+                                {fCurrency(booking.price - getPayByHoursLevel(user.level, calculateTotalHours(booking.eventList))- (booking.price - (booking.price /1.21*0.21)) * 0.035 - booking.price * 0.05-booking.price / 1.21 * 0.21)}
                             </Typography>
                         </Grid>
                         <Grid item xs={12} >
@@ -394,7 +407,7 @@ export default function BookingCard({ booking, showInfo = true }) {
                         </Grid>
                         <Grid item xs={6} sx={{ textAlign: 'end' }}>
                             <Typography variant="body1" paragraph>
-                                {fCurrency(booking.price * 0.4)}
+                                {fCurrency(getPayByHoursLevel(user.level, calculateTotalHours(booking.eventList)))}
                             </Typography>
                         </Grid>
                     </Grid>

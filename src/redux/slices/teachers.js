@@ -819,18 +819,90 @@ export function calculateRequestedPrice(teacher, totalDays, time) {
     price = 219000 / 2;
   }
   if (level === 3) {
-    price = 299000 / 2;
+    price = 200000;
   }
   if (level === 4) {
-    price = 399000 / 2;
+    price = 220000;
   }
   if (level === 5) {
-    price = 419000 / 2;
+    price = 230000;
   }
   let discountedPrice = price;
   if (time === 'FULL_DAY') {
-    return discountedPrice * 2;
+    return discountedPrice * 1.95;
   }
 
   return discountedPrice;
+}
+
+export function getComissionByLevel(level, porcentage) {
+  if (level === 1) {
+    return porcentage ? 30 : 0.3;
+  }
+  if (level === 2) {
+    return porcentage ? 20 : 0.2;
+  }
+  if (level === 3) {
+    return porcentage ? 15 : 0.15;
+  }
+  if (level === 4) {
+    return porcentage ? 10 : 0.1;
+  }
+  if (level === 5) {
+    return porcentage ? 5 : 0.05;
+  }
+}
+
+export function getPayByLevel(level, porcentage) {
+  if (level === 1) {
+    return porcentage ? 30 : 0.3;
+  }
+  if (level === 2) {
+    return porcentage ? 20 : 0.2;
+  }
+  if (level === 3) {
+    return porcentage ? 15 : 0.15;
+  }
+  if (level === 4) {
+    return porcentage ? 10 : 0.1;
+  }
+  if (level === 5) {
+    return porcentage ? 5 : 0.05;
+  }
+}
+
+export function calculateTotalHours(events) {
+  let totalHours = 0;
+
+  events.forEach(event => {
+    const start = new Date(event.start);
+    const end = new Date(event.end);
+    const duration = (end - start) / (1000 * 60 * 60); // Convert milliseconds to hours
+    if (duration > 3) {
+      totalHours += 6;
+    } else {
+      totalHours += duration;
+    }
+
+  });
+
+  return totalHours;
+}
+
+export function getPayByHoursLevel(level, totalHours) {
+  if (level === 1) {
+    return totalHours * 20000;
+  }
+  if (level === 2) {
+    return totalHours * 25000;
+  }
+  if (level === 3) {
+    return totalHours * 39600;
+  }
+  if (level === 4) {
+    return totalHours * 54000;
+  }
+  if (level === 5) {
+    return totalHours * 72000;
+  }
 }

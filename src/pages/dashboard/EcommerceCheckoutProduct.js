@@ -30,7 +30,7 @@ import CheckoutProductGuests from 'src/sections/@dashboard/e-commerce/checkout/C
 import useAuth from 'src/hooks/useAuth';
 import CheckoutProductShare from 'src/sections/@dashboard/e-commerce/checkout/CheckoutProductShare';
 import { sum } from 'lodash';
-initMercadoPago('TEST-88fbbb89-cc56-4432-a225-f27e4dab2a7c');
+initMercadoPago('TEST-88fbbb89-cc56-4432-a225-f27e4dab2a7c', { locale: 'es-AR' });
 
 // ----------------------------------------------------------------------
 

@@ -23,7 +23,7 @@ import useLocales from 'src/hooks/useLocales';
 import { Payment } from '@mercadopago/sdk-react';
 
 import { initMercadoPago } from '@mercadopago/sdk-react';
-initMercadoPago('TEST-88fbbb89-cc56-4432-a225-f27e4dab2a7c');
+initMercadoPago('TEST-88fbbb89-cc56-4432-a225-f27e4dab2a7c', { locale: 'es-AR' });
 
 // ----------------------------------------------------------------------
 

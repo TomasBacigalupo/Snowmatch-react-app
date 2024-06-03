@@ -142,7 +142,6 @@ export default function EcommerceTeacherDetails({ isGuest = false }) {
           ]
           }
         />
-        <CartWidget />
         {!isLoading && product && (
           <>
             <Grid container>

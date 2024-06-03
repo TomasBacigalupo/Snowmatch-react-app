@@ -21,7 +21,7 @@ const MobileSelectDays = ({ product, teacher, isOpen, closeFather, isRange }) =>
     const navigate = useNavigate();
     const isIndependant = teacher?.resorts?.includes('Cerro Catedral');
     const handleSubmitSelectedDates = useCallback((dates) => {
-        if (!product && !isRange) {
+        if (!product && !isRange && isIndependant) {
             dates.forEach((date) => {
                 let lessonTime = "MORNING"
                 let price = 0
@@ -52,7 +52,7 @@ const MobileSelectDays = ({ product, teacher, isOpen, closeFather, isRange }) =>
 
                 navigate('hire');
             })
-        } else {
+        } else if(product) {
             dates.forEach((date) => {
                 let lessonTime = "MORNING"
                 let price = 0
@@ -67,6 +67,35 @@ const MobileSelectDays = ({ product, teacher, isOpen, closeFather, isRange }) =>
                 if (new Date(date).getHours() === 8) {
                     lessonTime = "ALL_DAY"
                     price = calculatePrice(product, 1, "FULL_DAY")
+                }
+                const requestEvent = {
+                    price: price,
+                    people: 1,
+                    lessonTime: lessonTime,
+                    date: date,
+                    resort: 'Cerro Catedral'
+                };
+                dispatch(addCart({
+                    product: product,
+                    event: requestEvent
+                }))
+                navigate('hire');
+            })
+        }else{
+            dates.forEach((date) => {
+                let lessonTime = "MORNING"
+                let price = 0
+                if (new Date(date).getHours() === 14) {
+                    lessonTime = "AFTERNOON"
+                    price = 0
+                }
+                if (new Date(date).getHours() === 9) {
+                    lessonTime = "MORNING"
+                    price = 0
+                }
+                if (new Date(date).getHours() === 8) {
+                    lessonTime = "ALL_DAY"
+                    price = 0
                 }
                 const requestEvent = {
                     price: price,

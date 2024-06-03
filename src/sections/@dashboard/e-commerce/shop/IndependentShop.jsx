@@ -8,6 +8,7 @@ import { Typography, Drawer, Button } from '@mui/material';
 import { Grid, IconButton, Box } from '@mui/material';
 import Iconify from "src/components/Iconify";
 import useLocales from 'src/hooks/useLocales';
+import Markdown from 'src/components/Markdown';
 export default function IndependentShop() {
     const dispatch = useDispatch();
     const { category, filters } = useSelector((state) => state.teachers);
@@ -96,9 +97,9 @@ export default function IndependentShop() {
                     <Typography variant="h5" gutterBottom>
                         {translate(`more.${level}.title`)}
                     </Typography>
-                    <Typography variant="body1">
+                    <Markdown>
                         {translate(`more.${level}.description`)}
-                    </Typography>
+                    </Markdown>
                 </Box>
                 <Box width='100%' display='flex' justifyContent='center'>
                     <IconButton onClick={() => setIsOpen(false)}>

@@ -38,7 +38,7 @@ const QuestionTypography = styled(Typography)(({ theme }) => ({
 
 export default function FaqsList({ id }) {
   const { translate } = useLocales();
-  const questions = [0, 1];
+  const questions = [0, 1, 2, 3, 4, 5];
   
   return (
     <>

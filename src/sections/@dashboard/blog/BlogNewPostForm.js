@@ -15,6 +15,8 @@ import { PATH_DASHBOARD } from '../../../routes/paths';
 import { RHFSwitch, RHFEditor, FormProvider, RHFTextField, RHFUploadSingleFile } from '../../../components/hook-form';
 //
 import BlogNewPostPreview from './BlogNewPostPreview';
+import { createBlog } from 'src/redux/slices/admin';
+import { useDispatch } from 'src/redux/store';
 
 // ----------------------------------------------------------------------
 
@@ -44,6 +46,7 @@ const LabelStyle = styled(Typography)(({ theme }) => ({
 
 export default function BlogNewPostForm() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const [open, setOpen] = useState(false);
 
@@ -95,11 +98,14 @@ export default function BlogNewPostForm() {
 
   const onSubmit = async () => {
     try {
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      reset();
+      console.log("pase1")
+      dispatch(createBlog(values));
+      //await new Promise((resolve) => setTimeout(resolve, 500));
+
+      //reset();
       handleClosePreview();
       enqueueSnackbar('Post success!');
-      navigate(PATH_DASHBOARD.blog.posts);
+      //navigate(PATH_DASHBOARD.blog.posts);
     } catch (error) {
       console.error(error);
     }

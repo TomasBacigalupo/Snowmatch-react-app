@@ -31,7 +31,8 @@ export default function BlogPost() {
 
   const isMountedRef = useIsMountedRef();
 
-  const { title } = useParams();
+  const { id } = useParams();
+  const title = id;
 
   const [recentPosts, setRecentPosts] = useState([]);
 

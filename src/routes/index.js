@@ -136,9 +136,17 @@ export default function Router() {
 
     {
       element: (<GuestLayout />),
-      children: [{ path: 'protips', element: <BlogPosts /> }]
+      children: [
+        { path: 'protips', element: <BlogPosts /> },
+        {path: 'protips/posts/:title', element: <BlogPost />},
+        {
+          path: 'protips/new', element:
+            <AuthGuard>
+              <BlogNewPost />
+            </AuthGuard>
+        },
+      ]
     },
-
     {
       path: 'shops',
       children: [

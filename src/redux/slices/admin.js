@@ -209,3 +209,22 @@ export function getBooking(bookingId) {
       }
   };
 }
+
+export function createBlog(blogData) {
+  console.log("pase", blogData)
+  return async () => {
+      //dispatch(slice.actions.startLoading());
+      try {
+        console.log("pase3")
+          const response = await axios.post(`/api/blog/`,
+              blogData
+          );
+          const blog = response.data
+          console.log(blog);
+          //dispatch(slice.actions.getBookingSuccess(bookings));
+      } catch (error) {
+        console.log(error)
+          dispatch(slice.actions.hasError(error));
+      }
+  };
+}

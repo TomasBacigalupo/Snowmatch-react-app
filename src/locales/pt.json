@@ -338,5 +338,334 @@
       "experiences": "Experiências",
       "lessons": "Aulas",
       "experienceTitle": "Experiências Catedral"
+    },
+    "product": {
+        "heading": {
+            "create": "Criar",
+            "edit": "Editar"
+        },
+        "new": "Novo produto",
+        "date": {
+            "0": "D",
+            "1": "S",
+            "2": "T",
+            "3": "Q",
+            "4": "Q",
+            "5": "S",
+            "6": "S"
+        },
+        "name": {
+            "value": "Nome",
+            "max": "O nome deve ter menos de {{max}} caracteres"
+        },
+        "time": {
+            "value": "Duração",
+            "max": "O tempo deve ser menor que {{max}} minutos",
+            "min": "O tempo deve ser maior que {{min}} minutos"
+        },
+        "resort": {
+            "value": "Centro de esqui",
+            "required": "Resort é obrigatório"
+        },
+        "studentLevel": {
+            "value": "Nível do aluno",
+            "required": "Nível é obrigatório"
+        },
+        "maxStudents": {
+            "value": "Máximo de alunos",
+            "moreThan": "Deve haver pelo menos um aluno"
+        },
+        "price": {
+            "value": "Preço",
+            "moreThan": "O preço deve ser maior que 0"
+        },
+        "ageFrom": {
+            "value": "De",
+            "moreThan": "A idade mínima deve ser maior que 0"
+        },
+        "ageTo": {
+            "value": "Até",
+            "lessThan": "A idade máxima deve ser menor que 99"
+        },
+        "information": "Informação",
+        "description": "Descrição",
+        "dropToDelete": "Arraste para excluir",
+        "deleteAll": "Excluir todos",
+        "generator": "Gerador de eventos",
+        "startDate": "De",
+        "endDate": "Até",
+        "startTime": "Hora de início",
+        "generateEvents": "Gerar",
+        "isMinors": "Apenas menores",
+        "saleLastSpots": "Desconto para últimas vagas",
+        "saleConsecutive": "Desconto para dias consecutivos",
+        "create": "Criar produto",
+        "save": "Salvar produto",
+        "delete": "Excluir produto",
+        "no_products": "Não há produtos",
+        "selection": {
+            "heading": "Selecionar aulas",
+            "add_to_cart": "Reservar",
+            "booked": "Reservado",
+            "lesson_booked": "Aula Reservada",
+            "lesson_unbooked": "Aula liberada",
+            "continue": "Continuar",
+            "more": "Mais aulas",
+            "buy_now": "Comprar agora"
+        },
+        "add_new_product": "Criar",
+        "private_full_day": "Privada dia completo",
+        "private_half_day": "Privada meio dia",
+        "title": "Produto",
+        "events": "Eventos",
+        "143": {
+            "metaTitle": "SnowMatchX | A melhor aula de ski em Catedral",
+            "metaDesc": "Leve sua experiência na neve a outro nível com nossos instrutores selecionados.",
+            "descriptionPreview": "Experiência única com instrutores selecionados (49 c.)",
+            "title": "SnowMatchX | A melhor aula de esqui em Catedral",
+            "description": "SnowMatchX é muito mais do que uma aula de ski. É uma experiência na montanha <b>com um dos nossos instrutores Nível 5,</b> o mais alto grau concedido pela Associação Argentina de Instrutores de Esqui e Snowboard (AADIDESS).\nNesta aula você vai aprender a <b>esquiar no Cerro Catedral</b> com as instruções e conselhos dos <b>melhores professores da nossa escola.</b> <br/><br/>Não importa onde você está (tenha ou não experiência), <b>atreva-se a dar o salto!</b>",
+            "skiLevel": "Todos os níveis",
+            "totalStudents": "Máximo 4 alunos",
+            "meetingPoint": "Base Cerro Catedral",
+            "faqs": {
+                "0": {
+                    "question": "Qual é a diferença desta aula em relação às outras?",
+                    "answer": "O grande diferencial da aula SnowMatchX é a oportunidade de ter uma aula íntima e pessoal com um dos melhores instrutores da escola, com experiência nos melhores centros de esqui do mundo e com os mais altos padrões da Associação Argentina de Instrutores (AADIDESS)."
+                },
+                "1": {
+                    "question": "O preço mostrado é por pessoa ou pelo total da aula?",
+                    "answer": "O preço é pelo total da aula, independentemente do número de participantes (o máximo de alunos por aula é 5)."
+                },
+                "2": {
+                    "question": "O que acontece se as condições meteorológicas não forem adequadas para esquiar?",
+                    "answer": "Em caso de condições meteorológicas adversas, entraremos em contato para remarcar a aula."
+                },
+                "3": {
+                    "question": "O que devo fazer se tiver uma condição médica?",
+                    "answer": "Nesse caso, você deve consultar seu médico para ver se está em condições de fazer a aula. É recomendável informar o instrutor antes de iniciar a aula sobre qualquer lesão anterior."
+                },
+                "4": {
+                    "question": "Que equipamento eu preciso para a aula?",
+                    "answer": "Recomenda-se verificar a previsão do tempo antes de ir para a montanha. Traga roupas quentes adequadas para a neve, capacete, óculos e luvas. Se você não tiver esquis, botas e bastões, pode alugá-los em algum rental na base."
+                },
+                "5": {
+                    "question": "Como chego ao ponto de encontro no Cerro Catedral?",
+                    "answer": "O SnowMatch Point está localizado na base do Cerro Catedral, a 17 quilômetros do centro de San Carlos de Bariloche. Você pode chegar ao Catedral de transporte público, táxi ou carro particular."
+                }
+            }
+        },
+        "144": {
+            "metaTitle": "Aula de ski em Catedral para intermediários",
+            "metaDesc": "Para alunos com uma ou duas experiências anteriores na neve. Aprenda a descer pistas vermelhas e pretas.",
+            "descriptionPreview": "Corrija erros básicos e desça pistas pretas.",
+            "title": "SnowMatchX | A melhor aula de esqui em Catedral",
+            "description": "A <b>aula de ski para intermediários</b> é destinada a pessoas que já esquiaram pelo menos uma ou duas vezes, ou seja, que têm uma noção básica do esporte, mas querem continuar melhorando.<br/>Com esta aula, <b>você vai corrigir os erros típicos de iniciantes,</b> como posturas incorretas e gestos errôneos. <b>Você poderá deixar para trás as pistas azuis e passar para as vermelhas e pretas.</b>",
+            "skiLevel": "Intermediários/Avançados",
+            "totalStudents": "Entre 1 e 5 pessoas",
+            "meetingPoint": "Base Cerro Catedral",
+            "faqs": {
+                "0": {
+                    "question": "É possível progredir rapidamente em uma única aula?",
+                    "answer": "Sim, embora o grau de progresso dependa de cada aluno. Depois de fazer esta aula, você estará capacitado para esquiar nas pistas verdes e azuis do centro de esqui."
+                },
+                "1": {
+                    "question": "O preço mostrado é por pessoa ou pelo total da aula?",
+                    "answer": "O preço é pelo total da aula, independentemente do número de participantes (o máximo de alunos por aula é 5)."
+                },
+                "2": {
+                    "question": "O que acontece se as condições meteorológicas não forem adequadas para esquiar?",
+                    "answer": "Em caso de condições meteorológicas adversas, entraremos em contato para remarcar a aula."
+                },
+                "3": {
+                    "question": "O que devo fazer se tiver uma condição médica?",
+                    "answer": "Nesse caso, você deve consultar seu médico para ver se está em condições de fazer a aula. É recomendável informar o instrutor antes de iniciar a aula sobre qualquer lesão anterior."
+                },
+                "4": {
+                    "question": "Que equipamento eu preciso para a aula?",
+                    "answer": "Recomenda-se verificar a previsão do tempo antes de ir para a montanha. Traga roupas quentes adequadas para a neve, capacete, óculos e luvas. Se você não tiver esquis, botas e bastões, pode alugá-los em algum rental na base."
+                },
+                "5": {
+                    "question": "Como chego ao ponto de encontro no Cerro Catedral?",
+                    "answer": "O SnowMatch Point está localizado na base do Cerro Catedral, a 17 quilômetros do centro de San Carlos de Bariloche. Você pode chegar ao Catedral de transporte público, táxi ou carro particular."
+                }
+            }
+        },
+        "145": {
+            "metaTitle": "Aula de ski em Catedral para iniciantes",
+            "metaDesc": "Para alunos sem experiência anterior na neve. Dê os primeiros passos no mundo do ski com esta aula.",
+            "descriptionPreview": "Introdução ao mundo do ski desde o zero.",
+            "title": "SnowMatchX | A melhor aula de esqui em Catedral",
+            "description": "A <b>aula de ski para iniciantes</b> vai te dar as primeiras noções de esqui. Você vai aprender a colocar e tirar os esquis, fazer seus primeiros passos na neve e deslizar suavemente nas pistas verdes.<br/>Com esta aula, você estará capacitado para enfrentar <b>pistas verdes</b> e descer devagar mas com confiança.",
+            "skiLevel": "Iniciantes",
+            "totalStudents": "Entre 1 e 5 pessoas",
+            "meetingPoint": "Base Cerro Catedral",
+            "faqs": {
+                "0": {
+                    "question": "É possível aprender o básico do ski em uma única aula?",
+                    "answer": "Sim, nossa aula de iniciantes é projetada para fornecer uma introdução completa ao ski, cobrindo tudo, desde colocar os esquis até descer as primeiras pistas verdes com confiança."
+                },
+                "1": {
+                    "question": "O preço mostrado é por pessoa ou pelo total da aula?",
+                    "answer": "O preço é pelo total da aula, independentemente do número de participantes (o máximo de alunos por aula é 5)."
+                },
+                "2": {
+                    "question": "O que acontece se as condições meteorológicas não forem adequadas para esquiar?",
+                    "answer": "Em caso de condições meteorológicas adversas, entraremos em contato para remarcar a aula."
+                },
+                "3": {
+                    "question": "O que devo fazer se tiver uma condição médica?",
+                    "answer": "Nesse caso, você deve consultar seu médico para ver se está em condições de fazer a aula. É recomendável informar o instrutor antes de iniciar a aula sobre qualquer lesão anterior."
+                },
+                "4": {
+                    "question": "Que equipamento eu preciso para a aula?",
+                    "answer": "Recomenda-se verificar a previsão do tempo antes de ir para a montanha. Traga roupas quentes adequadas para a neve, capacete, óculos e luvas. Se você não tiver esquis, botas e bastões, pode alugá-los em algum rental na base."
+                },
+                "5": {
+                    "question": "Como chego ao ponto de encontro no Cerro Catedral?",
+                    "answer": "O SnowMatch Point está localizado na base do Cerro Catedral, a 17 quilômetros do centro de San Carlos de Bariloche. Você pode chegar ao Catedral de transporte público, táxi ou carro particular."
+                }
+            }
+        },
+        "146": {
+            "metaTitle": "Clínica de Esqui de Pista",
+            "metaDescription": "Para esquiadores intermediários e/ou avançados que querem melhorar seu nível de esqui em pista e aperfeiçoar sua técnica.",
+            "descriptionPreview": "Impulsione seu nível em pista. Intermediários/avançados.",
+            "description": "A Clínica de Esqui de Pista é uma aula projetada para esquiadores intermediários e avançados, que já esquiam regularmente e têm conhecimento do esporte. Visa aperfeiçoar a técnica, corrigir erros e incorporar gestos positivos que melhorarão a experiência na montanha.</br>Se você pode esquiar por todo tipo de pistas, mas quer ganhar confiança, eliminar movimentos errôneos e potencializar seu nível, não hesite mais: você está no lugar certo. <b>Torne-se um especialista!</b>",
+            "faqs": {
+                "0": {
+                    "question": "Posso fazer esta aula em família ou com amigos?",
+                    "answer": "Sim. Tenha em mente que não podem ser mais de 5 membros e procure que todos tenham um nível de esqui similar, para que todos possam aproveitar e aprender ao mesmo tempo. Da mesma forma, também temos aulas de esqui para famílias, especialmente pensadas para grupos familiares."
+                },
+                "1": {
+                    "question": "O preço exibido é por pessoa ou pelo total da aula?",
+                    "answer": "O preço é pelo total da aula, independentemente do número de participantes (o máximo de alunos por aula é 5)."
+                },
+                "2": {
+                    "question": "O que acontece se as condições meteorológicas não forem adequadas para esquiar?",
+                    "answer": "Em caso de condições meteorológicas adversas, entraremos em contato para remarcar a aula."
+                },
+                "3": {
+                    "question": "O que devo fazer se tiver uma condição médica?",
+                    "answer": "Nesse caso, você deve consultar seu médico para ver se está em condições de fazer a aula. É recomendável informar o instrutor antes de iniciar a aula sobre qualquer lesão anterior."
+                },
+                "4": {
+                    "question": "Que equipamento eu preciso para a aula?",
+                    "answer": "Recomenda-se verificar a previsão do tempo antes de ir para a montanha. Traga roupas quentes adequadas para a neve, capacete, óculos e luvas. Se você não tiver esquis, botas e bastões, pode alugá-los em algum rental na base."
+                },
+                "5": {
+                    "question": "Como chego ao ponto de encontro no Cerro Catedral?",
+                    "answer": "O SnowMatch Point está localizado na base do Cerro Catedral, a 17 quilômetros do centro de San Carlos de Bariloche. Você pode chegar ao Catedral de transporte público, táxi ou carro particular."
+                }
+            },
+            "skiLevel": "Intermediários/Avançados",
+            "totalStudents": "Entre 1 e 5 pessoas",
+            "meetingPoint": "Base Cerro Catedral"
+        },
+        "149": {
+            "descriptionPreview": "Aprenda a esquiar fora de pista. Intermediários/avançados.",
+            "description": "A aula de <b>freeride (estilo livre)</b> é uma incrível experiência fora de pista, orientada para esquiadores amantes da aventura e do contato com a natureza. O instrutor vai ensinar e levar você para esquiar por incríveis <b>bosques nevados e neve fofa não compactada*.</b><br/>Além disso, explicará <b>a técnica para que você possa esquiar em lugares com “bumps”</b> (montículos de neve que se formam na pista), e dominar todo tipo de descida.<br/>Neste curso, você aprenderá as <b>noções básicas do freeride</b>, para que possa desfrutar deste estilo de forma divertida e segura. Com uma progressão adequada, <b>ao finalizar, você estará capacitado para esquiar em qualquer condição e tipo de neve e declive.</b><br/>*<i>As atividades realizadas durante a aula dependerão das condições meteorológicas e da montanha no dia.</i>",
+            "skiLevel": "Intermediários/Avançados",
+            "totalStudents": "Entre 1 e 5 pessoas",
+            "meetingPoint": "Base Cerro Catedral",
+            "faqs": {
+                "0": {
+                    "question": "Posso fazer esta aula em família ou com amigos?",
+                    "answer": "Sim. Tenha em mente que não podem ser mais de 5 membros e procure que todos tenham um nível de esqui similar, para que todos possam aproveitar e aprender ao mesmo tempo. Da mesma forma, também temos aulas de esqui para famílias, especialmente pensadas para grupos familiares."
+                },
+                "1": {
+                    "question": "O preço exibido é por pessoa ou pelo total da aula?",
+                    "answer": "O preço é pelo total da aula, independentemente do número de participantes (o máximo de alunos por aula é 5)."
+                },
+                "2": {
+                    "question": "O que acontece se as condições meteorológicas não forem adequadas para esquiar?",
+                    "answer": "Em caso de condições meteorológicas adversas, entraremos em contato para remarcar a aula."
+                },
+                "3": {
+                    "question": "O que devo fazer se tiver uma condição médica?",
+                    "answer": "Nesse caso, você deve consultar seu médico para ver se está em condições de fazer a aula. É recomendável informar o instrutor antes de iniciar a aula sobre qualquer lesão anterior."
+                },
+                "4": {
+                    "question": "Que equipamento eu preciso para a aula?",
+                    "answer": "Recomenda-se verificar a previsão do tempo antes de ir para a montanha. Traga roupas quentes adequadas para a neve, capacete, óculos e luvas. Se você não tiver esquis, botas e bastões, pode alugá-los em algum rental na base."
+                },
+                "5": {
+                    "question": "Como chego ao ponto de encontro no Cerro Catedral?",
+                    "answer": "O SnowMatch Point está localizado na base do Cerro Catedral, a 17 quilômetros do centro de San Carlos de Bariloche. Você pode chegar ao Catedral de transporte público, táxi ou carro particular."
+                }
+            }
+        },
+        "147": {
+            "descriptionPreview": "Aula em grupo com amigos ou família. Qualquer nível.",
+            "description": "A <b>aula de esqui para famílias e/ou amigos</b> é a melhor opção para esquiar no Cerro Catedral se <b>você quer aproveitar a montanha em grupo.</b> A aula foca no aprendizado e na progressão de cada aluno, embora <b>sem negligenciar a diversão e o prazer.</b><br/>Além de aperfeiçoar suas habilidades na neve, os participantes têm a oportunidade de <b>mergulhar na grandiosidade da montanha, conhecer lugares únicos, parar para tirar fotos e criar memórias inesquecíveis</b> acompanhados por um instrutor especialista que se tornará um guia da montanha.<br/>O objetivo principal é <b>combinar o aprendizado com a experiência de aproveitar a montanha em grupo.</b> Afinal, não queremos ser profissionais... mas sim nos divertir!",
+            "skiLevel": "Todos os níveis",
+            "totalStudents": "Entre 1 e 5 pessoas",
+            "meetingPoint": "Base Cerro Catedral",
+            "faqs": {
+                "0": {
+                    "question": "Qual é a diferença desta aula em relação às outras?",
+                    "answer": "Com a experiência de esqui em família, além de aprender e corrigir seu nível de esqui, você poderá desfrutar de um excelente dia na montanha, descobrir as melhores pistas e não perder tempo em filas desnecessárias."
+                },
+                "1": {
+                    "question": "O preço exibido é por pessoa ou pelo total da aula?",
+                    "answer": "O preço é pelo total da aula, independentemente do número de participantes (o máximo de alunos por aula é 5)."
+                },
+                "2": {
+                    "question": "O que acontece se as condições meteorológicas não forem adequadas para esquiar?",
+                    "answer": "Em caso de condições meteorológicas adversas, entraremos em contato para remarcar a aula."
+                },
+                "3": {
+                    "question": "O que devo fazer se tiver uma condição médica?",
+                    "answer": "Nesse caso, você deve consultar seu médico para ver se está em condições de fazer a aula. É recomendável informar o instrutor antes de iniciar a aula sobre qualquer lesão anterior."
+                },
+                "4": {
+                    "question": "Que equipamento eu preciso para a aula?",
+                    "answer": "Recomenda-se verificar a previsão do tempo antes de ir para a montanha. Traga roupas quentes adequadas para a neve, capacete, óculos e luvas. Se você não tiver esquis, botas e bastões, pode alugá-los em algum rental na base."
+                },
+                "5": {
+                    "question": "Como chego ao ponto de encontro no Cerro Catedral?",
+                    "answer": "O SnowMatch Point está localizado na base do Cerro Catedral, a 17 quilômetros do centro de San Carlos de Bariloche. Você pode chegar ao Catedral de transporte público, táxi ou carro particular."
+                }
+            }
+        },
+        "148": {
+            "descriptionPreview": "Os primeiros passos na neve. Crianças de 4 a 12 anos.",
+            "description": "A <b>aula de esqui para crianças</b> é uma <b>experiência de aprendizado e brincadeira</b> para os menores da família. Com professores <b>especialistas em trabalho com crianças,</b> o curso combina momentos lúdicos e recreativos na neve, com ensino básico do esqui.<br/>Os alunos entrarão em contato com a neve, aprenderão a colocar e tirar os esquis, a <b>deslizar em lugares com pouca inclinação</b> e a aproveitar entre risadas e brincadeiras os divertidos caminhos da montanha.",
+            "skiLevel": "Intermediários/Avançados",
+            "totalStudents": "Entre 1 e 5 pessoas",
+            "meetingPoint": "Base Cerro Catedral",
+            "faqs": {
+                "0": {
+                    "question": "Posso fazer esta aula em família ou com amigos?",
+                    "answer": "Sim. Tenha em mente que não podem ser mais de 5 membros e procure que todos tenham um nível de esqui similar, para que todos possam aproveitar e aprender ao mesmo tempo. Da mesma forma, também temos aulas de esqui para famílias, especialmente pensadas para grupos familiares."
+                },
+                "1": {
+                    "question": "O preço exibido é por pessoa ou pelo total da aula?",
+                    "answer": "O preço é pelo total da aula, independentemente do número de participantes (o máximo de alunos por aula é 5)."
+                },
+                "2": {
+                    "question": "O que acontece se as condições meteorológicas não forem adequadas para esquiar?",
+                    "answer": "Em caso de condições meteorológicas adversas, entraremos em contato para remarcar a aula."
+                },
+                "3": {
+                    "question": "O que devo fazer se tiver uma condição médica?",
+                    "answer": "Nesse caso, você deve consultar seu médico para ver se está em condições de fazer a aula. É recomendável informar o instrutor antes de iniciar a aula sobre qualquer lesão anterior."
+                },
+                "4": {
+                    "question": "Que equipamento eu preciso para a aula?",
+                    "answer": "Recomenda-se verificar a previsão do tempo antes de ir para a montanha. Traga roupas quentes adequadas para a neve, capacete, óculos e luvas. Se você não tiver esquis, botas e bastões, pode alugá-los em algum rental na base."
+                },
+                "5": {
+                    "question": "Como chego ao ponto de encontro no Cerro Catedral?",
+                    "answer": "O SnowMatch Point está localizado na base do Cerro Catedral, a 17 quilômetros do centro de San Carlos de Bariloche. Você pode chegar ao Catedral de transporte público, táxi ou carro particular."
+                }
+            }
+        },
+        "skiLevel": "Nível",
+        "totalStudents": "Participantes",
+        "meetingPoint": "Ponto de encontro",
+        "ocupationTitle": "Calendário de disponibilidade",
+        "ocupationDescription": "Dias para aproveitar a experiência.",
+        "readMore": "Leia mais",
+        "descriptionTitle": "Sobre a Experiência"
     }
 }

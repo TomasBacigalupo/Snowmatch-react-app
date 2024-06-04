@@ -224,7 +224,7 @@ const slice = createSlice({
             state.loadingPayment = false;
             state.bookSuccess = true;
         },
-        createBookingError(state, action) {
+        onCreateBookingError(state, action) {
             state.isLoading = false;
             state.loadingPayment = false;
             state.bookSuccess = false;
@@ -248,7 +248,7 @@ const slice = createSlice({
 export default slice.reducer;
 
 // Actions
-export const { openModal, closeModal, selectEvent, changeMessage, bookingPending, changeAsignedStudents } = slice.actions;
+export const { openModal, closeModal, selectEvent, changeMessage, bookingPending, changeAsignedStudents, onCreateBookingError } = slice.actions;
 
 // ----------------------------------------------------------------------
 
@@ -506,7 +506,7 @@ export function bookingAndPay(teacherId, message, children, adults, events, tota
             });
             dispatch(slice.actions.createBookingSuccess());
         } catch (error) {
-            dispatch(slice.actions.createBookingError(error));
+            dispatch(slice.actions.onCreateBookingError(error));
         }
     };
 }

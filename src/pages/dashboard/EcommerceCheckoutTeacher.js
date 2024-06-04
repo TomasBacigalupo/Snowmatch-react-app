@@ -25,7 +25,7 @@ import CheckoutGuests from 'src/sections/@dashboard/e-commerce/checkout/Checkout
 import { Payment } from '@mercadopago/sdk-react';
 
 import { initMercadoPago } from '@mercadopago/sdk-react';
-import { bookingAndPay, bookingPending, createBooking, createPreference } from 'src/redux/slices/bookings';
+import { bookingAndPay, bookingPending, createBooking, createPreference, onCreateBookingError } from 'src/redux/slices/bookings';
 import { sum } from 'lodash';
 
 import ReactPixel from 'react-facebook-pixel';
@@ -90,7 +90,7 @@ export default function EcommerceCheckoutTeacher() {
   }, [dispatch]);
   useEffect(() => {
     dispatch(bookingPending());
-    dispatch(createPreference(events[0].teacherId, events))
+    dispatch(createPreference(events[0]?.teacherId, events))
   }, [dispatch, events]);
 
   useEffect(() => {
@@ -148,7 +148,7 @@ export default function EcommerceCheckoutTeacher() {
     ReactPixel.track('BookNow', {
       content_name: "Required Class",
       content_category: 'Teacher',
-      content_ids: [events[0].teacherId],
+      content_ids: [events[0]?.teacherId],
       content_type: 'product',
       value: total,
       currency: 'USD',
@@ -156,7 +156,7 @@ export default function EcommerceCheckoutTeacher() {
     // callback called when clicking the submit data button
     return new Promise((resolve, reject) => {
       dispatch(bookingAndPay(
-        events[0].teacherId,
+        events[0]?.teacherId,
         message,
         children,
         adults,
@@ -170,6 +170,7 @@ export default function EcommerceCheckoutTeacher() {
 
   const onError = async (error) => {
     // callback called for all Brick error cases
+    dispatch(onCreateBookingError())
     console.log(error);
   };
 

@@ -1,11 +1,9 @@
 import { PickersDay, StaticDatePicker, StaticDateRangePicker } from "@mui/lab";
 import { Button, DialogActions, DialogContent, DialogTitle, Grid, TextField, Box, Typography, Paper } from "@mui/material";
-import React, { useEffect } from "react";
-import { useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { DialogAnimate } from "src/components/animate";
 import useLocales from "src/hooks/useLocales";
 import { styled } from '@mui/material/styles';
-import { useCallback } from "react";
 import { isSameDay } from "date-fns";
 import { getEventsByTeacherId } from "src/redux/slices/bookings";
 import { useDispatch, useSelector } from "react-redux";
@@ -55,7 +53,6 @@ export default function SelectDates({ handleClose, onSubmit, isRange, product })
     tomorrow.setDate(tomorrow.getDate() + 1)
     const hasPrice = teacher?.level >= 3 && teacher?.resorts?.find(resort => resort === 'Cerro Catedral');
     const [range, setRange] = useState([from, to]);
-    //calculate total days between to and from
     const totalDays = Math.floor((to - from) / (1000 * 60 * 60 * 24));
 
     useEffect(() => {
@@ -64,13 +61,13 @@ export default function SelectDates({ handleClose, onSubmit, isRange, product })
 
     const renderWeekPickerDay = useCallback((date, _selectedDates, pickersDayProps) => {
         if (!date) {
-            return <PickersDay {...pickersDayProps} onClick={() => console.log("clocked2")} />;
+            return <PickersDay {...pickersDayProps} onClick={() => console.log("clicked2")} />;
         }
 
-        const dayIsBetween = selectedDates.length > 0 && selectedDates.find(_date => _date.getDate() === date.getDate()) !== undefined
-        const isFirstDay = false
-        const isLastDay = false
-        const isRandomDay = true
+        const dayIsBetween = selectedDates.length > 0 && selectedDates.find(_date => isSameDay(_date, date)) !== undefined;
+        const isFirstDay = false;
+        const isLastDay = false;
+        const isRandomDay = true;
 
         return (
             <CustomPickersDay
@@ -78,19 +75,19 @@ export default function SelectDates({ handleClose, onSubmit, isRange, product })
                 onClick={(newValue) => {
                     setDate(newValue);
 
-                    if (selectedDates.find(d => d.getTime() === newValue.getTime())) {
-                        setDates(selectedDates.filter(d => d.getTime() !== newValue.getTime()))
+                    if (selectedDates.find(d => isSameDay(d, newValue))) {
+                        setDates(selectedDates.filter(d => !isSameDay(d, newValue)));
                     }
 
                 }}
                 onDaySelect={(newValue) => {
                     setDate(newValue);
 
-                    if (selectedDates.find(d => d.getTime() === newValue.getTime())) {
-                        setDates(selectedDates.filter(d => d.getTime() !== newValue.getTime()))
+                    if (selectedDates.find(d => isSameDay(d, newValue))) {
+                        setDates(selectedDates.filter(d => !isSameDay(d, newValue)));
                     } else {
-                        setSelectTimeModal(true)
-                        setDates([...selectedDates, newValue])
+                        setSelectTimeModal(true);
+                        setDates([...selectedDates, newValue]);
                     }
 
                 }}
@@ -106,11 +103,9 @@ export default function SelectDates({ handleClose, onSubmit, isRange, product })
     const handleChangeRange = (newRange) => {
         const selectedDates = [];
 
-        // Parse the start and end dates
         const start = newRange[0];
         const end = newRange[1];
 
-        // Generate a list of dates between the start and end dates
         const dateList = [];
         let currentDate = new Date(start);
         while (currentDate <= end) {
@@ -118,41 +113,40 @@ export default function SelectDates({ handleClose, onSubmit, isRange, product })
             currentDate.setDate(currentDate.getDate() + 1);
         }
 
-        // Add each date to the selected dates list
         dateList.forEach((date) => {
             selectedDates.push(date);
         });
 
         if (selectedDates.length > 0) {
-            setSelectTimeModal(true)
+            setSelectTimeModal(true);
         }
-        // Now selectedDates array contains all the dates between the range
-        setDates(selectedDates)
+
+        setDates(selectedDates);
     }
 
     const morningSelected = () => {
         if (!isRange) {
-            selectedDates[selectedDates.length - 1].setHours(9)
+            selectedDates[selectedDates.length - 1].setHours(9);
         } else {
-            selectedDates.map(date => date.setHours(9))
+            selectedDates.map(date => date.setHours(9));
         }
-        setSelectTimeModal(false)
+        setSelectTimeModal(false);
     }
     const afternoonSelected = () => {
         if (!isRange) {
-            selectedDates[selectedDates.length - 1].setHours(14)
+            selectedDates[selectedDates.length - 1].setHours(14);
         } else {
-            selectedDates.map(date => date.setHours(14))
+            selectedDates.map(date => date.setHours(14));
         }
-        setSelectTimeModal(false)
+        setSelectTimeModal(false);
     }
     const allDaySelected = () => {
         if (!isRange) {
-            selectedDates[selectedDates.length - 1].setHours(8)
+            selectedDates[selectedDates.length - 1].setHours(8);
         } else {
-            selectedDates.map(date => date.setHours(8))
+            selectedDates.map(date => date.setHours(8));
         }
-        setSelectTimeModal(false)
+        setSelectTimeModal(false);
     }
 
     return (
@@ -171,7 +165,6 @@ export default function SelectDates({ handleClose, onSubmit, isRange, product })
                                     border: (theme) => `solid 1px ${theme.palette.grey[500_32]}`,
                                 }}
                             >
-                                {/* picture or icon */}
                                 <Typography
                                     variant="h6">
                                     {translate('checkout.morningTitle')} {isRange ? `${fCurrency(calculatePrice(product, selectedDates.length, 'MORNING'))}` : hasPrice && fCurrency(calculateRequestedPrice(teacher, totalDays, 'MORNING'))}
@@ -194,18 +187,13 @@ export default function SelectDates({ handleClose, onSubmit, isRange, product })
                                     p: 3,
                                     width: 1,
                                     my: 2,
-
                                     border: (theme) => `solid 1px ${theme.palette.grey[500_32]}`,
-
                                 }}
                             >
-                                {/* picture or icon */}
                                 <Typography
-                                    // color={timeSelected === 'ALL_DAY' ? 'primary' : ''}
                                     variant="h6">{translate('checkout.afternoonTitle')} {isRange ? `${fCurrency(calculatePrice(product, selectedDates.length, 'AFTERNOON'))}` : hasPrice && fCurrency(calculateRequestedPrice(teacher, totalDays, 'AFTERNOON'))}
                                 </Typography>
                                 <Typography
-                                    // color={timeSelected === 'ALL_DAY' ? 'primary' : ''}  
                                     variant="subtitle2">{translate('checkout.afternoonDescription')}
                                 </Typography>
                                 {isRange && <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -225,7 +213,6 @@ export default function SelectDates({ handleClose, onSubmit, isRange, product })
                                     border: (theme) => `solid 1px ${theme.palette.grey[500_32]}`,
                                 }}
                             >
-                                {/* picture or icon */}
                                 <Typography
                                     variant="h6">
                                     {translate('checkout.allDayTitle')}
@@ -255,13 +242,12 @@ export default function SelectDates({ handleClose, onSubmit, isRange, product })
                         renderDay={renderWeekPickerDay}
                         renderInput={(params) => <TextField {...params} />}
                         inputFormat="'Week of' MMM d"
-                        disableHighlightToday={false}
                         disablePast
-                    // shouldDisableDate={(date) => isBefore(date, endOfDay(new Date()))}
+                        //prevent to highlight the current day
+                        value={null}
                     />}
                     {isRange && <StaticDateRangePicker
                         onChange={handleChangeRange}
-                        // disabledDates={events.map(e => new Date(e.start))}
                         shouldDisableDate={(date) => !events.some(e => isSameDay(date, new Date(e.start)))}
                         showToolbar={false}
                         value={range}
@@ -272,9 +258,7 @@ export default function SelectDates({ handleClose, onSubmit, isRange, product })
                 <Grid item xs={12} pl={3}>
                     <Typography>{`${translate('general.total_days')}: ${selectedDates.length}`}</Typography>
                 </Grid>
-
             </Grid>
-
             <DialogActions>
                 <Button fullWidth variant='outlined' onClick={handleClose}>
                     {translate('general.cancel')}
@@ -284,6 +268,5 @@ export default function SelectDates({ handleClose, onSubmit, isRange, product })
                 </Button>
             </DialogActions>
         </React.Fragment>
-
     )
 }

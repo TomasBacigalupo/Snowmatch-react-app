@@ -7,7 +7,6 @@ import { styled } from '@mui/material/styles';
 import { isSameDay } from "date-fns";
 import { getEventsByTeacherId } from "src/redux/slices/bookings";
 import { useDispatch, useSelector } from "react-redux";
-import dayjs from 'dayjs';
 import { calculatePrice, calculateRequestedPrice } from "src/redux/slices/teachers";
 import { fCurrency } from "src/utils/formatNumber";
 

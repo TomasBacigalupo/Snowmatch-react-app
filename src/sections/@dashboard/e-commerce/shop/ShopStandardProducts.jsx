@@ -26,7 +26,9 @@ export default function ShopStandardProducts({ loading }) {
     const dispatch = useDispatch();
     const { products } = useSelector((state) => state.business);
     useEffect(() => {
-        dispatch(getProductsByBusinessId(13));
+        // prod
+       dispatch(getProductsByBusinessId(13));
+    //    dispatch(getProductsByBusinessId(1));
     }, []);
     return (
         <Box

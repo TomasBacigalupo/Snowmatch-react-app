@@ -17,7 +17,7 @@ export default function BlogPostTags({ post }) {
 
   return (
     <Box sx={{ py: 3 }}>
-      {tags.map((tag) => (
+      {tags?.map((tag) => (
         <Chip key={tag} label={tag} sx={{ m: 0.5 }} />
       ))}
 
@@ -34,16 +34,6 @@ export default function BlogPostTags({ post }) {
           }
           label={fShortenNumber(favorite)}
         />
-        <AvatarGroup
-          max={4}
-          sx={{
-            '& .MuiAvatar-root': { width: 32, height: 32 },
-          }}
-        >
-          {favoritePerson.map((person) => (
-            <Avatar key={person.name} alt={person.name} src={person.avatarUrl} />
-          ))}
-        </AvatarGroup>
       </Box>
     </Box>
   );

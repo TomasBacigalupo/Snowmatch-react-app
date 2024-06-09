@@ -25,79 +25,29 @@ import CheckoutGuests from 'src/sections/@dashboard/e-commerce/checkout/Checkout
 import { Payment } from '@mercadopago/sdk-react';
 
 import { initMercadoPago } from '@mercadopago/sdk-react';
-import { bookingAndPay, bookingPending, changeAsignedStudents, createBooking } from 'src/redux/slices/bookings';
+import { bookingAndPay, bookingAndPayProduct, bookingPending, changeAsignedStudents, createBooking } from 'src/redux/slices/bookings';
 import CheckoutProductGuests from 'src/sections/@dashboard/e-commerce/checkout/CheckoutProductGuests';
 import useAuth from 'src/hooks/useAuth';
 import CheckoutProductShare from 'src/sections/@dashboard/e-commerce/checkout/CheckoutProductShare';
 import { sum } from 'lodash';
+import ReactPixel from 'react-facebook-pixel';
 initMercadoPago('TEST-88fbbb89-cc56-4432-a225-f27e4dab2a7c', { locale: 'es-AR' });
 
 // ----------------------------------------------------------------------
-
-const STEPS = ['Confirmation', 'Teacher Approve', 'Payment'];
-
-const QontoConnector = styled(StepConnector)(({ theme }) => ({
-    top: 10,
-    left: 'calc(-50% + 20px)',
-    right: 'calc(50% + 20px)',
-    '& .MuiStepConnector-line': {
-        borderTopWidth: 2,
-        borderColor: theme.palette.divider,
-    },
-    '&.Mui-active, &.Mui-completed': {
-        '& .MuiStepConnector-line': {
-            borderColor: theme.palette.primary.main,
-        },
-    },
-}));
-
-QontoStepIcon.propTypes = {
-    active: PropTypes.bool,
-    completed: PropTypes.bool,
-};
-
-function QontoStepIcon({ active, completed }) {
-    return (
-        <Box
-            sx={{
-                zIndex: 9,
-                width: 24,
-                height: 24,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: active ? 'primary.main' : 'text.disabled',
-            }}
-        >
-            {completed ? (
-                <Iconify icon={'eva:checkmark-fill'} sx={{ zIndex: 1, width: 20, height: 20, color: 'primary.main' }} />
-            ) : (
-                <Box
-                    sx={{
-                        width: 8,
-                        height: 8,
-                        borderRadius: '50%',
-                        backgroundColor: 'currentColor',
-                    }}
-                />
-            )}
-        </Box>
-    );
-}
 
 export default function EcommerceCheckoutProduct() {
     const { themeStretch } = useSettings();
     const dispatch = useDispatch();
     const isMountedRef = useIsMountedRef();
     const { checkout } = useSelector((state) => state.teachers);
-    const { message, children, adults, bookSuccess, loadingPayment } = useSelector((state) => state.bookings);
+    const { message, children, adults, bookSuccess, loadingPayment, onCreateBookingError } = useSelector((state) => state.bookings);
     const { product } = useSelector((state) => state.teachers);
     const { cart, billing, activeStep, events } = checkout;
-    const isComplete = activeStep === STEPS.length;
+    
     const { user } = useAuth();
     const bookingPrice = sum(events.map((event) => event.price));
 
-    const {  discount, subtotal, shipping, card } = checkout;
+    const { discount, subtotal, shipping, card } = checkout;
     const total = calculatePrice(product, checkout.events.length)
     useEffect(() => {
         if (isMountedRef.current) {
@@ -165,10 +115,18 @@ export default function EcommerceCheckoutProduct() {
     const onSubmit = async (
         { selectedPaymentMethod, formData }
     ) => {
+        ReactPixel.track('BookNow', {
+            content_name: "Required Class",
+            content_category: 'Product',
+            content_ids: [events[0]?.productId],
+            content_type: 'product',
+            value: total,
+            currency: 'USD',
+        });
         // callback called when clicking the submit data button
         return new Promise((resolve, reject) => {
-            dispatch(bookingAndPay(
-                1,
+            dispatch(bookingAndPayProduct(
+                events[0]?.teacherId,
                 message,
                 children,
                 adults,
@@ -177,28 +135,23 @@ export default function EcommerceCheckoutProduct() {
                 formData
             ));
             console.log(JSON.stringify(formData));
-            // fetch("/process_payment", {
-            //   method: "POST",
-            //   headers: {
-            //     "Content-Type": "application/json",
-            //   },
-            //   body: JSON.stringify(formData),
-            // })
-            //   .then((response) => response.json())
-            //   .then((response) => {
-            //     // receive payment result
-            //     console.log(response);
-            //     resolve();
-            //   })
-            //   .catch((error) => {
-            //     // handle error response when trying to create payment
-            //     reject();
-            //   });
         });
+    };
+
+    const sendWhatsAppMessage = () => {
+        const phoneNumber = '+5492944367197';
+        const message = encodeURIComponent(
+            `dias de clase: ${events.map( e => {
+                console.log({e}); return e.date.toString() + ', ' + e.lessonTime}).toString()}\ncantidad de personas: ${adults}\nExperiencia:${product.name}`
+        );
+        const url = `https://api.whatsapp.com/send?phone=${phoneNumber}&text=${message}`;
+
+        window.open(url, '_blank');
     };
 
     const onError = async (error) => {
         // callback called for all Brick error cases
+        dispatch(onCreateBookingError())
         console.log(error);
     };
 
@@ -209,16 +162,16 @@ export default function EcommerceCheckoutProduct() {
         */
     };
 
-    const handleBook = () => {
-        dispatch(createBooking(
-            1,
-            message,
-            children,
-            adults,
-            events,
-            total
-        ));
-    }
+    // const handleBook = () => {
+    //     dispatch( (
+    //         1,
+    //         message,
+    //         children,
+    //         adults,
+    //         events,
+    //         total
+    //     ));
+    // }
 
 
     if (loadingPayment) {
@@ -270,7 +223,7 @@ export default function EcommerceCheckoutProduct() {
                         shipping={shipping}
                         onEdit={() => { }}
                         bookingPrice={bookingPrice}
-                    /> 
+                    />
                 </Box>
                 <Box marginTop={2}>
                     {bookingPrice > 0 &&
@@ -283,6 +236,26 @@ export default function EcommerceCheckoutProduct() {
                         />}
                 </Box>
                 <CheckoutOrderComplete open={bookSuccess} />
+                <Box mx={2}>
+                    <Button
+                        onClick={() => {
+                            const phoneNumber = '+5492944367197';
+                            const message = encodeURIComponent(
+                                `dias de clase: ${events.map( e => {
+                                    console.log({e}); return e.date.toString() + ', ' + e.lessonTime}).toString()}\ncantidad de personas: ${adults}\nExperiencia:${product.name}`
+                            );
+                            const url = `https://api.whatsapp.com/send?phone=${phoneNumber}&text=${message}`;
+                    
+                            window.open(url, '_blank');
+                        }}
+                        variant='contained'
+                        fullWidth
+                        sx={{
+                            py: 1.5
+                        }}
+                        style={{ m: 2, color: 'white', backgroundColor: '#820AD1' }}
+                    >Pagar com PIX</Button>
+                </Box>
                 {/* <Box marginTop={2} marginX={1}>
         <Button onClick={handleBook} variant='contained' fullWidth style={{ m: 2 }}> Book </Button>
           </Box>*/}

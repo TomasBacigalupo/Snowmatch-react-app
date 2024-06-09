@@ -3,29 +3,40 @@ import { Link as RouterLink } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 import { Grid, Link, Divider, Container, Typography, Stack } from '@mui/material';
 // routes
-import { PATH_PAGE } from '../../routes/paths';
+import { PATH_DASHBOARD, PATH_GUEST, PATH_PAGE } from '../../routes/paths';
 // components
 import Logo from '../../components/Logo';
 import SocialsButton from '../../components/SocialsButton';
 
 // ----------------------------------------------------------------------
-
+console.log(Array(600).fill(0).map((_, index) => ({ name: `Teacher ${index}`, href: PATH_GUEST.viewTeacher(index) })))
 const LINKS = [
-  // {
-  //   headline: 'SnowMatch',
-  //   children: [
-  //     { name: 'About us', href: PATH_PAGE.about },
-  //     { name: 'Contact us', href: PATH_PAGE.contact },
-  //     { name: 'FAQs', href: PATH_PAGE.faqs },
-  //   ],
-  // },
-  // {
-  //   headline: 'Legal',
-  //   children: [
-  //     { name: 'Terms and Condition', href: '#' },
-  //     { name: 'Privacy Policy', href: '#' },
-  //   ],
-  // },
+  {
+    headline: 'SnowMatch',
+    children: [
+      { name: 'Catedral', href: PATH_GUEST.independent },
+      { name: 'SnowMatchX', href: PATH_GUEST.snowMatchX },
+      { name: 'Intermedios', href: PATH_GUEST.intermedios },
+      { name: 'Principiantes', href: PATH_GUEST.principiantes },
+      { name: 'Clinic', href: PATH_GUEST.clinic },
+      { name: 'Family', href: PATH_GUEST.family },
+      { name: 'Children', href: PATH_GUEST.children },
+      { name: 'Free Ride', href: PATH_GUEST.freeRide },
+      { name: 'FAQs', href: PATH_PAGE.faqs }
+     
+    ],
+  },
+  {
+    headline: 'Profesores',
+    children:  Array(600).fill(0).map((_, index) => ({ name: `Teacher ${index}`, href: PATH_GUEST.viewTeacher(index) }))
+  },
+  {
+    headline: 'Legal',
+    children: [
+      { name: 'Terms and Condition', href: '#' },
+      { name: 'Privacy Policy', href: '#' },
+    ],
+  },
   {
     headline: 'Contact',
     children: [

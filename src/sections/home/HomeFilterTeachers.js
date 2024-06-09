@@ -17,6 +17,7 @@ import React, { useEffect } from 'react';
 import dayjs from 'dayjs';
 import ReactPixel from 'react-facebook-pixel';
 import {searchTeachers} from 'src/services/facebook';
+import { PATH_DASHBOARD } from 'src/routes/paths';
 
 
 export default function HomeFilterTeachers() {
@@ -113,10 +114,10 @@ export default function HomeFilterTeachers() {
         }))
         
         if (values.resort === "Cerro Catedral") {
-            if (isTeacher) {
+            if (isTeacher) { 
                 navigate('/dashboard/e-commerce/independent?resort=Cerro Catedral')
             } else {
-                navigate('/match/independent?resort=Cerro Catedral')
+                navigate(PATH_DASHBOARD.eCommerce.matchIndependant)
             }
 
         } else {

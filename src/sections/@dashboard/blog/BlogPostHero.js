@@ -81,7 +81,7 @@ BlogPostHero.propTypes = {
 };
 
 export default function BlogPostHero({ post }) {
-  const { cover, title, author, createdAt } = post;
+  const { cover, title, author, createdAt, imageCover } = post;
 
   const isDesktop = useResponsive('up', 'sm');
 
@@ -90,19 +90,16 @@ export default function BlogPostHero({ post }) {
       <TitleStyle>{title}</TitleStyle>
 
       <FooterStyle>
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <Avatar alt={author.name} src={author.avatarUrl} sx={{ width: 48, height: 48 }} />
+        {/* <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <Avatar alt="Juani Vaccarezza" src={""} sx={{ width: 48, height: 48 }} />
           <Box sx={{ ml: 2 }}>
             <Typography variant="subtitle1" sx={{ color: 'common.white' }}>
-              {author.name}
-            </Typography>
-            <Typography variant="body2" sx={{ color: 'grey.500' }}>
-              {fDate(createdAt)}
+              Juani Vaccarezza
             </Typography>
           </Box>
-        </Box>
+        </Box> */}
 
-        <SpeedDial
+        {/* <SpeedDial
           direction={isDesktop ? 'left' : 'up'}
           ariaLabel="Share post"
           icon={<Iconify icon="eva:share-fill" sx={{ width: 20, height: 20 }} />}
@@ -117,11 +114,11 @@ export default function BlogPostHero({ post }) {
               FabProps={{ color: 'default' }}
             />
           ))}
-        </SpeedDial>
+        </SpeedDial> */}
       </FooterStyle>
 
       <OverlayStyle />
-      <Image alt="post cover" src={cover} ratio="16/9" />
+      <Image alt="post cover" src={imageCover} ratio="16/9" />
     </Box>
   );
 }

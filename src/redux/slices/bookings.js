@@ -424,7 +424,7 @@ export function setAccepted(eventId) {
         }
     };
 }
-
+ 
 export function createBooking(teacherId, message, children, adults, events, totalPrice) {
     return async () => {
         dispatch(slice.actions.startLoading());
@@ -468,6 +468,7 @@ export function createBooking(teacherId, message, children, adults, events, tota
     };
 }
 
+
 export function bookingAndPay(teacherId, message, children, adults, events, totalPrice, formData) {
     return async () => {
         console.log({ formData })
@@ -475,6 +476,49 @@ export function bookingAndPay(teacherId, message, children, adults, events, tota
         try {
             await axios.post(`/api/bookings/bookAndPay?amount=${formData.transaction_amount}&token=${formData.token}&holderEmail=${formData.payer.email}&holderIdType=${formData.payer.identification.type}&holderId=${formData.payer.identification.number}&paymentMethodId=${formData.payment_method_id}&installments=${formData.installments}`, {
                 teacherId: teacherId,
+                userComment: message,
+                events: events.map(e => {
+                    if (e.lessonTime === 'AFTERNOON') {
+                        return {
+                            ...e,
+                            start: utcToLocalDate(new Date(e.date).setHours(14, 0, 0, 0)),
+                            end: utcToLocalDate(new Date(e.date).setHours(17, 0, 0, 0)),
+                            lessonTime: 'AFTERNOON'
+                        }
+                    }
+                    if (e.lessonTime === 'MORNING') {
+                        return {
+                            ...e,
+                            start: utcToLocalDate(new Date(e.date).setHours(10, 0, 0, 0)),
+                            end: utcToLocalDate(new Date(e.date).setHours(13, 0, 0, 0)),
+                            lessonTime: 'MORNING'
+                        }
+                    }
+                    return {
+                        ...e,
+                        start: utcToLocalDate(new Date(e.date).setHours(10, 0, 0, 0)),
+                        end: utcToLocalDate(new Date(e.date).setHours(17, 0, 0, 0)),
+                    }
+                }),
+                children: children,
+                adults: adults,
+                totalPrice: totalPrice,
+                payedReservation: totalPrice * 0.2,
+            });
+            dispatch(slice.actions.createBookingSuccess());
+        } catch (error) {
+            dispatch(slice.actions.onCreateBookingError(error));
+        }
+    };
+}
+
+export function bookingAndPayProduct(productId, message, children, adults, events, totalPrice, formData) {
+    return async () => {
+        console.log({ formData })
+        dispatch(slice.actions.startLoadingPayment());
+        try {
+            await axios.post(`/api/bookings/bookAndPayProduct?amount=${formData.transaction_amount}&token=${formData.token}&holderEmail=${formData.payer.email}&holderIdType=${formData.payer.identification.type}&holderId=${formData.payer.identification.number}&paymentMethodId=${formData.payment_method_id}&installments=${formData.installments}`, {
+                productId: productId,
                 userComment: message,
                 events: events.map(e => {
                     if (e.lessonTime === 'AFTERNOON') {

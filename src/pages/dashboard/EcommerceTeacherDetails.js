@@ -34,6 +34,7 @@ import useLocales from 'src/hooks/useLocales';
 import { trackViewTeacher } from 'src/services/facebook';
 import Policies from '../../sections/@dashboard/e-commerce/teacher-details/Policies'
 import TimeDetails from 'src/sections/@dashboard/e-commerce/teacher-details/TimeDetails';
+import { Helmet } from 'react-helmet-async';
 // ----------------------------------------------------------------------
 
 const PRODUCT_DESCRIPTION = [
@@ -115,6 +116,14 @@ export default function EcommerceTeacherDetails({ isGuest = false }) {
 
   return (
     <Page title={translate('teacherDetails.title')}>
+      <Helmet>
+        <title>{translate('teacherDetails.title')}</title>
+        <meta name="description" content={teacher?.information} />
+        <meta property="og:title" content={teacher?.name} />
+        <meta property="og:description" content={teacher?.information} />
+        <meta property="og:image" content={teacher?.imageLink} />
+        <meta property="og:url" content={`https://snowmatch.pro/match/teacher/${id}`} />
+      </Helmet>
       <Container maxWidth={themeStretch ? false : 'lg'} p={0}>
         <HeaderBreadcrumbs
           heading={translate('teacherDetails.title')}

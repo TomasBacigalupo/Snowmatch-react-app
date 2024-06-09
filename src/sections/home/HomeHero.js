@@ -1,5 +1,5 @@
 import { m } from 'framer-motion';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // @mui
 import { styled, useTheme } from '@mui/material/styles';
 import { Button, Box, Link, Container, Typography, Stack, Grid, Select, Hidden, Card, Avatar } from '@mui/material';
@@ -79,7 +79,8 @@ const HeroImgStyle = styled(m.div)(({ theme }) => ({
 export default function HomeHero() {
   const { translate } = useLocales()
   const [value, setValue] = useState(0);
-  const theme = useTheme()
+  const theme = useTheme();
+  const navigate = useNavigate()
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -153,7 +154,9 @@ export default function HomeHero() {
                     <Box>
                       <Box display='flex' justifyContent='space-between' alignItems='center'>
                         <m.div variants={varFade().inLeft}>
-                          <Box display='flex' alignItems='center' justifyItems='center' flexDirection='column'>
+                          <Box display='flex' alignItems='center' justifyItems='center' flexDirection='column' onClick={() =>
+                            navigate(PATH_DASHBOARD.eCommerce.matchIndependant)
+                          }>
                             <Avatar src='assets/resorts/icon-catedral.png' sx={{
                               border: 'solid',
                               borderColor: '#003366',
@@ -191,7 +194,7 @@ export default function HomeHero() {
                   </Box>
                 </Grid>
               </Hidden>
-              
+
             </Grid>
 
 

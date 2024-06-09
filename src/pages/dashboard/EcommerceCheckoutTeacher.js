@@ -222,6 +222,26 @@ export default function EcommerceCheckoutTeacher() {
               onError={onError}
             />}
         </Box>
+        <Box mx={2}>
+                    <Button
+                        onClick={() => {
+                            const phoneNumber = '+5492944367197';
+                            const message = encodeURIComponent(
+                                `dias de clase: ${events.map( e => {
+                                    console.log({e}); return e.date.toString() + ', ' + e.lessonTime}).toString()}\ncantidad de personas: ${adults}\nExperiencia:${teacher.name}`
+                            );
+                            const url = `https://api.whatsapp.com/send?phone=${phoneNumber}&text=${message}`;
+                    
+                            window.open(url, '_blank');
+                        }}
+                        variant='contained'
+                        fullWidth
+                        sx={{
+                            py: 1.5
+                        }}
+                        style={{ m: 2, color: 'white', backgroundColor: '#820AD1' }}
+                    >Pagar com PIX</Button>
+                </Box>
         <CheckoutOrderComplete open={bookSuccess} />
         {bookingPrice < 0 &&
           <Box marginTop={2} marginX={1}>

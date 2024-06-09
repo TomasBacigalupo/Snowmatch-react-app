@@ -47,93 +47,7 @@ export default function BlogPosts() {
 
   const isMountedRef = useIsMountedRef();
 
-  const [posts, setPosts] = useState([{
-    id: 1,
-    name: 'test',
-    description: 'test',
-    image: 'test',
-    view: 1,
-    createdAt: 'test',
-    updatedAt: 'test',
-    author: {
-      name: "Jaime",
-      avatarUrl: "https://image.snowmatch.pro/profile/248-7a4aae14-7db3-4074-a3a3-3b44b81e9538"
-    },
-    youtubeUrl: 'FUrHpKp7I_k',
-    title: 'proTips.tips.jaime.title',
-    description: 'proTips.tips.jaime.description',
-    createdAt: new Date().toString(),
-    isYoutube: true
-  }, {
-    id: 5,
-    name: 'test',
-    description: 'test',
-    image: 'test',
-    view: 1,
-    createdAt: 'test',
-    updatedAt: 'test',
-    author: {
-      name: "Chapi",
-      avatarUrl: "https://image.snowmatch.pro/profile/121-8b34533f-318d-479b-984d-f0b0d951f363"
-    },
-    youtubeUrl: 'GF8Dbap50VE',
-    title: 'proTips.tips.chapi2.title',
-    description: 'proTips.tips.chapi2.description',
-    createdAt: new Date().toString(),
-    isYoutube: true
-  }, {
-    id: 1,
-    name: 'test',
-    description: 'test',
-    image: 'test',
-    view: 1,
-    createdAt: 'test',
-    updatedAt: 'test',
-    author: {
-      name: "Tomi",
-      avatarUrl: "https://image.snowmatch.pro/profile/14-1b79994a-22e5-4eed-99b4-d4c93070a784"
-    },
-    youtubeUrl: 'abUomom9nMg',
-    title: 'proTips.tips.tomi.title',
-    description: 'proTips.tips.tomi.description',
-    createdAt: new Date().toString(),
-    isYoutube: true
-  }, {
-    id: 3,
-    name: 'test',
-    description: 'test',
-    image: 'test',
-    view: 1,
-    createdAt: 'test',
-    updatedAt: 'test',
-    author: {
-      name: "Manu",
-      avatarUrl: "https://image.snowmatch.pro/profile/121-8b34533f-318d-479b-984d-f0b0d951f363"
-    },
-    youtubeUrl: 'sX-8h-hS66U',
-    title: 'proTips.tips.manu.title',
-    description: 'proTips.tips.manu.description',
-    createdAt: new Date().toString(),
-    isYoutube: true
-  }, {
-    id: 4,
-    name: 'test',
-    description: 'test',
-    image: 'test',
-    view: 1,
-    createdAt: 'test',
-    updatedAt: 'test',
-    author: {
-      name: "Chapi",
-      avatarUrl: "https://image.snowmatch.pro/profile/121-8b34533f-318d-479b-984d-f0b0d951f363"
-    },
-    youtubeUrl: 'MAcD6sfsBTg',
-    title: 'proTips.tips.chapi.title',
-    description: 'proTips.tips.chapi.description',
-    createdAt: new Date().toString(),
-    isYoutube: true
-  }
-  ]);
+  const [posts, setPosts] = useState();
 
   const [filters, setFilters] = useState('latest');
 
@@ -146,6 +60,7 @@ export default function BlogPosts() {
       const response = await axios.get('/api/blog/posts');
 
       if (isMountedRef.current) {
+        console.log(response.data);
         setPosts([...response.data.map(p => ({
           ...p,
           name: p.title,
@@ -154,92 +69,7 @@ export default function BlogPosts() {
             name: "SnowMatch",
             avatarUrl: "/assets/logo/fullBlack.svg"
           },
-        })), {
-          id: 1,
-          name: 'test',
-          description: 'test',
-          image: 'test',
-          view: 1,
-          createdAt: 'test',
-          updatedAt: 'test',
-          author: {
-            name: "Jaime",
-            avatarUrl: "https://image.snowmatch.pro/profile/248-7a4aae14-7db3-4074-a3a3-3b44b81e9538"
-          },
-          youtubeUrl: 'FUrHpKp7I_k',
-          title: 'proTips.tips.jaime.title',
-          description: 'proTips.tips.jaime.description',
-          createdAt: new Date().toString(),
-          isYoutube: true
-        }, {
-          id: 5,
-          name: 'test',
-          description: 'test',
-          image: 'test',
-          view: 1,
-          createdAt: 'test',
-          updatedAt: 'test',
-          author: {
-            name: "Chapi",
-            avatarUrl: "https://image.snowmatch.pro/profile/121-8b34533f-318d-479b-984d-f0b0d951f363"
-          },
-          youtubeUrl: 'GF8Dbap50VE',
-          title: 'proTips.tips.chapi2.title',
-          description: 'proTips.tips.chapi2.description',
-          createdAt: new Date().toString(),
-          isYoutube: true
-        }, {
-          id: 1,
-          name: 'test',
-          description: 'test',
-          image: 'test',
-          view: 1,
-          createdAt: 'test',
-          updatedAt: 'test',
-          author: {
-            name: "Tomi",
-            avatarUrl: "https://image.snowmatch.pro/profile/14-1b79994a-22e5-4eed-99b4-d4c93070a784"
-          },
-          youtubeUrl: 'abUomom9nMg',
-          title: 'proTips.tips.tomi.title',
-          description: 'proTips.tips.tomi.description',
-          createdAt: new Date().toString(),
-          isYoutube: true
-        }, {
-          id: 3,
-          name: 'test',
-          description: 'test',
-          image: 'test',
-          view: 1,
-          createdAt: 'test',
-          updatedAt: 'test',
-          author: {
-            name: "Manu",
-            avatarUrl: "https://image.snowmatch.pro/profile/121-8b34533f-318d-479b-984d-f0b0d951f363"
-          },
-          youtubeUrl: 'sX-8h-hS66U',
-          title: 'proTips.tips.manu.title',
-          description: 'proTips.tips.manu.description',
-          createdAt: new Date().toString(),
-          isYoutube: true
-        }, {
-          id: 4,
-          name: 'test',
-          description: 'test',
-          image: 'test',
-          view: 1,
-          createdAt: 'test',
-          updatedAt: 'test',
-          author: {
-            name: "Chapi",
-            avatarUrl: "https://image.snowmatch.pro/profile/121-8b34533f-318d-479b-984d-f0b0d951f363"
-          },
-          youtubeUrl: 'MAcD6sfsBTg',
-          title: 'proTips.tips.chapi.title',
-          description: 'proTips.tips.chapi.description',
-          createdAt: new Date().toString(),
-          isYoutube: true
-        }]);
+        }))]);
       }
     } catch (error) {
       console.error(error);

@@ -38,6 +38,7 @@ import FaqsDetails from 'src/sections/@dashboard/e-commerce/teacher-details/Faqs
 import { Description } from '@mui/icons-material';
 import DescriptionDetails from 'src/sections/@dashboard/e-commerce/teacher-details/DescriptionDetails';
 import TechDetails from 'src/sections/@dashboard/e-commerce/teacher-details/TechDetails';
+import { Helmet } from 'react-helmet-async';
 // ----------------------------------------------------------------------
 
 const PRODUCT_DESCRIPTION = [
@@ -132,6 +133,14 @@ export default function EcommerceTeacherDetails({ isGuest = false }) {
     <Page title={translate('products.experienceTitle')} meta={
       <meta name="og:description" content={translate(`product.${id}.metaDescription`)} />
     }>
+      <Helmet>
+        <title>SnowMatchX</title>
+        <meta name="description" content={translate(`product.${id}.metaDescription`)} />
+        <meta property="og:title" content={translate(`product.${id}.metaTitle`)} />
+        <meta property="og:description" content={translate(`product.${id}.metaDesc`)} />
+        <meta property="og:image" content={product?.imageLink} />
+        <meta property="og:url" content={`https://snowmatch.pro/match/product/${id}`} />
+      </Helmet>
       <Container maxWidth={themeStretch ? false : 'lg'} p={0}>
         <HeaderBreadcrumbs
           heading={translate('products.experienceTitle')}

@@ -14,7 +14,8 @@
     "lint:fix": "eslint --fix --ext .js,.jsx ./src",
     "clear-all": "rm -rf build node_modules",
     "re-start": "rm -rf build node_modules && yarn install && yarn start",
-    "re-build": "rm -rf build node_modules && yarn install && yarn build"
+    "re-build": "rm -rf build node_modules && yarn install && yarn build",
+    "postbuild": "react-snap"
   },
   "eslintConfig": {
     "extends": [
@@ -127,6 +128,7 @@
     "react-router-dom": "^6.2.2",
     "react-scripts": "^5.0.0",
     "react-slick": "^0.28.0",
+    "react-snap": "^1.23.0",
     "react-youtube": "^10.1.0",
     "redux": "^4.1.2",
     "redux-persist": "^6.0.0",

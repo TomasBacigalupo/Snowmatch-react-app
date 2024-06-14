@@ -29,7 +29,8 @@ import { bookingAndPay, bookingPending, createBooking, createPreference, onCreat
 import { sum } from 'lodash';
 
 import ReactPixel from 'react-facebook-pixel';
-initMercadoPago('TEST-88fbbb89-cc56-4432-a225-f27e4dab2a7c', { locale: 'es-AR' });
+console.log(process.env.REACT_APP_MERCADO_PAGO_PUBLIC_KEY)
+initMercadoPago(process.env.REACT_APP_MERCADO_PAGO_PUBLIC_KEY, { locale: 'es-AR' });
 
 // ----------------------------------------------------------------------
 

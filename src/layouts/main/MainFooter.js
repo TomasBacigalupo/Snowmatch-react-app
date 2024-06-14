@@ -9,7 +9,6 @@ import Logo from '../../components/Logo';
 import SocialsButton from '../../components/SocialsButton';
 
 // ----------------------------------------------------------------------
-console.log(Array(600).fill(0).map((_, index) => ({ name: `Teacher ${index}`, href: PATH_GUEST.viewTeacher(index) })))
 const LINKS = [
   {
     headline: 'SnowMatch',
@@ -28,7 +27,7 @@ const LINKS = [
   },
   {
     headline: 'Profesores',
-    children:  Array(600).fill(0).map((_, index) => ({ name: `Teacher ${index}`, href: PATH_GUEST.viewTeacher(index) }))
+    children:  Array(200).fill(0).map((_, index) => ({ name: `Teacher ${index}`, href: PATH_GUEST.viewTeacher(index) }))
   },
   {
     headline: 'Legal',

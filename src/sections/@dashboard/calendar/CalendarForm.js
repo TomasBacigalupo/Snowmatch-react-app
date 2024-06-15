@@ -238,9 +238,9 @@ export default function CalendarForm({ event, range, onCancel, clients, members,
     }
 
 
-    if (user.user.role === 'ADMIN') {
-      setClassType('teacher')
-    }
+    // if (user.user.role === 'ADMIN') {
+    //   setClassType('teacher')
+    // }
 
   }, []);
 

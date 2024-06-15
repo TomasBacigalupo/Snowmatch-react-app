@@ -166,7 +166,7 @@ export default function Calendar() {
   };
 
   return (
-    <Page title={translate('calendar.name') }>
+    <Page title={translate('calendar.name')}>
       <Container maxWidth={themeStretch ? false : 'xl'}>
         <HeaderBreadcrumbs
           heading={translate('calendar.name') }

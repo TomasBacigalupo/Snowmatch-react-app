@@ -132,6 +132,65 @@ export default function CalendarDayForm({ event, range, onCancel, clients, membe
     enqueueSnackbar("Clase Asignada");
     onCancel();
   }
+  
+  function setLessonTime(event) {
+    // Extract the start and end dates from the event
+    let start = new Date(event.start);
+    let end = new Date(event.end);
+
+    if (timeSelected === 'ALL_DAY') {
+        start.setHours(9, 0, 0, 0); // Set start time to 9:00 AM
+        end.setHours(17, 0, 0, 0); // Set end time to 5:00 PM
+    } else if (timeSelected === 'MORNING') {
+        start.setHours(9, 0, 0, 0); // Set start time to 9:00 AM
+        end.setHours(13, 0, 0, 0); // Set end time to 1:00 PM
+    } else { // Assume 'AFTERNOON'
+        start.setHours(13, 0, 0, 0); // Set start time to 1:00 PM
+        end.setHours(17, 0, 0, 0); // Set end time to 5:00 PM
+    }
+
+    // Update the event object with new start and end times
+    event.start = start.toISOString();
+    event.end = end.toISOString();
+  }
+  
+  const handleCreateSchoolEvent = () => {
+    let newEvent
+    newEvent = {
+      ...event,
+      title: "Asignada",
+      description: "Creada manualmente",
+      textColor: "#FFC107",
+      start: values.start,
+      end: values.end,
+      assignedUsers: assignedUsers,
+      clients: selectedClients,
+    };
+    setLessonTime(newEvent, timeSelected)
+    const response = dispatch(createBusinessEvent(newEvent));
+
+    enqueueSnackbar("Clase Asignada");
+    onCancel();
+  }
+
+  // const handleEditSchoolEvent = () => {
+  //   newEvent = {
+  //     ...event,
+  //     title: data.title,
+  //     description: data.description,
+  //     textColor: data.textColor,
+  //     start: data.start,
+  //     end: data.end,
+  //     type: data.type,
+  //     price: data.price === null ? undefined : data.price,
+  //     assignedUsers: assignedUsers,
+  //     clients: selectedClients,
+  //     id: event.id
+  //   };
+  //   const response = dispatch(updateBusinessEvent(event.id, newEvent));
+  //   enqueueSnackbar("Clase Asignada");
+  //   onCancel();
+  // }
 
   const methods = useForm({
     resolver: yupResolver(EventSchema),
@@ -266,17 +325,13 @@ export default function CalendarDayForm({ event, range, onCancel, clients, membe
       setClassType('teacher')
     } else if (event?.businessOwner !== null && event?.businessOwner != undefined) {
       setClassType('school')
+    } else if (user?.user?.administeredBusiness != null && event?.administeredBusiness != undefined) {
+      setClassType('school')
     } else if (user?.user?.role === 'TEACHER') {
       setClassType('teacher')
     } else {
       setClassType('school')
     }
-
-
-    if (user.user.role === 'ADMIN') {
-      setClassType('teacher')
-    }
-
   }, []);
 
 
@@ -302,8 +357,20 @@ export default function CalendarDayForm({ event, range, onCancel, clients, membe
 
 
   return (
-    <FormProvider methods={methods} onSubmit={handleSubmit(handleBlock)}>
+    <FormProvider methods={methods} onSubmit={handleSubmit(handleBlock)}> 
       <Stack spacing={3} sx={{ p: 3 }}>
+      <Typography
+          variant="body2"
+          sx={{
+            maxWidth: 260,
+            overflow: 'hidden',
+            whiteSpace: 'nowrap',
+            color: 'text.disabled',
+            textOverflow: 'ellipsis',
+          }}
+        >
+          {classType}
+        </Typography>
         <ToggleButtonGroup
           color="primary"
           value={block}
@@ -568,8 +635,8 @@ export default function CalendarDayForm({ event, range, onCancel, clients, membe
 
         <LoadingButton fullWidth disabled={disabled || timeSelected === null} 
         // type="submit" 
-        variant="contained" loading={isSubmitting} sx={{ ':hover': { color: '#3399FF' } }} onClick={block === 'block' ? handleBlock : handleAssign}>
-          {block === 'block' ? 'Bloquear' : 'Asignar'}
+        variant="contained" loading={isSubmitting} sx={{ ':hover': { color: '#3399FF' } }} onClick={classType === "school"? handleCreateSchoolEvent : block === 'block' ? handleBlock : handleAssign}>
+          {classType === "school"? "createSchool" : block === 'block' ? 'Bloquear' : 'Asignar'}
         </LoadingButton>
       </DialogActions>
     </FormProvider>

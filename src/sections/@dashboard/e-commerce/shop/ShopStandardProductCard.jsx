@@ -15,6 +15,7 @@ import Iconify from 'src/components/Iconify';
 import useLocales from 'src/hooks/useLocales';
 import { fCurrency } from 'src/utils/formatNumber';
 import { useTranslation } from 'react-i18next';
+import { trackExperience } from 'src/services/facebook';
 // ----------------------------------------------------------------------
 
 ShopStandardProductCard.propTypes = {
@@ -48,7 +49,10 @@ export default function ShopStandardProductCard({ standardProduct }) {
     const hasDiscount = totalDays > 100
 
     return (
-        <Box onClick={() => navigate(linkTo)}>
+        <Box onClick={() => {
+            trackExperience(standardProduct)
+            navigate(linkTo)
+        }}>
             <Box sx={{ position: 'relative' }}>
                 <Image alt={name} src={src}
                     ratio="1/1" onError={() => setSrc('/assets/notFound.jpeg')} sx={{ borderRadius: '10px' }} />

@@ -35,6 +35,8 @@ import ShopOtherTeacherList from 'src/sections/@dashboard/e-commerce/shop/ShopOt
 import IndependentShop from 'src/sections/@dashboard/e-commerce/shop/IndependentShop';
 import ShopStandardProducts from 'src/sections/@dashboard/e-commerce/shop/ShopStandardProducts';
 import AirbnbFilters from 'src/sections/@dashboard/e-commerce/shop/AirbnbFilters';
+import { openCatedral } from 'src/services/facebook';
+import { Helmet } from 'react-helmet-async';
 // ----------------------------------------------------------------------
 
 function useQuery() {
@@ -79,7 +81,7 @@ export default function EcommerceShop({ isGuest = false, teacherType = "school" 
     to: filters.to,
     resort: resortFromPath !== null ? resortFromPath : filters.resort,
   };
-  
+
 
   const methods = useForm({
     defaultValues,
@@ -155,9 +157,23 @@ export default function EcommerceShop({ isGuest = false, teacherType = "school" 
     setValue('resort', '');
   };
 
+  useEffect(() => {
+    if (teacherType === "independent") {
+      openCatedral()
+    }
+  }, [teacherType]);
+
 
   return (
     <Page title="Match">
+      <Helmet>
+        <title>Clases de ski y Experiencias</title>
+        <meta name="description" content="Clases de ski en Cerro Catedral" />
+        <meta property="og:title" content="Clases de ski en el Cerro Catedral para todos los niveles" />
+        <meta property="og:description" content="Reservá tu clase en Bariloche en menos de un minuto con SnowMatch. Más de 30 instructores habilitados. ¡Cupos limitados!" />
+        <meta property="og:image" content="https://snowmatchimages.s3.amazonaws.com/profile/ClaseNiñoss.jpeg" />
+        <meta property="og:url" content="https://snowmatch.pro" />
+      </Helmet>
       <Container maxWidth={themeStretch ? false : 'lg'}>
         {teacherType === "independent" && <IndependentShop />}
         {teacherType === "independent" && category === "premium" && <AirbnbFilters />}

@@ -427,8 +427,13 @@ export function createBusinessEvent(newEvent) {
   return async () => {
     //dispatch(slice.actions.startLoading());
     try {
+      dispatch(slice.actions.startLoading());
       const response = await axios.post('/api/events/business', newEvent);
-      dispatch(slice.actions.createEventSuccess(response.data));
+      // dispatch(slice.actions.createEventSuccess(response.data));
+      dispatch(slice.actions.createEventSuccess({ id: response.data.id, 
+        start:  dayjs(response.data.from),
+        end:  dayjs(response.data.to),
+        title: response.data.title, textColor: response.data.textColor }));
       return response;
     } catch (error) {
       //dispatch(slice.actions.hasError(error));

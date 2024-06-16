@@ -745,24 +745,24 @@ export default function CalendarDayForm({ event, range, onCancel, clients, membe
                   disabled={disabled}
                   multiple
                   disableCloseOnSelect
-                  name="memberId" label={translate('calendar.form.member')}
-                  value={selectedMembers}
-                  options={[...members].sort((a, b) => a?.name?.localeCompare(b?.name))}
+                  name="clientId" label={translate('calendar.form.client')}
+                  value={selectedClients}
+                  options={[...clients].sort((a, b) => a?.name?.localeCompare(b?.name))}
                   getOptionLabel={(c) => `${c?.name} ${c?.lastname}`}
                   onChange={(event, value) => {
-                    setSelectedMembers([...value])
+                    setSelectedClients([...value])
                   }}
-                  renderOption={(props, member) => (
+                  renderOption={(props, clients) => (
                     <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-                      <Avatar sx={{ marginRight: '10px' }}>{`${member?.name[0]}${member?.lastname[0]}`}</Avatar>
-                      {`${member.name} ${member.lastname}`}
+                      <Avatar sx={{ marginRight: '10px' }}>{`${clients?.name[0]}${clients?.lastname[0]}`}</Avatar>
+                      {`${clients.name} ${clients.lastname}`}
                     </Box>
                   )}
       
                   renderInput={(params) => (
                     <RHFTextField {...params}
                       disabled={disabled}
-                      name="memberid" label="Memeber" sx={{my: 2}} />
+                      name="clientsid" label="Clients" sx={{my: 2}} />
                   )}
                 />
                 <Autocomplete
@@ -811,24 +811,24 @@ export default function CalendarDayForm({ event, range, onCancel, clients, membe
                   disabled={disabled}
                   multiple
                   disableCloseOnSelect
-                  name="memberId" label={translate('calendar.form.member')}
-                  value={selectedMembers}
-                  options={[...members].sort((a, b) => a?.name?.localeCompare(b?.name))}
+                  name="clientId" label={translate('calendar.form.client')}
+                  value={selectedClients}
+                  options={[...clients].sort((a, b) => a?.name?.localeCompare(b?.name))}
                   getOptionLabel={(c) => `${c?.name} ${c?.lastname}`}
                   onChange={(event, value) => {
-                    setSelectedMembers([...value])
+                    setSelectedClients([...value])
                   }}
-                  renderOption={(props, member) => (
+                  renderOption={(props, clients) => (
                     <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-                      <Avatar sx={{ marginRight: '10px' }}>{`${member?.name[0]}${member?.lastname[0]}`}</Avatar>
-                      {`${member.name} ${member.lastname}`}
+                      <Avatar sx={{ marginRight: '10px' }}>{`${clients?.name[0]}${clients?.lastname[0]}`}</Avatar>
+                      {`${clients.name} ${clients.lastname}`}
                     </Box>
                   )}
       
                   renderInput={(params) => (
                     <RHFTextField {...params}
                       disabled={disabled}
-                      name="memberid" label="Member" sx={{my: 2}}  />
+                      name="clientsid" label="Clients" sx={{my: 2}} />
                   )}
                 />
                 <Autocomplete

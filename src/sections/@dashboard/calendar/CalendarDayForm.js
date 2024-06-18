@@ -75,6 +75,7 @@ export default function CalendarDayForm({ event, range, onCancel, clients, membe
   const { enqueueSnackbar } = useSnackbar();
   const { translate } = useLocales()
   const [selectedClients, setSelectedClients] = useState([...event?.clients || []])
+  const [selectedMembers, setSelectedMembers] = useState([...event?.assignedUsers || []])
   const [assignedUsers, setAssignedUsers] = useState([...event?.assignedUsers || []])
   const [assignedStudents, setAssignedStudents] = useState([...event?.students || []])
   const [state, setState] = useState(event?.state || 'PENDING')
@@ -93,10 +94,14 @@ export default function CalendarDayForm({ event, range, onCancel, clients, membe
     event,
     category,
   ) => {
-    if (category === 'block') {
-      setBlock('block')
+    if (classType == "teacher"){
+      if (category === 'block') {
+        setBlock('block')
+      } else {
+        setBlock('assign')
+      }
     } else {
-      setBlock('assign')
+      setBlock('school')
     }
   };
 
@@ -148,10 +153,25 @@ export default function CalendarDayForm({ event, range, onCancel, clients, membe
         start.setHours(13, 0, 0, 0); // Set start time to 1:00 PM
         end.setHours(17, 0, 0, 0); // Set end time to 5:00 PM
     }
+    
+    // Format date to ISO string without converting to UTC
+    function formatLocalISODate(date) {
+      const pad = (number) => (number < 10 ? '0' : '') + number;
+      return date.getFullYear() +
+          '-' + pad(date.getMonth() + 1) +
+          '-' + pad(date.getDate()) +
+          'T' + pad(date.getHours()) +
+          ':' + pad(date.getMinutes()) +
+          ':' + pad(date.getSeconds());
+    }
 
     // Update the event object with new start and end times
-    event.start = start.toISOString();
-    event.end = end.toISOString();
+    event.start = formatLocalISODate(start);
+    event.end = formatLocalISODate(end);
+
+    // // Update the event object with new start and end times
+    // event.start = start.toISOString();
+    // event.end = end.toISOString();
   }
   
   const handleCreateSchoolEvent = () => {
@@ -163,7 +183,7 @@ export default function CalendarDayForm({ event, range, onCancel, clients, membe
       textColor: "#FFC107",
       start: values.start,
       end: values.end,
-      assignedUsers: assignedUsers,
+      assignedUsers: selectedMembers,
       clients: selectedClients,
     };
     setLessonTime(newEvent, timeSelected)
@@ -325,12 +345,15 @@ export default function CalendarDayForm({ event, range, onCancel, clients, membe
       setClassType('teacher')
     } else if (event?.businessOwner !== null && event?.businessOwner != undefined) {
       setClassType('school')
+      setBlock('school')
     } else if (user?.user?.administeredBusiness != null && event?.administeredBusiness != undefined) {
       setClassType('school')
+      setBlock('school')
     } else if (user?.user?.role === 'TEACHER') {
       setClassType('teacher')
     } else {
       setClassType('school')
+      setBlock('school')
     }
   }, []);
 
@@ -384,7 +407,7 @@ export default function CalendarDayForm({ event, range, onCancel, clients, membe
             marginBottom: 2,
           }}
         >
-          <ToggleButton
+          { classType === "teacher" && <><ToggleButton
             value="block"
             sx={{
               width: '100%',
@@ -409,7 +432,22 @@ export default function CalendarDayForm({ event, range, onCancel, clients, membe
             }}
           >
             Asignar Cliente
-          </ToggleButton>
+          </ToggleButton></> }
+
+          {classType === "school" && <ToggleButton
+            value="school"
+            sx={{
+              width: '100%',
+              borderRadius: 10,
+              justifyContent: 'center',
+              '&.MuiButtonBase-root': {
+                borderRadius: '100px !important',
+              },
+            }}
+          >
+            Evento escuela
+          </ToggleButton>}
+
         </ToggleButtonGroup>
         <Box>
           <MobileDatePicker
@@ -615,6 +653,212 @@ export default function CalendarDayForm({ event, range, onCancel, clients, membe
             </Grid>
         </>}
 
+
+        {block === 'school' && <>
+            <Grid spacing={2} direction={{ xs: 'column', md: 'column ' }}>
+
+              <Paper
+                onClick={() => {
+                  setTimeSelected('ALL_DAY')
+                }}
+                sx={{
+                  p: 3,
+                  my:2,
+                  width: 1,
+                  border: (theme) => `solid 1px ${timeSelected === 'ALL_DAY' ? theme.palette.primary.main : theme.palette.grey[500_32]}`,
+                  
+                }}
+              >
+                {/* picture or icon */}
+                <Typography color={timeSelected === 'ALL_DAY' ? 'primary':''} variant="h6">Todo el día</Typography>
+                {timeSelected === 'ALL_DAY' && <Typography color={timeSelected === 'ALL_DAY' ? 'primary':''} variant="subtitle2">Al bloquear tu día completo no podrán hacerte contrataciones este día</Typography>
+                }
+                {timeSelected === 'ALL_DAY' && clients?.length > 0 && <><Autocomplete
+                  disabled={disabled}
+                  multiple
+                  disableCloseOnSelect
+                  name="clientId" label={translate('calendar.form.client')}
+                  value={selectedClients}
+                  options={[...clients].sort((a, b) => a?.name?.localeCompare(b?.name))}
+                  getOptionLabel={(c) => `${c?.name} ${c?.lastname}`}
+                  onChange={(event, value) => {
+                    setSelectedClients([...value])
+                  }}
+                  renderOption={(props, clients) => (
+                    <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                      <Avatar sx={{ marginRight: '10px' }}>{`${clients?.name[0]}${clients?.lastname[0]}`}</Avatar>
+                      {`${clients.name} ${clients.lastname}`}
+                    </Box>
+                  )}
+      
+                  renderInput={(params) => (
+                    <RHFTextField {...params}
+                      disabled={disabled}
+                      name="clientsid" label="Clients" sx={{my: 2}} />
+                  )}
+                />
+                <Autocomplete
+                  disabled={disabled}
+                  multiple
+                  disableCloseOnSelect
+                  name="membersId" label={translate('calendar.form.member')}
+                  value={selectedMembers}
+                  options={[...members].sort((a, b) => a?.name?.localeCompare(b?.name))}
+                  getOptionLabel={(c) => `${c?.name} ${c?.lastname}`}
+                  onChange={(event, value) => {
+                    setSelectedMembers([...value])
+                  }}
+                  renderOption={(props, member) => (
+                    <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                      <Avatar sx={{ marginRight: '10px' }}>{`${member?.name[0]}${member?.lastname[0]}`}</Avatar>
+                      {`${member.name} ${member.lastname}`}
+                    </Box>
+                  )}
+      
+                  renderInput={(params) => (
+                    <RHFTextField {...params}
+                      disabled={disabled}
+                      name="memberid" label="Members" sx={{my: 2}} />
+                  )}
+                /></>}
+                
+              </Paper>
+              <Paper
+
+                onClick={() => { 
+                  setTimeSelected('MORNING')
+                }}
+                
+                sx={{
+                  p: 3,
+                  width: 1,
+                  my:2,
+                  border: (theme) => `solid 1px ${timeSelected === 'MORNING' ? theme.palette.primary.main : theme.palette.grey[500_32]}`,
+                  
+                }}
+              >
+                {/* picture or icon */}
+                <Typography variant="h6" color={timeSelected === 'MORNING' ? 'primary':''}>Mañana</Typography>
+                {timeSelected === 'MORNING' && <Typography color={timeSelected === 'MORNING' ? 'primary':''} variant="subtitle2">Al bloquear tu turno de mañana no podrán hacerte contrataciones este día entre las 8:00am y las 12:00pm</Typography>
+                }
+                 {timeSelected === 'MORNING' && members?.length > 0 && <><Autocomplete
+                  disabled={disabled}
+                  multiple
+                  disableCloseOnSelect
+                  name="clientId" label={translate('calendar.form.client')}
+                  value={selectedClients}
+                  options={[...clients].sort((a, b) => a?.name?.localeCompare(b?.name))}
+                  getOptionLabel={(c) => `${c?.name} ${c?.lastname}`}
+                  onChange={(event, value) => {
+                    setSelectedClients([...value])
+                  }}
+                  renderOption={(props, clients) => (
+                    <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                      <Avatar sx={{ marginRight: '10px' }}>{`${clients?.name[0]}${clients?.lastname[0]}`}</Avatar>
+                      {`${clients.name} ${clients.lastname}`}
+                    </Box>
+                  )}
+      
+                  renderInput={(params) => (
+                    <RHFTextField {...params}
+                      disabled={disabled}
+                      name="clientsid" label="Clients" sx={{my: 2}} />
+                  )}
+                />
+                <Autocomplete
+                disabled={disabled}
+                multiple
+                disableCloseOnSelect
+                name="membersId" label={translate('calendar.form.member')}
+                value={selectedMembers}
+                options={[...members].sort((a, b) => a?.name?.localeCompare(b?.name))}
+                getOptionLabel={(c) => `${c?.name} ${c?.lastname}`}
+                onChange={(event, value) => {
+                  setSelectedMembers([...value])
+                }}
+                renderOption={(props, member) => (
+                  <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                    <Avatar sx={{ marginRight: '10px' }}>{`${member?.name[0]}${member?.lastname[0]}`}</Avatar>
+                    {`${member.name} ${member.lastname}`}
+                  </Box>
+                )}
+    
+                renderInput={(params) => (
+                  <RHFTextField {...params}
+                    disabled={disabled}
+                    name="memberid" label="Members" sx={{my: 2}} />
+                )}
+              /></>}
+                
+              </Paper>
+              <Paper
+                onClick={() => {
+                  setTimeSelected('AFTERNOON')
+                }}
+                sx={{
+                  p: 3,
+                  width: 1,
+                  my:2,
+                  border: (theme) => `solid 1px ${timeSelected === 'AFTERNOON' ? theme.palette.primary.main : theme.palette.grey[500_32]}`,
+                  
+                }}
+              >
+                {/* picture or icon */}
+                <Typography color={timeSelected === 'AFTERNOON' ? 'primary':''} variant="h6">Tarde</Typography>
+                {timeSelected === 'AFTERNOON' && <Typography color={timeSelected === 'AFTERNOON' ? 'primary':''} variant="subtitle2">Al bloquear tu turno de tarde no podrán hacerte contrataciones este día entre las 2:30pm y las 17:30pm</Typography>
+                }
+                {timeSelected === 'AFTERNOON' && members?.length > 0 && <><Autocomplete
+                  disabled={disabled}
+                  multiple
+                  disableCloseOnSelect
+                  name="clientId" label={translate('calendar.form.client')}
+                  value={selectedClients}
+                  options={[...clients].sort((a, b) => a?.name?.localeCompare(b?.name))}
+                  getOptionLabel={(c) => `${c?.name} ${c?.lastname}`}
+                  onChange={(event, value) => {
+                    setSelectedClients([...value])
+                  }}
+                  renderOption={(props, clients) => (
+                    <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                      <Avatar sx={{ marginRight: '10px' }}>{`${clients?.name[0]}${clients?.lastname[0]}`}</Avatar>
+                      {`${clients.name} ${clients.lastname}`}
+                    </Box>
+                  )}
+      
+                  renderInput={(params) => (
+                    <RHFTextField {...params}
+                      disabled={disabled}
+                      name="clientsid" label="Clients" sx={{my: 2}} />
+                  )}
+                />
+                <Autocomplete
+                disabled={disabled}
+                multiple
+                disableCloseOnSelect
+                name="membersId" label={translate('calendar.form.member')}
+                value={selectedMembers}
+                options={[...members].sort((a, b) => a?.name?.localeCompare(b?.name))}
+                getOptionLabel={(c) => `${c?.name} ${c?.lastname}`}
+                onChange={(event, value) => {
+                  setSelectedMembers([...value])
+                }}
+                renderOption={(props, member) => (
+                  <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                    <Avatar sx={{ marginRight: '10px' }}>{`${member?.name[0]}${member?.lastname[0]}`}</Avatar>
+                    {`${member.name} ${member.lastname}`}
+                  </Box>
+                )}
+    
+                renderInput={(params) => (
+                  <RHFTextField {...params}
+                    disabled={disabled}
+                    name="memberid" label="Members" sx={{my: 2}} />
+                )}
+              /></>}
+                
+              </Paper>
+            </Grid>
+        </>}
 
 
       </Stack>

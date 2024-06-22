@@ -7,7 +7,7 @@ export const trackViewTeacher = (teacher) => {
         debug: process.env.REACT_APP_FACEBOOK_PIXEL_ID === "DEBUG"
     });
 
-    ReactPixel.track('ViewContent', {
+    ReactPixel.track(teacher?.name + ' ' + teacher?.lastname, {
         content_name: teacher?.name + ' ' + teacher?.lastname,
         content_category: 'Teacher',
         content_ids: [teacher?.id],

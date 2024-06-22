@@ -159,7 +159,7 @@ export default function HomeFilterTeachers() {
                                         ))}
                                     </RHFSelect>
                                 </Grid>
-                                <Grid item xs={12}>
+                                {/* <Grid item xs={12}>
                                     <Controller
                                         name="range"
                                         control={control}
@@ -186,7 +186,7 @@ export default function HomeFilterTeachers() {
                                             />
                                         )}
                                     />
-                                </Grid>
+                                </Grid> */}
                                 <Grid item xs={5}>
                                     <RHFMultiCheckbox name="category" options={FILTER_CATEGORY_OPTIONS} sx={{ width: 1 }} />
                                 </Grid>

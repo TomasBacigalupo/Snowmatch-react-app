@@ -227,7 +227,7 @@ export default function EcommerceCheckoutProduct() {
                         bookingPrice={bookingPrice}
                     />
                 </Box>
-                <Box marginTop={2}>
+                {/* <Box marginTop={2}>
                     {bookingPrice > 0 &&
                         <Payment
                             initialization={initialization}
@@ -236,7 +236,7 @@ export default function EcommerceCheckoutProduct() {
                             onReady={onReady}
                             onError={onError}
                         />}
-                </Box>
+                </Box> */}
                 <CheckoutOrderComplete open={bookSuccess} />
                 <Box mx={2}>
                     <Button
@@ -251,6 +251,25 @@ export default function EcommerceCheckoutProduct() {
                             window.open(url, '_blank');
                         }}
                         variant='contained'
+                        fullWidth
+                        sx={{
+                            py: 1.5
+                        }}
+                    >Pagar con Mercado Pago</Button>
+                </Box>
+                <Box mx={2} marginTop={2}>
+                    <Button
+                        onClick={() => {
+                            const phoneNumber = '+5492944367197';
+                            const message = encodeURIComponent(
+                                `dias de clase: ${events.map( e => {
+                                    console.log({e}); return e.date.toString() + ', ' + e.lessonTime}).toString()}\ncantidad de personas: ${adults}\nExperiencia:${product.name}`
+                            );
+                            const url = `https://api.whatsapp.com/send?phone=${phoneNumber}&text=${message}`;
+                    
+                            window.open(url, '_blank');
+                        }}
+                        variant='outlined'
                         fullWidth
                         sx={{
                             py: 1.5

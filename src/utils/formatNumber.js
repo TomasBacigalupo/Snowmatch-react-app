@@ -3,7 +3,7 @@ import numeral from 'numeral';
 // ----------------------------------------------------------------------
 
 export function fCurrency(number) {
-  return number.toLocaleString('es-ar', {
+  return number?.toLocaleString('es-ar', {
     style: 'currency',
     currency: 'ARS',
     minimumFractionDigits: 0

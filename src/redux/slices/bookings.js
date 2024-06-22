@@ -468,6 +468,52 @@ export function createBooking(teacherId, message, children, adults, events, tota
     };
 }
 
+export function createAdminBooking(teacherId, studentId, message, children, adults, events, totalPrice) {
+    return async () => {
+        dispatch(slice.actions.startLoading());
+        try {
+            await axios.post(`/api/bookings/business?businessId=1`, {
+                teacher: {id: teacherId},
+                student: {id: studentId},
+                userComment: message,
+                eventList: events.map(e => {
+                    if (e.lessonTime === 'AFTERNOON') {
+
+                        return {
+                            ...e,
+                            start: utcToLocalDate(new Date(e.start).setHours(14, 0, 0, 0)),
+                            end: utcToLocalDate(new Date(e.start).setHours(17, 0, 0, 0)),
+                            lessonTime: 'AFTERNOON'
+                        }
+                    }
+                    if (e.lessonTime === 'MORNING') {
+                        return {
+                            ...e,
+                            start: utcToLocalDate(new Date(e.start).setHours(10, 0, 0, 0)),
+                            end: utcToLocalDate(new Date(e.start).setHours(13, 0, 0, 0)),
+                            lessonTime: 'MORNING'
+                        }
+                    }
+                    return {
+                        ...e,
+                        start: utcToLocalDate(new Date(e.start).setHours(10, 0, 0, 0)),
+                        end: utcToLocalDate(new Date(e.start).setHours(17, 0, 0, 0)),
+                    }
+                }),
+                children: children,
+                adults: adults,
+                totalPrice: totalPrice,
+                price: totalPrice,
+            });
+            dispatch(slice.actions.createBookingSuccess());
+        } catch (error) {
+            dispatch(slice.actions.hasError(error));
+        }
+    };
+}
+
+
+
 
 export function bookingAndPay(teacherId, message, children, adults, events, totalPrice, formData) {
     return async () => {

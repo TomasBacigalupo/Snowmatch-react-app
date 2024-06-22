@@ -45,6 +45,7 @@ import DeclineForm from '../../sections/@dashboard/admin/DeclineForm';
 import AdminTableCard from 'src/sections/@dashboard/admin/list/AdminTableCard';
 import AdminBookingTableRow from 'src/sections/@dashboard/admin/list/AdminBookingTableRow';
 import AdminBookingTableCard from 'src/sections/@dashboard/admin/list/AdminBookingTableCard';
+import BookingModal from 'src/sections/@dashboard/admin/BookingModal';
 
 // ---------------------------------------------------------------------
 
@@ -99,6 +100,7 @@ export default function AdminReviewBookings() {
   const [filterName, setFilterName] = useState('');
   const [filterRole, setFilterRole] = useState(ROLE_OPTIONS[0]);
   const [filterLevel, setFilterLevel] = useState(0);
+  const [isOpen, setIsOpen] = useState(false);
 
   const { currentTab: filterStatus, onChangeTab: onChangeFilterStatus } = useTabs('PENDING');
 
@@ -209,6 +211,7 @@ export default function AdminReviewBookings() {
         //   </Button>
         // }
         />
+        <Button onClick={() => setIsOpen(true)}>Create Booking</Button>
         <Card>
           <Tabs
             allowScrollButtonsMobile
@@ -222,7 +225,7 @@ export default function AdminReviewBookings() {
               <Tab disableRipple key={tab} label={tab} value={tab} />
             ))}
           </Tabs>
-
+          <BookingModal isOpen={isOpen} onClose={() => setIsOpen(false)}/>
           <Divider />
 
           <AdminTableToolbar

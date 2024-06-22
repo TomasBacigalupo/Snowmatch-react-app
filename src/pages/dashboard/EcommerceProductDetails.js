@@ -120,7 +120,7 @@ export default function EcommerceTeacherDetails({ isGuest = false }) {
 
   useEffect(() => {
     if (product && (!user || !user.role === 'TEACHER')) {
-      trackViewTeacher(product)
+      //trackViewTeacher(product)
     }
   }, [product, user])
 

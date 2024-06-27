@@ -50,11 +50,10 @@ import BookingModal from 'src/sections/@dashboard/admin/BookingModal';
 // ---------------------------------------------------------------------
 
 
-const STATUS_OPTIONS = ['PENDING', 'APPROVED', 'DECLINED'];
+const STATUS_OPTIONS = ['PENDING', 'ACCEPTED', 'DECLINED'];
 
 const ROLE_OPTIONS = [
-  'TEACHER',
-  'STUDENT'
+  'PENDING', 'ACCEPTED', 'DECLINED'
 ];
 
 const TABLE_HEAD = [
@@ -183,10 +182,11 @@ export default function AdminReviewBookings() {
 
   useEffect(() => {
     setTableData(bookings ?? []);
+    console.log({bookings})
   }, [bookings]);
 
   useEffect(() => {
-    dispatch(getBookings(page, filterStatus, filterName, filterLevel))
+    dispatch(getBookings(page, filterStatus))
   }, [filterRole, filterName, filterLevel, page])
 
 

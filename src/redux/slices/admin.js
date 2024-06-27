@@ -59,8 +59,9 @@ const slice = createSlice({
     },
 
     getBookingsSuccess(state, action) {
+      console.log(action.payload)
       state.isLoading = false;
-      state.booking = action.payload;
+      state.bookings = action.payload;
     },
 
     openModal(state, email) {
@@ -103,11 +104,11 @@ export function getTeachers(page, role, name, level) {
   };
 }
 
-export function getBookings(page, role, name, level) {
+export function getBookings(page, status) {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`/api/admin/bookings/filter?page=${page}&state=${role}`);
+      const response = await axios.get(`/api/admin/bookings/filter?page=${page}&state=${status}`);
       dispatch(slice.actions.getBookingsSuccess(response.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));

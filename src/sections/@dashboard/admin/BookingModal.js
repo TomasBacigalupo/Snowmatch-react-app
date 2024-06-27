@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Dialog, DialogContent, Select, TextField, FormControl, InputLabel, MenuItem, DialogActions, DialogTitle, Button, Box, Autocomplete } from '@mui/material';
+import { Dialog, DialogContent, Select, TextField, FormControl, InputLabel, MenuItem, DialogActions, DialogTitle, Button, Box, Autocomplete, Typography } from '@mui/material';
 import { useDispatch } from 'src/redux/store';
 import { getTeachers } from 'src/redux/slices/admin';
 import { useSelector } from 'react-redux';
@@ -92,15 +92,15 @@ const BookingModal = ({ isOpen, onClose }) => {
             events,
             totalPrice));
 
-        // setFormData({
-        //     teacher: null,
-        //     student: null,
-        //     dateTimes: [{ date: '', time: '', price: '' }],
-        //     resort: 'Cerro Catedral',
-        //     children: 0,
-        //     adults: 0,
-        // });
-        //onClose();
+        setFormData({
+            teacher: null,
+            student: null,
+            dateTimes: [{ date: '', time: '', price: '' }],
+            resort: 'Cerro Catedral',
+            children: 0,
+            adults: 0,
+        });
+        onClose();
     };
 
     const handleTeacherInputChange = (event, newValue) => {
@@ -116,7 +116,7 @@ const BookingModal = ({ isOpen, onClose }) => {
             <DialogTitle>Create Booking</DialogTitle>
             <DialogContent>
                 <FormControl fullWidth margin="normal">
-                    <InputLabel id="teacher-label">Teacher</InputLabel>
+                    <Typography>Teacher</Typography>
                     <Autocomplete
                         id="teacher-autocomplete"
                         options={teachers}
@@ -134,7 +134,7 @@ const BookingModal = ({ isOpen, onClose }) => {
                     />
                 </FormControl>
                 <FormControl fullWidth margin="normal">
-                    <InputLabel id="student-label">Student</InputLabel>
+                    <Typography>Student</Typography>
                     <Autocomplete
                         id="student-autocomplete"
                         options={teachers}

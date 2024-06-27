@@ -5,6 +5,7 @@ import axios from '../../utils/axios';
 //
 import { dispatch } from '../store';
 import { start } from 'nprogress';
+import dayjs from 'dayjs';
 
 // ----------------------------------------------------------------------
 
@@ -472,7 +473,7 @@ export function createAdminBooking(teacherId, studentId, message, children, adul
     return async () => {
         dispatch(slice.actions.startLoading());
         try {
-            await axios.post(`/api/bookings/business?businessId=1`, {
+            await axios.post(`/api/bookings/business?businessId=13`, {
                 teacher: {id: teacherId},
                 student: {id: studentId},
                 userComment: message,
@@ -481,23 +482,24 @@ export function createAdminBooking(teacherId, studentId, message, children, adul
 
                         return {
                             ...e,
-                            start: utcToLocalDate(new Date(e.start).setHours(14, 0, 0, 0)),
-                            end: utcToLocalDate(new Date(e.start).setHours(17, 0, 0, 0)),
+                            start: dayjs(e.start),
+                            end: dayjs(e.start),
                             lessonTime: 'AFTERNOON'
                         }
                     }
                     if (e.lessonTime === 'MORNING') {
                         return {
                             ...e,
-                            start: utcToLocalDate(new Date(e.start).setHours(10, 0, 0, 0)),
-                            end: utcToLocalDate(new Date(e.start).setHours(13, 0, 0, 0)),
+                            start:dayjs(e.start),
+                            end: dayjs(e.start),
                             lessonTime: 'MORNING'
                         }
                     }
                     return {
                         ...e,
-                        start: utcToLocalDate(new Date(e.start).setHours(10, 0, 0, 0)),
-                        end: utcToLocalDate(new Date(e.start).setHours(17, 0, 0, 0)),
+                        start: dayjs(e.start),
+                        end: dayjs(e.start),
+                        lessonTime: 'ALL_DAY'
                     }
                 }),
                 children: children,

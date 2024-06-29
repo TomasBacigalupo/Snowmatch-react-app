@@ -30,6 +30,7 @@ import HoverButton from 'src/components/HoverButton';
 import LessonForm from 'src/sections/@dashboard/calendar/LessonForm';
 import { getBusinessMembers } from 'src/redux/slices/business';
 import CalendarDayForm from 'src/sections/@dashboard/calendar/CalendarDayForm';
+import useAuth from 'src/hooks/useAuth';
 
 // ----------------------------------------------------------------------
 
@@ -59,6 +60,7 @@ export default function Calendar() {
   const { events, isOpenModal, selectedRange } = useSelector((state) => state.calendar);
   const { members } = useSelector((state) => state.business);
   const { clients } = useSelector((state) => state.clients);
+  const user = useAuth()
 
   useEffect(() => {
     dispatch(getEventsByDate(date))
@@ -221,9 +223,9 @@ export default function Calendar() {
           <DialogTitle>{selectedEvent ? `${translate('calendar.editEvent')} - ${selectedEvent.id}` : new Date(selectedRange?.start).toDateString()}</DialogTitle>
           {/* {selectedEvent?.source === 'APP' ? 
             <LessonForm event={selectedEvent || {}} range={selectedRange} onCancel={handleCloseModal} clients={clients} members={members || {}}/> :  */}
-            {selectedEvent && <CalendarForm event={selectedEvent || {}} disabled={selectedEvent?.source === 'APP'}  range={selectedRange} onCancel={handleCloseModal} clients={clients} members={members || {}}/>}
+            {selectedEvent && <CalendarForm event={selectedEvent || {}} disabled={selectedEvent?.source === 'APP' && !(selectEvent?.businessOwner !== undefined && selectEvent?.businessOwner !== null && selectEvent.businessOwner.id === user?.user?.administeredBusiness) && !(user?.user?.role === "ADMIN")}  range={selectedRange} onCancel={handleCloseModal} clients={clients} members={members || {}}/>}
             {/* } */}
-            {!selectedEvent && <CalendarDayForm event={selectedEvent || {}} disabled={selectedEvent?.source === 'APP'}  range={selectedRange} onCancel={handleCloseModal} clients={clients} members={members || {}}/>}
+            {!selectedEvent && <CalendarDayForm event={selectedEvent || {}} disabled={selectedEvent?.source === 'APP' && !(selectEvent?.businessOwner !== undefined && selectEvent?.businessOwner !== null && selectEvent.businessOwner.id === user?.user?.administeredBusiness) && !(user?.user?.role === "ADMIN")}  range={selectedRange} onCancel={handleCloseModal} clients={clients} members={members || {}}/>}
         </DialogAnimate>
       </Container>
     </Page>

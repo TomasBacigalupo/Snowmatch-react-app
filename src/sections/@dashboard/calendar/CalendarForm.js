@@ -11,7 +11,7 @@ import { Box, Stack, Button, Tooltip, TextField, IconButton, DialogActions, Togg
 import { LoadingButton, MobileDateTimePicker } from '@mui/lab';
 // redux
 import { useDispatch } from '../../../redux/store';
-import { createEvent, updateEvent, deleteEvent, createBusinessEvent, updateBusinessEvent, deleteSchoolEvent, updateEventByUserIdAndEventId, createEventByUserId, deleteEventByUserId, } from '../../../redux/slices/calendar';
+import { createEvent, updateEvent, deleteEvent, createBusinessEvent, updateBusinessEvent, deleteSchoolEvent, updateEventByUserIdAndEventId, createEventByUserId, adminDeleteEvent ,deleteBusinessEvent } from '../../../redux/slices/calendar';
 // components
 import Iconify from '../../../components/Iconify';
 import { ColorSinglePicker } from '../../../components/color-utils';
@@ -212,14 +212,19 @@ export default function CalendarForm({ event, range, onCancel, clients, members,
   };
 
   const handleDelete = async () => {
-    if (!event.id) return;
+    console.log("deleting")
+    console.log(event)
+    if (!event?.id) return;
     try {
       onCancel();
-      if (user.user.role === 'ADMIN') {
-        dispatch(deleteEventByUserId(event.owner.id, event.id));
+      if (user?.user?.role === 'ADMIN') {
+        dispatch(adminDeleteEvent(event?.id));
         enqueueSnackbar('Delete success!');
-      } else {
-        dispatch(deleteEvent(event.id));
+      } else if (classType === 'teacher') {
+        dispatch(deleteEvent(event?.id));
+        enqueueSnackbar('Delete success!');
+      } else if (classType === 'school') {
+        dispatch(deleteBusinessEvent(event?.id));
         enqueueSnackbar('Delete success!');
       }
 

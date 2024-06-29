@@ -11,7 +11,7 @@ import { Box, Stack, Button, Tooltip, TextField, IconButton, DialogActions, Togg
 import { DateRangePicker, LoadingButton, MobileDatePicker, MobileDateTimePicker } from '@mui/lab';
 // redux
 import { useDispatch } from '../../../redux/store';
-import { createEvent, updateEvent, deleteEvent, createBusinessEvent, updateBusinessEvent, deleteSchoolEvent, updateEventByUserIdAndEventId, createEventByUserId, deleteEventByUserId, blockDays, assignDays, } from '../../../redux/slices/calendar';
+import { createEvent, updateEvent, deleteEvent, createBusinessEvent, updateBusinessEvent, deleteSchoolEvent, updateEventByUserIdAndEventId, createEventByUserId, adminDeleteEvent, blockDays, assignDays, deleteBusinessEvent} from '../../../redux/slices/calendar';
 // components
 import Iconify from '../../../components/Iconify';
 import { ColorSinglePicker } from '../../../components/color-utils';
@@ -187,6 +187,7 @@ export default function CalendarDayForm({ event, range, onCancel, clients, membe
       end: values.end,
       assignedUsers: selectedMembers,
       clients: selectedClients,
+      source: "SCHOOL"
     };
     setLessonTime(newEvent, timeSelected)
     const response = dispatch(createBusinessEvent(newEvent));
@@ -325,14 +326,18 @@ export default function CalendarDayForm({ event, range, onCancel, clients, membe
   };
 
   const handleDelete = async () => {
+    console.log("deleting", event)
     if (!event.id) return;
     try {
       onCancel();
-      if (user.user.role === 'ADMIN') {
-        dispatch(deleteEventByUserId(event.owner.id, event.id));
+      if (user?.user?.role === 'ADMIN') {
+        dispatch(adminDeleteEvent(event?.id));
         enqueueSnackbar('Delete success!');
-      } else {
-        dispatch(deleteEvent(event.id));
+      } else if (classType === 'teacher') {
+        dispatch(deleteEvent(event?.id));
+        enqueueSnackbar('Delete success!');
+      } else if (classType === 'school') {
+        dispatch(deleteBusinessEvent(event?.id));
         enqueueSnackbar('Delete success!');
       }
 

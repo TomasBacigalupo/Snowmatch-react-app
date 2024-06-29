@@ -511,6 +511,19 @@ export function updateBusinessEvent(eventId, updateEvent) {
   };
 }
 
+export function deleteBusinessEvent(eventId, deleteEvent) {
+  return async () => {
+    //dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.delete(`/api/events/business`, deleteEvent);
+      dispatch(slice.actions.updateEventSuccess({ ...updateEvent, id: eventId }));
+      return response;
+    } catch (error) {
+      //dispatch(slice.actions.hasError(error));
+      return error;
+    }
+  };
+}
 // ----------------------------------------------------------------------
 
 export function deleteEvent(eventId) {
@@ -532,6 +545,18 @@ export function deleteEventByUserId(userId, eventId) {
     dispatch(slice.actions.startLoading());
     try {
       await axios.delete(`/api/admin/user/${userId}/event/${eventId}`);
+      dispatch(slice.actions.deleteEventSuccess({ eventId }));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+export function adminDeleteEvent(eventId) {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      await axios.delete(`/api/admin/events/${eventId}`);
       dispatch(slice.actions.deleteEventSuccess({ eventId }));
     } catch (error) {
       dispatch(slice.actions.hasError(error));

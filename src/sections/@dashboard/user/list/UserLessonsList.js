@@ -10,7 +10,7 @@ import BookingCard from "../cards/BookingCard";
 import { SkeletonBooking, SkeletonConversationItem, SkeletonPost, SkeletonPostItem, SkeletonProduct } from "src/components/skeleton";
 
 const date = new Date()
-date.toLocaleString()
+date?.toLocaleString()
 
 export default function UserLessonsList() {
   const dispatch = useDispatch();

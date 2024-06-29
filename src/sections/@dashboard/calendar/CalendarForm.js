@@ -7,7 +7,7 @@ import { useSnackbar } from 'notistack';
 import { useForm, Controller, useWatch } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { Box, Stack, Button, Tooltip, TextField, IconButton, DialogActions, ToggleButton, ToggleButtonGroup } from '@mui/material';
+import { Box, Stack, Button, Tooltip, TextField, IconButton, DialogActions, ToggleButton, ToggleButtonGroup, DialogContent, DialogTitle, Typography } from '@mui/material';
 import { LoadingButton, MobileDateTimePicker } from '@mui/lab';
 // redux
 import { useDispatch } from '../../../redux/store';
@@ -17,7 +17,7 @@ import Iconify from '../../../components/Iconify';
 import { ColorSinglePicker } from '../../../components/color-utils';
 import { FormProvider, RHFTextField, RHFSwitch, RHFSelect, RHFCheckbox } from '../../../components/hook-form';
 import { useEffect, useState } from 'react';
-import { Avatar } from '@mui/material';
+import { Avatar, Dialog  } from '@mui/material';
 import { Autocomplete } from '@mui/material';
 import useLocales from 'src/hooks/useLocales';
 //User for is admin
@@ -32,6 +32,7 @@ import dayjs from 'dayjs';
 import { styled } from '@mui/system';
 import Chip from '@mui/material/Chip';
 import { slice } from 'lodash';
+import ClientDetailsModal from './ClientsDetailsModal';
 
 // ----------------------------------------------------------------------
 
@@ -88,6 +89,8 @@ export default function CalendarForm({ event, range, onCancel, clients, members,
   const { id } = useParams()
   const isCreating = !event?.id;
   const { teachers } = useSelector((state) => state.admin)
+  const [showClientDetails, setShowClientDetails] = useState(false)
+  const [currentClient, setCurrentClient] = useState(null)
 
 
   const dispatch = useDispatch();
@@ -277,6 +280,11 @@ export default function CalendarForm({ event, range, onCancel, clients, members,
     { group: 'Off', classify: ['Break', 'Training', 'Illness'] },
   ];
 
+  const handleClientDetails = (client) => {
+    setCurrentClient(client)
+    setShowClientDetails(true)
+  }
+
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
@@ -294,8 +302,8 @@ export default function CalendarForm({ event, range, onCancel, clients, members,
         </ToggleButtonGroup>}
 
         {user?.user?.role === 'ADMIN' && classType === 'teacher' && <AdminEventInfo event={event} />}
-
-        {clients?.length > 0 && <Autocomplete
+        
+         <Autocomplete
           disabled={disabled}
           multiple
           disableCloseOnSelect
@@ -311,6 +319,9 @@ export default function CalendarForm({ event, range, onCancel, clients, members,
             tagValue.map((option, index) => (
               <Chip
                 variant='outlined'
+                onClick={() => {
+                  console.log("option", option) 
+                  handleClientDetails(option)}}
                 label={`${option.name} ${option.lastname} ${option?.level?.slice(0, 3)}`}
                 sx={{ borderColor: getClientColor(option) }}
               />
@@ -327,7 +338,7 @@ export default function CalendarForm({ event, range, onCancel, clients, members,
               disabled={disabled}
               name="clientid" label="Client" />
           )}
-        />}
+        />
         {classType === 'school' && <Autocomplete
           disabled={(!members?.length > 0 && event?.businessOwner != null && event?.businessOwner != undefined)}
           disableCloseOnSelect
@@ -432,7 +443,7 @@ export default function CalendarForm({ event, range, onCancel, clients, members,
             </option>
           </RHFSelect>
         }
-        <RHFSelect disabled={disabled} name="type" label={translate('calendar.form.type')}>
+        {!disabled && <RHFSelect disabled={disabled} name="type" label={translate('calendar.form.type')}>
           {TYPE_OPTION.map((type, i) => (
             <optgroup key={type.group} label={type.group}>
               {type.classify.map((classify, idx) => (
@@ -444,6 +455,7 @@ export default function CalendarForm({ event, range, onCancel, clients, members,
           ))}
 
         </RHFSelect>
+        }
         <RHFTextField disabled={disabled} name="title" label={translate('calendar.form.title')} />
 
         <RHFTextField disabled={disabled} name="description" label={translate('calendar.form.description')} multiline rows={2} />
@@ -487,20 +499,20 @@ export default function CalendarForm({ event, range, onCancel, clients, members,
           )}
         />
 
-        <Controller
+        {!disabled && <Controller
           name="textColor"
           control={control}
           render={({ field }) => (
             <ColorSinglePicker disabled={disabled} value={field.value} onChange={field.onChange} colors={COLOR_OPTIONS} />
           )}
-        />
+        />}
         {/* <RHFCheckbox name='payed' label='Payed' disabled={user.user.role !== 'ADMIN'} /> */}
       </Stack>
-
+      <ClientDetailsModal showClientDetails={showClientDetails} setShowClientDetails={setShowClientDetails} currentClient={currentClient} />
       <DialogActions>
         {!isCreating && (
           <Tooltip title="Delete Event">
-            <IconButton onClick={handleDelete}>
+            <IconButton onClick={handleDelete} disabled={disabled}>
               <Iconify icon="eva:trash-2-outline" width={20} height={20} />
             </IconButton>
           </Tooltip>
@@ -515,6 +527,7 @@ export default function CalendarForm({ event, range, onCancel, clients, members,
           {isCreating ? translate('calendar.form.add') : translate('calendar.form.edit')}
         </LoadingButton>
       </DialogActions>
+
     </FormProvider>
   );
 }

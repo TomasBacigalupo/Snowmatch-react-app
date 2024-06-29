@@ -827,6 +827,9 @@ export function calculateRequestedPrice(teacher, totalDays, time) {
   if (level === 5) {
     price = 230000;
   }
+  if (level === 0) {
+    price = 500;
+  }
   let discountedPrice = price;
   if (time === 'FULL_DAY') {
     return discountedPrice * 1.95;

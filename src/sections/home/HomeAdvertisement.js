@@ -42,11 +42,11 @@ export default function HomeAdvertisement() {
             mb: { xs: 3, md: 0 },
           }}
         >
-          <m.div animate={{ y: [-20, 0, -20] }} transition={{ duration: 4, repeat: Infinity }}>
+          <m.div>
             <Image
               visibleByDefault
-              alt="rocket"
-              src="https://minimal-assets-api.vercel.app/assets/images/home/rocket.png"
+              alt="instructor-de-ski"
+              src="https://image.snowmatch.pro/profile/23-ef7b4fa1-8880-4915-9f0d-76b428e989c9"
               disabledEffect
               sx={{ maxWidth: 460 }}
             />

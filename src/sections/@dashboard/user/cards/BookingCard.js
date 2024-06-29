@@ -151,6 +151,11 @@ export default function BookingCard({ booking, showInfo = true }) {
         }
     };
 
+    const openWhatsApp = () => {
+        const phoneNumber = process.env.REACT_APP_WHATS_APP;
+        const url = `https://wa.me/${phoneNumber}`;
+        window.open(url, '_blank');
+    };
 
     return (
         <>
@@ -335,7 +340,7 @@ export default function BookingCard({ booking, showInfo = true }) {
                     <Grid item xs={12}>
                         <Divider sx={{ borderBottomWidth: 8, }} />
                     </Grid>
-                    <Grid item xs={12} container justifyContent='space-between'>
+                    {/* <Grid item xs={12} container justifyContent='space-between'>
                         <Grid item xs={12}>
                             <Typography variant="h3" paragraph>
                                 Detalles del pago
@@ -413,8 +418,8 @@ export default function BookingCard({ booking, showInfo = true }) {
                     </Grid>
                     <Grid item xs={12}>
                         <Divider sx={{ borderBottomWidth: 8, }} />
-                    </Grid>
-                    <Grid item xs={12}>
+                    </Grid> */}
+                    {/* <Grid item xs={12}>
                         <Typography variant="h3" paragraph>
                             Notas
                         </Typography>
@@ -424,8 +429,7 @@ export default function BookingCard({ booking, showInfo = true }) {
                                 Guardar
                             </Button>
                         </Box>
-
-                    </Grid>
+                    </Grid> */}
                     <Grid item xs={12}>
                         <Divider sx={{ borderBottomWidth: 8, }} />
                     </Grid>
@@ -434,7 +438,7 @@ export default function BookingCard({ booking, showInfo = true }) {
                             Soporte
                         </Typography>
                         {/* option to contact via email to support@snowmatch.pro */}
-                        <Box display='flex' justifyContent='space-between' alignItems='center'>
+                        <Box onClick={openWhatsApp} display='flex' justifyContent='space-between' alignItems='center'>
                             <Box display='flex' justifyContent='flex-start' alignItems='center'>
                                 <Iconify icon={'material-symbols:health-and-safety-outline'} width={25} height={25} mr={2} />
                                 <Typography sx={{ fontSize: '20px' }} alignItems='center'>
@@ -445,7 +449,7 @@ export default function BookingCard({ booking, showInfo = true }) {
                             <Iconify icon={'material-symbols:chevron-right'} width={25} height={25} />
                         </Box>
                         <Divider sx={{ my: 2 }} />
-                        <Box display='flex' justifyContent='space-between' alignItems='center'>
+                        <Box onClick={openWhatsApp} display='flex' justifyContent='space-between' alignItems='center'>
                             <Box display='flex' justifyContent='flex-start' alignItems='center'>
                                 <Iconify icon={'material-symbols:edit-outline'} width={25} height={25} mr={2} />
                                 <Typography sx={{ fontSize: '20px' }} alignItems='center'>
@@ -467,7 +471,7 @@ export default function BookingCard({ booking, showInfo = true }) {
                             <Iconify icon={'material-symbols:chevron-right'} width={25} height={25} />
                         </Box>
                         <Divider sx={{ my: 2 }} />
-                        <Box display='flex' justifyContent='space-between' alignItems='center'>
+                        <Box onClick={openWhatsApp} display='flex' justifyContent='space-between' alignItems='center'>
                             <Box display='flex' justifyContent='flex-start' alignItems='center'>
                                 <Iconify icon={'flat-color-icons:cancel'} width={25} height={25} mr={2} />
                                 <Typography sx={{ fontSize: '20px' }} alignItems='center'>

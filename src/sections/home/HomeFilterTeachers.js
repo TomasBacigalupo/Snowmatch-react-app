@@ -1,7 +1,7 @@
 import { Controller, useForm } from 'react-hook-form';
 // @mui
 import { MobileDateRangePicker } from '@mui/lab';
-import { Grid, Card, TextField, Typography, Box } from '@mui/material';
+import { Grid, Card, TextField, Typography, Box, Image } from '@mui/material';
 //
 import { FormProvider, RHFMultiCheckbox, RHFSelect } from 'src/components/hook-form';
 import { FILTER_CATEGORY_OPTIONS, FILTER_RESORT_OPTIONS } from '../@dashboard/e-commerce/shop/ShopFilterSidebar';
@@ -16,7 +16,7 @@ import { useTheme } from '@mui/material/styles';
 import React, { useEffect } from 'react';
 import dayjs from 'dayjs';
 import ReactPixel from 'react-facebook-pixel';
-import {searchTeachers} from 'src/services/facebook';
+import { searchTeachers } from 'src/services/facebook';
 import { PATH_DASHBOARD } from 'src/routes/paths';
 
 
@@ -70,10 +70,11 @@ export default function HomeFilterTeachers() {
 
     const onSubmitSchools = () => {
         try {
-            dispatch(filterTeachers({...values,
-            from: values.range[0],
-            to: values.range[1]
-        }))
+            dispatch(filterTeachers({
+                ...values,
+                from: values.range[0],
+                to: values.range[1]
+            }))
             if (isTeacher) {
                 navigate('/dashboard/e-commerce/shop/school')
             } else {
@@ -112,9 +113,9 @@ export default function HomeFilterTeachers() {
             from: values.range[0],
             to: values.range[1]
         }))
-        
+
         if (values.resort === "Cerro Catedral") {
-            if (isTeacher) { 
+            if (isTeacher) {
                 navigate('/dashboard/e-commerce/independent?resort=Cerro Catedral')
             } else {
                 navigate(PATH_DASHBOARD.eCommerce.matchIndependant)
@@ -134,7 +135,7 @@ export default function HomeFilterTeachers() {
     useEffect(() => {
         ReactPixel.pageView(); // For tracking page view
     })
-    
+
     return (
         <>
             <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
@@ -159,7 +160,7 @@ export default function HomeFilterTeachers() {
                                         ))}
                                     </RHFSelect>
                                 </Grid>
-                                <Grid item xs={12}>
+                                {/* <Grid item xs={12}>
                                     <Controller
                                         name="range"
                                         control={control}
@@ -186,7 +187,7 @@ export default function HomeFilterTeachers() {
                                             />
                                         )}
                                     />
-                                </Grid>
+                                </Grid> */}
                                 <Grid item xs={5}>
                                     <RHFMultiCheckbox name="category" options={FILTER_CATEGORY_OPTIONS} sx={{ width: 1 }} />
                                 </Grid>
@@ -200,7 +201,33 @@ export default function HomeFilterTeachers() {
                         </Card>
                     </Grid>
                     <Grid item xs={12} md={9} justifyContent='center'>
-                        <Typography variant="h5" sx={{ color: theme.typography.color, mt:1 }}> {translate("landingPRO.slogan")} </Typography>
+                        <Typography variant="h5" sx={{ color: theme.typography.color, mt: 1 }}> {translate("landingPRO.slogan")} </Typography>
+                    </Grid>
+                    <Grid item xs={12} md={9} justifyContent='center' container spacing={3}>
+                        {[{
+                            image: 'https://snowmatchimages.s3.amazonaws.com/profile/ClaseNin%CC%83oss.jpeg',
+                            url: 'https://snowmatch.pro/match/product/148',
+                        }, {
+                            image: 'https://snowmatchimages.s3.amazonaws.com/profile/clase-ski-catedral.jpg',
+                            url: 'https://snowmatch.pro/match/product/143'
+                        }, {
+                            image: 'https://snowmatchimages.s3.amazonaws.com/profile/clase-ski-freeride.jpg',
+                            url: 'https://snowmatch.pro/match/product/149'
+                        }].map((prod, index) => (
+                            <Grid key={index} item xs={4} container justifyContent="center">
+                                <Box
+                                    onClick={() => window.open(prod.url, '_blank')}
+                                    sx={{
+                                        width: '100%',
+                                        height: 200,
+                                        backgroundImage: `url(${prod.image})`,
+                                        backgroundSize: 'cover',
+                                        backgroundPosition: 'center',
+                                        borderRadius: 1
+                                    }}
+                                />
+                            </Grid>
+                        ))}
                     </Grid>
                 </Grid>
             </FormProvider>

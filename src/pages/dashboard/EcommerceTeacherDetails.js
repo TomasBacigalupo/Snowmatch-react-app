@@ -31,10 +31,10 @@ import {
 } from '../../sections/@dashboard/e-commerce/teacher-details';
 import CartWidget from '../../sections/@dashboard/e-commerce/CartWidget';
 import useLocales from 'src/hooks/useLocales';
-import { trackViewTeacher } from 'src/services/facebook';
 import Policies from '../../sections/@dashboard/e-commerce/teacher-details/Policies'
 import TimeDetails from 'src/sections/@dashboard/e-commerce/teacher-details/TimeDetails';
 import { Helmet } from 'react-helmet-async';
+import { trackViewTeacher } from 'src/services/tagmanager';
 // ----------------------------------------------------------------------
 
 const PRODUCT_DESCRIPTION = [

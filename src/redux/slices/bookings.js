@@ -5,6 +5,7 @@ import axios from '../../utils/axios';
 //
 import { dispatch } from '../store';
 import { start } from 'nprogress';
+import dayjs from 'dayjs';
 
 // ----------------------------------------------------------------------
 
@@ -467,6 +468,53 @@ export function createBooking(teacherId, message, children, adults, events, tota
         }
     };
 }
+
+export function createAdminBooking(teacherId, studentId, message, children, adults, events, totalPrice) {
+    return async () => {
+        dispatch(slice.actions.startLoading());
+        try {
+            await axios.post(`/api/bookings/business?businessId=13`, {
+                teacher: {id: teacherId},
+                student: {id: studentId},
+                userComment: message,
+                eventList: events.map(e => {
+                    if (e.lessonTime === 'AFTERNOON') {
+
+                        return {
+                            ...e,
+                            start: dayjs(e.start),
+                            end: dayjs(e.start),
+                            lessonTime: 'AFTERNOON'
+                        }
+                    }
+                    if (e.lessonTime === 'MORNING') {
+                        return {
+                            ...e,
+                            start:dayjs(e.start),
+                            end: dayjs(e.start),
+                            lessonTime: 'MORNING'
+                        }
+                    }
+                    return {
+                        ...e,
+                        start: dayjs(e.start),
+                        end: dayjs(e.start),
+                        lessonTime: 'ALL_DAY'
+                    }
+                }),
+                children: children,
+                adults: adults,
+                totalPrice: totalPrice,
+                price: totalPrice,
+            });
+            dispatch(slice.actions.createBookingSuccess());
+        } catch (error) {
+            dispatch(slice.actions.hasError(error));
+        }
+    };
+}
+
+
 
 
 export function bookingAndPay(teacherId, message, children, adults, events, totalPrice, formData) {

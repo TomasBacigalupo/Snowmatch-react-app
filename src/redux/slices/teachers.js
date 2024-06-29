@@ -813,19 +813,19 @@ export function calculateRequestedPrice(teacher, totalDays, time) {
   const level = teacher.level;
   let price = 0;
   if (level === 1) {
-    price = 159000 / 2;
+    price = 200000 / 2;
   }
   if (level === 2) {
     price = 219000 / 2;
   }
   if (level === 3) {
-    price = 200000;
-  }
-  if (level === 4) {
     price = 220000;
   }
+  if (level === 4) {
+    price = 250000;
+  }
   if (level === 5) {
-    price = 230000;
+    price = 300000;
   }
   if (level === 0) {
     price = 500;

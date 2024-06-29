@@ -507,7 +507,7 @@ export default function CalendarForm({ event, range, onCancel, clients, members,
       <DialogActions>
         {!isCreating && (
           <Tooltip title="Delete Event">
-            <IconButton onClick={handleDelete} disabled={disabled}>
+            <IconButton onClick={handleDelete} disabled={disabled && classType === 'school'}>
               <Iconify icon="eva:trash-2-outline" width={20} height={20} />
             </IconButton>
           </Tooltip>

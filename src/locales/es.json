@@ -1042,5 +1042,8 @@
             "title": "Certificados",
             "description": "Tomar clases con un instructor de esquí Nivel 1 es beneficioso porque están capacitados para enseñar tanto a niños como a adultos, individualmente o en grupo. Utilizan principios técnicos y metodológicos basados en la Técnica Argentina de Esquí y Snowboard, asegurando que los alumnos alcancen los objetivos hasta el nivel intermedio 4.<br/><br/>Además, los instructores Nivel 1 adaptan el terreno de las pistas balizadas a las condiciones psicofísicas del alumno, garantizando así la seguridad durante las lecciones. Su certificación es reconocida por todas las escuelas y clubes de esquí, permitiéndoles desempeñar su actividad dentro de estos entornos de manera profesional."
         }
-    }
+    },
+    "MORNING": "Mañana",
+    "AFTERNOON": "Tarde",
+    "ALL_DAY": "Día completo"
 }

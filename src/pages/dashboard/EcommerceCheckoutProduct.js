@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 // @mui
 import { styled } from '@mui/material/styles';
-import { Box, StepConnector, Button } from '@mui/material';
+import { Box, StepConnector, Button, TextField, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
 import { getCart, createBilling, calculatePrice } from '../../redux/slices/teachers';
@@ -31,6 +31,8 @@ import useAuth from 'src/hooks/useAuth';
 import CheckoutProductShare from 'src/sections/@dashboard/e-commerce/checkout/CheckoutProductShare';
 import { sum } from 'lodash';
 import ReactPixel from 'react-facebook-pixel';
+import useLocales from 'src/hooks/useLocales';
+import { fCurrency } from 'src/utils/formatNumber';
 
 console.log(process.env.REACT_APP_MERCADO_PAGO_PUBLIC_KEY)
 initMercadoPago(process.env.REACT_APP_MERCADO_PAGO_PUBLIC_KEY, { locale: 'es-AR' });
@@ -38,6 +40,8 @@ initMercadoPago(process.env.REACT_APP_MERCADO_PAGO_PUBLIC_KEY, { locale: 'es-AR'
 // ----------------------------------------------------------------------
 
 export default function EcommerceCheckoutProduct() {
+    const { translate } = useLocales();
+
     const { themeStretch } = useSettings();
     const dispatch = useDispatch();
     const isMountedRef = useIsMountedRef();
@@ -45,8 +49,11 @@ export default function EcommerceCheckoutProduct() {
     const { message, children, adults, bookSuccess, loadingPayment, onCreateBookingError } = useSelector((state) => state.bookings);
     const { product } = useSelector((state) => state.teachers);
     const { cart, billing, activeStep, events } = checkout;
-    
+    const [instructor, setInstructor] = useState('');
+    const [paymentMethod, setPaymentMethod] = useState('');
+
     const { user } = useAuth();
+    const isTeacher = user?.role === 'TEACHER';
     const bookingPrice = sum(events.map((event) => event.price));
 
     const { discount, subtotal, shipping, card } = checkout;
@@ -143,8 +150,9 @@ export default function EcommerceCheckoutProduct() {
     const sendWhatsAppMessage = () => {
         const phoneNumber = '+5492944367197';
         const message = encodeURIComponent(
-            `dias de clase: ${events.map( e => {
-                console.log({e}); return e.date.toString() + ', ' + e.lessonTime}).toString()}\ncantidad de personas: ${adults}\nExperiencia:${product.name}`
+            `dias de clase: ${events.map(e => {
+                console.log({ e }); return e.date.toString() + ', ' + e.lessonTime
+            }).toString()}\ncantidad de personas: ${adults}\nExperiencia:${product.name}`
         );
         const url = `https://api.whatsapp.com/send?phone=${phoneNumber}&text=${message}`;
 
@@ -162,6 +170,13 @@ export default function EcommerceCheckoutProduct() {
           Callback called when Brick is ready.
           Here you can hide loadings from your site, for example.
         */
+    };
+
+    const formatDate = (dateStr) => {
+        const date = new Date(dateStr);
+        const day = date.getDate().toString().padStart(2, '0');
+        const month = (date.getMonth() + 1).toString().padStart(2, '0');
+        return `${day}/${month}`;
     };
 
     // const handleBook = () => {
@@ -238,16 +253,15 @@ export default function EcommerceCheckoutProduct() {
                         />}
                 </Box> */}
                 <CheckoutOrderComplete open={bookSuccess} />
-                <Box mx={2}>
+                {!isTeacher && <Box mx={2}>
                     <Button
                         onClick={() => {
                             const phoneNumber = '+5492944367197';
-                            const message = encodeURIComponent(
-                                `dias de clase: ${events.map( e => {
-                                    console.log({e}); return e.date.toString() + ', ' + e.lessonTime}).toString()}\ncantidad de personas: ${adults}\nExperiencia:${product.name}`
+                            const _message = encodeURIComponent(
+                                `Experiencia: ${product.name}\nDias de clase:${events.map(e => '\n- ' + formatDate(e.date) + ' - ' + translate(e.lessonTime)).toString()}\nCantidad de personas: ${adults}\nComentario: *${message}*\n*Total: ${fCurrency(bookingPrice)}*`
                             );
-                            const url = `https://api.whatsapp.com/send?phone=${phoneNumber}&text=${message}`;
-                    
+                            const url = `https://api.whatsapp.com/send?phone=${phoneNumber}&text=${_message}`;
+
                             window.open(url, '_blank');
                         }}
                         variant='contained'
@@ -256,27 +270,75 @@ export default function EcommerceCheckoutProduct() {
                             py: 1.5
                         }}
                     >Pagar con Mercado Pago</Button>
-                </Box>
-                <Box mx={2} marginTop={2}>
+                </Box>}
+                {!isTeacher &&
+                    <Box mx={2} marginTop={2}>
+                        <Button
+                            onClick={() => {
+                                const phoneNumber = '+5492944367197';
+                                const _message = encodeURIComponent(
+                                    `Experiência: ${product.name}\nDias de aula:${events.map(e => '\n- ' + formatDate(e.date) + ' - ' + translate(e.lessonTime)).toString()}\nQuantidade de pessoas: ${adults}\nComentário: *${message}*\nTotal: ${fCurrency(bookingPrice)}`
+                                );
+                                const url = `https://api.whatsapp.com/send?phone=${phoneNumber}&text=${_message}`;
+
+                                window.open(url, '_blank');
+                            }}
+                            variant='outlined'
+                            fullWidth
+                            sx={{
+                                py: 1.5
+                            }}
+                            style={{ m: 2, color: 'white', backgroundColor: '#820AD1' }}
+                        >Pagar com PIX</Button>
+                    </Box>
+                }
+                {isTeacher && <Box mx={2}>
+                    <TextField
+                        value={instructor}
+                        fullWidth
+                        label='Instrutor'
+                        sx={{ mb: 2 }}
+                        onChange={(event) => {
+                            setInstructor(event.target.value)
+                        }}
+                        helperText='Nombre del instructor que dictará la clase'
+                    />
+                    <FormControl fullWidth variant="outlined" sx={{
+                        mb: 2
+                    }}>
+                        <InputLabel id="payment-method-label">Método de Pago</InputLabel>
+                        <Select
+                            labelId="payment-method-label"
+                            value={paymentMethod}
+                            onChange={(event) => {
+                                setPaymentMethod(event.target.value)
+                            }}
+                            label="Método de Pago"
+                        >
+                            <MenuItem value="tarjeta-de-debito">Tarjeta de Débito</MenuItem>
+                            <MenuItem value="transferencia">Transferencia</MenuItem>
+                            <MenuItem value="efectivo">Efectivo</MenuItem>
+                            <MenuItem value="reserva">Reserva</MenuItem>
+                            <MenuItem value="efectivo">Efectivo</MenuItem>
+                        </Select>
+                    </FormControl>
                     <Button
                         onClick={() => {
                             const phoneNumber = '+5492944367197';
-                            const message = encodeURIComponent(
-                                `dias de clase: ${events.map( e => {
-                                    console.log({e}); return e.date.toString() + ', ' + e.lessonTime}).toString()}\ncantidad de personas: ${adults}\nExperiencia:${product.name}`
+                            const _message = encodeURIComponent(
+                                `Experiencia: ${product.name}\nDias de clase:${events.map(e => '\n- ' + formatDate(e.date) + ' - ' + translate(e.lessonTime)).toString()}\nCantidad de personas: ${adults}\nComentario: *${message}*\n*Total: ${fCurrency(bookingPrice)}*\nMetodo de pago: ${paymentMethod}\nIntructor referido: ${instructor} `
                             );
-                            const url = `https://api.whatsapp.com/send?phone=${phoneNumber}&text=${message}`;
-                    
+                            const url = `https://api.whatsapp.com/send?phone=${phoneNumber}&text=${_message}`;
+
                             window.open(url, '_blank');
                         }}
-                        variant='outlined'
+                        variant='contained'
                         fullWidth
                         sx={{
                             py: 1.5
                         }}
-                        style={{ m: 2, color: 'white', backgroundColor: '#820AD1' }}
-                    >Pagar com PIX</Button>
-                </Box>
+                    >Referír Clase</Button>
+                </Box>}
                 {/* <Box marginTop={2} marginX={1}>
         <Button onClick={handleBook} variant='contained' fullWidth style={{ m: 2 }}> Book </Button>
           </Box>*/}

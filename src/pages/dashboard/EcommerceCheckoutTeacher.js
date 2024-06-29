@@ -29,6 +29,8 @@ import { bookingAndPay, bookingPending, createBooking, createPreference, onCreat
 import { sum } from 'lodash';
 
 import ReactPixel from 'react-facebook-pixel';
+import { fCurrency } from 'src/utils/formatNumber';
+import useLocales from 'src/hooks/useLocales';
 console.log(process.env.REACT_APP_MERCADO_PAGO_PUBLIC_KEY)
 initMercadoPago(process.env.REACT_APP_MERCADO_PAGO_PUBLIC_KEY, { locale: 'es-AR' });
 
@@ -71,6 +73,7 @@ function QontoStepIcon({ active, completed }) {
 }
 
 export default function EcommerceCheckoutTeacher() {
+  const { translate } = useLocales();
   const { themeStretch } = useSettings();
   const dispatch = useDispatch();
   const isMountedRef = useIsMountedRef();
@@ -193,6 +196,13 @@ export default function EcommerceCheckoutTeacher() {
     ));
   }
 
+  const formatDate = (dateStr) => {
+    const date = new Date(dateStr);
+    const day = date.getDate().toString().padStart(2, '0');
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    return `${day}/${month}`;
+  };
+
   if (loadingPayment) {
     return <LoadingScreen />
   } else {
@@ -215,34 +225,53 @@ export default function EcommerceCheckoutTeacher() {
         </Box>
         <Box marginTop={2}>
           {bookingPrice > 0 && preferenceId && !createBookingError &&
-            <Payment
-              initialization={initialization}
-              customization={customization}
-              onSubmit={onSubmit}
-              onReady={onReady}
-              onError={onError}
-            />}
+            // <Payment
+            //   initialization={initialization}
+            //   customization={customization}
+            //   onSubmit={onSubmit}
+            //   onReady={onReady}
+            //   onError={onError}
+            // />
+            <Box marginTop={2} marginX={2} marginBottom={3}>
+              <Button variant="contained" fullWidth
+                sx={{
+                  py: 1.5
+                }}
+                onClick={() => {
+                  const phoneNumber = '+5492944367197';
+                  const _message = encodeURIComponent(
+                    `Clase privada - ${teacher.name} - ${teacher.id}\nDias de clase:${events.map(e => '\n- ' + formatDate(e.date) + ' - ' + translate(e.lessonTime)).toString()}\nNiños: ${children}\nAdultos: ${adults}\nComentario: *${message}*\n*Total: ${fCurrency(bookingPrice)}*`
+                  );
+                  const url = `https://api.whatsapp.com/send?phone=${phoneNumber}&text=${_message}`;
+
+                  window.open(url, '_blank');
+                }}
+                style={{ m: 2, color: 'white',}}
+              >
+                Contactar y Pagar
+              </Button>
+            </Box>
+          }
         </Box>
         <Box mx={2}>
-                    <Button
-                        onClick={() => {
-                            const phoneNumber = '+5492944367197';
-                            const message = encodeURIComponent(
-                                `dias de clase: ${events.map( e => {
-                                    console.log({e}); return e.date.toString() + ', ' + e.lessonTime}).toString()}\ncantidad de personas: ${adults}\nExperiencia:${teacher.name}`
-                            );
-                            const url = `https://api.whatsapp.com/send?phone=${phoneNumber}&text=${message}`;
-                    
-                            window.open(url, '_blank');
-                        }}
-                        variant='contained'
-                        fullWidth
-                        sx={{
-                            py: 1.5
-                        }}
-                        style={{ m: 2, color: 'white', backgroundColor: '#820AD1' }}
-                    >Pagar com PIX</Button>
-                </Box>
+          <Button
+            onClick={() => {
+              const phoneNumber = '+5492944367197';
+              const _message = encodeURIComponent(
+                `Aula particular - ${teacher.name} - ${teacher.id}\nDias de aula:${events.map(e => '\n- ' + formatDate(e.date) + ' - ' + translate(e.lessonTime)).toString()}\nCrianças: ${children}\nAdultos: ${adults}\nComentário: *${message}*\n*Total: ${fCurrency(bookingPrice)}*`
+              );
+              const url = `https://api.whatsapp.com/send?phone=${phoneNumber}&text=${_message}`;
+
+              window.open(url, '_blank');
+            }}
+            variant='contained'
+            fullWidth
+            sx={{
+              py: 1.5
+            }}
+            style={{ m: 2, color: 'white', backgroundColor: '#820AD1' }}
+          >Pagar com PIX</Button>
+        </Box>
         <CheckoutOrderComplete open={bookSuccess} />
         {bookingPrice < 0 &&
           <Box marginTop={2} marginX={1}>
@@ -250,9 +279,17 @@ export default function EcommerceCheckoutTeacher() {
           </Box>}
         {createBookingError && (
           <Box marginTop={2} marginX={3}>
-            <Button variant="contained" fullWidth onClick={() => {
-              window.open('https://wa.me/5492944367197', '_blank');
-            }}>
+            <Button variant="contained" fullWidth
+              onClick={() => {
+                const phoneNumber = '+5492944367197';
+                const _message = encodeURIComponent(
+                  `Experiencia: Clase privada\nDias de clase:${events.map(e => '\n- ' + formatDate(e.date) + ' - ' + translate(e.lessonTime)).toString()}\nCantidad de personas: ${adults}\nComentario: *${message}*\n*Total: ${fCurrency(bookingPrice)}*`
+                );
+                const url = `https://api.whatsapp.com/send?phone=${phoneNumber}&text=${_message}`;
+
+                window.open(url, '_blank');
+              }}
+            >
               Terminar mi compra por WhatsApp
             </Button>
           </Box>

@@ -166,15 +166,15 @@ export default function SelectDates({ handleClose, onSubmit, isRange, product })
                             >
                                 <Typography
                                     variant="h6">
-                                    {translate('checkout.morningTitle')} {isRange ? `${fCurrency(calculatePrice(product, selectedDates.length, 'MORNING'))}` : hasPrice && fCurrency(calculateRequestedPrice(teacher, totalDays, 'MORNING'))}
+                                    {translate('checkout.morningTitle')} {product ? `${fCurrency(calculatePrice(product, 1, 'MORNING'))}` : hasPrice && fCurrency(calculateRequestedPrice(teacher, totalDays, 'MORNING'))}
                                 </Typography>
                                 <Typography
                                     variant="subtitle2">
                                     {translate('checkout.morningDescription')}
                                 </Typography>
-                                {isRange && <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                                {false && <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                                     <Typography variant="subtitle" sx={{ textAlign: 'end', flex: '1 1 auto' }}>
-                                        {isRange ? `${fCurrency(calculatePrice(product, selectedDates.length, 'MORNING') * selectedDates.length)} total` : (hasPrice && '$US 180')}
+                                        {product ? `${fCurrency(calculatePrice(product, selectedDates.length, 'MORNING') * selectedDates.length)} total` : (hasPrice && '$US 180')}
                                     </Typography>
                                 </Box>}
                             </Paper>
@@ -190,14 +190,14 @@ export default function SelectDates({ handleClose, onSubmit, isRange, product })
                                 }}
                             >
                                 <Typography
-                                    variant="h6">{translate('checkout.afternoonTitle')} {isRange ? `${fCurrency(calculatePrice(product, selectedDates.length, 'AFTERNOON'))}` : hasPrice && fCurrency(calculateRequestedPrice(teacher, totalDays, 'AFTERNOON'))}
+                                    variant="h6">{translate('checkout.afternoonTitle')} {product ? `${fCurrency(calculatePrice(product, 1, 'AFTERNOON'))}` : hasPrice && fCurrency(calculateRequestedPrice(teacher, totalDays, 'AFTERNOON'))}
                                 </Typography>
                                 <Typography
                                     variant="subtitle2">{translate('checkout.afternoonDescription')}
                                 </Typography>
-                                {isRange && <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                                {false && <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                                     <Typography variant="subtitle" sx={{ textAlign: 'end', flex: '1 1 auto' }}>
-                                        {isRange ? `${fCurrency(calculatePrice(product, selectedDates.length, 'AFTERNOON') * selectedDates.length)} total` : hasPrice && '$US 180'}
+                                        {product ? `${fCurrency(calculatePrice(product, selectedDates.length, 'AFTERNOON') * selectedDates.length)} total` : hasPrice && '$US 180'}
                                     </Typography>
                                 </Box>}
                             </Paper>
@@ -215,15 +215,15 @@ export default function SelectDates({ handleClose, onSubmit, isRange, product })
                                 <Typography
                                     variant="h6">
                                     {translate('checkout.allDayTitle')}
-                                    {isRange ? ` ${fCurrency(calculatePrice(product, selectedDates.length, 'FULL_DAY'))}` : hasPrice && fCurrency(calculateRequestedPrice(teacher, totalDays, 'FULL_DAY'))}
+                                    {product ? ` ${fCurrency(calculatePrice(product, 1, 'FULL_DAY'))}` : hasPrice && fCurrency(calculateRequestedPrice(teacher, totalDays, 'FULL_DAY'))}
                                 </Typography>
                                 <Typography
                                     variant="subtitle2">
                                     {translate('checkout.allDayDescription')}
                                 </Typography>
-                                {isRange && <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                                {false && <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                                     <Typography variant="subtitle" sx={{ textAlign: 'end', flex: '1 1 auto' }}>
-                                        {isRange ? `${fCurrency(calculatePrice(product, selectedDates.length, 'FULL_DAY') * selectedDates.length)} total` : hasPrice && fCurrency(calculateRequestedPrice(teacher, totalDays, 'FULL_DAY'))}
+                                        {product ? `${fCurrency(calculatePrice(product, selectedDates.length, 'FULL_DAY') * selectedDates.length)} total` : hasPrice && fCurrency(calculateRequestedPrice(teacher, totalDays, 'FULL_DAY'))}
                                     </Typography>
                                 </Box>}
                             </Paper>

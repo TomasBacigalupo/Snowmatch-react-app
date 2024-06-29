@@ -125,7 +125,8 @@ export default function Router() {
             </AuthGuard>
         },
         {
-          path: 'product/:id/hire', element: <AuthGuard>
+          path: 'product/:id/hire', element: 
+          <AuthGuard>
             <EcommerceCheckoutProduct />
           </AuthGuard>
         },
@@ -187,7 +188,9 @@ export default function Router() {
             { path: 'school/:id', element: <SchoolDetails /> },
             { path: 'shop/school', element: <EcommerceShop teacherType="school" /> },
             { path: 'teacher/:id', element: <EcommerceTeacherDetails /> },
-            { path: 'product/:id', element: <EcommerceProductDetails /> },
+            { path: 'teacher/:id/hire', element: <EcommerceCheckoutTeacher /> },
+            { path: 'dashboard/product/:id', element: <EcommerceProductDetails /> },
+            { path: 'dashboard/product/:id/hire', element: <EcommerceCheckoutProduct /> },
             { path: 'product/:name', element: <EcommerceProductDetails /> },
             { path: 'product', element: <EcommerceProductList /> },
             { path: 'product/new', element: <ProductCreate /> },

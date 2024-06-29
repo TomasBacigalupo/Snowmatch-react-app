@@ -105,7 +105,6 @@ export const PATH_DASHBOARD = {
     pending: path(ROOTS_DASHBOARD, '/school/pending'),
     teachers: path(ROOTS_DASHBOARD, '/school/teachers'),
     edit: (id) => path(ROOTS_DASHBOARD, `/school/${id}/edit`),
-
   },
   eCommerce: {
     root: path(ROOTS_DASHBOARD, '/e-commerce'),
@@ -126,6 +125,7 @@ export const PATH_DASHBOARD = {
     demoEdit: path(ROOTS_DASHBOARD, '/e-commerce/product/nike-blazer-low-77-vintage/edit'),
     demoView: path(ROOTS_DASHBOARD, '/e-commerce/product/nike-air-force-1-ndestrukt'),
     matchIndependant: '/match/independent?resort=Cerro Catedral',
+    viewSchoolProduct: (id) => path(ROOTS_DASHBOARD, `/e-commerce/dashboard/product/${id}`),
   },
   invoice: {
     root: path(ROOTS_DASHBOARD, '/invoice'),

@@ -94,7 +94,9 @@ export default function CalendarDayForm({ event, range, onCancel, clients, membe
     event,
     category,
   ) => {
-    if (classType == "teacher"){
+    console.log({ category })
+    console.log({ event })
+    if (classType == "teacher") {
       if (category === 'block') {
         setBlock('block')
       } else {
@@ -137,32 +139,32 @@ export default function CalendarDayForm({ event, range, onCancel, clients, membe
     enqueueSnackbar("Clase Asignada");
     onCancel();
   }
-  
+
   function setLessonTime(event) {
     // Extract the start and end dates from the event
     let start = new Date(event.start);
     let end = new Date(event.end);
 
     if (timeSelected === 'ALL_DAY') {
-        start.setHours(9, 0, 0, 0); // Set start time to 9:00 AM
-        end.setHours(17, 0, 0, 0); // Set end time to 5:00 PM
+      start.setHours(9, 0, 0, 0); // Set start time to 9:00 AM
+      end.setHours(17, 0, 0, 0); // Set end time to 5:00 PM
     } else if (timeSelected === 'MORNING') {
-        start.setHours(9, 0, 0, 0); // Set start time to 9:00 AM
-        end.setHours(13, 0, 0, 0); // Set end time to 1:00 PM
+      start.setHours(9, 0, 0, 0); // Set start time to 9:00 AM
+      end.setHours(13, 0, 0, 0); // Set end time to 1:00 PM
     } else { // Assume 'AFTERNOON'
-        start.setHours(13, 0, 0, 0); // Set start time to 1:00 PM
-        end.setHours(17, 0, 0, 0); // Set end time to 5:00 PM
+      start.setHours(13, 0, 0, 0); // Set start time to 1:00 PM
+      end.setHours(17, 0, 0, 0); // Set end time to 5:00 PM
     }
-    
+
     // Format date to ISO string without converting to UTC
     function formatLocalISODate(date) {
       const pad = (number) => (number < 10 ? '0' : '') + number;
       return date.getFullYear() +
-          '-' + pad(date.getMonth() + 1) +
-          '-' + pad(date.getDate()) +
-          'T' + pad(date.getHours()) +
-          ':' + pad(date.getMinutes()) +
-          ':' + pad(date.getSeconds());
+        '-' + pad(date.getMonth() + 1) +
+        '-' + pad(date.getDate()) +
+        'T' + pad(date.getHours()) +
+        ':' + pad(date.getMinutes()) +
+        ':' + pad(date.getSeconds());
     }
 
     // Update the event object with new start and end times
@@ -173,7 +175,7 @@ export default function CalendarDayForm({ event, range, onCancel, clients, membe
     // event.start = start.toISOString();
     // event.end = end.toISOString();
   }
-  
+
   const handleCreateSchoolEvent = () => {
     let newEvent
     newEvent = {
@@ -380,9 +382,9 @@ export default function CalendarDayForm({ event, range, onCancel, clients, membe
 
 
   return (
-    <FormProvider methods={methods} onSubmit={handleSubmit(handleBlock)}> 
+    <FormProvider methods={methods} onSubmit={handleSubmit(handleBlock)}>
       <Stack spacing={3} sx={{ p: 3 }}>
-      <Typography
+        {classType != "teacher" && <Typography
           variant="body2"
           sx={{
             maxWidth: 260,
@@ -393,8 +395,8 @@ export default function CalendarDayForm({ event, range, onCancel, clients, membe
           }}
         >
           {classType}
-        </Typography>
-        <ToggleButtonGroup
+        </Typography>}
+        {classType === "teacher" && <ToggleButtonGroup
           color="primary"
           value={block}
           exclusive
@@ -407,7 +409,7 @@ export default function CalendarDayForm({ event, range, onCancel, clients, membe
             marginBottom: 2,
           }}
         >
-          { classType === "teacher" && <><ToggleButton
+          <ToggleButton
             value="block"
             sx={{
               width: '100%',
@@ -432,23 +434,11 @@ export default function CalendarDayForm({ event, range, onCancel, clients, membe
             }}
           >
             Asignar Cliente
-          </ToggleButton></> }
+          </ToggleButton>
 
-          {classType === "school" && <ToggleButton
-            value="school"
-            sx={{
-              width: '100%',
-              borderRadius: 10,
-              justifyContent: 'center',
-              '&.MuiButtonBase-root': {
-                borderRadius: '100px !important',
-              },
-            }}
-          >
-            Evento escuela
-          </ToggleButton>}
 
         </ToggleButtonGroup>
+        }
         <Box>
           <MobileDatePicker
             label="Día"
@@ -456,247 +446,247 @@ export default function CalendarDayForm({ event, range, onCancel, clients, membe
             onChange={(newValue) => {
               setValue('start', newValue);
             }}
-            renderInput={(params) => <TextField {...params} fullWidth/>}
+            renderInput={(params) => <TextField {...params} fullWidth />}
           />
         </Box>
         {block === 'block' && <>
-            <Grid spacing={2} direction={{ xs: 'column', md: 'column ' }}>
-              <Paper
-                onClick={() => {
-                  setTimeSelected('ALL_DAY')
-                }}
-                sx={{
-                  p: 3,
-                  width: 1,
-                  my:2,
-                  border: (theme) => `solid 1px ${timeSelected === 'ALL_DAY' ? theme.palette.primary.main : theme.palette.grey[500_32]}`,
-                  
-                }}
-              >
-                {/* picture or icon */}
-                <Typography color={timeSelected === 'ALL_DAY' ? 'primary':''} variant="h6">Todo el día</Typography>
-                {timeSelected === 'ALL_DAY' && <Typography color={timeSelected === 'ALL_DAY' ? 'primary':''} variant="subtitle2">Al bloquear tu día completo no podrán hacerte contrataciones este día</Typography>
-                }
-              </Paper>
-              <Paper
+          <Grid spacing={2} direction={{ xs: 'column', md: 'column ' }}>
+            <Paper
+              onClick={() => {
+                setTimeSelected('ALL_DAY')
+              }}
+              sx={{
+                p: 3,
+                width: 1,
+                my: 2,
+                border: (theme) => `solid 1px ${timeSelected === 'ALL_DAY' ? theme.palette.primary.main : theme.palette.grey[500_32]}`,
 
-                onClick={() => { 
-                  setTimeSelected('MORNING')
-                }}
-                
-                sx={{
-                  p: 3,
-                  width: 1,
-                  my:2,
-                  border: (theme) => `solid 1px ${timeSelected === 'MORNING' ? theme.palette.primary.main : theme.palette.grey[500_32]}`,
-                  
-                }}
-              >
-                {/* picture or icon */}
-                <Typography variant="h6" color={timeSelected === 'MORNING' ? 'primary':''}>Mañana</Typography>
-                {timeSelected === 'MORNING' && <Typography color={timeSelected === 'MORNING' ? 'primary':''} variant="subtitle2">Al bloquear tu turno de mañana no podrán hacerte contrataciones este día entre las 8:00am y las 12:00pm</Typography>
-                }
-                
-              </Paper>
-              <Paper
-                onClick={() => {
-                  setTimeSelected('AFTERNOON')
-                }}
-                sx={{
-                  p: 3,
-                  width: 1,
-                  my:2,
-                  border: (theme) => `solid 1px ${timeSelected === 'AFTERNOON' ? theme.palette.primary.main : theme.palette.grey[500_32]}`,
-                  
-                }}
-              >
-                {/* picture or icon */}
-                <Typography color={timeSelected === 'AFTERNOON' ? 'primary':''} variant="h6">Tarde</Typography>
-                {timeSelected === 'AFTERNOON' && <Typography color={timeSelected === 'AFTERNOON' ? 'primary':''} variant="subtitle2">Al bloquear tu turno de tarde no podrán hacerte contrataciones este día entre las 2:30pm y las 17:30pm</Typography>
-                }
-                
-              </Paper>
-            </Grid>
+              }}
+            >
+              {/* picture or icon */}
+              <Typography color={timeSelected === 'ALL_DAY' ? 'primary' : ''} variant="h6">Todo el día</Typography>
+              {timeSelected === 'ALL_DAY' && <Typography color={timeSelected === 'ALL_DAY' ? 'primary' : ''} variant="subtitle2">Al bloquear tu día completo no podrán hacerte contrataciones este día</Typography>
+              }
+            </Paper>
+            <Paper
+
+              onClick={() => {
+                setTimeSelected('MORNING')
+              }}
+
+              sx={{
+                p: 3,
+                width: 1,
+                my: 2,
+                border: (theme) => `solid 1px ${timeSelected === 'MORNING' ? theme.palette.primary.main : theme.palette.grey[500_32]}`,
+
+              }}
+            >
+              {/* picture or icon */}
+              <Typography variant="h6" color={timeSelected === 'MORNING' ? 'primary' : ''}>Mañana</Typography>
+              {timeSelected === 'MORNING' && <Typography color={timeSelected === 'MORNING' ? 'primary' : ''} variant="subtitle2">Al bloquear tu turno de mañana no podrán hacerte contrataciones este día entre las 8:00am y las 12:00pm</Typography>
+              }
+
+            </Paper>
+            <Paper
+              onClick={() => {
+                setTimeSelected('AFTERNOON')
+              }}
+              sx={{
+                p: 3,
+                width: 1,
+                my: 2,
+                border: (theme) => `solid 1px ${timeSelected === 'AFTERNOON' ? theme.palette.primary.main : theme.palette.grey[500_32]}`,
+
+              }}
+            >
+              {/* picture or icon */}
+              <Typography color={timeSelected === 'AFTERNOON' ? 'primary' : ''} variant="h6">Tarde</Typography>
+              {timeSelected === 'AFTERNOON' && <Typography color={timeSelected === 'AFTERNOON' ? 'primary' : ''} variant="subtitle2">Al bloquear tu turno de tarde no podrán hacerte contrataciones este día entre las 2:30pm y las 17:30pm</Typography>
+              }
+
+            </Paper>
+          </Grid>
         </>}
 
         {block === 'assign' && <>
-            <Grid spacing={2} direction={{ xs: 'column', md: 'column ' }}>
+          <Grid spacing={2} direction={{ xs: 'column', md: 'column ' }}>
 
-              <Paper
-                onClick={() => {
-                  setTimeSelected('ALL_DAY')
-                }}
-                sx={{
-                  p: 3,
-                  my:2,
-                  width: 1,
-                  border: (theme) => `solid 1px ${timeSelected === 'ALL_DAY' ? theme.palette.primary.main : theme.palette.grey[500_32]}`,
-                  
-                }}
-              >
-                {/* picture or icon */}
-                <Typography color={timeSelected === 'ALL_DAY' ? 'primary':''} variant="h6">Todo el día</Typography>
-                {timeSelected === 'ALL_DAY' && <Typography color={timeSelected === 'ALL_DAY' ? 'primary':''} variant="subtitle2">Al bloquear tu día completo no podrán hacerte contrataciones este día</Typography>
-                }
-                {timeSelected === 'ALL_DAY' && clients?.length > 0 && <Autocomplete
-                  disabled={disabled}
-                  multiple
-                  disableCloseOnSelect
-                  name="clientId" label={translate('calendar.form.client')}
-                  value={selectedClients}
-                  options={[...clients].sort((a, b) => a?.name?.localeCompare(b?.name))}
-                  getOptionLabel={(c) => `${c?.name} ${c?.lastname}`}
-                  onChange={(event, value) => {
-                    setSelectedClients([...value])
-                  }}
-                  renderOption={(props, client) => (
-                    <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-                      <Avatar sx={{ marginRight: '10px' }}>{`${client?.name[0]}${client?.lastname[0]}`}</Avatar>
-                      {`${client.name} ${client.lastname}`}
-                    </Box>
-                  )}
-      
-                  renderInput={(params) => (
-                    <RHFTextField {...params}
-                      disabled={disabled}
-                      name="clientid" label="Client" sx={{my: 2}} />
-                  )}
-                />}
-                
-              </Paper>
-              <Paper
+            <Paper
+              onClick={() => {
+                setTimeSelected('ALL_DAY')
+              }}
+              sx={{
+                p: 3,
+                my: 2,
+                width: 1,
+                border: (theme) => `solid 1px ${timeSelected === 'ALL_DAY' ? theme.palette.primary.main : theme.palette.grey[500_32]}`,
 
-                onClick={() => { 
-                  setTimeSelected('MORNING')
+              }}
+            >
+              {/* picture or icon */}
+              <Typography color={timeSelected === 'ALL_DAY' ? 'primary' : ''} variant="h6">Todo el día</Typography>
+              {timeSelected === 'ALL_DAY' && <Typography color={timeSelected === 'ALL_DAY' ? 'primary' : ''} variant="subtitle2">Al bloquear tu día completo no podrán hacerte contrataciones este día</Typography>
+              }
+              {timeSelected === 'ALL_DAY' && clients?.length > 0 && <Autocomplete
+                disabled={disabled}
+                multiple
+                disableCloseOnSelect
+                name="clientId" label={translate('calendar.form.client')}
+                value={selectedClients}
+                options={[...clients].sort((a, b) => a?.name?.localeCompare(b?.name))}
+                getOptionLabel={(c) => `${c?.name} ${c?.lastname}`}
+                onChange={(event, value) => {
+                  setSelectedClients([...value])
                 }}
-                
-                sx={{
-                  p: 3,
-                  width: 1,
-                  my:2,
-                  border: (theme) => `solid 1px ${timeSelected === 'MORNING' ? theme.palette.primary.main : theme.palette.grey[500_32]}`,
-                  
+                renderOption={(props, client) => (
+                  <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                    <Avatar sx={{ marginRight: '10px' }}>{`${client?.name[0]}${client?.lastname[0]}`}</Avatar>
+                    {`${client.name} ${client.lastname}`}
+                  </Box>
+                )}
+
+                renderInput={(params) => (
+                  <RHFTextField {...params}
+                    disabled={disabled}
+                    name="clientid" label="Client" sx={{ my: 2 }} />
+                )}
+              />}
+
+            </Paper>
+            <Paper
+
+              onClick={() => {
+                setTimeSelected('MORNING')
+              }}
+
+              sx={{
+                p: 3,
+                width: 1,
+                my: 2,
+                border: (theme) => `solid 1px ${timeSelected === 'MORNING' ? theme.palette.primary.main : theme.palette.grey[500_32]}`,
+
+              }}
+            >
+              {/* picture or icon */}
+              <Typography variant="h6" color={timeSelected === 'MORNING' ? 'primary' : ''}>Mañana</Typography>
+              {timeSelected === 'MORNING' && <Typography color={timeSelected === 'MORNING' ? 'primary' : ''} variant="subtitle2">Al bloquear tu turno de mañana no podrán hacerte contrataciones este día entre las 8:00am y las 12:00pm</Typography>
+              }
+              {timeSelected === 'MORNING' && clients?.length > 0 && <Autocomplete
+                disabled={disabled}
+                multiple
+                disableCloseOnSelect
+                name="clientId" label={translate('calendar.form.client')}
+                value={selectedClients}
+                options={[...clients].sort((a, b) => a?.name?.localeCompare(b?.name))}
+                getOptionLabel={(c) => `${c?.name} ${c?.lastname}`}
+                onChange={(event, value) => {
+                  setSelectedClients([...value])
                 }}
-              >
-                {/* picture or icon */}
-                <Typography variant="h6" color={timeSelected === 'MORNING' ? 'primary':''}>Mañana</Typography>
-                {timeSelected === 'MORNING' && <Typography color={timeSelected === 'MORNING' ? 'primary':''} variant="subtitle2">Al bloquear tu turno de mañana no podrán hacerte contrataciones este día entre las 8:00am y las 12:00pm</Typography>
-                }
-                 {timeSelected === 'MORNING' && clients?.length > 0 && <Autocomplete
-                  disabled={disabled}
-                  multiple
-                  disableCloseOnSelect
-                  name="clientId" label={translate('calendar.form.client')}
-                  value={selectedClients}
-                  options={[...clients].sort((a, b) => a?.name?.localeCompare(b?.name))}
-                  getOptionLabel={(c) => `${c?.name} ${c?.lastname}`}
-                  onChange={(event, value) => {
-                    setSelectedClients([...value])
-                  }}
-                  renderOption={(props, client) => (
-                    <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-                      <Avatar sx={{ marginRight: '10px' }}>{`${client?.name[0]}${client?.lastname[0]}`}</Avatar>
-                      {`${client.name} ${client.lastname}`}
-                    </Box>
-                  )}
-      
-                  renderInput={(params) => (
-                    <RHFTextField {...params}
-                      disabled={disabled}
-                      name="clientid" label="Client" sx={{my: 2}} />
-                  )}
-                />}
-                
-              </Paper>
-              <Paper
-                onClick={() => {
-                  setTimeSelected('AFTERNOON')
+                renderOption={(props, client) => (
+                  <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                    <Avatar sx={{ marginRight: '10px' }}>{`${client?.name[0]}${client?.lastname[0]}`}</Avatar>
+                    {`${client.name} ${client.lastname}`}
+                  </Box>
+                )}
+
+                renderInput={(params) => (
+                  <RHFTextField {...params}
+                    disabled={disabled}
+                    name="clientid" label="Client" sx={{ my: 2 }} />
+                )}
+              />}
+
+            </Paper>
+            <Paper
+              onClick={() => {
+                setTimeSelected('AFTERNOON')
+              }}
+              sx={{
+                p: 3,
+                width: 1,
+                my: 2,
+                border: (theme) => `solid 1px ${timeSelected === 'AFTERNOON' ? theme.palette.primary.main : theme.palette.grey[500_32]}`,
+
+              }}
+            >
+              {/* picture or icon */}
+              <Typography color={timeSelected === 'AFTERNOON' ? 'primary' : ''} variant="h6">Tarde</Typography>
+              {timeSelected === 'AFTERNOON' && <Typography color={timeSelected === 'AFTERNOON' ? 'primary' : ''} variant="subtitle2">Al bloquear tu turno de tarde no podrán hacerte contrataciones este día entre las 2:30pm y las 17:30pm</Typography>
+              }
+              {timeSelected === 'AFTERNOON' && clients?.length > 0 && <Autocomplete
+                disabled={disabled}
+                multiple
+                disableCloseOnSelect
+                name="clientId" label={translate('calendar.form.client')}
+                value={selectedClients}
+                options={[...clients].sort((a, b) => a?.name?.localeCompare(b?.name))}
+                getOptionLabel={(c) => `${c?.name} ${c?.lastname}`}
+                onChange={(event, value) => {
+                  setSelectedClients([...value])
                 }}
-                sx={{
-                  p: 3,
-                  width: 1,
-                  my:2,
-                  border: (theme) => `solid 1px ${timeSelected === 'AFTERNOON' ? theme.palette.primary.main : theme.palette.grey[500_32]}`,
-                  
-                }}
-              >
-                {/* picture or icon */}
-                <Typography color={timeSelected === 'AFTERNOON' ? 'primary':''} variant="h6">Tarde</Typography>
-                {timeSelected === 'AFTERNOON' && <Typography color={timeSelected === 'AFTERNOON' ? 'primary':''} variant="subtitle2">Al bloquear tu turno de tarde no podrán hacerte contrataciones este día entre las 2:30pm y las 17:30pm</Typography>
-                }
-                {timeSelected === 'AFTERNOON' && clients?.length > 0 && <Autocomplete
-                  disabled={disabled}
-                  multiple
-                  disableCloseOnSelect
-                  name="clientId" label={translate('calendar.form.client')}
-                  value={selectedClients}
-                  options={[...clients].sort((a, b) => a?.name?.localeCompare(b?.name))}
-                  getOptionLabel={(c) => `${c?.name} ${c?.lastname}`}
-                  onChange={(event, value) => {
-                    setSelectedClients([...value])
-                  }}
-                  renderOption={(props, client) => (
-                    <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-                      <Avatar sx={{ marginRight: '10px' }}>{`${client?.name[0]}${client?.lastname[0]}`}</Avatar>
-                      {`${client.name} ${client.lastname}`}
-                    </Box>
-                  )}
-      
-                  renderInput={(params) => (
-                    <RHFTextField {...params}
-                      disabled={disabled}
-                      name="clientid" label="Client" sx={{my: 2}}  />
-                  )}
-                />}
-                
-              </Paper>
-            </Grid>
+                renderOption={(props, client) => (
+                  <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                    <Avatar sx={{ marginRight: '10px' }}>{`${client?.name[0]}${client?.lastname[0]}`}</Avatar>
+                    {`${client.name} ${client.lastname}`}
+                  </Box>
+                )}
+
+                renderInput={(params) => (
+                  <RHFTextField {...params}
+                    disabled={disabled}
+                    name="clientid" label="Client" sx={{ my: 2 }} />
+                )}
+              />}
+
+            </Paper>
+          </Grid>
         </>}
 
 
         {block === 'school' && <>
-            <Grid spacing={2} direction={{ xs: 'column', md: 'column ' }}>
+          <Grid spacing={2} direction={{ xs: 'column', md: 'column ' }}>
 
-              <Paper
-                onClick={() => {
-                  setTimeSelected('ALL_DAY')
+            <Paper
+              onClick={() => {
+                setTimeSelected('ALL_DAY')
+              }}
+              sx={{
+                p: 3,
+                my: 2,
+                width: 1,
+                border: (theme) => `solid 1px ${timeSelected === 'ALL_DAY' ? theme.palette.primary.main : theme.palette.grey[500_32]}`,
+
+              }}
+            >
+              {/* picture or icon */}
+              <Typography color={timeSelected === 'ALL_DAY' ? 'primary' : ''} variant="h6">Todo el día</Typography>
+              {timeSelected === 'ALL_DAY' && <Typography color={timeSelected === 'ALL_DAY' ? 'primary' : ''} variant="subtitle2">Al bloquear tu día completo no podrán hacerte contrataciones este día</Typography>
+              }
+              {timeSelected === 'ALL_DAY' && clients?.length > 0 && <><Autocomplete
+                disabled={disabled}
+                multiple
+                disableCloseOnSelect
+                name="clientId" label={translate('calendar.form.client')}
+                value={selectedClients}
+                options={[...clients].sort((a, b) => a?.name?.localeCompare(b?.name))}
+                getOptionLabel={(c) => `${c?.name} ${c?.lastname}`}
+                onChange={(event, value) => {
+                  setSelectedClients([...value])
                 }}
-                sx={{
-                  p: 3,
-                  my:2,
-                  width: 1,
-                  border: (theme) => `solid 1px ${timeSelected === 'ALL_DAY' ? theme.palette.primary.main : theme.palette.grey[500_32]}`,
-                  
-                }}
-              >
-                {/* picture or icon */}
-                <Typography color={timeSelected === 'ALL_DAY' ? 'primary':''} variant="h6">Todo el día</Typography>
-                {timeSelected === 'ALL_DAY' && <Typography color={timeSelected === 'ALL_DAY' ? 'primary':''} variant="subtitle2">Al bloquear tu día completo no podrán hacerte contrataciones este día</Typography>
-                }
-                {timeSelected === 'ALL_DAY' && clients?.length > 0 && <><Autocomplete
-                  disabled={disabled}
-                  multiple
-                  disableCloseOnSelect
-                  name="clientId" label={translate('calendar.form.client')}
-                  value={selectedClients}
-                  options={[...clients].sort((a, b) => a?.name?.localeCompare(b?.name))}
-                  getOptionLabel={(c) => `${c?.name} ${c?.lastname}`}
-                  onChange={(event, value) => {
-                    setSelectedClients([...value])
-                  }}
-                  renderOption={(props, clients) => (
-                    <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-                      <Avatar sx={{ marginRight: '10px' }}>{`${clients?.name[0]}${clients?.lastname[0]}`}</Avatar>
-                      {`${clients.name} ${clients.lastname}`}
-                    </Box>
-                  )}
-      
-                  renderInput={(params) => (
-                    <RHFTextField {...params}
-                      disabled={disabled}
-                      name="clientsid" label="Clients" sx={{my: 2}} />
-                  )}
-                />
+                renderOption={(props, clients) => (
+                  <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                    <Avatar sx={{ marginRight: '10px' }}>{`${clients?.name[0]}${clients?.lastname[0]}`}</Avatar>
+                    {`${clients.name} ${clients.lastname}`}
+                  </Box>
+                )}
+
+                renderInput={(params) => (
+                  <RHFTextField {...params}
+                    disabled={disabled}
+                    name="clientsid" label="Clients" sx={{ my: 2 }} />
+                )}
+              />
                 <Autocomplete
                   disabled={disabled}
                   multiple
@@ -714,150 +704,150 @@ export default function CalendarDayForm({ event, range, onCancel, clients, membe
                       {`${member.name} ${member.lastname}`}
                     </Box>
                   )}
-      
+
                   renderInput={(params) => (
                     <RHFTextField {...params}
                       disabled={disabled}
-                      name="memberid" label="Members" sx={{my: 2}} />
+                      name="memberid" label="Members" sx={{ my: 2 }} />
                   )}
                 /></>}
-                
-              </Paper>
-              <Paper
 
-                onClick={() => { 
-                  setTimeSelected('MORNING')
-                }}
-                
-                sx={{
-                  p: 3,
-                  width: 1,
-                  my:2,
-                  border: (theme) => `solid 1px ${timeSelected === 'MORNING' ? theme.palette.primary.main : theme.palette.grey[500_32]}`,
-                  
-                }}
-              >
-                {/* picture or icon */}
-                <Typography variant="h6" color={timeSelected === 'MORNING' ? 'primary':''}>Mañana</Typography>
-                {timeSelected === 'MORNING' && <Typography color={timeSelected === 'MORNING' ? 'primary':''} variant="subtitle2">Al bloquear tu turno de mañana no podrán hacerte contrataciones este día entre las 8:00am y las 12:00pm</Typography>
-                }
-                 {timeSelected === 'MORNING' && members?.length > 0 && <><Autocomplete
-                  disabled={disabled}
-                  multiple
-                  disableCloseOnSelect
-                  name="clientId" label={translate('calendar.form.client')}
-                  value={selectedClients}
-                  options={[...clients].sort((a, b) => a?.name?.localeCompare(b?.name))}
-                  getOptionLabel={(c) => `${c?.name} ${c?.lastname}`}
-                  onChange={(event, value) => {
-                    setSelectedClients([...value])
-                  }}
-                  renderOption={(props, clients) => (
-                    <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-                      <Avatar sx={{ marginRight: '10px' }}>{`${clients?.name[0]}${clients?.lastname[0]}`}</Avatar>
-                      {`${clients.name} ${clients.lastname}`}
-                    </Box>
-                  )}
-      
-                  renderInput={(params) => (
-                    <RHFTextField {...params}
-                      disabled={disabled}
-                      name="clientsid" label="Clients" sx={{my: 2}} />
-                  )}
-                />
-                <Autocomplete
+            </Paper>
+            <Paper
+
+              onClick={() => {
+                setTimeSelected('MORNING')
+              }}
+
+              sx={{
+                p: 3,
+                width: 1,
+                my: 2,
+                border: (theme) => `solid 1px ${timeSelected === 'MORNING' ? theme.palette.primary.main : theme.palette.grey[500_32]}`,
+
+              }}
+            >
+              {/* picture or icon */}
+              <Typography variant="h6" color={timeSelected === 'MORNING' ? 'primary' : ''}>Mañana</Typography>
+              {timeSelected === 'MORNING' && <Typography color={timeSelected === 'MORNING' ? 'primary' : ''} variant="subtitle2">Al bloquear tu turno de mañana no podrán hacerte contrataciones este día entre las 8:00am y las 12:00pm</Typography>
+              }
+              {timeSelected === 'MORNING' && members?.length > 0 && <><Autocomplete
                 disabled={disabled}
                 multiple
                 disableCloseOnSelect
-                name="membersId" label={translate('calendar.form.member')}
-                value={selectedMembers}
-                options={[...members].sort((a, b) => a?.name?.localeCompare(b?.name))}
+                name="clientId" label={translate('calendar.form.client')}
+                value={selectedClients}
+                options={[...clients].sort((a, b) => a?.name?.localeCompare(b?.name))}
                 getOptionLabel={(c) => `${c?.name} ${c?.lastname}`}
                 onChange={(event, value) => {
-                  setSelectedMembers([...value])
+                  setSelectedClients([...value])
                 }}
-                renderOption={(props, member) => (
+                renderOption={(props, clients) => (
                   <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-                    <Avatar sx={{ marginRight: '10px' }}>{`${member?.name[0]}${member?.lastname[0]}`}</Avatar>
-                    {`${member.name} ${member.lastname}`}
+                    <Avatar sx={{ marginRight: '10px' }}>{`${clients?.name[0]}${clients?.lastname[0]}`}</Avatar>
+                    {`${clients.name} ${clients.lastname}`}
                   </Box>
                 )}
-    
+
                 renderInput={(params) => (
                   <RHFTextField {...params}
                     disabled={disabled}
-                    name="memberid" label="Members" sx={{my: 2}} />
+                    name="clientsid" label="Clients" sx={{ my: 2 }} />
                 )}
-              /></>}
-                
-              </Paper>
-              <Paper
-                onClick={() => {
-                  setTimeSelected('AFTERNOON')
-                }}
-                sx={{
-                  p: 3,
-                  width: 1,
-                  my:2,
-                  border: (theme) => `solid 1px ${timeSelected === 'AFTERNOON' ? theme.palette.primary.main : theme.palette.grey[500_32]}`,
-                  
-                }}
-              >
-                {/* picture or icon */}
-                <Typography color={timeSelected === 'AFTERNOON' ? 'primary':''} variant="h6">Tarde</Typography>
-                {timeSelected === 'AFTERNOON' && <Typography color={timeSelected === 'AFTERNOON' ? 'primary':''} variant="subtitle2">Al bloquear tu turno de tarde no podrán hacerte contrataciones este día entre las 2:30pm y las 17:30pm</Typography>
-                }
-                {timeSelected === 'AFTERNOON' && members?.length > 0 && <><Autocomplete
+              />
+                <Autocomplete
                   disabled={disabled}
                   multiple
                   disableCloseOnSelect
-                  name="clientId" label={translate('calendar.form.client')}
-                  value={selectedClients}
-                  options={[...clients].sort((a, b) => a?.name?.localeCompare(b?.name))}
+                  name="membersId" label={translate('calendar.form.member')}
+                  value={selectedMembers}
+                  options={[...members].sort((a, b) => a?.name?.localeCompare(b?.name))}
                   getOptionLabel={(c) => `${c?.name} ${c?.lastname}`}
                   onChange={(event, value) => {
-                    setSelectedClients([...value])
+                    setSelectedMembers([...value])
                   }}
-                  renderOption={(props, clients) => (
+                  renderOption={(props, member) => (
                     <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-                      <Avatar sx={{ marginRight: '10px' }}>{`${clients?.name[0]}${clients?.lastname[0]}`}</Avatar>
-                      {`${clients.name} ${clients.lastname}`}
+                      <Avatar sx={{ marginRight: '10px' }}>{`${member?.name[0]}${member?.lastname[0]}`}</Avatar>
+                      {`${member.name} ${member.lastname}`}
                     </Box>
                   )}
-      
+
                   renderInput={(params) => (
                     <RHFTextField {...params}
                       disabled={disabled}
-                      name="clientsid" label="Clients" sx={{my: 2}} />
+                      name="memberid" label="Members" sx={{ my: 2 }} />
                   )}
-                />
-                <Autocomplete
+                /></>}
+
+            </Paper>
+            <Paper
+              onClick={() => {
+                setTimeSelected('AFTERNOON')
+              }}
+              sx={{
+                p: 3,
+                width: 1,
+                my: 2,
+                border: (theme) => `solid 1px ${timeSelected === 'AFTERNOON' ? theme.palette.primary.main : theme.palette.grey[500_32]}`,
+
+              }}
+            >
+              {/* picture or icon */}
+              <Typography color={timeSelected === 'AFTERNOON' ? 'primary' : ''} variant="h6">Tarde</Typography>
+              {timeSelected === 'AFTERNOON' && <Typography color={timeSelected === 'AFTERNOON' ? 'primary' : ''} variant="subtitle2">Al bloquear tu turno de tarde no podrán hacerte contrataciones este día entre las 2:30pm y las 17:30pm</Typography>
+              }
+              {timeSelected === 'AFTERNOON' && members?.length > 0 && <><Autocomplete
                 disabled={disabled}
                 multiple
                 disableCloseOnSelect
-                name="membersId" label={translate('calendar.form.member')}
-                value={selectedMembers}
-                options={[...members].sort((a, b) => a?.name?.localeCompare(b?.name))}
+                name="clientId" label={translate('calendar.form.client')}
+                value={selectedClients}
+                options={[...clients].sort((a, b) => a?.name?.localeCompare(b?.name))}
                 getOptionLabel={(c) => `${c?.name} ${c?.lastname}`}
                 onChange={(event, value) => {
-                  setSelectedMembers([...value])
+                  setSelectedClients([...value])
                 }}
-                renderOption={(props, member) => (
+                renderOption={(props, clients) => (
                   <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-                    <Avatar sx={{ marginRight: '10px' }}>{`${member?.name[0]}${member?.lastname[0]}`}</Avatar>
-                    {`${member.name} ${member.lastname}`}
+                    <Avatar sx={{ marginRight: '10px' }}>{`${clients?.name[0]}${clients?.lastname[0]}`}</Avatar>
+                    {`${clients.name} ${clients.lastname}`}
                   </Box>
                 )}
-    
+
                 renderInput={(params) => (
                   <RHFTextField {...params}
                     disabled={disabled}
-                    name="memberid" label="Members" sx={{my: 2}} />
+                    name="clientsid" label="Clients" sx={{ my: 2 }} />
                 )}
-              /></>}
-                
-              </Paper>
-            </Grid>
+              />
+                <Autocomplete
+                  disabled={disabled}
+                  multiple
+                  disableCloseOnSelect
+                  name="membersId" label={translate('calendar.form.member')}
+                  value={selectedMembers}
+                  options={[...members].sort((a, b) => a?.name?.localeCompare(b?.name))}
+                  getOptionLabel={(c) => `${c?.name} ${c?.lastname}`}
+                  onChange={(event, value) => {
+                    setSelectedMembers([...value])
+                  }}
+                  renderOption={(props, member) => (
+                    <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                      <Avatar sx={{ marginRight: '10px' }}>{`${member?.name[0]}${member?.lastname[0]}`}</Avatar>
+                      {`${member.name} ${member.lastname}`}
+                    </Box>
+                  )}
+
+                  renderInput={(params) => (
+                    <RHFTextField {...params}
+                      disabled={disabled}
+                      name="memberid" label="Members" sx={{ my: 2 }} />
+                  )}
+                /></>}
+
+            </Paper>
+          </Grid>
         </>}
 
 
@@ -877,10 +867,10 @@ export default function CalendarDayForm({ event, range, onCancel, clients, membe
           {translate('calendar.form.cancel')}
         </Button>
 
-        <LoadingButton fullWidth disabled={disabled || timeSelected === null} 
-        // type="submit" 
-        variant="contained" loading={isSubmitting} sx={{ ':hover': { color: '#3399FF' } }} onClick={classType === "school"? handleCreateSchoolEvent : block === 'block' ? handleBlock : handleAssign}>
-          {classType === "school"? "createSchool" : block === 'block' ? 'Bloquear' : 'Asignar'}
+        <LoadingButton fullWidth disabled={disabled || timeSelected === null}
+          // type="submit" 
+          variant="contained" loading={isSubmitting} sx={{ ':hover': { color: '#3399FF' } }} onClick={classType === "school" ? handleCreateSchoolEvent : block === 'block' ? handleBlock : handleAssign}>
+          {classType === "school" ? "createSchool" : block === 'block' ? 'Bloquear' : 'Asignar'}
         </LoadingButton>
       </DialogActions>
     </FormProvider>

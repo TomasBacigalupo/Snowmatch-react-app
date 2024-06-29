@@ -2,9 +2,11 @@ import React from 'react';
 import { Paper, Typography, Box, Icon } from '@mui/material';
 import { Person } from '@mui/icons-material';
 import { fCurrency } from 'src/utils/formatNumber';
-import { PATH_GUEST } from 'src/routes/paths';
+import { PATH_DASHBOARD, PATH_GUEST } from 'src/routes/paths';
 import { useNavigate } from 'react-router';
 import { styled, keyframes } from '@mui/system';
+import { trackExperience } from 'src/services/facebook';
+import useAuth from 'src/hooks/useAuth';
 const getColor = (level) => {
     switch (level) {
         case 'bronze':
@@ -62,9 +64,12 @@ const ShopCategorizedProductCard = ({ level, product }) => {
     const capacity = 5;
     const time = 3;
     const color = getColor(level);
+    const { user } = useAuth();
+    const isTeacher = user?.role === 'TEACHER';
 
     const navigate = useNavigate();
-    const linkTo = PATH_GUEST.viewProduct(id);
+    const linkTo = isTeacher ? PATH_DASHBOARD.eCommerce.viewSchoolProduct(id) : PATH_GUEST.viewProduct(id);
+    console.log({linkTo})
 
     // Estilizamos el contenedor usando styled-components
     const AnimatedContainer = styled(Paper)(({ level }) => ({
@@ -83,12 +88,15 @@ const ShopCategorizedProductCard = ({ level, product }) => {
             width: '200%',
             height: '100%',
             background: level === 'gold' ? `linear-gradient(135deg, transparent 10%, white 50%, transparent 90%)` : `linear-gradient(135deg, transparent 100%, white 50%, transparent 100%)`,
-            animation: level === 'gold' ? `${movingShineAnimation} 3s linear 1 forwards`: "none", // Aplicamos la animación de franja blanca
+            animation: level === 'gold' ? `${movingShineAnimation} 3s linear 1 forwards` : "none", // Aplicamos la animación de franja blanca
         },
     }));
 
     return (
-        <AnimatedContainer level={level} onClick={() => navigate(linkTo)}>
+        <AnimatedContainer level={level} onClick={() => {
+            trackExperience(product)
+            navigate(linkTo)
+        }}>
             <Box style={{ width: '100%' }}>
                 <Box display='flex' style={{ width: '100%' }} justifyContent='space-between' alignItems='flex-start'>
                     <Box>

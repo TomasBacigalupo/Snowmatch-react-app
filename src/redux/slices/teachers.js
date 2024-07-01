@@ -804,7 +804,7 @@ export function calculatePrice(product, totalDays, time) {
   const price = product?.price ?? 0;
   let discountedPrice = price;
   if (time === 'FULL_DAY') {
-    return discountedPrice * 2;
+    return discountedPrice * 1.95;
   }
   return discountedPrice;
 }

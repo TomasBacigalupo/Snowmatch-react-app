@@ -296,8 +296,9 @@ export function getEvents() {
 
 // ----------------------------------------------------------------------
 
-export function getEventsByDate(date) {
+export function getEventsByDate(date, isSchoolAdmin) {
   return async () => {
+    console.log({isSchoolAdmin})
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.get(`/api/events/?month=${date.getMonth() + 1}`);
@@ -310,7 +311,7 @@ export function getEventsByDate(date) {
         if (e?.source === 'APP' && e.eventType === "CLASS") {
           return {
             ...e,
-            title: e.title ?? 'Match',
+            title: isSchoolAdmin ? (e?.assignedUsers?.length > 0 ? `${e?.assignedUsers[0]?.name} ${e?.assignedUsers[0]?.lastname}` : '') : e.title ?? 'Match',
             name: 'Clase Solicitada',
             description: e.description ?? 'Un usuario ah solicitado una clase este dia',
             price: e.price ?? 0,

@@ -315,11 +315,12 @@ export default function EcommerceCheckoutProduct() {
                             }}
                             label="Método de Pago"
                         >
-                            <MenuItem value="tarjeta-de-debito">Tarjeta de Débito</MenuItem>
+                            <MenuItem value="tarjeta-de-debito">Tarjeta</MenuItem>
                             <MenuItem value="transferencia">Transferencia</MenuItem>
                             <MenuItem value="efectivo">Efectivo</MenuItem>
-                            <MenuItem value="reserva">Reserva</MenuItem>
-                            <MenuItem value="efectivo">Efectivo</MenuItem>
+                            <MenuItem value="reserva">50% Transferencias y 50% Efectivo ARS</MenuItem>
+                            <MenuItem value="reserva-dolares">50% Transferencias y 50% Efectivo USD</MenuItem>
+                            <MenuItem value="efectivo-dolares">USD</MenuItem>
                         </Select>
                     </FormControl>
                     <Button

@@ -31,7 +31,7 @@ export default function ShopStandardProductCard({ standardProduct }) {
     const { t } = useTranslation();
 
     const { isTeacher } = useAuth()
-    const linkTo = isTeacher ? PATH_DASHBOARD.eCommerce.viewProduct(id) : PATH_GUEST.viewProduct(id);
+    const linkTo = isTeacher ? PATH_DASHBOARD.eCommerce.viewSchoolProduct(id) : PATH_GUEST.viewProduct(id);
     const totalDays = Math.floor((to - from) / (1000 * 60 * 60 * 24))
     const getResortToShow = () => {
         if (resorts && resorts?.length > 1) {

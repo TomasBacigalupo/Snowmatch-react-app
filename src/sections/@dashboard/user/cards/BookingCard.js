@@ -111,14 +111,14 @@ export default function BookingCard({ booking, showInfo = true }) {
             const start = new Date(event?.start);
             const end = new Date(event?.end);
 
-            if (start.getHours() === 10 && end.getHours() === 13) {
+            if (start.getHours() === 9 && end.getHours() === 13) {
                 return (
                     <Typography variant="body1" paragraph>
                         {`${formatDate(start, { month: 'short', day: 'numeric' })} - Mañana`}
                     </Typography>
                 )
             }
-            if (start.getHours() === 14 && end.getHours() === 17) {
+            if (start.getHours() === 13 && end.getHours() === 17) {
                 return (
                     <Typography variant="body1" paragraph>
                         {`${formatDate(start, { month: 'short', day: 'numeric' })} - Tarde`}
@@ -127,7 +127,7 @@ export default function BookingCard({ booking, showInfo = true }) {
             }
             return (
                 <Typography variant="body1" paragraph>
-                    {`Desde las ${start.getHours()} - Todo el día`}
+                    {`${formatDate(start, { month: 'short', day: 'numeric' })} - Todo el día`}
                 </Typography>
             )
         })

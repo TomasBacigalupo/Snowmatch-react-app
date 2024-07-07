@@ -41,6 +41,10 @@ export default function BookingCard({ booking, showInfo = true }) {
     const isPending = booking.state === 'PENDING';
     const isAccepted = booking.state === 'ACCEPTED';
 
+    const fullTeacherPhoneNumber = `${booking?.teacher?.countryCode}${booking?.teacher?.cellphone}`;
+    const fullStudentPhoneNumber = `${booking?.student?.countryCode}${booking?.student?.cellphone}`;
+
+
     const handlePay = () => {
         // setPayedState(!payedState)
         // if (lessons.every((lesson) => lesson.payed)) {
@@ -136,18 +140,20 @@ export default function BookingCard({ booking, showInfo = true }) {
     const handleMessage = () => {
         //open whats app to user
         if (isStudent) {
-            window.open(`https://api.whatsapp.com/send?phone=${booking?.teacher?.phone}`, '_blank');
+            window.open(`https://api.whatsapp.com/send?phone=${fullTeacherPhoneNumber}`, '_blank');
         } else {
-            window.open(`https://api.whatsapp.com/send?phone=${booking?.student?.phone}`, '_blank');
+            window.open(`https://api.whatsapp.com/send?phone=${fullStudentPhoneNumber}`, '_blank');
         }
     };
 
     const handleCall = () => {
         //open phone app to user
-        if (isStudent) {
-            window.open(`tel:${booking?.teacher?.phone}`, '_blank');
+        if (isStudent) { 
+            const fullPhoneNumber = `${booking?.teacher?.countryCode}${booking?.teacher?.cellphone}`;
+            window.open(`tel:+${fullTeacherPhoneNumber}`, '_blank');
         } else {
-            window.open(`tel:${booking?.student?.phone}`, '_blank');
+            const fullPhoneNumber = `${booking?.student?.countryCode}${booking?.student?.cellphone}`;
+            window.open(`tel:+${fullStudentPhoneNumber}`, '_blank');
         }
     };
 
@@ -189,7 +195,7 @@ export default function BookingCard({ booking, showInfo = true }) {
                     <Button fullWidth variant="outlined" sx={{ mt: 2, py: 1, color: 'black', borderColor: 'black' }} onClick={handleCall}>
                         Llamar
                     </Button>
-                    <Typography variant='body2'>{booking.teacher.phone}</Typography>
+                    <Typography variant='body2'>{booking?.teacher?.cellphone}</Typography>
                 </Box>}
                 {isAccepted && isStudent && !booking.rate && new Date(booking.eventList[0]?.start) < new Date() && <Box display='flex' flex={1} width='100%' flexDirection='column' flexGrow={1}>
                     <Button fullWidth variant="outlined" sx={{ mt: 2, py: 1, mr: 2, color: 'black', borderColor: 'black' }} onClick={() => setRateOpen(true)}>

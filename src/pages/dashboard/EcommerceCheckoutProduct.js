@@ -49,8 +49,9 @@ export default function EcommerceCheckoutProduct() {
     const { message, children, adults, bookSuccess, loadingPayment, onCreateBookingError } = useSelector((state) => state.bookings);
     const { product } = useSelector((state) => state.teachers);
     const { cart, billing, activeStep, events } = checkout;
-    const [instructor, setInstructor] = useState('');
     const [paymentMethod, setPaymentMethod] = useState('');
+    const [client, setClient] = useState('');
+    const [phone, setPhone] = useState('');
 
     const { user } = useAuth();
     const isTeacher = user?.role === 'TEACHER';
@@ -294,14 +295,24 @@ export default function EcommerceCheckoutProduct() {
                 }
                 {isTeacher && <Box mx={2}>
                     <TextField
-                        value={instructor}
+                        value={client}
                         fullWidth
-                        label='Instrutor'
+                        label='Nombre del cliente'
                         sx={{ mb: 2 }}
                         onChange={(event) => {
-                            setInstructor(event.target.value)
+                            setClient(event.target.value)
                         }}
-                        helperText='Nombre del instructor que dictará la clase'
+                        helperText='Nombre del cliente que tomará la clase'
+                    />
+                    <TextField
+                        value={phone}
+                        fullWidth
+                        label='Teléfono del cliente'
+                        sx={{ mb: 2 }}
+                        onChange={(event) => {
+                            setPhone(event.target.value)
+                        }}
+                        helperText='Teléfono del cliente que tomará la clase'
                     />
                     <FormControl fullWidth variant="outlined" sx={{
                         mb: 2
@@ -327,7 +338,7 @@ export default function EcommerceCheckoutProduct() {
                         onClick={() => {
                             const phoneNumber = '+5492944367197';
                             const _message = encodeURIComponent(
-                                `Experiencia: ${product.name}\nDias de clase:${events.map(e => '\n- ' + formatDate(e.date) + ' - ' + translate(e.lessonTime)).toString()}\nCantidad de personas: ${adults}\nComentario: *${message}*\n*Total: ${fCurrency(bookingPrice)}*\nMetodo de pago: ${paymentMethod}\nIntructor referido: ${instructor} `
+                                `Experiencia: ${product.name}\nDias de clase:${events.map(e => '\n- ' + formatDate(e.date) + ' - ' + translate(e.lessonTime)).toString()}\nCantidad de personas: ${adults}\nComentario: *${message}*\n*Total: ${fCurrency(bookingPrice)}*\nMetodo de pago: ${paymentMethod}\nNombre del Cliente: ${client}\nTelefono del Cliente: ${phone}`
                             );
                             const url = `https://api.whatsapp.com/send?phone=${phoneNumber}&text=${_message}`;
 

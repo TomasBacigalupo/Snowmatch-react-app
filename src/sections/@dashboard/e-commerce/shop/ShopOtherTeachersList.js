@@ -18,14 +18,14 @@ export default function ShopOtherTeacherList({ teachers, loading }) {
     return (
         <Box
             sx={{
-                display: 'grid',
-                gap: 2,
-                overflowX: 'auto',
+            //     display: 'grid',
+            //     gap: 2,
+            //     overflowX: 'auto',
                 py: 2,
                 px: 1,
-                gridTemplateColumns: '100%',
-                gridAutoColumns: '100%',
-                gridAutoFlow: 'column',
+            //     gridTemplateColumns: '100%',
+            //     gridAutoColumns: '100%',
+            //     gridAutoFlow: 'column',
             }}
         >
             {(loading ? [...Array(12)] : teachers).map((teacher, index) =>

@@ -53,7 +53,7 @@ export default function Calendar() {
 
   const [date, setDate] = useState(new Date());
 
-  const [view, setView] = useState(isDesktop ? 'dayGridMonth' : 'listWeek');
+  const [view, setView] = useState('dayGridMonth');
 
   const selectedEvent = useSelector(selectedEventSelector);
 
@@ -76,7 +76,7 @@ export default function Calendar() {
     const calendarEl = calendarRef.current;
     if (calendarEl) {
       const calendarApi = calendarEl.getApi();
-      const newView = isDesktop ? 'dayGridMonth' : 'listWeek';
+      const newView = 'dayGridMonth';
       calendarApi.changeView(newView);
       setView(newView);
     }
@@ -169,7 +169,7 @@ export default function Calendar() {
 
   return (
     <Page title={translate('calendar.name')}>
-      <Container maxWidth={themeStretch ? false : 'xl'}>
+      <Container>
         <HeaderBreadcrumbs
           heading={translate('calendar.name') }
           links={[{ name: 'Dashboard', href: PATH_DASHBOARD.root }, { name: translate('calendar.name') }]}
@@ -183,6 +183,7 @@ export default function Calendar() {
             </HoverButton>
           }
         />
+        </Container>
 
         <Card>
           <CalendarStyle>
@@ -231,7 +232,7 @@ export default function Calendar() {
             event={selectedEvent || {}} 
             disabled={selectedEvent?.source === 'APP' && !(selectEvent?.businessOwner !== undefined && selectEvent?.businessOwner !== null && selectEvent.businessOwner.id === user?.user?.administeredBusiness) && !(user?.user?.role === "ADMIN") && !(user?.user?.role === "SCHOOL_ADMIN")}  range={selectedRange} onCancel={handleCloseModal} clients={clients} members={members || {}}/>}
         </DialogAnimate>
-      </Container>
+      {/* </Container> */}
     </Page>
   );
 }

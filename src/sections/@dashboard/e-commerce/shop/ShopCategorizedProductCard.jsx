@@ -100,7 +100,7 @@ const ShopCategorizedProductCard = ({ level, product }) => {
             <Box style={{ width: '100%' }}>
                 <Box display='flex' style={{ width: '100%' }} justifyContent='space-between' alignItems='flex-start'>
                     <Box>
-                        <Typography variant="h5" gutterBottom color={getTextColor(level)}>
+                        <Typography variant="h2" fontSize={22} gutterBottom color={getTextColor(level)}>
                             {title}
                         </Typography>
                     </Box>

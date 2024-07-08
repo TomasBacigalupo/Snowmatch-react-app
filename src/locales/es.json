@@ -133,7 +133,8 @@
         "private": "Privadas",
         "learning": "Capacitaciones",
         "protips": "Pro Tips",
-        "rent": "Alquilar"
+        "rent": "Alquilar",
+        "SnowMatch": "SnowMatch"
     },
     "calendar": {
         "name": "Calendario",

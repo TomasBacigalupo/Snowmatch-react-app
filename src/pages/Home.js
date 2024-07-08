@@ -30,17 +30,17 @@ const ContentStyle = styled('div')(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 export default function HomePage() {
-  
-  const {user} = useAuth()
- 
+
+  const { user } = useAuth()
+
   useEffect(() => {
-    if (user){
-      if(user.role === "TEACHER"){
+    if (user) {
+      if (user.role === "TEACHER") {
         window.location.href = "/dashboard"
       }
     }
-  },[user])
-  
+  }, [user])
+
   return (
     <Page title="Match a PRO">
       <Helmet>
@@ -52,12 +52,77 @@ export default function HomePage() {
         <meta property="og:url" content="https://snowmatch.pro" />
         <meta property="og:site_name" content="SnowMatch" />
         <meta property="og:locale" content="es_ES" />
+        <script type="application/ld+json">
+          {`
+          {
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            "url": "https://snowmatch.pro/",
+            "name": "Snowmatch",
+            "potentialAction": {
+              "@type": "SearchAction",
+              "target": "https://snowmatch.pro/?s={search_term_string}",
+              "query-input": "required name=search_term_string"
+            },
+            "mainEntity": {
+              "@type": "ItemList",
+              "itemListElement": [
+                {
+                  "@type": "ListItem",
+                  "position": 1,
+                  "url": "https://snowmatch.pro/match/independent?resort=Cerro%20Catedral"
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 2,
+                  "url": "https://snowmatch.pro/match/product/143"
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 3,
+                  "url": "https://snowmatch.pro/match/teacher/14"
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 4,
+                  "url": "https://snowmatch.pro/match/product/144"
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 5,
+                  "url": "https://snowmatch.pro/match/product/145"
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 6,
+                  "url": "https://snowmatch.pro/match/product/148"
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 7,
+                  "url": "https://snowmatch.pro/match/product/147"
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 8,
+                  "url": "https://snowmatch.pro/match/product/146"
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 9,
+                  "url": "https://snowmatch.pro/match/product/149"
+                }
+              ]
+            }
+          }
+          `}
+        </script>
       </Helmet>
       <RootStyle>
         <HomeHero />
         <ContentStyle>
-          <HomeStatsHero/>
-          <HomePartners/>
+          <HomeStatsHero />
+          <HomePartners />
           <HomeMinimal />
           <HomeAdvertisement />
           {/* <HomeMinimal />
@@ -75,9 +140,9 @@ export default function HomePage() {
           <HomeLookingFor />
 
           <HomeAdvertisement /> */}
-          
-        </ContentStyle> 
-        
+
+        </ContentStyle>
+
       </RootStyle>
     </Page>
   );

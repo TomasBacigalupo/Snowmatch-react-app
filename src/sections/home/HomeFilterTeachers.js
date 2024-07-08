@@ -141,7 +141,7 @@ export default function HomeFilterTeachers() {
             <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
                 <Grid container spacing={2}>
                     <Grid item xs={12} md={9} justifyContent='center'>
-                        <Typography variant="h5" sx={{ color: theme.typography.color }}> {translate("landingPRO.find")} </Typography>
+                        <Typography variant="h5" component='h1' sx={{ color: theme.typography.color,  }}> {translate("landingPRO.find")} </Typography>
                     </Grid>
                     <Grid item xs={12} md={9}>
                         <Card sx={{ p: 3 }}>
@@ -201,7 +201,7 @@ export default function HomeFilterTeachers() {
                         </Card>
                     </Grid>
                     <Grid item xs={12} md={9} justifyContent='center'>
-                        <Typography variant="h5" sx={{ color: theme.typography.color, mt: 1 }}> {translate("landingPRO.slogan")} </Typography>
+                        <Typography variant="h5" component='h2' sx={{ color: theme.typography.color, mt: 1 }}> {translate("landingPRO.slogan")} </Typography>
                     </Grid>
                     <Grid item xs={12} md={9} justifyContent='center' container spacing={3}>
                         {[{
@@ -223,7 +223,8 @@ export default function HomeFilterTeachers() {
                                         backgroundImage: `url(${prod.image})`,
                                         backgroundSize: 'cover',
                                         backgroundPosition: 'center',
-                                        borderRadius: 1
+                                        borderRadius: 1,
+                                        all: 'clase-ski-catedral.jpg',
                                     }}
                                 />
                             </Grid>

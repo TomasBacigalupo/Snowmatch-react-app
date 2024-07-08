@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 // @mui
 import { styled } from '@mui/material/styles';
-import { Box, StepConnector, Button } from '@mui/material';
+import { Box, StepConnector, Button, MenuItem, FormControl, TextField, InputLabel, Select } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
 import { getCart, createBilling } from '../../redux/slices/teachers';
@@ -31,6 +31,7 @@ import { sum } from 'lodash';
 import ReactPixel from 'react-facebook-pixel';
 import { fCurrency } from 'src/utils/formatNumber';
 import useLocales from 'src/hooks/useLocales';
+import useAuth from 'src/hooks/useAuth';
 console.log(process.env.REACT_APP_MERCADO_PAGO_PUBLIC_KEY)
 initMercadoPago(process.env.REACT_APP_MERCADO_PAGO_PUBLIC_KEY, { locale: 'es-AR' });
 
@@ -84,6 +85,12 @@ export default function EcommerceCheckoutTeacher() {
   const bookingPrice = sum(events.map((event) => event.price));
   const isComplete = activeStep === STEPS.length;
   const { total, discount, subtotal, shipping, card } = checkout;
+  const [paymentMethod, setPaymentMethod] = useState('');
+  const [client, setClient] = useState('');
+  const [phone, setPhone] = useState('');
+  const [clientLevel, setClientLevel] = useState('');
+  const { user } = useAuth();
+  const isTeacher = user?.role === 'TEACHER';
   useEffect(() => {
     if (isMountedRef.current) {
       dispatch(getCart(events));
@@ -246,14 +253,14 @@ export default function EcommerceCheckoutTeacher() {
 
                   window.open(url, '_blank');
                 }}
-                style={{ m: 2, color: 'white',}}
+                style={{ m: 2, color: 'white', }}
               >
                 Contactar y Pagar
               </Button>
             </Box>
           }
         </Box>
-        <Box mx={2}>
+        {!isTeacher && <Box mx={2}>
           <Button
             onClick={() => {
               const phoneNumber = '+5492944367197';
@@ -271,7 +278,7 @@ export default function EcommerceCheckoutTeacher() {
             }}
             style={{ m: 2, color: 'white', backgroundColor: '#820AD1' }}
           >Pagar com PIX</Button>
-        </Box>
+        </Box>}
         <CheckoutOrderComplete open={bookSuccess} />
         {bookingPrice < 0 &&
           <Box marginTop={2} marginX={1}>
@@ -302,6 +309,80 @@ export default function EcommerceCheckoutTeacher() {
             Contactar al profesor
           </Button>}
         </Box>
+        {isTeacher && <Box mx={2}>
+          <TextField
+            value={client}
+            fullWidth
+            label='Nombre y apellido del cliente'
+            sx={{ mb: 2 }}
+            onChange={(event) => {
+              setClient(event.target.value)
+            }}
+          />
+          <FormControl fullWidth variant="outlined" sx={{
+            mb: 2
+          }}>
+            <InputLabel id="cllient-level-label">Nivel del Cliente</InputLabel>
+            <Select
+              labelId="payment-method-label"
+              value={clientLevel}
+              onChange={(event) => {
+                setClientLevel(event.target.value)
+              }}
+              label="Nivel del Cliente"
+            >
+              <MenuItem value="tarjeta-de-debito">Principiante</MenuItem>
+              <MenuItem value="transferencia">Intermedio</MenuItem>
+              <MenuItem value="efectivo">Experto</MenuItem>
+            </Select>
+          </FormControl>
+          <TextField
+            value={phone}
+            fullWidth
+            label='Teléfono del cliente'
+            sx={{ mb: 2 }}
+            onChange={(event) => {
+              setPhone(event.target.value)
+            }}
+            helperText='Teléfono del cliente que tomará la clase'
+          />
+          <FormControl fullWidth variant="outlined" sx={{
+            mb: 2
+          }}>
+            <InputLabel id="payment-method-label">Método de Pago</InputLabel>
+            <Select
+              labelId="payment-method-label"
+              value={paymentMethod}
+              onChange={(event) => {
+                setPaymentMethod(event.target.value)
+              }}
+              label="Método de Pago"
+            >
+              <MenuItem value="tarjeta-de-debito">Tarjeta</MenuItem>
+              <MenuItem value="transferencia">Transferencia</MenuItem>
+              <MenuItem value="efectivo">Efectivo</MenuItem>
+              <MenuItem value="reserva">50% Transferencias y 50% Efectivo ARS</MenuItem>
+              <MenuItem value="reserva-dolares">50% Transferencias y 50% Efectivo USD</MenuItem>
+              <MenuItem value="efectivo-dolares">USD</MenuItem>
+            </Select>
+          </FormControl>
+          <Button
+            onClick={() => {
+              const phoneNumber = '+5492944367197';
+              const _message = encodeURIComponent(
+                `Clase Personalizada referida - ${teacher.name} ${teacher.lastname}\nDias de clase:${events.map(e => '\n- ' + formatDate(e.date) + ' - ' + translate(e.lessonTime)).toString()}\nCantidad de personas: ${adults}\nComentario: *${message}*\n*Total: ${fCurrency(bookingPrice)}*\nMetodo de pago: ${paymentMethod}\nNombre del Cliente: ${client}\nNivel del Cliente: ${clientLevel}\nTelefono del Cliente: ${phone}`
+              );
+              const url = `https://api.whatsapp.com/send?phone=${phoneNumber}&text=${_message}`;
+
+              window.open(url, '_blank');
+            }}
+            variant='contained'
+            fullWidth
+            sx={{
+              py: 1.5
+            }}
+          >Referír Clase</Button>
+        </Box>}
 
       </Page>
     );

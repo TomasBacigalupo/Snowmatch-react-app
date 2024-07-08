@@ -38,7 +38,7 @@ export default function ShopOtherTeacherCard({ teacher }) {
     };
 
     return (
-        <Card sx={{ width: '100%', flex: 1, maxHeight:'300px' }} onClick={() => navigate(linkTo)}>
+        <Card sx={{ width: '100%', flex: 1, maxHeight:'300px', mb:2 }} onClick={() => navigate(linkTo)}>
             <Box sx={{ display: 'flex', height: 'fit-content' }}>
                 <Box sx={{ flex: 1, maxWidth: '30%', minWidth: '30%', mr: 3 }}>
                     <Image alt={name} src={src} ratio="1/1" onError={() => setSrc('/assets/notFound.jpeg')} sx={{ width: '100%', objectFit: 'cover' }} />

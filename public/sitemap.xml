@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <!-- Home Page -->
+    <url>
+        <loc>https://snowmatch.pro/</loc>
+        <changefreq>daily</changefreq>
+        <priority>1.0</priority>
+    </url>
+
+    <!-- Find Your Ideal Class -->
+    <url>
+        <loc>https://snowmatch.pro/#classes</loc>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://snowmatch.pro/#instructors</loc>
+        <changefreq>weekly</changefreq>
+        <priority>0.7</priority>
+    </url>
+    <url>
+        <loc>https://snowmatch.pro/#mountains</loc>
+        <changefreq>weekly</changefreq>
+        <priority>0.7</priority>
+    </url>
+    
+    <!-- Experiences -->
+    <url>
+        <loc>https://snowmatch.pro/#experiences</loc>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <!-- Specific Experiences -->
+    <url>
+        <loc>https://snowmatch.pro/match/product/143</loc>
+        <changefreq>weekly</changefreq>
+        <priority>0.7</priority>
+    </url>
+    <url>
+        <loc>https://snowmatch.pro/match/product/144</loc>
+        <changefreq>weekly</changefreq>
+        <priority>0.7</priority>
+    </url>
+    <url>
+        <loc>https://snowmatch.pro/match/product/145</loc>
+        <changefreq>weekly</changefreq>
+        <priority>0.7</priority>
+    </url>
+    <url>
+        <loc>https://snowmatch.pro/match/product/147</loc>
+        <changefreq>weekly</changefreq>
+        <priority>0.7</priority>
+    </url>
+    <url>
+        <loc>https://snowmatch.pro/match/product/146</loc>
+        <changefreq>weekly</changefreq>
+        <priority>0.7</priority>
+    </url>
+    <url>
+        <loc>https://snowmatch.pro/match/product/149</loc>
+        <changefreq>weekly</changefreq>
+        <priority>0.7</priority>
+    </url>
+    <url>
+        <loc>https://snowmatch.pro/match/product/148</loc>
+        <changefreq>weekly</changefreq>
+        <priority>0.7</priority>
+    </url>
+
+    <!-- Cerro Catedral -->
+    <url>
+        <loc>https://snowmatch.pro/match/independent?resort=Cerro%20Catedral</loc>
+        <changefreq>weekly</changefreq>
+        <priority>0.7</priority>
+    </url>
+
+    <!-- Sign Up -->
+    <url>
+        <loc>https://snowmatch.pro/signup</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.6</priority>
+    </url>
+
+    <!-- FAQs -->
+    <url>
+        <loc>https://snowmatch.pro/faqs</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.6</priority>
+    </url>
+
+    <!-- Contact Us -->
+    <url>
+        <loc>https://snowmatch.pro/#contact</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.6</priority>
+    </url>
+
+    <!-- Legal -->
+    <url>
+        <loc>https://snowmatch.pro/terms</loc>
+        <changefreq>yearly</changefreq>
+        <priority>0.4</priority>
+    </url>
+    <url>
+        <loc>https://snowmatch.pro/privacy</loc>
+        <changefreq>yearly</changefreq>
+        <priority>0.4</priority>
+    </url>
+</urlset>

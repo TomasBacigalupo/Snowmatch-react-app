@@ -56,9 +56,7 @@ const navConfig = [
         path: PATH_DASHBOARD.eCommerce.root,
         icon: ICONS.match,
         children: [
-          { title: 'independent', path: PATH_DASHBOARD.eCommerce.shopInd },
-          { title: 'for_school', path: PATH_DASHBOARD.eCommerce.shopSchool },
-          { title: 'schools', path: PATH_DASHBOARD.eCommerce.schools },
+          { title: 'SnowMatch', path: PATH_DASHBOARD.eCommerce.shopInd },
         ],
       },
       { title: 'calendar', path: PATH_DASHBOARD.calendar, icon: ICONS.calendar },
@@ -73,15 +71,15 @@ const navConfig = [
           //     { title: 'currentWeek', path: PATH_DASHBOARD.kanban, },
           //   ]
           // },
-          {
-            title: 'group', path: PATH_DASHBOARD.eCommerce.viewProducts
-          },
-          {
-            title: 'private', path: PATH_DASHBOARD.eCommerce.newProduct, children: [
-              { title: 'halfDay', path: PATH_DASHBOARD.eCommerce.PrivateProductHalf, },
-              { title: 'fullDay', path: PATH_DASHBOARD.eCommerce.PrivateProductFull, },
-            ]
-          },
+          // {
+          //   title: 'group', path: PATH_DASHBOARD.eCommerce.viewProducts
+          // },
+          // {
+          //   title: 'private', path: PATH_DASHBOARD.eCommerce.newProduct, children: [
+          //     { title: 'halfDay', path: PATH_DASHBOARD.eCommerce.PrivateProductHalf, },
+          //     { title: 'fullDay', path: PATH_DASHBOARD.eCommerce.PrivateProductFull, },
+          //   ]
+          // },
         ],
       },
       // {title: 'learning', path:'', icon: <SnowmatchLogoWithGraduationHat />},

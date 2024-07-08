@@ -55,9 +55,7 @@ const navConfig = [
                 path: PATH_DASHBOARD.eCommerce.root,
                 icon: ICONS.match,
                 children: [
-                    { title: 'independent', path: PATH_DASHBOARD.eCommerce.shopInd },
-                    { title: 'for_school', path: PATH_DASHBOARD.eCommerce.shopSchool },
-                    { title: 'schools', path: PATH_DASHBOARD.eCommerce.schools },
+                    { title: 'snowmatch', path: PATH_DASHBOARD.eCommerce.shopInd },
                 ],
             },
             { title: 'calendar', path: PATH_DASHBOARD.calendar, icon: ICONS.calendar },

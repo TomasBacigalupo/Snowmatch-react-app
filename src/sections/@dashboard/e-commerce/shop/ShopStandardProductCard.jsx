@@ -59,7 +59,7 @@ export default function ShopStandardProductCard({ standardProduct }) {
             </Box>
             <Stack sx={{ pt: 1 }}>
                 <Stack direction="row" spacing={0.5}>
-                    <Typography variant='h5' component="span" >
+                    <Typography variant='h2' fontSize={18} component="span" >
                         {name}
                     </Typography>
                 </Stack>

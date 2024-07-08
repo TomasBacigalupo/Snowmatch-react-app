@@ -3,7 +3,7 @@ import orderBy from 'lodash/orderBy';
 // form
 import { useForm } from 'react-hook-form';
 // @mui
-import { Container, Typography, Stack, Drawer, Button } from '@mui/material';
+import { Container, Typography, Stack, Drawer, Button, Box } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
 import { getTeachers, filterTeachers, getTeachersWithEvents, resetFilters } from '../../redux/slices/teachers';
@@ -174,7 +174,9 @@ export default function EcommerceShop({ isGuest = false, teacherType = "school" 
         <meta property="og:image" content="https://snowmatchimages.s3.amazonaws.com/profile/ClaseNiñoss.jpeg" />
         <meta property="og:url" content="https://snowmatch.pro" />
       </Helmet>
+
       <Container maxWidth={themeStretch ? false : 'lg'}>
+
         {teacherType === "independent" && <IndependentShop />}
         {teacherType === "independent" && category === "premium" && <AirbnbFilters />}
 

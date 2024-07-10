@@ -34,19 +34,22 @@ export default function AuthGuard({ children }) {
     return <LoadingScreen />;
   }
 
-  if(isAuthenticated && !emailVerified){
-    if (pathname !== requestedLocation) {
-     setRequestedLocation(pathname);
-    }
-    return <PageVerify/>;
-  }
-
-  // if (isAuthenticated && !phoneVerified ) {
+  // if(isAuthenticated && !emailVerified){
   //   if (pathname !== requestedLocation) {
-  //     setRequestedLocation(pathname);
+  //    setRequestedLocation(pathname);
   //   }
-  //   return <PageVerifyWhatsApp />;
-  // }  
+  //   return <PageVerify/>;
+  // }
+
+  if (isAuthenticated && !emailVerified && !phoneVerified ) {
+
+    if (pathname !== requestedLocation) {
+      setRequestedLocation(pathname);
+    }
+    if(!emailVerified && !phoneVerified){
+      return <PageVerifyWhatsApp />;
+    }
+  }  
 
   if (!isAuthenticated) {
     dispatch(setRequestedRoute(requestedLocation))

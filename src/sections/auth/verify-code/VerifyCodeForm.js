@@ -11,12 +11,14 @@ import { LoadingButton } from '@mui/lab';
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
 import axios from '../../../utils/axios';
+import useAuth from 'src/hooks/useAuth';
 
 
 // ----------------------------------------------------------------------
 
 export default function VerifyCodeForm() {
   const navigate = useNavigate();
+  const { testVerification } = useAuth();
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -75,6 +77,11 @@ export default function VerifyCodeForm() {
         })
       }
 
+      testVerification((succ) => {
+        if (!succ) {
+          enqueueSnackbar('Phone not verified', { variant: 'warning' });
+        }
+      })
 
     } catch (error) {
       console.error(error);

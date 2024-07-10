@@ -28,7 +28,7 @@ const handlers = {
       isAuthorized,
       user,
       emailVerified: user?.emailVerified,
-      phoneVerified: user?.cellphoneVerified,
+      phoneVerified: user?.cellphoneVerification,
       isTeacher: user?.role === 'TEACHER',
       isStudent: user?.role === 'STUDENT',
       isAdmin: user?.role === 'ADMIN',
@@ -74,7 +74,6 @@ const handlers = {
   },
   VERIFY: (state, action) => {
     const { user } = action.payload;
-
     return {
       ...state,
       isAuthenticated: true,
@@ -82,7 +81,7 @@ const handlers = {
       isAuthorized: user.state != 'UNDER_REVIEW',
       isInitialized: true,
       emailVerified: user.emailVerified,
-      phoneVerified: user?.cellphoneVerified,
+      phoneVerified: user?.cellphoneVerification,
       isTeacher: user?.role === 'TEACHER',
       isStudent: user?.role === 'STUDENT',
       isAdmin: user?.role === 'ADMIN',
@@ -136,7 +135,7 @@ function AuthProvider({ children }) {
           const email = jwtDecode(accessToken).sub;
           const response = await axios.get(`/api/users/auth/${email}`);
           const user = response.data;
-          if (user?.emailVerified) {
+          if (user?.emailVerified || user?.cellphoneVerification) {
             dispatch({
               type: 'VERIFY',
               payload: {
@@ -260,13 +259,15 @@ function AuthProvider({ children }) {
   const testVerification = async (callBack) => {
     const response = await axios.get(`/api/users/auth/${state.user.email}`);
     const user = response.data;
-    if (user.emailVerified) {
+    if (user.emailVerified || user.cellphoneVerification) {
       dispatch({
         type: 'INITIALIZE',
         payload: {
           isAuthenticated: true,
           isAuthorized: user.state != 'UNDER_REVIEW',
           emailVerified: true,
+          phoneVerified: true,
+          cellphoneVerification: user.cellphoneVerification,
           user,
         },
       });

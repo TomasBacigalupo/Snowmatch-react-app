@@ -516,7 +516,7 @@ export function deleteBusinessEvent(eventId, deleteEvent) {
   return async () => {
     //dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.delete(`/api/events/business`, deleteEvent);
+      const response = await axios.delete(`/api/events/${eventId}/business`, );
       dispatch(slice.actions.updateEventSuccess({ ...updateEvent, id: eventId }));
       return response;
     } catch (error) {

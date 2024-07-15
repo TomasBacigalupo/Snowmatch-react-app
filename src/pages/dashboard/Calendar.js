@@ -22,6 +22,7 @@ import Page from '../../components/Page';
 import Iconify from '../../components/Iconify';
 import { DialogAnimate } from '../../components/animate';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
+import CalendarSelector from '../../sections/@dashboard/calendar/CalendarSelector';
 // sections
 import { CalendarForm, CalendarStyle, CalendarToolbar } from '../../sections/@dashboard/calendar';
 import { getClients } from 'src/redux/slices/clients';
@@ -43,7 +44,7 @@ const selectedEventSelector = (state) => {
 };
 
 export default function Calendar() {
-  const {translate} = useLocales()
+  const { translate } = useLocales();
   const { themeStretch } = useSettings();
   const dispatch = useDispatch();
 
@@ -53,6 +54,12 @@ export default function Calendar() {
 
   const [date, setDate] = useState(new Date());
 
+  const [eventsFilter, setEventsFilter] = useState({key: 0, value: "Todos"});
+  const filterOptions = [
+    {key: 0, value: "Todos"}, 
+    {key: 1, value: translate('menu.independent')}, 
+    {key: 2, value: translate('menu.School')}];
+
   const [view, setView] = useState('dayGridMonth');
 
   const selectedEvent = useSelector(selectedEventSelector);
@@ -60,16 +67,16 @@ export default function Calendar() {
   const { events, isOpenModal, selectedRange } = useSelector((state) => state.calendar);
   const { members } = useSelector((state) => state.business);
   const { clients } = useSelector((state) => state.clients);
-  const user = useAuth()
+  const user = useAuth();
 
   useEffect(() => {
-    dispatch(getEventsByDate(date, user?.user?.role === 'SCHOOL_ADMIN', user?.user?.administeredBusiness?.id))
-    dispatch(getClients())
-    dispatch(getBusinessMembers())
+    dispatch(getEventsByDate(date, user?.user?.role === 'SCHOOL_ADMIN', user?.user?.administeredBusiness?.id));
+    dispatch(getClients());
+    dispatch(getBusinessMembers());
   }, [dispatch]);
 
   useEffect(() => {
-    dispatch(getEventsByDate(date, user?.user?.role === 'SCHOOL_ADMIN'))
+    dispatch(getEventsByDate(date, user?.user?.role === 'SCHOOL_ADMIN'));
   }, [date]);
 
   useEffect(() => {
@@ -81,6 +88,11 @@ export default function Calendar() {
       setView(newView);
     }
   }, [isDesktop]);
+
+  const handleFilterEvents = (event) => {
+    const selectedFilter = filterOptions.find(option => option.value === event.target.value);
+    setEventsFilter(selectedFilter);
+  };
 
   const handleClickToday = () => {
     const calendarEl = calendarRef.current;
@@ -94,7 +106,7 @@ export default function Calendar() {
   const handleChangeView = (newView) => {
     const calendarEl = calendarRef.current;
     if (calendarEl) {
-      const calendarApi = calendarEl.getApi(); 
+      const calendarApi = calendarEl.getApi();
       calendarApi.changeView(newView);
       setView(newView);
     }
@@ -128,7 +140,7 @@ export default function Calendar() {
   };
 
   const handleSelectEvent = (arg) => {
-    const id = arg.event.id
+    const id = arg.event.id;
     dispatch(selectEvent(id));
   };
 
@@ -167,11 +179,36 @@ export default function Calendar() {
     dispatch(closeModal());
   };
 
+  const filterEventList = () => {
+    if (eventsFilter.key === 0) return events;
+
+    const memberIds = members.map(member => member.id);
+
+    return events.filter(event => {
+      const hasTeacher = event.assignedUsers.some(user => user.role === 'TEACHER');
+      const teachers = event.assignedUsers.filter(user => user.role === 'TEACHER');
+
+      if (eventsFilter.key === 1) { // Independientes
+        if (!hasTeacher) return !memberIds.includes(event?.owner?.id);
+        return teachers.some(teacher => !memberIds.includes(teacher.id));
+      }
+
+      if (eventsFilter.key === 2) { //Escuela
+        if (!hasTeacher) return memberIds.includes(event?.owner?.id);
+        return teachers.some(teacher => memberIds.includes(teacher?.id));
+      }
+
+      return false;
+    });
+  };
+
+  const filteredEvents = filterEventList();
+
   return (
     <Page title={translate('calendar.name')}>
       <Container>
         <HeaderBreadcrumbs
-          heading={translate('calendar.name') }
+          heading={translate('calendar.name')}
           links={[{ name: 'Dashboard', href: PATH_DASHBOARD.root }, { name: translate('calendar.name') }]}
           action={
             <HoverButton
@@ -183,41 +220,43 @@ export default function Calendar() {
             </HoverButton>
           }
         />
-        </Container>
-
-        <Card>
-          <CalendarStyle>
-            <CalendarToolbar
-              date={date}
-              view={view}
-              onNextDate={handleClickDateNext}
-              onPrevDate={handleClickDatePrev}
-              onToday={handleClickToday}
-              onChangeView={handleChangeView}
-            />
-            <FullCalendar
-              weekends
-              editable
-              droppable
-              selectable
-              events={events}
-              ref={calendarRef}
-              rerenderDelay={10}
-              initialDate={date}
-              initialView={view}
-              dayMaxEventRows={3}
-              eventDisplay="block"
-              headerToolbar={false}
-              allDayMaintainDuration
-              eventResizableFromStart
-              select={handleSelectRange}
-              eventDrop={handleDropEvent}
-              eventClick={handleSelectEvent}
-              eventResize={handleResizeEvent}
-              height={isDesktop ? 720 : 'auto'}
-              plugins={[listPlugin, dayGridPlugin, timelinePlugin, timeGridPlugin, interactionPlugin]}
-            />
-          </CalendarStyle>
+      </Container>
+      {user?.user?.role === 'SCHOOL_ADMIN' && 
+        <CalendarSelector onFilter={handleFilterEvents} filter={eventsFilter} filterOptions={filterOptions}/>
+      }
+      <Card>
+        <CalendarStyle>
+          <CalendarToolbar
+            date={date}
+            view={view}
+            onNextDate={handleClickDateNext}
+            onPrevDate={handleClickDatePrev}
+            onToday={handleClickToday}
+            onChangeView={handleChangeView}
+          />
+          <FullCalendar
+            weekends
+            editable
+            droppable
+            selectable
+            events={filteredEvents}
+            ref={calendarRef}
+            rerenderDelay={10}
+            initialDate={date}
+            initialView={view}
+            dayMaxEventRows={3}
+            eventDisplay="block"
+            headerToolbar={false}
+            allDayMaintainDuration
+            eventResizableFromStart
+            select={handleSelectRange}
+            eventDrop={handleDropEvent}
+            eventClick={handleSelectEvent}
+            eventResize={handleResizeEvent}
+            height={isDesktop ? 720 : 'auto'}
+            plugins={[listPlugin, dayGridPlugin, timelinePlugin, timeGridPlugin, interactionPlugin]}
+          />
+        </CalendarStyle>
         </Card>
 
         <DialogAnimate open={isOpenModal} onClose={handleCloseModal}>

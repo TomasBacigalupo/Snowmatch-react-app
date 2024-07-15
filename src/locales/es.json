@@ -134,7 +134,8 @@
         "learning": "Capacitaciones",
         "protips": "Pro Tips",
         "rent": "Alquilar",
-        "SnowMatch": "SnowMatch"
+        "SnowMatch": "SnowMatch",
+        "all": "Todos"
     },
     "calendar": {
         "name": "Calendario",

@@ -175,7 +175,7 @@ export default function EcommerceTeacherDetails({ isGuest = false }) {
                   <Box mx={2} width='100%' >
                     <Divider />
                   </Box>
-                  <Box mt={3}>
+                  {/* <Box mt={3}>
                     <Box px={2} pt={2}>
                       <Typography variant="h4" gutterBottom>
                         {translate('product.ocupationTitle')}
@@ -187,7 +187,7 @@ export default function EcommerceTeacherDetails({ isGuest = false }) {
                     <Box onClick={() => setIsOpen(true)}>
                       <TeacherDetailsMobileCalendar isProduct={true} teacher={product} />
                     </Box>
-                  </Box>
+                  </Box> */}
                   <Box mx={2} width='100%'>
                     <Divider />
                   </Box>

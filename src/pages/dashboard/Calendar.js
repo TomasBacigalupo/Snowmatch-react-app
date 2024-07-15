@@ -63,7 +63,7 @@ export default function Calendar() {
   const user = useAuth()
 
   useEffect(() => {
-    dispatch(getEventsByDate(date, user?.user?.role === 'SCHOOL_ADMIN'))
+    dispatch(getEventsByDate(date, user?.user?.role === 'SCHOOL_ADMIN', user?.user?.administeredBusiness?.id))
     dispatch(getClients())
     dispatch(getBusinessMembers())
   }, [dispatch]);

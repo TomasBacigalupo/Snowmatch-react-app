@@ -296,12 +296,12 @@ export function getEvents() {
 
 // ----------------------------------------------------------------------
 
-export function getEventsByDate(date, isSchoolAdmin) {
+export function getEventsByDate(date, isSchoolAdmin, businessId) {
   return async () => {
     console.log({isSchoolAdmin})
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`/api/events/?month=${date.getMonth() + 1}`);
+      const response = isSchoolAdmin ? await axios.get(`/api/events/business/${businessId}?month=${date.getMonth() + 1}`) : await axios.get(`/api/events/?month=${date.getMonth() + 1}`);
       const events = response.data.map(e => {
         const dateStart = new Date(e.start);
         const dateEnd = new Date(e.end);
@@ -311,7 +311,20 @@ export function getEventsByDate(date, isSchoolAdmin) {
         if (e?.source === 'APP' && e.eventType === "CLASS") {
           return {
             ...e,
-            title: isSchoolAdmin ? (e?.assignedUsers?.length > 0 ? `${e?.assignedUsers[0]?.name} ${e?.assignedUsers[0]?.lastname}` : '') : e.title ?? 'Match',
+            title: isSchoolAdmin ? (e?.assignedUsers?.length > 0 ? `${e?.assignedUsers[0]?.name} ${e?.assignedUsers[0]?.lastname}` : e?.owner?.name) : e.title ?? 'Match',
+            name: 'Clase Solicitada',
+            description: e.description ?? 'Un usuario ah solicitado una clase este dia',
+            price: e.price ?? 0,
+            start: adjustedDateStart,
+            end: adjustedDateEnd,
+            textColor: e.textColor ?? "#FFC107",
+            type: "App class"
+          };
+        }
+        if (isSchoolAdmin) {
+          return {
+            ...e,
+            title: isSchoolAdmin ? (e?.assignedUsers?.length > 0 ? `${e?.assignedUsers[0]?.name} ${e?.assignedUsers[0]?.lastname}` : `${e?.owner?.name} - ${e?.clients?.length > 0 ? 'OwnClass' : 'Blocked'}`) : e.title ?? 'Match',
             name: 'Clase Solicitada',
             description: e.description ?? 'Un usuario ah solicitado una clase este dia',
             price: e.price ?? 0,

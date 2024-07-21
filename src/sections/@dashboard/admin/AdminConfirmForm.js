@@ -125,6 +125,7 @@ export default function AdminConfirmForm({ isEdit, currentTeacher, documents }) 
     authorized: Yup.boolean(),
     zenriseClient: Yup.string(),
     zenriseSecret: Yup.string(),
+    priority: Yup.number(),
   });
 
   const defaultValues = useMemo(
@@ -155,6 +156,7 @@ export default function AdminConfirmForm({ isEdit, currentTeacher, documents }) 
       authorized: currentTeacher?.authorized || false,
       zenriseClient: currentTeacher?.zenriseClient || '',
       zenriseSecret: currentTeacher?.zenriseSecret || '',
+      priority: currentTeacher?.priority || 0,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentTeacher]
@@ -281,6 +283,7 @@ export default function AdminConfirmForm({ isEdit, currentTeacher, documents }) 
                   sx={{ mb: 1, mx: 0, width: 1 }}
                 />
               </Stack>
+              <RHFTextField name="priority" label="Priority" />
             </Box>
             
             <Stack sx={{ mt: 3 }}>

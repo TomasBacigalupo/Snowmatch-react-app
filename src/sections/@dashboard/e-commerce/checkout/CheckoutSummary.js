@@ -47,10 +47,12 @@ export default function CheckoutSummary({
   enableDiscount = false,
   bookingPrice
 }) {
-  const {translate} = useLocales()
+  const { translate } = useLocales()
   const displayShipping = shipping !== null ? 'Free' : '-';
   const dispatch = useDispatch()
   const [dollarValue, setDollarValue] = useState(470)
+  const [showDiscount, setShowDiscount] = useState(false);
+  const [discountCode, setDiscountCode] = useState('');
   // useEffect(() => {
   //   dispatch(getDollarValue((dollar) => { setDollarValue(Number(dollar.venta))}))
   // },[])
@@ -62,70 +64,92 @@ export default function CheckoutSummary({
       />
 
       <CardContent>
-        {subtotal >0 && (
-        <Stack spacing={2}>
-          <Stack direction="row" justifyContent="space-between">
-            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-              {translate('checkout.days')}
-            </Typography>
-            <Typography variant="subtitle2">{totalEvents}</Typography>
-          </Stack>
-          
+        {subtotal > 0 && (
+          <Stack spacing={2}>
+            <Stack direction="row" justifyContent="space-between">
+              <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                {translate('checkout.days')}
+              </Typography>
+              <Typography variant="subtitle2">{totalEvents}</Typography>
+            </Stack>
+            <Stack direction="row" justifyContent="space-between">
+              <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                Subtotal
+              </Typography>
+              <Typography variant="subtitle2">{fCurrency(subtotal)}</Typography>
+            </Stack>
+            {discount > 0 && <Stack direction="row" justifyContent="space-between">
+              <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                Descuento
+              </Typography>
+              <Typography variant="subtitle2" sx={{
+                color: 'success.main'
+              }}> -{fCurrency(discount)}</Typography>
+            </Stack>}
 
-          
-          {/* <Stack direction="row" justifyContent="space-between">
+
+
+            {/* <Stack direction="row" justifyContent="space-between">
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
               Total: {translate('checkout.subtotal')} 
             </Typography>
             <Typography variant="subtitle2">{subtotal ? fCurrency(subtotal) : translate('checkout.deal_with_pro')}</Typography>
           </Stack> */}
 
-          {/* <Stack direction="row" justifyContent="space-between">
+            {/* <Stack direction="row" justifyContent="space-between">
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
               Pago al inicio de clase
             </Typography>
             <Typography variant="subtitle2">{fCurrency(subtotal-bookingPrice)}</Typography>
           </Stack> */}
 
-          {/* <Stack direction="row" justifyContent="space-between">
+            {/* <Stack direction="row" justifyContent="space-between">
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
               Reserva
             </Typography>
             <Typography variant="subtitle2">{bookingPrice ? `${fCurrency(bookingPrice)}` : 'free' }</Typography>
           </Stack> */}
 
-          
 
-          <Divider />
 
-          <Stack direction="row" justifyContent="space-between">
-            <Typography variant="subtitle1">
-              {translate('checkout.total')}
-              </Typography>
-            <Box sx={{ textAlign: 'right' }}>
+            <Divider />
+
+            <Stack direction="row" justifyContent="space-between">
               <Typography variant="subtitle1">
-                {subtotal ? fCurrency(subtotal): 'free'}
+                {translate('checkout.total')}
               </Typography>
-            </Box>
-          </Stack>
+              <Box sx={{ textAlign: 'right' }}>
+                <Typography variant="subtitle1">
+                  {subtotal ? fCurrency(subtotal - discount) : 'free'}
+                </Typography>
+              </Box>
+            </Stack>
 
-          {enableDiscount && onApplyDiscount && (
-            <TextField
-              fullWidth
-              placeholder="Discount codes / Gifts"
-              value="DISCOUNT5"
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <Button onClick={() => onApplyDiscount(5)} sx={{ mr: -0.5 }}>
-                      Apply
-                    </Button>
-                  </InputAdornment>
-                ),
-              }}
-            />
-          )}
-        </Stack>
+            {!showDiscount && !(discount != 0) &&
+              <Stack direction="row" justifyContent="flex-end">
+                <Button onClick={() => setShowDiscount(true)}>Tengo un cupon</Button>
+              </Stack>
+            }
+
+            {showDiscount && !(discount != 0) && (
+              <TextField
+                fullWidth
+                placeholder="CODIGO"
+                onChange={(e) => setDiscountCode(e.target.value?.toUpperCase())}
+                value={discountCode}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <Button onClick={() => onApplyDiscount(discountCode)} sx={{ mr: -0.5 }}>
+                        Apply
+                      </Button>
+                    </InputAdornment>
+                  ),
+                }}
+              />
+            )}
+
+          </Stack>
         )}
         {!subtotal && (
           <Stack spacing={2}>

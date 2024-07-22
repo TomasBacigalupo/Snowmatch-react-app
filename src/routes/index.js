@@ -187,6 +187,7 @@ export default function Router() {
             { path: 'shop/schools', element: <SchoolList teacherType="school" /> },
             { path: 'school/:id', element: <SchoolDetails /> },
             { path: 'shop/school', element: <EcommerceShop teacherType="school" /> },
+            { path: 'clinics', element: <EcommerceShopClinics /> },
             { path: 'teacher/:id', element: <EcommerceTeacherDetails /> },
             { path: 'teacher/:id/hire', element: <EcommerceCheckoutTeacher /> },
             { path: 'dashboard/product/:id', element: <EcommerceProductDetails /> },
@@ -319,6 +320,7 @@ const GeneralBooking = Loadable(lazy(() => import('../pages/dashboard/GeneralBoo
 
 // ECOMMERCE
 const EcommerceShop = Loadable(lazy(() => import('../pages/dashboard/EcommerceShop')));
+const EcommerceShopClinics = Loadable(lazy(() => import('../pages/dashboard/EcommerceShopClinics')));
 const EcommerceProductDetails = Loadable(lazy(() => import('../pages/dashboard/EcommerceProductDetails')));
 const SchoolDetails = Loadable(lazy(() => import('../pages/dashboard/SchoolDetails')));
 const EcommerceTeacherDetails = Loadable(lazy(() => import('../pages/dashboard/EcommerceTeacherDetails')));

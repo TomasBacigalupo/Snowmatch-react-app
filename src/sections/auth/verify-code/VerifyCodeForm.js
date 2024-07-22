@@ -153,6 +153,7 @@ export default function VerifyCodeForm() {
                     width: { xs: 36, sm: 56 },
                     height: { xs: 36, sm: 56 },
                   },
+                  inputMode: 'numeric'
                 }}
               />
             )}

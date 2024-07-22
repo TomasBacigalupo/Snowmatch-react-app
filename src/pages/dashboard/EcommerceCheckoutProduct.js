@@ -5,7 +5,7 @@ import { styled } from '@mui/material/styles';
 import { Box, StepConnector, Button, TextField, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
-import { getCart, createBilling, calculatePrice } from '../../redux/slices/teachers';
+import { getCart, createBilling, calculatePrice, calculateDiscount } from '../../redux/slices/teachers';
 // hooks
 import useIsMountedRef from '../../hooks/useIsMountedRef';
 import useSettings from '../../hooks/useSettings';
@@ -55,10 +55,12 @@ export default function EcommerceCheckoutProduct() {
 
     const { user } = useAuth();
     const isTeacher = user?.role === 'TEACHER';
-    const bookingPrice = sum(events.map((event) => event.price));
+    const bookingPriceWithouDiscount = sum(events.map((event) => event.price));
+    const bookingPrice = sum(events.map((event) => event.price)) - checkout.discount;
 
     const { discount, subtotal, shipping, card } = checkout;
     const total = calculatePrice(product, checkout.events.length)
+    const [discountCode, setDiscountCode] = useState('');
     useEffect(() => {
         if (isMountedRef.current) {
             dispatch(getCart(events));
@@ -236,11 +238,15 @@ export default function EcommerceCheckoutProduct() {
                         enableEdit
                         total={bookingPrice}
                         totalEvents={events.length}
-                        subtotal={bookingPrice}
-                        discount={0}
+                        subtotal={bookingPriceWithouDiscount}
+                        discount={discount}
                         shipping={shipping}
                         onEdit={() => { }}
-                        bookingPrice={bookingPrice}
+                        bookingPrice={bookingPriceWithouDiscount - discount}
+                        onApplyDiscount={(discountCode) => {
+                            setDiscountCode(discountCode);
+                            dispatch(calculateDiscount(discountCode, bookingPriceWithouDiscount));
+                        }}
                     />
                 </Box>
                 {/* <Box marginTop={2}>
@@ -259,7 +265,7 @@ export default function EcommerceCheckoutProduct() {
                         onClick={() => {
                             const phoneNumber = '+5492944367197';
                             const _message = encodeURIComponent(
-                                `Experiencia: ${product.name}\nDias de clase:${events.map(e => '\n- ' + formatDate(e.date) + ' - ' + translate(e.lessonTime)).toString()}\nCantidad de personas: ${adults}\nComentario: *${message}*\n*Total: ${fCurrency(bookingPrice)}*`
+                                `Experiencia: ${product.name}\nDias de clase:${events.map(e => '\n- ' + formatDate(e.date) + ' - ' + translate(e.lessonTime)).toString()}\nCantidad de personas: ${adults}\nComentario: *${message}*\n${discountCode ? `Cupon: ${discountCode}` : ''}\n*Total: ${fCurrency(bookingPriceWithouDiscount - discount)}*`
                             );
                             const url = `https://api.whatsapp.com/send?phone=${phoneNumber}&text=${_message}`;
 

@@ -2,10 +2,10 @@ import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 // @mui
 import { styled } from '@mui/material/styles';
-import { Box, StepConnector, Button, MenuItem, FormControl, TextField, InputLabel, Select } from '@mui/material';
+import { Box, StepConnector, Button, MenuItem, FormControl, TextField, InputLabel, Select, InputAdornment } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
-import { getCart, createBilling } from '../../redux/slices/teachers';
+import { getCart, createBilling, applyDiscount, calculateDiscount } from '../../redux/slices/teachers';
 // hooks
 import useIsMountedRef from '../../hooks/useIsMountedRef';
 import useSettings from '../../hooks/useSettings';
@@ -82,7 +82,8 @@ export default function EcommerceCheckoutTeacher() {
 
   const { message, children, adults, bookSuccess, loadingPayment, preferenceId, createBookingError } = useSelector((state) => state.bookings);
   const { cart, billing, activeStep, events } = checkout;
-  const bookingPrice = sum(events.map((event) => event.price));
+  const bookingPriceWithouDiscount = sum(events.map((event) => event.price));
+  const bookingPrice = sum(events.map((event) => event.price)) - checkout.discount;
   const isComplete = activeStep === STEPS.length;
   const { total, discount, subtotal, shipping, card } = checkout;
   const [paymentMethod, setPaymentMethod] = useState('');
@@ -91,6 +92,7 @@ export default function EcommerceCheckoutTeacher() {
   const [clientLevel, setClientLevel] = useState('');
   const { user } = useAuth();
   const isTeacher = user?.role === 'TEACHER';
+  const [discountCode, setDiscountCode] = useState('');
   useEffect(() => {
     if (isMountedRef.current) {
       dispatch(getCart(events));
@@ -228,6 +230,10 @@ export default function EcommerceCheckoutTeacher() {
             shipping={shipping}
             onEdit={() => { }}
             bookingPrice={bookingPrice}
+            onApplyDiscount={(discountCode) => {
+              setDiscountCode(discountCode);
+              dispatch(calculateDiscount(discountCode, bookingPriceWithouDiscount));
+            }}
           />
         </Box>
         <Box marginTop={2}>
@@ -247,7 +253,7 @@ export default function EcommerceCheckoutTeacher() {
                 onClick={() => {
                   const phoneNumber = '+5492944367197';
                   const _message = encodeURIComponent(
-                    `Clase privada - ${teacher.name} - ${teacher.id}\nDias de clase:${events.map(e => '\n- ' + formatDate(e.date) + ' - ' + translate(e.lessonTime)).toString()}\nNiños: ${children}\nAdultos: ${adults}\nComentario: *${message}*\n*Total: ${fCurrency(bookingPrice)}*`
+                    `Clase privada - ${teacher.name} - ${teacher.id}\nDias de clase:${events.map(e => '\n- ' + formatDate(e.date) + ' - ' + translate(e.lessonTime)).toString()}\nNiños: ${children}\nAdultos: ${adults}\nComentario: *${message}*\n${discountCode ? `Cupon: ${discountCode}`: ''}\n*Total: ${fCurrency(bookingPrice)}*`
                   );
                   const url = `https://api.whatsapp.com/send?phone=${phoneNumber}&text=${_message}`;
 
@@ -265,7 +271,7 @@ export default function EcommerceCheckoutTeacher() {
             onClick={() => {
               const phoneNumber = '+5492944367197';
               const _message = encodeURIComponent(
-                `Aula particular - ${teacher.name} - ${teacher.id}\nDias de aula:${events.map(e => '\n- ' + formatDate(e.date) + ' - ' + translate(e.lessonTime)).toString()}\nCrianças: ${children}\nAdultos: ${adults}\nComentário: *${message}*\n*Total: ${fCurrency(bookingPrice)}*`
+                `Aula particular - ${teacher.name} - ${teacher.id}\nDias de aula:${events.map(e => '\n- ' + formatDate(e.date) + ' - ' + translate(e.lessonTime)).toString()}\nCrianças: ${children}\nAdultos: ${adults}\nComentário: *${message}*\n${discountCode ? `Cupon: ${discountCode}`: ''}\n*Total: ${fCurrency(bookingPrice)}*`
               );
               const url = `https://api.whatsapp.com/send?phone=${phoneNumber}&text=${_message}`;
 

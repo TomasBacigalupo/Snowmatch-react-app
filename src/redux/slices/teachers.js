@@ -11,6 +11,7 @@ import { dispatch } from '../store';
 import { useSelector } from 'react-redux';
 import { from } from 'stylis';
 import { id } from 'date-fns/locale';
+import { on } from 'process';
 
 // ----------------------------------------------------------------------
 
@@ -305,6 +306,7 @@ const slice = createSlice({
     },
 
     applyDiscount(state, action) {
+      console.log(action.payload)
       const discount = action.payload;
       state.checkout.discount = discount;
       state.checkout.total = state.checkout.subtotal - discount;
@@ -907,5 +909,14 @@ export function getPayByHoursLevel(level, totalHours) {
   }
   if (level === 5) {
     return totalHours * 72000;
+  }
+}
+
+export function calculateDiscount(discountCode, bookingPrice) {
+  if (discountCode === 'ELBLOGDESKI') {
+    dispatch(slice.actions.applyDiscount(bookingPrice * 0.15))
+  }
+  if (discountCode === 'GURURIDE') {
+    dispatch(slice.actions.applyDiscount(bookingPrice * 0.15))
   }
 }

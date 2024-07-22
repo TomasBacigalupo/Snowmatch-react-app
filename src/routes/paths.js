@@ -109,6 +109,7 @@ export const PATH_DASHBOARD = {
   eCommerce: {
     root: path(ROOTS_DASHBOARD, '/e-commerce'),
     shop: path(ROOTS_DASHBOARD, '/e-commerce/shop'),
+    clinics: path(ROOTS_DASHBOARD, '/e-commerce/clinics'),
     shopInd: path(ROOTS_DASHBOARD, '/e-commerce/shop/independent'),
     shopSchool: path(ROOTS_DASHBOARD, '/e-commerce/shop/school'),
     schools: path(ROOTS_DASHBOARD, '/e-commerce/shop/schools'),

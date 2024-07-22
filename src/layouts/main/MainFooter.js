@@ -22,12 +22,12 @@ const LINKS = [
       { name: 'Children', href: PATH_GUEST.children },
       { name: 'Free Ride', href: PATH_GUEST.freeRide },
       { name: 'FAQs', href: PATH_PAGE.faqs }
-     
+
     ],
   },
   {
     headline: 'Profesores',
-    children:  Array(200).fill(0).map((_, index) => ({ name: `Teacher ${index}`, href: PATH_GUEST.viewTeacher(index) }))
+    children: Array(200).fill(0).map((_, index) => ({ name: `Teacher ${index}`, href: PATH_GUEST.viewTeacher(index) }))
   },
   {
     headline: 'Legal',
@@ -75,7 +75,7 @@ export default function MainFooter() {
               justifyContent={{ xs: 'center', md: 'flex-start' }}
               sx={{ mt: 5, mb: { xs: 5, md: 0 } }}
             >
-              <SocialsButton sx={{ mx: 0.5 }} links={{instagram:"https://www.instagram.com/snow.match"}} />
+              <SocialsButton sx={{ mx: 0.5 }} links={{ instagram: "https://www.instagram.com/snow.match" }} />
             </Stack>
           </Grid>
 
@@ -104,6 +104,18 @@ export default function MainFooter() {
                   ))}
                 </Stack>
               ))}
+              <Stack>
+                <Link
+                  to='/clases-de-ski-bariloche'
+                  key='Bariloche'
+                  color="inherit"
+                  variant="body2"
+                  component={RouterLink}
+                  sx={{ display: 'block' }}
+                >
+                  Bariloche
+                </Link>
+              </Stack>
             </Stack>
           </Grid>
         </Grid>

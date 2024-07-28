@@ -47,7 +47,6 @@ export default function ShopStandardProductCard({ standardProduct }) {
     }
 
     const calculatePriceWithDiscount = (price) => {
-        console.log(isDesktop)
         return price
     }
 

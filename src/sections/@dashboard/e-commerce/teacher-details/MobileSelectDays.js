@@ -11,6 +11,7 @@ import { useDispatch } from 'react-redux';
 import useLocales from 'src/hooks/useLocales';
 import { useSelector } from 'src/redux/store';
 import { fCurrency } from 'src/utils/formatNumber';
+import {Hidden, Dialog } from '@mui/material';
 
 const MobileSelectDays = ({ product, teacher, isOpen, closeFather, isRange }) => {
     const { translate } = useLocales();
@@ -133,7 +134,10 @@ const MobileSelectDays = ({ product, teacher, isOpen, closeFather, isRange }) =>
                     zIndex: 999, // Ensure the grid is above other elements
                 }}
                 container justifyContent={'center'} alignItems={'center'} onClick={() => setOpen(true)}>
-                <Grid item xs={6} pl={2} pt={1} pb={1} justifyContent='center' textAlign='left'>
+                <Hidden smDown>
+                    <Grid item md={8}></Grid>
+                </Hidden>
+                <Grid item xs={6} md={2} pl={2} pt={1} pb={1} justifyContent='center' textAlign='left'>
                     <Typography variant="h4" width='100%'>
                         {isIndependant && !product && fCurrency(calculateRequestedPrice(teacher, totalDays, 'MORNING'))}
                         {product && fCurrency(calculatePrice(product, totalDays, 'MORNING'))}
@@ -143,61 +147,112 @@ const MobileSelectDays = ({ product, teacher, isOpen, closeFather, isRange }) =>
                         {(isIndependant || product) && translate('checkout.halfDay3Hours')}
                     </Typography>
                 </Grid>
-                <Grid item xs={6} px={2} py={3}>
+                <Grid item xs={6} md={2} px={2} py={3}>
                     <Button variant='contained' sx={{ p: 2 }} fullWidth onClick={() => setOpen(true)}>
                         {translate('checkout.selectDays')}
                     </Button>
                 </Grid>
             </Grid>
-
-            <Drawer
-                anchor="bottom"
-                open={open}
-                onClose={() => {
-                    setOpen(false)
-                    if (closeFather) {
-                        closeFather()
-                    }
-                }}
-                sx={{
-                    '& .MuiDrawer-paper': {
-                        boxSizing: 'border-box', width: '100%', paddingBottom: 2, borderTopLeftRadius: '12px',  // Adjust the value as needed
-                        borderTopRightRadius: '12px'
-                    }
-                }}
-            >
-                <Grid>
-                    <Grid item xs={12} p={2}>
-                        <IconButton onClick={() => {
-                            setOpen(false)
-                            if (closeFather) {
-                                closeFather()
-                            }
-                        }}>
-                            <Iconify icon={'ic:round-close'} width={20} height={20} />
-                        </IconButton>
+            <Hidden smUp>
+                <Drawer
+                    anchor="bottom"
+                    open={open}
+                    onClose={() => {
+                        setOpen(false)
+                        if (closeFather) {
+                            closeFather()
+                        }
+                    }}
+                    sx={{
+                        '& .MuiDrawer-paper': {
+                            boxSizing: 'border-box', width: '100%', paddingBottom: 2, borderTopLeftRadius: '12px',  // Adjust the value as needed
+                            borderTopRightRadius: '12px'
+                        }
+                    }}
+                >
+                    <Grid>
+                        <Grid item xs={12} p={2}>
+                            <IconButton onClick={() => {
+                                setOpen(false)
+                                if (closeFather) {
+                                    closeFather()
+                                }
+                            }}>
+                                <Iconify icon={'ic:round-close'} width={20} height={20} />
+                            </IconButton>
+                        </Grid>
+                        <Grid item xs={12} p={2} pb={0} mb={0}>
+                            <Typography variant="h4">
+                                {translate('checkout.selectDays')}
+                            </Typography>
+                            <Typography variant="body">
+                                {translate('checkout.selectDaysDescription')}
+                            </Typography>
+                        </Grid>
+                        <SelectDates
+                            product={product}
+                            isRange={isRange}
+                            handleClose={() => {
+                                if (closeFather) {
+                                    closeFather()
+                                }
+                                setOpen(false)
+                            }}
+                            onSubmit={handleSubmitSelectedDates}
+                        />
                     </Grid>
-                    <Grid item xs={12} p={2} pb={0} mb={0}>
-                        <Typography variant="h4">
-                            {translate('checkout.selectDays')}
-                        </Typography>
-                        <Typography variant="body">
-                            {translate('checkout.selectDaysDescription')}
-                        </Typography>
+                </Drawer>
+            </Hidden>
+            <Hidden smDown>
+                <Dialog
+                    anchor="bottom"
+                    open={open}
+                    onClose={() => {
+                        setOpen(false)
+                        if (closeFather) {
+                            closeFather()
+                        }
+                    }}
+                    sx={{
+                        '& .MuiDrawer-paper': {
+                            boxSizing: 'border-box', width: '33%', paddingBottom: 2, borderTopLeftRadius: '12px',  // Adjust the value as needed
+                            borderTopRightRadius: '12px'
+                        }
+                    }}
+                >
+                    <Grid>
+                        <Grid item xs={12} p={2}>
+                            <IconButton onClick={() => {
+                                setOpen(false)
+                                if (closeFather) {
+                                    closeFather()
+                                }
+                            }}>
+                                <Iconify icon={'ic:round-close'} width={20} height={20} />
+                            </IconButton>
+                        </Grid>
+                        <Grid item xs={12} p={2} pb={0} mb={0}>
+                            <Typography variant="h4">
+                                {translate('checkout.selectDays')}
+                            </Typography>
+                            <Typography variant="body">
+                                {translate('checkout.selectDaysDescription')}
+                            </Typography>
+                        </Grid>
+                        <SelectDates
+                            product={product}
+                            isRange={isRange}
+                            handleClose={() => {
+                                if (closeFather) {
+                                    closeFather()
+                                }
+                                setOpen(false)
+                            }}
+                            onSubmit={handleSubmitSelectedDates}
+                        />
                     </Grid>
-                    <SelectDates
-                        product={product}
-                        isRange={isRange}
-                        handleClose={() => {
-                            if (closeFather) {
-                                closeFather()
-                            }
-                            setOpen(false)
-                        }}
-                        onSubmit={handleSubmitSelectedDates}
-                    />
-                </Grid>
-            </Drawer>
+                </Dialog>
+            </Hidden>
         </>
 
     );

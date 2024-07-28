@@ -16,6 +16,8 @@ import useLocales from 'src/hooks/useLocales';
 import { fCurrency } from 'src/utils/formatNumber';
 import { useTranslation } from 'react-i18next';
 import { trackExperience } from 'src/services/facebook';
+// hooks
+import useResponsive from '../../../../hooks/useResponsive';
 // ----------------------------------------------------------------------
 
 ShopStandardProductCard.propTypes = {
@@ -28,6 +30,8 @@ export default function ShopStandardProductCard({ standardProduct }) {
     const { from, to } = filters;
     const navigate = useNavigate();
     const [src, setSrc] = useState(imageLink)
+    const isDesktop = useResponsive('up', 'sm');
+
     const { t } = useTranslation();
 
     const { isTeacher } = useAuth()
@@ -43,6 +47,7 @@ export default function ShopStandardProductCard({ standardProduct }) {
     }
 
     const calculatePriceWithDiscount = (price) => {
+        console.log(isDesktop)
         return price
     }
 
@@ -54,8 +59,10 @@ export default function ShopStandardProductCard({ standardProduct }) {
             navigate(linkTo)
         }}>
             <Box sx={{ position: 'relative' }}>
-                <Image alt={name} src={src}
-                    ratio="1/1" onError={() => setSrc('/assets/notFound.jpeg')} sx={{ borderRadius: '10px' }} />
+                {!isDesktop &&
+                    <Image alt={name} src={src}
+                        ratio="1/1" onError={() => setSrc('/assets/notFound.jpeg')} sx={{ borderRadius: '10px' }} />
+                }
             </Box>
             <Stack sx={{ pt: 1 }}>
                 <Stack direction="row" spacing={0.5}>

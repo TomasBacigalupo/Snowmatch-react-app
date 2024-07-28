@@ -59,14 +59,12 @@ export default function ShopStandardProductCard({ standardProduct }) {
             navigate(linkTo)
         }}>
             <Box sx={{ position: 'relative' }}>
-                {!isDesktop &&
-                    <Image alt={name} src={src}
-                        ratio="1/1" onError={() => setSrc('/assets/notFound.jpeg')} sx={{ borderRadius: '10px' }} />
-                }
+                <Image alt={name} src={src}
+                    ratio="1/1" onError={() => setSrc('/assets/notFound.jpeg')} sx={{ borderRadius: '10px' }} />
             </Box>
             <Stack sx={{ pt: 1 }}>
                 <Stack direction="row" spacing={0.5}>
-                    <Typography variant='h2' fontSize={18} component="span" >
+                    <Typography variant={isDesktop ? 'h3' : 'h2'} fontSize={18} component="span" >
                         {name}
                     </Typography>
                 </Stack>

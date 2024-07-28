@@ -141,44 +141,51 @@ export default function EcommerceTeacherDetails({ isGuest = false }) {
                 <TeacherDetailsCarousel teacher={{ images: [teacher?.imageLink], name: teacher?.name }} />
               </Grid>
               <Grid item xs={12} md={6} lg={5}>
-                <TeacherDetailsSummary
-                  teacher={teacher}
-                  cart={checkout.cart}
-                  onAddCart={handleAddCart}
-                  onGotoStep={handleGotoStep}
-                />
                 <Hidden smUp>
-                  <Grid item xs={12} p={3}>
-                    <Markdown children={teacher.information} />
-                  </Grid>
-                  <Grid item xs={12} p={3}>
-                    <Markdown children={teacher.description} />
-                  </Grid>
-                  <Box mx={2} >
-                    <Divider />
+                  <TeacherDetailsSummary
+                    teacher={teacher}
+                    cart={checkout.cart}
+                    onAddCart={handleAddCart}
+                    onGotoStep={handleGotoStep}
+                  />
+                </Hidden>
+                <Hidden smDown>
+                  <Box mx={3} width='100%' mt={1} mb={2}>
+                    <Typography variant='h6'>{teacher.name}</Typography>
                   </Box>
-                  <Grid container>
-                    {PRODUCT_DESCRIPTION.map((item) => (
-                      <Grid item xs={12} md={4} key={item.title} width={'100%'}>
-                        <Box display='flex' alignItems='flex-start' sx={{ my: 2, ml: 2, width: '100%', textAlign: 'start' }}>
-                          <Box><IconWrapperMobileStyle>
-                            <Iconify icon={item.icon} width={16} height={16} />
-                          </IconWrapperMobileStyle></Box>
-                          <Box ml={2}>
-                            <Typography variant="subtitle1" gutterBottom>
-                              {translate("teacherDetails." + item.title)}
-                            </Typography>
-                            <Typography sx={{ color: 'text.secondary' }}>
-                              {translate('teacherDetails.' + item.description)}
-                            </Typography>
-                          </Box>
+                </Hidden>
+                <Grid item xs={12} p={3}>
+                  <Markdown children={teacher.information} />
+                </Grid>
+                <Grid item xs={12} p={3}>
+                  <Markdown children={teacher.description} />
+                </Grid>
+                <Box mx={2} >
+                  <Divider />
+                </Box>
+                <Grid container>
+                  {PRODUCT_DESCRIPTION.map((item) => (
+                    <Grid item xs={12} md={4} key={item.title} width={'100%'}>
+                      <Box display='flex' alignItems='flex-start' sx={{ my: 2, ml: 2, width: '100%', textAlign: 'start' }}>
+                        <Box><IconWrapperMobileStyle>
+                          <Iconify icon={item.icon} width={16} height={16} />
+                        </IconWrapperMobileStyle></Box>
+                        <Box ml={2}>
+                          <Typography variant="subtitle1" gutterBottom>
+                            {translate("teacherDetails." + item.title)}
+                          </Typography>
+                          <Typography sx={{ color: 'text.secondary' }}>
+                            {translate('teacherDetails.' + item.description)}
+                          </Typography>
                         </Box>
-                      </Grid>
-                    ))}
-                  </Grid>
-                  <Box mx={2} >
-                    <Divider />
-                  </Box>
+                      </Box>
+                    </Grid>
+                  ))}
+                </Grid>
+                <Box mx={2} >
+                  <Divider />
+                </Box>
+                <Hidden smUp>
                   <Box mt={3}>
                     <Box px={2} pt={2}>
                       <Typography variant="h4" gutterBottom>
@@ -203,9 +210,9 @@ export default function EcommerceTeacherDetails({ isGuest = false }) {
                   <Box mx={2} >
                     <Divider />
                   </Box>
-                  <TimeDetails />
-                  <MobileSelectDays teacher={teacher} isOpen={isOpen} closeFather={() => setIsOpen(false)} />
                 </Hidden>
+                <TimeDetails />
+                <MobileSelectDays teacher={teacher} isOpen={isOpen} closeFather={() => setIsOpen(false)} />
               </Grid>
             </Grid>
             <Grid container sx={{ my: 1 }}>
@@ -267,6 +274,7 @@ export default function EcommerceTeacherDetails({ isGuest = false }) {
                   </Grid>
                 ))}
               </Grid>
+
             </Hidden>
           </>
         )}

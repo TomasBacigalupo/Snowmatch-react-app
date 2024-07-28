@@ -206,6 +206,26 @@ export default function EcommerceTeacherDetails({ isGuest = false }) {
                   <FaqsDetails id={product.id} />
                   <MobileSelectDays product={product} teacher={product} isOpen={isOpen} closeFather={() => setIsOpen(false)} isRange={false} />
                 </Hidden>
+
+                <Hidden smDown>
+                  <Box mx={3} width='100%' mt={1} mb={2}>
+                    <Typography variant='h6'>{product.name}</Typography>
+                  </Box>
+                  <TechDetails id={product.id} />
+                  <Box mx={2} width='100%' mt={2}>
+                    <Divider />
+                  </Box>
+                  <DescriptionDetails id={product.id} />
+                  <Box mx={2} width='100%'>
+                    <Divider />
+                  </Box>
+                  <TimeDetails />
+                  <Box mx={2} width='100%' >
+                    <Divider />
+                  </Box>
+                  <MobileSelectDays product={product} teacher={product} isOpen={isOpen} closeFather={() => setIsOpen(false)} isRange={false} />
+                </Hidden>
+
               </Grid>
             </Grid>
             <Grid container sx={{ my: 1 }}>
@@ -267,6 +287,7 @@ export default function EcommerceTeacherDetails({ isGuest = false }) {
                   </Grid>
                 ))}
               </Grid>
+              <FaqsDetails id={product.id} />
             </Hidden>
           </>
         )}

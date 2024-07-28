@@ -15,7 +15,7 @@ const TechDetails = ({ id }) => {
     return (
         <Grid container justifyContent="center" alignItems="center" spacing={2}>
             {iconData.map((item, index) => (
-                <Grid item xs={12} md={3} key={index}>
+                <Grid item xs={12} md={12} key={index}>
                     <Grid container alignItems="flex-start" justifyContent='center'>
                         <Grid item xs={1} justifyContent='flex-end'>
                             <Box width='100%' display='flex' justifyContent='flex-end'>

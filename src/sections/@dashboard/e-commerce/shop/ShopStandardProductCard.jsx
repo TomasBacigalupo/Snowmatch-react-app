@@ -16,6 +16,8 @@ import useLocales from 'src/hooks/useLocales';
 import { fCurrency } from 'src/utils/formatNumber';
 import { useTranslation } from 'react-i18next';
 import { trackExperience } from 'src/services/facebook';
+// hooks
+import useResponsive from '../../../../hooks/useResponsive';
 // ----------------------------------------------------------------------
 
 ShopStandardProductCard.propTypes = {
@@ -28,6 +30,8 @@ export default function ShopStandardProductCard({ standardProduct }) {
     const { from, to } = filters;
     const navigate = useNavigate();
     const [src, setSrc] = useState(imageLink)
+    const isDesktop = useResponsive('up', 'sm');
+
     const { t } = useTranslation();
 
     const { isTeacher } = useAuth()
@@ -59,7 +63,7 @@ export default function ShopStandardProductCard({ standardProduct }) {
             </Box>
             <Stack sx={{ pt: 1 }}>
                 <Stack direction="row" spacing={0.5}>
-                    <Typography variant='h2' fontSize={18} component="span" >
+                    <Typography variant={isDesktop ? 'h3' : 'h2'} fontSize={18} component="span" >
                         {name}
                     </Typography>
                 </Stack>

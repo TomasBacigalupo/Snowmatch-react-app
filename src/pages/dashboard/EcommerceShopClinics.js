@@ -78,7 +78,7 @@ export default function ComingSoon() {
                         <br/>
                         <Button 
                         onClick={() => {
-                            const phoneNumber = '+5492944367197';
+                            const phoneNumber = '+5492944263223';
                             const _message = encodeURIComponent(
                                 `Quiero saber más sobre las clinicas!`
                             );

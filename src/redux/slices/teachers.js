@@ -919,4 +919,7 @@ export function calculateDiscount(discountCode, bookingPrice) {
   if (discountCode === 'GURURIDE') {
     dispatch(slice.actions.applyDiscount(bookingPrice * 0.15))
   }
+  if (discountCode === 'JOSE15') {
+    dispatch(slice.actions.applyDiscount(bookingPrice * 0.15))
+  }
 }

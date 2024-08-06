@@ -251,7 +251,7 @@ export default function EcommerceCheckoutTeacher() {
                   py: 1.5
                 }}
                 onClick={() => {
-                  const phoneNumber = '+5492944367197';
+                  const phoneNumber = '+5492944263223';
                   const _message = encodeURIComponent(
                     `Clase privada - ${teacher.name} - ${teacher.id}\nDias de clase:${events.map(e => '\n- ' + formatDate(e.date) + ' - ' + translate(e.lessonTime)).toString()}\nNiños: ${children}\nAdultos: ${adults}\nComentario: *${message}*\n${discountCode ? `Cupon: ${discountCode}`: ''}\n*Total: ${fCurrency(bookingPrice)}*`
                   );
@@ -269,7 +269,7 @@ export default function EcommerceCheckoutTeacher() {
         {!isTeacher && <Box mx={2}>
           <Button
             onClick={() => {
-              const phoneNumber = '+5492944367197';
+              const phoneNumber = '+5492944263223';
               const _message = encodeURIComponent(
                 `Aula particular - ${teacher.name} - ${teacher.id}\nDias de aula:${events.map(e => '\n- ' + formatDate(e.date) + ' - ' + translate(e.lessonTime)).toString()}\nCrianças: ${children}\nAdultos: ${adults}\nComentário: *${message}*\n${discountCode ? `Cupon: ${discountCode}`: ''}\n*Total: ${fCurrency(bookingPrice)}*`
               );
@@ -294,7 +294,7 @@ export default function EcommerceCheckoutTeacher() {
           <Box marginTop={2} marginX={3}>
             <Button variant="contained" fullWidth
               onClick={() => {
-                const phoneNumber = '+5492944367197';
+                const phoneNumber = '+5492944263223';
                 const _message = encodeURIComponent(
                   `Experiencia: Clase privada\nDias de clase:${events.map(e => '\n- ' + formatDate(e.date) + ' - ' + translate(e.lessonTime)).toString()}\nCantidad de personas: ${adults}\nComentario: *${message}*\n*Total: ${fCurrency(bookingPrice)}*`
                 );
@@ -374,7 +374,7 @@ export default function EcommerceCheckoutTeacher() {
           </FormControl>
           <Button
             onClick={() => {
-              const phoneNumber = '+5492944367197';
+              const phoneNumber = '+5492944263223';
               const _message = encodeURIComponent(
                 `Clase Personalizada referida - ${teacher.name} ${teacher.lastname}\nDias de clase:${events.map(e => '\n- ' + formatDate(e.date) + ' - ' + translate(e.lessonTime)).toString()}\nCantidad de personas: ${adults}\nComentario: *${message}*\n*Total: ${fCurrency(bookingPrice)}*\nMetodo de pago: ${paymentMethod}\nNombre del Cliente: ${client}\nNivel del Cliente: ${clientLevel}\nTelefono del Cliente: ${phone}`
               );

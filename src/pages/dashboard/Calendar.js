@@ -32,6 +32,7 @@ import LessonForm from 'src/sections/@dashboard/calendar/LessonForm';
 import { getBusinessMembers } from 'src/redux/slices/business';
 import CalendarDayForm from 'src/sections/@dashboard/calendar/CalendarDayForm';
 import useAuth from 'src/hooks/useAuth';
+import LessonStepper from 'src/sections/@dashboard/calendar/LessonStepper';
 
 // ----------------------------------------------------------------------
 

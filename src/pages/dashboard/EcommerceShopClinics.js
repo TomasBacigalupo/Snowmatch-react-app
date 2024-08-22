@@ -1,6 +1,6 @@
 // @mui
 import { styled } from '@mui/material/styles';
-import { Box, Stack, Container, Typography, InputAdornment, Button, } from '@mui/material';
+import { Box, Stack, Container, Typography, InputAdornment, Button, Grid, } from '@mui/material';
 // hooks
 // components
 // assets
@@ -10,15 +10,18 @@ import Page from 'src/components/Page';
 import useCountdown from 'src/hooks/useCountdown';
 import { ComingSoonIllustration } from 'src/assets';
 import InputStyle from 'src/components/InputStyle';
+import { ClinicCard } from 'src/sections/@dashboard/clinics/ClinicCard';
+import MainFooter from 'src/layouts/main/MainFooter';
+import CustomFooter from 'src/sections/@dashboard/clinics/CustomFooter';
+import HeaderBreadcrumbs from 'src/components/HeaderBreadcrumbs';
 
 // ----------------------------------------------------------------------
 
 const RootStyle = styled('div')(({ theme }) => ({
     height: '100%',
     display: 'flex',
-    alignItems: 'center',
-    paddingTop: theme.spacing(5),
-    paddingBottom: theme.spacing(10),
+    flexDirection: 'column',  // Updated to allow footer placement
+    justifyContent: 'space-between',  // Space between content and footer
 }));
 
 const CountdownStyle = styled('div')({
@@ -37,62 +40,37 @@ const SeparatorStyle = styled(Typography)(({ theme }) => ({
 
 export default function ComingSoon() {
     const countdown = useCountdown(new Date('07/28/2024 19:00'));
+    const clinics = [
+        {
+            title: "Clinica de pista",
+            description: "La clínica de pista de snowmatch esta orientada a preparar a los instructores para los examenes de AADIDESS.",
+            imageUrl: "https://snowmatchimages.s3.amazonaws.com/profile/clinica-ski-pista.jpg"
+        },
+        {
+            title: "Clinica de palos",
+            description: "La clínica de palos de snowmatch te va a ayudar a mejrar tu técnica y velocidad dentro del trazado.",
+            imageUrl: "https://image.snowmatch.pro/profile/21"
+        }
+    ]
 
     return (
-        <Page title="Coming Soon">
+        <Page>
             <RootStyle>
                 <Container>
-                    <Box sx={{ textAlign: 'center' }}>
-                        <Typography variant="h3" paragraph>
-                            Proximamente
-                        </Typography>
-                        <Typography sx={{ color: 'text.secondary' }}></Typography>
-                        <ComingSoonIllustration sx={{ height: 240 }} />
-                        <CountdownStyle>
-                            <div>
-                                <Typography variant="h2">{countdown.days}</Typography>
-                                <Typography sx={{ color: 'text.secondary' }}>Días</Typography>
-                            </div>
-
-                            <SeparatorStyle variant="h2">:</SeparatorStyle>
-
-                            <div>
-                                <Typography variant="h2">{countdown.hours}</Typography>
-                                <Typography sx={{ color: 'text.secondary' }}>Horas</Typography>
-                            </div>
-
-                            <SeparatorStyle variant="h2">:</SeparatorStyle>
-
-                            <div>
-                                <Typography variant="h2">{countdown.minutes}</Typography>
-                                <Typography sx={{ color: 'text.secondary' }}>Minutos</Typography>
-                            </div>
-
-                            <SeparatorStyle variant="h2">:</SeparatorStyle>
-
-                            <div>
-                                <Typography variant="h2">{countdown.seconds}</Typography>
-                                <Typography sx={{ color: 'text.secondary' }}>Seconds</Typography>
-                            </div>
-                        </CountdownStyle>
-                        <br/>
-                        <Button 
-                        onClick={() => {
-                            const phoneNumber = '+5492944263223';
-                            const _message = encodeURIComponent(
-                                `Quiero saber más sobre las clinicas!`
-                            );
-                            const url = `https://api.whatsapp.com/send?phone=${phoneNumber}&text=${_message}`;
-
-                            window.open(url, '_blank');
-                        }}
-                        variant="contained" 
-                        size="large" mt={2}>
-                            Saber más
-                        </Button>
-                    </Box>
+                    <HeaderBreadcrumbs
+                        heading={"Clinicas"}
+                        links={[{ name: "Clinicas para instructores", href: "/dashboard/clinics" }]}
+                    />
+                    <Grid container spacing={2}>
+                        {clinics.map((clinic, index) => (
+                            <Grid item xs={12} sm={6} md={3}>
+                            <ClinicCard key={index} clinic={clinic} />
+                            </Grid>
+                        ))}
+                    </Grid>
                 </Container>
             </RootStyle>
+            <CustomFooter />
         </Page>
     );
 }

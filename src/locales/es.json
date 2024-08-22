@@ -635,6 +635,41 @@
                 }
             }
         },
+        "154": {
+            "metaTitle": "Clase de ski grupal en Catedral",
+            "metaDesc": "Una opción más económica para esquiar en grupo.",
+            "descriptionPreview": "Una opción más económica para esquiar en grupo.",
+            "description": "¿Venís en grupo a la montaña? ¿Estás solo y querés sumarte a una clase? Las clases grupales en el Cerro Catedral son tu elección ideal, una opción más económica que las clases individuales, pero con los mismos estándares de calidad.\nVas a estar acompañado por un instructor certificado de SnowMatch, quien va a esquiar junto al grupo por pistas acordes al nivel de todos. Recibirás ejercicios para mejorar el descenso, emprolijar la técnica y terminar el día con un mejor nivel de esquí.",
+            "skiLevel":"Todos los niveles",
+            "totalStudents": "Entre 1 y 5 personas",
+            "meetingPoint": "Nestor Esquí",
+            "faqs": {
+                "0": {
+                    "question": "¿Puedo tomar esta clase en familia o con amigos?",
+                    "answer": "Si.  Tené en cuenta que el precio es por persona y procurá que todos tengan un nivel de esquí similar, para que todos puedan disfrutar y aprender a la vez."
+                },
+                "1": {
+                    "question": "¿El precio que figura es por persona o por el total de la clase?",
+                    "answer": "El precio es por persona"
+                },
+                "2": {
+                    "question": "¿Qué pasa si las condiciones meteorológicas no son adecuadas para esquiar?",
+                    "answer": "En caso de condiciones meteorológicas adversas, te contactaremos para reprogramar la clase."
+                },
+                "3": {
+                    "question": "¿Qué debo hacer si tengo una condición médica?",
+                    "answer": "En ese caso deberás consultar con tu médico si estás en condiciones de tomar la clase. Es recomendable informar al instructor antes de iniciar la clase sobre alguna lesión previa."
+                },
+                "4": {
+                    "question": "¿Qué equipo necesito para la clase?",
+                    "answer": "Se recomienda ver el pronóstico del tiempo antes de ir a la montaña. Traer ropa de abrigo adecuada para la nieve, casco, antiparras y guantes. Si no tenés esquíes, botas y bastones, los podés alquilar en algún rental de la base."
+                },
+                "5": {
+                    "question": "¿Cómo llego al punto de encuentro en el Cerro Catedral?",
+                    "answer": "El SnowMatch Point está ubicado en la base del Cerro Catedral, a 17 kilómetros del centro de San Carlos de Bariloche. Podés llegar a Catedral en transporte público, taxi o auto particular. "
+                }
+            }
+        },
         "145": {
             "metaTitle": "Clase de ski en Catedral para principiantes",
             "metaDesc": "Para alumnos sin experiencia previa en la nieve. Da los primeros pasos en el mundo del ski con esta clase.",

@@ -9,6 +9,7 @@ import { getEventsByTeacherId } from "src/redux/slices/bookings";
 import { useDispatch, useSelector } from "react-redux";
 import { calculatePrice, calculateRequestedPrice } from "src/redux/slices/teachers";
 import { fCurrency } from "src/utils/formatNumber";
+import './SelectDates.css';
 
 
 const CustomPickersDay = styled(PickersDay, {
@@ -253,9 +254,6 @@ export default function SelectDates({ handleClose, onSubmit, isRange, product })
                         defaultValue={range}
                         disablePast={true}
                     />}
-                </Grid>
-                <Grid item xs={12} pl={3}>
-                    <Typography>{`${translate('general.total_days')}: ${selectedDates.length}`}</Typography>
                 </Grid>
             </Grid>
             <DialogActions>

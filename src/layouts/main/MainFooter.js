@@ -21,6 +21,7 @@ const LINKS = [
       { name: 'Family', href: PATH_GUEST.family },
       { name: 'Children', href: PATH_GUEST.children },
       { name: 'Free Ride', href: PATH_GUEST.freeRide },
+      { name: 'Clase grupal Catedral', href: PATH_GUEST.grupales },
       { name: 'FAQs', href: PATH_PAGE.faqs }
 
     ],

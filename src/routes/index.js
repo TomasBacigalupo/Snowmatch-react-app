@@ -293,6 +293,7 @@ export default function Router() {
       children: [
         { element: <HomePage />, index: true },
         { path: 'clases-de-ski-bariloche', element: <HomePageBariloche /> },
+        { path: 'clases-de-ski-lago-hermoso', element: <HomePageLagoHermoso /> },
         { path: 'about-us', element: <About /> },
         { path: 'contact-us', element: <Contact /> },
         { path: 'faqs', element: <Faqs /> },
@@ -376,6 +377,7 @@ const Kanban = Loadable(lazy(() => import('../pages/dashboard/Kanban')));
 // MAIN
 const HomePage = Loadable(lazy(() => import('../pages/Home')));
 const HomePageBariloche = Loadable(lazy(() => import('../pages/HomeBariloche')));
+const HomePageLagoHermoso = Loadable(lazy(() => import('../pages/HomeLagoHermoso')));
 const About = Loadable(lazy(() => import('../pages/About')));
 const Contact = Loadable(lazy(() => import('../pages/Contact')));
 const Faqs = Loadable(lazy(() => import('../pages/Faqs')));

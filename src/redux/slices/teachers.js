@@ -922,4 +922,10 @@ export function calculateDiscount(discountCode, bookingPrice) {
   if (discountCode === 'JOSE15') {
     dispatch(slice.actions.applyDiscount(bookingPrice * 0.15))
   }
+  if (discountCode === 'RESIDENTE') {
+    dispatch(slice.actions.applyDiscount(bookingPrice * 0.15))
+  }
+  if (discountCode === 'MATCH10') {
+    dispatch(slice.actions.applyDiscount(bookingPrice * 0.10))
+  }
 }

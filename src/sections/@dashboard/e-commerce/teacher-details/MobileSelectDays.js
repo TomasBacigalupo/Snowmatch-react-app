@@ -1,7 +1,7 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import Drawer from '@mui/material/Drawer';
 import Typography from '@mui/material/Typography';
-import { Grid, IconButton } from '@mui/material';
+import { Box, Grid, IconButton } from '@mui/material';
 import Iconify from 'src/components/Iconify';
 import Button from '@mui/material/Button';
 import SelectDates from './SelectDates';
@@ -11,7 +11,8 @@ import { useDispatch } from 'react-redux';
 import useLocales from 'src/hooks/useLocales';
 import { useSelector } from 'src/redux/store';
 import { fCurrency } from 'src/utils/formatNumber';
-import {Hidden, Dialog } from '@mui/material';
+import { Hidden, Dialog } from '@mui/material';
+import { useTheme } from '@mui/system';
 
 const MobileSelectDays = ({ product, teacher, isOpen, closeFather, isRange }) => {
     const { translate } = useLocales();
@@ -53,7 +54,7 @@ const MobileSelectDays = ({ product, teacher, isOpen, closeFather, isRange }) =>
 
                 navigate('hire');
             })
-        } else if(product) {
+        } else if (product) {
             dates.forEach((date) => {
                 let lessonTime = "MORNING"
                 let price = 0
@@ -82,7 +83,7 @@ const MobileSelectDays = ({ product, teacher, isOpen, closeFather, isRange }) =>
                 }))
                 navigate('hire');
             })
-        }else{
+        } else {
             dates.forEach((date) => {
                 let lessonTime = "MORNING"
                 let price = 0
@@ -116,6 +117,17 @@ const MobileSelectDays = ({ product, teacher, isOpen, closeFather, isRange }) =>
     })
     //calculate total days between to and from
     const totalDays = Math.floor((to - from) / (1000 * 60 * 60 * 24));
+    const [borderColor, setBorderColor] = useState('black');
+    const theme = useTheme();
+
+    const handleClick = (day) => {
+        const phoneNumber = '5492944263223';
+    const message = encodeURIComponent('Quiero participar de la clinica el ' + day);
+    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${message}`;
+    
+    window.open(whatsappUrl, '_blank');
+    };
+
     useEffect(() => {
         setOpen(isOpen)
     }, [isOpen])
@@ -170,37 +182,87 @@ const MobileSelectDays = ({ product, teacher, isOpen, closeFather, isRange }) =>
                         }
                     }}
                 >
-                    <Grid>
-                        <Grid item xs={12} p={2}>
-                            <IconButton onClick={() => {
-                                setOpen(false)
-                                if (closeFather) {
-                                    closeFather()
-                                }
-                            }}>
-                                <Iconify icon={'ic:round-close'} width={20} height={20} />
-                            </IconButton>
+                    {product?.id === 155 ? (
+                        <Grid>
+                            <Grid item xs={12} p={2}>
+                                <IconButton onClick={() => {
+                                    setOpen(false)
+                                    if (closeFather) {
+                                        closeFather()
+                                    }
+                                }}>
+                                    <Iconify icon={'ic:round-close'} width={20} height={20} />
+                                </IconButton>
+                            </Grid>
+                            <Grid item xs={12} p={2} pb={0} mb={0}>
+                                <Typography variant="h4">
+                                    {translate('checkout.selectDays')}
+                                </Typography>
+                                <Typography variant="body">
+                                    Seleccioná los horarios disponibles para tener tu clínica
+                                </Typography>
+                            </Grid>
+
+                            <Grid item xs={12}>
+                                <Box
+                                    margin={2}
+                                    padding={3}
+                                    borderRadius={2}
+                                    border={2}
+                                    borderColor={borderColor}
+                                    onClick={()=>handleClick('12 de Septiembre de 9:30 a 12:30')}
+                                ><Typography variant="h4">
+                                        12 de Septiembre de 9:30 a 12:30
+                                    </Typography>
+                                    <Typography variant="body">
+                                        {translate('checkout.selectDaysDescription')}
+                                    </Typography>
+                                </Box>
+                                <Box onClick={()=>handleClick('13 de Septiembre de 9:30 a 12:30')} margin={2} padding={3} borderRadius={2} border={3} borderColor='black'>
+                                    <Typography variant="h4">
+                                        13 de Septiembre de 9:30 a 12:30
+                                    </Typography>
+                                    <Typography variant="body">
+                                        {translate('checkout.selectDaysDescription')}
+                                    </Typography>
+                                </Box>
+                            </Grid>
                         </Grid>
-                        <Grid item xs={12} p={2} pb={0} mb={0}>
-                            <Typography variant="h4">
-                                {translate('checkout.selectDays')}
-                            </Typography>
-                            <Typography variant="body">
-                                {translate('checkout.selectDaysDescription')}
-                            </Typography>
+                    ) :
+                        <Grid>
+                            <Grid item xs={12} p={2}>
+                                <IconButton onClick={() => {
+                                    setOpen(false)
+                                    if (closeFather) {
+                                        closeFather()
+                                    }
+                                }}>
+                                    <Iconify icon={'ic:round-close'} width={20} height={20} />
+                                </IconButton>
+                            </Grid>
+                            <Grid item xs={12} p={2} pb={0} mb={0}>
+                                <Typography variant="h4">
+                                    {translate('checkout.selectDays')}
+                                </Typography>
+                                <Typography variant="body">
+                                    {translate('checkout.selectDaysDescription')}
+                                </Typography>
+                            </Grid>
+                            <SelectDates
+                                product={product}
+                                isRange={isRange}
+                                handleClose={() => {
+                                    if (closeFather) {
+                                        closeFather()
+                                    }
+                                    setOpen(false)
+                                }}
+                                onSubmit={handleSubmitSelectedDates}
+                            />
                         </Grid>
-                        <SelectDates
-                            product={product}
-                            isRange={isRange}
-                            handleClose={() => {
-                                if (closeFather) {
-                                    closeFather()
-                                }
-                                setOpen(false)
-                            }}
-                            onSubmit={handleSubmitSelectedDates}
-                        />
-                    </Grid>
+
+                    }
+
                 </Drawer>
             </Hidden>
             <Hidden smDown>

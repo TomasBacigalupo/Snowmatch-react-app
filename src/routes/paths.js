@@ -34,6 +34,7 @@ export const PATH_GUEST = {
   family: path(ROOTS_FIND_A_PRO, `/product/147`),
   children: path(ROOTS_FIND_A_PRO, `/product/148`),
   freeRide: path(ROOTS_FIND_A_PRO, `/product/149`),
+  grupales: path(ROOTS_FIND_A_PRO, `/product/154`),
   viewTeacher: (id) => path(ROOTS_FIND_A_PRO, `/teacher/${id}`),
   viewProduct: (id) => path(ROOTS_FIND_A_PRO, `/product/${id}`),
   viewTeacherProducts: (id, productId) => path(ROOTS_FIND_A_PRO, `/teacher/${id}/products/${productId}`),

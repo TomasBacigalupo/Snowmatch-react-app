@@ -137,12 +137,12 @@ export default function PageVerifyWhatsApp() {
                             </Grid>
                             <Grid item xs={12}>
                                 {!loading && (
-                                    <Typography disabled variant='caption'>Telefono:{' ' + user.cellphone}</Typography>
+                                    <Typography disabled variant='caption'>Telefono:{' ' + user?.cellphone}</Typography>
                                 )}
                             </Grid>
                             <Grid item xs={12}>
                                 {!loading && (
-                                    <Typography disabled variant='caption'>Email:{' ' + user.email}</Typography>
+                                    <Typography disabled variant='caption'>Email:{' ' + user?.email}</Typography>
                                 )}
                             </Grid>
                             <Grid item xs={12}>

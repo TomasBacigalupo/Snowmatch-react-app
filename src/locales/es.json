@@ -565,7 +565,7 @@
         "events": "Eventos",
         "143": {
             "metaTitle": "SnowMatchX | La mejor clase de ski en Catedral",
-            "metaDesc": "Llevá tu experiencia en la nieve a otro nivel con nuestros instructores seleccionados.",
+            "metaDescription": "Llevá tu experiencia en la nieve a otro nivel con nuestros instructores seleccionados.",
             "descriptionPreview": "Experiencia única con instructores seleccionados (49 c.)",
             "title": "SnowMatchX | La mejor clase de esquí en Catedral",
             "description": "SnowMatchX es mucho más que una clase de ski. Es una experiencia en la montaña <b>con uno de nuestros instructores Nivel 5,</b> el rango más alto que otorga la Asociación Argentina de Instructores de Esquí y Snowboard (AADIDESS).\nEn esta lección vas a aprender a <b>esquiar en el Cerro Catedral</b> con las instrucciones y consejos de los <b>profesores top de nuestra escuela.</b> <br/><br/>No importa dónde estés parado (tengas o no experiencia), <b>¡animate a dar el salto!</b>",
@@ -601,7 +601,7 @@
         },
         "144": {
             "metaTitle": "Clase de ski en Catedral para intermedios",
-            "metaDesc": "Para alumnos con una o dos experiencias previas en la nieve. Aprendé a bajar pistas rojas y negras.",
+            "metaDescription": "Para alumnos con una o dos experiencias previas en la nieve. Aprendé a bajar pistas rojas y negras.",
             "descriptionPreview": "Corregí errores básicos y bajá pistas negras.",
             "title": "SnowMatchX | La mejor clase de esquí en Catedral",
             "description": "La <b>clase de ski para intermedios</b> está orientada a aquellas personas que esquiaron al menos una o dos veces, es decir, que tienen una noción básica del deporte, pero que quieren seguir mejorando.<br/>Con esta clase <b>vas a corregir los típicos errores de principiantes,</b> como malas posturas y gestos erróneos. <b>Podrás dejar atrás las pistas azules, y pasar a las rojas y negras.</b>",
@@ -637,14 +637,14 @@
         },
         "154": {
             "metaTitle": "Clase de ski grupal en Catedral",
-            "metaDesc": "Una opción más económica para esquiar en grupo.",
+            "metaDescription": "Una opción más económica para esquiar en grupo.",
             "descriptionPreview": "Una opción más económica para esquiar en grupo.",
             "description": "¿Venís en grupo a la montaña? ¿Estás solo y querés sumarte a una clase? Las clases grupales en el Cerro Catedral son tu elección ideal, una opción más económica que las clases individuales, pero con los mismos estándares de calidad.\nVas a estar acompañado por un instructor certificado de SnowMatch, quien va a esquiar junto al grupo por pistas acordes al nivel de todos. Recibirás ejercicios para mejorar el descenso, emprolijar la técnica y terminar el día con un mejor nivel de esquí.",
             "skiLevel":"Todos los niveles",
             "totalStudents": "Entre 1 y 5 personas",
             "meetingPoint": "Nestor Esquí",
             "faqs": {
-                "0": {
+                "3": {
                     "question": "¿Puedo tomar esta clase en familia o con amigos?",
                     "answer": "Si.  Tené en cuenta que el precio es por persona y procurá que todos tengan un nivel de esquí similar, para que todos puedan disfrutar y aprender a la vez."
                 },
@@ -653,16 +653,51 @@
                     "answer": "El precio es por persona"
                 },
                 "2": {
-                    "question": "¿Qué pasa si las condiciones meteorológicas no son adecuadas para esquiar?",
-                    "answer": "En caso de condiciones meteorológicas adversas, te contactaremos para reprogramar la clase."
+                    "question": "¿Qué pasa si no se llena el cupo mínimo de la clase?",
+                    "answer": "En caso de que no se llene el cupo minimo de la clase hay dos opciones: reprogramar la clase o pagar el extra para pasar a clase privada."
                 },
-                "3": {
-                    "question": "¿Qué debo hacer si tengo una condición médica?",
-                    "answer": "En ese caso deberás consultar con tu médico si estás en condiciones de tomar la clase. Es recomendable informar al instructor antes de iniciar la clase sobre alguna lesión previa."
+                "0": {
+                    "question": "¿El precio incluye pase?",
+                    "answer": "No. El precio de la calse no incluye el pase"
                 },
                 "4": {
-                    "question": "¿Qué equipo necesito para la clase?",
-                    "answer": "Se recomienda ver el pronóstico del tiempo antes de ir a la montaña. Traer ropa de abrigo adecuada para la nieve, casco, antiparras y guantes. Si no tenés esquíes, botas y bastones, los podés alquilar en algún rental de la base."
+                    "question": "¿El precio incluye equipo?",
+                    "answer": "No. El precio de la clase no incluye equipo"
+                },
+                "5": {
+                    "question": "¿Cómo llego al punto de encuentro en el Cerro Catedral?",
+                    "answer": "El SnowMatch Point está ubicado en la base del Cerro Catedral, a 17 kilómetros del centro de San Carlos de Bariloche. Podés llegar a Catedral en transporte público, taxi o auto particular. "
+                }
+            }
+        },
+        "155": {
+            "metaTitle": "Clinica de Carrera en Catedral",
+            "metaDescription": "Parcticá tu técnica de carrera con Coco y Nicol.",
+            "descriptionPreview": "Parcticá tu técnica de carrera con Coco y Nicol.",
+            "description": "Clinica de carrera guiada por Coco y Nicol. <br/>3hs de practica en trazado de gigante con correcciones y consejos de profesionales. <br/> Disponibilad sujeta a cupos.<br/>", 
+            "skiLevel":"Expertos",
+            "totalStudents": "Entre 1 y 15 personas",
+            "meetingPoint": "Nestor Esquí",
+            "faqs": {
+                "3": {
+                    "question": "¿Quien da la clínica?",
+                    "answer": "La clinica la dan coco y nicol, dos corredores con experiencia."
+                },
+                "1": {
+                    "question": "¿El precio que figura es por persona?",
+                    "answer": "El precio es por persona y es de 100 dolares por persona por 3 horas de entrenamiento."
+                },
+                "2": {
+                    "question": "¿Qué pasa si no llenamos el cupo minimo?",
+                    "answer": "En caso de que no se llene el cupo minimo de la clínica se devuelve el dinero."
+                },
+                "0": {
+                    "question": "¿A que esquiadores esta enfocado?",
+                    "answer": "La clinica está enfocada a esquiadores expertos que quieran mejorar su técnica de carrera. Si sos principiante toma una clase de ski."
+                },
+                "4": {
+                    "question": "¿Cómo pago mi cupo?",
+                    "answer": "El pago se puede hacer de forma presencial en la oficina de snowmatch o por transferencia bancaria."
                 },
                 "5": {
                     "question": "¿Cómo llego al punto de encuentro en el Cerro Catedral?",
@@ -672,7 +707,7 @@
         },
         "145": {
             "metaTitle": "Clase de ski en Catedral para principiantes",
-            "metaDesc": "Para alumnos sin experiencia previa en la nieve. Da los primeros pasos en el mundo del ski con esta clase.",
+            "metaDescription": "Para alumnos sin experiencia previa en la nieve. Da los primeros pasos en el mundo del ski con esta clase.",
             "descriptionPreview": "Introducción al mundo del ski desde cero.",
             "title": "SnowMatchX | La mejor clase de esquí en Catedral",
             "description": "La <b>clase de ski para principiantes</b> te dará las herramientas básicas para que puedas <b>iniciarte en el mundo del ski si no tenés experiencia previa.</b> Comprenderás la teoría más importante para poder deslizarte en tus esquíes sin problemas.<br/>Con esta lección para primerizos aprenderás los gestos iniciales del deporte, tales <b>como frenar en cuña, doblar en pendiente y enderezar la postura.</b><br/> Si tenés buena progresión, al final de clase podrás empezar a <b>bajar por pistas verdes y con poca pendiente. ¿Te animás?</br>",
@@ -743,7 +778,7 @@
         },
         "149": {
             "metaTitle": "Freeride por bosques y nieve onda",
-            "metaDesc": " Para los esquiadores más aventureros que quieren aprender a esquiar",
+            "metaDescription": " Para los esquiadores más aventureros que quieren aprender a esquiar",
             "descriptionPreview": "Aprendé a esquiar fuera de pista. Intermedios/avanzados.",
             "description": "La clase de <b>freeride (estilo libre)</b> es una increíble experiencia fuera de pista, orientada a los esquiadores amantes de la aventura y del contacto con la naturaleza. El instructor te enseñará y te llevará a esquiar por alucinantes <b>bosques nevados y nieve onda sin pisar*.</b><br/>Además, te explicará <b>la técnica para que puedas esquiar en lugares con “bumps”</b> (montículos de nieve que se forman en la pista), y domines todo tipo de bajadas.<br/>En este curso aprenderás las <b>nociones básicas del freeride</b>, para que puedas disfrutar de este estilo de forma divertida y sin peligro. Con una progresión acorde, <b>al finalizar estarás capacitado para esquiar en cualquier condición y tipo de nieve y pendiente.</b><br/>*<i>Las actividades realizadas durante la clase dependerán de las condiciones meteorológicas y de la montaña ese día.</i>",
             "skiLevel": "Intermedios/Avanzados",
@@ -778,7 +813,7 @@
         },
         "147": {
             "metaTitle": "Clase de ski para familias",
-            "metaDesc": "Tomá una clase de ski en Catedral junto a toda tu familia y/o amigos.",
+            "metaDescription": "Tomá una clase de ski en Catedral junto a toda tu familia y/o amigos.",
             "descriptionPreview": "Clase grupal con amigos o familia. Cualquier nivel.",
             "description": "La <b>clase de ski para familias y/o amigos</b> es la mejor opción para esquiar en el Cerro Catedral si <b>querés disfrutar de la montaña en grupo.</b> La clase pone el foco en el aprendizaje y la progresión de cada alumno, aunque <b>sin descuidar la diversión y el disfrute.</b><br/>Además de perfeccionar sus habilidades en la nieve, los participantes tienen la oportunidad de <b>sumergirse en la majestuosidad de la montaña, conocer lugares únicos, frenar a tomarse fotos y crear recuerdos inolvidables</b> acompañados por un instructor experto que se volverá un guía de montaña.<br/>La meta principal es <b>combinar el aprendizaje con la experiencia de disfrutar la montaña en grupo.</b> Después de todo, no queremos ser profesionales… ¡sino pasarla bien!",
             "skiLevel": "Todos los niveles",
@@ -813,7 +848,7 @@
         },
         "148": {
             "metaTitle": "Clase de ski para niños",
-            "metaDesc": "Para pequeños esquiadores de entre 4 y 12 años. Aprenderán a deslizarse por la nieve en un entorno recreativo y lúdico.",
+            "metaDescription": "Para pequeños esquiadores de entre 4 y 12 años. Aprenderán a deslizarse por la nieve en un entorno recreativo y lúdico.",
             "descriptionPreview": "Los primeros pasos en la nieve. Niños de 4 a 12 años.",
             "description": "La <b>clase de ski para niños/as</b> es una <b>experiencia de aprendizaje y juego</b> para los más chicos de la familia. Con profes <b>especialistas en trabajo con infancias,</b> el curso combina momentos lúdicos y recreativos en la nieve, con enseñanza básica del ski.<br/>Los alumnos entrarán en contacto con la nieve, aprenderán a ponerse y sacarse los esquíes, a <b>deslizarse en lugares con poca pendiente</b> y a disfrutar entre risas y juegos de los divertidísimos caminitos de montaña.",
             "skiLevel": "Intermedios/Avanzados",

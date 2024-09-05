@@ -75,7 +75,7 @@ export default function TeacherDetailsMobileReview({ teacher, openForm = false }
             <Drawer
                 anchor="bottom"
                 open={openReviewModal}
-                onClose={() => setOpenReviewModal(true)}
+                onClose={() => setOpenReviewModal(false)}
                 sx={{
                     '& .MuiDrawer-paper': {
                         boxSizing: 'border-box', width: '100%', paddingBottom: 2, borderTopLeftRadius: '12px',  // Adjust the value as needed
@@ -86,18 +86,20 @@ export default function TeacherDetailsMobileReview({ teacher, openForm = false }
                     }
                 }}
             >
-                {!isStudent && !(emailVerified || phoneVerified) && <>
+                <Box mt={1} flex justifyContent='center' width='100%'>
+                    <IconButton onClick={() => setOpenReviewModal(false)}>
+                        <Iconify icon={'line-md:close-circle'} width={25} height={25} />
+                    </IconButton>
+                </Box>
+
+                {!isStudent && <>
                     <RegisterStudent />
                 </>}
-                {!(emailVerified || phoneVerified) && <>
+                {isStudent && !(emailVerified || phoneVerified) && <>
                     <PageVerifyWhatsApp />
                 </>}
                 {isStudent && (emailVerified || phoneVerified) && <>
-                    <Box mt={1}>
-                        <IconButton onClick={() => setOpenReviewModal(false)}>
-                            <Iconify icon={'line-md:close-circle'} width={25} height={25} />
-                        </IconButton>
-                    </Box>
+
                     <Grid container p={2} spacing={3}>
                         <Grid item xs={12}>
                             <Typography variant="h2" gutterBottom>

@@ -14,6 +14,8 @@ import { useNavigate } from 'react-router';
 import { rateTeacherByID } from 'src/redux/slices/rates';
 import { useDispatch, useSelector } from 'src/redux/store';
 import useLocales from 'src/hooks/useLocales';
+import { useSnackbar } from 'notistack';
+import { comment } from 'stylis';
 
 // ----------------------------------------------------------------------
 
@@ -34,8 +36,9 @@ export default function ProductDetailsReviewFormMobile({ onClose, id, teacherId,
 
 
   const dispatch = useDispatch()
-  const {isSubmitting} = useSelector(state => state.rates)
-  const {translate} = useLocales() 
+  const { isSubmitting } = useSelector(state => state.rates)
+  const { translate } = useLocales()
+  const { enqueueSnackbar } = useSnackbar()
 
   const ReviewSchema = Yup.object().shape({
     stars: Yup.mixed().required(translate("reviewForm.ratingRequired")),
@@ -65,7 +68,7 @@ export default function ProductDetailsReviewFormMobile({ onClose, id, teacherId,
 
   const onSubmit = async (data) => {
     let fun, safe
-    switch(data.fun){
+    switch (data.fun) {
       case "Aburrido":
         fun = 0
         break
@@ -89,12 +92,13 @@ export default function ProductDetailsReviewFormMobile({ onClose, id, teacherId,
     }
     try {
       dispatch(rateTeacherByID(teacherId, {
-        ...data,
+        comment: data.comment,
         fun: fun,
-        safe: safe,
+        safety: safe,
         stars: Number(data.stars),
         bookingId: bookingId,
       }))
+      enqueueSnackbar('Gracias por tu review', { variant: 'success' });
       onClose();
     } catch (error) {
       console.log("error")
@@ -131,7 +135,7 @@ export default function ProductDetailsReviewFormMobile({ onClose, id, teacherId,
           <RHFTextField name="comment" label={translate("reviewForm.comment")} multiline rows={3} />
 
           <Typography variant="body2">{translate("reviewForm.fun")}:</Typography>
-          <RHFRadioGroup name='fun' options={["Aburrido", 'Divertido', "Muy Divertido"]}/>
+          <RHFRadioGroup name='fun' options={["Aburrido", 'Divertido', "Muy Divertido"]} />
 
           <Typography variant="body2">{translate("reviewForm.security")}</Typography>
           <RHFRadioGroup name='safety' options={["No es Seguro", 'Seguro', "Muy Seguro"]} />

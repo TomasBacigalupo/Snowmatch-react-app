@@ -233,7 +233,7 @@ export default function SelectDates({ handleClose, onSubmit, isRange, product })
                 </DialogContent>
             </DialogAnimate>
             <Grid container width={'100%'} height={'100%'}>
-                <Grid item xs={12} width={'100%'} height={'100%'}>
+                <Grid id='custom-calendar' item xs={12} width={'100%'} height={'100%'}>
                     {!isRange && <StaticDatePicker
                         onChange={() => { }}
                         disabledDates={events.map(e => new Date(e.start))}

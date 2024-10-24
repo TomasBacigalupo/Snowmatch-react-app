@@ -5,6 +5,7 @@ import Label from '../../../components/Label';
 import SvgIconStyle from '../../../components/SvgIconStyle';
 import SchoolIcon from '@mui/icons-material/School';
 import CastForEducationIcon from '@mui/icons-material/CastForEducation';
+import VideoCallIcon from '@mui/icons-material/VideoCall';
 // ----------------------------------------------------------------------
 
 const getIcon = (name) => <SvgIconStyle src={`/icons/${name}.svg`} sx={{ width: 1, height: 1 }} />;
@@ -26,6 +27,7 @@ const ICONS = {
   match: getIcon('ic_match'),
   rental: getIcon('ic_rental'),
   protips: <CastForEducationIcon/>,
+  videoCoach: <VideoCallIcon/>,
 };
 
 const navConfigGuestCatedral = [
@@ -48,6 +50,7 @@ const navConfigGuestCatedral = [
         ,
       },
       { title: 'protips', path: PATH_GUEST.protips, icon: ICONS.protips },
+      { title: 'videoCoach', path: PATH_GUEST.videoCoach, icon: ICONS.videoCoach }
       // { title: 'chat', path: PATH_DASHBOARD.chat.root, icon: ICONS.chat },
      
       // { title: 'kanban', path: PATH_DASHBOARD.kanban, icon: ICONS.kanban },

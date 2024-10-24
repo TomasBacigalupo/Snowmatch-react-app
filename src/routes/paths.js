@@ -35,6 +35,7 @@ export const PATH_GUEST = {
   children: path(ROOTS_FIND_A_PRO, `/product/148`),
   freeRide: path(ROOTS_FIND_A_PRO, `/product/149`),
   grupales: path(ROOTS_FIND_A_PRO, `/product/154`),
+  palos: path(ROOTS_FIND_A_PRO, `/product/155`),
   viewTeacher: (id) => path(ROOTS_FIND_A_PRO, `/teacher/${id}`),
   viewProduct: (id) => path(ROOTS_FIND_A_PRO, `/product/${id}`),
   viewTeacherProducts: (id, productId) => path(ROOTS_FIND_A_PRO, `/teacher/${id}/products/${productId}`),
@@ -45,6 +46,7 @@ export const PATH_GUEST = {
   calculate: path(ROOTS_RENTAL, `/calculate`),
   checkout: (id) => path(ROOTS_FIND_A_PRO, `/teacher/${id}/hire`),
   protips: ROOTS_PRO_TIPS,
+  videoCoach: path(ROOTS_FIND_A_PRO, `/videoCoach`),
 };
 
 export const PATH_PAGE = {
@@ -71,6 +73,7 @@ export const PATH_DASHBOARD = {
     analytics: path(ROOTS_DASHBOARD, '/analytics'),
     banking: path(ROOTS_DASHBOARD, '/banking'),
     booking: path(ROOTS_DASHBOARD, '/booking'),
+    videoCoach: path(ROOTS_DASHBOARD, '/videoCoach'),
   },
   mail: {
     root: path(ROOTS_DASHBOARD, '/mail'),

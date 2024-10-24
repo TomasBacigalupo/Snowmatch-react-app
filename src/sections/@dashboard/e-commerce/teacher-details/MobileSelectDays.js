@@ -122,10 +122,10 @@ const MobileSelectDays = ({ product, teacher, isOpen, closeFather, isRange }) =>
 
     const handleClick = (day) => {
         const phoneNumber = '5492944263223';
-    const message = encodeURIComponent('Quiero participar de la clinica el ' + day);
-    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${message}`;
-    
-    window.open(whatsappUrl, '_blank');
+        const message = encodeURIComponent('Quiero participar de la clinica el ' + day);
+        const whatsappUrl = `https://wa.me/${phoneNumber}?text=${message}`;
+
+        window.open(whatsappUrl, '_blank');
     };
 
     useEffect(() => {
@@ -210,20 +210,20 @@ const MobileSelectDays = ({ product, teacher, isOpen, closeFather, isRange }) =>
                                     borderRadius={2}
                                     border={2}
                                     borderColor={borderColor}
-                                    onClick={()=>handleClick('12 de Septiembre de 9:30 a 12:30')}
+                                    onClick={() => handleClick('12 de Septiembre de 9:30 a 12:30')}
                                 ><Typography variant="h4">
-                                        12 de Septiembre de 9:30 a 12:30
+                                        12 de Septiembre
                                     </Typography>
                                     <Typography variant="body">
-                                        {translate('checkout.selectDaysDescription')}
+                                        De 9:30hs a 12:30hs
                                     </Typography>
                                 </Box>
-                                <Box onClick={()=>handleClick('13 de Septiembre de 9:30 a 12:30')} margin={2} padding={3} borderRadius={2} border={3} borderColor='black'>
+                                <Box onClick={() => handleClick('13 de Septiembre de 9:30 a 12:30')} margin={2} padding={3} borderRadius={2} border={3} borderColor='black'>
                                     <Typography variant="h4">
-                                        13 de Septiembre de 9:30 a 12:30
+                                        13 de Septiembre 
                                     </Typography>
                                     <Typography variant="body">
-                                        {translate('checkout.selectDaysDescription')}
+                                        De 9:30hs a 12:30hs
                                     </Typography>
                                 </Box>
                             </Grid>

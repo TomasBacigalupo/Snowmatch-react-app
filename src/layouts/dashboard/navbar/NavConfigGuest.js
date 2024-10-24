@@ -5,6 +5,8 @@ import Label from '../../../components/Label';
 import SvgIconStyle from '../../../components/SvgIconStyle';
 import SchoolIcon from '@mui/icons-material/School';
 import CastForEducationIcon from '@mui/icons-material/CastForEducation';
+import VideoCallIcon from '@mui/icons-material/VideoCall';
+
 // ----------------------------------------------------------------------
 
 const getIcon = (name) => <SvgIconStyle src={`/icons/${name}.svg`} sx={{ width: 1, height: 1 }} />;
@@ -26,6 +28,7 @@ const ICONS = {
   match: getIcon('ic_match'),
   rental: getIcon('ic_rental'),
   protips: <CastForEducationIcon/>,
+  videoCoach: <VideoCallIcon/>,
 };
 
 const navConfigGuest = [
@@ -45,7 +48,8 @@ const navConfigGuest = [
         icon: ICONS.match,
         children: [
           { title: 'school_teachers', path: PATH_GUEST.school },
-          { title: 'Independent', path: PATH_GUEST.independent },
+          { title: 'videoCoach', path: PATH_GUEST.videoCoach, icon: ICONS.videoCoach }
+      
           // { title: 'Schools', path: PATH_GUEST.schools },
         ],
       },

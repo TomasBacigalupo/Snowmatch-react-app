@@ -9,17 +9,18 @@ import { Box } from '@mui/material';
 Logo.propTypes = {
   disabledLink: PropTypes.bool,
   sx: PropTypes.object,
+  disabled: PropTypes.bool,
 };
 
-export default function Logo({ disabledLink = false, sx }) {
+export default function Logo({ disabledLink = false, sx, disabled = false }) {
   const theme = useTheme();
-  const PRIMARY_LIGHT = theme.palette.primary.light;
-  const PRIMARY_MAIN = theme.palette.primary.main;
-  const PRIMARY_DARK = theme.palette.primary.dark;
+  const PRIMARY_LIGHT = disabled ? 'grey': theme.palette.primary.light;
+  const PRIMARY_MAIN = disabled ? 'grey': theme.palette.primary.main;
+  const PRIMARY_DARK = disabled ? 'grey': theme.palette.primary.dark;
 
   const logo = (
     <Box sx={{ width: 40, height: 40, ...sx }}>
-      <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 512 512"preserveAspectRatio="xMidYMid meet">
+      <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 512 512" preserveAspectRatio="xMidYMid meet">
         <defs>
           <linearGradient id="BG1" x1="100%" x2="50%" y1="9.946%" y2="50%">
             <stop offset="0%" stopColor={PRIMARY_DARK} />

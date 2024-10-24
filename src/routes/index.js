@@ -18,6 +18,9 @@ import SchoolList from 'src/pages/dashboard/SchoolsList';
 import RegisterStudent from 'src/pages/auth/RegisterStudent';
 import RoleBasedGuard from 'src/guards/RoleBasedGuard';
 import ReviewTeacher from 'src/pages/dashboard/ReviewTeacher';
+import VideoUpload from 'src/pages/dashboard/VideoUpload';
+import UploadedVideos from 'src/pages/dashboard/UploadedVideos';
+import UnratedVideos from 'src/pages/dashboard/UnratedVideos';
 
 // ----------------------------------------------------------------------
 
@@ -132,6 +135,15 @@ export default function Router() {
         },
         { path: 'lessons', element: <UserLessons /> },
         { path: 'lessons/:eventId', element: <LessonDetails /> },
+        {
+          path: 'videoCoach',
+          children: [
+            { element: <Navigate to="/match/videoCoach/upload" replace />, index: true },
+            { path: 'upload', element: <VideoUpload /> },
+            { path: 'uploaded', element: <UploadedVideos /> },
+            { path: 'unrated', element: <UnratedVideos /> },
+          ],
+        },
       ]
     },
 
@@ -266,6 +278,15 @@ export default function Router() {
             { path: 'bookings', element: <AdminReviewBookings /> },
             { path: ':id/confirm', element: <AdminConfirm /> },
             { path: ':id/events', element: <AdminUserEvents /> },
+          ],
+        },
+        {
+          path: 'videoCoach',
+          children: [
+            { element: <Navigate to="/dashboard/videoCoach/upload" replace />, index: true },
+            { path: 'upload', element: <VideoUpload /> },
+            { path: 'uploaded', element: <UploadedVideos /> },
+            { path: 'unrated', element: <UnratedVideos /> },
           ],
         },
       ],

@@ -108,7 +108,8 @@
     "PRO Schools": "PRO Schools",
     "reviews": "My Reviews",
     "lessons": "My Lessons",
-    "all": "All"
+    "all": "All",
+    "videoCoach": "VideoCoach"
   },
   "calendar": {
     "name": "Calendar",
@@ -172,7 +173,8 @@
     "lessons": "Lessons",
     "reviews": "Reviews",
     "product": "Products",
-    "lesson_details": "Lesson details"
+    "lesson_details": "Lesson details",
+    "videoCoach": "Video Coach"
   },
   "profile": {
     "tabs": {

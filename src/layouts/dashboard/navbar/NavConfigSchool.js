@@ -1,10 +1,11 @@
 // routes
-import { PATH_DASHBOARD } from '../../../routes/paths';
+import { PATH_DASHBOARD, PATH_GUEST } from '../../../routes/paths';
 // components
 import Label from '../../../components/Label';
 import SvgIconStyle from '../../../components/SvgIconStyle';
 import SchoolIcon from '@mui/icons-material/School';
 import DiscountIcon from '@mui/icons-material/Discount';
+import VideoCallIcon from '@mui/icons-material/VideoCall';
 
 // ----------------------------------------------------------------------
 
@@ -34,7 +35,8 @@ const navConfigSchool = [
         subheader: 'general',
         items: [
             { title: 'overview', path: PATH_DASHBOARD.general.app, icon: ICONS.dashboard },
-            // { title: 'e-commerce', path: PATH_DASHBOARD.general.ecommerce, icon: ICONS.ecommerce },
+            { title: 'videoCoach', path: PATH_DASHBOARD.videoCoach, icon: ICONS.videoCoach }
+      // { title: 'e-commerce', path: PATH_DASHBOARD.general.ecommerce, icon: ICONS.ecommerce },
             // { title: 'analytics', path: PATH_DASHBOARD.general.analytics, icon: ICONS.analytics },
             // { title: 'banking', path: PATH_DASHBOARD.general.banking, icon: ICONS.banking },
             // { title: 'booking', path: PATH_DASHBOARD.general.booking, icon: ICONS.booking },

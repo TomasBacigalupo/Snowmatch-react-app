@@ -136,7 +136,8 @@
         "rent": "Alquilar",
         "SnowMatch": "SnowMatch",
         "all": "Todos",
-        "clinicas": "Clinicas"
+        "clinicas": "Clinicas",
+        "videoCoach": "VideoCoach"
     },
     "calendar": {
         "name": "Calendario",
@@ -209,7 +210,8 @@
         "lesson_details": "Detalles de la clase",
         "private_half_day": "Privada medio día",
         "private_full_day": "Privada día completo",
-        "group": "Grupales"
+        "group": "Grupales",
+        "videoCoach": "Video Coach"
     },
     "reviewForm": {
         "title": "Calificar",

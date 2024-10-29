@@ -27,6 +27,7 @@ const initialState = {
     assignedStudents: [],
     preferenceId:'',
     createBookingError: false,
+    videos: [],
 };
 
 const slice = createSlice({
@@ -242,6 +243,10 @@ const slice = createSlice({
         getVideosSuccess(state, action) {
             state.isLoading = false;
             state.videos = action.payload;
+        },
+
+        createVideoSuccess(state, action) {
+            state.isLoading = false;
         }
 
     },
@@ -269,8 +274,6 @@ export function getVideos() {
 }
 
 
-
-
 // ----------------------------------------------------------------------
 
 export function getLessonById(id) {
@@ -287,15 +290,43 @@ export function getLessonById(id) {
 
 // ----------------------------------------------------------------------
 
-export function createVideo() {
+export function changeProfilePicture(picture, callBack) {
+    return async () => {
+      try {
+        const signedUrl = await axios.get(`/api/images/preSignedUrlImage`)
+        // Upload at URL
+        await fetch(signedUrl.data, {
+          method: 'PUT',
+          headers: {
+            "Content-Type": picture.type,
+          },
+          body: picture
+        });
+  
+      } catch (error) {
+        console.error(error)
+        callBack(false)
+      }
+      callBack(true)
+    }
+  }
+
+export function createVideo(video) {
     return async () => {
         try {
             
-            const response = await axios.post('/api/VideoReviews');
+            const response = await axios.post('/api/videos/VideoReviews',{});
 
-            const presignedUrl = response.data.presignedUrl;
+            const presignedUrl = response.data.videoUrl;
+            await fetch(presignedUrl, {
+                method: 'PUT',
+                headers: {
+                  "Content-Type": video.type,
+                },
+                body: video
+              });
 
-            dispatch(slice.actions.createVideoSuccess(newEvent));
+            dispatch(slice.actions.createVideoSuccess());
             return response;
         } catch (error) {
             return error;

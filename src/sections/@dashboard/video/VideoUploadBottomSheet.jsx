@@ -1,9 +1,11 @@
 import { Button, Divider, IconButton, Input, List, ListItem, ListItemText, Step, StepLabel, Stepper, SwipeableDrawer, TextField, Typography } from "@mui/material";
 import { Box, useMediaQuery } from "@mui/system";
 import { GridCloseIcon } from "@mui/x-data-grid";
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { styled } from '@mui/material/styles';
 import { useTheme } from '@mui/material/styles';
+import { useDispatch, useSelector } from "src/redux/store";
+import { createVideo } from "src/redux/slices/video";
 
 
 const EmptyStateBox = styled(Box)(({ theme }) => ({
@@ -30,16 +32,15 @@ export default function VideoUploadBottomSheet({ open, onClose, onOpen, title })
     const videoRef = useRef(null);
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
+    const dispatch = useDispatch();
+    // const { isLoading } = useSelector((state) => state.video)
+
 
     const handleUpload = () => {
-        if (selectedFile && (videoTitle.trim() || title)) {
+        if (selectedFile && ((videoTitle && videoTitle.trim()) || title)) {
             console.log('Uploading file:', selectedFile, 'with title:', videoTitle);
+            dispatch(createVideo(selectedFile));
             setActiveStep(2);
-            setTimeout(() => {
-                alert('Video uploaded successfully!');
-                resetUploadState();
-                onClose();
-            }, 1000);
         } else {
             alert('Please select a file and enter a title');
         }
@@ -145,7 +146,7 @@ export default function VideoUploadBottomSheet({ open, onClose, onOpen, title })
                                 color="primary"
                                 onClick={handleUpload}
                                 fullWidth={isMobile}
-                                disabled={!(videoTitle.trim() || title)}
+                                disabled={!((videoTitle && videoTitle.trim()) || title)}
                             >
                                 Upload
                             </Button>

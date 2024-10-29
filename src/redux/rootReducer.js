@@ -17,6 +17,8 @@ import businessReducer from './slices/business';
 import rateReducer from './slices/rates';
 import configReducer from './slices/config';
 import bookingReducer from './slices/bookings';
+import videoReducer from './slices/video';
+import video from './slices/video';
 
 
 // ----------------------------------------------------------------------
@@ -51,6 +53,7 @@ const rootReducer = combineReducers({
   rates: rateReducer,
   config: configReducer,
   bookings: bookingReducer,
+  video: videoReducer,
 });
 
 export { rootPersistConfig, rootReducer };

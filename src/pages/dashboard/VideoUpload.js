@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Typography, Button, Box, useMediaQuery, Stepper, Step, StepLabel, SwipeableDrawer, Container, Grid, Card, CardContent, CardMedia, List, ListItem, ListItemText, Divider, IconButton, TextField, SvgIcon } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { useTheme } from '@mui/material/styles';
@@ -12,6 +12,8 @@ import CloseIcon from '@mui/icons-material/Close';
 import StepContent from '@mui/material/StepContent';
 import Paper from '@mui/material/Paper';
 import VideoUploadBottomSheet from 'src/sections/@dashboard/video/VideoUploadBottomSheet';
+import { useDispatch, useSelector } from 'src/redux/store';
+import { getVideos } from 'src/redux/slices/video';
 
 const Input = styled('input')({
     display: 'none',
@@ -79,6 +81,22 @@ export default function VideoUpload() {
     const [selectedVideo, setSelectedVideo] = useState(null);
     const [isVideoDetailOpen, setIsVideoDetailOpen] = useState(false);
     const [selectedLevelTitle, setSelectedLevelTitle] = useState('');
+
+    const dispatch = useDispatch();
+    const { videos } = useSelector((state) => state.video);
+
+    useEffect(() => {
+        dispatch(getVideos());
+    }, [dispatch]);
+
+    useEffect(() => {
+        if (videos) {
+            setUploadedVideos(videos);
+            console.log('Videos:', videos);
+        }
+    }, [videos]);
+
+
 
     const handleFileSelect = (event) => {
         const file = event.target.files[0];
@@ -261,6 +279,8 @@ export default function VideoUpload() {
         { level: 4, title: 'Expert', description: 'Complete the expert course', completed: false },
         { level: 5, title: 'Master', description: 'Complete the master course', completed: false },
     ];
+
+    
     return (
         <Page title="My Progress">
             <Container>

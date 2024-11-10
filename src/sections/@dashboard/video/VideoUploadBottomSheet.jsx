@@ -1,12 +1,13 @@
-import { Button, Divider, IconButton, Input, List, ListItem, ListItemText, Step, StepLabel, Stepper, SwipeableDrawer, TextField, Typography } from "@mui/material";
+import { Button, Input, Step, StepLabel, Stepper, SwipeableDrawer, TextField, Typography } from "@mui/material";
 import { Box, useMediaQuery } from "@mui/system";
-import { GridCloseIcon } from "@mui/x-data-grid";
 import React, { useState, useRef, useEffect } from 'react';
 import { styled } from '@mui/material/styles';
 import { useTheme } from '@mui/material/styles';
 import { useDispatch, useSelector } from "src/redux/store";
-import { createVideo } from "src/redux/slices/video";
+import { clearUploadVideoState, createVideo } from "src/redux/slices/video";
 
+const MAX_VIDEO_SIZE_MB = 30; // for example, 30MB limit
+const MAX_VIDEO_DURATION_SEC = 30;
 
 const EmptyStateBox = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -19,12 +20,10 @@ const EmptyStateBox = styled(Box)(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
 }));
 
-export default function VideoUploadBottomSheet({ open, onClose, onOpen, title }) {
+export default function VideoUploadBottomSheet({ open, onClose, onOpen, course }) {
     const steps = ['Seleccionar', 'Revisar', 'Subir'];
     const theme = useTheme();
-    const [selectedVideo, setSelectedVideo] = useState(null);
-    const [isVideoDetailOpen, setIsVideoDetailOpen] = useState(false);
-    const [videoTitle, setVideoTitle] = useState(title);
+    const [videoCourse, setVideoCourse] = useState(course);
     const [videoPreviewUrl, setVideoPreviewUrl] = useState(null);
     const [selectedFile, setSelectedFile] = useState(null);
     const [videoDuration, setVideoDuration] = useState(0);
@@ -33,13 +32,13 @@ export default function VideoUploadBottomSheet({ open, onClose, onOpen, title })
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
     const dispatch = useDispatch();
-    // const { isLoading } = useSelector((state) => state.video)
+    const { isLoading } = useSelector((state) => state.video)
 
 
     const handleUpload = () => {
-        if (selectedFile && ((videoTitle && videoTitle.trim()) || title)) {
-            console.log('Uploading file:', selectedFile, 'with title:', videoTitle);
-            dispatch(createVideo(selectedFile));
+        if (selectedFile && ((videoCourse && videoCourse.trim()) || course)) {
+            console.log('Uploading file:', selectedFile, 'with title:', videoCourse);
+            dispatch(createVideo(selectedFile, videoCourse || course));
             setActiveStep(2);
         } else {
             alert('Please select a file and enter a title');
@@ -50,29 +49,45 @@ export default function VideoUploadBottomSheet({ open, onClose, onOpen, title })
         setSelectedFile(null);
         setVideoPreviewUrl(null);
         setVideoDuration(0);
-        setVideoTitle('');
+        setVideoCourse('');
         setActiveStep(0);
     };
 
     const handleFileSelect = (event) => {
         const file = event.target.files[0];
+        const fileSizeMB = file.size / (1024 * 1024);
+        if (fileSizeMB > MAX_VIDEO_SIZE_MB) {
+            alert('Video is too large. Max size is 30MB.');
+            return;
+        }
 
         const tempVideoUrl = URL.createObjectURL(file);
         const video = document.createElement('video');
         video.src = tempVideoUrl;
 
         video.onloadedmetadata = () => {
-            if (video.duration <= 30) {
-                setSelectedFile(file);
-                setVideoPreviewUrl(tempVideoUrl);
-                setVideoDuration(video.duration);
-                setActiveStep(1);
-            } else {
-                alert('Please select a video that is 30 seconds or shorter.');
-                URL.revokeObjectURL(tempVideoUrl);
+            if (video.duration > MAX_VIDEO_DURATION_SEC) {
+                alert(`Video duration exceeds ${MAX_VIDEO_DURATION_SEC} seconds.`);
+                return;
             }
+            setSelectedFile(file);
+            setVideoPreviewUrl(tempVideoUrl);
+            setVideoDuration(video.duration);
+            setActiveStep(1);
         };
     };
+
+    useEffect(() => {
+        if (activeStep === 2 && isLoading === false) {
+            setActiveStep(3);
+        }
+    }, [isLoading]);
+
+    useEffect(() => {
+        if (!open) {
+            dispatch(clearUploadVideoState());
+        }
+    }, [open]);
 
     const renderStep = () => {
         switch (activeStep) {
@@ -101,7 +116,6 @@ export default function VideoUploadBottomSheet({ open, onClose, onOpen, title })
                                     </Button>
                                 </label>
                             </Box>
-
                         </EmptyStateBox>
 
                     </Box>
@@ -112,19 +126,19 @@ export default function VideoUploadBottomSheet({ open, onClose, onOpen, title })
                         <Typography variant="body2" mt={1} textAlign="center">
                             Selected: {selectedFile.name} ({videoDuration.toFixed(1)} seconds)
                         </Typography>
-                        {!title && <Box my={2}>
+                        {!course && <Box my={2}>
                             <TextField
                                 fullWidth
                                 label="Video Title"
                                 variant="outlined"
-                                value={videoTitle}
-                                onChange={(e) => setVideoTitle(e.target.value)}
+                                value={videoCourse}
+                                onChange={(e) => setVideoCourse(e.target.value)}
                                 required
                             />
                         </Box>}
-                        {title && <Box my={2}>
+                        {course && <Box my={2}>
                             <Typography variant="body1" textAlign="center">
-                                {title}
+                                {course}
                             </Typography>
                         </Box>}
                         {videoPreviewUrl && (
@@ -146,7 +160,7 @@ export default function VideoUploadBottomSheet({ open, onClose, onOpen, title })
                                 color="primary"
                                 onClick={handleUpload}
                                 fullWidth={isMobile}
-                                disabled={!((videoTitle && videoTitle.trim()) || title)}
+                                disabled={!((videoCourse && videoCourse.trim()) || course)}
                             >
                                 Upload
                             </Button>

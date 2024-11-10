@@ -642,7 +642,7 @@
             "metaDescription": "Una opción más económica para esquiar en grupo.",
             "descriptionPreview": "Una opción más económica para esquiar en grupo.",
             "description": "¿Venís en grupo a la montaña? ¿Estás solo y querés sumarte a una clase? Las clases grupales en el Cerro Catedral son tu elección ideal, una opción más económica que las clases individuales, pero con los mismos estándares de calidad.\nVas a estar acompañado por un instructor certificado de SnowMatch, quien va a esquiar junto al grupo por pistas acordes al nivel de todos. Recibirás ejercicios para mejorar el descenso, emprolijar la técnica y terminar el día con un mejor nivel de esquí.",
-            "skiLevel":"Todos los niveles",
+            "skiLevel": "Todos los niveles",
             "totalStudents": "Entre 1 y 5 personas",
             "meetingPoint": "Nestor Esquí",
             "faqs": {
@@ -676,8 +676,8 @@
             "metaTitle": "Clinica de Carrera en Catedral",
             "metaDescription": "Parcticá tu técnica de carrera con Coco y Nicol.",
             "descriptionPreview": "Parcticá tu técnica de carrera con Coco y Nicol.",
-            "description": "Clinica de carrera guiada por Coco y Nicol. <br/>3hs de practica en trazado de gigante con correcciones y consejos de profesionales. <br/> Disponibilad sujeta a cupos.<br/>", 
-            "skiLevel":"Expertos",
+            "description": "Clinica de carrera guiada por Coco y Nicol. <br/>3hs de practica en trazado de gigante con correcciones y consejos de profesionales. <br/> Disponibilad sujeta a cupos.<br/>",
+            "skiLevel": "Expertos",
             "totalStudents": "Entre 1 y 15 personas",
             "meetingPoint": "Nestor Esquí",
             "faqs": {
@@ -1120,5 +1120,46 @@
     },
     "MORNING": "Mañana",
     "AFTERNOON": "Tarde",
-    "ALL_DAY": "Día completo"
+    "ALL_DAY": "Día completo",
+    "course": {
+        "BUMPS": {
+            "title": "Bumps and Moguls Mastery",
+            "description": "Focuses on navigating bumps with stability and flow."
+        },
+        "SHORT_TURNS_TECHNIQUE": {
+            "title": "Short Turns Technique",
+            "description": "Sharp, controlled turns that emphasize agility."
+        },
+        "CARVING_FUNDAMENTALS": {
+            "title": "PistCarving Fundamentalsa",
+            "description": "Basics of carving with edge control and speed."
+        },
+        "PISTE_PRECISION": {
+            "title": "Piste Precision",
+            "description": "Balance and technique for skiing on groomed runs"
+        },
+        "OFF_PISTE_BASICS": {
+            "title": "Off-Piste Basics",
+            "description": "Intro to skiing on unprepared terrain, emphasizing control."
+        },
+        "SLALOM": {
+            "title": "Slalom Skill-building",
+            "description": "For those interested in jumps and basic tricks."
+        },
+        "FREESTYLE_FUNDAMENTALS": {
+            "title": "Freestyle Fundamentals",
+            "description": "For those interested in jumps and basic tricks."
+        }
+    },
+    "videoCoachScreen": {
+        "profile": "Progreso",
+        "uploaded_videos": "Videos subidos",
+        "score": "Puntaje:",
+        "review": "Correcciones:",
+        "videosPending": "Videos pendientes de revisión",
+        "waiting_review": "Esperando revisión",
+        "uploadVideo": "Subir video",
+        "completeLevel": "Completar nivel",
+        "tryBetterScore": "Mejorar puntaje"
+    }
 }

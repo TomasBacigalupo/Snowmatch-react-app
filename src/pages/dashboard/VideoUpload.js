@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Typography, Button, Box, useMediaQuery, Stepper, Step, StepLabel, SwipeableDrawer, Container, Grid, Card, CardContent, CardMedia, List, ListItem, ListItemText, Divider, IconButton, TextField, SvgIcon } from '@mui/material';
+import { Typography, Button, Box, useMediaQuery, Stepper, Step, StepLabel, SwipeableDrawer, Container, Grid, Card, CardContent, CardMedia, List, ListItem, ListItemText, Divider, IconButton, TextField, SvgIcon, ToggleButtonGroup, ToggleButton } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { useTheme } from '@mui/material/styles';
 import Page from '../../components/Page';
@@ -14,6 +14,8 @@ import Paper from '@mui/material/Paper';
 import VideoUploadBottomSheet from 'src/sections/@dashboard/video/VideoUploadBottomSheet';
 import { useDispatch, useSelector } from 'src/redux/store';
 import { getVideos } from 'src/redux/slices/video';
+import { AnalyticsCurrentSubject, AnalyticsUserProgress } from 'src/sections/@dashboard/general/analytics';
+import Markdown from 'src/components/Markdown';
 
 const Input = styled('input')({
     display: 'none',
@@ -255,174 +257,444 @@ export default function VideoUpload() {
         </SvgIcon>
     );
 
-    const Level = ({ level, title, description, completed, onClick }) => (
-        <Grid item xs={6} sm={6} md={4}>
-            <Box display="flex" flexDirection="column" alignItems="center" mb={2} onClick={()=>{
-                setSelectedLevelTitle(title)
-                onClick()
-                }}>
-                <TrophyIcon component={Trophy} level={level} completed={completed} />
-                <Typography variant="h6" sx={{ mt: 2 }}>
-                    {title}
-                </Typography>
-                <Typography variant="body2" sx={{ textAlign: 'center' }}>
-                    {description}
-                </Typography>
-            </Box>
+    const Level = ({ level, title, description, completed, onClick, score, minScore, maxScore }) => (
+        <Grid item xs={6} sm={6} md={4} >
+            <Card height='250px'>
+                <Box
+                    padding={2}
+                    height='250px'
+                    display="flex"
+                    flexDirection="column"
+                    alignItems="center"
+                    justifyContent='space-between'
+                    onClick={() => {
+                        setSelectedLevelTitle(title)
+                        onClick()
+                    }}>
+                    <TrophyIcon component={Trophy} level={level} completed={!completed} />
+                    {completed && <Typography variant="body2" color="textSecondary">{score}</Typography>}
+                    {!completed && <Typography variant="body2" color="textSecondary">IQ: {minScore} - {maxScore} </Typography>}
+                    <Typography variant="h6" sx={{ mt: 2, mb: 1 }}>
+                        {title}
+                    </Typography>
+                    <Typography variant="body2">
+                        {description}
+                    </Typography>
+
+                    {!completed && <Typography variant="body2"
+                        sx={{ textDecoration: 'underline', cursor: 'pointer', color: 'black' }}
+                    >{translate('videoCoachScreen.completeLevel')}</Typography>}
+                    {completed && <Typography variant="body2"
+                        sx={{ textDecoration: 'underline', cursor: 'pointer', color: 'black' }}
+                    >{translate('videoCoachScreen.tryBetterScore')}</Typography>}
+                </Box>
+            </Card>
         </Grid>
     );
 
     const levels = [
-        { level: 1, title: 'Beginner', description: 'Complete the beginner course', completed: true },
-        { level: 2, title: 'Intermediate', description: 'Complete the intermediate course', completed: true },
-        { level: 3, title: 'Advanced', description: 'Complete the advanced course', completed: false },
-        { level: 4, title: 'Expert', description: 'Complete the expert course', completed: false },
-        { level: 5, title: 'Master', description: 'Complete the master course', completed: false },
+        { level: 1, course: 'BUMPS', completed: true, score: 8 },
+        { level: 2, course: 'CARVING_FUNDAMENTALS', score: 10, completed: true },
+        { level: 3, course: 'PISTE_PRECISION', minScore: 5, maxScore: 10, completed: false },
+        { level: 4, course: 'OFF_PISTE_BASICS', minScore: 5, maxScore: 10, completed: false },
+        { level: 5, course: 'SLALOM', minScore: 5, maxScore: 10, completed: false },
+        { level: 6, course: 'FREESTYLE_FUNDAMENTALS', minScore: 5, maxScore: 10, completed: false },
     ];
 
-    
-    return (
-        <Page title="My Progress">
-            <Container>
-                <HeaderBreadcrumbs
-                    heading={"My Progress"}
-                />
-                {/* Updated section for displaying uploaded videos or message */}
-                <Box >
-                    <Grid container spacing={2}>
+
+    const renderHowTo = () => {
+        return (
+            <Box sx={{ maxWidth: 400 }}>
+                <Stepper activeStep={activeHowToStep} orientation="vertical">
+                    {stepsHowTo.map((step, index) => (
+                        <Step key={step.label}>
+                            <StepLabel
+                                optional={
+                                    index === steps.length - 1 ? (
+                                        <Typography variant="caption">Último paso</Typography>
+                                    ) : null
+                                }
+                            >
+                                {step.label}
+                            </StepLabel>
+                            <StepContent>
+                                <Typography>{step.description}</Typography>
+                                <Box sx={{ mb: 2 }}>
+                                    {index !== steps.length - 1 ? <Button
+                                        variant="contained"
+                                        onClick={handleNext}
+                                        sx={{ mt: 1, mr: 1 }}
+                                    >
+                                        {index === steps.length - 1 ? 'Terminar' : 'Continuar'}
+                                    </Button> : <Button
+                                        variant="contained"
+                                        onClick={() => setIsOpen(true)}
+                                        sx={{ mt: 1, mr: 1 }}
+                                    >
+                                        Subir Video
+                                    </Button>}
+
+                                    <Button
+                                        disabled={index === 0}
+                                        onClick={handleBack}
+                                        sx={{ mt: 1, mr: 1 }}
+                                    >
+                                        Atrás
+                                    </Button>
+                                </Box>
+                            </StepContent>
+                        </Step>
+                    ))}
+                </Stepper>
+                {activeStep === steps.length && (
+                    <Paper square elevation={0} sx={{ p: 3 }}>
+                        <Typography>All steps completed - you&apos;re finished</Typography>
+                        <Button onClick={() => { }} sx={{ mt: 1, mr: 1 }}>
+                            Reset
+                        </Button>
+                    </Paper>
+                )}
+            </Box>
+        )
+    }
+    const [tab, setTab] = useState('profile');
+    const handleChange = (event, newCategory) => {
+        setTab(newCategory);
+    }
+    if (tab === 'profile') {
+        return (
+            <Page title="My Progress">
+                <Container>
+                    <ToggleButtonGroup
+                        color="primary"
+                        value={tab}
+                        exclusive
+                        onChange={handleChange}
+                        aria-label="Platform"
+                        sx={{
+                            width: '100%',
+                            borderRadius: 10,
+                            justifyContent: 'space-between',
+                        }}
+                    >
+                        <ToggleButton
+                            value="profile"
+                            sx={{
+                                width: '100%',
+                                borderRadius: 15,
+                                justifyContent: 'center',
+                                fontSize: '0.75rem',
+                                '&.MuiButtonBase-root': {
+                                    borderRadius: '100px !important',
+                                },
+                            }}
+                        >
+                            {translate('videoCoachScreen.profile')}
+                        </ToggleButton>
+                        <ToggleButton
+                            value="uploaded"
+                            sx={{
+                                width: '100%',
+                                borderRadius: 15,
+                                justifyContent: 'center',
+                                fontSize: '0.75rem',
+                                '&.MuiButtonBase-root': {
+                                    borderRadius: '100px !important',
+                                },
+                            }}
+                        >
+                            {translate('videoCoachScreen.uploaded_videos')}
+                        </ToggleButton>
+                    </ToggleButtonGroup>
+                    <AnalyticsUserProgress />
+                    {/* Updated section for displaying uploaded videos or message */}
+
+                    <Grid container spacing={1} justifyContent='space-between'>
                         {levels.map((level) => (
                             <Level
-                                key={level.level}
+                                key={level.course}
                                 level={level.level}
-                                title={level.title}
-                                description={level.description}
+                                title={translate(`course.${level.course}.title`)}
+                                description={translate(`course.${level.course}.description`)}
                                 completed={level.completed}
                                 onClick={() => {
                                     setOpen(true);
                                 }}
+                                score={level.score}
+                                minScore={level.minScore}
+                                maxScore={level.maxScore}
                             />
                         ))}
                     </Grid>
-                    {/* {uploadedVideos.length > 0 ? (
+
+                </Container>
+
+                <SwipeableDrawer
+                    anchor="bottom"
+                    open={isOpen}
+                    onClose={() => setIsOpen(false)}
+                    onOpen={() => setIsOpen(true)}
+                    disableSwipeToOpen={false}
+                    ModalProps={{
+                        keepMounted: true,
+                    }}
+                    PaperProps={{
+                        sx: {
+                            height: '100%',
+                            maxHeight: '100%',
+                        },
+                    }}
+                >
+                    <Box
+                        sx={{
+                            padding: theme.spacing(2),
+                            height: '100%',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            overflow: 'auto',
+                        }}
+                    >
+                        <Typography variant="h4" gutterBottom align="center">
+                            Subí tu video
+                        </Typography>
+                        <Box my={2}>
+                            <Stepper activeStep={activeStep} alternativeLabel={!isMobile}>
+                                {steps.map((label) => (
+                                    <Step key={label}>
+                                        <StepLabel>{label}</StepLabel>
+                                    </Step>
+                                ))}
+                            </Stepper>
+                        </Box>
+                        {renderStep()}
+                    </Box>
+                </SwipeableDrawer>
+
+                {/* Updated SwipeableDrawer for video details */}
+                <SwipeableDrawer
+                    anchor="bottom"
+                    open={isVideoDetailOpen}
+                    onClose={() => setIsVideoDetailOpen(false)}
+                    onOpen={() => setIsVideoDetailOpen(true)}
+                    disableSwipeToOpen={false}
+                    ModalProps={{
+                        keepMounted: true,
+                    }}
+                    PaperProps={{
+                        sx: {
+                            height: '100%',
+                            maxHeight: '100%',
+                        },
+                    }}
+                >
+                    <Box
+                        sx={{
+                            padding: theme.spacing(2),
+                            height: '100%',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            overflow: 'auto',
+                        }}
+                    >
+                        {selectedVideo && (
+                            <>
+                                <Box display="flex" justifyContent="flex-end" mb={2}>
+                                    <IconButton
+                                        edge="end"
+                                        color="inherit"
+                                        onClick={() => setIsVideoDetailOpen(false)}
+                                        aria-label="close"
+                                    >
+                                        <CloseIcon />
+                                    </IconButton>
+                                </Box>
+                                <Typography variant="h4" gutterBottom align="center">
+                                    {selectedVideo.title}
+                                </Typography>
+                                <Box my={2}>
+                                    <video
+                                        src={'https://s3.us-east-1.amazonaws.com/dev.videos.snowmatch.pro/' + selectedVideo.videoUrl}
+                                        controls
+                                        style={{ width: '100%', maxHeight: '300px' }}
+                                    />
+                                </Box>
+                                <Typography variant="h6" gutterBottom>
+                                    Score: {selectedVideo.score}
+                                </Typography>
+                                <Typography variant="h6" gutterBottom>
+                                    Comments:
+                                </Typography>
+                                <List>
+                                    {selectedVideo.comments?.length > 0 ? (
+                                        selectedVideo.comments.map((comment, index) => (
+                                            <React.Fragment key={index}>
+                                                <ListItem>
+                                                    <ListItemText primary={comment} />
+                                                </ListItem>
+                                                {index < selectedVideo.comments.length - 1 && <Divider />}
+                                            </React.Fragment>
+                                        ))
+                                    ) : (
+                                        <ListItem>
+                                            <ListItemText primary="No comments yet." />
+                                        </ListItem>
+                                    )}
+                                </List>
+                            </>
+                        )}
+                    </Box>
+                </SwipeableDrawer>
+                <VideoUploadBottomSheet
+                    title={selectedLevelTitle}
+                    onOpen={() => setOpen(true)}
+                    open={open}
+                    onClose={() => setOpen(false)} />
+            </Page>
+        );
+    }
+
+    return (
+        <Page title="My Progress">
+            <Container>
+                <ToggleButtonGroup
+                    color="primary"
+                    value={tab}
+                    exclusive
+                    onChange={handleChange}
+                    aria-label="Platform"
+                    sx={{
+                        width: '100%',
+                        borderRadius: 10,
+                        justifyContent: 'space-between',
+                    }}
+                >
+                    <ToggleButton
+                        value="profile"
+                        sx={{
+                            width: '100%',
+                            borderRadius: 15,
+                            justifyContent: 'center',
+                            fontSize: '0.75rem',
+                            '&.MuiButtonBase-root': {
+                                borderRadius: '100px !important',
+                            },
+                        }}
+                    >
+                        {translate('videoCoachScreen.profile')}
+                    </ToggleButton>
+                    <ToggleButton
+                        value="uploaded"
+                        sx={{
+                            width: '100%',
+                            borderRadius: 15,
+                            justifyContent: 'center',
+                            fontSize: '0.75rem',
+                            '&.MuiButtonBase-root': {
+                                borderRadius: '100px !important',
+                            },
+                        }}
+                    >
+                        {translate('videoCoachScreen.uploaded_videos')}
+                    </ToggleButton>
+                </ToggleButtonGroup>
+
+                {/* Updated section for displaying uploaded videos or message */}
+                <Box >
+                    {uploadedVideos?.filter(video => !video?.reviewed)?.length > 0 && (
+                        <Box my={2}>
+                            <Typography variant="h6" mt={4}>
+                                {translate(`videoCoachScreen.videosPending`)}
+                            </Typography>
+                        </Box>
+                    )}
+                    {uploadedVideos?.filter(video => !video?.reviewed)?.length > 0 && (
                         <Grid container spacing={3}>
-                            {uploadedVideos.map((video) => (
+                            {uploadedVideos?.filter(video => !video?.reviewed).map((video) => (
                                 <Grid item xs={12} sm={6} md={4} key={video.id}>
                                     <StyledCard onClick={() => handleVideoClick(video)}>
                                         <CardMedia
-                                            component="img"
+                                            component="div"
                                             height="140"
-                                            image={video.thumbnail}
+                                            image={video.videoUrl}
                                             alt={video.title}
-                                        />
+                                        >
+                                            <video
+                                                src={'https://s3.us-east-1.amazonaws.com/dev.videos.snowmatch.pro/' + video.videoUrl}
+                                                style={{ width: '100%', maxHeight: 140, objectFit: 'cover' }}
+                                            />
+                                        </CardMedia>
                                         <CardContent>
                                             <Typography gutterBottom variant="subtitle1">
-                                                {video.title}
+                                                {translate(`course.${video.course}.title`)}
                                             </Typography>
-                                            <Typography variant="body2" color="text.secondary">
-                                                Estado: {video.status}
-                                            </Typography>
+                                            {video.reviewed && (<Typography variant="body2" color="text.secondary">
+                                                {translate(`videoCoachScreen.score`)} {video.score}
+                                            </Typography>)}
+                                            {!video.reviewed && (<Typography variant="body2" color="text.secondary">
+                                                {translate(`videoCoachScreen.waiting_review`)}
+                                            </Typography>)}
                                         </CardContent>
                                     </StyledCard>
                                 </Grid>
                             ))}
                         </Grid>
-                    ) : (
-                        <Box sx={{ maxWidth: 400 }}>
-                            <Stepper activeStep={activeHowToStep} orientation="vertical">
-                                {stepsHowTo.map((step, index) => (
-                                    <Step key={step.label}>
-                                        <StepLabel
-                                            optional={
-                                                index === steps.length - 1 ? (
-                                                    <Typography variant="caption">Último paso</Typography>
-                                                ) : null
-                                            }
-                                        >
-                                            {step.label}
-                                        </StepLabel>
-                                        <StepContent>
-                                            <Typography>{step.description}</Typography>
-                                            <Box sx={{ mb: 2 }}>
-                                                {index !== steps.length - 1 ? <Button
-                                                    variant="contained"
-                                                    onClick={handleNext}
-                                                    sx={{ mt: 1, mr: 1 }}
-                                                >
-                                                    {index === steps.length - 1 ? 'Terminar' : 'Continuar'}
-                                                </Button> : <Button
-                                                    variant="contained"
-                                                    onClick={() => setIsOpen(true)}
-                                                    sx={{ mt: 1, mr: 1 }}
-                                                >
-                                                    Subir Video
-                                                </Button>}
-
-                                                <Button
-                                                    disabled={index === 0}
-                                                    onClick={handleBack}
-                                                    sx={{ mt: 1, mr: 1 }}
-                                                >
-                                                    Atrás
-                                                </Button>
-                                            </Box>
-                                        </StepContent>
-                                    </Step>
-                                ))}
-                            </Stepper>
-                            {activeStep === steps.length && (
-                                <Paper square elevation={0} sx={{ p: 3 }}>
-                                    <Typography>All steps completed - you&apos;re finished</Typography>
-                                    <Button onClick={() => { }} sx={{ mt: 1, mr: 1 }}>
-                                        Reset
-                                    </Button>
-                                </Paper>
-                            )}
+                    )}
+                    {uploadedVideos?.length === 0 && (
+                        <Box textAlign="center" mt={4}>
+                            <Typography variant="h6">
+                                No videos uploaded yet.
+                            </Typography>
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                onClick={() => setOpen(true)}
+                                sx={{ mt: 2 }}
+                            >
+                                Upload a Video
+                            </Button>
                         </Box>
-                    )} */}
+                    )}
+
+                    {uploadedVideos?.filter(video => video?.reviewed)?.length > 0 && (
+                        <Box my={2}><Typography variant="h6" mt={4}>
+                            Videos Calificados
+                        </Typography>
+                        </Box>
+                    )}
+                    {uploadedVideos?.filter(video => video?.reviewed)?.length > 0 && (
+                        <Grid container spacing={3}>
+                            {uploadedVideos.map((video) => (
+                                <Grid item xs={12} sm={6} md={4} key={video.id}>
+                                    <StyledCard onClick={() => handleVideoClick(video)}>
+                                        <CardMedia
+                                            component="div"
+                                            height="140"
+                                            image={video.videoUrl}
+                                            alt={video.title}
+                                        >
+                                            <video
+                                                src={'https://s3.us-east-1.amazonaws.com/dev.videos.snowmatch.pro/' + video.videoUrl}
+                                                style={{ width: '100%', maxHeight: 140, objectFit: 'cover' }}
+                                            />
+                                        </CardMedia>
+                                        <CardContent>
+                                            <Typography gutterBottom variant="subtitle1">
+                                                {translate(`course.${video.course}.title`)}
+                                            </Typography>
+                                            {video.reviewed && (<Typography variant="body2" color="text.secondary">
+                                                {translate(`videoCoachScreen.score`)} {video.score}
+                                            </Typography>)}
+                                            {!video.reviewed && (<Typography variant="body2" color="text.secondary">
+                                                {translate(`videoCoachScreen.waiting_review`)}
+                                            </Typography>)}
+                                        </CardContent>
+                                    </StyledCard>
+                                </Grid>
+                            ))}
+                        </Grid>
+                    )}
                 </Box>
             </Container>
-
-            <SwipeableDrawer
-                anchor="bottom"
-                open={isOpen}
-                onClose={() => setIsOpen(false)}
-                onOpen={() => setIsOpen(true)}
-                disableSwipeToOpen={false}
-                ModalProps={{
-                    keepMounted: true,
-                }}
-                PaperProps={{
-                    sx: {
-                        height: '100%',
-                        maxHeight: '100%',
-                    },
-                }}
-            >
-                <Box
-                    sx={{
-                        padding: theme.spacing(2),
-                        height: '100%',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        overflow: 'auto',
-                    }}
-                >
-                    <Typography variant="h4" gutterBottom align="center">
-                        Subí tu video
-                    </Typography>
-                    <Box my={2}>
-                        <Stepper activeStep={activeStep} alternativeLabel={!isMobile}>
-                            {steps.map((label) => (
-                                <Step key={label}>
-                                    <StepLabel>{label}</StepLabel>
-                                </Step>
-                            ))}
-                        </Stepper>
-                    </Box>
-                    {renderStep()}
-                </Box>
-            </SwipeableDrawer>
-
             {/* Updated SwipeableDrawer for video details */}
             <SwipeableDrawer
                 anchor="bottom"
@@ -462,37 +734,24 @@ export default function VideoUpload() {
                                 </IconButton>
                             </Box>
                             <Typography variant="h4" gutterBottom align="center">
-                                {selectedVideo.title}
+                                {translate(`course.${selectedVideo.course}.title`)}
                             </Typography>
                             <Box my={2}>
                                 <video
-                                    src={selectedVideo.url}
+                                    src={'https://s3.us-east-1.amazonaws.com/dev.videos.snowmatch.pro/' + selectedVideo.videoUrl}
                                     controls
                                     style={{ width: '100%', maxHeight: '300px' }}
                                 />
                             </Box>
                             <Typography variant="h6" gutterBottom>
-                                Estado: {selectedVideo.status}
+                                {translate('videoCoachScreen.score')} {selectedVideo.score}
                             </Typography>
                             <Typography variant="h6" gutterBottom>
-                                Comments:
+                                {translate('videoCoachScreen.review')}
                             </Typography>
-                            <List>
-                                {selectedVideo.comments.length > 0 ? (
-                                    selectedVideo.comments.map((comment, index) => (
-                                        <React.Fragment key={index}>
-                                            <ListItem>
-                                                <ListItemText primary={comment} />
-                                            </ListItem>
-                                            {index < selectedVideo.comments.length - 1 && <Divider />}
-                                        </React.Fragment>
-                                    ))
-                                ) : (
-                                    <ListItem>
-                                        <ListItemText primary="No comments yet." />
-                                    </ListItem>
-                                )}
-                            </List>
+                            <Markdown>
+                                {selectedVideo.comment}
+                            </Markdown>
                         </>
                     )}
                 </Box>
@@ -504,4 +763,5 @@ export default function VideoUpload() {
                 onClose={() => setOpen(false)} />
         </Page>
     );
+
 }

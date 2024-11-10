@@ -1,16 +1,16 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { utcDateToLocalDate, utcToLocalDate } from 'src/utils/dateUtils';
+import { utcToLocalDate } from 'src/utils/dateUtils';
 // utils
 import axios from '../../utils/axios';
 //
 import { dispatch } from '../store';
-import { start } from 'nprogress';
 import dayjs from 'dayjs';
 
 // ----------------------------------------------------------------------
 
 const initialState = {
     isLoading: false,
+    isUploading: false,
     loadingPayment: false,
     error: null,
     bookings: [],
@@ -215,14 +215,17 @@ const slice = createSlice({
             const children = action.payload;
             state.children = children;
         },
+
         changeAsignedStudents(state, action) {
             state.assignedStudents = action.payload;
         },
+
         createBookingSuccess(state, action) {
             state.isLoading = false;
             state.loadingPayment = false;
             state.bookSuccess = true;
         },
+
         onCreateBookingError(state, action) {
             state.isLoading = false;
             state.loadingPayment = false;
@@ -247,8 +250,13 @@ const slice = createSlice({
 
         createVideoSuccess(state, action) {
             state.isLoading = false;
-        }
+            state.isUploading = false;
+        },
 
+        clearUploadVideoState(state) {
+            state.isLoading = false;
+            state.isUploading = false;
+        }
     },
 });
 
@@ -256,7 +264,7 @@ const slice = createSlice({
 export default slice.reducer;
 
 // Actions
-export const { openModal, closeModal, selectEvent, changeMessage, bookingPending, changeAsignedStudents, onCreateBookingError } = slice.actions;
+export const { openModal, closeModal, selectEvent, changeMessage, bookingPending, changeAsignedStudents, onCreateBookingError, clearUploadVideoState } = slice.actions;
 
 // ----------------------------------------------------------------------
 
@@ -311,14 +319,21 @@ export function changeProfilePicture(picture, callBack) {
     }
   }
 
-export function createVideo(video) {
+export function createVideo(video, course) {
     return async () => {
         try {
-            
-            const response = await axios.post('/api/videos/VideoReviews',{});
-
+            dispatch(slice.actions.startLoading());
+            const response = await axios.post('/api/videos/VideoReviews',{
+                course: course,
+            });
             const presignedUrl = response.data.videoUrl;
-            await fetch(presignedUrl, {
+
+            // change the presigned url from https to http
+            // because the presigned url is not working with https
+            // so we need to change it to http
+            const httpPresignedUrl = presignedUrl.replace('https', 'http');
+            
+            await fetch(httpPresignedUrl, {
                 method: 'PUT',
                 headers: {
                   "Content-Type": video.type,

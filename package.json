@@ -7,6 +7,7 @@
   "private": true,
   "scripts": {
     "start": "react-app-rewired start -f .env.dev",
+    "capacitor": "react-app-rewired build -f .env.dev && npx cap sync",
     "build": "react-app-rewired build -f --max-old-space-size=5000 .env.production",
     "deploy-pi": "react-app-rewired --max-old-space-size=50000 build -f .env.production",
     "eject": "react-scripts eject",

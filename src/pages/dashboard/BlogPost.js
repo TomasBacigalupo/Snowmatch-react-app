@@ -73,7 +73,6 @@ export default function BlogPost() {
             { name: post?.title },
           ]}
         />
-
         {post && (
           <Box>
             <BlogPostHero post={post} />

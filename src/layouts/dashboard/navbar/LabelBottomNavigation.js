@@ -9,17 +9,18 @@ import CastForEducationIcon from '@mui/icons-material/CastForEducation';
 import Logo from 'src/components/Logo';
 import VideoCallIcon from '@mui/icons-material/VideoCall';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-import { IconButton } from '@mui/material';
+import { IconButton, useTheme, useMediaQuery } from '@mui/material';
 import { PATH_GUEST } from 'src/routes/paths';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
 import VideoUploadBottomSheet from 'src/sections/@dashboard/video/VideoUploadBottomSheet';
-import { FlashAuto } from '@mui/icons-material';
 
 export default function LabelBottomNavigation() {
   const [value, setValue] = React.useState(0);
   const ref = React.useRef(null);
   const location = useLocation();
   const [open, setOpen] = React.useState(false);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   // Mapping between paths and BottomNavigation values
   const getPathValue = (path) => {
@@ -45,16 +46,19 @@ export default function LabelBottomNavigation() {
     }
   }, [location.pathname]);
 
-
   return (
-    <Box sx={{ pb: 7 }} ref={ref}>
+    <Box sx={{ pb: `calc(env(safe-area-inset-bottom) + ${isMobile ? '56px' : '16px'})`, height:'100px'}} ref={ref}>
       <CssBaseline />
-      <Paper sx={{ position: 'fixed', bottom: 0, left: 0, right: 0 }} elevation={3}>
+      <Paper sx={{ position: 'fixed', bottom: 0, paddingBottom: '30px' + "calc(env(safe-area-inset-bottom)", left: 0, right: 0, height: '100px' }} elevation={3}>
         <BottomNavigation
           showLabels
           value={value}
           onChange={(event, newValue) => {
             setValue(newValue);
+          }}
+          sx={{
+            paddingBottom: 'env(safe-area-inset-bottom)',
+            height: `0px + env(safe-area-inset-bottom)`,
           }}
         >
           <BottomNavigationAction

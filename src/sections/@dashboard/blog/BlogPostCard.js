@@ -443,7 +443,7 @@ BlogPostCard.propTypes = {
 export default function BlogPostCard({ post, index }) {
   const isDesktop = useResponsive('up', 'md');
 
-  const { cover, title, view, comment, share, author, createdAt } = post;
+  const { cover, title, view, comment, share, author, createdAt, id } = post;
 
   const latestPost = index === 0 || index === 1 || index === 2;
 
@@ -498,7 +498,7 @@ export default function BlogPostCard({ post, index }) {
         <Image alt="cover" src={post?.imageCover} ratio="4/3" />
       </Box>
 
-      <PostContent title={title} view={view} description={post?.description} comment={comment} share={share} createdAt={createdAt} />
+      <PostContent title={title} view={view} description={post?.description} comment={comment} share={share} createdAt={createdAt} id={id}/>
     </Card>
   );
 }
@@ -515,10 +515,9 @@ PostContent.propTypes = {
   description: PropTypes.string,
 };
 
-export function PostContent({ title, view, comment, share, createdAt, index, description }) {
+export function PostContent({ title, view, comment, share, createdAt, index, description, id }) {
   const isDesktop = useResponsive('up', 'md');
-
-  const linkTo = PATH_DASHBOARD.blog.view(paramCase(title));
+  const linkTo = PATH_DASHBOARD.blog.view(id);
 
   const latestPostLarge = index === 0;
   const latestPostSmall = index === 1 || index === 2;

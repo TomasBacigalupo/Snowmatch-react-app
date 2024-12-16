@@ -83,6 +83,7 @@ export default function VideoUpload() {
     const [selectedVideo, setSelectedVideo] = useState(null);
     const [isVideoDetailOpen, setIsVideoDetailOpen] = useState(false);
     const [selectedLevelTitle, setSelectedLevelTitle] = useState('');
+    const [selectedCourse, setSelectdCourse] = useState('');
 
     const dispatch = useDispatch();
     const { videos } = useSelector((state) => state.video);
@@ -95,6 +96,25 @@ export default function VideoUpload() {
         if (videos) {
             setUploadedVideos(videos);
             console.log('Videos:', videos);
+            let _levels = levels;
+            videos.forEach((video) => {
+                if (video.score > 0) {
+                    _levels = _levels.map((level) => {
+                        if (level.course === video.course) {
+                            return { ...level, completed: true, score: video.score };
+                        }
+                        return level;
+                    });
+                }else {
+                    _levels = _levels.map((level) => {
+                        if (level.course === video.course) {
+                            return { ...level, completed: false, status: 'PENDING', score: video.score };
+                        }
+                        return level;
+                    });
+                }
+            });
+            setLevels(_levels);
         }
     }, [videos]);
 
@@ -257,7 +277,7 @@ export default function VideoUpload() {
         </SvgIcon>
     );
 
-    const Level = ({ level, title, description, completed, onClick, score, minScore, maxScore }) => (
+    const Level = ({ course, level, title, description, completed, onClick, score, minScore, maxScore, status }) => (
         <Grid item xs={6} sm={6} md={4} >
             <Card height='250px'>
                 <Box
@@ -268,8 +288,11 @@ export default function VideoUpload() {
                     alignItems="center"
                     justifyContent='space-between'
                     onClick={() => {
-                        setSelectedLevelTitle(title)
-                        onClick()
+                        if (status != "PENDING") {
+                            setSelectedLevelTitle(title)
+                            setSelectdCourse(course)
+                            onClick()
+                        }
                     }}>
                     <TrophyIcon component={Trophy} level={level} completed={!completed} />
                     {completed && <Typography variant="body2" color="textSecondary">{score}</Typography>}
@@ -281,9 +304,12 @@ export default function VideoUpload() {
                         {description}
                     </Typography>
 
-                    {!completed && <Typography variant="body2"
+                    {!completed && status != 'PENDING' && <Typography variant="body2"
                         sx={{ textDecoration: 'underline', cursor: 'pointer', color: 'black' }}
                     >{translate('videoCoachScreen.completeLevel')}</Typography>}
+                    {!completed && status === 'PENDING' && <Typography variant="body2"
+                        sx={{ color: 'black' }}
+                    >{translate('videoCoachScreen.pendingReview')}</Typography>}
                     {completed && <Typography variant="body2"
                         sx={{ textDecoration: 'underline', cursor: 'pointer', color: 'black' }}
                     >{translate('videoCoachScreen.tryBetterScore')}</Typography>}
@@ -292,14 +318,14 @@ export default function VideoUpload() {
         </Grid>
     );
 
-    const levels = [
-        { level: 1, course: 'BUMPS', completed: true, score: 8 },
-        { level: 2, course: 'CARVING_FUNDAMENTALS', score: 10, completed: true },
-        { level: 3, course: 'PISTE_PRECISION', minScore: 5, maxScore: 10, completed: false },
-        { level: 4, course: 'OFF_PISTE_BASICS', minScore: 5, maxScore: 10, completed: false },
-        { level: 5, course: 'SLALOM', minScore: 5, maxScore: 10, completed: false },
+    const [levels, setLevels] = useState([
+        { level: 1, course: 'BUMPS', completed: false, score: 8 },
+        { level: 2, course: 'CARVING_FUNDAMENTALS', score: 10, minScore: 5, maxScore: 10, completed: false},
+        { level: 3, course: 'PISTE_PRECISION', minScore: 5, maxScore: 10, completed: false,  },
+        { level: 4, course: 'OFF_PISTE_BASICS', minScore: 5, maxScore: 10, completed: false, },
+        { level: 5, course: 'SLALOM', minScore: 5, maxScore: 10, completed: false, },
         { level: 6, course: 'FREESTYLE_FUNDAMENTALS', minScore: 5, maxScore: 10, completed: false },
-    ];
+    ]);
 
 
     const renderHowTo = () => {
@@ -412,6 +438,7 @@ export default function VideoUpload() {
                     <Grid container spacing={1} justifyContent='space-between'>
                         {levels.map((level) => (
                             <Level
+                                course={level.course}
                                 key={level.course}
                                 level={level.level}
                                 title={translate(`course.${level.course}.title`)}
@@ -423,6 +450,7 @@ export default function VideoUpload() {
                                 score={level.score}
                                 minScore={level.minScore}
                                 maxScore={level.maxScore}
+                                status={level.status}
                             />
                         ))}
                     </Grid>
@@ -513,7 +541,7 @@ export default function VideoUpload() {
                                 </Typography>
                                 <Box my={2}>
                                     <video
-                                        src={'https://s3.us-east-1.amazonaws.com/dev.videos.snowmatch.pro/' + selectedVideo.videoUrl}
+                                        src={process.env.REACT_APP_VIDEO_BUCKET_URL + selectedVideo.videoUrl}
                                         controls
                                         style={{ width: '100%', maxHeight: '300px' }}
                                     />
@@ -546,6 +574,7 @@ export default function VideoUpload() {
                 </SwipeableDrawer>
                 <VideoUploadBottomSheet
                     title={selectedLevelTitle}
+                    course={selectedCourse}
                     onOpen={() => setOpen(true)}
                     open={open}
                     onClose={() => setOpen(false)} />
@@ -615,13 +644,10 @@ export default function VideoUpload() {
                                         <CardMedia
                                             component="div"
                                             height="140"
-                                            image={video.videoUrl}
+                                            image={"/assets/resorts/icon-bayo.png"}
                                             alt={video.title}
                                         >
-                                            <video
-                                                src={'https://s3.us-east-1.amazonaws.com/dev.videos.snowmatch.pro/' + video.videoUrl}
-                                                style={{ width: '100%', maxHeight: 140, objectFit: 'cover' }}
-                                            />
+                                            <img src='/assets/resorts/icon-bayo.png' height="140" alt={video.title} />
                                         </CardMedia>
                                         <CardContent>
                                             <Typography gutterBottom variant="subtitle1">
@@ -673,7 +699,7 @@ export default function VideoUpload() {
                                             alt={video.title}
                                         >
                                             <video
-                                                src={'https://s3.us-east-1.amazonaws.com/dev.videos.snowmatch.pro/' + video.videoUrl}
+                                                src={process.env.REACT_APP_VIDEO_BUCKET_URL + video.videoUrl}
                                                 style={{ width: '100%', maxHeight: 140, objectFit: 'cover' }}
                                             />
                                         </CardMedia>
@@ -738,7 +764,7 @@ export default function VideoUpload() {
                             </Typography>
                             <Box my={2}>
                                 <video
-                                    src={'https://s3.us-east-1.amazonaws.com/dev.videos.snowmatch.pro/' + selectedVideo.videoUrl}
+                                    src={process.env.REACT_APP_VIDEO_BUCKET_URL + selectedVideo.videoUrl}
                                     controls
                                     style={{ width: '100%', maxHeight: '300px' }}
                                 />
@@ -758,6 +784,7 @@ export default function VideoUpload() {
             </SwipeableDrawer>
             <VideoUploadBottomSheet
                 title={selectedLevelTitle}
+                course={selectedCourse}
                 onOpen={() => setOpen(true)}
                 open={open}
                 onClose={() => setOpen(false)} />

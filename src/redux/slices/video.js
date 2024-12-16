@@ -331,7 +331,7 @@ export function createVideo(video, course) {
             // change the presigned url from https to http
             // because the presigned url is not working with https
             // so we need to change it to http
-            const httpPresignedUrl = presignedUrl.replace('https', 'http');
+            const httpPresignedUrl = presignedUrl // presignedUrl.replace('https', 'http');
             
             await fetch(httpPresignedUrl, {
                 method: 'PUT',

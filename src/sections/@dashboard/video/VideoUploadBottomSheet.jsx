@@ -1,10 +1,17 @@
-import { Button, Input, Step, StepLabel, Stepper, SwipeableDrawer, TextField, Typography } from "@mui/material";
+import { Button, FormControl, Input, InputLabel, MenuItem, Select, Step, StepLabel, Stepper, SwipeableDrawer, TextField, Typography } from "@mui/material";
 import { Box, useMediaQuery } from "@mui/system";
-import React, { useState, useRef, useEffect } from 'react';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { styled } from '@mui/material/styles';
 import { useTheme } from '@mui/material/styles';
 import { useDispatch, useSelector } from "src/redux/store";
 import { clearUploadVideoState, createVideo } from "src/redux/slices/video";
+import { useTranslation } from "react-i18next";
+import useLocales from "src/hooks/useLocales";
+import useAuth from "src/hooks/useAuth";
+import { PATH_AUTH } from "src/routes/paths";
+import { useNavigate } from "react-router";
+import { UploadSingleFile } from "src/components/upload";
 
 const MAX_VIDEO_SIZE_MB = 30; // for example, 30MB limit
 const MAX_VIDEO_DURATION_SEC = 30;
@@ -21,6 +28,15 @@ const EmptyStateBox = styled(Box)(({ theme }) => ({
 }));
 
 export default function VideoUploadBottomSheet({ open, onClose, onOpen, course }) {
+
+    const navigate = useNavigate();
+    const { user } = useAuth();
+
+    if (!user && open) {
+        navigate(PATH_AUTH.login, { replace: true });
+    }
+
+    const { translate } = useLocales();
     const steps = ['Seleccionar', 'Revisar', 'Subir'];
     const theme = useTheme();
     const [videoCourse, setVideoCourse] = useState(course);
@@ -53,11 +69,15 @@ export default function VideoUploadBottomSheet({ open, onClose, onOpen, course }
         setActiveStep(0);
     };
 
-    const handleFileSelect = (event) => {
+    const handleFileSelect = useCallback((event) => {
+        console.log('handleFileSelect');
         const file = event.target.files[0];
+        if (!file) return; // Prevent errors if no file is selected
+
         const fileSizeMB = file.size / (1024 * 1024);
         if (fileSizeMB > MAX_VIDEO_SIZE_MB) {
             alert('Video is too large. Max size is 30MB.');
+            event.target.value = ""; // Reset the input
             return;
         }
 
@@ -65,17 +85,20 @@ export default function VideoUploadBottomSheet({ open, onClose, onOpen, course }
         const video = document.createElement('video');
         video.src = tempVideoUrl;
 
-        video.onloadedmetadata = () => {
-            if (video.duration > MAX_VIDEO_DURATION_SEC) {
-                alert(`Video duration exceeds ${MAX_VIDEO_DURATION_SEC} seconds.`);
-                return;
-            }
-            setSelectedFile(file);
-            setVideoPreviewUrl(tempVideoUrl);
-            setVideoDuration(video.duration);
-            setActiveStep(1);
-        };
-    };
+        if (video.duration > MAX_VIDEO_DURATION_SEC) {
+            alert(`Video duration exceeds ${MAX_VIDEO_DURATION_SEC} seconds.`);
+            event.target.value = ""; // Reset the input
+            return;
+        }
+        setSelectedFile(file);
+        setVideoPreviewUrl(tempVideoUrl);
+        setVideoDuration(video.duration);
+        setActiveStep(1);
+
+        setActiveStep(1);
+        // Reset the input after handling the file to allow re-selecting the same file
+        event.target.value = "";
+    }, [setSelectedFile, setVideoPreviewUrl, setVideoDuration]);
 
     useEffect(() => {
         if (activeStep === 2 && isLoading === false) {
@@ -89,52 +112,53 @@ export default function VideoUploadBottomSheet({ open, onClose, onOpen, course }
         }
     }, [open]);
 
-    const renderStep = () => {
+    const renderStep = useCallback(() => {
         switch (activeStep) {
             case 0:
                 return (
                     <Box my={2} display="flex" flexDirection="column" alignItems="center">
-                        <Input
-                            accept="video/*"
-                            id="contained-button-file"
-                            type="file"
-                            onChange={handleFileSelect}
-                        />
+
                         <EmptyStateBox>
                             <Box my={2}>
                                 <Typography variant="body1" textAlign="center">
-                                    Subí tu video esquiando
+                                    {translate('video_upload_bottom_sheet.upload_video')}
                                 </Typography>
                                 <Typography variant="body2" textAlign="center">
-                                    Subí tu video esquiando
+                                    {translate('video_upload_bottom_sheet.max_size', { size: MAX_VIDEO_SIZE_MB })}
                                 </Typography>
                             </Box>
                             <Box mx={2}>
-                                <label htmlFor="contained-button-file">
+                                <label class="custom-file-upload">
+                                    <input accept="video/*" type="file" onChange={handleFileSelect} style={{ display: 'none' }} />
                                     <Button variant="outlined" component="span" fullWidth>
-                                        Select Video (Max 30 seconds)
+                                        {translate('video_upload_bottom_sheet.select_video')}
                                     </Button>
                                 </label>
                             </Box>
                         </EmptyStateBox>
-
+                        <Typography mt={2} variant="body" textAlign="center">
+                            {translate('video_upload_bottom_sheet.description')}
+                        </Typography>
                     </Box>
                 );
             case 1:
                 return (
                     <>
-                        <Typography variant="body2" mt={1} textAlign="center">
-                            Selected: {selectedFile.name} ({videoDuration.toFixed(1)} seconds)
-                        </Typography>
                         {!course && <Box my={2}>
-                            <TextField
-                                fullWidth
-                                label="Video Title"
-                                variant="outlined"
-                                value={videoCourse}
-                                onChange={(e) => setVideoCourse(e.target.value)}
-                                required
-                            />
+                            <FormControl fullWidth variant="outlined" sx={{ mt: 2 }}>
+                                <InputLabel id="video-course-label">Video Course</InputLabel>
+                                <Select
+                                    labelId="video-course-label"
+                                    value={videoCourse}
+                                    onChange={(e) => setVideoCourse(e.target.value)}
+                                    label="Video Course"
+                                    required
+                                >
+                                    <MenuItem value="Beginner">Beginner</MenuItem>
+                                    <MenuItem value="Intermediate">Intermediate</MenuItem>
+                                    <MenuItem value="Advanced">Advanced</MenuItem>
+                                </Select>
+                            </FormControl>
                         </Box>}
                         {course && <Box my={2}>
                             <Typography variant="body1" textAlign="center">
@@ -143,9 +167,6 @@ export default function VideoUploadBottomSheet({ open, onClose, onOpen, course }
                         </Box>}
                         {videoPreviewUrl && (
                             <Box my={2}>
-                                <Typography variant="h6" gutterBottom align="center">
-                                    Video Preview
-                                </Typography>
                                 <video
                                     ref={videoRef}
                                     src={videoPreviewUrl}
@@ -173,10 +194,42 @@ export default function VideoUploadBottomSheet({ open, onClose, onOpen, course }
                         Uploading...
                     </Typography>
                 );
+            case 3:
+                return (
+                    <Box
+                        display="flex"
+                        flexDirection="column"
+                        justifyContent="center"
+                        alignItems="center"
+                        textAlign="center"
+                        sx={{ padding: 4, backgroundColor: '#f5f5f5', borderRadius: 2 }}
+                    >
+                        <CheckCircleIcon
+                            sx={{ fontSize: 64, color: 'green', mb: 2 }}
+                        />
+                        <Typography variant="h5" gutterBottom>
+                            Great job! 🎉
+                        </Typography>
+                        <Typography variant="body1" sx={{ mb: 2 }}>
+                            Your video has been uploaded successfully. You’ll receive an email once it has been reviewed by your instructor.
+                        </Typography>
+                        <Typography variant="subtitle2" color="textSecondary" sx={{ mb: 3 }}>
+                            In the meantime, feel free to explore other content or upload another video.
+                        </Typography>
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={onClose}
+                            sx={{ textTransform: 'none' }}
+                        >
+                            Close
+                        </Button>
+                    </Box>
+                );
             default:
                 return null;
         }
-    };
+    }, [activeStep, videoCourse, videoPreviewUrl, course]);
     return (
         <SwipeableDrawer
             anchor="bottom"
@@ -194,6 +247,25 @@ export default function VideoUploadBottomSheet({ open, onClose, onOpen, course }
                 },
             }}
         >
+            <Box display="flex" alignItems="center" justifyContent="space-between" sx={{ paddingTop: 'env(safe-area-inset-top)' }}>
+                <Button onClick={onClose} sx={{
+                    padding: '0px',
+                    fontWeight: 'normal',
+                    color: 'black',
+                    textDecoration: 'underline',
+                    '&:hover': {
+                        textDecoration: 'underline',
+                    },
+                    textAlign: 'left',
+                    width: '100px'
+                }}>
+                    Cancelar
+                </Button>
+                <Typography variant="h4" gutterBottom align="center" sx={{ flexGrow: 1 }}>
+                    Subí tu video
+                </Typography>
+                <Box width='100px' /> {/* Placeholder to balance the space */}
+            </Box>
             <Box
                 sx={{
                     padding: theme.spacing(2),
@@ -203,10 +275,7 @@ export default function VideoUploadBottomSheet({ open, onClose, onOpen, course }
                     overflow: 'auto',
                 }}
             >
-                <Typography variant="h4" gutterBottom align="center">
-                    Subí tu video
-                </Typography>
-                <Box my={2}>
+                <Box mb={2}>
                     <Stepper activeStep={activeStep} alternativeLabel={!isMobile}>
                         {steps.map((label) => (
                             <Step key={label}>

@@ -1160,6 +1160,13 @@
         "waiting_review": "Esperando revisión",
         "uploadVideo": "Subir video",
         "completeLevel": "Completar nivel",
-        "tryBetterScore": "Mejorar puntaje"
+        "tryBetterScore": "Mejorar puntaje",
+        "pendingReview": "Esperando calificación"
+    },
+    "video_upload_bottom_sheet": {
+        "upload_video": "Subir video",
+        "description": "Te recomendamos que el video sea corto y que se noten claros tus movimientos.",
+        "select_video": "Seleccionar video",
+        "max_size": "Tamaño máximo 50MB"
     }
 }

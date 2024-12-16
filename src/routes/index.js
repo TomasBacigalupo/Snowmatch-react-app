@@ -312,7 +312,8 @@ export default function Router() {
       path: '/',
       element: <MainLayout />,
       children: [
-        { element: <HomePage />, index: true },
+        { element: <Navigate to="/match/videoCoach/upload" replace /> //changed just for app build <HomePage />
+          , index: true },
         { path: 'clases-de-ski-bariloche', element: <HomePageBariloche /> },
         { path: 'clases-de-ski-lago-hermoso', element: <HomePageLagoHermoso /> },
         { path: 'about-us', element: <About /> },

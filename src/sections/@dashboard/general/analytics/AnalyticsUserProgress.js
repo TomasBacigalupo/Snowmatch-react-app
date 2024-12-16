@@ -2,9 +2,10 @@ import merge from 'lodash/merge';
 import ReactApexChart from 'react-apexcharts';
 // @mui
 import { useTheme, styled } from '@mui/material/styles';
-import { Box, Card, CardHeader } from '@mui/material';
+import { Box } from '@mui/material';
 //
 import { BaseOptionChart } from '../../../../components/chart';
+import useAuth from 'src/hooks/useAuth';
 
 // ----------------------------------------------------------------------
 
@@ -33,7 +34,13 @@ const CHART_DATA = [
   { name: 'data', data: [80, 50, 30, 40, 100, 20] },
 ];
 
+const CHART_DATA_EMPTY = [
+  { name: 'data', data: [0, 0, 0, 0, 0, 0] },
+];
+
 export default function AnalyticsUserProgress() {
+
+  const { user } = useAuth();
   const theme = useTheme();
 
   const chartOptions = merge(BaseOptionChart(), {
@@ -59,7 +66,7 @@ export default function AnalyticsUserProgress() {
 
   return (
     <Box>
-        <ReactApexChart type="radar" series={CHART_DATA} options={chartOptions} height={250} />
+        <ReactApexChart type="radar" series={user ? CHART_DATA : CHART_DATA_EMPTY } options={chartOptions} height={250} />
     </Box>
   );
 }

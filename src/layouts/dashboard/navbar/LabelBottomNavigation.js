@@ -10,9 +10,10 @@ import Logo from 'src/components/Logo';
 import VideoCallIcon from '@mui/icons-material/VideoCall';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import { IconButton, useTheme, useMediaQuery } from '@mui/material';
-import { PATH_GUEST } from 'src/routes/paths';
+import { PATH_DASHBOARD, PATH_GUEST } from 'src/routes/paths';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
 import VideoUploadBottomSheet from 'src/sections/@dashboard/video/VideoUploadBottomSheet';
+import DownhillSkiingIcon from '@mui/icons-material/DownhillSkiing';
 
 export default function LabelBottomNavigation() {
   const [value, setValue] = React.useState(0);
@@ -103,7 +104,7 @@ export default function LabelBottomNavigation() {
             component={RouterLink}
             to={PATH_GUEST.root}
           />
-          <BottomNavigationAction label="More" icon={<MoreHorizIcon />} />
+          <BottomNavigationAction label="Lessons" component={RouterLink} to={PATH_GUEST.root + '/lessons'} icon={<DownhillSkiingIcon/>} />
         </BottomNavigation>
       </Paper>
       <VideoUploadBottomSheet

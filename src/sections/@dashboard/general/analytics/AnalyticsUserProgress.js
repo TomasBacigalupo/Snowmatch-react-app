@@ -31,11 +31,11 @@ const ChartWrapperStyle = styled('div')(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 const CHART_DATA = [
-  { name: 'data', data: [80, 50, 30, 40, 100, 20] },
+  { name: 'data', data: [80, 50, 30, 89] },
 ];
 
 const CHART_DATA_EMPTY = [
-  { name: 'data', data: [0, 0, 0, 0, 0, 0] },
+  { name: 'data', data: [0, 0, 0, 0] },
 ];
 
 export default function AnalyticsUserProgress() {

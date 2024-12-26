@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Typography, Button, Box, useMediaQuery, Stepper, Step, StepLabel, SwipeableDrawer, Container, Grid, Card, CardContent, CardMedia, List, ListItem, ListItemText, Divider, IconButton, TextField, SvgIcon, ToggleButtonGroup, ToggleButton } from '@mui/material';
+import { Typography, Button, Box, useMediaQuery, Stepper, Step, StepLabel, SwipeableDrawer, Container, Grid, Card, CardContent, CardMedia, List, ListItem, ListItemText, Divider, IconButton, TextField, SvgIcon, ToggleButtonGroup, ToggleButton, CircularProgress } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { useTheme } from '@mui/material/styles';
 import Page from '../../components/Page';
@@ -16,6 +16,8 @@ import { useDispatch, useSelector } from 'src/redux/store';
 import { getVideos } from 'src/redux/slices/video';
 import { AnalyticsCurrentSubject, AnalyticsUserProgress } from 'src/sections/@dashboard/general/analytics';
 import Markdown from 'src/components/Markdown';
+import { useNavigate } from 'react-router-dom';
+
 
 const Input = styled('input')({
     display: 'none',
@@ -84,6 +86,8 @@ export default function VideoUpload() {
     const [isVideoDetailOpen, setIsVideoDetailOpen] = useState(false);
     const [selectedLevelTitle, setSelectedLevelTitle] = useState('');
     const [selectedCourse, setSelectdCourse] = useState('');
+    const navigate = useNavigate();
+
 
     const dispatch = useDispatch();
     const { videos } = useSelector((state) => state.video);
@@ -105,7 +109,7 @@ export default function VideoUpload() {
                         }
                         return level;
                     });
-                }else {
+                } else {
                     _levels = _levels.map((level) => {
                         if (level.course === video.course) {
                             return { ...level, completed: false, status: 'PENDING', score: video.score };
@@ -276,113 +280,80 @@ export default function VideoUpload() {
             <text x="50%" y="50%" textAnchor="middle" dy=".3em" fontSize="1.5rem" fill="black">{level}</text>
         </SvgIcon>
     );
-
-    const Level = ({ course, level, title, description, completed, onClick, score, minScore, maxScore, status }) => (
-        <Grid item xs={6} sm={6} md={4} >
-            <Card height='250px'>
-                <Box
-                    padding={2}
-                    height='250px'
-                    display="flex"
-                    flexDirection="column"
-                    alignItems="center"
-                    justifyContent='space-between'
-                    onClick={() => {
-                        if (status != "PENDING") {
-                            setSelectedLevelTitle(title)
-                            setSelectdCourse(course)
-                            onClick()
-                        }
-                    }}>
-                    <TrophyIcon component={Trophy} level={level} completed={!completed} />
-                    {completed && <Typography variant="body2" color="textSecondary">{score}</Typography>}
-                    {!completed && <Typography variant="body2" color="textSecondary">IQ: {minScore} - {maxScore} </Typography>}
-                    <Typography variant="h6" sx={{ mt: 2, mb: 1 }}>
-                        {title}
-                    </Typography>
-                    <Typography variant="body2">
-                        {description}
-                    </Typography>
-
-                    {!completed && status != 'PENDING' && <Typography variant="body2"
-                        sx={{ textDecoration: 'underline', cursor: 'pointer', color: 'black' }}
-                    >{translate('videoCoachScreen.completeLevel')}</Typography>}
-                    {!completed && status === 'PENDING' && <Typography variant="body2"
-                        sx={{ color: 'black' }}
-                    >{translate('videoCoachScreen.pendingReview')}</Typography>}
-                    {completed && <Typography variant="body2"
-                        sx={{ textDecoration: 'underline', cursor: 'pointer', color: 'black' }}
-                    >{translate('videoCoachScreen.tryBetterScore')}</Typography>}
-                </Box>
-            </Card>
-        </Grid>
+    const CircularProgressWithLabel = ({ value }) => (
+        <Box position="relative" display="inline-flex">
+            <CircularProgress size={80} variant="determinate" value={value} />
+            <Box
+                top={0}
+                left={0}
+                bottom={0}
+                right={0}
+                position="absolute"
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+            >
+                <Typography variant="caption" component="div" color="textSecondary">
+                    {`${Math.round(value)}%`}
+                </Typography>
+            </Box>
+        </Box>
     );
+    const Level = ({ course, level, title, description, completed, onClick, score, minScore, maxScore, status, progress }) => {
+
+        return (
+            <Grid item xs={12} sm={6} md={4}>
+                <Card>
+                    <Box
+                        padding={2}
+                       
+                        display="flex"
+                        flexDirection="row"
+                        alignItems="center"
+                        justifyContent="center"
+                        onClick={() => {
+                            navigate(`/match/videoCoach/courses?course=${course}`);
+                        }}
+                    >
+                        <Box display="flex"
+                            height='100%'
+                            flexDirection="column"
+                            justifyContent="center"
+                            alignItems="center">
+                            <CircularProgressWithLabel value={progress} />
+
+                        </Box>
+                        {/* <TrophyIcon component={Trophy} level={level} completed={!completed} /> */}
+
+                        <Box
+                            paddingLeft={2}
+                            display="flex"
+                            flexDirection="column"
+                            alignItems="flex-start"
+                            justifyContent="flex-start"
+                            onClick={() => {
+                                navigate(`/match/videoCoach/courses?course=${course}`);
+                            }}
+                        >
+                            <Typography variant="h6" sx={{ mt: 2, mb: 1 }}>
+                                {title}
+                            </Typography>
+                            <Typography variant="body2">{description}</Typography>
+                        </Box>
+
+                    </Box>
+                </Card>
+            </Grid>
+        );
+    };
 
     const [levels, setLevels] = useState([
-        { level: 1, course: 'BUMPS', completed: false, score: 8 },
-        { level: 2, course: 'CARVING_FUNDAMENTALS', score: 10, minScore: 5, maxScore: 10, completed: false},
-        { level: 3, course: 'PISTE_PRECISION', minScore: 5, maxScore: 10, completed: false,  },
-        { level: 4, course: 'OFF_PISTE_BASICS', minScore: 5, maxScore: 10, completed: false, },
-        { level: 5, course: 'SLALOM', minScore: 5, maxScore: 10, completed: false, },
-        { level: 6, course: 'FREESTYLE_FUNDAMENTALS', minScore: 5, maxScore: 10, completed: false },
+        { level: 1, course: 'PIST', completed: false, score: 8, progress: 10 },
+        { level: 2, course: 'BUMPS', score: 10, minScore: 0, maxScore: 100, progress: 39, completed: false },
+        { level: 3, course: 'FREE_RIDE', minScore: 0, maxScore: 100, progress: 86, completed: false, },
+        { level: 4, course: 'FREE_STYLE', minScore: 0, maxScore: 100, progress: 33, completed: false, },
     ]);
 
-
-    const renderHowTo = () => {
-        return (
-            <Box sx={{ maxWidth: 400 }}>
-                <Stepper activeStep={activeHowToStep} orientation="vertical">
-                    {stepsHowTo.map((step, index) => (
-                        <Step key={step.label}>
-                            <StepLabel
-                                optional={
-                                    index === steps.length - 1 ? (
-                                        <Typography variant="caption">Último paso</Typography>
-                                    ) : null
-                                }
-                            >
-                                {step.label}
-                            </StepLabel>
-                            <StepContent>
-                                <Typography>{step.description}</Typography>
-                                <Box sx={{ mb: 2 }}>
-                                    {index !== steps.length - 1 ? <Button
-                                        variant="contained"
-                                        onClick={handleNext}
-                                        sx={{ mt: 1, mr: 1 }}
-                                    >
-                                        {index === steps.length - 1 ? 'Terminar' : 'Continuar'}
-                                    </Button> : <Button
-                                        variant="contained"
-                                        onClick={() => setIsOpen(true)}
-                                        sx={{ mt: 1, mr: 1 }}
-                                    >
-                                        Subir Video
-                                    </Button>}
-
-                                    <Button
-                                        disabled={index === 0}
-                                        onClick={handleBack}
-                                        sx={{ mt: 1, mr: 1 }}
-                                    >
-                                        Atrás
-                                    </Button>
-                                </Box>
-                            </StepContent>
-                        </Step>
-                    ))}
-                </Stepper>
-                {activeStep === steps.length && (
-                    <Paper square elevation={0} sx={{ p: 3 }}>
-                        <Typography>All steps completed - you&apos;re finished</Typography>
-                        <Button onClick={() => { }} sx={{ mt: 1, mr: 1 }}>
-                            Reset
-                        </Button>
-                    </Paper>
-                )}
-            </Box>
-        )
-    }
     const [tab, setTab] = useState('profile');
     const handleChange = (event, newCategory) => {
         setTab(newCategory);
@@ -445,16 +416,17 @@ export default function VideoUpload() {
                                 description={translate(`course.${level.course}.description`)}
                                 completed={level.completed}
                                 onClick={() => {
-                                    setOpen(true);
+                                    navigate(`/`);
+                                    // setOpen(true);
                                 }}
                                 score={level.score}
                                 minScore={level.minScore}
                                 maxScore={level.maxScore}
                                 status={level.status}
+                                progress={level.progress}
                             />
                         ))}
                     </Grid>
-
                 </Container>
 
                 <SwipeableDrawer

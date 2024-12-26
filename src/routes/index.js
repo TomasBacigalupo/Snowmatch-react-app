@@ -5,6 +5,7 @@ import MainLayout from '../layouts/main';
 import { DashboardLayout, GuestLayout } from '../layouts/dashboard';
 
 import LogoOnlyLayout from '../layouts/LogoOnlyLayout';
+import PlainLayout from 'src/layouts/PlainLayout';
 // guards
 import GuestGuard from '../guards/GuestGuard';
 import AuthGuard from '../guards/AuthGuard';
@@ -21,6 +22,7 @@ import ReviewTeacher from 'src/pages/dashboard/ReviewTeacher';
 import VideoUpload from 'src/pages/dashboard/VideoUpload';
 import UploadedVideos from 'src/pages/dashboard/UploadedVideos';
 import UnratedVideos from 'src/pages/dashboard/UnratedVideos';
+import CourseLevels from 'src/pages/dashboard/CourseLevels';
 
 // ----------------------------------------------------------------------
 
@@ -142,6 +144,23 @@ export default function Router() {
             { path: 'upload', element: <VideoUpload /> },
             { path: 'uploaded', element: <UploadedVideos /> },
             { path: 'unrated', element: <UnratedVideos /> },
+          ],
+        },
+      ]
+    },
+    {
+      path: 'match',
+      element: (
+        <RoleBasedGuard accessibleRoles={['GUEST', 'STUDENT']}>
+          <PlainLayout />
+        </RoleBasedGuard>
+
+      ),
+      children: [
+        {
+          path: 'videoCoach',
+          children: [
+            { path: 'courses', element: <CourseLevels /> },
           ],
         },
       ]

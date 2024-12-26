@@ -1121,9 +1121,23 @@
     "MORNING": "Mañana",
     "AFTERNOON": "Tarde",
     "ALL_DAY": "Día completo",
+    "progress": {
+        "title": "Progreso",
+        "description": "Tu progreso en la montaña",
+        "level": "Nivel",
+        "score": "Puntaje",
+        "review": "Correcciones",
+        "videos": "Videos subidos",
+        "pending": "Videos pendientes de revisión",
+        "waiting": "Esperando revisión",
+        "upload": "Subir video",
+        "complete": "Completar nivel",
+        "try": "Mejorar puntaje",
+        "pendingReview": "Esperando calificación"
+    },
     "course": {
         "BUMPS": {
-            "title": "Bumps and Moguls Mastery",
+            "title": "Bumps",
             "description": "Focuses on navigating bumps with stability and flow."
         },
         "SHORT_TURNS_TECHNIQUE": {
@@ -1138,7 +1152,7 @@
             "title": "Piste Precision",
             "description": "Balance and technique for skiing on groomed runs"
         },
-        "OFF_PISTE_BASICS": {
+        "FREE_RIDE": {
             "title": "Off-Piste Basics",
             "description": "Intro to skiing on unprepared terrain, emphasizing control."
         },
@@ -1146,9 +1160,49 @@
             "title": "Slalom Skill-building",
             "description": "For those interested in jumps and basic tricks."
         },
-        "FREESTYLE_FUNDAMENTALS": {
-            "title": "Freestyle Fundamentals",
+        "FREE_STYLE": {
+            "title": "Freestyle",
             "description": "For those interested in jumps and basic tricks."
+        },
+        "PIST":{
+            "title": "Pista",
+            "description": "Para aquellos que quieren mejorar su técnica en pista."
+        },
+        "PIST_1": {
+            "title": "Primeros Pasos",
+            "description": "Para aquellos que quieren mejorar su técnica en pista."
+        },
+        "PIST_2": {
+            "title": "Intermedios",
+            "description": "Para aquellos que quieren mejorar su técnica en pista."
+        },
+        "PIST_3": {
+            "title": "Avanzados",
+            "description": "Para aquellos que quieren mejorar su técnica en pista."
+        },
+        "BUMPS_1": {
+            "title": "Primeros Pasos",
+            "description": "Para aquellos que quieren mejorar su técnica en pista."
+        },
+        "BUMPS_2": {
+            "title": "Intermedios",
+            "description": "Para aquellos que quieren mejorar su técnica en pista."
+        },
+        "BUMPS_3": {
+            "title": "Avanzados",
+            "description": "Para aquellos que quieren mejorar su técnica en pista."
+        },
+        "FREE_STYLE_1": {
+            "title": "Primeros Saltos",
+            "description": "Para aquellos que quieren mejorar su técnica en pista."
+        },
+        "FREE_STYLE_2": {
+            "title": "Saltos Con Grabs",
+            "description": "Para aquellos que quieren mejorar su técnica en pista."
+        },
+        "FREE_STYLE_3": {
+            "title": "Saltos Con Rotación",
+            "description": "Para aquellos que quieren mejorar su técnica en pista."
         }
     },
     "videoCoachScreen": {

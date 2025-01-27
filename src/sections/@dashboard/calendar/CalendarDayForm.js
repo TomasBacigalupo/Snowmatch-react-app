@@ -8,10 +8,10 @@ import { useForm, Controller, useWatch } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { Box, Stack, Button, Tooltip, TextField, IconButton, DialogActions, ToggleButton, ToggleButtonGroup, Paper, Typography, Grid } from '@mui/material';
-import { DateRangePicker, LoadingButton, MobileDatePicker, MobileDateTimePicker } from '@mui/lab';
+import { DateRangePicker, LoadingButton, MobileDatePicker, MobileDateRangePicker, MobileDateTimePicker } from '@mui/lab';
 // redux
 import { useDispatch } from '../../../redux/store';
-import { createEvent, updateEvent, deleteEvent, createBusinessEvent, updateBusinessEvent, deleteSchoolEvent, updateEventByUserIdAndEventId, createEventByUserId, adminDeleteEvent, blockDays, assignDays, deleteBusinessEvent} from '../../../redux/slices/calendar';
+import { createEvent, updateEvent, deleteEvent, createBusinessEvent, updateBusinessEvent, deleteSchoolEvent, updateEventByUserIdAndEventId, createEventByUserId, adminDeleteEvent, blockDays, assignDays, deleteBusinessEvent } from '../../../redux/slices/calendar';
 // components
 import Iconify from '../../../components/Iconify';
 import { ColorSinglePicker } from '../../../components/color-utils';
@@ -49,10 +49,13 @@ const getInitialValues = (event, range) => {
     title: '',
     description: '',
     textColor: '#1890FF',
-    start: range ? dayjs(range.start).hour(9) : new Date(),
-    end: range ? dayjs(range.end).subtract(1, 'day').hour(18) : new Date(),
+    start: range ? dayjs(range.start).hour(9).toDate() : new Date(),
+    end: range ? dayjs(range.end).subtract(1, 'day').hour(18).toDate() : new Date(),
     price: event?.price ?? 0,
     assignedStudents: event?.students ?? [],
+    dateRange: range
+      ? [dayjs(range.start).hour(9).toDate(), dayjs(range.end).hour(18).toDate()]
+      : [null, null], // Default value for dateRange if no range is provided
   };
 
   if (event || range) {
@@ -111,6 +114,12 @@ export default function CalendarDayForm({ event, range, onCancel, clients, membe
   const dispatch = useDispatch();
 
   const EventSchema = Yup.object().shape({
+    dateRange: Yup.array()
+      .of(Yup.date().required('Required')) // Ensure both start and end dates are present and valid
+      .min(2, 'Both start and end dates are required') // Ensure there are at least 2 items in the array
+      .test('valid-range', 'End date must be after start date', ([start, end]) =>
+        start && end ? new Date(end) > new Date(start) : false
+      ),
     // title: Yup.string().max(255).min(3).required('Title is required'),
     // type: Yup.string().max(255).required('Title is required'),
     // description: Yup.string().max(5000).required('Description is required'),
@@ -118,9 +127,11 @@ export default function CalendarDayForm({ event, range, onCancel, clients, membe
   });
 
   const handleBlock = () => {
+    const [start, end] = values.dateRange; // Destructure start and end from dateRange
+
     dispatch(blockDays(
-      values.start,
-      values.start,
+      start,
+      end,
       timeSelected,
       "Bloqueado por el instructor"
     ))
@@ -445,6 +456,24 @@ export default function CalendarDayForm({ event, range, onCancel, clients, membe
         </ToggleButtonGroup>
         }
         <Box>
+          <MobileDateRangePicker
+            label="Día"
+            startText="Desde"
+            endText="Hasta"
+            value={values.dateRange} // dateRange should be an array [startDate, endDate]
+            onChange={(newValue) => {
+              setValue('dateRange', newValue); // Update formik's field value
+            }}
+            renderInput={(startProps, endProps) => (
+              <>
+                <TextField {...startProps} fullWidth />
+                <Box sx={{ mx: 2 }}>-</Box>
+                <TextField {...endProps} fullWidth />
+              </>
+            )}
+          />
+        </Box>
+        {/* <Box>
           <MobileDatePicker
             label="Día"
             value={values.start}
@@ -453,7 +482,7 @@ export default function CalendarDayForm({ event, range, onCancel, clients, membe
             }}
             renderInput={(params) => <TextField {...params} fullWidth />}
           />
-        </Box>
+        </Box> */}
         {block === 'block' && <>
           <Grid spacing={2} direction={{ xs: 'column', md: 'column ' }}>
             <Paper

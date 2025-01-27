@@ -24,32 +24,12 @@ const Input = styled('input')({
 });
 
 const steps = ['Seleccionar', 'Revisar', 'Subir'];
-const stepsHowTo = [
-    {
-        label: 'Subí tu video',
-        description: `Subí un video tuyo esquiando donde se pueda apreciar tu técnica.`,
-    },
-    {
-        label: 'Espera las correcciones de un Pro',
-        description:
-            'Un profesor te enviará comentarios sobre tu técnica y ejercicios para mejorar.',
-    },
-    {
-        label: 'Probalo en la pista',
-        description: `Con las recomendaciones del profesor, y ejercicios para mejorar, podés volver a subir tu video y mejorar tu técnica.`,
-    },
-];
 
-// Sample data for uploaded videos (now including comments)
+
 const sampleUploadedVideos = [
     { id: 1, title: 'My First Video', status: 'Processed', url: 'https://example.com/video1.mp4', thumbnail: 'https://example.com/thumbnail1.jpg', comments: ['Great form!', 'Try to keep your back straight.'] },
     { id: 2, title: 'Practice Session', status: 'Processing', url: 'https://example.com/video2.mp4', thumbnail: 'https://example.com/thumbnail2.jpg', comments: [] },
 ];
-
-const StyledUploadButton = styled(Button)(({ theme }) => ({
-    marginBottom: theme.spacing(4),
-    padding: theme.spacing(1.5, 3),
-}));
 
 const StyledCard = styled(Card)(({ theme }) => ({
     height: '100%',

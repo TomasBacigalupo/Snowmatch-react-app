@@ -155,7 +155,7 @@ function GuestLayout() {
       <MainStyle collapseClick={collapseClick}>
         <Outlet />
       </MainStyle>
-      <LabelBottomNavigation/>
+      <LabelBottomNavigation onOpenSidebar={() => setOpen(true)} isGuest={true}/>
     </Box>
   );
 }

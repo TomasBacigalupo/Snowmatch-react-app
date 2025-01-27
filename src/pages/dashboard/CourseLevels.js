@@ -27,8 +27,8 @@ const steps = ['Seleccionar', 'Revisar', 'Subir'];
 
 const courseLevels = {
     'PIST': [
-        { course: 'PIST_1', level: 1, title: 'Principiante', description: 'Aprender a esquiar en pista', completed: true, score: 8 },
-        { course: 'PIST_2', level: 2, title: 'Intermedio', description: 'Mejorar técnica en pista', completed: true, score: 10 },
+        { course: 'PIST_1', level: 1, title: 'Principiante', description: 'Aprender a esquiar en pista', completed: true, score: 8, demoUrl: 'https://snowmatchvideos.s3.us-east-1.amazonaws.com/Screen+Recording+2024-12-29+at+4.13.17%E2%80%AFPM.mov' },
+        { course: 'PIST_2', level: 2, title: 'Intermedio', description: 'Clavado de bastón', completed: true, score: 10, demoUrl:'https://snowmatchvideos.s3.us-east-1.amazonaws.com/Tip_Como+hacer+el+clavado+de+baston.mp4' },
         { course: 'PIST_3',level: 3, title: 'Avanzado', description: 'Dominar técnica en pista', completed: false },
     ],
     'BUMPS': [
@@ -319,6 +319,7 @@ export default function CourseLevels() {
     ]);
 
     const [tab, setTab] = useState('profile');
+    const [demoUrl, setDemoUrl] = useState('');
 
     return (
         <Page title="My Progress">
@@ -345,6 +346,7 @@ export default function CourseLevels() {
                             description={translate(`course.${level.course}.description`)}
                             completed={level.completed}
                             onClick={() => {
+                                setDemoUrl(level.demoUrl);
                                 setOpen(true);
                             }}
                             score={level.score}
@@ -470,6 +472,7 @@ export default function CourseLevels() {
                 </Box>
             </SwipeableDrawer>
             <VideoUploadBottomSheet
+                demoUrl={demoUrl}
                 title={selectedLevelTitle}
                 course={selectedCourse}
                 onOpen={() => setOpen(true)}

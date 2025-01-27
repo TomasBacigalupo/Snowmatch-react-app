@@ -14,8 +14,14 @@ import { PATH_DASHBOARD, PATH_GUEST } from 'src/routes/paths';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
 import VideoUploadBottomSheet from 'src/sections/@dashboard/video/VideoUploadBottomSheet';
 import DownhillSkiingIcon from '@mui/icons-material/DownhillSkiing';
+import PropTypes from 'prop-types';
 
-export default function LabelBottomNavigation() {
+LabelBottomNavigation.propTypes = {
+  onOpenSidebar: PropTypes.func,
+  isGuest: PropTypes.bool,
+};
+
+export default function LabelBottomNavigation({ onOpenSidebar, isGuest }) {
   const [value, setValue] = React.useState(0);
   const ref = React.useRef(null);
   const location = useLocation();
@@ -32,7 +38,7 @@ export default function LabelBottomNavigation() {
         return 1;
       case '/upload': // Add this manually for the Upload button as it's a special case
         return 2;
-      case PATH_GUEST.root:
+      case PATH_GUEST.independent:
         return 3;
       default:
         return false;
@@ -48,7 +54,7 @@ export default function LabelBottomNavigation() {
   }, [location.pathname]);
 
   return (
-    <Box sx={{ pb: `calc(env(safe-area-inset-bottom) + ${isMobile ? '56px' : '16px'})`, height:'100px'}} ref={ref}>
+    <Box sx={{ pb: `calc(env(safe-area-inset-bottom) + ${isMobile ? '56px' : '16px'})`, height: '100px' }} ref={ref}>
       <CssBaseline />
       <Paper sx={{ position: 'fixed', bottom: 0, paddingBottom: '30px' + "calc(env(safe-area-inset-bottom)", left: 0, right: 0, height: '100px' }} elevation={3}>
         <BottomNavigation
@@ -74,44 +80,17 @@ export default function LabelBottomNavigation() {
             component={RouterLink}
             to={PATH_GUEST.protips}
           />
-          <BottomNavigationAction
-            onClick={() => setOpen(true)}
-            label="Upload"
-            icon={
-              <Box marginTop={-1} paddingBottom={0.3}>
-                <IconButton
-                  onClick={() => setOpen(true)}
-                  sx={{
-                    bgcolor: '#3399ff',
-                    width: 56,
-                    height: 56,
-                    mt: -3,
-                    p: 1,
-                    border: '2px solid white',
-                    '&:hover': {
-                      bgcolor: '#3399ff',
-                    },
-                  }}
-                >
-                  <VideoCallIcon sx={{ color: 'white', fontSize: '2rem' }} />
-                </IconButton>
-              </Box>
-            }
-          />
+          {console.log(value)}
           <BottomNavigationAction
             label="Match"
-            icon={<Logo sx={{ height: '25px', width: '25px' }} />}
+            icon={<Logo disabled={value != 3} disabledLink={true} sx={{ height: '25px', width: '25px' }} />}
             component={RouterLink}
             to={PATH_GUEST.root}
           />
-          <BottomNavigationAction label="Lessons" component={RouterLink} to={PATH_GUEST.root + '/lessons'} icon={<DownhillSkiingIcon/>} />
+          <BottomNavigationAction label="Lessons" component={RouterLink} to={PATH_GUEST.root + '/lessons'} icon={<DownhillSkiingIcon />} />
+          <BottomNavigationAction label="More" onClick={onOpenSidebar} icon={<MoreHorizIcon />} />
         </BottomNavigation>
       </Paper>
-      <VideoUploadBottomSheet
-        open={open}
-        onOpen={() => setOpen(true)}
-        onClose={() => setOpen(false)}
-      />
     </Box>
   );
 }

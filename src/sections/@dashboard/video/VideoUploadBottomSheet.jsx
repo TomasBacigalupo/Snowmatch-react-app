@@ -12,9 +12,8 @@ import useAuth from "src/hooks/useAuth";
 import { PATH_AUTH } from "src/routes/paths";
 import { useNavigate } from "react-router";
 import { UploadSingleFile } from "src/components/upload";
-
-const MAX_VIDEO_SIZE_MB = 30; // for example, 30MB limit
-const MAX_VIDEO_DURATION_SEC = 30;
+import { set } from "lodash";
+import { on } from "process";
 
 const EmptyStateBox = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -27,7 +26,7 @@ const EmptyStateBox = styled(Box)(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
 }));
 
-export default function VideoUploadBottomSheet({ open, onClose, onOpen, course }) {
+export default function VideoUploadBottomSheet({ open, onClose, onOpen, course, demoUrl }) {
 
     const navigate = useNavigate();
     const { user } = useAuth();
@@ -37,7 +36,7 @@ export default function VideoUploadBottomSheet({ open, onClose, onOpen, course }
     }
 
     const { translate } = useLocales();
-    const steps = ['Seleccionar', 'Revisar', 'Subir'];
+    const steps = ['Ejercicio', 'Tu video', 'Subir'];
     const theme = useTheme();
     const [videoCourse, setVideoCourse] = useState(course);
     const [videoPreviewUrl, setVideoPreviewUrl] = useState(null);
@@ -70,32 +69,18 @@ export default function VideoUploadBottomSheet({ open, onClose, onOpen, course }
     };
 
     const handleFileSelect = useCallback((event) => {
-        console.log('handleFileSelect');
         const file = event.target.files[0];
+
         if (!file) return; // Prevent errors if no file is selected
 
-        const fileSizeMB = file.size / (1024 * 1024);
-        if (fileSizeMB > MAX_VIDEO_SIZE_MB) {
-            alert('Video is too large. Max size is 30MB.');
-            event.target.value = ""; // Reset the input
-            return;
-        }
 
         const tempVideoUrl = URL.createObjectURL(file);
         const video = document.createElement('video');
         video.src = tempVideoUrl;
 
-        if (video.duration > MAX_VIDEO_DURATION_SEC) {
-            alert(`Video duration exceeds ${MAX_VIDEO_DURATION_SEC} seconds.`);
-            event.target.value = ""; // Reset the input
-            return;
-        }
         setSelectedFile(file);
         setVideoPreviewUrl(tempVideoUrl);
         setVideoDuration(video.duration);
-        setActiveStep(1);
-
-        setActiveStep(1);
         // Reset the input after handling the file to allow re-selecting the same file
         event.target.value = "";
     }, [setSelectedFile, setVideoPreviewUrl, setVideoDuration]);
@@ -112,19 +97,53 @@ export default function VideoUploadBottomSheet({ open, onClose, onOpen, course }
         }
     }, [open]);
 
+    const onCloseWrapper = () => {
+        resetUploadState();
+        setActiveStep(0);
+        onClose();
+    }
+
     const renderStep = useCallback(() => {
         switch (activeStep) {
             case 0:
                 return (
+                    <Box my={2} display="flex" flexDirection="column" >
+                        <Box mb={2}>
+                        <video
+                            src={demoUrl}
+                            width='100%'
+                            controls
+                        />
+                        </Box>
+                        <Typography variant="h2" textAlign='left'>
+                        {translate(`course.${course}.title`)}
+                        </Typography>
+                        <Typography variant="subtitle1" textAlign='left'>
+                        {translate(`course.${course}.description`)}
+                        </Typography>
+                        <Typography variant="body1" textAlign='left'>
+                        {translate(`course.${course}.fundamentals`)}
+                        </Typography>
+                        <Button onClick={()=> setActiveStep(activeStep + 1)} sx={{
+                            mt: 2,
+                        }}>
+                            Siguiente
+                        </Button>
+                    </Box>
+                );
+            case 1:
+                return (
                     <Box my={2} display="flex" flexDirection="column" alignItems="center">
-
+                        <Box my={2}>
+                            <Typography variant="body1" textAlign="center">
+                                {translate('video_upload_bottom_sheet.upload_video')}
+                            </Typography>
+                        </Box>
+                        {!selectedFile && 
                         <EmptyStateBox>
                             <Box my={2}>
                                 <Typography variant="body1" textAlign="center">
                                     {translate('video_upload_bottom_sheet.upload_video')}
-                                </Typography>
-                                <Typography variant="body2" textAlign="center">
-                                    {translate('video_upload_bottom_sheet.max_size', { size: MAX_VIDEO_SIZE_MB })}
                                 </Typography>
                             </Box>
                             <Box mx={2}>
@@ -136,45 +155,19 @@ export default function VideoUploadBottomSheet({ open, onClose, onOpen, course }
                                 </label>
                             </Box>
                         </EmptyStateBox>
+                        }
+                        {selectedFile && videoPreviewUrl && (
+                            <video
+                                ref={videoRef}
+                                src={videoPreviewUrl}
+                                width='100%'
+                                maxHeight='50px'
+                                controls
+                            />
+                        )}
                         <Typography mt={2} variant="body" textAlign="center">
                             {translate('video_upload_bottom_sheet.description')}
                         </Typography>
-                    </Box>
-                );
-            case 1:
-                return (
-                    <>
-                        {!course && <Box my={2}>
-                            <FormControl fullWidth variant="outlined" sx={{ mt: 2 }}>
-                                <InputLabel id="video-course-label">Video Course</InputLabel>
-                                <Select
-                                    labelId="video-course-label"
-                                    value={videoCourse}
-                                    onChange={(e) => setVideoCourse(e.target.value)}
-                                    label="Video Course"
-                                    required
-                                >
-                                    <MenuItem value="Beginner">Beginner</MenuItem>
-                                    <MenuItem value="Intermediate">Intermediate</MenuItem>
-                                    <MenuItem value="Advanced">Advanced</MenuItem>
-                                </Select>
-                            </FormControl>
-                        </Box>}
-                        {course && <Box my={2}>
-                            <Typography variant="body1" textAlign="center">
-                                {course}
-                            </Typography>
-                        </Box>}
-                        {videoPreviewUrl && (
-                            <Box my={2}>
-                                <video
-                                    ref={videoRef}
-                                    src={videoPreviewUrl}
-                                    controls
-                                    style={{ width: '100%', maxHeight: '300px' }}
-                                />
-                            </Box>
-                        )}
                         <Box mt={2} display="flex" justifyContent="center">
                             <Button
                                 variant="contained"
@@ -186,7 +179,9 @@ export default function VideoUploadBottomSheet({ open, onClose, onOpen, course }
                                 Upload
                             </Button>
                         </Box>
-                    </>
+
+                    </Box>
+
                 );
             case 2:
                 return (
@@ -219,7 +214,7 @@ export default function VideoUploadBottomSheet({ open, onClose, onOpen, course }
                         <Button
                             variant="contained"
                             color="primary"
-                            onClick={onClose}
+                            onClick={onCloseWrapper}
                             sx={{ textTransform: 'none' }}
                         >
                             Close
@@ -234,7 +229,7 @@ export default function VideoUploadBottomSheet({ open, onClose, onOpen, course }
         <SwipeableDrawer
             anchor="bottom"
             open={open}
-            onClose={onClose}
+            onClose={onCloseWrapper}
             onOpen={onOpen}
             disableSwipeToOpen={false}
             ModalProps={{
@@ -248,7 +243,7 @@ export default function VideoUploadBottomSheet({ open, onClose, onOpen, course }
             }}
         >
             <Box display="flex" alignItems="center" justifyContent="space-between" sx={{ paddingTop: 'env(safe-area-inset-top)' }}>
-                <Button onClick={onClose} sx={{
+                <Button onClick={onCloseWrapper} sx={{
                     padding: '0px',
                     fontWeight: 'normal',
                     color: 'black',

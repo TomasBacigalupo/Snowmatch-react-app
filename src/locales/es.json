@@ -1169,12 +1169,14 @@
             "description": "Para aquellos que quieren mejorar su técnica en pista."
         },
         "PIST_1": {
-            "title": "Primeros Pasos",
-            "description": "Para aquellos que quieren mejorar su técnica en pista."
+            "title": "Posícion Básica",
+            "description": "Cómo pararme arriba de los esquies.",
+            "fundamentals": "La actitud dinamica de equilibrio nos va a permitir mejorar la esquiada pudiendo generar el cambio de canto desde los tobillos y evitando movimientos compensatorios" 
         },
         "PIST_2": {
-            "title": "Intermedios",
-            "description": "Para aquellos que quieren mejorar su técnica en pista."
+            "title": "Clavado de Baston",
+            "description": "Timing de clavado de baston en pista",
+            "fundamentals": "El clavado de baston es una herramienta fundamental para el equilibrio y la rotacion de cadera en la pista"
         },
         "PIST_3": {
             "title": "Avanzados",

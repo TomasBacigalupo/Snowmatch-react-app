@@ -16,7 +16,6 @@
     "clear-all": "rm -rf build node_modules",
     "re-start": "rm -rf build node_modules && yarn install && yarn start",
     "re-build": "rm -rf build node_modules && yarn install && yarn build"
-    
   },
   "eslintConfig": {
     "extends": [
@@ -122,6 +121,7 @@
     "react-map-gl": "^6.1.19",
     "react-markdown": "^8.0.0",
     "react-multi-date-picker": "^3.3.4",
+    "react-player": "^2.16.0",
     "react-quill": "^2.0.0-beta.4",
     "react-redux": "^7.2.6",
     "react-responsive": "^9.0.0-beta.10",

@@ -473,16 +473,6 @@ export default function CalendarDayForm({ event, range, onCancel, clients, membe
             )}
           />
         </Box>
-        {/* <Box>
-          <MobileDatePicker
-            label="Día"
-            value={values.start}
-            onChange={(newValue) => {
-              setValue('start', newValue);
-            }}
-            renderInput={(params) => <TextField {...params} fullWidth />}
-          />
-        </Box> */}
         {block === 'block' && <>
           <Grid spacing={2} direction={{ xs: 'column', md: 'column ' }}>
             <Paper

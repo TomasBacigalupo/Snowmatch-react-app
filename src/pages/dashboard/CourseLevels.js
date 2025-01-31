@@ -18,6 +18,7 @@ import { getVideos } from 'src/redux/slices/video';
 import { AnalyticsCurrentSubject, AnalyticsUserProgress } from 'src/sections/@dashboard/general/analytics';
 import Markdown from 'src/components/Markdown';
 import Breadcrumbs from 'src/components/Breadcrumbs';
+import ReactPlayer from 'react-player';
 
 const Input = styled('input')({
     display: 'none',
@@ -28,23 +29,23 @@ const steps = ['Seleccionar', 'Revisar', 'Subir'];
 const courseLevels = {
     'PIST': [
         { course: 'PIST_1', level: 1, title: 'Principiante', description: 'Aprender a esquiar en pista', completed: true, score: 8, demoUrl: 'https://snowmatchvideos.s3.us-east-1.amazonaws.com/Screen+Recording+2024-12-29+at+4.13.17%E2%80%AFPM.mov' },
-        { course: 'PIST_2', level: 2, title: 'Intermedio', description: 'Clavado de bastón', completed: true, score: 10, demoUrl:'https://snowmatchvideos.s3.us-east-1.amazonaws.com/Tip_Como+hacer+el+clavado+de+baston.mp4' },
-        { course: 'PIST_3',level: 3, title: 'Avanzado', description: 'Dominar técnica en pista', completed: false },
+        { course: 'PIST_2', level: 2, title: 'Intermedio', description: 'Clavado de bastón', completed: true, score: 10, demoUrl: 'https://snowmatchvideos.s3.us-east-1.amazonaws.com/Tip_Como+hacer+el+clavado+de+baston.mp4' },
+        { course: 'PIST_3', level: 3, title: 'Avanzado', description: 'Dominar técnica en pista', completed: false },
     ],
     'BUMPS': [
-        { course: 'BUMPS_1',level: 1, title: 'Principiante', description: 'Aprender a esquiar en bumps', completed: false },
-        { course: 'BUMPS_2',level: 2, title: 'Intermedio', description: 'Mejorar técnica en bumps', completed: false },
-        { course: 'BUMPS_3',level: 3, title: 'Avanzado', description: 'Dominar técnica en bumps', completed: false },
+        { course: 'BUMPS_1', level: 1, title: 'Principiante', description: 'Aprender a esquiar en bumps', completed: false },
+        { course: 'BUMPS_2', level: 2, title: 'Intermedio', description: 'Mejorar técnica en bumps', completed: false },
+        { course: 'BUMPS_3', level: 3, title: 'Avanzado', description: 'Dominar técnica en bumps', completed: false },
     ],
     'FREE_RIDE': [
-        { course: 'FREE_RIDE_1',level: 1, title: 'Principiante', description: 'Aprender a esquiar en free ride', completed: false },
-        { course: 'FREE_RIDE_2',level: 2, title: 'Intermedio', description: 'Mejorar técnica en free ride', completed: false },
-        { course: 'FREE_RIDE_3',level: 3, title: 'Avanzado', description: 'Dominar técnica en free ride', completed: false },
+        { course: 'FREE_RIDE_1', level: 1, title: 'Principiante', description: 'Aprender a esquiar en free ride', completed: false },
+        { course: 'FREE_RIDE_2', level: 2, title: 'Intermedio', description: 'Mejorar técnica en free ride', completed: false },
+        { course: 'FREE_RIDE_3', level: 3, title: 'Avanzado', description: 'Dominar técnica en free ride', completed: false },
     ],
     'FREE_STYLE': [
-        { course: 'FREE_STYLE_1',level: 1, title: 'Principiante', description: 'Aprender a esquiar en free style', completed: false },
-        { course: 'FREE_STYLE_2',level: 2, title: 'Intermedio', description: 'Mejorar técnica en free style', completed: false },
-        { course: 'FREE_STYLE_3',level: 3, title: 'Avanzado', description: 'Dominar técnica en free style', completed: false },
+        { course: 'FREE_STYLE_1', level: 1, title: 'Principiante', description: 'Aprender a esquiar en free style', completed: false },
+        { course: 'FREE_STYLE_2', level: 2, title: 'Intermedio', description: 'Mejorar técnica en free style', completed: false },
+        { course: 'FREE_STYLE_3', level: 3, title: 'Avanzado', description: 'Dominar técnica en free style', completed: false },
     ],
 };
 
@@ -226,6 +227,15 @@ export default function CourseLevels() {
                                 <Typography variant="h6" gutterBottom align="center">
                                     Video Preview
                                 </Typography>
+                                <ReactPlayer
+                                    url={videoPreviewUrl}
+                                    controls
+                                    playing={false}
+                                    light={true}
+                                    width="100%"
+                                    height="auto"
+                                    maxHeight="300px"
+                                />
                                 <video
                                     ref={videoRef}
                                     src={videoPreviewUrl}

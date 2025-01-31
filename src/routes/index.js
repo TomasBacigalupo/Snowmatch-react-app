@@ -23,6 +23,7 @@ import VideoUpload from 'src/pages/dashboard/VideoUpload';
 import UploadedVideos from 'src/pages/dashboard/UploadedVideos';
 import UnratedVideos from 'src/pages/dashboard/UnratedVideos';
 import CourseLevels from 'src/pages/dashboard/CourseLevels';
+import BackButtonLayout from 'src/layouts/BackButtonLayout';
 
 // ----------------------------------------------------------------------
 
@@ -102,17 +103,79 @@ export default function Router() {
       ),
       children: [
         { element: <Navigate to={'/match/school/:resort'} replace />, index: true },
-        { path: '*', element: <EcommerceShop isGuest={true} teacherType="school" /> },
-        { path: 'independent', element: <EcommerceShop isGuest={true} teacherType="independent" /> },
-        { path: 'school', element: <EcommerceShop isGuest={true} teacherType="school" /> },
-        { path: 'teacher/:id', element: <EcommerceTeacherDetails isGuest={true} /> },
-        { path: 'product/:id', element: <EcommerceProductDetails /> },
-        { path: 'teacher/:id/products/:productId', element: <EcommerceTeacherProducts /> },
+        // { path: '*', element: <EcommerceShop isGuest={true} teacherType="school" /> },
+        // { path: 'independent', element: <EcommerceShop isGuest={true} teacherType="independent" /> },
+        // { path: 'school', element: <EcommerceShop isGuest={true} teacherType="school" /> },
+        // { path: 'teacher/:id', element: <EcommerceTeacherDetails isGuest={true} /> },
+        // { path: 'product/:id', element: <EcommerceProductDetails /> },
+        // { path: 'teacher/:id/products/:productId', element: <EcommerceTeacherProducts /> },
         { path: 'schools/:id', element: <SchoolDetails isGuest={true} /> },
         { path: 'schools', element: <SchoolList teacherType="school" /> },
         // { path: '*', element: <EcommerceShop isGuest={true} teacherType="school" /> },
         // { path: 'independent', element: <EcommerceShop isGuest={true} teacherType="independent" /> },
         // { path: 'school', element: <EcommerceShop isGuest={true} teacherType="school" /> },
+        // {
+        //   path: 'teacher/:id', element:
+        //     <EcommerceTeacherDetails isGuest={true} />
+        // },
+        {
+          path: 'teacher/:id/review', element:
+            <AuthGuard>
+              <ReviewTeacher />
+            </AuthGuard>
+        },
+        // {
+        //   path: 'teacher/:id/hire', element:
+        //     <AuthGuard>
+        //       <EcommerceCheckoutTeacher />
+        //     </AuthGuard>
+        // },
+        {
+          path: 'product/:id/hire', element: 
+          <AuthGuard>
+            <EcommerceCheckoutProduct />
+          </AuthGuard>
+        },
+        { path: 'lessons', element: <UserLessons /> },
+        { path: 'lessons/:eventId', element: <LessonDetails /> },
+        {
+          path: 'videoCoach',
+          children: [
+            { element: <Navigate to="/match/videoCoach/upload" replace />, index: true },
+            { path: 'upload', element: <VideoUpload /> },
+            { path: 'uploaded', element: <UploadedVideos /> },
+            { path: 'unrated', element: <UnratedVideos /> },
+          ],
+        },
+      ]
+    },
+    {
+      path: 'match',
+      element: (
+        <RoleBasedGuard accessibleRoles={['GUEST', 'STUDENT']}>
+          <PlainLayout />
+        </RoleBasedGuard>
+
+      ),
+      children: [
+        { element: <Navigate to={'/match/school/:resort'} replace />, index: true },
+        { path: '*', element: <EcommerceShop isGuest={true} teacherType="school" /> },
+        { path: 'independent', element: <EcommerceShop isGuest={true} teacherType="independent" /> },
+        { path: 'school', element: <EcommerceShop isGuest={true} teacherType="school" /> },
+      ]
+    },
+    {
+      path: 'match',
+      element: (
+        <RoleBasedGuard accessibleRoles={['GUEST', 'STUDENT']}>
+          <BackButtonLayout />
+        </RoleBasedGuard>
+
+      ),
+      children: [
+        { path: 'teacher/:id', element: <EcommerceTeacherDetails isGuest={true} /> },
+        { path: 'product/:id', element: <EcommerceProductDetails /> },
+        { path: 'teacher/:id/products/:productId', element: <EcommerceTeacherProducts /> },
         {
           path: 'teacher/:id', element:
             <EcommerceTeacherDetails isGuest={true} />
@@ -152,7 +215,7 @@ export default function Router() {
       path: 'match',
       element: (
         <RoleBasedGuard accessibleRoles={['GUEST', 'STUDENT']}>
-          <PlainLayout />
+          <BackButtonLayout />
         </RoleBasedGuard>
 
       ),

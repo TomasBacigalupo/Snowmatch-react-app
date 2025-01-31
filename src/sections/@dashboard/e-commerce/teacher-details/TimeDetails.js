@@ -39,7 +39,7 @@ const TimeDetails = () => {
                 anchor="bottom"
                 open={open}
                 onClose={() => setOpen(false)}
-                sx={{ '& .MuiDrawer-paper': { boxSizing: 'border-box', width: '100%', height: '100%' } }}
+                sx={{ '& .MuiDrawer-paper':  { boxSizing: 'border-box', width: '100%', height: '100%', paddingTop: 'env(safe-area-inset-top)' } }}
             >
                 <Grid>
                     <Grid item xs={12} p={2}>

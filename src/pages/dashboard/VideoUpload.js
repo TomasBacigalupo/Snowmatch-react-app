@@ -449,8 +449,6 @@ export default function VideoUpload() {
                         {renderStep()}
                     </Box>
                 </SwipeableDrawer>
-
-                {/* Updated SwipeableDrawer for video details */}
                 <SwipeableDrawer
                     anchor="bottom"
                     open={isVideoDetailOpen}
@@ -580,7 +578,7 @@ export default function VideoUpload() {
                 </ToggleButtonGroup>
 
                 {/* Updated section for displaying uploaded videos or message */}
-                <Box >
+                <Box>
                     {uploadedVideos?.filter(video => !video?.reviewed)?.length > 0 && (
                         <Box my={2}>
                             <Typography variant="h6" mt={4}>

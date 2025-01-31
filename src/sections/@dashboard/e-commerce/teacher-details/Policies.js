@@ -33,7 +33,7 @@ const Policies = () => {
                 sx={{
                     '& .MuiDrawer-paper': {
                         boxSizing: 'border-box', width: '100%', paddingBottom: 2, borderTopLeftRadius: '12px',  // Adjust the value as needed
-                        borderTopRightRadius: '12px'
+                        borderTopRightRadius: '12px',
                     }
                 }}
             >

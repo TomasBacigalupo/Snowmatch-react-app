@@ -3,9 +3,6 @@ import { Outlet } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 import { IconButton } from '@mui/material';
 import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
-import NavbarVertical from './dashboard/navbar/NavbarVertical';
-import LabelBottomNavigation from './dashboard/navbar/LabelBottomNavigation';
-import { useState } from 'react';
 
 // ----------------------------------------------------------------------
 
@@ -24,7 +21,7 @@ const HeaderStyle = styled('header')(({ theme }) => ({
 }));
 
 const ContentStyle = styled('div')(({ theme }) => ({
-  paddingTop: 'env(safe-area-inset-top)', // Leave space for the fixed header
+  // paddingTop: 'calc(env(safe-area-inset-top, 0px) + 24px)', // Leave space for the fixed header
   [theme.breakpoints.up('sm')]: {
     paddingTop: theme.spacing(12) // Adjust for larger screens if needed
   }
@@ -32,15 +29,27 @@ const ContentStyle = styled('div')(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-export default function PlainLayout() {
-  const [open, setOpen] = useState(false);
-  
+export default function BackButtonLayout() {
   return (
-    <ContentStyle>
-      <NavbarVertical isOpenSidebar={open} onCloseSidebar={() => setOpen(false)} isGuest={true} />
-      <Outlet />
-      <LabelBottomNavigation onOpenSidebar={() => setOpen(true)} isGuest={true} />
-    </ContentStyle>
-
+    <>
+      <HeaderStyle>
+        <IconButton 
+          onClick={() => window.history.back()} 
+          sx={{
+            borderRadius: '50%', // Make it circular
+            width: 40, // Adjust size
+            height: 40, // Adjust size
+            '&:hover': {
+              backgroundColor: 'rgba(0, 0, 0, 0.1)' // Slightly darker on hover
+            }
+          }}
+        >
+          <ArrowBackRoundedIcon fontSize="medium" />
+        </IconButton>
+      </HeaderStyle>
+      <ContentStyle>
+        <Outlet />
+      </ContentStyle>
+    </>
   );
 }

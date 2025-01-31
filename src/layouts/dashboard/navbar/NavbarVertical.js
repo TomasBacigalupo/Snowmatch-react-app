@@ -99,7 +99,7 @@ export default function NavbarVertical({ isOpenSidebar, onCloseSidebar, isGuest,
       <Stack
         spacing={3}
         sx={{
-          pt: 3,
+          pt: 'env(safe-area-inset-top)',
           pb: 2,
           px: 2.5,
           flexShrink: 0,
@@ -107,7 +107,7 @@ export default function NavbarVertical({ isOpenSidebar, onCloseSidebar, isGuest,
         }}
       >
         <Stack direction="row" alignItems="center" justifyContent="space-between">
-          <Logo />
+          {/* <Logo /> */}
           {isDesktop && !isCollapse && (
             <CollapseButton onToggleCollapse={onToggleCollapse} collapseClick={collapseClick} />
           )}

@@ -94,22 +94,20 @@ export default function TeacherDetailsCarousel({ teacher }) {
 
   return (
     <RootStyle>
-      <Box sx={{ p: 1 }}>
-        <Box sx={{ zIndex: 0, borderRadius: 2, overflow: 'hidden', position: 'relative' }}>
-          {teacher.images.map((img) => (
-            <Image
-              onError={() => setSource('/assets/notFound.jpeg')}
-              key={source}
-              alt="large image"
-              src={source}
-              ratio="1/1"
-              onClick={() => handleOpenLightbox(source)}
-              sx={{ cursor: 'zoom-in' }}
-            />
-          ))}
-          <Box sx={{ position: 'absolute', top: 8, right: 8 }}>
-            <ShareButton teacherName={teacher.name} />
-          </Box>
+      <Box sx={{ zIndex: 0, borderRadius: 2, overflow: 'hidden', position: 'relative' }}>
+        {teacher.images.map((img) => (
+          <Image
+            onError={() => setSource('/assets/notFound.jpeg')}
+            key={source}
+            alt="large image"
+            src={source}
+            ratio="1/1"
+            onClick={() => handleOpenLightbox(source)}
+            sx={{ cursor: 'zoom-in' }}
+          />
+        ))}
+        <Box sx={{ position: 'absolute', top: 8, right: 8 }}>
+          <ShareButton teacherName={teacher.name} />
         </Box>
       </Box>
 

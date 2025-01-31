@@ -176,7 +176,6 @@ export default function EcommerceShop({ isGuest = false, teacherType = "school" 
       </Helmet>
 
       <Container maxWidth={themeStretch ? false : 'lg'}>
-
         {teacherType === "independent" && <IndependentShop />}
         {teacherType === "independent" && category === "premium" && <AirbnbFilters />}
 
@@ -189,27 +188,24 @@ export default function EcommerceShop({ isGuest = false, teacherType = "school" 
             sx={{ mb: 2 }}
             xs={12}
           >
+            <ShopProductSearch teachers={filteredTeachers} />
 
-            <>
-              <Stack xs={12}>
-                <ShopProductSearch teachers={filteredTeachers} />
-              </Stack>
 
-              {/* {!isTeacher && <CartWidget />} */}
+            {/* {!isTeacher && <CartWidget />} */}
 
-              <Stack direction="row" spacing={1} flexShrink={0} sx={{ my: 1 }}>
-                <FormProvider methods={methods}>
-                  <ShopFilterSidebar
-                    onResetAll={handleResetFilter}
-                    isOpen={openFilter}
-                    onOpen={handleOpenFilter}
-                    onClose={handleCloseFilter}
-                    isIndependant={teacherType === "independent"}
-                  />
-                </FormProvider>
-                {/*<ShopProductSort />*/}
-              </Stack>
-            </>
+            {/* <Stack direction="row" spacing={1} flexShrink={0} sx={{ my: 1 }}>
+              <FormProvider methods={methods}>
+                <ShopFilterSidebar
+                  onResetAll={handleResetFilter}
+                  isOpen={openFilter}
+                  onOpen={handleOpenFilter}
+                  onClose={handleCloseFilter}
+                  isIndependant={teacherType === "independent"}
+                />
+              </FormProvider>
+              <ShopProductSort />
+            </Stack> */}
+
 
 
           </Stack>

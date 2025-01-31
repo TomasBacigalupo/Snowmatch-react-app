@@ -77,12 +77,13 @@ export default function TeacherDetailsMobileReview({ teacher, openForm = false }
                 open={openReviewModal}
                 onClose={() => setOpenReviewModal(false)}
                 sx={{
+                    paddingTop: 'env(safe-area-inset-top)',
                     '& .MuiDrawer-paper': {
                         boxSizing: 'border-box', width: '100%', paddingBottom: 2, borderTopLeftRadius: '12px',  // Adjust the value as needed
                         borderTopRightRadius: '12px',
                         height: '95%',
-                        marginTop: '20px',
-                        paddingX: 1
+                        marginTop: 'env(safe-area-inset-top)',
+                        paddingX: 1,
                     }
                 }}
             >
@@ -157,6 +158,7 @@ export default function TeacherDetailsMobileReview({ teacher, openForm = false }
                 open={open}
                 onClose={() => setOpen(false)}
                 sx={{
+                    paddingTop: 'env(safe-area-inset-top)',
                     '& .MuiDrawer-paper': {
                         boxSizing: 'border-box', width: '100%', height: '100%', paddingBottom: 2, borderTopLeftRadius: '12px',  // Adjust the value as needed
                         borderTopRightRadius: '12px'

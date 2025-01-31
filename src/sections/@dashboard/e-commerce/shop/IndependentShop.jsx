@@ -4,7 +4,7 @@ import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import { useDispatch, useSelector } from 'react-redux';
 import { setPremiumTeachers, setStandardTeachers } from 'src/redux/slices/teachers';
 import { premiumLesson, standardLesson } from 'src/services/facebook';
-import { Typography, Drawer, Button } from '@mui/material';
+import { Typography, Drawer, Button, Hidden } from '@mui/material';
 import { Grid, IconButton, Box } from '@mui/material';
 import Iconify from "src/components/Iconify";
 import useLocales from 'src/hooks/useLocales';
@@ -121,21 +121,23 @@ export default function IndependentShop() {
                 </Typography>
             </Button>
             }
+            <Hidden mdDown>
+                {category != 'premium' && <Box
+                    color="inherit"
+                    variant="text"
+                    fullWidth sx={{
+                        position: 'absolute',
+                        left: '50%', // Position the button at 50% of the container's width
+                        transform: 'translateX(-50%)', // Move the button back by half of its own width
+                        top: 60,
+                    }}>
+                    <Typography component='h1'>
+                        Clases de ski Catedral
+                    </Typography>
+                </Box>
+                }
+            </Hidden>
 
-            {category != 'premium' && <Box
-                color="inherit"
-                variant="text"
-                fullWidth sx={{
-                    position: 'absolute',
-                    left: '50%', // Position the button at 50% of the container's width
-                    transform: 'translateX(-50%)', // Move the button back by half of its own width
-                    top: 60,
-                }}>
-                <Typography component='h1'>
-                    Clases de ski Catedral
-                </Typography>
-            </Box>
-            }
 
         </>
     );

@@ -34,6 +34,7 @@
         }
     },
     "general": {
+        "startSearch": "Empezá tu busqueda",
         "cancel": "Cancelar",
         "AVAILABLE": "Disponible",
         "UNAVAILABLE": "Ocupado",

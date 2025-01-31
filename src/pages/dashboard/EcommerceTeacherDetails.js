@@ -136,10 +136,11 @@ export default function EcommerceTeacherDetails({ isGuest = false }) {
         />
         {!isLoading && teacher && (
           <>
+            <TeacherDetailsCarousel teacher={{ images: [teacher?.imageLink], name: teacher?.name }} />
             <Grid container p={0}>
-              <Grid item xs={12} md={6} lg={7}>
+              {/* <Grid item xs={12} md={6} lg={7}>
                 <TeacherDetailsCarousel teacher={{ images: [teacher?.imageLink], name: teacher?.name }} />
-              </Grid>
+              </Grid> */}
               <Grid item xs={12} md={6} lg={5}>
                 <Hidden smUp>
                   <TeacherDetailsSummary
@@ -196,7 +197,7 @@ export default function EcommerceTeacherDetails({ isGuest = false }) {
                       </Typography>
                     </Box>
                     <Box onClick={() => setIsOpen(true)}>
-                      <TeacherDetailsMobileCalendar teacher={teacher}/>
+                      <TeacherDetailsMobileCalendar teacher={teacher} />
                     </Box>
                   </Box>
                   <Box mx={2} >

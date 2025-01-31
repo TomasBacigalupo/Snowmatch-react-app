@@ -25,7 +25,6 @@ export default function HeaderBreadcrumbs({ links, action, heading, moreLink = '
           </Typography>
           {links  && <Breadcrumbs links={links} {...other} />}
         </Box>
-
         {action && <Box sx={{ flexShrink: 0 }}>{action}</Box>}
       </Box>
 

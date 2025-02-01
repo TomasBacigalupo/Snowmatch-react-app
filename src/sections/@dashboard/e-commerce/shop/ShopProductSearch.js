@@ -5,6 +5,7 @@ import match from 'autosuggest-highlight/match';
 import { useNavigate } from 'react-router-dom';
 import { Controller, useForm } from 'react-hook-form';
 import { useTheme } from '@mui/material/styles';
+import { formatDate } from "@fullcalendar/react";
 // @mui
 import { styled } from '@mui/material/styles';
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
@@ -45,7 +46,7 @@ const PopperStyle = styled((props) => <Popper placement="bottom-start" {...props
 
 // ----------------------------------------------------------------------
 
-export default function ShopProductSearch({ teachers }) {
+export default function ShopProductSearch({ filters, teachers }) {
   const navigate = useNavigate();
   const theme = useTheme()
   const dispatch = useDispatch()
@@ -114,20 +115,20 @@ export default function ShopProductSearch({ teachers }) {
   }
 
   const handleNext = () => {
-    if(expandedResort){
+    if (expandedResort) {
       setExpandedDates(true)
     }
-    if(expandedDates){
+    if (expandedDates) {
       setExpandedDiscipline(true)
     }
   }
 
   const defaultRange = [
-    new Date(),
-    new Date(new Date().setDate(new Date().getDate() + 7)),
+    filters.from,
+    filters.to,
   ]
   const defaultValues = {
-    resort: 'Cerro Catedral',
+    resort: filters.resort,
     range: defaultRange,
     from: defaultRange[0],
     to: defaultRange[1],
@@ -195,70 +196,33 @@ export default function ShopProductSearch({ teachers }) {
           width: '100%',
           display: 'flex',
           alignItems: 'center',
-          px: 1,
-          py: 0,
+          justifyContent: 'center', // Center contents horizontally
+          px: 2,
+          py: 1,
           borderRadius: 10,
           boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
+          position: 'relative', // Needed for absolute positioning of the icon
         }}
       >
-        <InputAdornment position="start">
-          <Iconify icon="eva:search-fill" sx={{ width: 24, height: 24, color: 'text.disabled', ml: 1 }} />
-        </InputAdornment>
-        <Autocomplete
-          size="medium"
-          style={{
-            border: 'none'
+        {/* Search Icon */}
+        <Box
+          sx={{
+            position: 'absolute',
+            left: 16, // Adjust as needed
+            display: 'flex',
+            alignItems: 'center',
           }}
-          fullWidth
-          onClick={handleOpenDrawer}
-          popupIcon={null}
-          options={searchResults}
-          onInputChange={(event, value) => handleChangeSearch(value)}
-          getOptionLabel={(product) => product.name + " " + product.lastname}
-          noOptionsText={<SearchNotFound searchQuery={searchQuery} />}
-          isOptionEqualToValue={(option, value) => option.id === value.id}
-          renderInput={(params) => (
-            <TextField {...params} placeholder={translate('general.startSearch')} fullWidth sx={{
-              '& .MuiOutlinedInput-root': {
-                border: 'none',
-                boxShadow: 'none',
-                '& fieldset': { border: 'none' },
-                '&:hover fieldset': { border: 'none' },
-                '&.Mui-focused fieldset': { border: 'none' },
-              },
-              input: {
-                caretColor: 'transparent', // Oculta el cursor
+        >
+          <Iconify icon="eva:search-fill" sx={{ width: 24, height: 24, color: 'text.disabled' }} />
+        </Box>
 
-                textAlign: 'center', // Centra el texto
-
-              },
-            }} inputProps={{ inputMode: 'none', readOnly: true }} // Prevents keyboard from opening
-            />
-          )}
-          renderOption={(props, product, { inputValue }) => {
-            const { name, lastname, email, imageLink, id } = product;
-            const matches = match(name + " " + lastname, inputValue);
-            const parts = parse(name + " " + lastname, matches);
-
-            return (
-              <li {...props} onClick={() => handleClick(id)}>
-                <Image alt={name} src={imageLink} sx={{ width: 48, height: 48, borderRadius: 1, flexShrink: 0, mr: 1.5 }} />
-                <Link underline="none" onClick={() => handleClick(id)}>
-                  {parts.map((part, index) => (
-                    <Typography
-                      key={index}
-                      component="span"
-                      variant="subtitle2"
-                      color={part.highlight ? 'primary' : 'textPrimary'}
-                    >
-                      {part.text}
-                    </Typography>
-                  ))}
-                </Link>
-              </li>
-            );
-          }}
-        />
+        {/* Centered Text */}
+        <Box component="li" display="flex" flexDirection="column" alignItems="center">
+          <Typography fontWeight="bold">{filters.resort}</Typography>
+          <Typography variant="body2" color="text.secondary">
+            {`${formatDate(filters.from)} - ${formatDate(filters.to)}`}
+          </Typography>
+        </Box>
       </Paper>
 
       <Drawer

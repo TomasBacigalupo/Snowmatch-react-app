@@ -24,6 +24,7 @@ import UploadedVideos from 'src/pages/dashboard/UploadedVideos';
 import UnratedVideos from 'src/pages/dashboard/UnratedVideos';
 import CourseLevels from 'src/pages/dashboard/CourseLevels';
 import BackButtonLayout from 'src/layouts/BackButtonLayout';
+import Training from 'src/pages/dashboard/Training';
 
 // ----------------------------------------------------------------------
 
@@ -131,10 +132,10 @@ export default function Router() {
         //     </AuthGuard>
         // },
         {
-          path: 'product/:id/hire', element: 
-          <AuthGuard>
-            <EcommerceCheckoutProduct />
-          </AuthGuard>
+          path: 'product/:id/hire', element:
+            <AuthGuard>
+              <EcommerceCheckoutProduct />
+            </AuthGuard>
         },
         { path: 'lessons', element: <UserLessons /> },
         { path: 'lessons/:eventId', element: <LessonDetails /> },
@@ -145,6 +146,7 @@ export default function Router() {
             { path: 'upload', element: <VideoUpload /> },
             { path: 'uploaded', element: <UploadedVideos /> },
             { path: 'unrated', element: <UnratedVideos /> },
+            { path: 'training', element: <Training /> }
           ],
         },
       ]
@@ -193,10 +195,10 @@ export default function Router() {
             </AuthGuard>
         },
         {
-          path: 'product/:id/hire', element: 
-          <AuthGuard>
-            <EcommerceCheckoutProduct />
-          </AuthGuard>
+          path: 'product/:id/hire', element:
+            <AuthGuard>
+              <EcommerceCheckoutProduct />
+            </AuthGuard>
         },
         { path: 'lessons', element: <UserLessons /> },
         { path: 'lessons/:eventId', element: <LessonDetails /> },
@@ -233,7 +235,7 @@ export default function Router() {
       element: (<GuestLayout />),
       children: [
         { path: 'protips', element: <BlogPosts /> },
-        {path: 'protips/posts/:id', element: <BlogPost />},
+        { path: 'protips/posts/:id', element: <BlogPost /> },
         {
           path: 'protips/new', element:
             <AuthGuard>
@@ -394,8 +396,10 @@ export default function Router() {
       path: '/',
       element: <MainLayout />,
       children: [
-        { element: <Navigate to="/match/videoCoach/upload" replace /> //changed just for app build <HomePage />
-          , index: true },
+        {
+          element: <Navigate to="/match/videoCoach/upload" replace /> //changed just for app build <HomePage />
+          , index: true
+        },
         { path: 'clases-de-ski-bariloche', element: <HomePageBariloche /> },
         { path: 'clases-de-ski-lago-hermoso', element: <HomePageLagoHermoso /> },
         { path: 'about-us', element: <About /> },

@@ -188,7 +188,7 @@ export default function EcommerceShop({ isGuest = false, teacherType = "school" 
             sx={{ mb: 2 }}
             xs={12}
           >
-            <ShopProductSearch teachers={filteredTeachers} />
+            <ShopProductSearch filters={filters} teachers={filteredTeachers} />
 
 
             {/* {!isTeacher && <CartWidget />} */}
@@ -220,7 +220,7 @@ export default function EcommerceShop({ isGuest = false, teacherType = "school" 
                   &nbsp;{translate('general.teachers_found')}
                 </Typography>
               }
-              {(teacherType !== "independent") &&
+              {/* {(teacherType !== "independent") &&
                 <TeacherTagFiltered
                   filters={filters}
                   isShowReset={!isDefault && !openFilter}
@@ -235,7 +235,7 @@ export default function EcommerceShop({ isGuest = false, teacherType = "school" 
                   onOpen={handleOpenFilter}
                   isIndependant={teacherType === "independent"}
                 />
-              }
+              } */}
             </>
           </Stack>
         )}

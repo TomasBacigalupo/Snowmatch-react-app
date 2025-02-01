@@ -291,9 +291,9 @@ export default function VideoUpload() {
                         flexDirection="row"
                         alignItems="center"
                         justifyContent="center"
-                        onClick={() => {
-                            navigate(`/match/videoCoach/courses?course=${course}`);
-                        }}
+                        // onClick={() => {
+                        //     navigate(`/match/videoCoach/courses?course=${course}`);
+                        // }}
                     >
                         <Box display="flex"
                             height='100%'
@@ -311,9 +311,9 @@ export default function VideoUpload() {
                             flexDirection="column"
                             alignItems="flex-start"
                             justifyContent="flex-start"
-                            onClick={() => {
-                                navigate(`/match/videoCoach/courses?course=${course}`);
-                            }}
+                            // onClick={() => {
+                            //     navigate(`/match/videoCoach/courses?course=${course}`);
+                            // }}
                         >
                             <Typography variant="h6" sx={{ mt: 2, mb: 1 }}>
                                 {title}

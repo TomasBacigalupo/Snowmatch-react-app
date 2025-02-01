@@ -19,6 +19,7 @@ const RootStyle = styled('div')(({ theme }) => ({
   height: '100%',
   alignItems: 'center',
   padding: theme.spacing(12, 0),
+  paddingTop: 'env(safe-area-inset-top)',
 }));
 
 // ----------------------------------------------------------------------

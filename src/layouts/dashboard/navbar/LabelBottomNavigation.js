@@ -75,10 +75,10 @@ export default function LabelBottomNavigation({ onOpenSidebar, isGuest }) {
             to={PATH_GUEST.videoCoach}
           />
           <BottomNavigationAction
-            label="Tips"
+            label="Progresión"
             icon={<CastForEducationIcon />}
             component={RouterLink}
-            to={PATH_GUEST.protips}
+            to={PATH_GUEST.training}
           />
           {console.log(value)}
           <BottomNavigationAction

@@ -47,6 +47,7 @@ export const PATH_GUEST = {
   checkout: (id) => path(ROOTS_FIND_A_PRO, `/teacher/${id}/hire`),
   protips: ROOTS_PRO_TIPS,
   videoCoach: path(ROOTS_FIND_A_PRO, `/videoCoach`),
+  training: path(ROOTS_FIND_A_PRO, `/videoCoach/training`),
 };
 
 export const PATH_PAGE = {

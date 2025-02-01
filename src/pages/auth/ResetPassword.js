@@ -29,6 +29,7 @@ const RootStyle = styled('div')(({ theme }) => ({
   alignItems: 'center',
   justifyContent: 'center',
   padding: theme.spacing(12, 0),
+  paddingTop: 'env(safe-area-inset-top)',
 }));
 
 // ----------------------------------------------------------------------

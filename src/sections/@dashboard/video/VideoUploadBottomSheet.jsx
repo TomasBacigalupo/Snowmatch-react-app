@@ -11,20 +11,10 @@ import useLocales from "src/hooks/useLocales";
 import useAuth from "src/hooks/useAuth";
 import { PATH_AUTH } from "src/routes/paths";
 import { useNavigate } from "react-router";
-import { UploadSingleFile } from "src/components/upload";
-import { set } from "lodash";
-import { on } from "process";
-
-const EmptyStateBox = styled(Box)(({ theme }) => ({
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: '200px',
-    border: `1px solid ${theme.palette.divider}`,
-    borderRadius: theme.shape.borderRadius,
-    backgroundColor: theme.palette.background.paper,
-}));
+import { Camera, CameraSource, CameraResultType } from '@capacitor/camera';
+import { VideoEditor } from '@awesome-cordova-plugins/video-editor';
+import { VideoPicker } from '@coderpradp/capacitor-plugin-video-picker';
+import VideoTrimmer from "./VideoTrimmer";
 
 export default function VideoUploadBottomSheet({ open, onClose, onOpen, course, demoUrl }) {
 
@@ -51,13 +41,10 @@ export default function VideoUploadBottomSheet({ open, onClose, onOpen, course, 
 
 
     const handleUpload = () => {
-        if (selectedFile && ((videoCourse && videoCourse.trim()) || course)) {
-            console.log('Uploading file:', selectedFile, 'with title:', videoCourse);
-            dispatch(createVideo(selectedFile, videoCourse || course));
-            setActiveStep(2);
-        } else {
-            alert('Please select a file and enter a title');
-        }
+
+        dispatch(createVideo(selectedFile, videoCourse || 'BUMPS'));
+        setActiveStep(2);
+
     };
 
     const resetUploadState = () => {
@@ -67,23 +54,6 @@ export default function VideoUploadBottomSheet({ open, onClose, onOpen, course, 
         setVideoCourse('');
         setActiveStep(0);
     };
-
-    const handleFileSelect = useCallback((event) => {
-        const file = event.target.files[0];
-
-        if (!file) return; // Prevent errors if no file is selected
-
-
-        const tempVideoUrl = URL.createObjectURL(file);
-        const video = document.createElement('video');
-        video.src = tempVideoUrl;
-
-        setSelectedFile(file);
-        setVideoPreviewUrl(tempVideoUrl);
-        setVideoDuration(video.duration);
-        // Reset the input after handling the file to allow re-selecting the same file
-        event.target.value = "";
-    }, [setSelectedFile, setVideoPreviewUrl, setVideoDuration]);
 
     useEffect(() => {
         if (activeStep === 2 && isLoading === false) {
@@ -103,82 +73,91 @@ export default function VideoUploadBottomSheet({ open, onClose, onOpen, course, 
         onClose();
     }
 
+    const handleTrim = async (start, end) => {
+        if (!videoPreviewUrl) return;
+        const trimmedVideo = await VideoEditor.trim(videoPreviewUrl, start, end);
+        if (trimmedVideo) {
+            console.log("Trimmed video ready for upload:", trimmedVideo);
+            setSelectedFile(trimmedVideo);
+        }
+    };
+
+    const uploadVideo = async () => {
+        try {
+            await Camera.requestPermissions()
+
+            const _video = await VideoPicker.pick();
+            const file = _video.files[0];
+
+            if (!file) return;
+
+            const tempVideoUrl = file.webPath;
+            console.log('object url created', tempVideoUrl)
+            const video = document.createElement('video');
+            video.src = tempVideoUrl;
+
+            setSelectedFile(file);
+            setVideoPreviewUrl(tempVideoUrl);
+            // setVideoDuration(video.duration);
+
+            console.log("video", video)
+            setSelectedFile(video)
+        } catch (error) {
+            console.error('Error uploading video:', error);
+        }
+    };
+
     const renderStep = useCallback(() => {
         switch (activeStep) {
             case 0:
                 return (
-                    <Box my={2} display="flex" flexDirection="column" >
-                        <Box mb={2}>
-                        <video
-                            src={demoUrl}
-                            width='100%'
-                            controls
-                        />
+                    <Box my={2} display="flex" height='100%' flexDirection="column" justifyContent='space-between'>
+                        <Box my={2} display="flex" flexDirection="column" >
+                            <Box mb={2}>
+                                <video
+                                    src={demoUrl}
+                                    width='100%'
+                                    controls
+                                />
+                            </Box>
+                            <Typography variant="h2" textAlign='left'>
+                                {translate(`course.${course}.title`)}
+                            </Typography>
+                            <Typography variant="subtitle1" textAlign='left'>
+                                {translate(`course.${course}.description`)}
+                            </Typography>
+                            <Typography variant="body1" textAlign='left'>
+                                {translate(`course.${course}.fundamentals`)}
+                            </Typography>
                         </Box>
-                        <Typography variant="h2" textAlign='left'>
-                        {translate(`course.${course}.title`)}
-                        </Typography>
-                        <Typography variant="subtitle1" textAlign='left'>
-                        {translate(`course.${course}.description`)}
-                        </Typography>
-                        <Typography variant="body1" textAlign='left'>
-                        {translate(`course.${course}.fundamentals`)}
-                        </Typography>
-                        <Button onClick={()=> setActiveStep(activeStep + 1)} sx={{
-                            mt: 2,
+
+                        <Button variant="contained" sx={{ py: 2, my: 2 }} fullWidth onClick={async () => {
+                            await uploadVideo();
+                            setActiveStep(activeStep + 1)
                         }}>
-                            Siguiente
+                            Start Challange
                         </Button>
                     </Box>
                 );
             case 1:
                 return (
-                    <Box my={2} display="flex" flexDirection="column" alignItems="center">
+                    <Box my={2} display="flex" height='100%' flexDirection="column" justifyContent='space-between'>
                         <Box my={2}>
-                            <Typography variant="body1" textAlign="center">
-                                {translate('video_upload_bottom_sheet.upload_video')}
-                            </Typography>
+                            {selectedFile && videoPreviewUrl && (
+                                <VideoTrimmer videoUrl={videoPreviewUrl} onTrim={handleTrim} />
+                            )}
                         </Box>
-                        {!selectedFile && 
-                        <EmptyStateBox>
-                            <Box my={2}>
-                                <Typography variant="body1" textAlign="center">
-                                    {translate('video_upload_bottom_sheet.upload_video')}
-                                </Typography>
-                            </Box>
-                            <Box mx={2}>
-                                <label class="custom-file-upload">
-                                    <input accept="video/*" type="file" onChange={handleFileSelect} style={{ display: 'none' }} />
-                                    <Button variant="outlined" component="span" fullWidth>
-                                        {translate('video_upload_bottom_sheet.select_video')}
-                                    </Button>
-                                </label>
-                            </Box>
-                        </EmptyStateBox>
-                        }
-                        {selectedFile && videoPreviewUrl && (
-                            <video
-                                ref={videoRef}
-                                src={videoPreviewUrl}
-                                width='100%'
-                                maxHeight='50px'
-                                controls
-                            />
-                        )}
-                        <Typography mt={2} variant="body" textAlign="center">
-                            {translate('video_upload_bottom_sheet.description')}
-                        </Typography>
-                        <Box mt={2} display="flex" justifyContent="center">
-                            <Button
-                                variant="contained"
-                                color="primary"
-                                onClick={handleUpload}
-                                fullWidth={isMobile}
-                                disabled={!((videoCourse && videoCourse.trim()) || course)}
-                            >
-                                Upload
-                            </Button>
-                        </Box>
+
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            fullWidth
+                            onClick={handleUpload}
+                            sx={{ py: 2, my: 2 }}
+                            disabled={!((videoCourse && videoCourse.trim()) || course)}
+                        >
+                            Upload
+                        </Button>
 
                     </Box>
 

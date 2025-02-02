@@ -1,150 +1,241 @@
-import orderBy from 'lodash/orderBy';
-import { useEffect, useCallback, useState } from 'react';
-import { Grid, Container, Stack, Typography, Box } from '@mui/material';
-import useSettings from '../../hooks/useSettings';
-import useIsMountedRef from '../../hooks/useIsMountedRef';
-import axios from '../../utils/axios';
+import { useState } from 'react';
+import { Container, Typography, Box } from '@mui/material';
+import Slider from 'react-slick';
 import Page from '../../components/Page';
-import { SkeletonPostItem } from '../../components/skeleton';
-import useLocales from 'src/hooks/useLocales';
-import TrainingHeroSection from './TrainingHeroSection';
+import useSettings from '../../hooks/useSettings';
+import useLocales from '../../hooks/useLocales';
 import VideoUploadBottomSheet from 'src/sections/@dashboard/video/VideoUploadBottomSheet';
 
+// Carousel settings
+const sliderSettings = {
+  dots: false,
+  infinite: false,
+  speed: 500,
+  slidesToShow: 4, // Default for large screens
+  slidesToScroll: 1,
+  variableWidth: true, // Allow dynamic width for slides
+  responsive: [
+    {
+      breakpoint: 1280, // Medium screens
+      settings: {
+        slidesToShow: 3,
+      },
+    },
+    {
+      breakpoint: 960, // Tablet screens
+      settings: {
+        slidesToShow: 2,
+      },
+    },
+    {
+      breakpoint: 600, // Mobile screens
+      settings: {
+        slidesToShow: 1,
+        slidesToScroll: 1, // Scroll one card at a time
+        variableWidth: true, // Show part of the next card
+      },
+    },
+  ],
+};
+const levelColors = {
+    Principiante: 'secondary.lighter', 
+    Intermedio: 'info.lighter', 
+    Avanzado: 'info.light',  
+  };
 
-// Custom Card Component for Videos
-const TrainingCard = ({ post, index }) => (
+  const levelIcon = {
+    Principiante: '/assets/courses/Intensidad_1.svg',  
+    Intermedio: '/assets/courses/Intensidad_dark.svg',  
+    Avanzado: '/assets/courses/Intensidad_3.svg',  
+  };
+  
+  const CourseCard = ({ post, onClick }) => (
     <Box
-        sx={{
-            position: 'relative',
-            borderRadius: 2,
-            overflow: 'hidden',
-            backgroundColor: '#f4f4f4',
-            '&:hover img': { transform: 'scale(1.05)', transition: '0.3s' },
-        }}
+      onClick={onClick}
+      sx={{
+        width: 200, 
+        height: 340,
+        borderRadius: 2,
+        overflow: 'hidden',
+        display: 'flex',
+        flexDirection: 'column',
+        backgroundColor: 'primary.light',
+        cursor: 'pointer',
+        '&:hover': { boxShadow: 4 },
+      }}
     >
-        <Box
+      {/* Upper Section: Title, Subtitle, and Level Indicator */}
+      <Box
+        sx={{
+          height: 180,
+          p: 2,
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'space-between',
+          backgroundColor: levelColors[post.level] || 'secondary.lighter', 
+        }}
+      >
+        <Typography
+          variant="subtitle2"
+          fontWeight="bold"
+          color="text.primary"
+          noWrap
+        >
+          {post.title}
+        </Typography>
+  
+        <Typography
+          variant="h2"
+          fontWeight="bold"
+          color="text.primary"
+          sx={{
+            mb: 2,
+            overflow: 'hidden',
+            display: '-webkit-box',
+            WebkitBoxOrient: 'vertical',
+            WebkitLineClamp: 2, // Allows up to 2 lines
+            lineHeight: 1, // Tight line spacing
+          }}
+        >
+          {post.subtitle}
+        </Typography>
+  
+        <Box sx={{ display: 'flex', alignItems: 'center', mt: 'auto' }}>
+          <Box
             component="img"
-            src={post.cover}
-            alt={post.title}
-            sx={{
-                width: '100%',
-                height: 180,
-                objectFit: 'cover',
-            }}
-        />
-        <Box sx={{ p: 2 }}>
-            <Typography variant="h6">{post.title}</Typography>
-            <Typography variant="body2" color="text.secondary">
-                {post.subtitle}
-            </Typography>
+            src={levelIcon[post.level]}
+            alt="Level"
+            sx={{ width: 24, height: 24 }}
+          />
+          <Typography variant="body2" fontWeight="bold" sx={{ ml: 'auto' }}>
+            {post.points} pts
+          </Typography>
         </Box>
+      </Box>
+  
+      {/* Lower Section: Image */}
+      <Box
+        component="img"
+        src={post.cover}
+        alt={post.title}
+        sx={{
+          width: '100%',
+          height: 160,
+          objectFit: 'cover',
+        }}
+      />
     </Box>
-);
+  );
 
-// Main Training Page
+// Main Component
 export default function Training() {
-    const { themeStretch } = useSettings();
-    const { translate } = useLocales();
-    const [open, setOpen] = useState(false)
-    const [selectedLevelTitle, setSelectedLevelTitle] = useState("");
-    const [selectedCourse, setSelectedCourse] = useState("");
-    
+  const { themeStretch } = useSettings();
+  const { translate } = useLocales();
+  const [open, setOpen] = useState(false);
+  const [selectedLevelTitle, setSelectedLevelTitle] = useState('');
+  const [selectedCourse, setSelectedCourse] = useState('');
 
-
-    const COURSES = [
+  const COURSES = [
+    {
+      title: 'Pista',
+      subtitle: 'Domina las pistas completando los tres ejercicios',
+      levels: [
         {
-            title: "Pista",
-            subtitle: "Domina las pistas completando los tres ejercicios",
-            cover: "/assets/courses/pista.png",
-            description: "Aprende a esquiar en la pista con correcciones online de nuestro equipo",
-            levels: [
-                {
-                    title: "Posicion al esquiar",
-                    subtitle: "Mejora tu posicion en la bajada",
-                    cover: "/assets/courses/position.png"
-                },
-                {
-                    title: "Clavado de Baston",
-                    subtitle: "Aprende a clavar el baston en el momento justo",
-                    cover: "/assets/courses/clavado.png"
-                },
-                {
-                    title: "Vueltas Medianas",
-                    subtitle: "Domina la velocidad en pistas azules con estilo",
-                    cover: "/assets/courses/pista2.png"
-                }
-            ]
+          title: 'Posición al esquiar',
+          subtitle: 'Mejora tu posición en la bajada',
+          cover: '/assets/courses/position.png',
+          level: 'Principiante',
+          points: 25,
         },
         {
-            title: "Bumps",
-            subtitle: "Descubri tu nivel en los bumps completando desafíos",
-            cover: "/assets/courses/bumps.png",
-            levels: [
-                {
-                    title: "Primeros moguls",
-                    subtitle: "Ejercicio para mejorar bumps",
-                    cover: "/assets/courses/carving.png"
-                },
-                {
-                    title: "Clavado de Baston",
-                    subtitle: "Aprende a clavar el baston en el momento justo",
-                    cover: "/assets/courses/pista.png"
-                }
-            ]
-        }
-    ]
+          title: 'Clavado de Bastón',
+          subtitle: 'Aprende a clavar el bastón en el momento justo',
+          cover: '/assets/courses/clavado.png',
+          level: 'Intermedio',
+          points: 25,
+        },
+        {
+          title: 'Vueltas Medianas',
+          subtitle: 'Domina la velocidad en pistas azules con estilo',
+          cover: '/assets/courses/pista2.png',
+          level: 'Avanzado',
+          points: 50,
+        },
+      ],
+    },
+    {
+      title: 'Bumps',
+      subtitle: 'Descubrí tu nivel en los bumps completando desafíos',
+      levels: [
+        {
+          title: 'Primeros moguls',
+          subtitle: 'Ejercicio para mejorar bumps',
+          cover: '/assets/courses/carving.png',
+          level: 'Principiante',
+          points: 25,
+        },
+        {
+          title: 'Clavado de Bastón',
+          subtitle: 'Aprende a clavar el bastón en el momento justo',
+          cover: '/assets/courses/pista.png',
+          level: 'Intermedio',
+          points: 25, 
+        },
+      ],
+    },
+  ];
 
-    const handleSelectCourseLevel = (course, level) => {
-        setOpen(true);
-        setSelectedCourse("PIST");
-        setSelectedLevelTitle(level.title)
-    }
+  const handleSelectCourseLevel = (course, level) => {
+    setOpen(true);
+    setSelectedCourse(course.title);
+    setSelectedLevelTitle(level.title);
+  };
 
-    return (
-        <Page title={translate('training.title')}>
-            <Container maxWidth={themeStretch ? false : 'lg'}>
-                <Grid container spacing={4}>
-                    {COURSES.map(course => (
-                        <Grid item xs={12}>
-                            <TrainingHeroSection
-                                title={course.title}
-                                subtitle={course.subtitle}
-                                backgroundImage={course.cover}
-                            />
-                            <Box
-                                sx={{
-                                    mt: -30,
-                                    position: 'relative',
-                                    display: 'flex',
-                                    overflowX: 'auto',
-                                    whiteSpace: 'nowrap',
-                                    gap: 3,
-                                    pb: 2,
-                                    px: 2,
-                                    '&::-webkit-scrollbar': { height: 'none' },
-                                    '&::-webkit-scrollbar-thumb': 'none',
-                                }}
-                            >
-                                {course.levels.map((post, index) =>
-                                    post ? (
-                                        <Box key={post.id} sx={{ flex: '0 0 auto', width: 320 }} onClick={()=>handleSelectCourseLevel(course, post)}>
-                                            <TrainingCard post={post} index={index}  />
-                                        </Box>
-                                    ) : (
-                                        <SkeletonPostItem key={index} sx={{ flex: '0 0 auto', width: 240 }} />
-                                    )
-                                )}
-                            </Box>
-                        </Grid>
-                    ))}
-                </Grid>
-            </Container>
-            <VideoUploadBottomSheet
-                title={selectedLevelTitle}
-                course={selectedCourse}
-                onOpen={() => setOpen(true)}
-                open={open}
-                onClose={() => setOpen(false)} />
-        </Page>
-    );
+  return (
+    <Page title={translate('training.title')}>
+      <Container maxWidth={themeStretch ? false : 'lg'}>
+        {COURSES.map((course, idx) => (
+          <Box key={idx} sx={{ mb: 6 }}>
+            {/* Section Header */}
+            <Typography variant="h4" sx={{ mb: 1, fontWeight: 'bold' }}>
+              {course.title}
+            </Typography>
+            <Typography variant="subtitle1" sx={{ mb: 3 }} color="text.secondary">
+              {course.subtitle}
+            </Typography>
+
+            {/* Carousel for Course Levels */}
+            <Slider
+              {...sliderSettings}
+              style={{
+                display: 'flex',
+              }}
+            >
+              {course.levels.map((level, levelIdx) => (
+                <Box
+                  key={levelIdx}
+                  sx={{
+                    flex: '0 0 auto',
+                    marginRight: 2, 
+                  }}
+                >
+                  <CourseCard
+                    post={level}
+                    onClick={() => handleSelectCourseLevel(course, level)}
+                  />
+                </Box>
+              ))}
+            </Slider>
+          </Box>
+        ))}
+      </Container>
+      <VideoUploadBottomSheet
+        title={selectedLevelTitle}
+        course={selectedCourse}
+        onOpen={() => setOpen(true)}
+        open={open}
+        onClose={() => setOpen(false)}
+      />
+    </Page>
+  );
 }

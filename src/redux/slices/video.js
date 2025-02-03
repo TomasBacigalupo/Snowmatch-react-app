@@ -322,11 +322,15 @@ export function changeProfilePicture(picture, callBack) {
 export function createVideo(video, course) {
     return async () => {
         try {
+            console.log('video.type', video.type)
+            console.log('course 1', course)
             dispatch(slice.actions.startLoading());
             const response = await axios.post('/api/videos/VideoReviews',{
                 course: course,
             });
             const presignedUrl = response.data.videoUrl;
+
+            console.log("presignedUrl 1", presignedUrl)
 
             // change the presigned url from https to http
             // because the presigned url is not working with https
@@ -344,6 +348,7 @@ export function createVideo(video, course) {
             dispatch(slice.actions.createVideoSuccess());
             return response;
         } catch (error) {
+            console.log("error", error.message)
             return error;
         }
     };

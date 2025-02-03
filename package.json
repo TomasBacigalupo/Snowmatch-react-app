@@ -53,6 +53,7 @@
     "@emotion/cache": "^11.7.1",
     "@emotion/react": "^11.8.2",
     "@emotion/styled": "^11.8.1",
+    "@ffmpeg/ffmpeg": "^0.12.15",
     "@fullcalendar/core": "^6.1.10",
     "@fullcalendar/daygrid": "^5.10.1",
     "@fullcalendar/interaction": "^5.10.1",

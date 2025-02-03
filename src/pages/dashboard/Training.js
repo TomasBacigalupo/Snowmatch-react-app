@@ -53,7 +53,7 @@ const levelColors = {
     <Box
       onClick={onClick}
       sx={{
-        width: 200, 
+        width: 240, 
         height: 340,
         borderRadius: 2,
         overflow: 'hidden',
@@ -134,11 +134,13 @@ export default function Training() {
   const [open, setOpen] = useState(false);
   const [selectedLevelTitle, setSelectedLevelTitle] = useState('');
   const [selectedCourse, setSelectedCourse] = useState('');
+  const [demoUrl, setDemoUrl] = useState('');
 
   const COURSES = [
     {
       title: 'Pista',
       subtitle: 'Domina las pistas completando los tres ejercicios',
+      code: 'PIST',
       levels: [
         {
           title: 'Posición al esquiar',
@@ -146,6 +148,7 @@ export default function Training() {
           cover: '/assets/courses/position.png',
           level: 'Principiante',
           points: 25,
+          demoUrl: 'https://snowmatchvideos.s3.us-east-1.amazonaws.com/Screen+Recording+2024-12-29+at+4.13.17%E2%80%AFPM.mov'
         },
         {
           title: 'Clavado de Bastón',
@@ -153,6 +156,7 @@ export default function Training() {
           cover: '/assets/courses/clavado.png',
           level: 'Intermedio',
           points: 25,
+          demoUrl: 'https://snowmatchvideos.s3.us-east-1.amazonaws.com/Tip_Como+hacer+el+clavado+de+baston.mp4'
         },
         {
           title: 'Vueltas Medianas',
@@ -166,6 +170,7 @@ export default function Training() {
     {
       title: 'Bumps',
       subtitle: 'Descubrí tu nivel en los bumps completando desafíos',
+      code: 'BUMPS',
       levels: [
         {
           title: 'Primeros moguls',
@@ -187,8 +192,9 @@ export default function Training() {
 
   const handleSelectCourseLevel = (course, level) => {
     setOpen(true);
-    setSelectedCourse(course.title);
-    setSelectedLevelTitle(level.title);
+    setSelectedCourse(course.code);
+    setSelectedLevelTitle(level.code);
+    setDemoUrl(level.demoUrl)
   };
 
   return (
@@ -235,6 +241,7 @@ export default function Training() {
         onOpen={() => setOpen(true)}
         open={open}
         onClose={() => setOpen(false)}
+        demoUrl={demoUrl}
       />
     </Page>
   );

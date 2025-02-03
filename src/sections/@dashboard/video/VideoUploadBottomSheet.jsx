@@ -2,7 +2,7 @@ import { Button, FormControl, Input, InputLabel, MenuItem, Select, Step, StepLab
 import { Box, useMediaQuery } from "@mui/system";
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { styled } from '@mui/material/styles';
+import { styled, alpha } from '@mui/material/styles';
 import { useTheme } from '@mui/material/styles';
 import { useDispatch, useSelector } from "src/redux/store";
 import { clearUploadVideoState, createVideo } from "src/redux/slices/video";
@@ -15,6 +15,25 @@ import { Camera, CameraSource, CameraResultType } from '@capacitor/camera';
 import { VideoEditor } from '@awesome-cordova-plugins/video-editor';
 import { VideoPicker } from '@coderpradp/capacitor-plugin-video-picker';
 import VideoTrimmer from "./VideoTrimmer";
+import ReactPlayer from "react-player";
+import { m } from 'framer-motion';
+import Logo from "src/components/Logo";
+
+import { FFmpeg, fetchFile } from '@ffmpeg/ffmpeg';
+import { LoadingButton } from "@mui/lab";
+
+
+const RootStyle = styled('div')(({ theme }) => ({
+    right: 0,
+    bottom: 0,
+    zIndex: 99999,
+    width: '100%',
+    height: '100%',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: theme.palette.background.default,
+}));
 
 export default function VideoUploadBottomSheet({ open, onClose, onOpen, course, demoUrl }) {
 
@@ -35,17 +54,56 @@ export default function VideoUploadBottomSheet({ open, onClose, onOpen, course, 
     const [activeStep, setActiveStep] = useState(0);
     const videoRef = useRef(null);
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+    const [loadingCompresor, setLoadingCompresor] = useState(false)
 
     const dispatch = useDispatch();
     const { isLoading } = useSelector((state) => state.video)
 
 
-    const handleUpload = () => {
+    const handleUpload = useCallback(async () => {
+        console.log("handeleUpload")
+        console.log("selectedFile", selectedFile)
+        setLoadingCompresor(true)
+        
+        const file = selectedFile;
+        const fetchedFile = await fetch(file.webPath);
+        const blobFile = await fetchedFile.blob();
+        
+        console.log("blobFile", blobFile.type);
 
-        dispatch(createVideo(selectedFile, videoCourse || 'BUMPS'));
+        // Load FFmpeg.wasm
+        const ffmpeg = new FFmpeg({ log: true });
+        await ffmpeg.load();
+
+        // Instead of writing to virtual file system, process the Blob directly
+        const inputFileData = await blobFile.arrayBuffer();  // Convert Blob to ArrayBuffer
+
+        // Initialize FFmpeg input as ArrayBuffer
+        await ffmpeg.writeFile('input.mp4', new Uint8Array(inputFileData));
+
+        // Set up FFmpeg command to compress the video
+        const outputFileName = 'compressed_video.mp4';
+
+        await ffmpeg.exec([
+            '-i', 'input.mp4',  // Input file
+            '-b:v', '500k',    // Lower video bitrate
+            '-b:a', '64k',     // Lower audio bitrate
+            '-s', '480x270',    // Resize resolution
+            outputFileName
+        ]);
+
+        // Read the compressed file from FFmpeg's virtual filesystem
+        const compressedFileData = await ffmpeg.readFile(outputFileName);
+
+        // Convert the compressed file data back to a Blob
+        const compressedBlobFile = new Blob([compressedFileData.buffer], { type: 'video/mp4' });
+
+        console.log("compressedBlobFile", compressedBlobFile.type);
+
+        dispatch(createVideo(compressedBlobFile, videoCourse || 'BUMPS'));
         setActiveStep(2);
 
-    };
+    }, [selectedFile, setLoadingCompresor, setActiveStep, dispatch]);
 
     const resetUploadState = () => {
         setSelectedFile(null);
@@ -84,26 +142,19 @@ export default function VideoUploadBottomSheet({ open, onClose, onOpen, course, 
 
     const uploadVideo = async () => {
         try {
-            await Camera.requestPermissions()
 
-            const _video = await VideoPicker.pick();
-            const file = _video.files[0];
+            await Camera.requestPermissions();
 
-            if (!file) return;
+            const videos = await VideoPicker.pick();
+            const file = videos.files[0];
 
-            const tempVideoUrl = file.webPath;
-            console.log('object url created', tempVideoUrl)
-            const video = document.createElement('video');
-            video.src = tempVideoUrl;
-
+            setVideoPreviewUrl(file.webPath);
             setSelectedFile(file);
-            setVideoPreviewUrl(tempVideoUrl);
-            // setVideoDuration(video.duration);
 
-            console.log("video", video)
-            setSelectedFile(video)
+            console.log("file.path", file.path);
+
         } catch (error) {
-            console.error('Error uploading video:', error);
+            console.error('Error uploading video:', error.message);
         }
     };
 
@@ -114,8 +165,8 @@ export default function VideoUploadBottomSheet({ open, onClose, onOpen, course, 
                     <Box my={2} display="flex" height='100%' flexDirection="column" justifyContent='space-between'>
                         <Box my={2} display="flex" flexDirection="column" >
                             <Box mb={2}>
-                                <video
-                                    src={demoUrl}
+                                <ReactPlayer
+                                    url={demoUrl}
                                     width='100%'
                                     controls
                                 />
@@ -143,30 +194,84 @@ export default function VideoUploadBottomSheet({ open, onClose, onOpen, course, 
                 return (
                     <Box my={2} display="flex" height='100%' flexDirection="column" justifyContent='space-between'>
                         <Box my={2}>
-                            {selectedFile && videoPreviewUrl && (
-                                <VideoTrimmer videoUrl={videoPreviewUrl} onTrim={handleTrim} />
+                            {videoPreviewUrl && (
+                                <VideoTrimmer videoUrl={videoPreviewUrl} />
                             )}
                         </Box>
 
-                        <Button
+                        <LoadingButton
+                            loading={loadingCompresor}
                             variant="contained"
                             color="primary"
                             fullWidth
-                            onClick={handleUpload}
+                            onClick={()=>{
+                                setLoadingCompresor(true)
+                                handleUpload()
+                            }}
                             sx={{ py: 2, my: 2 }}
-                            disabled={!((videoCourse && videoCourse.trim()) || course)}
                         >
                             Upload
-                        </Button>
+                        </LoadingButton>
 
                     </Box>
 
                 );
             case 2:
                 return (
-                    <Typography variant="body1" mt={2} textAlign="center">
-                        Uploading...
-                    </Typography>
+                    <RootStyle>
+                        <m.div
+                            initial={{ rotateY: 0 }}
+                            animate={{ rotateY: 360 }}
+                            transition={{
+                                duration: 2,
+                                ease: 'easeInOut',
+                                repeatDelay: 1,
+                                repeat: Infinity,
+                            }}
+                        >
+                            <Logo disabledLink sx={{ width: 64, height: 64 }} />
+                        </m.div>
+
+                        <Box
+                            component={m.div}
+                            animate={{
+                                scale: [1.2, 1, 1, 1.2, 1.2],
+                                rotate: [270, 0, 0, 270, 270],
+                                opacity: [0.25, 1, 1, 1, 0.25],
+                                borderRadius: ['25%', '25%', '50%', '50%', '25%'],
+                            }}
+                            transition={{ ease: 'linear', duration: 3.2, repeat: Infinity }}
+                            sx={{
+                                width: 100,
+                                height: 100,
+                                borderRadius: '25%',
+                                position: 'absolute',
+                                border: (theme) => `solid 3px ${alpha(theme.palette.primary.dark, 0.24)}`,
+                            }}
+                        />
+
+                        <Box
+                            component={m.div}
+                            animate={{
+                                scale: [1, 1.2, 1.2, 1, 1],
+                                rotate: [0, 270, 270, 0, 0],
+                                opacity: [1, 0.25, 0.25, 0.25, 1],
+                                borderRadius: ['25%', '25%', '50%', '50%', '25%'],
+                            }}
+                            transition={{
+                                ease: 'linear',
+                                duration: 3.2,
+                                repeat: Infinity,
+                            }}
+                            sx={{
+                                width: 120,
+                                height: 120,
+                                borderRadius: '25%',
+                                position: 'absolute',
+                                border: (theme) => `solid 8px ${alpha(theme.palette.primary.dark, 0.24)}`,
+                            }}
+                        />
+                    </RootStyle>
                 );
             case 3:
                 return (
@@ -203,7 +308,7 @@ export default function VideoUploadBottomSheet({ open, onClose, onOpen, course, 
             default:
                 return null;
         }
-    }, [activeStep, videoCourse, videoPreviewUrl, course]);
+    }, [activeStep, videoCourse, videoPreviewUrl, loadingCompresor, course]);
     return (
         <SwipeableDrawer
             anchor="bottom"

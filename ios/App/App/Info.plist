@@ -46,11 +46,9 @@
 		<key>UIViewControllerBasedStatusBarAppearance</key>
 		<true />
 		<key>NSCameraUsageDescription</key>
-		<string>Your app needs access to the photo library to select videos.</string>
-		<key>NSPhotoLibraryAddUsageDescription</key>
-		<string>Your app needs access to the photo library to select videos.</string>
+		<string>SnowMatch necesita acceso a tu cámara para mostrar tus habilidades a los expertos.</string>
 		<key>NSPhotoLibraryUsageDescription</key>
-		<string>Your app needs access to the photo library to select videos.</string>
-
+		<string>SnowMatch necesita acceso a tu biblioteca de fotos para seleccionar los videos que
+			subas.</string>
 	</dict>
 </plist>

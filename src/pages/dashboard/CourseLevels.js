@@ -450,7 +450,7 @@ export default function CourseLevels() {
                             </Typography>
                             <Box my={2}>
                                 <video
-                                    src={process.env.REACT_APP_VIDEO_BUCKET_URL + selectedVideo.videoUrl}
+                                    src={`${process.env.REACT_APP_VIDEO_BUCKET_URL}/${selectedVideo.videoUrl}`}
                                     controls
                                     style={{ width: '100%', maxHeight: '300px' }}
                                 />

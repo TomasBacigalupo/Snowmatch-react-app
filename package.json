@@ -48,6 +48,7 @@
     "@capacitor/core": "^6.0.0",
     "@capacitor/filesystem": "^6.0.0",
     "@capacitor/ios": "^6.0.0",
+    "@capacitor/push-notifications": "^7.0.0",
     "@coderpradp/capacitor-plugin-video-picker": "^6.0.2",
     "@date-io/moment": "^2.14.0",
     "@emotion/cache": "^11.7.1",

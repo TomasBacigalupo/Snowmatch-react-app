@@ -15,6 +15,7 @@ import { Link as RouterLink, useLocation } from 'react-router-dom';
 import VideoUploadBottomSheet from 'src/sections/@dashboard/video/VideoUploadBottomSheet';
 import DownhillSkiingIcon from '@mui/icons-material/DownhillSkiing';
 import PropTypes from 'prop-types';
+import WorkspacePremiumIcon from '@mui/icons-material/WorkspacePremium';
 
 LabelBottomNavigation.propTypes = {
   onOpenSidebar: PropTypes.func,
@@ -76,7 +77,7 @@ export default function LabelBottomNavigation({ onOpenSidebar, isGuest }) {
           />
           <BottomNavigationAction
             label="Academy"
-            icon={<CastForEducationIcon />}
+            icon={<WorkspacePremiumIcon />}
             component={RouterLink}
             to={PATH_GUEST.training}
           />

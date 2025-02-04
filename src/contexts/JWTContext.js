@@ -4,6 +4,8 @@ import PropTypes from 'prop-types';
 import axios from '../utils/axios';
 import { isValidToken, setSession } from '../utils/jwt';
 import jwtDecode from 'jwt-decode';
+import { PushNotifications } from '@capacitor/push-notifications';
+
 
 // ----------------------------------------------------------------------
 
@@ -183,6 +185,21 @@ function AuthProvider({ children }) {
     initialize();
   }, []);
 
+
+  const registerNotifications = async () => {
+    let permStatus = await PushNotifications.checkPermissions();
+  
+    if (permStatus.receive === 'prompt') {
+      permStatus = await PushNotifications.requestPermissions();
+    }
+  
+    if (permStatus.receive !== 'granted') {
+      throw new Error('User denied permissions!');
+    }
+  
+    await PushNotifications.register();
+  }
+
   const login = async (username, password) => {
     const response = await axios.post('/api/login', {
       "username": username.toLowerCase(),
@@ -191,6 +208,8 @@ function AuthProvider({ children }) {
     const accessToken = response.data.password;
     const responseUser = await axios.get(`/api/users/auth/${username}`)
     const user = responseUser.data;
+
+    registerNotifications();
 
     setSession(accessToken);
     dispatch({

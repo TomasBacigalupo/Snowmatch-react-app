@@ -286,14 +286,14 @@ export default function VideoUpload() {
                 <Card>
                     <Box
                         padding={2}
-                       
+
                         display="flex"
                         flexDirection="row"
                         alignItems="center"
                         justifyContent="center"
-                        // onClick={() => {
-                        //     navigate(`/match/videoCoach/courses?course=${course}`);
-                        // }}
+                    // onClick={() => {
+                    //     navigate(`/match/videoCoach/courses?course=${course}`);
+                    // }}
                     >
                         <Box display="flex"
                             height='100%'
@@ -311,9 +311,9 @@ export default function VideoUpload() {
                             flexDirection="column"
                             alignItems="flex-start"
                             justifyContent="flex-start"
-                            // onClick={() => {
-                            //     navigate(`/match/videoCoach/courses?course=${course}`);
-                            // }}
+                        // onClick={() => {
+                        //     navigate(`/match/videoCoach/courses?course=${course}`);
+                        // }}
                         >
                             <Typography variant="h6" sx={{ mt: 2, mb: 1 }}>
                                 {title}
@@ -491,7 +491,7 @@ export default function VideoUpload() {
                                 </Typography>
                                 <Box my={2}>
                                     <video
-                                        src={process.env.REACT_APP_VIDEO_BUCKET_URL + selectedVideo.videoUrl}
+                                        src={`${process.env.REACT_APP_VIDEO_BUCKET_URL}/${selectedVideo.videoUrl}`}
                                         controls
                                         style={{ width: '100%', maxHeight: '300px' }}
                                     />
@@ -591,13 +591,14 @@ export default function VideoUpload() {
                             {uploadedVideos?.filter(video => !video?.reviewed).map((video) => (
                                 <Grid item xs={12} sm={6} md={4} key={video.id}>
                                     <StyledCard onClick={() => handleVideoClick(video)}>
-                                        <CardMedia
-                                            component="div"
-                                            height="140"
-                                            image={"/assets/resorts/icon-bayo.png"}
-                                            alt={video.title}
-                                        >
-                                            <img src='/assets/resorts/icon-bayo.png' height="140" alt={video.title} />
+                                        <CardMedia component="div">
+                                            <video
+                                                src={`${process.env.REACT_APP_VIDEO_BUCKET_URL}/${video.videoUrl}`}
+                                                height="140"
+                                                style={{ width: '100%', objectFit: 'cover', borderRadius: '4px' }}
+                                                controls={false}
+                                                muted
+                                            />
                                         </CardMedia>
                                         <CardContent>
                                             <Typography gutterBottom variant="subtitle1">
@@ -642,15 +643,13 @@ export default function VideoUpload() {
                             {uploadedVideos.map((video) => (
                                 <Grid item xs={12} sm={6} md={4} key={video.id}>
                                     <StyledCard onClick={() => handleVideoClick(video)}>
-                                        <CardMedia
-                                            component="div"
-                                            height="140"
-                                            image={video.videoUrl}
-                                            alt={video.title}
-                                        >
+                                        <CardMedia component="div">
                                             <video
-                                                src={process.env.REACT_APP_VIDEO_BUCKET_URL + video.videoUrl}
-                                                style={{ width: '100%', maxHeight: 140, objectFit: 'cover' }}
+                                                src={`${process.env.REACT_APP_VIDEO_BUCKET_URL}/${video.videoUrl}`}
+                                                height="140"
+                                                style={{ width: '100%', objectFit: 'cover', borderRadius: '4px' }}
+                                                controls={false}
+                                                muted
                                             />
                                         </CardMedia>
                                         <CardContent>
@@ -685,6 +684,7 @@ export default function VideoUpload() {
                     sx: {
                         height: '100%',
                         maxHeight: '100%',
+                        paddingTop: 'env(safe-area-inset-bottom)'
                     },
                 }}
             >
@@ -714,7 +714,7 @@ export default function VideoUpload() {
                             </Typography>
                             <Box my={2}>
                                 <video
-                                    src={process.env.REACT_APP_VIDEO_BUCKET_URL + selectedVideo.videoUrl}
+                                    src={`${process.env.REACT_APP_VIDEO_BUCKET_URL}/${selectedVideo.videoUrl}`}
                                     controls
                                     style={{ width: '100%', maxHeight: '300px' }}
                                 />

@@ -109,7 +109,9 @@
     "reviews": "My Reviews",
     "lessons": "My Lessons",
     "all": "All",
-    "videoCoach": "VideoCoach"
+    "videoCoach": "VideoCoach",
+    "contact": "Contact support",
+    "help": "Help"
   },
   "calendar": {
     "name": "Calendar",

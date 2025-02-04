@@ -9,6 +9,8 @@ PODS:
   - CapacitorCordova (6.2.0)
   - CapacitorFilesystem (6.0.3):
     - Capacitor
+  - CapacitorPushNotifications (7.0.0):
+    - Capacitor
   - CoderpradpCapacitorPluginVideoPicker (6.0.2):
     - Capacitor
   - CordovaPlugins (6.0.0):
@@ -23,6 +25,7 @@ DEPENDENCIES:
   - "CapacitorCommunityMedia (from `../../node_modules/@capacitor-community/media`)"
   - "CapacitorCordova (from `../../node_modules/@capacitor/ios`)"
   - "CapacitorFilesystem (from `../../node_modules/@capacitor/filesystem`)"
+  - "CapacitorPushNotifications (from `../../node_modules/@capacitor/push-notifications`)"
   - "CoderpradpCapacitorPluginVideoPicker (from `../../node_modules/@coderpradp/capacitor-plugin-video-picker`)"
   - CordovaPlugins (from `../capacitor-cordova-ios-plugins`)
 
@@ -41,6 +44,8 @@ EXTERNAL SOURCES:
     :path: "../../node_modules/@capacitor/ios"
   CapacitorFilesystem:
     :path: "../../node_modules/@capacitor/filesystem"
+  CapacitorPushNotifications:
+    :path: "../../node_modules/@capacitor/push-notifications"
   CoderpradpCapacitorPluginVideoPicker:
     :path: "../../node_modules/@coderpradp/capacitor-plugin-video-picker"
   CordovaPlugins:
@@ -52,10 +57,11 @@ SPEC CHECKSUMS:
   CapacitorCommunityMedia: 93af2d4e36ce412f04f4f5c28d6ed8bf74ccdf66
   CapacitorCordova: b33e7f4aa4ed105dd43283acdd940964374a87d9
   CapacitorFilesystem: fa3099b3c3aa43a1b51362d0c999301ab1a9a752
+  CapacitorPushNotifications: c4feed483e03825369c278f5bab75100fb3f94a0
   CoderpradpCapacitorPluginVideoPicker: a410fb1f4a36683bcd90d5729bf42765c5126d04
   CordovaPlugins: c8b823fbe83514975dff3f4811465d70b3ff3962
   SDWebImage: 73c6079366fea25fa4bb9640d5fb58f0893facd8
 
-PODFILE CHECKSUM: ac5a8a7da77ab62de1ad3fbcf4c967013715d667
+PODFILE CHECKSUM: 25ccf5c66248a2fab78b72a6a9594f1fa7b288bf
 
 COCOAPODS: 1.14.2

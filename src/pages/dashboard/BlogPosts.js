@@ -89,7 +89,6 @@ export default function BlogPosts() {
   return (
     <Page title={translate('proTips.title')}>
       <Container maxWidth={themeStretch ? false : 'lg'}>
-        hols
         <HeaderBreadcrumbs
           heading={translate('proTips.title')}
           links={[

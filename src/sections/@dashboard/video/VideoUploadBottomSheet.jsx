@@ -88,7 +88,6 @@ export default function VideoUploadBottomSheet({ open, onClose, onOpen, course, 
             '-i', 'input.mp4',  // Input file
             '-b:v', '500k',    // Lower video bitrate
             '-b:a', '64k',     // Lower audio bitrate
-            '-s', '480x270',    // Resize resolution
             outputFileName
         ]);
 

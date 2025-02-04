@@ -138,7 +138,9 @@
         "SnowMatch": "SnowMatch",
         "all": "Todos",
         "clinicas": "Clinicas",
-        "videoCoach": "VideoCoach"
+        "videoCoach": "VideoCoach",
+        "contact": "Conactar soporte",
+        "help": "Ayuda"
     },
     "calendar": {
         "name": "Calendario",

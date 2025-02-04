@@ -6,6 +6,8 @@ import SvgIconStyle from '../../../components/SvgIconStyle';
 import SchoolIcon from '@mui/icons-material/School';
 import CastForEducationIcon from '@mui/icons-material/CastForEducation';
 import VideoCallIcon from '@mui/icons-material/VideoCall';
+import SupportAgentIcon from '@mui/icons-material/SupportAgent';
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 // ----------------------------------------------------------------------
 
 const getIcon = (name) => <SvgIconStyle src={`/icons/${name}.svg`} sx={{ width: 1, height: 1 }} />;
@@ -26,8 +28,10 @@ const ICONS = {
   dashboard: getIcon('ic_dashboard'),
   match: getIcon('ic_match'),
   rental: getIcon('ic_rental'),
-  protips: <CastForEducationIcon/>,
-  videoCoach: <VideoCallIcon/>,
+  protips: <CastForEducationIcon />,
+  videoCoach: <VideoCallIcon />,
+  contactSupport: <SupportAgentIcon />,
+  help: <HelpOutlineIcon />
 };
 
 const navConfigGuestCatedral = [
@@ -46,13 +50,13 @@ const navConfigGuestCatedral = [
         path: PATH_GUEST.root,
         icon: ICONS.match,
         path: PATH_GUEST.independent
-          // { title: 'Schools', path: PATH_GUEST.schools },
+        // { title: 'Schools', path: PATH_GUEST.schools },
         ,
       },
       { title: 'protips', path: PATH_GUEST.protips, icon: ICONS.protips },
       { title: 'videoCoach', path: PATH_GUEST.videoCoach, icon: ICONS.videoCoach }
       // { title: 'chat', path: PATH_DASHBOARD.chat.root, icon: ICONS.chat },
-     
+
       // { title: 'kanban', path: PATH_DASHBOARD.kanban, icon: ICONS.kanban },
     ],
   },
@@ -69,6 +73,20 @@ const navConfigGuestCatedral = [
           { title: 'rent', path: PATH_GUEST.calculate },
         ],
       }
+      // { title: 'chat', path: PATH_DASHBOARD.chat.root, icon: ICONS.chat },
+
+      // { title: 'kanban', path: PATH_DASHBOARD.kanban, icon: ICONS.kanban },
+    ],
+  },
+  // Support
+  {
+    subheader: 'support',
+    items: [
+
+      { title: 'contact', path: PATH_GUEST.protips, icon: ICONS.contactSupport },
+      { title: 'help', path: PATH_GUEST.videoCoach, icon: ICONS.help }
+
+
       // { title: 'chat', path: PATH_DASHBOARD.chat.root, icon: ICONS.chat },
 
       // { title: 'kanban', path: PATH_DASHBOARD.kanban, icon: ICONS.kanban },

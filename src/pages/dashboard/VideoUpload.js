@@ -16,6 +16,7 @@ import { useDispatch, useSelector } from 'src/redux/store';
 import { getVideos } from 'src/redux/slices/video';
 import { AnalyticsCurrentSubject, AnalyticsUserProgress } from 'src/sections/@dashboard/general/analytics';
 import Markdown from 'src/components/Markdown';
+import ReactPlayer from "react-player";
 import { useNavigate } from 'react-router-dom';
 
 
@@ -592,8 +593,9 @@ export default function VideoUpload() {
                                 <Grid item xs={12} sm={6} md={4} key={video.id}>
                                     <StyledCard onClick={() => handleVideoClick(video)}>
                                         <CardMedia component="div">
-                                            <video
-                                                src={`${process.env.REACT_APP_VIDEO_BUCKET_URL}/${video.videoUrl}`}
+                                            {console.log("preview del video", `${process.env.REACT_APP_VIDEO_PREVIEW_BUCKET_URL}/${video.videoUrl}.jpg`)}
+                                            <img
+                                            src={`${process.env.REACT_APP_VIDEO_PREVIEW_BUCKET_URL}/${video.videoUrl}.jpg`}
                                                 height="140"
                                                 style={{ width: '100%', objectFit: 'cover', borderRadius: '4px' }}
                                                 controls={false}
@@ -644,8 +646,8 @@ export default function VideoUpload() {
                                 <Grid item xs={12} sm={6} md={4} key={video.id}>
                                     <StyledCard onClick={() => handleVideoClick(video)}>
                                         <CardMedia component="div">
-                                            <video
-                                                src={`${process.env.REACT_APP_VIDEO_BUCKET_URL}/${video.videoUrl}`}
+                                            <img
+                                                src={`${process.env.REACT_APP_VIDEO_PREVIEW_BUCKET_URL}/${video.videoUrl}.jpg`}
                                                 height="140"
                                                 style={{ width: '100%', objectFit: 'cover', borderRadius: '4px' }}
                                                 controls={false}
@@ -713,10 +715,10 @@ export default function VideoUpload() {
                                 {translate(`course.${selectedVideo.course}.title`)}
                             </Typography>
                             <Box my={2}>
-                                <video
-                                    src={`${process.env.REACT_APP_VIDEO_BUCKET_URL}/${selectedVideo.videoUrl}`}
+                                <ReactPlayer
+                                    url={`${process.env.REACT_APP_VIDEO_BUCKET_URL}/${selectedVideo.videoUrl}`}
                                     controls
-                                    style={{ width: '100%', maxHeight: '300px' }}
+                                    style={{ maxHeight: '300px' }}
                                 />
                             </Box>
                             <Typography variant="h6" gutterBottom>

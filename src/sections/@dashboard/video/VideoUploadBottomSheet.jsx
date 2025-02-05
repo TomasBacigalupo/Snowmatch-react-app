@@ -1,4 +1,4 @@
-import { Button, FormControl, Input, InputLabel, MenuItem, Select, Step, StepLabel, Stepper, SwipeableDrawer, TextField, Typography } from "@mui/material";
+import { Button, FormControl, Input, InputLabel, LinearProgress, MenuItem, Select, Step, StepLabel, Stepper, SwipeableDrawer, TextField, Typography } from "@mui/material";
 import { Box, useMediaQuery } from "@mui/system";
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import React, { useState, useRef, useEffect, useCallback } from 'react';
@@ -21,6 +21,7 @@ import Logo from "src/components/Logo";
 
 import { FFmpeg, fetchFile } from '@ffmpeg/ffmpeg';
 import { LoadingButton } from "@mui/lab";
+import { column } from "stylis";
 
 
 const RootStyle = styled('div')(({ theme }) => ({
@@ -55,6 +56,7 @@ export default function VideoUploadBottomSheet({ open, onClose, onOpen, course, 
     const videoRef = useRef(null);
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
     const [loadingCompresor, setLoadingCompresor] = useState(false)
+    const [_progress, setProgress] = useState(0);
 
     const dispatch = useDispatch();
     const { isLoading } = useSelector((state) => state.video)
@@ -64,16 +66,21 @@ export default function VideoUploadBottomSheet({ open, onClose, onOpen, course, 
         console.log("handeleUpload")
         console.log("selectedFile", selectedFile)
         setLoadingCompresor(true)
-        
+
         const file = selectedFile;
         const fetchedFile = await fetch(file.webPath);
         const blobFile = await fetchedFile.blob();
-        
+
         console.log("blobFile", blobFile.type);
 
         // Load FFmpeg.wasm
         const ffmpeg = new FFmpeg({ log: true });
         await ffmpeg.load();
+
+        // Add progress listener
+        ffmpeg.on('progress', (progressData) => {
+            setProgress(Number(progressData.progress * 100).toFixed(2));
+        });
 
         // Instead of writing to virtual file system, process the Blob directly
         const inputFileData = await blobFile.arrayBuffer();  // Convert Blob to ArrayBuffer
@@ -198,12 +205,19 @@ export default function VideoUploadBottomSheet({ open, onClose, onOpen, course, 
                             )}
                         </Box>
 
+                        {_progress > 0 &&<Box width='100%' display='felx' justifyContent="center" alignItems="center" flexDirectiob="column">
+                            <LinearProgress variant="determinate" sx={{
+                                width: '100%'
+                            }} valueBuffer={_progress} value={_progress}/>
+                            <Typography textAlign="center" variant="bory">Analizando..</Typography>
+                        </Box>}
+
                         <LoadingButton
                             loading={loadingCompresor}
                             variant="contained"
                             color="primary"
                             fullWidth
-                            onClick={()=>{
+                            onClick={() => {
                                 setLoadingCompresor(true)
                                 handleUpload()
                             }}
@@ -307,7 +321,7 @@ export default function VideoUploadBottomSheet({ open, onClose, onOpen, course, 
             default:
                 return null;
         }
-    }, [activeStep, videoCourse, videoPreviewUrl, loadingCompresor, course]);
+    }, [activeStep, videoCourse, videoPreviewUrl, loadingCompresor, course, _progress]);
     return (
         <SwipeableDrawer
             anchor="bottom"

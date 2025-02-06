@@ -37,7 +37,7 @@ const navConfig = [
     subheader: 'general',
     items: [
       { title: 'overview', path: PATH_DASHBOARD.general.app, icon: ICONS.dashboard },
-      { title: 'videoCoach', path: PATH_DASHBOARD.general.videoCoach, icon: ICONS.videoCoach }
+      { title: 'videoCoach', path: PATH_DASHBOARD.general.videoCoachRate, icon: ICONS.videoCoach }
       
       // { title: 'e-commerce', path: PATH_DASHBOARD.general.ecommerce, icon: ICONS.ecommerce },
       // { title: 'analytics', path: PATH_DASHBOARD.general.analytics, icon: ICONS.analytics },

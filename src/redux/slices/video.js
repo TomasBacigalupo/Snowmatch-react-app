@@ -248,6 +248,11 @@ const slice = createSlice({
             state.videos = action.payload;
         },
 
+        getVideosToReviewSuccess(state, action) {
+            state.isLoading = false;
+            state.videosToReview = action.payload;
+        },
+
         createVideoSuccess(state, action) {
             state.isLoading = false;
             state.isUploading = false;
@@ -275,6 +280,19 @@ export function getVideos() {
             const response = await axios.get(`/api/videos/VideoReviews/myVideos`);
             const videos = response.data
             dispatch(slice.actions.getVideosSuccess(videos));
+        } catch (error) {
+            dispatch(slice.actions.hasError(error));
+        }
+    };
+}
+
+export function getVideosToReview() {
+    return async () => {
+        dispatch(slice.actions.startLoading());
+        try {
+            const response = await axios.get(`/api/videos/VideoReviews`);
+            const videos = response.data
+            dispatch(slice.actions.getVideosToReviewSuccess(videos));
         } catch (error) {
             dispatch(slice.actions.hasError(error));
         }

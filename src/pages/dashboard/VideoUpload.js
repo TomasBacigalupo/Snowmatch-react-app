@@ -595,7 +595,7 @@ export default function VideoUpload() {
                                         <CardMedia component="div">
                                             {console.log("preview del video", `${process.env.REACT_APP_VIDEO_PREVIEW_BUCKET_URL}/${video.videoUrl}.jpg`)}
                                             <img
-                                            src={`${process.env.REACT_APP_VIDEO_PREVIEW_BUCKET_URL}/${video.videoUrl}.jpg`}
+                                                src={`${process.env.REACT_APP_VIDEO_PREVIEW_BUCKET_URL}/${video.videoUrl}.jpg`}
                                                 height="140"
                                                 style={{ width: '100%', objectFit: 'cover', borderRadius: '4px' }}
                                                 controls={false}
@@ -642,7 +642,7 @@ export default function VideoUpload() {
                     )}
                     {uploadedVideos?.filter(video => video?.reviewed)?.length > 0 && (
                         <Grid container spacing={3}>
-                            {uploadedVideos.map((video) => (
+                            {uploadedVideos.filter(video => video?.reviewed).map((video) => (
                                 <Grid item xs={12} sm={6} md={4} key={video.id}>
                                     <StyledCard onClick={() => handleVideoClick(video)}>
                                         <CardMedia component="div">
@@ -686,13 +686,17 @@ export default function VideoUpload() {
                     sx: {
                         height: '100%',
                         maxHeight: '100%',
-                        paddingTop: 'env(safe-area-inset-bottom)'
+                        paddingTop: 'env(safe-area-inset-bottom)',
+                        width: '100vw',  // Asegura que el ancho sea igual al viewport
+                        maxWidth: '100%',
                     },
                 }}
             >
                 <Box
                     sx={{
                         padding: theme.spacing(2),
+                        width: '100vw',  // Asegura que el ancho sea igual al viewport
+                        maxWidth: '100%',
                         height: '100%',
                         display: 'flex',
                         flexDirection: 'column',
@@ -718,7 +722,7 @@ export default function VideoUpload() {
                                 <ReactPlayer
                                     url={`${process.env.REACT_APP_VIDEO_BUCKET_URL}/${selectedVideo.videoUrl}`}
                                     controls
-                                    style={{ maxHeight: '300px' }}
+                                    style={{ maxHeight: '300px', maxWidth: '100%',}}
                                 />
                             </Box>
                             <Typography variant="h6" gutterBottom>

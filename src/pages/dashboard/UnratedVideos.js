@@ -6,6 +6,8 @@ import * as Yup from 'yup';
 // form
 import { yupResolver } from '@hookform/resolvers/yup';
 import { GridCloseIcon } from '@mui/x-data-grid';
+import { useDispatch, useSelector } from 'src/redux/store';
+import { getVideosToReview } from 'src/redux/slices/video';
 
 // This would typically come from your backend
 const mockUnratedVideos = [
@@ -20,6 +22,13 @@ export default function UnratedVideos() {
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState('');
   const drawerContentRef = useRef(null);
+  const dispatch = useDispatch()
+  const { videosToReview } = useSelector((state) => state.video);
+
+
+  useEffect(() => {
+          dispatch(getVideosToReview());
+      }, [dispatch]);
 
   const [isScrolled, setIsScrolled] = useState(false);
 
@@ -99,7 +108,7 @@ export default function UnratedVideos() {
         Unrated Videos
       </Typography>
       <List>
-        {mockUnratedVideos.map((video) => (
+        {videosToReview?.map((video) => (
           <Paper
             key={video.id}
             elevation={3}
@@ -115,18 +124,25 @@ export default function UnratedVideos() {
               minHeight: 150, // Ajusta según necesidad
             }}
           >
+            {/*  "comment": "Postura para velocidad: Si buscas más velocidad, inclina el cuerpo hacia adelante y mantén los esquís paralelos y bien alineados.",
+    "course": "BUMPS",
+    "id": 11,
+    "reviewed": true,
+    "score": 67.0,
+    "userId": 9,
+    "videoUrl": "9-8a1f2faa-039b-4940-b504-094b7d6bcdc9" */}
             {/* Contenedor de avatar + texto en la misma fila */}
             <Box sx={{ display: 'flex', alignItems: 'flex-start', flex: 1 }}>
               <ListItemAvatar>
                 <Avatar
                   variant="square"
-                  src={video.thumbnail}
+                  src={`${process.env.REACT_APP_VIDEO_PREVIEW_BUCKET_URL}/${video.videoUrl}.jpg`}
                   alt={video.title}
                   sx={{ width: 120, height: 120, borderRadius: 2 }}
                 />
               </ListItemAvatar>
               <ListItemText
-                primary={video.title}
+                primary={video.course}
                 secondary={`Uploaded on: ${video.uploadDate}`}
                 sx={{
                   marginLeft: 2,
@@ -208,7 +224,8 @@ export default function UnratedVideos() {
                 </Box>
                 <Box sx={{ position: 'relative', paddingBottom: '56.25%', height: 0, overflow: 'hidden', marginBottom: 2 }}>
                   <video style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }} controls>
-                    <source src={selectedVideo.videoUrl} type="video/mp4" />
+                    <source src={`${process.env.REACT_APP_VIDEO_BUCKET_URL}/${selectedVideo.videoUrl}`}
+                    type="video/mp4" />
                     Your browser does not support the video tag.
                   </video>
                 </Box>

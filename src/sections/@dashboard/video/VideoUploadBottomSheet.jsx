@@ -1,383 +1,190 @@
-import { Button, FormControl, Input, InputLabel, LinearProgress, MenuItem, Select, Step, StepLabel, Stepper, SwipeableDrawer, TextField, Typography } from "@mui/material";
-import { Box, useMediaQuery } from "@mui/system";
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { styled, alpha } from '@mui/material/styles';
-import { useTheme } from '@mui/material/styles';
-import { useDispatch, useSelector } from "src/redux/store";
-import { clearUploadVideoState, createVideo } from "src/redux/slices/video";
-import { useTranslation } from "react-i18next";
-import useLocales from "src/hooks/useLocales";
-import useAuth from "src/hooks/useAuth";
-import { PATH_AUTH } from "src/routes/paths";
-import { useNavigate } from "react-router";
-import { Camera, CameraSource, CameraResultType } from '@capacitor/camera';
-import { VideoEditor } from '@awesome-cordova-plugins/video-editor';
-import { VideoPicker } from '@coderpradp/capacitor-plugin-video-picker';
-import VideoTrimmer from "./VideoTrimmer";
-import ReactPlayer from "react-player";
-import { m } from 'framer-motion';
-import Logo from "src/components/Logo";
-
-import { FFmpeg, fetchFile } from '@ffmpeg/ffmpeg';
-import { LoadingButton } from "@mui/lab";
-import { column } from "stylis";
+import { Box, Button, Typography } from "@mui/material";
+import { SwipeableDrawer } from "@mui/material";
+import React, { useState, useEffect } from "react";
+import { styled } from "@mui/system";
+import { useSwipeable } from "react-swipeable";
+import EnterSnowMatchCodeStep from "./EnterSnowMatchCodeStep";
+import { formatTextWithHighlight } from "src/utils/formatTextWithHighlight";
 
 
-const RootStyle = styled('div')(({ theme }) => ({
-    right: 0,
-    bottom: 0,
-    zIndex: 99999,
-    width: '100%',
-    height: '100%',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: theme.palette.background.default,
-}));
+export default function VideoUploadBottomSheet({ open, onClose }) {
+  const [activeStep, setActiveStep] = useState(0);
 
-export default function VideoUploadBottomSheet({ open, onClose, onOpen, course, demoUrl }) {
+  const steps = [
+    {
+      image: "/assets/courses/groom.jpeg",
+      title: "Welcome to SnowMatch Academy",
+      description:
+      "Improve your skiing technique with personalized feedback from SnowMatch Academy – upload your videos and refine your skills like never before!"
+    },
+    {
+      image: "/assets/courses/groom_skiing.jpg",
+      title: "The Four Core Skills",
+      description:
+        "Over 40 levels, you’ll steadily progress by building and enhancing four core carving skills, ensuring continuous improvement at every stage.",
+    },
+    {
+      image: "/assets/courses/groom.jpeg",
+      title: "How to Play and Progress",
+      description:
+        "To pass each level, you need to upload a 30-second video of skiing that meets or exceeds the target criteria.",
+    },
+  ];
 
-    const navigate = useNavigate();
-    const { user } = useAuth();
+  const handleNext = () => {
+    setActiveStep((prev) => prev + 1);
+  };
+  const handlePrev = () => {
+    setActiveStep((prev) => prev - 1);
+  };
 
-    if (!user && open) {
-        navigate(PATH_AUTH.login, { replace: true });
-    }
+  const swipeHandlers = useSwipeable({
+    onSwipedLeft: handleNext,
+    onSwipedRight: handlePrev,
+  });
 
-    const { translate } = useLocales();
-    const steps = ['Ejercicio', 'Tu video', 'Subir'];
-    const theme = useTheme();
-    const [videoCourse, setVideoCourse] = useState(course);
-    const [videoPreviewUrl, setVideoPreviewUrl] = useState(null);
-    const [selectedFile, setSelectedFile] = useState(null);
-    const [videoDuration, setVideoDuration] = useState(0);
-    const [activeStep, setActiveStep] = useState(0);
-    const videoRef = useRef(null);
-    const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-    const [loadingCompresor, setLoadingCompresor] = useState(false)
-    const [_progress, setProgress] = useState(0);
+  useEffect(() => {
+    if (!open) setActiveStep(0);
+  }, [open]);
 
-    const dispatch = useDispatch();
-    const { isLoading } = useSelector((state) => state.video)
-
-
-    const handleUpload = useCallback(async () => {
-        console.log("handeleUpload")
-        console.log("selectedFile", selectedFile)
-        setLoadingCompresor(true)
-
-        const file = selectedFile;
-        const fetchedFile = await fetch(file.webPath);
-        const blobFile = await fetchedFile.blob();
-
-        console.log("blobFile", blobFile.type);
-
-        // Load FFmpeg.wasm
-        const ffmpeg = new FFmpeg({ log: true });
-        await ffmpeg.load();
-
-        // Add progress listener
-        ffmpeg.on('progress', (progressData) => {
-            setProgress(Number(progressData.progress * 100).toFixed(2));
-        });
-
-        // Instead of writing to virtual file system, process the Blob directly
-        const inputFileData = await blobFile.arrayBuffer();  // Convert Blob to ArrayBuffer
-
-        // Initialize FFmpeg input as ArrayBuffer
-        await ffmpeg.writeFile('input.mp4', new Uint8Array(inputFileData));
-
-        // Set up FFmpeg command to compress the video
-        const outputFileName = 'compressed_video.mp4';
-
-        await ffmpeg.exec([
-            '-i', 'input.mp4',  // Input file
-            '-b:v', '500k',    // Lower video bitrate
-            '-b:a', '64k',     // Lower audio bitrate
-            outputFileName
-        ]);
-
-        // Read the compressed file from FFmpeg's virtual filesystem
-        const compressedFileData = await ffmpeg.readFile(outputFileName);
-
-        // Convert the compressed file data back to a Blob
-        const compressedBlobFile = new Blob([compressedFileData.buffer], { type: 'video/mp4' });
-
-        console.log("compressedBlobFile", compressedBlobFile.type);
-
-        dispatch(createVideo(compressedBlobFile, videoCourse || 'BUMPS'));
-        setActiveStep(2);
-
-    }, [selectedFile, setLoadingCompresor, setActiveStep, dispatch]);
-
-    const resetUploadState = () => {
-        setSelectedFile(null);
-        setVideoPreviewUrl(null);
-        setVideoDuration(0);
-        setVideoCourse('');
-        setActiveStep(0);
-    };
-
-    useEffect(() => {
-        if (activeStep === 2 && isLoading === false) {
-            setActiveStep(3);
-        }
-    }, [isLoading]);
-
-    useEffect(() => {
-        if (!open) {
-            dispatch(clearUploadVideoState());
-        }
-    }, [open]);
-
-    const onCloseWrapper = () => {
-        resetUploadState();
-        setActiveStep(0);
-        onClose();
-    }
-
-    const handleTrim = async (start, end) => {
-        if (!videoPreviewUrl) return;
-        const trimmedVideo = await VideoEditor.trim(videoPreviewUrl, start, end);
-        if (trimmedVideo) {
-            console.log("Trimmed video ready for upload:", trimmedVideo);
-            setSelectedFile(trimmedVideo);
-        }
-    };
-
-    const uploadVideo = async () => {
-        try {
-
-            await Camera.requestPermissions();
-
-            const videos = await VideoPicker.pick();
-            const file = videos.files[0];
-
-            setVideoPreviewUrl(file.webPath);
-            setSelectedFile(file);
-
-            console.log("file.path", file.path);
-
-        } catch (error) {
-            console.error('Error uploading video:', error.message);
-        }
-    };
-
-    const renderStep = useCallback(() => {
-        switch (activeStep) {
-            case 0:
-                return (
-                    <Box my={2} display="flex" height='100%' flexDirection="column" justifyContent='space-between'>
-                        <Box my={2} display="flex" flexDirection="column" >
-                            <Box mb={2}>
-                                <ReactPlayer
-                                    url={demoUrl}
-                                    width='100%'
-                                    controls
-                                />
-                            </Box>
-                            <Typography variant="h2" textAlign='left'>
-                                {translate(`course.${course}.title`)}
-                            </Typography>
-                            <Typography variant="subtitle1" textAlign='left'>
-                                {translate(`course.${course}.description`)}
-                            </Typography>
-                            <Typography variant="body1" textAlign='left'>
-                                {translate(`course.${course}.fundamentals`)}
-                            </Typography>
-                        </Box>
-
-                        <Button variant="contained" sx={{ py: 2, my: 2 }} fullWidth onClick={async () => {
-                            await uploadVideo();
-                            setActiveStep(activeStep + 1)
-                        }}>
-                            Start Challange
-                        </Button>
-                    </Box>
-                );
-            case 1:
-                return (
-                    <Box my={2} display="flex" height='100%' flexDirection="column" justifyContent='space-between'>
-                        <Box my={2}>
-                            {videoPreviewUrl && (
-                                <VideoTrimmer videoUrl={videoPreviewUrl} />
-                            )}
-                        </Box>
-
-                        {_progress > 0 &&<Box width='100%' display='felx' justifyContent="center" alignItems="center" flexDirectiob="column">
-                            <LinearProgress variant="determinate" sx={{
-                                width: '100%'
-                            }} valueBuffer={_progress} value={_progress}/>
-                            <Typography textAlign="center" variant="bory">Analizando..</Typography>
-                        </Box>}
-
-                        <LoadingButton
-                            loading={loadingCompresor}
-                            variant="contained"
-                            color="primary"
-                            fullWidth
-                            onClick={() => {
-                                setLoadingCompresor(true)
-                                handleUpload()
-                            }}
-                            sx={{ py: 2, my: 2 }}
-                        >
-                            Upload
-                        </LoadingButton>
-
-                    </Box>
-
-                );
-            case 2:
-                return (
-                    <RootStyle>
-                        <m.div
-                            initial={{ rotateY: 0 }}
-                            animate={{ rotateY: 360 }}
-                            transition={{
-                                duration: 2,
-                                ease: 'easeInOut',
-                                repeatDelay: 1,
-                                repeat: Infinity,
-                            }}
-                        >
-                            <Logo disabledLink sx={{ width: 64, height: 64 }} />
-                        </m.div>
-
-                        <Box
-                            component={m.div}
-                            animate={{
-                                scale: [1.2, 1, 1, 1.2, 1.2],
-                                rotate: [270, 0, 0, 270, 270],
-                                opacity: [0.25, 1, 1, 1, 0.25],
-                                borderRadius: ['25%', '25%', '50%', '50%', '25%'],
-                            }}
-                            transition={{ ease: 'linear', duration: 3.2, repeat: Infinity }}
-                            sx={{
-                                width: 100,
-                                height: 100,
-                                borderRadius: '25%',
-                                position: 'absolute',
-                                border: (theme) => `solid 3px ${alpha(theme.palette.primary.dark, 0.24)}`,
-                            }}
-                        />
-
-                        <Box
-                            component={m.div}
-                            animate={{
-                                scale: [1, 1.2, 1.2, 1, 1],
-                                rotate: [0, 270, 270, 0, 0],
-                                opacity: [1, 0.25, 0.25, 0.25, 1],
-                                borderRadius: ['25%', '25%', '50%', '50%', '25%'],
-                            }}
-                            transition={{
-                                ease: 'linear',
-                                duration: 3.2,
-                                repeat: Infinity,
-                            }}
-                            sx={{
-                                width: 120,
-                                height: 120,
-                                borderRadius: '25%',
-                                position: 'absolute',
-                                border: (theme) => `solid 8px ${alpha(theme.palette.primary.dark, 0.24)}`,
-                            }}
-                        />
-                    </RootStyle>
-                );
-            case 3:
-                return (
-                    <Box
-                        display="flex"
-                        flexDirection="column"
-                        justifyContent="center"
-                        alignItems="center"
-                        textAlign="center"
-                        sx={{ padding: 4, backgroundColor: '#f5f5f5', borderRadius: 2 }}
-                    >
-                        <CheckCircleIcon
-                            sx={{ fontSize: 64, color: 'green', mb: 2 }}
-                        />
-                        <Typography variant="h5" gutterBottom>
-                            Great job! 🎉
-                        </Typography>
-                        <Typography variant="body1" sx={{ mb: 2 }}>
-                            Your video has been uploaded successfully. You’ll receive an email once it has been reviewed by your instructor.
-                        </Typography>
-                        <Typography variant="subtitle2" color="textSecondary" sx={{ mb: 3 }}>
-                            In the meantime, feel free to explore other content or upload another video.
-                        </Typography>
-                        <Button
-                            variant="contained"
-                            color="primary"
-                            onClick={onCloseWrapper}
-                            sx={{ textTransform: 'none' }}
-                        >
-                            Close
-                        </Button>
-                    </Box>
-                );
-            default:
-                return null;
-        }
-    }, [activeStep, videoCourse, videoPreviewUrl, loadingCompresor, course, _progress]);
-    return (
-        <SwipeableDrawer
-            anchor="bottom"
-            open={open}
-            onClose={onCloseWrapper}
-            onOpen={onOpen}
-            disableSwipeToOpen={false}
-            ModalProps={{
-                keepMounted: true,
-            }}
-            PaperProps={{
-                sx: {
-                    height: '100%',
-                    maxHeight: '100%',
-                },
-            }}
+  return (
+    <SwipeableDrawer
+      anchor="bottom"
+      open={open}
+      onClose={onClose}
+      {...swipeHandlers}
+      PaperProps={{
+        sx: {
+          height: "100%",
+          maxHeight: "100%",
+        },
+      }}
+    >
+      <Box
+        sx={{
+          height: "100%",
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
+      {activeStep < steps.length ? (
+        <>
+        {/* Cover Image Section */}
+        <Box
+          sx={{
+            height: "50vh", // Image height set to 50% of the viewport height
+            position: "relative", // Make the container a positioned element
+            backgroundImage: `url(${steps[activeStep].image})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            "::before": {
+              content: '""',
+              position: "absolute",
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              backgroundColor: "rgba(255, 255, 255, 0.2)", // Adjust the opacity value here
+              zIndex: 1,
+            },
+          }}
         >
-            <Box display="flex" alignItems="center" justifyContent="space-between" sx={{ paddingTop: 'env(safe-area-inset-top)' }}>
-                <Button onClick={onCloseWrapper} sx={{
-                    padding: '0px',
-                    fontWeight: 'normal',
-                    color: 'black',
-                    textDecoration: 'underline',
-                    '&:hover': {
-                        textDecoration: 'underline',
-                    },
-                    textAlign: 'left',
-                    width: '100px'
-                }}>
-                    Cancelar
-                </Button>
-                <Typography variant="h4" gutterBottom align="center" sx={{ flexGrow: 1 }}>
-                    Subí tu video
-                </Typography>
-                <Box width='100px' /> {/* Placeholder to balance the space */}
-            </Box>
-            <Box
+          {/* Title */}
+          <Typography
+            variant="h1"
+            sx={{
+              position: "absolute",
+              top: 56,
+              left: 16,
+              right: 48,
+              color: "#2B2B2B", // Keep the text visible over the overlay
+              fontWeight: "bold",
+              lineHeight: 1.4,
+              textAlign: "left",
+              zIndex: 2, // Ensure it appears above the overlay
+            }}
+          >
+            {formatTextWithHighlight(steps[activeStep].title)}
+          </Typography>
+
+          {/* Logo */}
+          <Box
+            sx={{
+              position: "absolute",
+              top: 235,
+              left: 16,
+              zIndex: 2, // Ensure it appears above the overlay
+            }}
+          >
+            <img
+              src="/logo/logo_fondo_blanco.png"
+              alt="Logo"
+              style={{ width: 46, height: 46, borderRadius: 8 }}
+            />
+          </Box>
+        </Box>
+  
+        {/* Content Section */}
+        <Box
+          sx={{
+            flex: 1,
+            backgroundColor: "white",
+            textAlign: "center",
+            p: 3,
+            borderRadius: "16px 16px 0 0", // Rounded top borders
+            position: "relative",
+            top: -16, // Overlap effect for smooth transition
+            zIndex: 1,
+          }}
+        >
+          <Typography 
+            variant="body1" 
+            sx={{ mb: 2, textAlign: 'left' }}
+          >
+            {formatTextWithHighlight(steps[activeStep].description)}
+          </Typography>
+        </Box>
+  
+        {/* Navigation Section */}
+        <Box
+          sx={{
+            p: 2,
+            backgroundColor: "white",
+          }}
+        >
+          <Box display="flex" justifyContent="center" mb={3}>
+            {steps.map((_, index) => (
+              <Box
+                key={index}
                 sx={{
-                    padding: theme.spacing(2),
-                    height: '100%',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    overflow: 'auto',
+                  width: 8,
+                  height: 8,
+                  mx: 0.5,
+                  borderRadius: "50%",
+                  backgroundColor:
+                    index === activeStep ? "primary.main" : "grey.400",
                 }}
-            >
-                <Box mb={2}>
-                    <Stepper activeStep={activeStep} alternativeLabel={!isMobile}>
-                        {steps.map((label) => (
-                            <Step key={label}>
-                                <StepLabel>{label}</StepLabel>
-                            </Step>
-                        ))}
-                    </Stepper>
-                </Box>
-                {renderStep()}
-            </Box>
-        </SwipeableDrawer>
-    )
+              />
+            ))}
+          </Box>
+          <Button
+            onClick={handleNext}
+            variant="contained"
+            fullWidth
+            sx={{ textTransform: "none" }}
+          >
+            {activeStep === steps.length - 1 ? "Start Now" : "Continue"}
+          </Button>
+        </Box>
+        </>
+        ) : (
+          // Render the new "Enter SnowMatch Code" step
+          <EnterSnowMatchCodeStep
+            onAddCode={() => console.log("Code added")}
+            onSupport={() => console.log("Contact support")}
+          />
+        )}
+      </Box>
+    </SwipeableDrawer>
+  );
 }

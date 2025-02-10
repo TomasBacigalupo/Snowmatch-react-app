@@ -5,6 +5,8 @@ import Page from '../../components/Page';
 import useSettings from '../../hooks/useSettings';
 import useLocales from '../../hooks/useLocales';
 import VideoUploadBottomSheet from 'src/sections/@dashboard/video/VideoUploadBottomSheet';
+import AcademyWelcome from 'src/sections/@dashboard/video/AcademyWelcome';
+import useAuth from 'src/hooks/useAuth';
 
 // Carousel settings
 const sliderSettings = {
@@ -132,9 +134,13 @@ export default function Training() {
   const { themeStretch } = useSettings();
   const { translate } = useLocales();
   const [open, setOpen] = useState(false);
+  const [openWelcome, setOpenWelcome] = useState(false);
   const [selectedLevelTitle, setSelectedLevelTitle] = useState('');
   const [selectedCourse, setSelectedCourse] = useState('');
   const [demoUrl, setDemoUrl] = useState('');
+  const user = useAuth()
+  const today = new Date().toISOString().split("T")[0]; // "YYYY-MM-DD"
+  const isPremium = user?.user?.premiumExpiration > today;
 
   const COURSES = [
     {
@@ -191,7 +197,7 @@ export default function Training() {
   ];
 
   const handleSelectCourseLevel = (course, level) => {
-    setOpen(true);
+    isPremium ? setOpen(true) : setOpenWelcome(true);
     setSelectedCourse(course.code);
     setSelectedLevelTitle(level.code);
     setDemoUrl(level.demoUrl)
@@ -242,6 +248,10 @@ export default function Training() {
         open={open}
         onClose={() => setOpen(false)}
         demoUrl={demoUrl}
+      />
+      <AcademyWelcome
+          open={openWelcome}
+          onClose={() => setOpenWelcome(false)} 
       />
     </Page>
   );

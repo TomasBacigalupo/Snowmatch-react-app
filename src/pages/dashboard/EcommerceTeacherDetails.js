@@ -155,13 +155,13 @@ export default function EcommerceTeacherDetails({ isGuest = false }) {
                     <Typography variant='h6'>{teacher.name}</Typography>
                   </Box>
                 </Hidden>
-                <Grid item xs={12} p={3}>
+                <Grid item xs={12} px={3}>
                   <Markdown children={teacher.information} />
                 </Grid>
-                <Grid item xs={12} p={3}>
+                <Grid item xs={12} px={3}>
                   <Markdown children={teacher.description} />
                 </Grid>
-                <Box mx={2} >
+                <Box m={2} >
                   <Divider />
                 </Box>
                 <Grid container>

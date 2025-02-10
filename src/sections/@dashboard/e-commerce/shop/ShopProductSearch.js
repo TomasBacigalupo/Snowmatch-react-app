@@ -90,6 +90,7 @@ export default function ShopProductSearch({ filters, teachers }) {
       from: values.range[0],
       to: values.range[1]
     })
+    
     dispatch(filterTeachers({
       ...values,
       from: values.range[0],
@@ -247,16 +248,30 @@ export default function ShopProductSearch({ filters, teachers }) {
                 expanded={expandedResort}
                 onChange={() => setExpandedResort(!expanded)}
                 sx={{ borderRadius: 1, my: 2, width: "100%", "&::before": { display: "none" } }}>
-                {!expandedResort && <AccordionSummary sx={{
-                  borderRadius: 10
-                }}>
-                  <Box display='flex' justifyContent='space-between' width='100%'>
-                    <Typography>{translate("filter.resort")}</Typography>
-                    <Typography sx={{ fontWeight: "bold" }}>
-                      Seleccionar montaña
-                    </Typography>
-                  </Box>
-                </AccordionSummary>}
+                {!expandedResort && !values.resort &&
+                  <AccordionSummary sx={{
+                    borderRadius: 10
+                  }}>
+                    <Box display='flex' justifyContent='space-between' width='100%'>
+                      <Typography>{translate("filter.resort")}</Typography>
+                      <Typography sx={{ fontWeight: "bold" }}>
+                        Seleccionar montaña
+                      </Typography>
+                    </Box>
+                  </AccordionSummary>
+                }
+                {!expandedResort && values.resort &&
+                  <AccordionSummary sx={{
+                    borderRadius: 10
+                  }}>
+                    <Box display='flex' justifyContent='space-between' width='100%'>
+                      <Typography>{values.resort}</Typography>
+                      <Typography sx={{ fontWeight: "bold" }}>
+                        Cambiar Montaña
+                      </Typography>
+                    </Box>
+                  </AccordionSummary>
+                }
                 <AccordionDetails>
                   <Typography variant='h3' mb={2}>¿A dónde vas?</Typography>
                   <RHFSelect name="resort" label={translate("filter.resort")} placeholder="Resort">
@@ -301,13 +316,31 @@ export default function ShopProductSearch({ filters, teachers }) {
                 onChange={() => setExpandedDates(!expanded)}
                 sx={{ borderRadius: 1, my: 2, "&::before": { display: "none", width: '100%' } }}
               >
-                {!expandedDates && <AccordionSummary>
+                {!expandedDates && !values.range && <AccordionSummary>
                   <Box display='flex' justifyContent='space-between' width='100%'>
                     <Typography>
                       Fecha
                     </Typography>
+                    {console.log("filters", filters)}
+                    {console.log("values", values)}
                     <Typography sx={{ fontWeight: "bold" }}>
                       Agregar fechas
+                    </Typography>
+                  </Box>
+                </AccordionSummary>}
+                {!expandedDates && values.range && <AccordionSummary>
+                  <Box display='flex' justifyContent='space-between' width='100%'>
+                    {`${new Date(values.range[0]).toLocaleDateString('en-GB', {
+                      day: 'numeric',
+                      month: 'numeric',
+                    })} - ${new Date(values.range[1]).toLocaleDateString('en-GB', {
+                      day: 'numeric',
+                      month: 'numeric',
+                    })}`}
+                    {console.log("filters", filters)}
+                    {console.log("values", values)}
+                    <Typography sx={{ fontWeight: "bold" }}>
+                      Cambiár fechas
                     </Typography>
                   </Box>
                 </AccordionSummary>}
@@ -346,14 +379,36 @@ export default function ShopProductSearch({ filters, teachers }) {
               </Accordion>
               <Accordion expanded={expandedDiscipline}
                 onChange={() => setExpandedDiscipline(!expanded)} sx={{ borderRadius: 1, my: 2, width: "100%", "&::before": { display: "none" } }}>
-                {!expandedDiscipline && <AccordionSummary >
+                {!expandedDiscipline && values?.category?.length === 0 && <AccordionSummary >
+
                   <Box display='flex' justifyContent='space-between' width='100%'>
                     <Typography>
                       Disciplina
                     </Typography>
-                    <Typography sx={{ fontWeight: "bold" }}>
-                      Seleccionar
+                    {filters.discipline?.length === 0 &&
+                      <Typography sx={{ fontWeight: "bold" }}>
+                        Seleccionar
+                      </Typography>}
+                    {values.discipline?.length != 0 &&
+                      <Typography sx={{ fontWeight: "bold" }}>
+                        {filters.discipline[0]}
+                      </Typography>}
+                  </Box>
+                </AccordionSummary>}
+                {!expandedDiscipline && values?.category?.length != 0 && <AccordionSummary >
+
+                  <Box display='flex' justifyContent='space-between' width='100%'>
+                    <Typography>
+                      {values?.category[0]}
                     </Typography>
+                    {filters.discipline?.length === 0 &&
+                      <Typography sx={{ fontWeight: "bold" }}>
+                        Cambiar
+                      </Typography>}
+                    {values.discipline?.length != 0 &&
+                      <Typography sx={{ fontWeight: "bold" }}>
+                        {filters.discipline[0]}
+                      </Typography>}
                   </Box>
                 </AccordionSummary>}
                 <AccordionDetails>

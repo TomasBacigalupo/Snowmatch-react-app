@@ -5,7 +5,7 @@ import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { styled, alpha } from '@mui/material/styles';
 import { useTheme } from '@mui/material/styles';
 import { useDispatch, useSelector } from "src/redux/store";
-import { clearUploadVideoState, createVideo } from "src/redux/slices/video";
+import { clearUploadVideoState, createVideo, createVideoMultipart } from "src/redux/slices/video";
 import { useTranslation } from "react-i18next";
 import useLocales from "src/hooks/useLocales";
 import useAuth from "src/hooks/useAuth";
@@ -22,6 +22,7 @@ import Logo from "src/components/Logo";
 import { FFmpeg, fetchFile } from '@ffmpeg/ffmpeg';
 import { LoadingButton } from "@mui/lab";
 import { column } from "stylis";
+import ProgressComponent from "./ProgressComponent";
 
 
 const RootStyle = styled('div')(({ theme }) => ({
@@ -93,10 +94,30 @@ export default function VideoUploadBottomSheet({ open, onClose, onOpen, course, 
 
         await ffmpeg.exec([
             '-i', 'input.mp4',  // Input file
-            '-b:v', '500k',    // Lower video bitrate
+            '-b:v', '600k',    // Lower video bitrate
+            '-r', '30',          // Limitar a 30 FPS
+            '-preset', 'fast',   // Compresión rápida pero eficiente
             '-b:a', '64k',     // Lower audio bitrate
+            '-movflags', '+faststart', // Permite reproducción inmediata
+            '-vf', 'scale=-2:720',  // Redimensionar a 720p manteniendo relación de aspecto
             outputFileName
         ]);
+
+        // await ffmpeg.exec([
+        //     '-i', 'input.mp4',  // Archivo de entrada
+        //     '-vf', 'scale=-2:720',  // Redimensionar a 720p manteniendo relación de aspecto
+        //     '-c:v', 'libx264',   // Códec de video optimizado para móviles
+        //     '-preset', 'fast',   // Compresión rápida pero eficiente
+        //     '-crf', '28',        // Factor de calidad (más alto = más compresión)
+        //     '-b:v', '600k',      // Bitrate de video optimizado
+        //     '-maxrate', '800k',  // Control de picos de bitrate
+        //     '-bufsize', '1200k', // Buffer de bitrate
+        //     '-r', '30',          // Limitar a 30 FPS
+        //     '-c:a', 'aac',       // Códec de audio compatible con móviles
+        //     '-b:a', '64k',       // Bitrate de audio optimizado
+        //     '-movflags', '+faststart', // Permite reproducción inmediata
+        //     'output.mp4'
+        // ]);
 
         // Read the compressed file from FFmpeg's virtual filesystem
         const compressedFileData = await ffmpeg.readFile(outputFileName);
@@ -107,6 +128,7 @@ export default function VideoUploadBottomSheet({ open, onClose, onOpen, course, 
         console.log("compressedBlobFile", compressedBlobFile.type);
 
         dispatch(createVideo(compressedBlobFile, videoCourse || 'BUMPS'));
+        // dispatch(createVideoMultipart(compressedBlobFile, videoCourse || 'BUMPS'));
         setActiveStep(2);
 
     }, [selectedFile, setLoadingCompresor, setActiveStep, dispatch]);
@@ -205,12 +227,7 @@ export default function VideoUploadBottomSheet({ open, onClose, onOpen, course, 
                             )}
                         </Box>
 
-                        {_progress > 0 &&<Box width='100%' display='felx' justifyContent="center" alignItems="center" flexDirectiob="column">
-                            <LinearProgress variant="determinate" sx={{
-                                width: '100%'
-                            }} valueBuffer={_progress} value={_progress}/>
-                            <Typography textAlign="center" variant="bory">Analizando..</Typography>
-                        </Box>}
+                        {_progress > 0 && <ProgressComponent _progress={_progress}/>}
 
                         <LoadingButton
                             loading={loadingCompresor}
@@ -300,13 +317,13 @@ export default function VideoUploadBottomSheet({ open, onClose, onOpen, course, 
                             sx={{ fontSize: 64, color: 'green', mb: 2 }}
                         />
                         <Typography variant="h5" gutterBottom>
-                            Great job! 🎉
+                            Excelente Bajada! 🎉
                         </Typography>
                         <Typography variant="body1" sx={{ mb: 2 }}>
-                            Your video has been uploaded successfully. You’ll receive an email once it has been reviewed by your instructor.
+                            SnowMatch AI corrigio tu video. Te vamos a enviar una notificacion cuando un Pro lo revise.
                         </Typography>
                         <Typography variant="subtitle2" color="textSecondary" sx={{ mb: 3 }}>
-                            In the meantime, feel free to explore other content or upload another video.
+                            Mientras tanto podés mirar otros cursos para preparate para tu proximo Challange.
                         </Typography>
                         <Button
                             variant="contained"

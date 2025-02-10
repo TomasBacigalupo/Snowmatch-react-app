@@ -1,13 +1,14 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Container, Typography, List, ListItem, ListItemText, ListItemSecondaryAction, Button, SwipeableDrawer, Box, TextField, Rating, Avatar, ListItemAvatar, Paper, IconButton, Divider } from '@mui/material';
-import { FormProvider, RHFEditor } from 'src/components/hook-form';
+import { FormProvider, RHFEditor, RHFTextField, RHFSlider } from 'src/components/hook-form';
 import { useForm } from 'react-hook-form';
 import * as Yup from 'yup';
 // form
 import { yupResolver } from '@hookform/resolvers/yup';
 import { GridCloseIcon } from '@mui/x-data-grid';
 import { useDispatch, useSelector } from 'src/redux/store';
-import { getVideosToReview } from 'src/redux/slices/video';
+import { getVideosToReview, reviewVideo } from 'src/redux/slices/video';
+import { LoadingButton } from '@mui/lab';
 
 // This would typically come from your backend
 const mockUnratedVideos = [
@@ -27,8 +28,8 @@ export default function UnratedVideos() {
 
 
   useEffect(() => {
-          dispatch(getVideosToReview());
-      }, [dispatch]);
+    dispatch(getVideosToReview());
+  }, [dispatch]);
 
   const [isScrolled, setIsScrolled] = useState(false);
 
@@ -45,8 +46,14 @@ export default function UnratedVideos() {
     setComment('');
   };
 
-  const handleSubmitRating = () => {
+  const handleSubmitRating = (data) => {
     // Implement rating submission logic here
+    dispatch(reviewVideo({
+      id: selectedVideo.id,
+      comment: data.comment,
+      score: data.score,
+      revewd: true
+    }))
     console.log('Rating video with id:', selectedVideo.id, 'Rating:', rating, 'Comment:', comment);
     handleCloseDrawer();
   };
@@ -70,23 +77,12 @@ export default function UnratedVideos() {
   }, [drawerOpen]);
 
   const NewBlogSchema = Yup.object().shape({
-    title: Yup.string().required('Title is required'),
-    description: Yup.string().required('Description is required'),
-    content: Yup.string().min(1000).required('Content is required'),
-    cover: Yup.mixed().required('Cover is required'),
+    comment: Yup.string().required('Leave a comment'),
+    score: Yup.number().required('dejale un puntaje al video')
   });
 
   const defaultValues = {
-    title: '',
-    description: '',
-    content: '',
-    cover: null,
-    tags: ['Logan'],
-    publish: true,
-    comments: true,
-    metaTitle: '',
-    metaDescription: '',
-    metaKeywords: ['Logan'],
+    comment: true,
   };
 
   const methods = useForm({
@@ -172,7 +168,7 @@ export default function UnratedVideos() {
             height: '100%',
             display: 'flex',
             flexDirection: 'column',
-            paddingTop:'env(safe-area-inset-top)'
+            paddingTop: 'env(safe-area-inset-top)'
           },
         }}
       >
@@ -207,8 +203,7 @@ export default function UnratedVideos() {
 
         {/* Divider para efecto Airbnb */}
 
-        <FormProvider methods={methods} onSubmit={handleSubmit(() => { })}>
-
+        <FormProvider methods={methods} onSubmit={handleSubmit(handleSubmitRating)}>
 
           <Box ref={drawerContentRef} sx={{ flex: 1, p: 2, overflow: 'auto' }}>
             {selectedVideo && (
@@ -225,26 +220,21 @@ export default function UnratedVideos() {
                 <Box sx={{ position: 'relative', paddingBottom: '56.25%', height: 0, overflow: 'hidden', marginBottom: 2 }}>
                   <video style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }} controls>
                     <source src={`${process.env.REACT_APP_VIDEO_BUCKET_URL}/${selectedVideo.videoUrl}`}
-                    type="video/mp4" />
+                      type="video/mp4" />
                     Your browser does not support the video tag.
                   </video>
                 </Box>
-                <RHFEditor simple={true} name="content1" />
-                <Rating
-                  name="video-rating"
-                  value={rating}
-                  onChange={(event, newValue) => setRating(newValue)}
-                  sx={{ mt: 2 }}
-                />
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={handleSubmitRating}
-                  sx={{ py:2, mt: 2 }}
+                <RHFEditor simple={true} name="comment" />
+                <RHFSlider valueLabelDisplay="on" label="Score" name="score"/>
+                <LoadingButton
                   fullWidth
-                >
-                  Submit Rating
-                </Button>
+                  size="large"
+                  type="submit"
+                  variant="contained"
+                  //loading={isSubmitting}
+                  sx={{ ':hover': { color: '#3399FF' }, py: 2, mt:2 }}>
+                  Review
+                </LoadingButton>
               </>
             )}
           </Box>

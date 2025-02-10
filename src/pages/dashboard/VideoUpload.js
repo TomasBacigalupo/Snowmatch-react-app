@@ -1,23 +1,16 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Typography, Button, Box, useMediaQuery, Stepper, Step, StepLabel, SwipeableDrawer, Container, Grid, Card, CardContent, CardMedia, List, ListItem, ListItemText, Divider, IconButton, TextField, SvgIcon, ToggleButtonGroup, ToggleButton, CircularProgress } from '@mui/material';
+import { Typography, Button, Box, useMediaQuery, Container, Grid, Card, CardContent, CardMedia, TextField, SvgIcon, ToggleButtonGroup, ToggleButton, CircularProgress } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { useTheme } from '@mui/material/styles';
 import Page from '../../components/Page';
-import HeaderBreadcrumbs from 'src/components/HeaderBreadcrumbs';
 import useLocales from 'src/hooks/useLocales';
-import { PATH_GUEST } from 'src/routes/paths';
-import CloseIcon from '@mui/icons-material/Close';
 
-
-import StepContent from '@mui/material/StepContent';
-import Paper from '@mui/material/Paper';
 import VideoUploadBottomSheet from 'src/sections/@dashboard/video/VideoUploadBottomSheet';
 import { useDispatch, useSelector } from 'src/redux/store';
 import { getVideos } from 'src/redux/slices/video';
-import { AnalyticsCurrentSubject, AnalyticsUserProgress } from 'src/sections/@dashboard/general/analytics';
-import Markdown from 'src/components/Markdown';
-import ReactPlayer from "react-player";
+import { AnalyticsUserProgress } from 'src/sections/@dashboard/general/analytics';
 import { useNavigate } from 'react-router-dom';
+import VideoReviewedBottomSheet from 'src/sections/@dashboard/video/VideoReviewedBottomSheet';
 
 
 const Input = styled('input')({
@@ -410,119 +403,6 @@ export default function VideoUpload() {
                     </Grid>
                 </Container>
 
-                <SwipeableDrawer
-                    anchor="bottom"
-                    open={isOpen}
-                    onClose={() => setIsOpen(false)}
-                    onOpen={() => setIsOpen(true)}
-                    disableSwipeToOpen={false}
-                    ModalProps={{
-                        keepMounted: true,
-                    }}
-                    PaperProps={{
-                        sx: {
-                            height: '100%',
-                            maxHeight: '100%',
-                        },
-                    }}
-                >
-                    <Box
-                        sx={{
-                            padding: theme.spacing(2),
-                            height: '100%',
-                            display: 'flex',
-                            flexDirection: 'column',
-                            overflow: 'auto',
-                        }}
-                    >
-                        <Typography variant="h4" gutterBottom align="center">
-                            Subí tu video
-                        </Typography>
-                        <Box my={2}>
-                            <Stepper activeStep={activeStep} alternativeLabel={!isMobile}>
-                                {steps.map((label) => (
-                                    <Step key={label}>
-                                        <StepLabel>{label}</StepLabel>
-                                    </Step>
-                                ))}
-                            </Stepper>
-                        </Box>
-                        {renderStep()}
-                    </Box>
-                </SwipeableDrawer>
-                <SwipeableDrawer
-                    anchor="bottom"
-                    open={isVideoDetailOpen}
-                    onClose={() => setIsVideoDetailOpen(false)}
-                    onOpen={() => setIsVideoDetailOpen(true)}
-                    disableSwipeToOpen={false}
-                    ModalProps={{
-                        keepMounted: true,
-                    }}
-                    PaperProps={{
-                        sx: {
-                            height: '100%',
-                            maxHeight: '100%',
-                        },
-                    }}
-                >
-                    <Box
-                        sx={{
-                            padding: theme.spacing(2),
-                            height: '100%',
-                            display: 'flex',
-                            flexDirection: 'column',
-                            overflow: 'auto',
-                        }}
-                    >
-                        {selectedVideo && (
-                            <>
-                                <Box display="flex" justifyContent="flex-end" mb={2}>
-                                    <IconButton
-                                        edge="end"
-                                        color="inherit"
-                                        onClick={() => setIsVideoDetailOpen(false)}
-                                        aria-label="close"
-                                    >
-                                        <CloseIcon />
-                                    </IconButton>
-                                </Box>
-                                <Typography variant="h4" gutterBottom align="center">
-                                    {selectedVideo.title}
-                                </Typography>
-                                <Box my={2}>
-                                    <video
-                                        src={`${process.env.REACT_APP_VIDEO_BUCKET_URL}/${selectedVideo.videoUrl}`}
-                                        controls
-                                        style={{ width: '100%', maxHeight: '300px' }}
-                                    />
-                                </Box>
-                                <Typography variant="h6" gutterBottom>
-                                    Score: {selectedVideo.score}
-                                </Typography>
-                                <Typography variant="h6" gutterBottom>
-                                    Comments:
-                                </Typography>
-                                <List>
-                                    {selectedVideo.comments?.length > 0 ? (
-                                        selectedVideo.comments.map((comment, index) => (
-                                            <React.Fragment key={index}>
-                                                <ListItem>
-                                                    <ListItemText primary={comment} />
-                                                </ListItem>
-                                                {index < selectedVideo.comments.length - 1 && <Divider />}
-                                            </React.Fragment>
-                                        ))
-                                    ) : (
-                                        <ListItem>
-                                            <ListItemText primary="No comments yet." />
-                                        </ListItem>
-                                    )}
-                                </List>
-                            </>
-                        )}
-                    </Box>
-                </SwipeableDrawer>
                 <VideoUploadBottomSheet
                     title={selectedLevelTitle}
                     course={selectedCourse}
@@ -672,72 +552,12 @@ export default function VideoUpload() {
                     )}
                 </Box>
             </Container>
-            {/* Updated SwipeableDrawer for video details */}
-            <SwipeableDrawer
-                anchor="bottom"
+            <VideoReviewedBottomSheet
                 open={isVideoDetailOpen}
                 onClose={() => setIsVideoDetailOpen(false)}
                 onOpen={() => setIsVideoDetailOpen(true)}
-                disableSwipeToOpen={false}
-                ModalProps={{
-                    keepMounted: true,
-                }}
-                PaperProps={{
-                    sx: {
-                        height: '100%',
-                        maxHeight: '100%',
-                        paddingTop: 'env(safe-area-inset-bottom)',
-                        width: '100vw',  // Asegura que el ancho sea igual al viewport
-                        maxWidth: '100%',
-                    },
-                }}
-            >
-                <Box
-                    sx={{
-                        padding: theme.spacing(2),
-                        width: '100vw',  // Asegura que el ancho sea igual al viewport
-                        maxWidth: '100%',
-                        height: '100%',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        overflow: 'auto',
-                    }}
-                >
-                    {selectedVideo && (
-                        <>
-                            <Box display="flex" justifyContent="flex-end" mb={2}>
-                                <IconButton
-                                    edge="end"
-                                    color="inherit"
-                                    onClick={() => setIsVideoDetailOpen(false)}
-                                    aria-label="close"
-                                >
-                                    <CloseIcon />
-                                </IconButton>
-                            </Box>
-                            <Typography variant="h4" gutterBottom align="center">
-                                {translate(`course.${selectedVideo.course}.title`)}
-                            </Typography>
-                            <Box my={2}>
-                                <ReactPlayer
-                                    url={`${process.env.REACT_APP_VIDEO_BUCKET_URL}/${selectedVideo.videoUrl}`}
-                                    controls
-                                    style={{ maxHeight: '300px', maxWidth: '100%',}}
-                                />
-                            </Box>
-                            <Typography variant="h6" gutterBottom>
-                                {translate('videoCoachScreen.score')} {selectedVideo.score}
-                            </Typography>
-                            <Typography variant="h6" gutterBottom>
-                                {translate('videoCoachScreen.review')}
-                            </Typography>
-                            <Markdown>
-                                {selectedVideo.comment}
-                            </Markdown>
-                        </>
-                    )}
-                </Box>
-            </SwipeableDrawer>
+                selectedVideo={selectedVideo}
+            />
             <VideoUploadBottomSheet
                 title={selectedLevelTitle}
                 course={selectedCourse}

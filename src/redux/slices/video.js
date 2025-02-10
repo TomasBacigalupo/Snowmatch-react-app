@@ -2,6 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import { utcToLocalDate } from 'src/utils/dateUtils';
 // utils
 import axios from '../../utils/axios';
+import * as axios2 from 'axios';        // The default axios instance
 //
 import { dispatch } from '../store';
 import dayjs from 'dayjs';
@@ -28,6 +29,7 @@ const initialState = {
     preferenceId:'',
     createBookingError: false,
     videos: [],
+    progress: 0,
 };
 
 const slice = createSlice({
@@ -258,6 +260,10 @@ const slice = createSlice({
             state.isUploading = false;
         },
 
+        updateUploadProgress(state, action) {
+            state.progress = action.payload;
+        },
+
         clearUploadVideoState(state) {
             state.isLoading = false;
             state.isUploading = false;
@@ -293,6 +299,17 @@ export function getVideosToReview() {
             const response = await axios.get(`/api/videos/VideoReviews`);
             const videos = response.data
             dispatch(slice.actions.getVideosToReviewSuccess(videos));
+        } catch (error) {
+            dispatch(slice.actions.hasError(error));
+        }
+    };
+}
+
+export function reviewVideo(data) {
+    return async () => {
+        const {id} = data;
+        try {
+            await axios.put(`/api/videos/VideoReviews/${id}`, data);
         } catch (error) {
             dispatch(slice.actions.hasError(error));
         }
@@ -371,6 +388,52 @@ export function createVideo(video, course) {
         }
     };
 }
+
+export function createVideoMultipart(video, course) {
+    return async (dispatch) => {
+      try {
+        console.log("video.type", video.type);
+        console.log("course 1", course);
+  
+        dispatch(slice.actions.startLoading());
+  
+        // 1️⃣ Solicitar URL pre-firmada
+        const response = await axios.post("/api/videos/VideoReviews", {
+          course: course,
+        });
+  
+        const presignedUrl = response.data.videoUrl;
+        console.log("presignedUrl", presignedUrl);
+  
+        // 2️⃣ Crear FormData para multipart upload
+        const formData = new FormData();
+        formData.append("file", video);
+  
+        const axiosInstance = axios2.create();
+
+        // 3️⃣ Subir el archivo con seguimiento de progreso
+        await axiosInstance.put(presignedUrl, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+          onUploadProgress: (progressEvent) => {
+            const progress = Math.round(
+              (progressEvent.loaded * 100) / progressEvent.total
+            );
+            dispatch(slice.actions.updateUploadProgress(progress));
+            console.log(`Upload Progress: ${progress}%`);
+          },
+        });
+  
+        dispatch(slice.actions.createVideoSuccess());
+        return response;
+      } catch (error) {
+        console.log("error", error);
+        dispatch(slice.actions.uploadFailed(error.message));
+        return error;
+      }
+    };
+  }
 
 function addUtcOffset(dateString) {
     const date = new Date(dateString);

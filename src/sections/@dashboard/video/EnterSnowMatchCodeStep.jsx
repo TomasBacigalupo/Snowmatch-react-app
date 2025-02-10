@@ -1,7 +1,8 @@
 import React from "react";
-import { Box, Typography, Button, TextField, Link } from "@mui/material";
+import { Box, Typography, Button, TextField, Link, IconButton } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
 
-const EnterSnowMatchCodeStep = ({ onAddCode, onSupport }) => {
+const EnterSnowMatchCodeStep = ({ onAddCode, onSupport, onClose }) => {
   return (
     <Box
       sx={{
@@ -13,6 +14,22 @@ const EnterSnowMatchCodeStep = ({ onAddCode, onSupport }) => {
         p: 3,
       }}
     >
+      {/* Close Icon */}
+      <IconButton
+        onClick={onClose}
+        sx={{
+          position: "absolute",
+          top: 16,
+          left: 16,
+          borderRadius: "50%",
+          width: 36,
+          height: 36,
+          zIndex: 3,
+          color: "black"
+        }}
+      >
+        <CloseIcon fontSize="small" />
+      </IconButton>
       {/* Title */}
       <Typography variant="h5" fontWeight="bold" gutterBottom>
         

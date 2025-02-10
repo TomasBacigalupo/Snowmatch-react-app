@@ -196,8 +196,6 @@ export default function VideoUploadBottomSheet({ open, onClose }) {
         ) : (
           // Render the new "Enter SnowMatch Code" step
           <EnterSnowMatchCodeStep
-            onAddCode={() => console.log("Code added")}
-            onSupport={() => console.log("Contact support")}
             onClose={onClose}
           />
         )}

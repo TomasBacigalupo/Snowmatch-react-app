@@ -2,7 +2,18 @@ import React from "react";
 import { Box, Typography, Button, TextField, Link, IconButton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 
-const EnterSnowMatchCodeStep = ({ onAddCode, onSupport, onClose }) => {
+const EnterSnowMatchCodeStep = ({ onClose }) => {
+
+  const handleSupport = () => { 
+
+    const _message = encodeURIComponent(
+      `👋 Hello SnowMatch Team,\n\nI would like to get my SnowMatch Pass.\n\n🔹 📅 Request Date: ${new Date().toLocaleDateString()}\n`
+    );
+    const url = `https://api.whatsapp.com/send/?phone=5492944263223&text=${_message}&type=phone_number&app_absent=0`;
+
+    window.open(url, '_blank');
+  }
+
   return (
     <Box
       sx={{
@@ -106,6 +117,7 @@ const EnterSnowMatchCodeStep = ({ onAddCode, onSupport, onClose }) => {
         <Link
           href="#"
           underline="hover"
+          onClick={handleSupport}
           sx={{ display: "block", mt: 2, color: "primary.main" }}
         >
           I can’t find my SnowMatch Code
@@ -118,7 +130,7 @@ const EnterSnowMatchCodeStep = ({ onAddCode, onSupport, onClose }) => {
           variant="contained"
           color="primary"
           fullWidth
-          onClick={onAddCode}
+          onClick={handleSupport}
           sx={{ mb: 2 }}
         >
           Add SnowMatch Pass
@@ -127,7 +139,7 @@ const EnterSnowMatchCodeStep = ({ onAddCode, onSupport, onClose }) => {
           variant="outlined"
           color="primary"
           fullWidth
-          onClick={onSupport}
+          onClick={handleSupport}
         >
           Contact Support
         </Button>

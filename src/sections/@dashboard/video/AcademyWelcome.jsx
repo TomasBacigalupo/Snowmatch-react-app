@@ -13,7 +13,7 @@ export default function VideoUploadBottomSheet({ open, onClose }) {
   const steps = [
     {
       image: "/assets/courses/groom.jpeg",
-      title: "Welcome to SnowMatch Academy",
+      title: "Welcome to SMAcademy",
       description:
         "Improve your skiing technique with personalized feedback from SnowMatch Academy – upload your videos and refine your skills like never before!",
     },
@@ -59,6 +59,7 @@ export default function VideoUploadBottomSheet({ open, onClose }) {
         sx: {
           height: "100%",
           maxHeight: "100%",
+          paddingBottom: 'env(safe-area-inset-bottom)'
         },
       }}
     >
@@ -73,7 +74,10 @@ export default function VideoUploadBottomSheet({ open, onClose }) {
           <>
             {/* Cover Image Section */}
             <Box
+              display='flex'
+              flexDirection='column'
               sx={{
+                paddingTop: 'env(safe-area-inset-top)',
                 height: "50vh",
                 position: "relative",
                 backgroundImage: `url(${steps[activeStep].image})`,
@@ -92,30 +96,24 @@ export default function VideoUploadBottomSheet({ open, onClose }) {
               }}
             >
               {/* Close Icon */}
-                <IconButton
-                  onClick={onClose}
-                  sx={{
-                    position: "absolute",
-                    top: 16,
-                    left: 16,
-                    borderRadius: "50%",
-                    width: 36,
-                    height: 36,
-                    zIndex: 3,
-                    color: "black"
-                  }}
-                >
-                  <CloseIcon fontSize="small" />
-                </IconButton>
+              <IconButton
+                onClick={onClose}
+                sx={{
+                  borderRadius: "50%",
+                  width: 36,
+                  height: 36,
+                  zIndex: 3,
+                  color: "black",
+                }}
+              >
+                <CloseIcon fontSize="small" />
+              </IconButton>
 
               {/* Title */}
               <Typography
                 variant="h1"
                 sx={{
-                  position: "absolute",
-                  top: 56,
-                  left: 16,
-                  right: 48,
+                  px:2, 
                   color: "#2B2B2B",
                   fontWeight: "bold",
                   lineHeight: 1.4,
@@ -129,10 +127,8 @@ export default function VideoUploadBottomSheet({ open, onClose }) {
               {/* Logo */}
               <Box
                 sx={{
-                  position: "absolute",
-                  top: 235,
-                  left: 16,
                   zIndex: 2,
+                  px:2
                 }}
               >
                 <img
@@ -164,7 +160,8 @@ export default function VideoUploadBottomSheet({ open, onClose }) {
             {/* Navigation Section */}
             <Box
               sx={{
-                p: 2,
+                px: 2,
+                pt: 2,
                 backgroundColor: "white",
               }}
             >
@@ -187,7 +184,7 @@ export default function VideoUploadBottomSheet({ open, onClose }) {
                 onClick={handleNext}
                 variant="contained"
                 fullWidth
-                sx={{ textTransform: "none" }}
+                sx={{ textTransform: "none", py: 2 }}
               >
                 {activeStep === steps.length - 1 ? "Start Now" : "Continue"}
               </Button>

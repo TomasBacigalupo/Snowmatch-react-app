@@ -1,8 +1,15 @@
 import React from "react";
 import { Box, Typography, Button, TextField, Link, IconButton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+import useAuth from "src/hooks/useAuth";
 
 const EnterSnowMatchCodeStep = ({ onClose }) => {
+
+  const {addToPremium} = useAuth()
+  const handleAddCode = () => {
+    addToPremium()
+    onClose()
+  }
 
   const handleSupport = () => { 
 
@@ -23,15 +30,13 @@ const EnterSnowMatchCodeStep = ({ onClose }) => {
         justifyContent: "space-between",
         textAlign: "center",
         p: 3,
+        pt: 'env(safe-area-inset-top)'
       }}
     >
       {/* Close Icon */}
       <IconButton
         onClick={onClose}
         sx={{
-          position: "absolute",
-          top: 16,
-          left: 16,
           borderRadius: "50%",
           width: 36,
           height: 36,
@@ -130,7 +135,7 @@ const EnterSnowMatchCodeStep = ({ onClose }) => {
           variant="contained"
           color="primary"
           fullWidth
-          onClick={handleSupport}
+          onClick={handleAddCode}
           sx={{ mb: 2 }}
         >
           Add SnowMatch Pass

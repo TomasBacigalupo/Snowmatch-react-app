@@ -7,6 +7,8 @@ PODS:
     - Capacitor
     - SDWebImage
   - CapacitorCordova (6.2.0)
+  - CapacitorDevice (7.0.0):
+    - Capacitor
   - CapacitorFilesystem (6.0.3):
     - Capacitor
   - CapacitorPushNotifications (7.0.0):
@@ -26,6 +28,7 @@ DEPENDENCIES:
   - "CapacitorCamera (from `../../node_modules/@capacitor/camera`)"
   - "CapacitorCommunityMedia (from `../../node_modules/@capacitor-community/media`)"
   - "CapacitorCordova (from `../../node_modules/@capacitor/ios`)"
+  - "CapacitorDevice (from `../../node_modules/@capacitor/device`)"
   - "CapacitorFilesystem (from `../../node_modules/@capacitor/filesystem`)"
   - "CapacitorPushNotifications (from `../../node_modules/@capacitor/push-notifications`)"
   - "CapacitorShare (from `../../node_modules/@capacitor/share`)"
@@ -45,6 +48,8 @@ EXTERNAL SOURCES:
     :path: "../../node_modules/@capacitor-community/media"
   CapacitorCordova:
     :path: "../../node_modules/@capacitor/ios"
+  CapacitorDevice:
+    :path: "../../node_modules/@capacitor/device"
   CapacitorFilesystem:
     :path: "../../node_modules/@capacitor/filesystem"
   CapacitorPushNotifications:
@@ -61,6 +66,7 @@ SPEC CHECKSUMS:
   CapacitorCamera: 9052bd3f464f135ba983feccd8ac1266272f0549
   CapacitorCommunityMedia: 93af2d4e36ce412f04f4f5c28d6ed8bf74ccdf66
   CapacitorCordova: b33e7f4aa4ed105dd43283acdd940964374a87d9
+  CapacitorDevice: 62066b65e148a133df7b8c5bf972ba835b329748
   CapacitorFilesystem: fa3099b3c3aa43a1b51362d0c999301ab1a9a752
   CapacitorPushNotifications: c4feed483e03825369c278f5bab75100fb3f94a0
   CapacitorShare: 2fcf1758cd07e0558f6aed40d7437bf8a3a42297
@@ -68,6 +74,6 @@ SPEC CHECKSUMS:
   CordovaPlugins: c8b823fbe83514975dff3f4811465d70b3ff3962
   SDWebImage: 73c6079366fea25fa4bb9640d5fb58f0893facd8
 
-PODFILE CHECKSUM: 687d4c591c17514634a636843eaad0d5a5488b03
+PODFILE CHECKSUM: 7d623dbfcf7083a2a3880c78f397e20a653740f9
 
 COCOAPODS: 1.14.2

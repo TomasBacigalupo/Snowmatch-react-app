@@ -50,6 +50,13 @@ const handlers = {
       isAdmin: user?.role === 'ADMIN',
     };
   },
+  ADDTOPREMIUM: (state) => ({
+    ...state,
+    user: {
+      ...state.user,
+      premiumExpiration: "2028-02-20"
+    }
+  }),
   LOGOUT: (state) => ({
     ...state,
     isAuthenticated: false,
@@ -116,7 +123,8 @@ const AuthContext = createContext({
   verify: () => Promise.resolve(),
   testVerification: () => Promise.resolve(),
   updateUser: () => Promise.resolve(),
-  refreshUser: () => { }
+  refreshUser: () => { },
+  addToPremium: () => {}
 });
 
 // ----------------------------------------------------------------------
@@ -259,6 +267,10 @@ function AuthProvider({ children }) {
     dispatch({ type: 'LOGOUT' });
   };
 
+  const addToPremium = async () => {
+    dispatch({ type: 'ADDTOPREMIUM' });
+  }
+
   const verify = async (token) => {
     //TODO really verify token with BE
     if (token === "123456") {
@@ -317,7 +329,8 @@ function AuthProvider({ children }) {
         verify,
         testVerification,
         updateUser,
-        refreshUser
+        refreshUser,
+        addToPremium
       }}
     >
       {children}

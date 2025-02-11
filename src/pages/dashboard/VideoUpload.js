@@ -322,9 +322,9 @@ export default function VideoUpload() {
     };
 
     const [levels, setLevels] = useState([
-        { level: 1, course: 'PIST', completed: false, score: 8, progress: 10 },
+        { level: 1, course: 'CARVING', completed: false, score: 8, progress: 10 },
         { level: 2, course: 'BUMPS', score: 10, minScore: 0, maxScore: 100, progress: 39, completed: false },
-        { level: 3, course: 'FREE_RIDE', minScore: 0, maxScore: 100, progress: 86, completed: false, },
+        { level: 3, course: 'SHORT_TURNS', minScore: 0, maxScore: 100, progress: 86, completed: false, },
         { level: 4, course: 'FREE_STYLE', minScore: 0, maxScore: 100, progress: 33, completed: false, },
     ]);
 

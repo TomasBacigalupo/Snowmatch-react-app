@@ -48,7 +48,7 @@ export default function AnalyticsUserProgress() {
     fill: { opacity: 0.48 },
     legend: { floating: true, horizontalAlign: 'center' },
     xaxis: {
-      categories: ['Bumps', 'Pist', 'Freestyle', 'FreeRide', 'SuperG', 'Slalom'],
+      categories: ['Carving', 'Bumps', 'Corto', 'FreeStyle'],
       labels: {
         style: {
           colors: [

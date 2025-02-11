@@ -1141,15 +1141,15 @@
     "course": {
         "BUMPS": {
             "title": "Bumps",
-            "description": "Focuses on navigating bumps with stability and flow."
+            "description": "Enfocado en esquiar sobre bumps con estabilidad y fluidez."
         },
-        "SHORT_TURNS_TECHNIQUE": {
-            "title": "Short Turns Technique",
-            "description": "Sharp, controlled turns that emphasize agility."
+        "SHORT_TURNS": {
+            "title": "Corto Paralelo",
+            "description": "Giros rápidos y controlados que resaltan la agilidad."
         },
-        "CARVING_FUNDAMENTALS": {
-            "title": "PistCarving Fundamentalsa",
-            "description": "Basics of carving with edge control and speed."
+        "CARVING": {
+            "title": "Carving",
+            "description": "Fundamentos del carving con control de cantos y velocidad."
         },
         "PISTE_PRECISION": {
             "title": "Piste Precision",
@@ -1159,29 +1159,21 @@
             "title": "Off-Piste Basics",
             "description": "Intro to skiing on unprepared terrain, emphasizing control."
         },
-        "SLALOM": {
-            "title": "Slalom Skill-building",
-            "description": "For those interested in jumps and basic tricks."
-        },
         "FREE_STYLE": {
             "title": "Freestyle",
-            "description": "For those interested in jumps and basic tricks."
+           "description": "Para quienes quieren aprender saltos y trucos básicos."
         },
-        "PIST":{
-            "title": "Pista",
-            "description": "Para aquellos que quieren mejorar su técnica en pista."
-        },
-        "PIST_1": {
+        "CARVING_1": {
             "title": "Posícion Básica",
             "description": "Cómo pararme arriba de los esquies.",
-            "fundamentals": "La actitud dinamica de equilibrio nos va a permitir mejorar la esquiada pudiendo generar el cambio de canto desde los tobillos y evitando movimientos compensatorios" 
+            "fundamentals": "La actitud dinamica de equilibrio nos va a permitir mejorar la esquiada pudiendo generar el cambio de canto desde los tobillos y evitando movimientos compensatorios"
         },
-        "PIST_2": {
+        "CARVING_2": {
             "title": "Clavado de Baston",
             "description": "Timing de clavado de baston en pista",
             "fundamentals": "El clavado de baston es una herramienta fundamental para el equilibrio y la rotacion de cadera en la pista"
         },
-        "PIST_3": {
+        "CARVING_3": {
             "title": "Avanzados",
             "description": "Para aquellos que quieren mejorar su técnica en pista."
         },

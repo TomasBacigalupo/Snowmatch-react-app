@@ -144,7 +144,7 @@ export default function Training() {
 
   const COURSES = [
     {
-      title: 'Carvin',
+      title: 'Carving',
       subtitle: 'Domina las pistas completando los tres ejercicios',
       code: 'PIST',
       levels: [

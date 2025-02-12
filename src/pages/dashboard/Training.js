@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { Container, Typography, Box } from '@mui/material';
 import Slider from 'react-slick';
 import Page from '../../components/Page';
@@ -40,94 +40,94 @@ const sliderSettings = {
   ],
 };
 const levelColors = {
-    Principiante: 'secondary.lighter', 
-    Intermedio: 'info.lighter', 
-    Avanzado: 'info.light',  
-  };
+  Principiante: 'secondary.lighter',
+  Intermedio: 'info.lighter',
+  Avanzado: 'info.light',
+};
 
-  const levelIcon = {
-    Principiante: '/assets/courses/Intensidad_1.svg',  
-    Intermedio: '/assets/courses/Intensidad_dark.svg',  
-    Avanzado: '/assets/courses/Intensidad_3.svg',  
-  };
-  
-  const CourseCard = ({ post, onClick }) => (
+const levelIcon = {
+  Principiante: '/assets/courses/Intensidad_1.svg',
+  Intermedio: '/assets/courses/Intensidad_dark.svg',
+  Avanzado: '/assets/courses/Intensidad_3.svg',
+};
+
+const CourseCard = ({ post, onClick }) => (
+  <Box
+    onClick={onClick}
+    sx={{
+      width: 240,
+      height: 340,
+      borderRadius: 2,
+      overflow: 'hidden',
+      display: 'flex',
+      flexDirection: 'column',
+      backgroundColor: 'primary.light',
+      cursor: 'pointer',
+      '&:hover': { boxShadow: 4 },
+    }}
+  >
+    {/* Upper Section: Title, Subtitle, and Level Indicator */}
     <Box
-      onClick={onClick}
       sx={{
-        width: 240, 
-        height: 340,
-        borderRadius: 2,
-        overflow: 'hidden',
+        height: 180,
+        p: 2,
         display: 'flex',
         flexDirection: 'column',
-        backgroundColor: 'primary.light',
-        cursor: 'pointer',
-        '&:hover': { boxShadow: 4 },
+        justifyContent: 'space-between',
+        backgroundColor: levelColors[post.level] || 'secondary.lighter',
       }}
     >
-      {/* Upper Section: Title, Subtitle, and Level Indicator */}
-      <Box
+      <Typography
+        variant="subtitle2"
+        fontWeight="bold"
+        color="text.primary"
+        noWrap
+      >
+        {post.title}
+      </Typography>
+
+      <Typography
+        variant="h2"
+        fontWeight="bold"
+        color="text.primary"
         sx={{
-          height: 180,
-          p: 2,
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'space-between',
-          backgroundColor: levelColors[post.level] || 'secondary.lighter', 
+          mb: 2,
+          overflow: 'hidden',
+          display: '-webkit-box',
+          WebkitBoxOrient: 'vertical',
+          WebkitLineClamp: 2, // Allows up to 2 lines
+          lineHeight: 1, // Tight line spacing
         }}
       >
-        <Typography
-          variant="subtitle2"
-          fontWeight="bold"
-          color="text.primary"
-          noWrap
-        >
-          {post.title}
+        {post.subtitle}
+      </Typography>
+
+      <Box sx={{ display: 'flex', alignItems: 'center', mt: 'auto' }}>
+        <Box
+          component="img"
+          src={levelIcon[post.level]}
+          alt="Level"
+          sx={{ width: 24, height: 24 }}
+        />
+        <Typography variant="body2" fontWeight="bold" sx={{ ml: 'auto' }}>
+          {post.points} pts
         </Typography>
-  
-        <Typography
-          variant="h2"
-          fontWeight="bold"
-          color="text.primary"
-          sx={{
-            mb: 2,
-            overflow: 'hidden',
-            display: '-webkit-box',
-            WebkitBoxOrient: 'vertical',
-            WebkitLineClamp: 2, // Allows up to 2 lines
-            lineHeight: 1, // Tight line spacing
-          }}
-        >
-          {post.subtitle}
-        </Typography>
-  
-        <Box sx={{ display: 'flex', alignItems: 'center', mt: 'auto' }}>
-          <Box
-            component="img"
-            src={levelIcon[post.level]}
-            alt="Level"
-            sx={{ width: 24, height: 24 }}
-          />
-          <Typography variant="body2" fontWeight="bold" sx={{ ml: 'auto' }}>
-            {post.points} pts
-          </Typography>
-        </Box>
       </Box>
-  
-      {/* Lower Section: Image */}
-      <Box
-        component="img"
-        src={post.cover}
-        alt={post.title}
-        sx={{
-          width: '100%',
-          height: 160,
-          objectFit: 'cover',
-        }}
-      />
     </Box>
-  );
+
+    {/* Lower Section: Image */}
+    <Box
+      component="img"
+      src={post.cover}
+      alt={post.title}
+      sx={{
+        width: '100%',
+        height: 160,
+        objectFit: 'cover',
+      }}
+    />
+  </Box>
+);
 
 // Main Component
 export default function Training() {
@@ -139,8 +139,8 @@ export default function Training() {
   const [selectedCourse, setSelectedCourse] = useState('');
   const [demoUrl, setDemoUrl] = useState('');
   const user = useAuth()
-  const today = new Date().toISOString().split("T")[0]; // "YYYY-MM-DD"
-  const isPremium = user?.user?.premiumExpiration > today;
+  const today = new Date().toISOString().split("T")[0];
+  const [isPremium, setIsPremium] = useState(user?.user?.premiumExpiration > today)
 
   const COURSES = [
     {
@@ -246,7 +246,7 @@ export default function Training() {
           subtitle: 'Challange 2 subtitle',
           cover: '/assets/courses/pista.png',
           level: 'Intermedio',
-          points: 25, 
+          points: 25,
         },
         {
           title: 'Challange 3 title',
@@ -260,7 +260,7 @@ export default function Training() {
           subtitle: 'Demo 1 subtitle',
           cover: '/assets/courses/pista.png',
           level: 'Intermedio',
-          points: 25, 
+          points: 25,
         },
         {
           title: 'Challange 4 title',
@@ -274,7 +274,7 @@ export default function Training() {
           subtitle: 'Challange 5 subtitle',
           cover: '/assets/courses/pista.png',
           level: 'Intermedio',
-          points: 25, 
+          points: 25,
         },
         {
           title: 'Challange 6 title',
@@ -288,7 +288,7 @@ export default function Training() {
           subtitle: 'Demo 2 subtitle',
           cover: '/assets/courses/pista.png',
           level: 'Intermedio',
-          points: 25, 
+          points: 25,
         },
       ],
     },
@@ -309,7 +309,7 @@ export default function Training() {
           subtitle: 'Challange 2 subtitle',
           cover: '/assets/courses/pista.png',
           level: 'Intermedio',
-          points: 25, 
+          points: 25,
         },
         {
           title: 'Challange 3 title',
@@ -323,7 +323,7 @@ export default function Training() {
           subtitle: 'Demo 1 subtitle',
           cover: '/assets/courses/pista.png',
           level: 'Intermedio',
-          points: 25, 
+          points: 25,
         },
         {
           title: 'Challange 4 title',
@@ -337,7 +337,7 @@ export default function Training() {
           subtitle: 'Challange 5 subtitle',
           cover: '/assets/courses/pista.png',
           level: 'Intermedio',
-          points: 25, 
+          points: 25,
         },
         {
           title: 'Challange 6 title',
@@ -351,7 +351,7 @@ export default function Training() {
           subtitle: 'Demo 2 subtitle',
           cover: '/assets/courses/pista.png',
           level: 'Intermedio',
-          points: 25, 
+          points: 25,
         },
       ],
     },
@@ -372,7 +372,7 @@ export default function Training() {
           subtitle: 'Challange 2 subtitle',
           cover: '/assets/courses/pista.png',
           level: 'Intermedio',
-          points: 25, 
+          points: 25,
         },
         {
           title: 'Challange 3 title',
@@ -386,7 +386,7 @@ export default function Training() {
           subtitle: 'Demo 1 subtitle',
           cover: '/assets/courses/pista.png',
           level: 'Intermedio',
-          points: 25, 
+          points: 25,
         },
         {
           title: 'Challange 4 title',
@@ -400,7 +400,7 @@ export default function Training() {
           subtitle: 'Challange 5 subtitle',
           cover: '/assets/courses/pista.png',
           level: 'Intermedio',
-          points: 25, 
+          points: 25,
         },
         {
           title: 'Challange 6 title',
@@ -414,18 +414,30 @@ export default function Training() {
           subtitle: 'Demo 2 subtitle',
           cover: '/assets/courses/pista.png',
           level: 'Intermedio',
-          points: 25, 
+          points: 25,
         },
       ],
     },
   ];
 
   const handleSelectCourseLevel = (course, level) => {
-    isPremium ? setOpen(true) : setOpenWelcome(true);
+    setOpen(true)
     setSelectedCourse(course.code);
     setSelectedLevelTitle(level.code);
     setDemoUrl(level.demoUrl)
   };
+
+  const handleCloseAcademywelcome = () => {
+    setOpenWelcome(false)
+    console.log(isPremium)
+    if (isPremium) {
+      setOpen(true)
+    }
+  }
+  const onAddToPremium = () => {
+    setIsPremium(true)
+    setOpen(true)
+  }
 
   return (
     <Page title={translate('training.title')}>
@@ -452,7 +464,7 @@ export default function Training() {
                   key={levelIdx}
                   sx={{
                     flex: '0 0 auto',
-                    marginRight: 2, 
+                    marginRight: 2,
                   }}
                 >
                   <CourseCard
@@ -472,10 +484,6 @@ export default function Training() {
         open={open}
         onClose={() => setOpen(false)}
         demoUrl={demoUrl}
-      />
-      <AcademyWelcome
-          open={openWelcome}
-          onClose={() => setOpenWelcome(false)} 
       />
     </Page>
   );

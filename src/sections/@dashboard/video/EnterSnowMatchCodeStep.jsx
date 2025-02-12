@@ -1,17 +1,27 @@
-import React from "react";
+import React, { useState } from "react";
 import { Box, Typography, Button, TextField, Link, IconButton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import useAuth from "src/hooks/useAuth";
+import { LoadingButton } from "@mui/lab";
 
-const EnterSnowMatchCodeStep = ({ onClose }) => {
+const EnterSnowMatchCodeStep = ({ onClose, onAddToPremium }) => {
 
-  const {addToPremium} = useAuth()
-  const handleAddCode = () => {
-    addToPremium()
+  const { addToPremium } = useAuth()
+  const [loading, setLoading] = useState(false);
+  const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+
+
+  const handleAddCode = async () => {
+    setLoading(true)
+    await addToPremium()
+    await sleep(3000)
+    onAddToPremium()
+    setLoading(false)
     onClose()
   }
 
-  const handleSupport = () => { 
+  const handleSupport = () => {
 
     const _message = encodeURIComponent(
       `👋 Hello SnowMatch Team,\n\nI would like to get my SnowMatch Pass.\n\n🔹 📅 Request Date: ${new Date().toLocaleDateString()}\n`
@@ -48,7 +58,7 @@ const EnterSnowMatchCodeStep = ({ onClose }) => {
       </IconButton>
       {/* Title */}
       <Typography variant="h5" fontWeight="bold" gutterBottom>
-        
+
       </Typography>
       {/* Logo */}
       <Box
@@ -56,11 +66,11 @@ const EnterSnowMatchCodeStep = ({ onClose }) => {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          mb: 2, 
+          mb: 2,
         }}
       >
         <img
-          src="/logo/snowmatch.png" 
+          src="/logo/snowmatch.png"
           alt="SnowMatch Logo"
         />
       </Box>
@@ -71,6 +81,7 @@ const EnterSnowMatchCodeStep = ({ onClose }) => {
         </Typography>
         <TextField
           placeholder="SNM123"
+          helperText="SM123 works 😉"
           variant="outlined"
           fullWidth
           sx={{
@@ -131,23 +142,24 @@ const EnterSnowMatchCodeStep = ({ onClose }) => {
 
       {/* Buttons */}
       <Box>
-        <Button
+        <LoadingButton
           variant="contained"
           color="primary"
           fullWidth
           onClick={handleAddCode}
+          loading={loading}
           sx={{ mb: 2 }}
         >
           Add SnowMatch Pass
-        </Button>
-        <Button
+        </LoadingButton>
+        <LoadingButton
           variant="outlined"
           color="primary"
           fullWidth
           onClick={handleSupport}
         >
           Contact Support
-        </Button>
+        </LoadingButton>
       </Box>
     </Box>
   );

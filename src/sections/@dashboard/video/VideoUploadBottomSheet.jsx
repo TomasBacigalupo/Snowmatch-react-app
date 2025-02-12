@@ -23,6 +23,8 @@ import { FFmpeg, fetchFile } from '@ffmpeg/ffmpeg';
 import { LoadingButton } from "@mui/lab";
 import { column } from "stylis";
 import ProgressComponent from "./ProgressComponent";
+import AcademyWelcome from 'src/sections/@dashboard/video/AcademyWelcome';
+
 
 
 const RootStyle = styled('div')(({ theme }) => ({
@@ -50,6 +52,8 @@ export default function VideoUploadBottomSheet({ open, onClose, onOpen, course, 
     const steps = ['Ejercicio', 'Tu video', 'Subir'];
     const theme = useTheme();
     const [videoCourse, setVideoCourse] = useState(course);
+
+    const [openWelcome, setOpenWelcome] = useState(false);
     const [videoPreviewUrl, setVideoPreviewUrl] = useState(null);
     const [selectedFile, setSelectedFile] = useState(null);
     const [videoDuration, setVideoDuration] = useState(0);
@@ -58,6 +62,15 @@ export default function VideoUploadBottomSheet({ open, onClose, onOpen, course, 
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
     const [loadingCompresor, setLoadingCompresor] = useState(false)
     const [_progress, setProgress] = useState(0);
+    const today = new Date().toISOString().split("T")[0];
+    const isPremium = user?.premiumExpiration > today
+
+    const handleCloseAcademywelcome = () => {
+        setOpenWelcome(false)
+    }
+    const onAddToPremium = () => {
+
+    }
 
     const dispatch = useDispatch();
     const { isLoading } = useSelector((state) => state.video)
@@ -211,8 +224,13 @@ export default function VideoUploadBottomSheet({ open, onClose, onOpen, course, 
                         </Box>
 
                         <Button variant="contained" sx={{ py: 2, my: 2 }} fullWidth onClick={async () => {
-                            await uploadVideo();
-                            setActiveStep(activeStep + 1)
+                            if (isPremium) {
+                                await uploadVideo();
+                                setActiveStep(activeStep + 1)
+                            } else {
+                                setOpenWelcome(true)
+                            }
+
                         }}>
                             Start Challange
                         </Button>
@@ -227,7 +245,7 @@ export default function VideoUploadBottomSheet({ open, onClose, onOpen, course, 
                             )}
                         </Box>
 
-                        {_progress > 0 && <ProgressComponent _progress={_progress}/>}
+                        {_progress > 0 && <ProgressComponent _progress={_progress} />}
 
                         <LoadingButton
                             loading={loadingCompresor}
@@ -338,63 +356,72 @@ export default function VideoUploadBottomSheet({ open, onClose, onOpen, course, 
             default:
                 return null;
         }
-    }, [activeStep, videoCourse, videoPreviewUrl, loadingCompresor, course, _progress]);
-    return (
-        <SwipeableDrawer
-            anchor="bottom"
-            open={open}
-            onClose={onCloseWrapper}
-            onOpen={onOpen}
-            disableSwipeToOpen={false}
-            ModalProps={{
-                keepMounted: true,
-            }}
-            PaperProps={{
-                sx: {
-                    height: '100%',
-                    maxHeight: '100%',
-                },
-            }}
-        >
-            <Box display="flex" alignItems="center" justifyContent="space-between" sx={{ paddingTop: 'env(safe-area-inset-top)' }}>
-                <Button onClick={onCloseWrapper} sx={{
-                    padding: '0px',
-                    fontWeight: 'normal',
-                    color: 'black',
-                    textDecoration: 'underline',
-                    '&:hover': {
-                        textDecoration: 'underline',
+    }, [activeStep, videoCourse, videoPreviewUrl, loadingCompresor, course, _progress, isPremium]);
+    if (open) {
+        return (
+            <SwipeableDrawer
+                anchor="bottom"
+                open={open}
+                onClose={onCloseWrapper}
+                onOpen={onOpen}
+                disableSwipeToOpen={false}
+                ModalProps={{
+                    keepMounted: true,
+                }}
+                PaperProps={{
+                    sx: {
+                        height: '100%',
+                        maxHeight: '100%',
                     },
-                    textAlign: 'left',
-                    width: '100px'
-                }}>
-                    Cancelar
-                </Button>
-                <Typography variant="h4" gutterBottom align="center" sx={{ flexGrow: 1 }}>
-                    Subí tu video
-                </Typography>
-                <Box width='100px' /> {/* Placeholder to balance the space */}
-            </Box>
-            <Box
-                sx={{
-                    padding: theme.spacing(2),
-                    height: '100%',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    overflow: 'auto',
                 }}
             >
-                <Box mb={2}>
-                    <Stepper activeStep={activeStep} alternativeLabel={!isMobile}>
-                        {steps.map((label) => (
-                            <Step key={label}>
-                                <StepLabel>{label}</StepLabel>
-                            </Step>
-                        ))}
-                    </Stepper>
+                <Box display="flex" alignItems="center" justifyContent="space-between" sx={{ paddingTop: 'env(safe-area-inset-top)' }}>
+                    <Button onClick={onCloseWrapper} sx={{
+                        padding: '0px',
+                        fontWeight: 'normal',
+                        color: 'black',
+                        textDecoration: 'underline',
+                        '&:hover': {
+                            textDecoration: 'underline',
+                        },
+                        textAlign: 'left',
+                        width: '100px'
+                    }}>
+                        Cancelar
+                    </Button>
+                    <Typography variant="h4" gutterBottom align="center" sx={{ flexGrow: 1 }}>
+                        Subí tu video
+                    </Typography>
+                    <Box width='100px' /> {/* Placeholder to balance the space */}
                 </Box>
-                {renderStep()}
-            </Box>
-        </SwipeableDrawer>
-    )
+                <Box
+                    sx={{
+                        padding: theme.spacing(2),
+                        height: '100%',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        overflow: 'auto',
+                    }}
+                >
+                    <Box mb={2}>
+                        <Stepper activeStep={activeStep} alternativeLabel={!isMobile}>
+                            {steps.map((label) => (
+                                <Step key={label}>
+                                    <StepLabel>{label}</StepLabel>
+                                </Step>
+                            ))}
+                        </Stepper>
+                    </Box>
+                    {renderStep()}
+                </Box>
+                {openWelcome && <AcademyWelcome
+                    open={openWelcome}
+                    onClose={handleCloseAcademywelcome}
+                    onAddToPremium={onAddToPremium}
+                />}
+            </SwipeableDrawer>
+        )
+    } else {
+        return <></>
+    }
 }

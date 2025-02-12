@@ -1141,27 +1141,99 @@
     "course": {
         "BUMPS": {
             "title": "Bumps",
-            "description": "Enfocado en esquiar sobre bumps con estabilidad y fluidez."
+            "description": "Enfocado en esquiar sobre bumps con estabilidad y fluidez.",
+            "challenge1": {
+                "title": "challange1",
+                "subtitle":"challange1subtitle", 
+                "description": "challange1description"
+            },
+            "challenge2": {
+                "title": "challange1",
+                "subtitle":"challange1subtitle", 
+                "description": "challange1description"
+            },
+            "challenge3": {
+                "title": "challange1",
+                "subtitle":"challange1subtitle", 
+                "description": "challange1description"
+            },
+            "Demo1": {
+                "title": "challange1",
+                "subtitle":"challange1subtitle", 
+                "description": "challange1description"
+            }
         },
         "SHORT_TURNS": {
             "title": "Corto Paralelo",
-            "description": "Giros rápidos y controlados que resaltan la agilidad."
+            "description": "Giros rápidos y controlados que resaltan la agilidad.",
+            "challenge1": {
+                "title": "challange1",
+                "subtitle":"challange1subtitle", 
+                "description": "challange1description"
+            },
+            "challenge2": {
+                "title": "challange1",
+                "subtitle":"challange1subtitle", 
+                "description": "challange1description"
+            },
+            "challenge3": {
+                "title": "challange1",
+                "subtitle":"challange1subtitle", 
+                "description": "challange1description"
+            },
+            "Demo1": {
+                "title": "challange1",
+                "subtitle":"challange1subtitle", 
+                "description": "challange1description"
+            }
         },
         "CARVING": {
             "title": "Carving",
-            "description": "Fundamentos del carving con control de cantos y velocidad."
-        },
-        "PISTE_PRECISION": {
-            "title": "Piste Precision",
-            "description": "Balance and technique for skiing on groomed runs"
-        },
-        "FREE_RIDE": {
-            "title": "Off-Piste Basics",
-            "description": "Intro to skiing on unprepared terrain, emphasizing control."
+            "description": "Fundamentos del carving con control de cantos y velocidad.",
+            "challenge1": {
+                "title": "challange1",
+                "subtitle":"challange1subtitle", 
+                "description": "challange1description"
+            },
+            "challenge2": {
+                "title": "challange1",
+                "subtitle":"challange1subtitle", 
+                "description": "challange1description"
+            },
+            "challenge3": {
+                "title": "challange1",
+                "subtitle":"challange1subtitle", 
+                "description": "challange1description"
+            },
+            "Demo1": {
+                "title": "challange1",
+                "subtitle":"challange1subtitle", 
+                "description": "challange1description"
+            }
         },
         "FREE_STYLE": {
             "title": "Freestyle",
-           "description": "Para quienes quieren aprender saltos y trucos básicos."
+           "description": "Para quienes quieren aprender saltos y trucos básicos.",
+           "challenge1": {
+                "title": "challange1",
+                "subtitle":"challange1subtitle", 
+                "description": "challange1description"
+            },
+            "challenge2": {
+                "title": "challange1",
+                "subtitle":"challange1subtitle", 
+                "description": "challange1description"
+            },
+            "challenge3": {
+                "title": "challange1",
+                "subtitle":"challange1subtitle", 
+                "description": "challange1description"
+            },
+            "Demo1": {
+                "title": "challange1",
+                "subtitle":"challange1subtitle", 
+                "description": "challange1description"
+            }
         },
         "CARVING_1": {
             "title": "Posícion Básica",
@@ -1172,34 +1244,6 @@
             "title": "Clavado de Baston",
             "description": "Timing de clavado de baston en pista",
             "fundamentals": "El clavado de baston es una herramienta fundamental para el equilibrio y la rotacion de cadera en la pista"
-        },
-        "CARVING_3": {
-            "title": "Avanzados",
-            "description": "Para aquellos que quieren mejorar su técnica en pista."
-        },
-        "BUMPS_1": {
-            "title": "Primeros Pasos",
-            "description": "Para aquellos que quieren mejorar su técnica en pista."
-        },
-        "BUMPS_2": {
-            "title": "Intermedios",
-            "description": "Para aquellos que quieren mejorar su técnica en pista."
-        },
-        "BUMPS_3": {
-            "title": "Avanzados",
-            "description": "Para aquellos que quieren mejorar su técnica en pista."
-        },
-        "FREE_STYLE_1": {
-            "title": "Primeros Saltos",
-            "description": "Para aquellos que quieren mejorar su técnica en pista."
-        },
-        "FREE_STYLE_2": {
-            "title": "Saltos Con Grabs",
-            "description": "Para aquellos que quieren mejorar su técnica en pista."
-        },
-        "FREE_STYLE_3": {
-            "title": "Saltos Con Rotación",
-            "description": "Para aquellos que quieren mejorar su técnica en pista."
         }
     },
     "videoCoachScreen": {

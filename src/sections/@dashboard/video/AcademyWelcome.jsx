@@ -7,7 +7,7 @@ import EnterSnowMatchCodeStep from "./EnterSnowMatchCodeStep";
 import { formatTextWithHighlight } from "src/utils/formatTextWithHighlight";
 
 
-export default function VideoUploadBottomSheet({ open, onClose }) {
+export default function VideoUploadBottomSheet({ open, onClose, onAddToPremium }) {
   const [activeStep, setActiveStep] = useState(0);
 
   const steps = [
@@ -194,6 +194,7 @@ export default function VideoUploadBottomSheet({ open, onClose }) {
           // Render the new "Enter SnowMatch Code" step
           <EnterSnowMatchCodeStep
             onClose={onClose}
+            onAddToPremium={onAddToPremium}
           />
         )}
       </Box>

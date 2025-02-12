@@ -124,7 +124,7 @@ const AuthContext = createContext({
   testVerification: () => Promise.resolve(),
   updateUser: () => Promise.resolve(),
   refreshUser: () => { },
-  addToPremium: () => {}
+  addToPremium: () => Promise.resolve()
 });
 
 // ----------------------------------------------------------------------

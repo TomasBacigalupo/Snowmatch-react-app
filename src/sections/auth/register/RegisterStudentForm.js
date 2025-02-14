@@ -31,31 +31,6 @@ export default function RegisterStudentForm() {
 const RegisterSchema = Yup.object().shape({
   firstName: Yup.string().required(translate('registerForm.nameRequired')),
   email: Yup.string().email(translate('registerForm.emailInvalid')).required(translate('registerForm.emailRequired')),
-  countryCode: Yup.string().required(),
-  cellphone: Yup.string().when(['countryCode'], (countryCode) => {
-    let regex;
-    let errorMessage;
-
-    if (countryCode === '54') {
-      // Define Argentina regex and error message
-      regex = /^\d{10,11}$/;
-      errorMessage = 'Argentinian cellphone number is not valid';
-    } else if (countryCode === '55') {
-      // Define Brasil regex and error message
-      regex = /^\d{11,12}$/;
-      errorMessage = 'Brazilian cellphone number is not valid';
-    } else if (countryCode === '56') {
-      // Define Chile regex and error message
-      regex = /^\d{9}$/;
-      errorMessage = 'Chilean cellphone number is not valid';
-    } else {
-      // Define Rest of the World regex and error message
-      regex = /^\d{10,11}$/;
-      errorMessage = 'Cellphone number is not valid';
-    }
-
-    return Yup.string().matches(regex, errorMessage);
-  }).required('Phone number required'),
   password: Yup.string().required(translate('registerForm.passwordRequired')),
 });
 
@@ -118,7 +93,7 @@ const RegisterSchema = Yup.object().shape({
                 </Stack>
 
                 <RHFTextField name="email" label="Email" />
-                <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
+                {/* <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
                     <RHFSelect name="countryCode" label={translate('registerForm.countryCode')} placeholder="Country Code">
                         <option value="" />
                         {countries.map((option) => (
@@ -128,7 +103,7 @@ const RegisterSchema = Yup.object().shape({
                         ))}
                     </RHFSelect>
                     <RHFTextField name="cellphone" label={translate('registerForm.phone')} />
-                </Stack>
+                </Stack> */}
 
 
                 <RHFTextField

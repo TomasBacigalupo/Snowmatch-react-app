@@ -15,6 +15,7 @@ import MenuPopover from '../../../components/MenuPopover';
 import { IconButtonAnimate } from '../../../components/animate';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import useLocales from 'src/hooks/useLocales';
+import { InAppBrowser } from '@capacitor/inappbrowser';
 
 // ----------------------------------------------------------------------
 
@@ -60,14 +61,14 @@ const GUEST_MENU_OPTIONS = [
 export default function AccountPopover() {
   const navigate = useNavigate();
 
-  const { user, logout, isAuthenticated, isStudent, isTeacher } = useAuth();
+  const { user, logout, isAuthenticated, isStudent, isTeacher, deleteAccount } = useAuth();
 
   const isMountedRef = useIsMountedRef();
 
   const { enqueueSnackbar } = useSnackbar();
 
   const [open, setOpen] = useState(null);
-  const {translate} = useLocales()
+  const { translate } = useLocales()
 
   const handleOpen = (event) => {
     setOpen(event.currentTarget);
@@ -110,8 +111,8 @@ export default function AccountPopover() {
           }),
         }}
       >
-        {!isAuthenticated && <AccountCircleIcon sx={{ fontSize: 40 }}/>}
-        {isAuthenticated &&<MyAvatar />}
+        {!isAuthenticated && <AccountCircleIcon sx={{ fontSize: 40 }} />}
+        {isAuthenticated && <MyAvatar />}
       </IconButtonAnimate>
 
       <MenuPopover
@@ -128,7 +129,7 @@ export default function AccountPopover() {
           },
         }}
       >
-        {isAuthenticated &&(<><Box sx={{ my: 1.5, px: 2.5 }}>
+        {isAuthenticated && (<><Box sx={{ my: 1.5, px: 2.5 }}>
           <Typography variant="subtitle2" noWrap>
             {user?.displayName}
           </Typography>
@@ -137,7 +138,7 @@ export default function AccountPopover() {
           </Typography>
         </Box>
 
-        <Divider sx={{ borderStyle: 'dashed' }} /></>)}
+          <Divider sx={{ borderStyle: 'dashed' }} /></>)}
 
         {isTeacher && <Stack sx={{ p: 1 }}>
           {MENU_OPTIONS.map((option) => (
@@ -156,7 +157,7 @@ export default function AccountPopover() {
         {!isAuthenticated && <Stack sx={{ p: 1 }}>
           {GUEST_MENU_OPTIONS.map((option) => (
             <MenuItem key={option.label} to={option.linkTo} component={RouterLink} onClick={handleClose}>
-              { translate("accountPopover." + option.label)}
+              {translate("accountPopover." + option.label)}
             </MenuItem>
           ))}
         </Stack>}
@@ -165,14 +166,26 @@ export default function AccountPopover() {
 
         {isAuthenticated &&
           <MenuItem onClick={handleLogout} sx={{ m: 1 }}>
-          { translate("accountPopover.logOut")}
+            {translate("accountPopover.logOut")}
+          </MenuItem>
+        }
+        {isAuthenticated &&
+          <MenuItem 
+            onClick={async () => {
+              deleteAccount()
+            }}
+            sx={{ m: 1 }}>
+            {translate("accountPopover.deleteAccount")}
           </MenuItem>
         }
         {!isAuthenticated &&
-          <MenuItem  sx={{ m: 1 }} onClick={()=>{
-            window.location.href = 'https://instagram.com/snow.match'
-          }}>
-          {translate("accountPopover.help")}
+          <MenuItem sx={{ m: 1 }} onClick={async () => {
+            await InAppBrowser.openInWebView({
+              url: "https://blog.snowmatch.pro/soporte/"
+            })
+          }}
+          >
+            {translate("accountPopover.help")}
           </MenuItem>
         }
       </MenuPopover>

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { Box, IconButton, Divider, List, ListItem, ListItemText, SwipeableDrawer, Typography } from "@mui/material";
-import { GridCloseIcon } from "@mui/x-data-grid";
+import { Avatar, Box, IconButton, Divider, Typography, SwipeableDrawer } from "@mui/material";
 import { useTheme } from '@mui/material/styles';
+import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import ReactPlayer from "react-player";
 import Markdown from "src/components/Markdown";
 import useLocales from "src/hooks/useLocales";
@@ -9,74 +9,171 @@ import CloseIcon from '@mui/icons-material/Close';
 
 export default function VideoReviewedBottomSheet({ open, onClose, onOpen, selectedVideo }) {
     const theme = useTheme();
-    console.log('open', open);
     const { translate } = useLocales();
+    const [isPlaying, setIsPlaying] = useState(false);
+
+
     return (
         <SwipeableDrawer
-                anchor="bottom"
-                open={open}
-                onClose={onClose}
-                onOpen={onOpen}
-                disableSwipeToOpen={false}
-                ModalProps={{
-                    keepMounted: true,
-                }}
-                PaperProps={{
-                    sx: {
-                        height: '100%',
-                        maxHeight: '100%',
-                        paddingTop: 'env(safe-area-inset-bottom)',
-                        width: '100vw',  // Asegura que el ancho sea igual al viewport
-                        maxWidth: '100%',
-                    },
+            anchor="bottom"
+            open={open}
+            onClose={onClose}
+            onOpen={onOpen}
+            disableSwipeToOpen={false}
+            ModalProps={{
+                keepMounted: true,
+            }}
+            PaperProps={{
+                sx: {
+                    height: '100%',
+                    maxHeight: '100%',
+                    paddingTop: 'env(safe-area-inset-bottom)',
+                    width: '100vw',
+                    maxWidth: '100%',
+                },
+            }}
+        >
+            <Box
+                sx={{
+                    width: '100vw',
+                    maxWidth: '100%',
+                    height: '100%',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    overflow: 'auto',
                 }}
             >
-                <Box
-                    sx={{
-                        padding: theme.spacing(2),
-                        width: '100vw',  // Asegura que el ancho sea igual al viewport
-                        maxWidth: '100%',
-                        height: '100%',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        overflow: 'auto',
-                    }}
-                >
-                    {selectedVideo && (
-                        <>
-                            <Box display="flex" justifyContent="flex-end" mb={2}>
-                                <IconButton
-                                    edge="end"
-                                    color="inherit"
-                                    onClick={onClose}
-                                    aria-label="close"
-                                >
+                {selectedVideo && (
+                    <>
+                        {/* Botón de cierre */}
+                        <Box
+                            display="flex"
+                            alignItems="center"
+                            justifyContent="center"
+                            position="relative"
+                            mt={2}
+                            mx={2} 
+                            sx={{ borderBottom: "2px solid #EBEBEB" }} // Línea inferior estilo Airbnb
+                        >
+                            {/* Título del curso - Centrado basado en su propio tamaño */}
+                            <Typography
+                                variant="h4"
+                                sx={{
+                                    position: "absolute",
+                                    left: "50%",
+                                    transform: "translateX(-50%)",
+                                    fontWeight: 600,
+                                    color: "#222222" // Color oscuro como Airbnb 
+                                }}
+                            >
+                                {translate(`course.${selectedVideo.course}.title`)}
+                            </Typography>
+
+                            {/* Botón de cierre - Alineado a la derecha */}
+                            <Box ml="auto">
+                                <IconButton edge="end" color="inherit" onClick={onClose} aria-label="close">
                                     <CloseIcon />
                                 </IconButton>
                             </Box>
-                            <Typography variant="h4" gutterBottom align="center">
-                                {translate(`course.${selectedVideo.course}.title`)}
-                            </Typography>
-                            <Box my={2}>
+                        </Box>
+
+                        {/* Video */}
+                        <Box mb={2}>
+                            {!isPlaying ? (
+                                <Box
+                                    position="relative"
+                                    width="100%"
+                                    maxHeight="300px"
+                                    sx={{ cursor: "pointer" }}
+                                    onClick={() => setIsPlaying(true)}
+                                >
+                                    {/* Thumbnail Image */}
+                                    <Box
+                                        component="img"
+                                        src={`${process.env.REACT_APP_VIDEO_PREVIEW_BUCKET_URL}/${selectedVideo.videoUrl}.jpg`}
+                                        alt="Video Thumbnail"
+                                        sx={{
+                                            width: "100%",
+                                            maxHeight: "300px",
+                                            objectFit: "cover",
+                                        }}
+                                    />
+                                    {/* Play Button Overlay */}
+                                    <Box
+                                        position="absolute"
+                                        top="50%"
+                                        left="50%"
+                                        sx={{
+                                            transform: "translate(-50%, -50%)",
+                                            backgroundColor: "rgba(0, 0, 0, 0.6)",
+                                            borderRadius: "50%",
+                                            width: "60px",
+                                            height: "60px",
+                                            display: "flex",
+                                            alignItems: "center",
+                                            justifyContent: "center",
+                                        }}
+                                    >
+                                        <PlayArrowIcon sx={{ fontSize: 40, color: "white" }} />
+                                    </Box>
+                                </Box>
+                            ) : (
                                 <ReactPlayer
                                     url={`${process.env.REACT_APP_VIDEO_BUCKET_URL}/${selectedVideo.videoUrl}`}
+                                    playing={isPlaying}
                                     controls
                                     style={{ maxHeight: '300px', maxWidth: '100%', }}
+                                    onPause={() => setIsPlaying(false)}
+                                    onPlay={() => setIsPlaying(true)}
                                 />
-                            </Box>
+                            )}
+                        </Box>
+                        <Box px={2}>
+                            {/* Score */}
                             <Typography variant="h6" gutterBottom>
                                 {translate('videoCoachScreen.score')} {selectedVideo.score}
                             </Typography>
-                            <Typography variant="h6" gutterBottom>
-                                {translate('videoCoachScreen.review')}
-                            </Typography>
-                            <Markdown>
-                                {selectedVideo.comment}
-                            </Markdown>
-                        </>
-                    )}
-                </Box>
-            </SwipeableDrawer>
-    )
 
+                            {/* Revisor */}
+                            {selectedVideo.reviewer && (
+                                <>
+                                    <Divider sx={{ my: 2 }} />
+
+                                    {/* Info del reviewer */}
+                                    <Box display="flex" alignItems="center" gap={2} sx={{ mb: 2 }}>
+                                        <Avatar src={selectedVideo.reviewer.imageLink} sx={{ bgcolor: theme.palette.primary.main, width: 48, height: 48 }}>
+                                            {selectedVideo.reviewer.name[0]}
+                                            {selectedVideo.reviewer.lastname[0]}
+                                        </Avatar>
+                                        <Box>
+                                            <Typography variant="h6">
+                                                {selectedVideo.reviewer.name} {selectedVideo.reviewer.lastname}
+                                            </Typography>
+                                            <Typography variant="body2" color="text.secondary">
+                                                {translate("teacher.level")} {selectedVideo.reviewer.level}
+                                            </Typography>
+                                        </Box>
+                                    </Box>
+
+                                    {/* Comentario estilo chat */}
+                                    <Box
+                                        sx={{
+                                            backgroundColor: theme.palette.grey[200],
+                                            padding: theme.spacing(2),
+                                            borderRadius: 2,
+                                            alignSelf: 'flex-start',
+                                            width: "100%"
+                                        }}
+                                    >
+                                        <Markdown>{selectedVideo.comment}</Markdown>
+                                    </Box>
+                                </>
+                            )}
+                        </Box>
+
+                    </>
+                )}
+            </Box>
+        </SwipeableDrawer>
+    );
 }

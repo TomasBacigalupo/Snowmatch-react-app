@@ -12,19 +12,19 @@ export default function VideoUploadBottomSheet({ open, onClose, onAddToPremium }
 
   const steps = [
     {
-      image: "/assets/courses/groom.jpeg",
-      title: "Welcome to SMAcademy",
+      image: "/assets/courses/WELCOME.png",
+      title: "Welcome to SnowMatch Academy",
       description:
         "Improve your skiing technique with personalized feedback from SnowMatch Academy – upload your videos and refine your skills like never before!",
     },
     {
-      image: "/assets/courses/groom_skiing.jpg",
+      image: "/assets/courses/HOW_TO_PLAY.png",
       title: "The Four Core Skills",
       description:
         "Over 40 levels, you’ll steadily progress by building and enhancing four core carving skills, ensuring continuous improvement at every stage.",
     },
     {
-      image: "/assets/courses/groom.jpeg",
+      image: "/assets/courses/FOUR_CORE.png",
       title: "How to Play and Progress",
       description:
         "To pass each level, you need to upload a 30-second video of skiing that meets or exceeds the target criteria.",
@@ -125,7 +125,7 @@ export default function VideoUploadBottomSheet({ open, onClose, onAddToPremium }
               </Typography>
 
               {/* Logo */}
-              <Box
+              {activeStep > 0 && <Box
                 sx={{
                   zIndex: 2,
                   px:2
@@ -136,7 +136,7 @@ export default function VideoUploadBottomSheet({ open, onClose, onAddToPremium }
                   alt="Logo"
                   style={{ width: 46, height: 46, borderRadius: 8 }}
                 />
-              </Box>
+              </Box>}
             </Box>
 
             {/* Content Section */}

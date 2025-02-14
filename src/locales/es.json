@@ -283,6 +283,7 @@
         "LogIn": "Log In",
         "logOut": "Log Out",
         "help": "Ayuda",
+        "deleteAccount": "Eliminar mi cuenta",
         "Lessons": "Mis clases"
     },
     "generalApp": {
@@ -1263,5 +1264,40 @@
         "description": "Te recomendamos que el video sea corto y que se noten claros tus movimientos.",
         "select_video": "Seleccionar video",
         "max_size": "Tamaño máximo 50MB"
+    },
+    "teacher":{
+        "level": "Nivel"
+    },
+    "CARVING_CHALLANGE_1": {
+        "title": "Contar en vueltas",
+        "subtitle": "Contando"
+    },
+    "CARVING_CHALLANGE_2": {
+        "title": "Balanceo en la curva",
+        "subtitle": "Balanceo"
+    },
+    "CARVING_CHALLANGE_3": {
+        "title": "Movimiento controlados",
+        "subtitle": "Control"
+    },
+    "CARVING_DEMO_1": {
+        "title": "Primera demo",
+        "subtitle": "Carving azul"
+    },
+    "BUMPS_CHALLANGE_1": {
+        "title": "Bumps lento pero seguro",
+        "subtitle": "Control en Bumps"
+    },
+    "BUMPS_CHALLANGE_2": {
+        "title": "Pivoteo y flexión en pista",
+        "subtitle": "Pivoteo y Flexión"
+    },
+    "BUMPS_CHALLANGE_3": {
+        "title": "Movimiento controlados",
+        "subtitle": "Control"
+    },
+    "BUMPS_DEMO_1": {
+        "title": "Primera demo",
+        "subtitle": "Carving azul"
     }
 }

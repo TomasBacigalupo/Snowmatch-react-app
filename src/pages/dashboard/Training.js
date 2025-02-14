@@ -7,6 +7,7 @@ import useLocales from '../../hooks/useLocales';
 import VideoUploadBottomSheet from 'src/sections/@dashboard/video/VideoUploadBottomSheet';
 import AcademyWelcome from 'src/sections/@dashboard/video/AcademyWelcome';
 import useAuth from 'src/hooks/useAuth';
+import CourseCard from 'src/sections/@dashboard/training/CourseCard';
 
 // Carousel settings
 const sliderSettings = {
@@ -51,84 +52,6 @@ const levelIcon = {
   Avanzado: '/assets/courses/Intensidad_3.svg',
 };
 
-const CourseCard = ({ post, onClick }) => (
-  <Box
-    onClick={onClick}
-    sx={{
-      width: 240,
-      height: 340,
-      borderRadius: 2,
-      overflow: 'hidden',
-      display: 'flex',
-      flexDirection: 'column',
-      backgroundColor: 'primary.light',
-      cursor: 'pointer',
-      '&:hover': { boxShadow: 4 },
-    }}
-  >
-    {/* Upper Section: Title, Subtitle, and Level Indicator */}
-    <Box
-      sx={{
-        height: 180,
-        p: 2,
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'space-between',
-        backgroundColor: levelColors[post.level] || 'secondary.lighter',
-      }}
-    >
-      <Typography
-        variant="subtitle2"
-        fontWeight="bold"
-        color="text.primary"
-        noWrap
-      >
-        {post.title}
-      </Typography>
-
-      <Typography
-        variant="h2"
-        fontWeight="bold"
-        color="text.primary"
-        sx={{
-          mb: 2,
-          overflow: 'hidden',
-          display: '-webkit-box',
-          WebkitBoxOrient: 'vertical',
-          WebkitLineClamp: 2, // Allows up to 2 lines
-          lineHeight: 1, // Tight line spacing
-        }}
-      >
-        {post.subtitle}
-      </Typography>
-
-      <Box sx={{ display: 'flex', alignItems: 'center', mt: 'auto' }}>
-        <Box
-          component="img"
-          src={levelIcon[post.level]}
-          alt="Level"
-          sx={{ width: 24, height: 24 }}
-        />
-        <Typography variant="body2" fontWeight="bold" sx={{ ml: 'auto' }}>
-          {post.points} pts
-        </Typography>
-      </Box>
-    </Box>
-
-    {/* Lower Section: Image */}
-    <Box
-      component="img"
-      src={post.cover}
-      alt={post.title}
-      sx={{
-        width: '100%',
-        height: 160,
-        objectFit: 'cover',
-      }}
-    />
-  </Box>
-);
-
 // Main Component
 export default function Training() {
   const { themeStretch } = useSettings();
@@ -140,39 +63,43 @@ export default function Training() {
   const [demoUrl, setDemoUrl] = useState('');
   const user = useAuth()
   const today = new Date().toISOString().split("T")[0];
-  const [isPremium, setIsPremium] = useState(user?.user?.premiumExpiration > today)
+  const [isPremium, setIsPremium] = useState(user?.user?.premiumExpiration > today);
 
   const COURSES = [
     {
       title: 'Carving',
       subtitle: 'Domina las pistas completando los tres ejercicios',
-      code: 'PIST',
+      code: 'CARVING',
       levels: [
         {
+          code: 'CARVING_CHALLANGE_1',
           title: 'Challenge 1 title',
           subtitle: 'Challenge 1 subtitle',
-          cover: '/assets/courses/position.png',
+          cover: 'https://image.snowmatch.pro/videoPosters/CARVING_CHALLANGE_1.jpg',
           level: 'Principiante',
           points: 25,
-          demoUrl: 'https://snowmatchvideos.s3.us-east-1.amazonaws.com/Screen+Recording+2024-12-29+at+4.13.17%E2%80%AFPM.mov'
+          demoUrl: 'https://snowmatchvideos.s3.us-east-1.amazonaws.com/CARVING_CHALLANGE_1.mov'
         },
         {
+          code: 'CARVING_CHALLANGE_2',
           title: 'Challenge 2 title',
           subtitle: 'Challenge 2 subtitle',
-          cover: '/assets/courses/position.png',
+          cover: 'https://image.snowmatch.pro/videoPosters/CARVING_CHALLANGE_2.jpg',
           level: 'Principiante',
           points: 25,
-          demoUrl: 'https://snowmatchvideos.s3.us-east-1.amazonaws.com/Screen+Recording+2024-12-29+at+4.13.17%E2%80%AFPM.mov'
+          demoUrl: 'https://snowmatchvideos.s3.us-east-1.amazonaws.com/CARVING_CHALLANGE_2.mov'
         },
         {
+          code: 'CARVING_CHALLANGE_3',
           title: 'Challenge 3 title',
           subtitle: 'Challenge 3 subtitle',
-          cover: '/assets/courses/position.png',
+          cover: 'https://image.snowmatch.pro/videoPosters/CARVING_CHALLANGE_3.jpg',
           level: 'Principiante',
           points: 25,
-          demoUrl: 'https://snowmatchvideos.s3.us-east-1.amazonaws.com/Screen+Recording+2024-12-29+at+4.13.17%E2%80%AFPM.mov'
+          demoUrl: 'https://snowmatchvideos.s3.us-east-1.amazonaws.com/CARVING_CHALLANGE_2.mov'
         },
         {
+          code:'CARVING_DEMO_1',
           title: 'Demo 1 title',
           subtitle: 'Demo 1 subtitle',
           cover: '/assets/courses/position.png',
@@ -235,27 +162,34 @@ export default function Training() {
       code: 'BUMPS',
       levels: [
         {
+          code:"BUMPS_CHALLANGE_1",
           title: 'Challange 1 title',
           subtitle: 'Challange 1 subtitle',
-          cover: '/assets/courses/carving.png',
+          cover: 'https://image.snowmatch.pro/videoPosters/BUMPS_CHALLANGE_1.jpg',
           level: 'Principiante',
+          demoUrl: 'https://snowmatchvideos.s3.us-east-1.amazonaws.com/BUMPS_CHALLANGE_1.mov',
           points: 25,
         },
         {
+          code:"BUMPS_CHALLANGE_2",
           title: 'Challange 2 title',
           subtitle: 'Challange 2 subtitle',
-          cover: '/assets/courses/pista.png',
+          cover: 'https://image.snowmatch.pro/videoPosters/BUMPS_CHALLANGE_2.jpg',
           level: 'Intermedio',
+          demoUrl: 'https://snowmatchvideos.s3.us-east-1.amazonaws.com/BUMPS_CHALLANGE_2.mov',
           points: 25,
         },
         {
+          code:"BUMPS_CHALLANGE_3",
           title: 'Challange 3 title',
           subtitle: 'Challange 3 subtitle',
-          cover: '/assets/courses/carving.png',
+          cover: 'https://image.snowmatch.pro/videoPosters/BUMPS_CHALLANGE_3.jpg',
           level: 'Principiante',
+          demoUrl: 'https://snowmatchvideos.s3.us-east-1.amazonaws.com/BUMPS_CHALLANGE_3.mov',
           points: 25,
         },
         {
+          code:"BUMPS_DEMO_1",
           title: 'Demo 1 title',
           subtitle: 'Demo 1 subtitle',
           cover: '/assets/courses/pista.png',

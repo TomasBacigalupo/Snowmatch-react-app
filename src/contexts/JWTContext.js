@@ -124,7 +124,8 @@ const AuthContext = createContext({
   testVerification: () => Promise.resolve(),
   updateUser: () => Promise.resolve(),
   refreshUser: () => { },
-  addToPremium: () => Promise.resolve()
+  addToPremium: () => Promise.resolve(),
+  deleteAccount: () => Promise.resolve()
 });
 
 // ----------------------------------------------------------------------
@@ -226,6 +227,12 @@ function AuthProvider({ children }) {
         user,
       },
     });
+  };
+
+  const deleteAccount = async () => {
+     axios.delete('/api/users/deleteAccount');
+    setSession(null);
+    dispatch({ type: 'LOGOUT' });
   };
 
   const register = async (email, password, firstName, lastName, countryCode, phone, entity, file, role = 'TEACHER') => {
@@ -330,7 +337,8 @@ function AuthProvider({ children }) {
         testVerification,
         updateUser,
         refreshUser,
-        addToPremium
+        addToPremium,
+        deleteAccount
       }}
     >
       {children}

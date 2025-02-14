@@ -230,6 +230,7 @@
     "LogIn": "LogIn",
     "logOut": "LogOut",
     "help": "Help",
+    "deleteAccount": "Delete Account",
     "Lessons": "My lessons"
   },
   "generalApp": {
@@ -533,7 +534,39 @@
     "group": "Group",
     "private": "exclusive",
     "experiences": "Experiences",
-    "lessons":"Lessons",
+    "lessons": "Lessons",
     "experienceTitle": "Experience in Catedral"
+  },
+  "CARVING_CHALLENGE_1": {
+    "title": "Counting in Turns",
+    "subtitle": "Counting"
+  },
+  "CARVING_CHALLENGE_2": {
+    "title": "Balancing in the Turn",
+    "subtitle": "Balancing"
+  },
+  "CARVING_CHALLENGE_3": {
+    "title": "Controlled Movements",
+    "subtitle": "Control"
+  },
+  "CARVING_DEMO_1": {
+    "title": "First Demo",
+    "subtitle": "Blue Carving"
+  },
+  "BUMPS_CHALLENGE_1": {
+    "title": "Bumps: Slow but Steady",
+    "subtitle": "Control in Bumps"
+  },
+  "BUMPS_CHALLENGE_2": {
+    "title": "Pivoting and Flexion on the Slope",
+    "subtitle": "Pivoting and Flexion"
+  },
+  "BUMPS_CHALLENGE_3": {
+    "title": "Controlled Movements",
+    "subtitle": "Control"
+  },
+  "BUMPS_DEMO_1": {
+    "title": "First Demo",
+    "subtitle": "Blue Carving"
   }
 }

@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { Container, Typography, List, ListItem, ListItemText, ListItemSecondaryAction, Button, SwipeableDrawer, Box, TextField, Rating, Avatar, ListItemAvatar, Paper, IconButton, Divider } from '@mui/material';
 import { FormProvider, RHFEditor, RHFTextField, RHFSlider } from 'src/components/hook-form';
 import { useForm } from 'react-hook-form';
+import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import * as Yup from 'yup';
 // form
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -9,6 +10,8 @@ import { GridCloseIcon } from '@mui/x-data-grid';
 import { useDispatch, useSelector } from 'src/redux/store';
 import { getVideosToReview, reviewVideo } from 'src/redux/slices/video';
 import { LoadingButton } from '@mui/lab';
+import ReactPlayer from 'react-player';
+import { ArrowBack } from '@mui/icons-material';
 
 // This would typically come from your backend
 const mockUnratedVideos = [
@@ -24,7 +27,9 @@ export default function UnratedVideos() {
   const [comment, setComment] = useState('');
   const drawerContentRef = useRef(null);
   const dispatch = useDispatch()
-  const { videosToReview } = useSelector((state) => state.video);
+  const { videosToReview, isLoadingReview } = useSelector((state) => state.video);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [loading, setLoading] = useState(false);
 
 
   useEffect(() => {
@@ -47,16 +52,21 @@ export default function UnratedVideos() {
   };
 
   const handleSubmitRating = (data) => {
-    // Implement rating submission logic here
+    setLoading(true)
     dispatch(reviewVideo({
       id: selectedVideo.id,
       comment: data.comment,
       score: data.score,
       revewd: true
     }))
-    console.log('Rating video with id:', selectedVideo.id, 'Rating:', rating, 'Comment:', comment);
-    handleCloseDrawer();
   };
+
+  useEffect(() => {
+    if (!isLoadingReview) {
+      setLoading(false)
+      handleCloseDrawer()
+    }
+  }, [isLoadingReview])
 
   useEffect(() => {
     const handleDrawerScroll = () => {
@@ -129,77 +139,99 @@ export default function UnratedVideos() {
     "videoUrl": "9-8a1f2faa-039b-4940-b504-094b7d6bcdc9" */}
             {/* Contenedor de avatar + texto en la misma fila */}
             <Box sx={{ display: 'flex', alignItems: 'flex-start', flex: 1 }}>
-              <ListItemAvatar>
-                <Avatar
-                  variant="square"
-                  src={`${process.env.REACT_APP_VIDEO_PREVIEW_BUCKET_URL}/${video.videoUrl}.jpg`}
-                  alt={video.title}
-                  sx={{ width: 120, height: 120, borderRadius: 2 }}
-                />
-              </ListItemAvatar>
-              <ListItemText
-                primary={video.course}
-                secondary={`Uploaded on: ${video.uploadDate}`}
-                sx={{
-                  marginLeft: 2,
-                  '& .MuiTypography-root': {
-                    fontWeight: 600,
-                  },
+              <video
+                src={`${process.env.REACT_APP_VIDEO_BUCKET_URL}/${video.videoUrl}`}
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                  borderRadius: '12px', // Equivalent to `rounded-xl` in Tailwind (12px)
                 }}
+                autoPlay
+                muted
+                loop
+                playsInline
+                defaultMuted
               />
-            </Box>
 
-            {/* Botón en la esquina inferior derecha */}
-            <Box sx={{ position: 'absolute', right: 20, bottom: 20, display: 'flex', justifyContent: 'flex-end', marginTop: 'auto' }}>
-              <Button fullWidth variant="contained" color="primary" onClick={() => handleRate(video)}>
-                Rate
-              </Button>
             </Box>
+            <ListItemText
+              primary={video.course}
+              secondary={`Uploaded by: ${video.user.name}`}
+              sx={{
+                '& .MuiTypography-root': {
+                  fontWeight: 600,
+                },
+              }}
+            />
+            {/* Botón en la esquina inferior derecha */}
+            <Button fullWidth variant="contained" color="primary" onClick={() => handleRate(video)}>
+              Rate
+            </Button>
           </Paper>
         ))}
       </List>
       <SwipeableDrawer
-        anchor="bottom"
+        anchor="right"
         open={drawerOpen}
         onClose={handleCloseDrawer}
         onOpen={() => { }}
+        disableSwipeToOpen={false}
+        ModalProps={{
+          keepMounted: true,
+        }}
         PaperProps={{
           sx: {
             height: '100%',
-            display: 'flex',
-            flexDirection: 'column',
-            paddingTop: 'env(safe-area-inset-top)'
+            maxHeight: '100%',
+            paddingTop: 'env(safe-area-inset-bottom)',
+            width: '100vw',
+            maxWidth: '100%',
           },
         }}
       >
-
         <Box
           display="flex"
-          justifyContent="space-between"
           alignItems="center"
-          mx={1}
-          mb={0}
-          px={2}
-          py={1}
+          justifyContent="center"
+          position="relative"
+          mt={2}
+          mx={2}
           sx={{
             position: "sticky",
             top: 0,
             width: "100%",
             backgroundColor: "white",
-            borderBottom: "1px solid #ddd",
+            borderBottom: "2px solid #EBEBEB",
             zIndex: 10,
           }}
+
         >
-          {/* Contenedor para centrar el video */}
-          <Box flexGrow={1} display="flex" justifyContent="center">
-            ReviewVideo
+
+          {/* Botón de cierre - Alineado a la izquierda */}
+          <Box mr="auto">
+            <IconButton edge="start" color="inherit" onClick={handleCloseDrawer} aria-label="close">
+              <ArrowBack />
+            </IconButton>
           </Box>
 
-          {/* Botón de cierre alineado a la derecha */}
-          <IconButton edge="end" color="inherit" onClick={handleCloseDrawer} aria-label="close">
-            <GridCloseIcon />
-          </IconButton>
+          {/* Título del curso - Centrado basado en su propio tamaño */}
+          <Typography
+            variant="h4"
+            sx={{
+              position: "absolute",
+              left: "50%",
+              transform: "translateX(-50%)",
+              fontWeight: 600,
+              color: "#222222" // Color oscuro como Airbnb 
+            }}
+          >
+            Rate Video
+          </Typography>
         </Box>
+
+
+
 
         {/* Divider para efecto Airbnb */}
 
@@ -212,27 +244,70 @@ export default function UnratedVideos() {
                   {selectedVideo.title}
                 </Typography>
                 <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                  <Avatar alt={selectedVideo.uploadedBy} src={selectedVideo.avatarUrl} sx={{ mr: 2 }} />
+                  <Avatar alt={selectedVideo.user.name} src={selectedVideo.imageUrl} sx={{ mr: 2 }} />
                   <Typography variant="body1">
-                    Uploaded by {selectedVideo.uploadedBy}
+                    Uploaded by {selectedVideo.user.name}
                   </Typography>
                 </Box>
-                <Box sx={{ position: 'relative', paddingBottom: '56.25%', height: 0, overflow: 'hidden', marginBottom: 2 }}>
-                  <video style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }} controls>
-                    <source src={`${process.env.REACT_APP_VIDEO_BUCKET_URL}/${selectedVideo.videoUrl}`}
-                      type="video/mp4" />
-                    Your browser does not support the video tag.
-                  </video>
+                <Box mb={2}>
+                  {!isPlaying ? (
+                    <Box
+                      position="relative"
+                      width="100%"
+                      maxHeight="300px"
+                      sx={{ cursor: "pointer" }}
+                      onClick={() => setIsPlaying(true)}
+                    >
+                      {/* Thumbnail Image */}
+                      <Box
+                        component="img"
+                        src={`${process.env.REACT_APP_VIDEO_PREVIEW_BUCKET_URL}/${selectedVideo.videoUrl}.jpg`}
+                        alt="Video Thumbnail"
+                        sx={{
+                          width: "100%",
+                          maxHeight: "300px",
+                          objectFit: "cover",
+                        }}
+                      />
+                      {/* Play Button Overlay */}
+                      <Box
+                        position="absolute"
+                        top="50%"
+                        left="50%"
+                        sx={{
+                          transform: "translate(-50%, -50%)",
+                          backgroundColor: "rgba(0, 0, 0, 0.6)",
+                          borderRadius: "50%",
+                          width: "60px",
+                          height: "60px",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                        }}
+                      >
+                        <PlayArrowIcon sx={{ fontSize: 40, color: "white" }} />
+                      </Box>
+                    </Box>
+                  ) : (
+                    <ReactPlayer
+                      url={`${process.env.REACT_APP_VIDEO_BUCKET_URL}/${selectedVideo.videoUrl}`}
+                      playing={isPlaying}
+                      controls
+                      style={{ maxHeight: '300px', maxWidth: '100%', }}
+                      onPause={() => setIsPlaying(false)}
+                      onPlay={() => setIsPlaying(true)}
+                    />
+                  )}
                 </Box>
+                <RHFSlider valueLabelDisplay="on" label="Score" name="score" />
                 <RHFEditor simple={true} name="comment" />
-                <RHFSlider valueLabelDisplay="on" label="Score" name="score"/>
                 <LoadingButton
                   fullWidth
                   size="large"
                   type="submit"
                   variant="contained"
-                  //loading={isSubmitting}
-                  sx={{ ':hover': { color: '#3399FF' }, py: 2, mt:2 }}>
+                  loading={loading}
+                  sx={{ ':hover': { color: '#3399FF' }, py: 2, mt: 2 }}>
                   Review
                 </LoadingButton>
               </>

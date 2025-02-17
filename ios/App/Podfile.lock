@@ -11,6 +11,9 @@ PODS:
     - Capacitor
   - CapacitorFilesystem (6.0.3):
     - Capacitor
+  - CapacitorGeolocation (7.1.0):
+    - Capacitor
+    - IONGeolocationLib (~> 1.0)
   - CapacitorInappbrowser (2.0.0):
     - Capacitor
     - OSInAppBrowserLib (~> 1.0)
@@ -22,6 +25,7 @@ PODS:
     - Capacitor
   - CordovaPlugins (6.0.0):
     - CapacitorCordova
+  - IONGeolocationLib (1.0.0)
   - OSInAppBrowserLib (1.0.0)
   - SDWebImage (5.20.0):
     - SDWebImage/Core (= 5.20.0)
@@ -34,6 +38,7 @@ DEPENDENCIES:
   - "CapacitorCordova (from `../../node_modules/@capacitor/ios`)"
   - "CapacitorDevice (from `../../node_modules/@capacitor/device`)"
   - "CapacitorFilesystem (from `../../node_modules/@capacitor/filesystem`)"
+  - "CapacitorGeolocation (from `../../node_modules/@capacitor/geolocation`)"
   - "CapacitorInappbrowser (from `../../node_modules/@capacitor/inappbrowser`)"
   - "CapacitorPushNotifications (from `../../node_modules/@capacitor/push-notifications`)"
   - "CapacitorShare (from `../../node_modules/@capacitor/share`)"
@@ -42,6 +47,7 @@ DEPENDENCIES:
 
 SPEC REPOS:
   trunk:
+    - IONGeolocationLib
     - OSInAppBrowserLib
     - SDWebImage
 
@@ -58,6 +64,8 @@ EXTERNAL SOURCES:
     :path: "../../node_modules/@capacitor/device"
   CapacitorFilesystem:
     :path: "../../node_modules/@capacitor/filesystem"
+  CapacitorGeolocation:
+    :path: "../../node_modules/@capacitor/geolocation"
   CapacitorInappbrowser:
     :path: "../../node_modules/@capacitor/inappbrowser"
   CapacitorPushNotifications:
@@ -76,14 +84,16 @@ SPEC CHECKSUMS:
   CapacitorCordova: b33e7f4aa4ed105dd43283acdd940964374a87d9
   CapacitorDevice: 62066b65e148a133df7b8c5bf972ba835b329748
   CapacitorFilesystem: fa3099b3c3aa43a1b51362d0c999301ab1a9a752
+  CapacitorGeolocation: 0d4eeb930b58a6896ec0b495a0f638fb49df69db
   CapacitorInappbrowser: 7ff2c75c4cfc178cbbb99fbe382b2381bcc187c6
   CapacitorPushNotifications: c4feed483e03825369c278f5bab75100fb3f94a0
   CapacitorShare: 2fcf1758cd07e0558f6aed40d7437bf8a3a42297
   CoderpradpCapacitorPluginVideoPicker: a410fb1f4a36683bcd90d5729bf42765c5126d04
   CordovaPlugins: c8b823fbe83514975dff3f4811465d70b3ff3962
+  IONGeolocationLib: 81f33f88d025846946de2cf63b0c7628e7c6bc9d
   OSInAppBrowserLib: c3d0b21a0c8b6d81e69117ad08bb6b8a4849c4e1
   SDWebImage: 73c6079366fea25fa4bb9640d5fb58f0893facd8
 
-PODFILE CHECKSUM: d31b44ea2a72e0dd20ac86ff96eb01ce05002fba
+PODFILE CHECKSUM: b8c95b216b5f86080ba439d7a82153d80823c77a
 
 COCOAPODS: 1.14.2

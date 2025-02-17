@@ -25,6 +25,7 @@ import UnratedVideos from 'src/pages/dashboard/UnratedVideos';
 import CourseLevels from 'src/pages/dashboard/CourseLevels';
 import BackButtonLayout from 'src/layouts/BackButtonLayout';
 import Training from 'src/pages/dashboard/Training';
+import Maps from 'src/pages/dashboard/Maps';
 
 // ----------------------------------------------------------------------
 
@@ -92,6 +93,13 @@ export default function Router() {
       element: (<GuestLayout />),
       children: [
         { path: 'calculate', element: <Rental isGuest={true} /> }
+      ]
+    },
+    {
+      path: 'maps',
+      element: (<GuestLayout />),
+      children: [
+        { path: ':id', element: <Maps /> }
       ]
     },
     {

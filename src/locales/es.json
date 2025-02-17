@@ -1140,6 +1140,11 @@
         "pendingReview": "Esperando calificación"
     },
     "course": {
+        "CHALLANGE": {
+            "title": "Sube tu video y recibe el análisis de tu inclinación",
+            "description":"Sube un video de tu sesión de esquí y nuestra inteligencia artificial calculará tu inclinación durante el descenso. Recibe información valiosa para mejorar tu técnica y lleva tu entrenamiento al siguiente nivel.",
+            "fundamentals": ""
+        },
         "BUMPS": {
             "title": "Bumps",
             "description": "Enfocado en esquiar sobre bumps con estabilidad y fluidez.",
@@ -1299,5 +1304,13 @@
     "BUMPS_DEMO_1": {
         "title": "Primera demo",
         "subtitle": "Carving azul"
-    }
+    },
+    "AI_CHALLANGE_1": {
+        "title": "Lleva tu esquiada al máximo",
+        "subtitle": "Cuanto angulas?"
+    },
+    "AI_CHALLANGE_2": {
+        "title": "Lleva tu esquiada al máximo",
+        "subtitle": "Levantas el interno?"
+    }    
 }

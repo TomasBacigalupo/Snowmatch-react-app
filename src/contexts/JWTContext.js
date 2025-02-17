@@ -196,6 +196,11 @@ function AuthProvider({ children }) {
 
 
   const registerNotifications = async () => {
+    
+    await PushNotifications.addListener('registration', token => {
+      console.info('Registration token: ', token.value);
+    });
+
     let permStatus = await PushNotifications.checkPermissions();
   
     if (permStatus.receive === 'prompt') {

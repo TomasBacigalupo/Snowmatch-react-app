@@ -109,23 +109,9 @@ export default function VideoUploadBottomSheet({ open, onClose, onAddToPremium }
                 <CloseIcon fontSize="small" />
               </IconButton>
 
-              {/* Title */}
-              <Typography
-                variant="h1"
-                sx={{
-                  px:2, 
-                  color: "#2B2B2B",
-                  fontWeight: "bold",
-                  lineHeight: 1.4,
-                  textAlign: "left",
-                  zIndex: 2,
-                }}
-              >
-                {formatTextWithHighlight(steps[activeStep].title)}
-              </Typography>
 
               {/* Logo */}
-              {activeStep > 0 && <Box
+               <Box
                 sx={{
                   zIndex: 2,
                   px:2
@@ -136,7 +122,7 @@ export default function VideoUploadBottomSheet({ open, onClose, onAddToPremium }
                   alt="Logo"
                   style={{ width: 46, height: 46, borderRadius: 8 }}
                 />
-              </Box>}
+              </Box>
             </Box>
 
             {/* Content Section */}
@@ -152,6 +138,19 @@ export default function VideoUploadBottomSheet({ open, onClose, onAddToPremium }
                 zIndex: 1,
               }}
             >
+              {/* Title */}
+              <Typography
+                variant="h2"
+                sx={{
+                  color: "#2B2B2B",
+                  fontWeight: "bold",
+                  lineHeight: 1.4,
+                  textAlign: "left",
+                  zIndex: 2,
+                }}
+              >
+                {formatTextWithHighlight(steps[activeStep].title)}
+              </Typography>
               <Typography variant="body1" sx={{ mb: 2, textAlign: "left" }}>
                 {formatTextWithHighlight(steps[activeStep].description)}
               </Typography>

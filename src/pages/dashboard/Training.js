@@ -5,7 +5,6 @@ import Page from '../../components/Page';
 import useSettings from '../../hooks/useSettings';
 import useLocales from '../../hooks/useLocales';
 import VideoUploadBottomSheet from 'src/sections/@dashboard/video/VideoUploadBottomSheet';
-import AcademyWelcome from 'src/sections/@dashboard/video/AcademyWelcome';
 import useAuth from 'src/hooks/useAuth';
 import CourseCard from 'src/sections/@dashboard/training/CourseCard';
 
@@ -40,17 +39,7 @@ const sliderSettings = {
     },
   ],
 };
-const levelColors = {
-  Principiante: 'secondary.lighter',
-  Intermedio: 'info.lighter',
-  Avanzado: 'info.light',
-};
 
-const levelIcon = {
-  Principiante: '/assets/courses/Intensidad_1.svg',
-  Intermedio: '/assets/courses/Intensidad_dark.svg',
-  Avanzado: '/assets/courses/Intensidad_3.svg',
-};
 
 // Main Component
 export default function Training() {
@@ -66,6 +55,31 @@ export default function Training() {
   const [isPremium, setIsPremium] = useState(user?.user?.premiumExpiration > today);
 
   const COURSES = [
+    {
+      title: 'Challange',
+      subtitle: 'Sos un buen esquiador? Que SnowMatch AI lo diga!',
+      code: 'CHALLANGE',
+      levels: [
+        {
+          code: 'AI_CHALLANGE_1',
+          title: 'Challenge 1 title',
+          subtitle: 'Challenge 1 subtitle',
+          cover: '/assets/courses/ai_challange.png',
+          level: 'Principiante',
+          points: 25,
+          demoUrl: 'https://snowmatchvideos.s3.us-east-1.amazonaws.com/CARVING_CHALLANGE_1.mov'
+        },
+        {
+          code: 'AI_CHALLANGE_2',
+          title: 'Challenge 1 title',
+          subtitle: 'Challenge 1 subtitle',
+          cover: '/assets/courses/ai_challange2.png',
+          level: 'Principiante',
+          points: 25,
+          demoUrl: 'https://snowmatchvideos.s3.us-east-1.amazonaws.com/CARVING_CHALLANGE_1.mov'
+        },
+      ],
+    },
     {
       title: 'Carving',
       subtitle: 'Domina las pistas completando los tres ejercicios',

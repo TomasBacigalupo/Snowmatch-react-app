@@ -11,7 +11,10 @@ import dayjs from 'dayjs';
 
 const initialState = {
     isLoading: false,
+    isLoadingExists: false,
     isUploading: false,
+    isLoadingReview: false,
+    analizeExists: false,
     loadingPayment: false,
     error: null,
     bookings: [],
@@ -39,6 +42,18 @@ const slice = createSlice({
         // START LOADING
         startLoading(state) {
             state.isLoading = true;
+        },
+
+        startLoadingReview(state) {
+            state.isLoadingReview = true;
+        },
+
+        stopLoadingReview(state) {
+            state.isLoadingReview = false;
+        },
+
+         startLoadingExists(state) {
+            state.isLoadingExists = true;
         },
 
         startLoadingPayment(state) {
@@ -260,6 +275,11 @@ const slice = createSlice({
             state.isUploading = false;
         },
 
+        existsVideoSuccess(state, action) {
+            state.isLoadingExists = false;
+            state.analizeExists = action.payload;
+        },
+
         updateUploadProgress(state, action) {
             state.progress = action.payload;
         },
@@ -309,7 +329,10 @@ export function reviewVideo(data) {
     return async () => {
         const {id} = data;
         try {
+            dispatch(slice.actions.startLoadingReview());
             await axios.put(`/api/videos/VideoReviews/${id}`, data);
+            dispatch(slice.actions.stopLoadingReview());
+            dispatch(getVideosToReview())
         } catch (error) {
             dispatch(slice.actions.hasError(error));
         }
@@ -383,6 +406,21 @@ export function createVideo(video, course) {
             dispatch(slice.actions.createVideoSuccess());
             return response;
         } catch (error) {
+            console.log("error", error.message)
+            return error;
+        }
+    };
+}
+
+export function videoExists(bucket, key) {
+    return async () => {
+        try {
+            dispatch(slice.actions.startLoadingExists());
+            const response = await axios.get(`/api/videos/exists?bucket=${bucket}&key=${key}`);
+            dispatch(slice.actions.existsVideoSuccess(response.data.exists));
+            console.log(response)
+        } catch (error) {
+
             console.log("error", error.message)
             return error;
         }

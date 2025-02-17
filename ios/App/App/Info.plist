@@ -50,5 +50,9 @@
 		<key>NSPhotoLibraryUsageDescription</key>
 		<string>SnowMatch necesita acceso a tu biblioteca de fotos para seleccionar los videos que
 			subas.</string>
+		<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+		<string>SnowMatch quiere saber tu ubicacion par poder mostrarte el mapa de pistas del centro de esqui en el que estás esquiando</string>
+		<key>NSLocationWhenInUseUsageDescription</key>
+		<string>SnowMatch quiere saber tu ubicacion par poder mostrarte el mapa de pistas del centro de esqui en el que estás esquiando</string>
 	</dict>
 </plist>

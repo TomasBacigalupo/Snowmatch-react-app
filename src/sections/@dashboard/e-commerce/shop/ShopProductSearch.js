@@ -16,8 +16,6 @@ import {
 } from '@mui/material';
 // hooks
 import useIsMountedRef from '../../../../hooks/useIsMountedRef';
-// utils
-import axios from '../../../../utils/axios';
 // routes
 import { PATH_DASHBOARD, PATH_GUEST } from '../../../../routes/paths';
 // components
@@ -36,6 +34,7 @@ import { searchTeachers } from 'src/services/facebook';
 import { filterTeachers } from 'src/redux/slices/teachers';
 import { DesktopDateRangePicker, MobileDateRangePicker, StaticDateRangePicker } from '@mui/lab';
 import dayjs from 'dayjs';
+import { Language } from '@mui/icons-material';
 
 
 // ----------------------------------------------------------------------
@@ -84,17 +83,24 @@ export default function ShopProductSearch({ filters, teachers }) {
   const handleOpenDrawer = () => setIsDrawerOpen(true);
   const handleCloseDrawer = () => setIsDrawerOpen(false);
 
-  const onSubmit = () => {
+  const onSubmit = (data) => {
+    console.log('pase', data)
+
+    //react search
     searchTeachers({
       ...values,
       from: values.range[0],
       to: values.range[1]
     })
-    
+
     dispatch(filterTeachers({
       ...values,
       from: values.range[0],
-      to: values.range[1]
+      to: values.range[1],
+      resort: values.resort,
+      gender: [],
+      language: [],
+      discipline: [],
     }))
 
     if (values.resort === "Cerro Catedral") {
@@ -105,12 +111,11 @@ export default function ShopProductSearch({ filters, teachers }) {
       }
 
     } else {
-      if (isTeacher) {
-        navigate(`/dashboard/e-commerce/shop/school?resort=${values.resort}`)
-      } else {
-        navigate(`/match/school?resort=${values.resort}`)
-      }
-
+      // if (isTeacher) {
+      //   navigate(`/dashboard/e-commerce/shop/school?resort=${values.resort}`)
+      // } else {
+      //   navigate(`/match/school?resort=${values.resort}`)
+      // }
     }
     handleCloseDrawer()
   }
@@ -133,14 +138,15 @@ export default function ShopProductSearch({ filters, teachers }) {
     range: defaultRange,
     from: defaultRange[0],
     to: defaultRange[1],
-    gender: [],
+    // gender: [],
     category: ["Ski"],
-    language: [],
-    discipline: []
+    // language: [],
+    // discipline: []
   };
 
   const methods = useForm({
     defaultValues,
+    resolver: undefined,
   });
 
   const {
@@ -225,25 +231,26 @@ export default function ShopProductSearch({ filters, teachers }) {
           </Typography>
         </Box>
       </Paper>
+      <FormProvider width='100%' methods={methods} onSubmit={handleSubmit(onSubmit)}>
+        <Drawer
+          anchor="top"
+          open={isDrawerOpen}
+          onClose={handleCloseDrawer}
+          sx={{
+            '& .MuiDrawer-paper': {
+              height: '100%',
+              borderRadius: '0 0 16px 16px',
+              boxShadow: '0px 4px 20px rgba(0, 0, 0, 0.2)',
+              p: 3,
+              backgroundColor: '#F7F7F7',
+              paddingTop: 'calc(env(safe-area-inset-top, 0px) + 24px)',
+            },
+          }}
+        >
+          <Box display='flex' flexDirection='column' justifyContent='space-between' height='100%'>
 
-      <Drawer
-        anchor="top"
-        open={isDrawerOpen}
-        onClose={handleCloseDrawer}
-        sx={{
-          '& .MuiDrawer-paper': {
-            height: '100%',
-            borderRadius: '0 0 16px 16px',
-            boxShadow: '0px 4px 20px rgba(0, 0, 0, 0.2)',
-            p: 3,
-            backgroundColor: '#F7F7F7',
-            paddingTop: 'calc(env(safe-area-inset-top, 0px) + 24px)',
-          },
-        }}
-      >
-        <Box display='flex' flexDirection='column' justifyContent='space-between' height='100%'>
-          <Box width='100%'>
-            <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+            <Box width='100%'>
+
               <Accordion
                 expanded={expandedResort}
                 onChange={() => setExpandedResort(!expanded)}
@@ -287,10 +294,10 @@ export default function ShopProductSearch({ filters, teachers }) {
                     ))}
                   </RHFSelect>
                   <Box display="flex" gap={2} mt={2} overflow="auto" sx={{ scrollbarWidth: "none", "&::-webkit-scrollbar": { display: "none" } }}>
-                    {["Catedral", "Chapelco", "Bayo", "La Hoya"].map((resort) => (
+                    {[{title:"Catedral", value:"Cerro Catedral"}, {title:"Chapelco", value:"Chapelco"}, {title:"Bayo", value:"Cerro Bayo"}, {title:"La Hoya", value:"La Hoya"}].map((resort) => (
                       <Box
                         key={resort}
-                        onClick={() => setValue("resort", resort)} // Assuming `setValue` is from react-hook-form
+                        onClick={() => setValue("resort", resort.value)} // Assuming `setValue` is from react-hook-form
                         sx={{
                           minWidth: 100,
                           height: 100,
@@ -305,7 +312,7 @@ export default function ShopProductSearch({ filters, teachers }) {
                           "&:hover": { backgroundColor: "#EAEAEA" },
                         }}
                       >
-                        {resort}
+                        {resort.title}
                       </Box>
                     ))}
                   </Box>
@@ -417,8 +424,8 @@ export default function ShopProductSearch({ filters, teachers }) {
                 </AccordionDetails>
               </Accordion>
 
-            </FormProvider>
-            {/* <Box sx={{ my: 2 }}>
+
+              {/* <Box sx={{ my: 2 }}>
               <Typography variant="subtitle1">Desired Teacher</Typography>
               <Autocomplete
                 size="medium"
@@ -462,19 +469,20 @@ export default function ShopProductSearch({ filters, teachers }) {
                 }}
               />
             </Box> */}
-          </Box>
+            </Box>
 
-          <Box display='flex' justifyContent='space-between'>
-            <Button onClick={handleCloseDrawer}>Borrar todo</Button>
-            {(expandedDates || expandedResort) && <HoverButton onClick={handleNext} variant="contained" size="large" startIcon={<Iconify icon={'eva:flash-fill'} width={20} height={20} />}>
-              Next
-            </HoverButton>}
-            {(!expandedDates && !expandedResort) && <HoverButton onClick={onSubmit} variant="contained" size="large" startIcon={<Iconify icon={'eva:flash-fill'} width={20} height={20} />}>
-              {translate("landingPRO.search")}
-            </HoverButton>}
+            <Box display='flex' justifyContent='space-between'>
+              <Button onClick={handleCloseDrawer}>Borrar todo</Button>
+              {(expandedDates || expandedResort) && <HoverButton onClick={handleNext} variant="contained" size="large" startIcon={<Iconify icon={'eva:flash-fill'} width={20} height={20} />}>
+                Next
+              </HoverButton>}
+              {(!expandedDates && !expandedResort) && <Button type='submit' onClick={onSubmit} variant="contained" size="large" startIcon={<Iconify icon={'eva:flash-fill'} width={20} height={20} />}>
+                {translate("landingPRO.search")}
+              </Button>}
+            </Box>
           </Box>
-        </Box>
-      </Drawer>
+        </Drawer>
+      </FormProvider>
     </>
 
 

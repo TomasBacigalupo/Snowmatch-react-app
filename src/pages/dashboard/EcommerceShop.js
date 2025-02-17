@@ -6,7 +6,7 @@ import { useForm } from 'react-hook-form';
 import { Container, Typography, Stack, Drawer, Button, Box } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
-import { getTeachers, filterTeachers, getTeachersWithEvents, resetFilters } from '../../redux/slices/teachers';
+import { getTeachers, filterTeachers, getTeachersWithEvents, resetFilters, getFreeTeachers } from '../../redux/slices/teachers';
 
 // routes
 import { PATH_DASHBOARD, PATH_GUEST } from '../../routes/paths';
@@ -59,13 +59,14 @@ export default function EcommerceShop({ isGuest = false, teacherType = "school" 
   const { teachers, sortBy, filters, teachersWithEvents, category, isLoading } = useSelector((state) => { return state.teachers })
 
   useEffect(() => {
-    if (query.get('resort')) {
-      dispatch(filterTeachers({ resort: query.get('resort') }))
-    } else if (filters.resort === "") {
-      dispatch(filterTeachers({ resort: 'Cerro Catedral' }))
-    }
+    // dispatch(getFreeTeachers
+    // if (query.get('resort')) {
+    //   dispatch(filterTeachers({ resort: query.get('resort') }))
+    // } else if (filters.resort === "") {
+    //   dispatch(filterTeachers({ resort: 'Cerro Catedral' }))
+    // }
 
-  }, [])
+  }, [filters])
 
 
   const filteredTeachers = applyFilter(teachers, sortBy, filters, teacherType);
@@ -102,12 +103,12 @@ export default function EcommerceShop({ isGuest = false, teacherType = "school" 
     !values.resort;
 
   useEffect(() => {
-    dispatch(getTeachers());
+    dispatch(getFreeTeachers(filters.from, filters.to, filters.resort, 0));
     //dispatch(getTeachersWithEvents(filters));
   }, [dispatch, filters]);
 
   useEffect(() => {
-    dispatch(filterTeachers(values));
+    //dispatch(filterTeachers(values));
   }, [dispatch, values]);
 
   const handleOpenFilter = () => {
@@ -174,26 +175,21 @@ export default function EcommerceShop({ isGuest = false, teacherType = "school" 
         <meta property="og:image" content="https://snowmatchimages.s3.amazonaws.com/profile/ClaseNiñoss.jpeg" />
         <meta property="og:url" content="https://snowmatch.pro" />
       </Helmet>
-
       <Container maxWidth={themeStretch ? false : 'lg'}>
-        {teacherType === "independent" && <IndependentShop />}
-        {teacherType === "independent" && category === "premium" && <AirbnbFilters />}
-
-        {(teacherType !== "independent" || category === "premium") &&
-          <Stack
-            spacing={{ xs: 0, sm: 3 }}
-            direction={{ xs: 'row', sm: 'row' }}
-            alignItems={{ sm: 'center' }}
-            justifyContent="space-between"
-            sx={{ mb: 2 }}
-            xs={12}
-          >
-            <ShopProductSearch filters={filters} teachers={filteredTeachers} />
+        <Stack
+          spacing={{ xs: 0, sm: 3 }}
+          direction={{ xs: 'row', sm: 'row' }}
+          alignItems={{ sm: 'center' }}
+          justifyContent="space-between"
+          sx={{ mb: 2 }}
+          xs={12}
+        >
+          <ShopProductSearch filters={filters} teachers={filteredTeachers} />
 
 
-            {/* {!isTeacher && <CartWidget />} */}
+          {/* {!isTeacher && <CartWidget />} */}
 
-            {/* <Stack direction="row" spacing={1} flexShrink={0} sx={{ my: 1 }}>
+          {/* <Stack direction="row" spacing={1} flexShrink={0} sx={{ my: 1 }}>
               <FormProvider methods={methods}>
                 <ShopFilterSidebar
                   onResetAll={handleResetFilter}
@@ -208,18 +204,19 @@ export default function EcommerceShop({ isGuest = false, teacherType = "school" 
 
 
 
-          </Stack>
-        }
+        </Stack>
+        {teacherType === "independent" && <IndependentShop />}
+        {/* {teacherType === "independent" && category === "premium" && <AirbnbFilters />} */}
         {!isDefault && (
           <Stack sx={{ mb: 3 }}>
 
             <>
-              {(teacherType !== "independent" || category === "premium") &&
+              {/* {(teacherType !== "independent" || category === "premium") &&
                 <Typography variant="body2" gutterBottom>
                   <strong>{filteredTeachers.length}</strong>
                   &nbsp;{translate('general.teachers_found')}
                 </Typography>
-              }
+              } */}
               {/* {(teacherType !== "independent") &&
                 <TeacherTagFiltered
                   filters={filters}

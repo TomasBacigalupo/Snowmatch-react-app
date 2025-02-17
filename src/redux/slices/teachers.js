@@ -425,6 +425,24 @@ export function getTeachers() {
   };
 }
 
+export function getFreeTeachers(startDate, endDate, resort, page) {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get(`/api/users/free_teachers?
+        level=2&startDate=${startDate.toISOString().split(".")[0]}&endDate=${endDate.toISOString().split(".")[0]}&resort=${resort}&page=${page}&size=20`);
+      const teachers = response.data.map(t => ({
+        ...t,
+        stars: t.stars ? t.stars : 0
+      })).sort((a, b) => b.stars - a.stars);
+
+      dispatch(slice.actions.getTeachersSuccess(teachers));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
 // ----------------------------------------------------------------------
 
 export function getTeachersWithEvents(filters) {

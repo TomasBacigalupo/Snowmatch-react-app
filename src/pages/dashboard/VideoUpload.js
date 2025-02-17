@@ -558,12 +558,12 @@ export default function VideoUpload() {
                 onOpen={() => setIsVideoDetailOpen(true)}
                 selectedVideo={selectedVideo}
             />
-            <VideoUploadBottomSheet
+            {/* <VideoUploadBottomSheet
                 title={selectedLevelTitle}
                 course={selectedCourse}
                 onOpen={() => setOpen(true)}
                 open={open}
-                onClose={() => setOpen(false)} />
+                onClose={() => setOpen(false)} /> */}
         </Page>
     );
 

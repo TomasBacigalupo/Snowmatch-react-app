@@ -16,6 +16,7 @@ import VideoUploadBottomSheet from 'src/sections/@dashboard/video/VideoUploadBot
 import DownhillSkiingIcon from '@mui/icons-material/DownhillSkiing';
 import PropTypes from 'prop-types';
 import WorkspacePremiumIcon from '@mui/icons-material/WorkspacePremium';
+import MapIcon from '@mui/icons-material/Map';
 
 LabelBottomNavigation.propTypes = {
   onOpenSidebar: PropTypes.func,
@@ -89,7 +90,8 @@ export default function LabelBottomNavigation({ onOpenSidebar, isGuest }) {
             to={PATH_GUEST.root}
           />
           <BottomNavigationAction label="Lessons" component={RouterLink} to={PATH_GUEST.root + '/lessons'} icon={<DownhillSkiingIcon />} />
-          <BottomNavigationAction label="More" onClick={onOpenSidebar} icon={<MoreHorizIcon />} />
+          
+          <BottomNavigationAction label="Maps" component={RouterLink} to={'/maps/chapelco'} icon={<MapIcon />} />
         </BottomNavigation>
       </Paper>
     </Box>

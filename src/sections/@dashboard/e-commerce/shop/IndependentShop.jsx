@@ -76,7 +76,7 @@ export default function IndependentShop() {
                     {translate('products.lessons')}
                 </ToggleButton>
             </ToggleButtonGroup>
-            <Drawer
+            {/* <Drawer
                 //className={classes.drawer}
                 variant="temporary"
                 anchor="top"
@@ -106,8 +106,8 @@ export default function IndependentShop() {
                         <Iconify icon="mingcute:up-fill" width={25} height={25} />
                     </IconButton>
                 </Box>
-            </Drawer>
-            {category === 'premium' && <Button
+            </Drawer> */}
+            {/* {category === 'premium' && <Button
                 color="inherit"
                 variant="text"
                 fullWidth sx={{
@@ -120,7 +120,7 @@ export default function IndependentShop() {
                     {translate(`more.${level}.button`)}
                 </Typography>
             </Button>
-            }
+            } */}
             <Hidden mdDown>
                 {category != 'premium' && <Box
                     color="inherit"

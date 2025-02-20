@@ -1,22 +1,124 @@
-import { Card, CardContent, Typography, Button, Avatar, Stack } from "@mui/material";
+import React, { useState, useEffect } from 'react';
+import { Drawer, Dialog, Grid, Typography, IconButton, Button, Avatar, Stack } from '@mui/material';
+import Iconify from 'src/components/Iconify';
+import { Hidden } from '@mui/material';
+import { useTheme } from '@mui/system';
 
-const ReviewRequestBox = () => {
-  return (
-    <Card sx={{ p: 2, borderRadius: 2, boxShadow: 3, textAlign: "center" }}>
-      <Stack direction="column" alignItems="center" spacing={2}>
-        <Avatar src="/images/pro-instructor.jpg" sx={{ width: 56, height: 56 }} />
-        <Typography variant="h6" fontWeight="bold">
-          Obtén una revisión de un SnowMatch Pro
-        </Typography>
-        <Typography variant="body2" color="text.secondary">
-          Un instructor experto analizará tu video y te dará consejos para mejorar tu técnica.
-        </Typography>
-        <Button variant="contained" color="primary" fullWidth>
-          Solicitar revisión
-        </Button>
-      </Stack>
-    </Card>
-  );
+const ReviewRequestBox = ({ isOpen, closeDrawer, onRequestReview }) => {
+    const [open, setOpen] = useState(isOpen);
+    const theme = useTheme();
+
+    useEffect(() => {
+        setOpen(isOpen);
+    }, [isOpen]);
+
+    return (
+        <>
+            {/* Botón fijo en la parte inferior */}
+            <Grid
+                sx={{
+                    position: 'fixed',
+                    bottom: 0,
+                    left: 0,
+                    width: '100%',
+                    backgroundColor: '#fff',
+                    borderTopLeftRadius: '12px',
+                    boxShadow: '0px -4px 10px rgba(0, 0, 0, 0.1)',
+                    zIndex: 999,
+                }}
+                container justifyContent="center" alignItems="center" onClick={() => setOpen(true)}
+            >
+                <Grid item xs={8} md={6} pl={2} py={2}>
+                    <b>Solicita un experto</b> <br/> para corregir tu video
+                </Grid>
+                <Grid item xs={4} md={6} pr={2} py={2}>
+                    <Button variant="contained" color="primary" fullWidth sx={{ p: 2 }}>
+                        ProCheck
+                    </Button>
+                </Grid>
+            </Grid>
+
+            {/* Drawer en Mobile */}
+            <Hidden smUp>
+                <Drawer
+                    anchor="bottom"
+                    open={open}
+                    onClose={() => {
+                        setOpen(false);
+                        if (closeDrawer) closeDrawer();
+                    }}
+                    sx={{
+                        '& .MuiDrawer-paper': {
+                            width: '100%',
+                            paddingBottom: 2,
+                            borderTopLeftRadius: '12px',
+                            borderTopRightRadius: '12px',
+                        },
+                    }}
+                >
+                    <ReviewContent setOpen={setOpen} closeDrawer={closeDrawer} onRequestReview={onRequestReview} />
+                </Drawer>
+            </Hidden>
+
+            {/* Dialog en Desktop */}
+            <Hidden smDown>
+                <Dialog
+                    open={open}
+                    onClose={() => {
+                        setOpen(false);
+                        if (closeDrawer) closeDrawer();
+                    }}
+                    sx={{
+                        '& .MuiPaper-root': {
+                            width: '33%',
+                            paddingBottom: 2,
+                            borderRadius: '12px',
+                        },
+                    }}
+                >
+                    <ReviewContent setOpen={setOpen} closeDrawer={closeDrawer} onRequestReview={onRequestReview} />
+                </Dialog>
+            </Hidden>
+        </>
+    );
+};
+
+const ReviewContent = ({ setOpen, closeDrawer, onRequestReview }) => {
+    return (
+        <Grid container direction="column" alignItems="center" p={3}>
+            <Grid item xs={12} textAlign="right" width="100%">
+                <IconButton onClick={() => {
+                    setOpen(false);
+                    if (closeDrawer) closeDrawer();
+                }}>
+                    <Iconify icon="ic:round-close" width={24} height={24} />
+                </IconButton>
+            </Grid>
+
+            <Stack direction="column" alignItems="center" spacing={2}>
+                <Avatar src="/images/pro-instructor.jpg" sx={{ width: 64, height: 64 }} />
+                <Typography variant="h6" fontWeight="bold">
+                    Obtén una revisión de un SnowMatch Pro
+                </Typography>
+                <Typography variant="body2" color="text.secondary" textAlign="center">
+                    Un instructor experto analizará tu video y te dará consejos para mejorar tu técnica.
+                </Typography>
+                <Button 
+                    variant="contained" 
+                    color="primary" 
+                    fullWidth 
+                    sx={{ py: 1.5 }}
+                    onClick={() => {
+                        onRequestReview();
+                        setOpen(false);
+                        if (closeDrawer) closeDrawer();
+                    }}
+                >
+                    Solicitar revisión
+                </Button>
+            </Stack>
+        </Grid>
+    );
 };
 
 export default ReviewRequestBox;

@@ -11,6 +11,7 @@ import { videoExists } from "src/redux/slices/video";
 import { useSelector } from "react-redux";
 import { ArrowBack } from "@mui/icons-material";
 import Logo from "src/components/Logo";
+import ReviewRequestBox from "./ReviewRequestBox";
 
 export default function VideoReviewedBottomSheet({ open, onClose, onOpen, selectedVideo }) {
     const theme = useTheme();
@@ -231,6 +232,9 @@ export default function VideoReviewedBottomSheet({ open, onClose, onOpen, select
                             >
                                 See Video
                             </Button>
+                        </Box>
+                        <Box>
+                            <ReviewRequestBox />
                         </Box>
                     </>
                 )}

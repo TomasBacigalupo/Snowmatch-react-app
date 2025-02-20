@@ -57,7 +57,7 @@ export default function UnratedVideos() {
       id: selectedVideo.id,
       comment: data.comment,
       score: data.score,
-      revewd: true
+      reviewed: true,
     }))
   };
 

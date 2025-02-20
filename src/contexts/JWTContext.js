@@ -196,8 +196,11 @@ function AuthProvider({ children }) {
 
 
   const registerNotifications = async () => {
-    
+
     await PushNotifications.addListener('registration', token => {
+
+      axios.post(`/api/users/notificationTokens/${token.value}`)
+
       console.info('Registration token: ', token.value);
     });
 
@@ -264,7 +267,7 @@ function AuthProvider({ children }) {
         body: file
       });
     }
-    
+    registerNotifications();
     dispatch({
       type: 'REGISTER',
       payload: {

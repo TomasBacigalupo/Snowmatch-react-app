@@ -7,11 +7,12 @@ import Markdown from "src/components/Markdown";
 import useLocales from "src/hooks/useLocales";
 import CloseIcon from '@mui/icons-material/Close';
 import { useDispatch } from "src/redux/store";
-import { videoExists } from "src/redux/slices/video";
+import { proCheck, videoExists } from "src/redux/slices/video";
 import { useSelector } from "react-redux";
 import { ArrowBack } from "@mui/icons-material";
 import Logo from "src/components/Logo";
 import ReviewRequestBox from "./ReviewRequestBox";
+import { VideoReviewStatus } from "./VideoReviewStatus";
 
 export default function VideoReviewedBottomSheet({ open, onClose, onOpen, selectedVideo }) {
     const theme = useTheme();
@@ -33,6 +34,9 @@ export default function VideoReviewedBottomSheet({ open, onClose, onOpen, select
         console.log("isLoadingExists", isLoadingExists)
     }, [analizeExists, isLoadingExists])
 
+    const handleRequestProCheck = () => {
+        dispatch(proCheck(selectedVideo.id))
+    }
 
     return (
         <SwipeableDrawer
@@ -233,9 +237,16 @@ export default function VideoReviewedBottomSheet({ open, onClose, onOpen, select
                                 See Video
                             </Button>
                         </Box>
-                        <Box>
-                            <ReviewRequestBox />
-                        </Box>
+                        {!selectedVideo.proCheck && !selectedVideo.reviewed && <Box>
+                            <ReviewRequestBox onRequestReview={handleRequestProCheck} />
+                        </Box>}
+                        {selectedVideo.proCheck && !selectedVideo.reviewed && <Box>
+                            <VideoReviewStatus
+                                proCheck={selectedVideo.proCheck}
+                                reviewed={selectedVideo.reviewed}
+                                onRequestReview={handleRequestProCheck}
+                            />
+                        </Box>}
                     </>
                 )}
             </Box>

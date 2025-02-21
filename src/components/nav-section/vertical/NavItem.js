@@ -7,6 +7,8 @@ import Iconify from '../../Iconify';
 import { ListItemStyle, ListItemTextStyle, ListItemIconStyle } from './style';
 import { isExternalLink } from '..';
 import useLocales from 'src/hooks/useLocales'
+import { InAppBrowser, DefaultWebViewOptions } from '@capacitor/inappbrowser';
+
 
 // ----------------------------------------------------------------------
 
@@ -50,7 +52,12 @@ export function NavItemRoot({ item, isCollapse, open = false, active, onOpen }) 
   }
 
   return isExternalLink(path) ? (
-    <ListItemStyle component={Link} href={path} target="_blank" rel="noopener">
+    <ListItemStyle onClick={async () => {
+      await InAppBrowser.openInWebView({
+        url: path,
+        options: DefaultWebViewOptions
+    });
+    }}>
       {renderContent}
     </ListItemStyle>
   ) : (

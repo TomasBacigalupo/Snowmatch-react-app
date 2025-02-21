@@ -3,6 +3,9 @@ import { Drawer, Dialog, Grid, Typography, IconButton, Button, Avatar, Stack } f
 import Iconify from 'src/components/Iconify';
 import { Hidden } from '@mui/material';
 import { useTheme } from '@mui/system';
+import { useDispatch, useSelector } from 'src/redux/store';
+import { proCheck } from 'src/redux/slices/video';
+import { LoadingButton } from '@mui/lab';
 
 const ReviewRequestBox = ({ isOpen, closeDrawer, onRequestReview }) => {
     const [open, setOpen] = useState(isOpen);
@@ -11,7 +14,7 @@ const ReviewRequestBox = ({ isOpen, closeDrawer, onRequestReview }) => {
     useEffect(() => {
         setOpen(isOpen);
     }, [isOpen]);
-
+    
     return (
         <>
             {/* Botón fijo en la parte inferior */}
@@ -29,7 +32,7 @@ const ReviewRequestBox = ({ isOpen, closeDrawer, onRequestReview }) => {
                 container justifyContent="center" alignItems="center" onClick={() => setOpen(true)}
             >
                 <Grid item xs={8} md={6} pl={2} py={2}>
-                    <b>Solicita un experto</b> <br/> para corregir tu video
+                    <b>Solicita un experto</b> <br /> para corregir tu video
                 </Grid>
                 <Grid item xs={4} md={6} pr={2} py={2}>
                     <Button variant="contained" color="primary" fullWidth sx={{ p: 2 }}>
@@ -84,6 +87,8 @@ const ReviewRequestBox = ({ isOpen, closeDrawer, onRequestReview }) => {
 };
 
 const ReviewContent = ({ setOpen, closeDrawer, onRequestReview }) => {
+    const dispatch = useDispatch();
+    const { isLoadingProCheck } = useSelector(state => state.video);
     return (
         <Grid container direction="column" alignItems="center" p={3}>
             <Grid item xs={12} textAlign="right" width="100%">
@@ -103,11 +108,12 @@ const ReviewContent = ({ setOpen, closeDrawer, onRequestReview }) => {
                 <Typography variant="body2" color="text.secondary" textAlign="center">
                     Un instructor experto analizará tu video y te dará consejos para mejorar tu técnica.
                 </Typography>
-                <Button 
-                    variant="contained" 
-                    color="primary" 
-                    fullWidth 
+                <LoadingButton
+                    variant="contained"
+                    color="primary"
+                    fullWidth
                     sx={{ py: 1.5 }}
+                    loading={isLoadingProCheck}
                     onClick={() => {
                         onRequestReview();
                         setOpen(false);
@@ -115,7 +121,7 @@ const ReviewContent = ({ setOpen, closeDrawer, onRequestReview }) => {
                     }}
                 >
                     Solicitar revisión
-                </Button>
+                </LoadingButton>
             </Stack>
         </Grid>
     );

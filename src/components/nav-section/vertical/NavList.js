@@ -27,7 +27,6 @@ export function NavListRoot({ list, isCollapse }) {
     return (
       <>
         <NavItemRoot item={list} isCollapse={isCollapse} active={active} open={open} onOpen={() => setOpen(!open)} />
-
         {!isCollapse && (
           <Collapse in={open} timeout="auto" unmountOnExit>
             <List component="div" disablePadding>

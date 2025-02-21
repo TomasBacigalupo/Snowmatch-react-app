@@ -14,6 +14,7 @@ const initialState = {
     isLoadingExists: false,
     isUploading: false,
     isLoadingReview: false,
+    isLoadingProCheck: false,
     analizeExists: false,
     loadingPayment: false,
     error: null,
@@ -47,9 +48,16 @@ const slice = createSlice({
         startLoadingReview(state) {
             state.isLoadingReview = true;
         },
+        startLoadingProCheck(state) {
+            state.isLoadingProCheck = true;
+        },
 
         stopLoadingReview(state) {
             state.isLoadingReview = false;
+        },
+
+        stopLoadingProCheck(state) {
+            state.isLoadingProCheck = false;
         },
 
          startLoadingExists(state) {
@@ -333,6 +341,19 @@ export function reviewVideo(data) {
             await axios.put(`/api/videos/VideoReviews/${id}`, data);
             dispatch(slice.actions.stopLoadingReview());
             dispatch(getVideosToReview())
+        } catch (error) {
+            dispatch(slice.actions.hasError(error));
+        }
+    };
+}
+
+export function proCheck(id) {
+    return async () => {
+        try {
+            dispatch(slice.actions.startLoadingProCheck());
+            await axios.put(`/api/videos/VideoReviews/proCheck/${id}`);
+            dispatch(slice.actions.stopLoadingProCheck());
+            dispatch(getVideos())
         } catch (error) {
             dispatch(slice.actions.hasError(error));
         }

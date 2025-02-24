@@ -8,17 +8,27 @@ import useLocales from 'src/hooks/useLocales';
 import VideoUploadBottomSheet from 'src/sections/@dashboard/video/VideoUploadBottomSheet';
 import { useDispatch, useSelector } from 'src/redux/store';
 import { getVideos } from 'src/redux/slices/video';
-import { AnalyticsUserProgress } from 'src/sections/@dashboard/general/analytics';
+import { AnalyticsUserProgress, AnalyticsWidgetSummary } from 'src/sections/@dashboard/general/analytics';
 import { useNavigate } from 'react-router-dom';
 import VideoReviewedBottomSheet from 'src/sections/@dashboard/video/VideoReviewedBottomSheet';
+import PerformanceChart from 'src/sections/@dashboard/general/analytics/PerformanceChart';
+import AnalyticsChallangeWidget from 'src/sections/@dashboard/general/analytics/AnalyticsChallangeWidget';
+import LeaderBoardRightDrawer from 'src/sections/@dashboard/video/LeaderBoardRightDrawer';
 
 
 const Input = styled('input')({
     display: 'none',
 });
 
-const steps = ['Seleccionar', 'Revisar', 'Subir'];
+const userScores = [
+    { date: "2024-02-10", score: 85 },
+    { date: "2024-02-12", score: 80 },
+    { date: "2024-02-15", score: 70 },
+    { date: "2024-02-18", score: 60 },
+    { date: "2024-02-20", score: 55 },
+];
 
+const allScores = [95, 85, 75, 65, 55, 50, 45, 40, 35, 30, 25, 20];
 
 const sampleUploadedVideos = [
     { id: 1, title: 'My First Video', status: 'Processed', url: 'https://example.com/video1.mp4', thumbnail: 'https://example.com/thumbnail1.jpg', comments: ['Great form!', 'Try to keep your back straight.'] },
@@ -58,9 +68,17 @@ export default function VideoUpload() {
     const [uploadedVideos, setUploadedVideos] = useState(sampleUploadedVideos);
     const [selectedVideo, setSelectedVideo] = useState(null);
     const [isVideoDetailOpen, setIsVideoDetailOpen] = useState(false);
+    const [isLeaderBoardOpen, setIsLeaderBoardOpen] = useState(false);
     const [selectedLevelTitle, setSelectedLevelTitle] = useState('');
     const [selectedCourse, setSelectdCourse] = useState('');
+    const [selectedChallange, setSelectedChallenge] = useState('');
     const navigate = useNavigate();
+
+    const [bestCarvingChallange, setBestCarvingChallange] = useState(45);
+    const [carvingChallangeResults, setCarvingChallangeResults] = useState([50, 80, 120, 150, 200, 180, 140]);
+
+    const [bestBumpsChallange, setBestBumpsChallange] = useState(35);
+    const [bumpsChallangeResults, setBumpsChallangeResults] = useState([50, 80, 120, 150, 200, 180, 140]);
 
 
     const dispatch = useDispatch();
@@ -72,6 +90,12 @@ export default function VideoUpload() {
 
     useEffect(() => {
         if (videos) {
+            
+            setCarvingChallangeResults(videos.filter(v => v.course === "AI_CHALLANGE_1").sort((a, b) => a.id - b.id) // Sort by video.id in ascending order
+            .map(v => v.score));
+            const bestScore = Math.max(...videos.filter(v => v.course === "AI_CHALLANGE_1").map(v => v.score));
+            setBestCarvingChallange(bestScore || 0);
+
             setUploadedVideos(videos);
             console.log('Videos:', videos);
             let _levels = levels;
@@ -377,10 +401,23 @@ export default function VideoUpload() {
                             {translate('videoCoachScreen.uploaded_videos')}
                         </ToggleButton>
                     </ToggleButtonGroup>
-                    <AnalyticsUserProgress />
+
                     {/* Updated section for displaying uploaded videos or message */}
 
                     <Grid container spacing={1} justifyContent='space-between'>
+                        <Grid item><LeaderBoardRightDrawer
+                            open={isLeaderBoardOpen}
+                            onClose={() => setIsLeaderBoardOpen(false)}
+                            onOpen={() => setIsLeaderBoardOpen(true)}
+                            selectedChallange={selectedChallange}
+                        /></Grid>
+                        <Grid item xs={12}>
+                            <AnalyticsChallangeWidget title="Carving Challange" total={bestCarvingChallange} chartData={carvingChallangeResults} onLeaderboardClick={() => setIsLeaderBoardOpen(true)} />
+                        </Grid>
+                        {/* muy bueno pero no tiene uso hoy: <PerformanceChart userScores={userScores} allScores={allScores} userScore={55} /> */}
+                        {/* <Grid item xs={12}>
+                            <AnalyticsUserProgress />
+                        </Grid> */}
                         {levels.map((level) => (
                             <Level
                                 course={level.course}
@@ -558,6 +595,7 @@ export default function VideoUpload() {
                 onOpen={() => setIsVideoDetailOpen(true)}
                 selectedVideo={selectedVideo}
             />
+
             {/* <VideoUploadBottomSheet
                 title={selectedLevelTitle}
                 course={selectedCourse}

@@ -49,6 +49,7 @@ export default function Training() {
   const [openWelcome, setOpenWelcome] = useState(false);
   const [selectedLevelTitle, setSelectedLevelTitle] = useState('');
   const [selectedCourse, setSelectedCourse] = useState('');
+  const [selectedLevel, setSelectedLevel] = useState('');
   const [demoUrl, setDemoUrl] = useState('');
   const user = useAuth()
   const today = new Date().toISOString().split("T")[0];
@@ -67,17 +68,9 @@ export default function Training() {
           cover: '/assets/courses/ai_challange.png',
           level: 'Principiante',
           points: 25,
+          course: "CARVING_CHALLANGE",
           demoUrl: 'https://snowmatchvideos.s3.us-east-1.amazonaws.com/CARVING_CHALLANGE_1.mov'
-        },
-        {
-          code: 'AI_CHALLANGE_2',
-          title: 'Challenge 1 title',
-          subtitle: 'Challenge 1 subtitle',
-          cover: '/assets/courses/ai_challange2.png',
-          level: 'Principiante',
-          points: 25,
-          demoUrl: 'https://snowmatchvideos.s3.us-east-1.amazonaws.com/CARVING_CHALLANGE_1.mov'
-        },
+        }
       ],
     },
     {
@@ -113,7 +106,7 @@ export default function Training() {
           demoUrl: 'https://snowmatchvideos.s3.us-east-1.amazonaws.com/CARVING_CHALLANGE_2.mov'
         },
         {
-          code:'CARVING_DEMO_1',
+          code: 'CARVING_DEMO_1',
           title: 'Demo 1 title',
           subtitle: 'Demo 1 subtitle',
           cover: '/assets/courses/position.png',
@@ -176,7 +169,7 @@ export default function Training() {
       code: 'BUMPS',
       levels: [
         {
-          code:"BUMPS_CHALLANGE_1",
+          code: "BUMPS_CHALLANGE_1",
           title: 'Challange 1 title',
           subtitle: 'Challange 1 subtitle',
           cover: 'https://image.snowmatch.pro/videoPosters/BUMPS_CHALLANGE_1.jpg',
@@ -185,7 +178,7 @@ export default function Training() {
           points: 25,
         },
         {
-          code:"BUMPS_CHALLANGE_2",
+          code: "BUMPS_CHALLANGE_2",
           title: 'Challange 2 title',
           subtitle: 'Challange 2 subtitle',
           cover: 'https://image.snowmatch.pro/videoPosters/BUMPS_CHALLANGE_2.jpg',
@@ -194,7 +187,7 @@ export default function Training() {
           points: 25,
         },
         {
-          code:"BUMPS_CHALLANGE_3",
+          code: "BUMPS_CHALLANGE_3",
           title: 'Challange 3 title',
           subtitle: 'Challange 3 subtitle',
           cover: 'https://image.snowmatch.pro/videoPosters/BUMPS_CHALLANGE_3.jpg',
@@ -203,7 +196,7 @@ export default function Training() {
           points: 25,
         },
         {
-          code:"BUMPS_DEMO_1",
+          code: "BUMPS_DEMO_1",
           title: 'Demo 1 title',
           subtitle: 'Demo 1 subtitle',
           cover: '/assets/courses/pista.png',
@@ -369,9 +362,11 @@ export default function Training() {
   ];
 
   const handleSelectCourseLevel = (course, level) => {
+    console.log("level.code", level.code)
     setOpen(true)
     setSelectedCourse(course.code);
     setSelectedLevelTitle(level.code);
+    setSelectedLevel(level.code)
     setDemoUrl(level.demoUrl)
   };
 
@@ -391,7 +386,7 @@ export default function Training() {
     <Page title={translate('training.title')}>
       <Container maxWidth={themeStretch ? false : 'lg'}>
         {COURSES.map((course, idx) => (
-          <Box key={idx} sx={{ mb: 6 }}>
+          <Box key={idx} sx={{ mb: 6, position: 'relative' }}>
             {/* Section Header */}
             <Typography variant="h4" sx={{ mb: 1, fontWeight: 'bold' }}>
               {course.title}
@@ -403,9 +398,7 @@ export default function Training() {
             {/* Carousel for Course Levels */}
             <Slider
               {...sliderSettings}
-              style={{
-                display: 'flex',
-              }}
+              style={{ display: 'flex', position: 'relative' }}
             >
               {course.levels.map((level, levelIdx) => (
                 <Box
@@ -413,12 +406,38 @@ export default function Training() {
                   sx={{
                     flex: '0 0 auto',
                     marginRight: 2,
+                    position: 'relative',
                   }}
                 >
                   <CourseCard
                     post={level}
-                    onClick={() => handleSelectCourseLevel(course, level)}
+                    onClick={() => idx === 0 && handleSelectCourseLevel(course, level)}
+                    sx={{
+                      pointerEvents: idx === 0 ? 'auto' : 'none', // Desactiva interacción si idx > 0
+                      opacity: idx === 0 ? 1 : 0.5, // Reduce visibilidad si idx > 0
+                    }}
                   />
+                  {idx > 0 && (
+                    <Box
+                      sx={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        width: '100%',
+                        height: '100%',
+                        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        color: 'white',
+                        fontSize: '1.2rem',
+                        fontWeight: 'bold',
+                        borderRadius: 2,
+                      }}
+                    >
+                      Coming Soon
+                    </Box>
+                  )}
                 </Box>
               ))}
             </Slider>
@@ -428,10 +447,12 @@ export default function Training() {
       <VideoUploadBottomSheet
         title={selectedLevelTitle}
         course={selectedCourse}
+        level={selectedLevel}
         onOpen={() => setOpen(true)}
         open={open}
         onClose={() => setOpen(false)}
         demoUrl={demoUrl}
+
       />
     </Page>
   );

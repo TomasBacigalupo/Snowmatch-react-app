@@ -56,7 +56,17 @@ const slice = createSlice({
             state.isLoadingReview = false;
         },
 
-        stopLoadingProCheck(state) {
+        stopLoadingProCheck(state, action) {
+            const id = action.payload;
+            state.videos = state.videos.map(video => {
+                if(video.id = id){
+                    return {
+                        ...video,
+                        proCheck: true
+                    }
+                }
+                return video
+            })
             state.isLoadingProCheck = false;
         },
 
@@ -352,7 +362,7 @@ export function proCheck(id) {
         try {
             dispatch(slice.actions.startLoadingProCheck());
             await axios.put(`/api/videos/VideoReviews/proCheck/${id}`);
-            dispatch(slice.actions.stopLoadingProCheck());
+            dispatch(slice.actions.stopLoadingProCheck(id));
             dispatch(getVideos())
         } catch (error) {
             dispatch(slice.actions.hasError(error));

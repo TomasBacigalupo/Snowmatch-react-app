@@ -146,6 +146,7 @@
     "react-swipeable": "^7.0.2",
     "react-youtube": "^10.1.0",
     "react-zoom-pan-pinch": "^3.7.0",
+    "recharts": "^2.15.1",
     "redux": "^4.1.2",
     "redux-persist": "^6.0.0",
     "rehype-raw": "^6.1.1",

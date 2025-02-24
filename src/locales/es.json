@@ -1140,6 +1140,9 @@
         "pendingReview": "Esperando calificación"
     },
     "course": {
+        "AI_CHALLANGE_1": {
+            "title": "Carving challange"
+        },
         "CHALLANGE": {
             "title": "Sube tu video y recibe el análisis de tu inclinación",
             "description":"Sube un video de tu sesión de esquí y nuestra inteligencia artificial calculará tu inclinación durante el descenso. Recibe información valiosa para mejorar tu técnica y lleva tu entrenamiento al siguiente nivel.",

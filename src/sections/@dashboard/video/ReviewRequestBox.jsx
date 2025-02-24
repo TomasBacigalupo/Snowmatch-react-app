@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Drawer, Dialog, Grid, Typography, IconButton, Button, Avatar, Stack } from '@mui/material';
+import { Drawer, Dialog, Grid, Typography, IconButton, Button, Avatar, Stack, AvatarGroup, Box } from '@mui/material';
 import Iconify from 'src/components/Iconify';
 import { Hidden } from '@mui/material';
 import { useTheme } from '@mui/system';
@@ -14,7 +14,7 @@ const ReviewRequestBox = ({ isOpen, closeDrawer, onRequestReview }) => {
     useEffect(() => {
         setOpen(isOpen);
     }, [isOpen]);
-    
+
     return (
         <>
             {/* Botón fijo en la parte inferior */}
@@ -28,13 +28,14 @@ const ReviewRequestBox = ({ isOpen, closeDrawer, onRequestReview }) => {
                     borderTopLeftRadius: '12px',
                     boxShadow: '0px -4px 10px rgba(0, 0, 0, 0.1)',
                     zIndex: 999,
+                    paddingBottom: 'env(safe-area-inset-bottom)',
                 }}
                 container justifyContent="center" alignItems="center" onClick={() => setOpen(true)}
             >
-                <Grid item xs={8} md={6} pl={2} py={2}>
+                <Grid item xs={8} md={6} pl={2} pt={2}>
                     <b>Solicita un experto</b> <br /> para corregir tu video
                 </Grid>
-                <Grid item xs={4} md={6} pr={2} py={2}>
+                <Grid item xs={4} md={6} pr={2} pt={2}>
                     <Button variant="contained" color="primary" fullWidth sx={{ p: 2 }}>
                         ProCheck
                     </Button>
@@ -101,8 +102,13 @@ const ReviewContent = ({ setOpen, closeDrawer, onRequestReview }) => {
             </Grid>
 
             <Stack direction="column" alignItems="center" spacing={2}>
-                <Avatar src="/images/pro-instructor.jpg" sx={{ width: 64, height: 64 }} />
-                <Typography variant="h6" fontWeight="bold">
+                <Box sx={{ display: "flex", justifyContent: "center", mb: 2 }}>
+                    <AvatarGroup max={3} sx={{ "& .MuiAvatar-root": { width: 48, height: 48, border: "2px solid white" } }}>
+                        <Avatar src="/images/pro-instructor-1.jpg" />
+                        <Avatar src="/images/pro-instructor-2.jpg" />
+                        <Avatar src="/images/pro-instructor-3.jpg" />
+                    </AvatarGroup>
+                </Box><Typography variant="h6" fontWeight="bold">
                     Obtén una revisión de un SnowMatch Pro
                 </Typography>
                 <Typography variant="body2" color="text.secondary" textAlign="center">

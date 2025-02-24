@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Container, Typography, List, ListItem, ListItemText, ListItemSecondaryAction, Button, SwipeableDrawer, Box, TextField, Rating, Avatar, ListItemAvatar, Paper, IconButton, Divider } from '@mui/material';
+import { Container, Typography, List, ListItem, ListItemText, ListItemSecondaryAction, Button, SwipeableDrawer, Box, TextField, Rating, Avatar, ListItemAvatar, Paper, IconButton, Divider, Grid } from '@mui/material';
 import { FormProvider, RHFEditor, RHFTextField, RHFSlider } from 'src/components/hook-form';
 import { useForm } from 'react-hook-form';
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
@@ -88,6 +88,9 @@ export default function UnratedVideos() {
 
   const NewBlogSchema = Yup.object().shape({
     comment: Yup.string().required('Leave a comment'),
+    goodComment: Yup.string(),
+    errorComment: Yup.string(),
+    imporveComment: Yup.string(),
     score: Yup.number().required('dejale un puntaje al video')
   });
 
@@ -107,6 +110,8 @@ export default function UnratedVideos() {
     setValue,
     handleSubmit,
   } = methods;
+
+  const score = watch("score");
 
   return (
     <Container>
@@ -230,11 +235,6 @@ export default function UnratedVideos() {
           </Typography>
         </Box>
 
-
-
-
-        {/* Divider para efecto Airbnb */}
-
         <FormProvider methods={methods} onSubmit={handleSubmit(handleSubmitRating)}>
 
           <Box ref={drawerContentRef} sx={{ flex: 1, p: 2, overflow: 'auto' }}>
@@ -299,8 +299,25 @@ export default function UnratedVideos() {
                     />
                   )}
                 </Box>
-                <RHFSlider valueLabelDisplay="on" label="Score" name="score" />
-                <RHFEditor simple={true} name="comment" />
+                <Grid container spacing={1}>
+                  <Grid item xs={12} justifyContent='center' container>
+                    <Grid item xs={12}>
+                      <Typography variant='h1' textAlign='center'>{score}</Typography>
+                    </Grid>
+                    <Grid item xs={6}>
+                      <RHFSlider name="score" />
+                    </Grid>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <RHFTextField name="goodComment" label="Que se ve bueno de la bajada" helperText="Algo positivo que destaques del video" />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <RHFTextField name="errorsComment" label="Error técnico comun" helperText="Error tecnico prinicpal en la bajada" />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <RHFTextField name="improveComment" label="Que hacer para mejorar?" helperText="Una recomendacion para proxima bajada" />
+                  </Grid>
+                </Grid>
                 <LoadingButton
                   fullWidth
                   size="large"

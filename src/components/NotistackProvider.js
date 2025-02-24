@@ -21,16 +21,16 @@ function SnackbarStyles() {
           '& .SnackbarContent-root': {
             width: '100%',
             padding: theme.spacing(1),
-            margin: theme.spacing(0.25, 0),
+            margin: `calc(${theme.spacing(0.25)} + env(safe-area-inset-top)) 0 0 0`,
             boxShadow: theme.customShadows.z8,
             borderRadius: theme.shape.borderRadius,
             color: theme.palette.grey[isLight ? 0 : 800],
             backgroundColor: theme.palette.grey[isLight ? 900 : 0],
             '&.SnackbarItem-variantSuccess, &.SnackbarItem-variantError, &.SnackbarItem-variantWarning, &.SnackbarItem-variantInfo':
-              {
-                color: theme.palette.text.primary,
-                backgroundColor: theme.palette.background.paper,
-              },
+            {
+              color: theme.palette.text.primary,
+              backgroundColor: theme.palette.background.paper,
+            },
             [theme.breakpoints.up('md')]: {
               minWidth: 240,
             },

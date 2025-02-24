@@ -39,11 +39,12 @@ const RootStyle = styled('div')(({ theme }) => ({
     backgroundColor: theme.palette.background.default,
 }));
 
-export default function VideoUploadBottomSheet({ open, onClose, onOpen, course, demoUrl }) {
+export default function VideoUploadBottomSheet({ open, onClose, onOpen, course, demoUrl, level }) {
 
     const navigate = useNavigate();
     const { user } = useAuth();
 
+    
     if (!user && open) {
         navigate(PATH_AUTH.login, { replace: true });
     }
@@ -140,8 +141,7 @@ export default function VideoUploadBottomSheet({ open, onClose, onOpen, course, 
 
         console.log("compressedBlobFile", compressedBlobFile.type);
 
-        dispatch(createVideo(compressedBlobFile, videoCourse || 'BUMPS'));
-        // dispatch(createVideoMultipart(compressedBlobFile, videoCourse || 'BUMPS'));
+        dispatch(createVideo(compressedBlobFile, level));
         setActiveStep(2);
 
     }, [selectedFile, setLoadingCompresor, setActiveStep, dispatch]);
@@ -180,6 +180,8 @@ export default function VideoUploadBottomSheet({ open, onClose, onOpen, course, 
             setSelectedFile(trimmedVideo);
         }
     };
+
+    useEffect(()=>console.log("this is teh course"), [course])
 
     const uploadVideo = async () => {
         try {

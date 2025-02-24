@@ -13,18 +13,23 @@ import { ArrowBack } from "@mui/icons-material";
 import Logo from "src/components/Logo";
 import ReviewRequestBox from "./ReviewRequestBox";
 import { VideoReviewStatus } from "./VideoReviewStatus";
+import VideoAnalyticsChart from "./VideoAnalyticsChart";
+import SnowMatchIntelligenceBox from "./SnowMatchIntelligenceBox";
+import { useSnackbar } from "notistack";
 
 export default function VideoReviewedBottomSheet({ open, onClose, onOpen, selectedVideo }) {
     const theme = useTheme();
     const { translate } = useLocales();
     const [isPlaying, setIsPlaying] = useState(false);
-    const [isPlayingAnalized, setIsPlayingAlaized] = useState(false);
     const dispatch = useDispatch();
-    const [snowMatchIntelligenceOpen, setSnowMatchIntelligenceOpen] = useState(false)
-    const { analizeExists, isLoadingExists } = useSelector(state => state.video)
+    const { analizeExists, isLoadingExists } = useSelector(state => state.video);
+    const [ isProCheckRequested, setIsProCheckRequested ]  = useState(selectedVideo?.proCheck);
+    const { enqueueSnackbar } = useSnackbar();
 
     useEffect(() => {
         if (selectedVideo) {
+            setIsProCheckRequested(selectedVideo.proCheck)
+            console.log(selectedVideo);
             dispatch(videoExists("snowmatchvideosanalisados", `videos_analizados/${selectedVideo.videoUrl}.mp4`))
         }
     }, [selectedVideo]);
@@ -36,6 +41,8 @@ export default function VideoReviewedBottomSheet({ open, onClose, onOpen, select
 
     const handleRequestProCheck = () => {
         dispatch(proCheck(selectedVideo.id))
+        setIsProCheckRequested(true);
+        enqueueSnackbar("ProCheck Solicitado")
     }
 
     return (
@@ -53,6 +60,7 @@ export default function VideoReviewedBottomSheet({ open, onClose, onOpen, select
                     height: '100%',
                     maxHeight: '100%',
                     paddingTop: 'env(safe-area-inset-bottom)',
+                    paddingBottom: 'env(safe-area-inset-bottom)',
                     width: '100vw',
                     maxWidth: '100%',
                 },
@@ -160,6 +168,8 @@ export default function VideoReviewedBottomSheet({ open, onClose, onOpen, select
                                 {translate('videoCoachScreen.score')} {selectedVideo.score}
                             </Typography>
 
+                            {selectedVideo.analysisData && <VideoAnalyticsChart turnData={selectedVideo.analysisData} />}
+
                             {/* Revisor */}
                             {selectedVideo.reviewer && (
                                 <>
@@ -197,52 +207,14 @@ export default function VideoReviewedBottomSheet({ open, onClose, onOpen, select
                             )}
                         </Box>
 
-                        <Box
-                            sx={{
-                                margin: 2,
-                                marginBottom: 6,
-                                border: "1px solid #E0E0E0",
-                                borderRadius: "12px",
-                                padding: "16px",
-                                maxWidth: "400px",
-                                backgroundColor: "white",
-                                boxShadow: "0px 4px 10px rgba(0,0,0,0.05)",
-                            }}
-                        >
-                            {/* Header con icono y título */}
-                            <Box display="flex" alignItems="center" gap={1} mb={1}>
-                                <Logo />
-                                <Typography variant="subtitle1" fontWeight={600}>
-                                    SnowMatch Intelligence
-                                </Typography>
-                            </Box>
+                        <SnowMatchIntelligenceBox video={selectedVideo}/>
 
-                            {/* Descripción */}
-                            <Typography variant="body1" color="text.primary" mb={2}>
-                                Short but intense ride with power spikes! You crushed higher power zones and hit a 3-day activity logging streak.
-                            </Typography>
-
-                            {/* Botón */}
-                            <Button
-                                variant="contained"
-                                fullWidth
-                                sx={{
-                                    color: "white",
-                                    borderRadius: "8px",
-                                    textTransform: "none",
-                                    fontWeight: "bold",
-                                }}
-                                onClick={() => setSnowMatchIntelligenceOpen(true)}
-                            >
-                                See Video
-                            </Button>
-                        </Box>
-                        {!selectedVideo.proCheck && !selectedVideo.reviewed && <Box>
+                        {!selectedVideo.proCheck && !isProCheckRequested && !selectedVideo.reviewed && <Box marginTop={5}>
                             <ReviewRequestBox onRequestReview={handleRequestProCheck} />
                         </Box>}
-                        {selectedVideo.proCheck && !selectedVideo.reviewed && <Box>
+                        {(isProCheckRequested) && !selectedVideo.reviewed && <Box>
                             <VideoReviewStatus
-                                proCheck={selectedVideo.proCheck}
+                                proCheck={isProCheckRequested}
                                 reviewed={selectedVideo.reviewed}
                                 onRequestReview={handleRequestProCheck}
                             />
@@ -250,101 +222,6 @@ export default function VideoReviewedBottomSheet({ open, onClose, onOpen, select
                     </>
                 )}
             </Box>
-            <SwipeableDrawer
-                anchor="bottom"
-                open={snowMatchIntelligenceOpen}
-                onClose={() => setSnowMatchIntelligenceOpen(false)}
-                onOpen={() => setSnowMatchIntelligenceOpen(true)}
-                disableSwipeToOpen={false}
-                ModalProps={{
-                    keepMounted: true,
-                }}
-                PaperProps={{
-                    sx: {
-                        height: '80%',
-                        maxHeight: '80%',
-                        width: '100vw',
-                        maxWidth: '100%',
-                        borderTopLeftRadius: "16px",
-                        borderTopRightRadius: "16px",
-                        padding: 2,
-                    },
-                }}
-            >
-                <Box
-                    sx={{
-                        display: "flex",
-                        flexDirection: "column",
-                        overflow: "auto",
-                        height: "100%",
-                    }}
-                >
-                    {/* Encabezado con Cierre */}
-                    <Box display="flex" justifyContent="space-between" alignItems="center">
-                        <Typography variant="h6" fontWeight={600}>
-                            SnowMatch Intelligence
-                        </Typography>
-                        <IconButton onClick={() => setSnowMatchIntelligenceOpen(false)}>
-                            <CloseIcon />
-                        </IconButton>
-                    </Box>
-
-                    <Divider sx={{ my: 2 }} />
-                    {selectedVideo &&
-                        <Box mb={2}>
-                            {!isPlayingAnalized ? (
-                                <Box
-                                    position="relative"
-                                    width="100%"
-                                    maxHeight="300px"
-                                    sx={{ cursor: "pointer" }}
-                                    onClick={() => setIsPlayingAlaized(true)}
-                                >
-                                    {/* Thumbnail Image */}
-                                    <Box
-                                        component="img"
-                                        src={`${process.env.REACT_APP_VIDEO_PREVIEW_BUCKET_URL}/${selectedVideo?.videoUrl}.jpg`}
-                                        alt="Video Thumbnail"
-                                        sx={{
-                                            width: "100%",
-                                            maxHeight: "300px",
-                                            objectFit: "cover",
-                                        }}
-                                    />
-                                    {/* Play Button Overlay */}
-                                    <Box
-                                        position="absolute"
-                                        top="50%"
-                                        left="50%"
-                                        sx={{
-                                            transform: "translate(-50%, -50%)",
-                                            backgroundColor: "rgba(0, 0, 0, 0.6)",
-                                            borderRadius: "50%",
-                                            width: "60px",
-                                            height: "60px",
-                                            display: "flex",
-                                            alignItems: "center",
-                                            justifyContent: "center",
-                                        }}
-                                    >
-                                        <PlayArrowIcon sx={{ fontSize: 40, color: "white" }} />
-                                    </Box>
-                                </Box>
-                            ) : (
-                                <ReactPlayer
-                                    url={`${process.env.REACT_APP_VIDEO_ANALIZED_BUCKET_URL}/${selectedVideo?.videoUrl}.mp4`}
-                                    playing={isPlayingAnalized}
-                                    controls
-                                    style={{ maxHeight: '300px', maxWidth: '100%', }}
-                                    onPause={() => setIsPlaying(false)}
-                                    onPlay={() => setIsPlaying(true)}
-                                />
-                            )}
-                            {console.log("test", `${process.env.REACT_APP_VIDEO_ANALIZED_BUCKET_URL}/${selectedVideo?.videoUrl}.mp4`)}
-                        </Box>
-                    }
-                </Box>
-            </SwipeableDrawer>
         </SwipeableDrawer>
     );
 }

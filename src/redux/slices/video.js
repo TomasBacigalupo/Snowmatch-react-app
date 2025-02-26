@@ -34,6 +34,8 @@ const initialState = {
     createBookingError: false,
     videos: [],
     progress: 0,
+    leaders: [],
+    isLoadingLeaderBoard: false
 };
 
 const slice = createSlice({
@@ -43,6 +45,10 @@ const slice = createSlice({
         // START LOADING
         startLoading(state) {
             state.isLoading = true;
+        },
+
+        startLoadingLeaderBoard(state) {
+            state.isLoadingLeaderBoard = true;
         },
 
         startLoadingReview(state) {
@@ -283,6 +289,11 @@ const slice = createSlice({
             state.videos = action.payload;
         },
 
+        getLeaderBoardSuccess(state, action) {
+            state.isLoadingLeaderBoard = false;
+            state.leaders = action.payload;
+        },
+
         getVideosToReviewSuccess(state, action) {
             state.isLoading = false;
             state.videosToReview = action.payload;
@@ -324,6 +335,19 @@ export function getVideos() {
             const response = await axios.get(`/api/videos/VideoReviews/myVideos`);
             const videos = response.data
             dispatch(slice.actions.getVideosSuccess(videos));
+        } catch (error) {
+            dispatch(slice.actions.hasError(error));
+        }
+    };
+}
+
+export function getLeaderBoard(course) {
+    return async () => {
+        dispatch(slice.actions.startLoadingLeaderBoard());
+        try {
+            const response = await axios.get(`/api/videos/VideoReviews/leaderboard?course=${course}`);
+            const leaders = response.data
+            dispatch(slice.actions.getLeaderBoardSuccess(leaders));
         } catch (error) {
             dispatch(slice.actions.hasError(error));
         }

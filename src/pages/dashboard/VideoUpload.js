@@ -14,6 +14,32 @@ import VideoReviewedBottomSheet from 'src/sections/@dashboard/video/VideoReviewe
 import PerformanceChart from 'src/sections/@dashboard/general/analytics/PerformanceChart';
 import AnalyticsChallangeWidget from 'src/sections/@dashboard/general/analytics/AnalyticsChallangeWidget';
 import LeaderBoardRightDrawer from 'src/sections/@dashboard/video/LeaderBoardRightDrawer';
+import { InAppPurchase2 } from '@ionic-native/in-app-purchase-2';
+
+// ----------------------------------------------------------------------
+
+const productIds = ['your_product_id_1', 'your_product_id_2']; // Replace with your App Store product IDs
+
+const setupIAP = () => {
+    InAppPurchase2.register(productIds);
+
+    // Handlers for different states
+    InAppPurchase2.when(productIds[0]).approved((p) => {
+        p.verify(); // Call this to verify the purchase
+    });
+
+    InAppPurchase2.when(productIds[0]).verified((p) => {
+        p.finish(); // Complete the purchase process
+    });
+
+    InAppPurchase2.when(productIds[0]).owned((p) => {
+        console.log('Product already owned', p);
+    });
+
+    InAppPurchase2.refresh();
+};
+
+// ----------------------------------------------------------------------
 
 
 const Input = styled('input')({
@@ -85,14 +111,27 @@ export default function VideoUpload() {
     const { videos } = useSelector((state) => state.video);
 
     useEffect(() => {
+        setupIAP();
+    }, []);
+
+    const buyProduct = async (productId) => {
+        try {
+            const product = InAppPurchase2.order(productId);
+            console.log('Purchase started:', product);
+        } catch (error) {
+            console.error('Purchase failed:', error);
+        }
+    };
+
+    useEffect(() => {
         dispatch(getVideos());
     }, [dispatch]);
 
     useEffect(() => {
         if (videos) {
-            
+
             setCarvingChallangeResults(videos.filter(v => v.course === "AI_CHALLANGE_1").sort((a, b) => a.id - b.id) // Sort by video.id in ascending order
-            .map(v => v.score));
+                .map(v => v.score));
             const bestScore = Math.max(...videos.filter(v => v.course === "AI_CHALLANGE_1").map(v => v.score));
             setBestCarvingChallange(bestScore || 0);
 
@@ -168,92 +207,6 @@ export default function VideoUpload() {
         setSelectedVideo(video);
         setIsVideoDetailOpen(true);
     };
-
-    const renderStep = () => {
-        switch (activeStep) {
-            case 0:
-                return (
-                    <Box my={2} display="flex" flexDirection="column" alignItems="center">
-                        <Input
-                            accept="video/*"
-                            id="contained-button-file"
-                            type="file"
-                            onChange={handleFileSelect}
-                        />
-                        <EmptyStateBox>
-                            <Box my={2}>
-                                <Typography variant="body1" textAlign="center">
-                                    Subí tu video esquiando
-                                </Typography>
-                                <Typography variant="body2" textAlign="center">
-                                    Subí tu video esquiando
-                                </Typography>
-                            </Box>
-                            <Box mx={2}>
-                                <label htmlFor="contained-button-file">
-                                    <Button variant="outlined" component="span" fullWidth>
-                                        Select Video (Max 30 seconds)
-                                    </Button>
-                                </label>
-                            </Box>
-
-                        </EmptyStateBox>
-
-                    </Box>
-                );
-            case 1:
-                return (
-                    <>
-                        <Typography variant="body2" mt={1} textAlign="center">
-                            Selected: {selectedFile.name} ({videoDuration.toFixed(1)} seconds)
-                        </Typography>
-                        <Box my={2}>
-                            <TextField
-                                fullWidth
-                                label="Video Title"
-                                variant="outlined"
-                                value={videoTitle}
-                                onChange={(e) => setVideoTitle(e.target.value)}
-                                required
-                            />
-                        </Box>
-                        {videoPreviewUrl && (
-                            <Box my={2}>
-                                <Typography variant="h6" gutterBottom align="center">
-                                    Video Preview
-                                </Typography>
-                                <video
-                                    ref={videoRef}
-                                    src={videoPreviewUrl}
-                                    controls
-                                    style={{ width: '100%', maxHeight: '300px' }}
-                                />
-                            </Box>
-                        )}
-                        <Box mt={2} display="flex" justifyContent="center">
-                            <Button
-                                variant="contained"
-                                color="primary"
-                                onClick={handleUpload}
-                                fullWidth={isMobile}
-                                disabled={!videoTitle.trim()}
-                            >
-                                Upload
-                            </Button>
-                        </Box>
-                    </>
-                );
-            case 2:
-                return (
-                    <Typography variant="body1" mt={2} textAlign="center">
-                        Uploading...
-                    </Typography>
-                );
-            default:
-                return null;
-        }
-    };
-
 
     const handleNext = () => {
         setActiveHowToStep((prevActiveStep) => prevActiveStep + 1);
@@ -410,6 +363,7 @@ export default function VideoUpload() {
                             onClose={() => setIsLeaderBoardOpen(false)}
                             onOpen={() => setIsLeaderBoardOpen(true)}
                             selectedChallange={selectedChallange}
+                            course={"AI_CHALLANGE_1"}
                         /></Grid>
                         <Grid item xs={12}>
                             <AnalyticsChallangeWidget title="Carving Challange" total={bestCarvingChallange} chartData={carvingChallangeResults} onLeaderboardClick={() => setIsLeaderBoardOpen(true)} />
@@ -602,6 +556,7 @@ export default function VideoUpload() {
                 onOpen={() => setOpen(true)}
                 open={open}
                 onClose={() => setOpen(false)} /> */}
+            <Button fullWidth onClick={buyProduct}>buy</Button>
         </Page>
     );
 

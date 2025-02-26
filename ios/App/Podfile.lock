@@ -89,7 +89,7 @@ SPEC CHECKSUMS:
   CapacitorPushNotifications: c4feed483e03825369c278f5bab75100fb3f94a0
   CapacitorShare: 2fcf1758cd07e0558f6aed40d7437bf8a3a42297
   CoderpradpCapacitorPluginVideoPicker: a410fb1f4a36683bcd90d5729bf42765c5126d04
-  CordovaPlugins: c8b823fbe83514975dff3f4811465d70b3ff3962
+  CordovaPlugins: bb5597ee03a5bea28fbf88a0fd462515ed18ad8e
   IONGeolocationLib: 81f33f88d025846946de2cf63b0c7628e7c6bc9d
   OSInAppBrowserLib: c3d0b21a0c8b6d81e69117ad08bb6b8a4849c4e1
   SDWebImage: 73c6079366fea25fa4bb9640d5fb58f0893facd8

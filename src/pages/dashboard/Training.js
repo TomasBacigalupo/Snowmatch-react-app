@@ -362,7 +362,7 @@ export default function Training() {
   ];
 
   const handleSelectCourseLevel = (course, level) => {
-    console.log("level.code", level.code)
+    console.log("level", level)
     setOpen(true)
     setSelectedCourse(course.code);
     setSelectedLevelTitle(level.code);

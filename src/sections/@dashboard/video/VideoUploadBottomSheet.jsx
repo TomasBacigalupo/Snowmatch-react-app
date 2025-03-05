@@ -1,4 +1,4 @@
-import { Button, FormControl, Input, InputLabel, LinearProgress, MenuItem, Select, Step, StepLabel, Stepper, SwipeableDrawer, TextField, Typography } from "@mui/material";
+import { Button, FormControl, Input, InputLabel, LinearProgress, MenuItem, Paper, Select, Step, StepLabel, Stepper, SwipeableDrawer, TextField, Typography } from "@mui/material";
 import { Box, useMediaQuery } from "@mui/system";
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import React, { useState, useRef, useEffect, useCallback } from 'react';
@@ -24,6 +24,7 @@ import { LoadingButton } from "@mui/lab";
 import { column } from "stylis";
 import ProgressComponent from "./ProgressComponent";
 import AcademyWelcome from 'src/sections/@dashboard/video/AcademyWelcome';
+import Markdown from "src/components/Markdown";
 
 
 
@@ -44,7 +45,7 @@ export default function VideoUploadBottomSheet({ open, onClose, onOpen, course, 
     const navigate = useNavigate();
     const { user } = useAuth();
 
-    
+
     if (!user && open) {
         navigate(PATH_AUTH.login, { replace: true });
     }
@@ -181,7 +182,7 @@ export default function VideoUploadBottomSheet({ open, onClose, onOpen, course, 
         }
     };
 
-    useEffect(()=>console.log("this is teh course"), [course])
+    useEffect(() => console.log("this is teh course"), [course])
 
     const uploadVideo = async () => {
         try {
@@ -206,15 +207,50 @@ export default function VideoUploadBottomSheet({ open, onClose, onOpen, course, 
             case 0:
                 return (
                     <Box my={2} display="flex" height='100%' flexDirection="column" justifyContent='space-between'>
-                        <Box my={2} display="flex" flexDirection="column" >
-                            <Box mb={2}>
-                                <ReactPlayer
-                                    url={demoUrl}
-                                    width='100%'
-                                    controls
-                                />
+                        <Box mb={2} display="flex" flexDirection="column" >
+                            <Box>
+                                <Paper
+                                    sx={{
+                                        border: '2px solid', // Borde
+                                        borderColor: 'primary.dark', // Color primario oscuro
+                                        borderRadius: 2, // Bordes redondeados
+                                        p: 2, // Padding
+                                    }}
+                                >
+                                    <Markdown>
+                                        El objetivo de este ejercicio es desafiar tu inclinacion al esquiar llevando tus esquies al maximo de angulacion posible. Te animas?
+                                    </Markdown>
+                                </Paper>
                             </Box>
-                            <Typography variant="h2" textAlign='left'>
+                            <Box mt={4}>
+                                <video
+                                    src={demoUrl}
+                                    width="100%"
+                                    height="300px"
+                                    controls
+                                    playsInline
+                                    disablePictureInPicture
+                                    autoPlay={true}
+                                    style={{
+                                        borderRadius: '12px',
+                                        objectFit: 'cover',
+                                        display: 'block',
+                                        backgroundColor: 'black'
+                                    }}
+                                ></video>
+                            </Box>
+                            {/* Header con icono y título */}
+                            <Box display="flex" alignItems="center" gap={1} mb={1}>
+                                <Box
+                                    component="img"
+                                    src="/icons/pc.jpg"
+                                    sx={{ width: 140, height: 140, objectFit: "contain" }}
+                                />
+                                <Typography variant="h3" sx={{ color: "primary.dark" }}>
+                                    SnowMatch AI Corrigirá tu video
+                                </Typography>
+                            </Box>
+                            {/* <Typography variant="h2" textAlign='left'>
                                 {translate(`course.${course}.title`)}
                             </Typography>
                             <Typography variant="subtitle1" textAlign='left'>
@@ -222,7 +258,7 @@ export default function VideoUploadBottomSheet({ open, onClose, onOpen, course, 
                             </Typography>
                             <Typography variant="body1" textAlign='left'>
                                 {translate(`course.${course}.fundamentals`)}
-                            </Typography>
+                            </Typography> */}
                         </Box>
 
                         <Button variant="contained" sx={{ py: 2, my: 2 }} fullWidth onClick={async () => {
@@ -391,10 +427,24 @@ export default function VideoUploadBottomSheet({ open, onClose, onOpen, course, 
                     }}>
                         Cancelar
                     </Button>
-                    <Typography variant="h4" gutterBottom align="center" sx={{ flexGrow: 1 }}>
-                        Subí tu video
+                    <Typography variant="h4" align="center" sx={{ flexGrow: 1 }}>
+                        {translate(`course.${course}.title`)}
                     </Typography>
-                    <Box width='100px' /> {/* Placeholder to balance the space */}
+                    <Box width='100px' mr={2}>
+                        <Paper
+                            sx={{
+                                border: '2px solid', // Borde
+                                backgroundColor: 'primary.dark', // Color primario oscuro
+                                borderRadius: 2, // Bordes redondeados
+                                px: 1, // Padding
+                            }}>
+                            <Typography color="white" textAlign="center" fontWeight="bold">
+                                100 pts
+                            </Typography>
+
+                        </Paper>
+
+                    </Box> {/* Placeholder to balance the space */}
                 </Box>
                 <Box
                     sx={{
@@ -405,7 +455,7 @@ export default function VideoUploadBottomSheet({ open, onClose, onOpen, course, 
                         overflow: 'auto',
                     }}
                 >
-                    <Box mb={2}>
+                    {/* <Box mb={2}>
                         <Stepper activeStep={activeStep} alternativeLabel={!isMobile}>
                             {steps.map((label) => (
                                 <Step key={label}>
@@ -413,7 +463,7 @@ export default function VideoUploadBottomSheet({ open, onClose, onOpen, course, 
                                 </Step>
                             ))}
                         </Stepper>
-                    </Box>
+                    </Box> */}
                     {renderStep()}
                 </Box>
                 {openWelcome && <AcademyWelcome

@@ -58,6 +58,9 @@ export default function UnratedVideos() {
       comment: data.comment,
       score: data.score,
       reviewed: true,
+      goodAspects: data.goodAspects,
+      errors: data.badAspects,
+      toImprove: data.howToImprove
     }))
   };
 
@@ -107,6 +110,8 @@ export default function UnratedVideos() {
     setValue,
     handleSubmit,
   } = methods;
+
+  const score = watch("score")
 
   return (
     <Container>
@@ -294,8 +299,24 @@ export default function UnratedVideos() {
                     />
                   )}
                 </Box>
-                <RHFSlider valueLabelDisplay="on" label="Score" name="score" />
-                <RHFEditor simple={true} name="comment" />
+                <Box display='flex' flexDirection='column' alignItems='center' justifyContent='center' marginX="20%">
+                  <Box width="100%">
+                    <Typography textAlign="center" variant="h3">{score} pts</Typography>
+                  </Box>
+                  <Box width="100%">
+                    <RHFSlider name="score" />
+                  </Box>
+                </Box>
+                {/* Text Inputs */}
+                <Box mt={2}>
+                  <RHFTextField name="goodAspects" label="Good Aspects" multiline rows={3} fullWidth />
+                </Box>
+                <Box mt={2}>
+                  <RHFTextField name="badAspects" label="Bad Aspects" multiline rows={3} fullWidth />
+                </Box>
+                <Box mt={2}>
+                  <RHFTextField name="howToImprove" label="How to Improve" multiline rows={3} fullWidth />
+                </Box>
                 <LoadingButton
                   fullWidth
                   size="large"

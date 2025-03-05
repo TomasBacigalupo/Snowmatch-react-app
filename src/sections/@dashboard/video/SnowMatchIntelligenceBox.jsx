@@ -6,6 +6,7 @@ import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import CloseIcon from '@mui/icons-material/Close';
 import ReactPlayer from "react-player";
 import { useState } from "react";
+import Markdown from "src/components/Markdown";
 
 const SnowMatchIntelligenceBox = ({ video }) => {
 
@@ -74,7 +75,6 @@ const SnowMatchIntelligenceBox = ({ video }) => {
                     maxHeight: '100%',
                     width: '100vw',
                     maxWidth: '100%',
-                    padding: 2,
                     paddingTop: "env(safe-area-inset-top)"
                 },
             }}
@@ -88,7 +88,7 @@ const SnowMatchIntelligenceBox = ({ video }) => {
                 }}
             >
                 {/* Encabezado con Cierre */}
-                <Box display="flex" justifyContent="space-between" alignItems="center">
+                <Box px={2} display="flex" justifyContent="space-between" alignItems="center">
                     <Typography variant="h6" fontWeight={600}>
                         SnowMatch Intelligence
                     </Typography>
@@ -97,7 +97,7 @@ const SnowMatchIntelligenceBox = ({ video }) => {
                     </IconButton>
                 </Box>
 
-                <Divider sx={{ my: 2 }} />
+                <Divider sx={{ mt: 2 }} />
                 {video &&
                     <Box mb={2}>
                         {!isPlayingAnalized ? (
@@ -148,9 +148,9 @@ const SnowMatchIntelligenceBox = ({ video }) => {
                                 onPlay={() => isPlayingAnalized(true)}
                             />
                         )}
-                        <Typography variant="body1" color="text.primary" mb={2}>
-                            {video?.aiComment}
-                        </Typography>
+                        <Box px={2} pt={2}>
+                            <Markdown>{video?.aiComment}</Markdown>
+                        </Box>
                     </Box>
                 }
             </Box>

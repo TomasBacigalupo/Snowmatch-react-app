@@ -39,7 +39,7 @@ export default function PlainLayout() {
     <ContentStyle>
       <NavbarVertical isOpenSidebar={open} onCloseSidebar={() => setOpen(false)} isGuest={true} />
       <Outlet />
-      <LabelBottomNavigation onOpenSidebar={() => setOpen(true)} isGuest={true} />
+      <LabelBottomNavigation/>
     </ContentStyle>
 
   );

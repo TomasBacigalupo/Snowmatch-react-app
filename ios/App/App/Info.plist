@@ -45,14 +45,30 @@
 		</array>
 		<key>UIViewControllerBasedStatusBarAppearance</key>
 		<true />
+
+		<!-- Permisos de privacidad -->
 		<key>NSCameraUsageDescription</key>
 		<string>SnowMatch necesita acceso a tu cámara para mostrar tus habilidades a los expertos.</string>
 		<key>NSPhotoLibraryUsageDescription</key>
 		<string>SnowMatch necesita acceso a tu biblioteca de fotos para seleccionar los videos que
 			subas.</string>
 		<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-		<string>SnowMatch quiere saber tu ubicacion par poder mostrarte el mapa de pistas del centro de esqui en el que estás esquiando</string>
+		<string>SnowMatch quiere saber tu ubicación para poder mostrarte el mapa de pistas del
+			centro de esquí en el que estás esquiando.</string>
 		<key>NSLocationWhenInUseUsageDescription</key>
-		<string>SnowMatch quiere saber tu ubicacion par poder mostrarte el mapa de pistas del centro de esqui en el que estás esquiando</string>
+		<string>SnowMatch quiere saber tu ubicación para poder mostrarte el mapa de pistas del
+			centro de esquí en el que estás esquiando.</string>
+
+		<!-- Configuración de compras dentro de la app (IAP) -->
+		<key>NSUserDefaults</key>
+		<dict>
+			<key>SUEnableAutomaticChecks</key>
+			<true />
+		</dict>
+		<key>SKStoreProduct</key>
+		<dict>
+			<key>Enabled</key>
+			<true />
+		</dict>
 	</dict>
 </plist>

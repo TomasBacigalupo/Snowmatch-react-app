@@ -45,9 +45,9 @@ const VideoAnalyticsChart = ({ turnData }) => {
         paralelsHip: turnData.map(turn => Math.round(turn.maxEdgeAnglePosition)),
         paralelsHands: turnData.map(turn => Math.round(turn.maxEdgeAnglePosition.edgeAngle)),
         paralelsShoulders: turnData.map(turn => Math.round(turn.maxEdgeAnglePosition.edgeAngle)),
-        edgeAngleChange: turnData.map(turn => turn.changeTurnPosition.edgeAngle),
-        hipAngleChange: turnData.map(turn => turn.changeTurnPosition.hipAngle),
-        handsAngleChange: turnData.map(turn => turn.changeTurnPosition.hipAngle),
+        edgeAngleChange: turnData.map(turn => Math.round(turn.changeTurnPosition.edgeAngle)),
+        hipAngleChange: turnData.map(turn => Math.round(turn.changeTurnPosition.hipAngle)),
+        handsAngleChange: turnData.map(turn => Math.round(turn.changeTurnPosition.hipAngle)),
     };
 
     const series = [{ name: metricLabels[selectedMetric], data: dataMap[selectedMetric] }];
@@ -94,34 +94,9 @@ const VideoAnalyticsChart = ({ turnData }) => {
                 </Box>
                 <Chart options={options} series={series} type="line" height={300} />
             </Box>
-            <Divider/>
-            <Box>
+            <Divider py={3}/>
+            <Box pt={2}>
                 <Title>Turn Change</Title>
-                <Box sx={{ display: "flex", gap: 1, marginBottom: 2 }}>
-                    {metrics.map(({ key, label }) => (
-                        <Button
-                            key={key}
-                            variant="outlined"
-                            onClick={() => setSelectedMetric(key)}
-                            sx={{
-                                borderRadius: 8,
-                                borderColor: "grey.400",
-                                color: selectedMetric === key ? "white" : "text.primary",
-                                backgroundColor: selectedMetric === key ? "black" : "transparent",
-                                "&:hover": {
-                                    backgroundColor: "white",
-                                    borderColor: "black",
-                                    color: "black"
-                                },
-                                paddingX: 2.5,
-                                paddingY: 1,
-                            }}
-                        >
-                            {label}
-                        </Button>
-                    ))}
-                </Box>
-                <Title>{metricLabels[selectedMetric]}</Title>
                 <Chart options={options} series={series} type="line" height={300} />
             </Box>
         </>

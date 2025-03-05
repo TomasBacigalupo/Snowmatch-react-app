@@ -1,0 +1,140 @@
+{
+  "appPolicies" : {
+    "eula" : "",
+    "policies" : [
+      {
+        "locale" : "en_US",
+        "policyText" : "",
+        "policyURL" : ""
+      }
+    ]
+  },
+  "identifier" : "B5F02FED",
+  "nonRenewingSubscriptions" : [
+
+  ],
+  "products" : [
+    {
+      "displayPrice" : "99.99",
+      "familyShareable" : false,
+      "internalID" : "6742570880",
+      "localizations" : [
+        {
+          "description" : "100 videos uploads",
+          "displayName" : "100 videos",
+          "locale" : "es_ES"
+        }
+      ],
+      "productID" : "pro.videos.hundred",
+      "referenceName" : "100 videos",
+      "type" : "Consumable"
+    },
+    {
+      "displayPrice" : "4.99",
+      "familyShareable" : false,
+      "internalID" : "6742509476",
+      "localizations" : [
+        {
+          "description" : "Análisis de 5 videos",
+          "displayName" : "5 videos",
+          "locale" : "es_ES"
+        }
+      ],
+      "productID" : "5_CREDITS",
+      "referenceName" : "5 videos",
+      "type" : "Consumable"
+    },
+    {
+      "displayPrice" : "9.99",
+      "familyShareable" : false,
+      "internalID" : "6742692322",
+      "localizations" : [
+        {
+          "description" : "1 video, perfecto para probar la experiencia",
+          "displayName" : "One Shot",
+          "locale" : "es_ES"
+        }
+      ],
+      "productID" : "pro.snowmatch.oneshot",
+      "referenceName" : "One Shot",
+      "type" : "Consumable"
+    },
+    {
+      "displayPrice" : "49.99",
+      "familyShareable" : false,
+      "internalID" : "6742692242",
+      "localizations" : [
+        {
+          "description" : "10 videos, desbloquea tu siguiente nivel",
+          "displayName" : "Progress Pack",
+          "locale" : "es_ES"
+        }
+      ],
+      "productID" : "pro.snowmatch.progress",
+      "referenceName" : "Progress Pack",
+      "type" : "Consumable"
+    }
+  ],
+  "settings" : {
+    "_applicationInternalID" : "6741247513",
+    "_developerTeamID" : "DTF4NR87GG",
+    "_failTransactionsEnabled" : false,
+    "_lastSynchronizedDate" : 762784769.36455202,
+    "_locale" : "en_US",
+    "_storefront" : "USA",
+    "_storeKitErrors" : [
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Load Products"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Purchase"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Verification"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "App Store Sync"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Subscription Status"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "App Transaction"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Manage Subscriptions Sheet"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Refund Request Sheet"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Offer Code Redeem Sheet"
+      }
+    ]
+  },
+  "subscriptionGroups" : [
+
+  ],
+  "version" : {
+    "major" : 4,
+    "minor" : 0
+  }
+}

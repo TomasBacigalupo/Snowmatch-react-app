@@ -5,10 +5,12 @@ import React, { useState, useEffect } from "react";
 import { useSwipeable } from "react-swipeable";
 import EnterSnowMatchCodeStep from "./EnterSnowMatchCodeStep";
 import { formatTextWithHighlight } from "src/utils/formatTextWithHighlight";
+import useAuth from "src/hooks/useAuth";
 
 
 export default function VideoUploadBottomSheet({ open, onClose, onAddToPremium }) {
   const [activeStep, setActiveStep] = useState(0);
+  const { addToPremium } = useAuth()
 
   const steps = [
     {
@@ -31,8 +33,13 @@ export default function VideoUploadBottomSheet({ open, onClose, onAddToPremium }
     },
   ];
 
-  const handleNext = () => {
+  const handleNext = async () => {
     setActiveStep((prev) => prev + 1);
+    if(activeStep + 1 === steps.length){
+      await addToPremium()
+      onAddToPremium()
+      onClose()
+    }
   };
 
   const handlePrev = () => {

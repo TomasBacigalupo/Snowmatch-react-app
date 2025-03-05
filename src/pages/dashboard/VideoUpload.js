@@ -14,32 +14,10 @@ import VideoReviewedBottomSheet from 'src/sections/@dashboard/video/VideoReviewe
 import PerformanceChart from 'src/sections/@dashboard/general/analytics/PerformanceChart';
 import AnalyticsChallangeWidget from 'src/sections/@dashboard/general/analytics/AnalyticsChallangeWidget';
 import LeaderBoardRightDrawer from 'src/sections/@dashboard/video/LeaderBoardRightDrawer';
-import { InAppPurchase2 } from '@ionic-native/in-app-purchase-2';
-
+import { buyProduct, getProducts } from 'src/services/inAppPurchaseService'
+import PremiumContainer from 'src/sections/payment/Premiumcontainer';
 // ----------------------------------------------------------------------
 
-const productIds = ['your_product_id_1', 'your_product_id_2']; // Replace with your App Store product IDs
-
-const setupIAP = () => {
-    InAppPurchase2.register(productIds);
-
-    // Handlers for different states
-    InAppPurchase2.when(productIds[0]).approved((p) => {
-        p.verify(); // Call this to verify the purchase
-    });
-
-    InAppPurchase2.when(productIds[0]).verified((p) => {
-        p.finish(); // Complete the purchase process
-    });
-
-    InAppPurchase2.when(productIds[0]).owned((p) => {
-        console.log('Product already owned', p);
-    });
-
-    InAppPurchase2.refresh();
-};
-
-// ----------------------------------------------------------------------
 
 
 const Input = styled('input')({
@@ -110,18 +88,6 @@ export default function VideoUpload() {
     const dispatch = useDispatch();
     const { videos } = useSelector((state) => state.video);
 
-    useEffect(() => {
-        setupIAP();
-    }, []);
-
-    const buyProduct = async (productId) => {
-        try {
-            const product = InAppPurchase2.order(productId);
-            console.log('Purchase started:', product);
-        } catch (error) {
-            console.error('Purchase failed:', error);
-        }
-    };
 
     useEffect(() => {
         dispatch(getVideos());
@@ -549,14 +515,6 @@ export default function VideoUpload() {
                 onOpen={() => setIsVideoDetailOpen(true)}
                 selectedVideo={selectedVideo}
             />
-
-            {/* <VideoUploadBottomSheet
-                title={selectedLevelTitle}
-                course={selectedCourse}
-                onOpen={() => setOpen(true)}
-                open={open}
-                onClose={() => setOpen(false)} /> */}
-            <Button fullWidth onClick={buyProduct}>buy</Button>
         </Page>
     );
 

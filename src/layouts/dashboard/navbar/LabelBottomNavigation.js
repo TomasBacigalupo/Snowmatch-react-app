@@ -23,8 +23,8 @@ LabelBottomNavigation.propTypes = {
   isGuest: PropTypes.bool,
 };
 
-export default function LabelBottomNavigation({ onOpenSidebar, isGuest }) {
-  const [value, setValue] = React.useState(0);
+export default function LabelBottomNavigation() {
+  const [value, setValue] = React.useState(null);
   const ref = React.useRef(null);
   const location = useLocation();
   const [open, setOpen] = React.useState(false);
@@ -33,15 +33,29 @@ export default function LabelBottomNavigation({ onOpenSidebar, isGuest }) {
 
   // Mapping between paths and BottomNavigation values
   const getPathValue = (path) => {
+    if(path?.includes("map")){
+      return 5
+    }
+    if(path?.includes("upload")){
+      return 0
+    }
     switch (path) {
       case PATH_GUEST.videoCoach:
         return 0;
-      case PATH_GUEST.protips:
+      case PATH_GUEST.training:
         return 1;
       case '/upload': // Add this manually for the Upload button as it's a special case
         return 2;
       case PATH_GUEST.independent:
         return 3;
+      case PATH_GUEST.root:
+        return 3;
+      case PATH_GUEST.school:
+        return 3;
+      case PATH_DASHBOARD.eCommerce.matchIndependant:
+        return 3;
+      case PATH_GUEST.root + '/lessons':
+        return 4
       default:
         return false;
     }
@@ -55,6 +69,9 @@ export default function LabelBottomNavigation({ onOpenSidebar, isGuest }) {
     }
   }, [location.pathname]);
 
+  if(value === null){
+    return <></>
+  }
   return (
     <Box sx={{ pb: `calc(env(safe-area-inset-bottom) + ${isMobile ? '56px' : '16px'})`, height: '100px' }} ref={ref}>
       <CssBaseline />
@@ -87,10 +104,10 @@ export default function LabelBottomNavigation({ onOpenSidebar, isGuest }) {
             label="Match"
             icon={<Logo disabled={value != 3} disabledLink={true} sx={{ height: '25px', width: '25px' }} />}
             component={RouterLink}
-            to={PATH_GUEST.root}
+            to={PATH_GUEST.school}
           />
           <BottomNavigationAction label="Lessons" component={RouterLink} to={PATH_GUEST.root + '/lessons'} icon={<DownhillSkiingIcon />} />
-          
+
           <BottomNavigationAction label="Maps" component={RouterLink} to={'/maps/chapelco'} icon={<MapIcon />} />
         </BottomNavigation>
       </Paper>

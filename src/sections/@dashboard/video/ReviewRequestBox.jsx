@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { Drawer, Dialog, Grid, Typography, IconButton, Button, Avatar, Stack, AvatarGroup, Box } from '@mui/material';
+import { Drawer, Dialog, Grid, Typography, IconButton, Button, Avatar, Stack, AvatarGroup, Box, Divider, SwipeableDrawer } from '@mui/material';
 import Iconify from 'src/components/Iconify';
 import { Hidden } from '@mui/material';
 import { useTheme } from '@mui/system';
 import { useDispatch, useSelector } from 'src/redux/store';
 import { proCheck } from 'src/redux/slices/video';
 import { LoadingButton } from '@mui/lab';
+import { CloseIcon } from 'src/theme/overrides/CustomIcons';
+import PremiumContainer from 'src/sections/payment/Premiumcontainer';
+import useLocales from 'src/hooks/useLocales';
 
 const ReviewRequestBox = ({ isOpen, closeDrawer, onRequestReview }) => {
     const [open, setOpen] = useState(isOpen);
@@ -44,44 +47,49 @@ const ReviewRequestBox = ({ isOpen, closeDrawer, onRequestReview }) => {
 
             {/* Drawer en Mobile */}
             <Hidden smUp>
-                <Drawer
+                <SwipeableDrawer
                     anchor="bottom"
                     open={open}
-                    onClose={() => {
-                        setOpen(false);
-                        if (closeDrawer) closeDrawer();
+                    onClose={() => setOpen(false)}
+                    onOpen={() => setOpen(true)}
+                    disableSwipeToOpen={false}
+                    ModalProps={{
+                        keepMounted: true,
                     }}
-                    sx={{
-                        '& .MuiDrawer-paper': {
-                            width: '100%',
-                            paddingBottom: 2,
-                            borderTopLeftRadius: '12px',
-                            borderTopRightRadius: '12px',
+                    PaperProps={{
+                        sx: {
+                            height: '100%',
+                            maxHeight: '100%',
+                            width: '100vw',
+                            maxWidth: '100vw',
+                            paddingTop: "env(safe-area-inset-top)"
                         },
                     }}
                 >
-                    <ReviewContent setOpen={setOpen} closeDrawer={closeDrawer} onRequestReview={onRequestReview} />
-                </Drawer>
-            </Hidden>
+                    <Box
+                        sx={{
+                            display: "flex",
+                            flexDirection: "column",
+                            overflow: "auto",
+                            height: "100%",
+                        }}
+                    >
+                        {/* Encabezado con Cierre */}
+                        <Box px={2} display="flex" justifyContent="space-between" alignItems="center">
+                            <Typography variant="h6" fontWeight={600}>
+                                Pro Check
+                            </Typography>
+                            <IconButton onClick={() => setOpen(false)}>
 
-            {/* Dialog en Desktop */}
-            <Hidden smDown>
-                <Dialog
-                    open={open}
-                    onClose={() => {
-                        setOpen(false);
-                        if (closeDrawer) closeDrawer();
-                    }}
-                    sx={{
-                        '& .MuiPaper-root': {
-                            width: '33%',
-                            paddingBottom: 2,
-                            borderRadius: '12px',
-                        },
-                    }}
-                >
-                    <ReviewContent setOpen={setOpen} closeDrawer={closeDrawer} onRequestReview={onRequestReview} />
-                </Dialog>
+                                <Iconify icon="ic:round-close" width={24} height={24} />
+                            </IconButton>
+                        </Box>
+
+                        <Divider sx={{ mt: 2 }} />
+                        <ReviewContent setOpen={setOpen} closeDrawer={closeDrawer} onRequestReview={onRequestReview} />
+
+                    </Box>
+                </SwipeableDrawer>
             </Hidden>
         </>
     );
@@ -90,45 +98,41 @@ const ReviewRequestBox = ({ isOpen, closeDrawer, onRequestReview }) => {
 const ReviewContent = ({ setOpen, closeDrawer, onRequestReview }) => {
     const dispatch = useDispatch();
     const { isLoadingProCheck } = useSelector(state => state.video);
+    const { translate } = useLocales()
     return (
-        <Grid container direction="column" alignItems="center" p={3}>
-            <Grid item xs={12} textAlign="right" width="100%">
-                <IconButton onClick={() => {
-                    setOpen(false);
-                    if (closeDrawer) closeDrawer();
-                }}>
-                    <Iconify icon="ic:round-close" width={24} height={24} />
-                </IconButton>
+        <Grid container direction="row" alignItems="center" p={3}>
+            <Grid item xs={12}>
+                <Stack direction="column" alignItems="center" spacing={2}>
+                    <Box sx={{ display: "flex", justifyContent: "center", mb: 2 }}>
+                        <AvatarGroup max={3} sx={{ "& .MuiAvatar-root": { width: 48, height: 48, border: "2px solid white" } }}>
+                            <Avatar src="/assets/pro/1.png" />
+                            <Avatar src="/assets/pro/2.png" />
+                            <Avatar src="/assets/pro/3.png" />
+                        </AvatarGroup>
+                    </Box><Typography variant="h6" fontWeight="bold">
+                        {translate("reviewRequestBox.title")}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary" textAlign="center">
+                        {translate("reviewRequestBox.subtitle")}
+                    </Typography>
+                    <PremiumContainer />
+                    <LoadingButton
+                        variant="contained"
+                        color="primary"
+                        fullWidth
+                        sx={{ py: 1.5 }}
+                        loading={isLoadingProCheck}
+                        onClick={() => {
+                            onRequestReview();
+                            setOpen(false);
+                            if (closeDrawer) closeDrawer();
+                        }}
+                    >
+                        {translate("reviewRequestBox.cta")}
+                    </LoadingButton>
+                </Stack>
             </Grid>
 
-            <Stack direction="column" alignItems="center" spacing={2}>
-                <Box sx={{ display: "flex", justifyContent: "center", mb: 2 }}>
-                    <AvatarGroup max={3} sx={{ "& .MuiAvatar-root": { width: 48, height: 48, border: "2px solid white" } }}>
-                        <Avatar src="/images/pro-instructor-1.jpg" />
-                        <Avatar src="/images/pro-instructor-2.jpg" />
-                        <Avatar src="/images/pro-instructor-3.jpg" />
-                    </AvatarGroup>
-                </Box><Typography variant="h6" fontWeight="bold">
-                    Obtén una revisión de un SnowMatch Pro
-                </Typography>
-                <Typography variant="body2" color="text.secondary" textAlign="center">
-                    Un instructor experto analizará tu video y te dará consejos para mejorar tu técnica.
-                </Typography>
-                <LoadingButton
-                    variant="contained"
-                    color="primary"
-                    fullWidth
-                    sx={{ py: 1.5 }}
-                    loading={isLoadingProCheck}
-                    onClick={() => {
-                        onRequestReview();
-                        setOpen(false);
-                        if (closeDrawer) closeDrawer();
-                    }}
-                >
-                    Solicitar revisión
-                </LoadingButton>
-            </Stack>
         </Grid>
     );
 };

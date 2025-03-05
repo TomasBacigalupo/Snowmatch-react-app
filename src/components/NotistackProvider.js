@@ -21,7 +21,7 @@ function SnackbarStyles() {
           '& .SnackbarContent-root': {
             width: '100%',
             padding: theme.spacing(1),
-            margin: `calc(${theme.spacing(0.25)} + env(safe-area-inset-top)) 0 0 0`,
+            margin: `0 0 calc(${theme.spacing(0.25)} + env(safe-area-inset-bottom)) 0`,
             boxShadow: theme.customShadows.z8,
             borderRadius: theme.shape.borderRadius,
             color: theme.palette.grey[isLight ? 0 : 800],
@@ -74,7 +74,7 @@ export default function NotistackProvider({ children }) {
         preventDuplicate
         autoHideDuration={3000}
         variant="success" // Set default variant
-        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
         iconVariant={{
           info: <SnackbarIcon icon={'eva:info-fill'} color="info" />,
           success: <SnackbarIcon icon={'eva:checkmark-circle-2-fill'} color="success" />,

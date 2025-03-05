@@ -7,6 +7,8 @@ import useLocales from '../../hooks/useLocales';
 import VideoUploadBottomSheet from 'src/sections/@dashboard/video/VideoUploadBottomSheet';
 import useAuth from 'src/hooks/useAuth';
 import CourseCard from 'src/sections/@dashboard/training/CourseCard';
+import SkiProgress from 'src/sections/@dashboard/video/SkiProgress';
+import { Icon } from '@iconify/react';
 
 // Carousel settings
 const sliderSettings = {
@@ -57,18 +59,30 @@ export default function Training() {
 
   const COURSES = [
     {
-      title: 'Challange',
-      subtitle: 'Sos un buen esquiador? Que SnowMatch AI lo diga!',
+      title: 'Top Challenges',
+      subtitle: 'Desafiate a vos mismo y a tus amigos con los ejercicios de esquí más populares',
       code: 'CHALLANGE',
       levels: [
         {
           code: 'AI_CHALLANGE_1',
           title: 'Challenge 1 title',
           subtitle: 'Challenge 1 subtitle',
-          cover: '/assets/courses/ai_challange.png',
+          cover: '/assets/courses/pista.png',
+          icon: "hugeicons:angle-01",
           level: 'Principiante',
           points: 25,
           course: "CARVING_CHALLANGE",
+          demoUrl: 'https://snowmatchvideos.s3.us-east-1.amazonaws.com/CARVING_CHALLANGE_1.mov'
+        },
+        {
+          code: 'AI_CHALLANGE_2',
+          title: 'Challenge 2 title',
+          subtitle: 'Challenge 2 subtitle',
+          cover: '/assets/courses/position.png',
+          icon: 'ph:wave-sine-light',
+          level: 'Principiante',
+          points: 25,
+          course: "AI_CHALLANGE_2",
           demoUrl: 'https://snowmatchvideos.s3.us-east-1.amazonaws.com/CARVING_CHALLANGE_1.mov'
         }
       ],
@@ -82,7 +96,7 @@ export default function Training() {
           code: 'CARVING_CHALLANGE_1',
           title: 'Challenge 1 title',
           subtitle: 'Challenge 1 subtitle',
-          cover: 'https://image.snowmatch.pro/videoPosters/CARVING_CHALLANGE_1.jpg',
+          cover: '/assets/courses/position.png',
           level: 'Principiante',
           points: 25,
           demoUrl: 'https://snowmatchvideos.s3.us-east-1.amazonaws.com/CARVING_CHALLANGE_1.mov'
@@ -91,7 +105,7 @@ export default function Training() {
           code: 'CARVING_CHALLANGE_2',
           title: 'Challenge 2 title',
           subtitle: 'Challenge 2 subtitle',
-          cover: 'https://image.snowmatch.pro/videoPosters/CARVING_CHALLANGE_2.jpg',
+          cover: '/assets/courses/pista.png',
           level: 'Principiante',
           points: 25,
           demoUrl: 'https://snowmatchvideos.s3.us-east-1.amazonaws.com/CARVING_CHALLANGE_2.mov'
@@ -172,7 +186,7 @@ export default function Training() {
           code: "BUMPS_CHALLANGE_1",
           title: 'Challange 1 title',
           subtitle: 'Challange 1 subtitle',
-          cover: 'https://image.snowmatch.pro/videoPosters/BUMPS_CHALLANGE_1.jpg',
+          cover: '/assets/courses/pista.png',
           level: 'Principiante',
           demoUrl: 'https://snowmatchvideos.s3.us-east-1.amazonaws.com/BUMPS_CHALLANGE_1.mov',
           points: 25,
@@ -388,9 +402,13 @@ export default function Training() {
         {COURSES.map((course, idx) => (
           <Box key={idx} sx={{ mb: 6, position: 'relative' }}>
             {/* Section Header */}
-            <Typography variant="h4" sx={{ mb: 1, fontWeight: 'bold' }}>
-              {course.title}
-            </Typography>
+            <Box display="flex" gap={2} mb={1} alignItems="center">
+              <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
+                {course.title}
+              </Typography>
+              {idx === 0 && <Icon icon="solar:medal-ribbon-linear"  height="30px" />}
+            </Box>
+
             <Typography variant="subtitle1" sx={{ mb: 3 }} color="text.secondary">
               {course.subtitle}
             </Typography>
@@ -417,7 +435,7 @@ export default function Training() {
                       opacity: idx === 0 ? 1 : 0.5, // Reduce visibilidad si idx > 0
                     }}
                   />
-                  {idx > 0 && (
+                  {/* {idx > 0 && (
                     <Box
                       sx={{
                         position: 'absolute',
@@ -437,12 +455,13 @@ export default function Training() {
                     >
                       Coming Soon
                     </Box>
-                  )}
+                  )} */}
                 </Box>
               ))}
             </Slider>
           </Box>
         ))}
+        <SkiProgress />
       </Container>
       <VideoUploadBottomSheet
         title={selectedLevelTitle}
@@ -452,7 +471,6 @@ export default function Training() {
         open={open}
         onClose={() => setOpen(false)}
         demoUrl={demoUrl}
-
       />
     </Page>
   );

@@ -1144,8 +1144,8 @@
             "title": "Carving challange"
         },
         "CHALLANGE": {
-            "title": "Sube tu video y recibe el análisis de tu inclinación",
-            "description":"Sube un video de tu sesión de esquí y nuestra inteligencia artificial calculará tu inclinación durante el descenso. Recibe información valiosa para mejorar tu técnica y lleva tu entrenamiento al siguiente nivel.",
+            "title": "Angulación",
+            "description": "Nuestra inteligencia artificial calculará tu inclinación durante el descenso. Recibe información valiosa para mejorar tu técnica y lleva tu entrenamiento al siguiente nivel.",
             "fundamentals": ""
         },
         "BUMPS": {
@@ -1153,22 +1153,22 @@
             "description": "Enfocado en esquiar sobre bumps con estabilidad y fluidez.",
             "challenge1": {
                 "title": "challange1",
-                "subtitle":"challange1subtitle", 
+                "subtitle": "challange1subtitle",
                 "description": "challange1description"
             },
             "challenge2": {
                 "title": "challange1",
-                "subtitle":"challange1subtitle", 
+                "subtitle": "challange1subtitle",
                 "description": "challange1description"
             },
             "challenge3": {
                 "title": "challange1",
-                "subtitle":"challange1subtitle", 
+                "subtitle": "challange1subtitle",
                 "description": "challange1description"
             },
             "Demo1": {
                 "title": "challange1",
-                "subtitle":"challange1subtitle", 
+                "subtitle": "challange1subtitle",
                 "description": "challange1description"
             }
         },
@@ -1177,22 +1177,22 @@
             "description": "Giros rápidos y controlados que resaltan la agilidad.",
             "challenge1": {
                 "title": "challange1",
-                "subtitle":"challange1subtitle", 
+                "subtitle": "challange1subtitle",
                 "description": "challange1description"
             },
             "challenge2": {
                 "title": "challange1",
-                "subtitle":"challange1subtitle", 
+                "subtitle": "challange1subtitle",
                 "description": "challange1description"
             },
             "challenge3": {
                 "title": "challange1",
-                "subtitle":"challange1subtitle", 
+                "subtitle": "challange1subtitle",
                 "description": "challange1description"
             },
             "Demo1": {
                 "title": "challange1",
-                "subtitle":"challange1subtitle", 
+                "subtitle": "challange1subtitle",
                 "description": "challange1description"
             }
         },
@@ -1201,46 +1201,46 @@
             "description": "Fundamentos del carving con control de cantos y velocidad.",
             "challenge1": {
                 "title": "challange1",
-                "subtitle":"challange1subtitle", 
+                "subtitle": "challange1subtitle",
                 "description": "challange1description"
             },
             "challenge2": {
                 "title": "challange1",
-                "subtitle":"challange1subtitle", 
+                "subtitle": "challange1subtitle",
                 "description": "challange1description"
             },
             "challenge3": {
                 "title": "challange1",
-                "subtitle":"challange1subtitle", 
+                "subtitle": "challange1subtitle",
                 "description": "challange1description"
             },
             "Demo1": {
                 "title": "challange1",
-                "subtitle":"challange1subtitle", 
+                "subtitle": "challange1subtitle",
                 "description": "challange1description"
             }
         },
         "FREE_STYLE": {
             "title": "Freestyle",
-           "description": "Para quienes quieren aprender saltos y trucos básicos.",
-           "challenge1": {
+            "description": "Para quienes quieren aprender saltos y trucos básicos.",
+            "challenge1": {
                 "title": "challange1",
-                "subtitle":"challange1subtitle", 
+                "subtitle": "challange1subtitle",
                 "description": "challange1description"
             },
             "challenge2": {
                 "title": "challange1",
-                "subtitle":"challange1subtitle", 
+                "subtitle": "challange1subtitle",
                 "description": "challange1description"
             },
             "challenge3": {
                 "title": "challange1",
-                "subtitle":"challange1subtitle", 
+                "subtitle": "challange1subtitle",
                 "description": "challange1description"
             },
             "Demo1": {
                 "title": "challange1",
-                "subtitle":"challange1subtitle", 
+                "subtitle": "challange1subtitle",
                 "description": "challange1description"
             }
         },
@@ -1273,7 +1273,7 @@
         "select_video": "Seleccionar video",
         "max_size": "Tamaño máximo 50MB"
     },
-    "teacher":{
+    "teacher": {
         "level": "Nivel"
     },
     "CARVING_CHALLANGE_1": {
@@ -1309,11 +1309,45 @@
         "subtitle": "Carving azul"
     },
     "AI_CHALLANGE_1": {
-        "title": "Lleva tu esquiada al máximo",
+        "title": "Angulación",
         "subtitle": "Cuanto angulas?"
     },
     "AI_CHALLANGE_2": {
-        "title": "Lleva tu esquiada al máximo",
-        "subtitle": "Levantas el interno?"
-    }    
+        "title": "Bumps",
+        "subtitle": "Bumps por Segundo"
+    },
+    "memberships": {
+        "pro.snowmatch.oneshot": {
+            "name": "Single Shot",
+            "price": "$10 USD",
+            "benefits": {
+                "1" :"📹 1 corrección de video por un experto",
+                "2" :"🧠 Snowmatch Intelligence",
+                "3" :"🎯 Perfecto para probar la experiencia"
+        }
+        },
+        "pro.snowmatch.progress": {
+            "name": "Progress Pack",
+            "price": "$50 USD",
+            "benefits": {
+                "1" :"📹 10 correcciones de video para mejorar progresivamente",
+                "2" :"🧠 Snowmatch Intelligence",
+                "3" :"🔥 Desbloquea tu siguiente nivel de esquí"
+            }
+        },
+        "pro.videos.hundred": {
+            "name": "Master Pack",
+            "price": "$100 USD",
+            "benefits": {
+                "1" :"📹 100 correcciones de video para un entrenamiento intensivo",
+                "2" :"🧠 Snowmatch Intelligence",
+                "3" :"🥇 Acceso exclusivo a contenido premium"
+            }
+        }
+    },
+    "reviewRequestBox": {
+        "title": "Obtén una revisión de un SnowMatch Pro",
+        "subtitle": "Un instructor experto analizará tu video y te dará consejos para mejorar tu técnica.",
+        "cta": "Solicitar revisión"
+    }
 }

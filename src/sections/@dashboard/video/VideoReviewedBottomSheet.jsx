@@ -162,12 +162,11 @@ export default function VideoReviewedBottomSheet({ open, onClose, onOpen, select
                                 />
                             )}
                         </Box>
-                        <Box px={2}>
+                        <Box p={2}>
                             {/* Score */}
                             <Typography variant="h6" gutterBottom>
                                 {translate('videoCoachScreen.score')} {selectedVideo.score}
                             </Typography>
-
                             {selectedVideo.analysisData && <VideoAnalyticsChart turnData={selectedVideo.analysisData} />}
 
                             {/* Revisor */}

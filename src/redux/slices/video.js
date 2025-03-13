@@ -12,6 +12,7 @@ import dayjs from 'dayjs';
 const initialState = {
     isLoading: false,
     isLoadingExists: false,
+    isLoadingCredits: false,
     isUploading: false,
     isLoadingReview: false,
     isLoadingProCheck: false,
@@ -45,6 +46,10 @@ const slice = createSlice({
         // START LOADING
         startLoading(state) {
             state.isLoading = true;
+        },
+
+        startLoadingCredits(state) {
+            state.isLoadingCredits = true;
         },
 
         startLoadingLeaderBoard(state) {
@@ -288,6 +293,11 @@ const slice = createSlice({
             state.isLoading = false;
             state.videos = action.payload;
         },
+        
+        addCreditsSuccess(state, action) {
+            state.isLoadingCredits = false;
+            state.credits = action.payload;
+        },
 
         getLeaderBoardSuccess(state, action) {
             state.isLoadingLeaderBoard = false;
@@ -335,6 +345,19 @@ export function getVideos() {
             const response = await axios.get(`/api/videos/VideoReviews/myVideos`);
             const videos = response.data
             dispatch(slice.actions.getVideosSuccess(videos));
+        } catch (error) {
+            dispatch(slice.actions.hasError(error));
+        }
+    };
+}
+
+export function addCredits(id, credits) {
+    return async () => {
+        dispatch(slice.actions.startLoadingCredits());
+        try {
+            const response = await axios.get(`/api/videos/VideoReviews/addAiCredits/${id}?credits=${credits}`);
+            const videos = response.data
+            dispatch(slice.actions.addCreditsSuccess(videos));
         } catch (error) {
             dispatch(slice.actions.hasError(error));
         }
@@ -390,6 +413,7 @@ export function proCheck(id) {
             dispatch(getVideos())
         } catch (error) {
             dispatch(slice.actions.hasError(error));
+            dispatch(slice.actions.stopLoadingProCheck(0));
         }
     };
 }

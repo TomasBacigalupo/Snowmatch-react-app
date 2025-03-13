@@ -9,6 +9,7 @@ import useAuth from 'src/hooks/useAuth';
 import CourseCard from 'src/sections/@dashboard/training/CourseCard';
 import SkiProgress from 'src/sections/@dashboard/video/SkiProgress';
 import { Icon } from '@iconify/react';
+import ExcerciseBottomSheet from 'src/sections/@dashboard/video/ExcerciseBottomSheet';
 
 // Carousel settings
 const sliderSettings = {
@@ -48,6 +49,7 @@ export default function Training() {
   const { themeStretch } = useSettings();
   const { translate } = useLocales();
   const [open, setOpen] = useState(false);
+  const [openExcercise, setOpenExcercise] = useState(false);
   const [openWelcome, setOpenWelcome] = useState(false);
   const [selectedLevelTitle, setSelectedLevelTitle] = useState('');
   const [selectedCourse, setSelectedCourse] = useState('');
@@ -376,8 +378,13 @@ export default function Training() {
   ];
 
   const handleSelectCourseLevel = (course, level) => {
+    if(course.code === "AI_CHALLANGE_1" || level.code === "AI_CHALLANGE_1"){
+      setOpen(true)
+    }else {
+      setOpenExcercise(true)
+    }
     console.log("level", level)
-    setOpen(true)
+    
     setSelectedCourse(course.code);
     setSelectedLevelTitle(level.code);
     setSelectedLevel(level.code)
@@ -406,7 +413,7 @@ export default function Training() {
               <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
                 {course.title}
               </Typography>
-              {idx === 0 && <Icon icon="solar:medal-ribbon-linear"  height="30px" />}
+              {idx === 0 && <Icon icon="solar:medal-ribbon-linear" height="30px" />}
             </Box>
 
             <Typography variant="subtitle1" sx={{ mb: 3 }} color="text.secondary">
@@ -429,7 +436,7 @@ export default function Training() {
                 >
                   <CourseCard
                     post={level}
-                    onClick={() => idx === 0 && handleSelectCourseLevel(course, level)}
+                    onClick={() => handleSelectCourseLevel(course, level)}
                     sx={{
                       pointerEvents: idx === 0 ? 'auto' : 'none', // Desactiva interacción si idx > 0
                       opacity: idx === 0 ? 1 : 0.5, // Reduce visibilidad si idx > 0
@@ -470,6 +477,14 @@ export default function Training() {
         onOpen={() => setOpen(true)}
         open={open}
         onClose={() => setOpen(false)}
+        demoUrl={demoUrl}
+      />
+      <ExcerciseBottomSheet title={selectedLevelTitle}
+        course={selectedCourse}
+        level={selectedLevel}
+        onOpen={() => setOpenExcercise(true)}
+        open={openExcercise}
+        onClose={() => setOpenExcercise(false)}
         demoUrl={demoUrl}
       />
     </Page>

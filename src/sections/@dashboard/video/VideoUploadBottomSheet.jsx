@@ -1,11 +1,11 @@
-import { Button, FormControl, Input, InputLabel, LinearProgress, MenuItem, Paper, Select, Step, StepLabel, Stepper, SwipeableDrawer, TextField, Typography } from "@mui/material";
+import { Button, Paper, SwipeableDrawer, Typography } from "@mui/material";
 import { Box, useMediaQuery } from "@mui/system";
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { styled, alpha } from '@mui/material/styles';
 import { useTheme } from '@mui/material/styles';
 import { useDispatch, useSelector } from "src/redux/store";
-import { clearUploadVideoState, createVideo, createVideoMultipart } from "src/redux/slices/video";
+import { clearUploadVideoState, createVideo } from "src/redux/slices/video";
 import { useTranslation } from "react-i18next";
 import useLocales from "src/hooks/useLocales";
 import useAuth from "src/hooks/useAuth";
@@ -25,6 +25,7 @@ import { column } from "stylis";
 import ProgressComponent from "./ProgressComponent";
 import AcademyWelcome from 'src/sections/@dashboard/video/AcademyWelcome';
 import Markdown from "src/components/Markdown";
+import VideoStory from "./VideoStory";
 
 
 

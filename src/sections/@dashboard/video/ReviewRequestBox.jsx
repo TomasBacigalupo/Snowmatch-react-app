@@ -9,9 +9,13 @@ import { LoadingButton } from '@mui/lab';
 import { CloseIcon } from 'src/theme/overrides/CustomIcons';
 import PremiumContainer from 'src/sections/payment/Premiumcontainer';
 import useLocales from 'src/hooks/useLocales';
+import useAuth from 'src/hooks/useAuth';
 
 const ReviewRequestBox = ({ isOpen, closeDrawer, onRequestReview }) => {
     const [open, setOpen] = useState(isOpen);
+    const [showPaymentDrawer, setShowPaymentDrawer] = useState(false);
+    const { user } = useAuth();
+
     const theme = useTheme();
 
     useEffect(() => {
@@ -58,11 +62,12 @@ const ReviewRequestBox = ({ isOpen, closeDrawer, onRequestReview }) => {
                     }}
                     PaperProps={{
                         sx: {
-                            height: '100%',
+                            height: user.proCheckCredits > 0 ? 'fit' : '100%',
                             maxHeight: '100%',
                             width: '100vw',
                             maxWidth: '100vw',
-                            paddingTop: "env(safe-area-inset-top)"
+                            paddingTop: user.proCheckCredits > 0 ? '2' : "env(safe-area-inset-top)",
+                            borderRadius: user.proCheckCredits > 0 ? '16px' : "0"
                         },
                     }}
                 >
@@ -75,18 +80,18 @@ const ReviewRequestBox = ({ isOpen, closeDrawer, onRequestReview }) => {
                         }}
                     >
                         {/* Encabezado con Cierre */}
-                        <Box px={2} display="flex" justifyContent="space-between" alignItems="center">
+                        {user.proCheckCredits === 0 && <Box px={2} display="flex" justifyContent="space-between" alignItems="center">
                             <Typography variant="h6" fontWeight={600}>
                                 Pro Check
                             </Typography>
                             <IconButton onClick={() => setOpen(false)}>
-
                                 <Iconify icon="ic:round-close" width={24} height={24} />
                             </IconButton>
-                        </Box>
+                        </Box>}
 
-                        <Divider sx={{ mt: 2 }} />
-                        <ReviewContent setOpen={setOpen} closeDrawer={closeDrawer} onRequestReview={onRequestReview} />
+                        {user.proCheckCredits === 0 && <Divider />}
+                        {user.proCheckCredits === 0 && <PremiumContainer />}
+                        {user.proCheckCredits > 0 && <ReviewContent setOpen={setOpen} closeDrawer={closeDrawer} onRequestReview={onRequestReview} />}
 
                     </Box>
                 </SwipeableDrawer>
@@ -96,9 +101,20 @@ const ReviewRequestBox = ({ isOpen, closeDrawer, onRequestReview }) => {
 };
 
 const ReviewContent = ({ setOpen, closeDrawer, onRequestReview }) => {
+    const [showPaymentDrawer, setShowPaymentDrawer] = useState(false);
     const dispatch = useDispatch();
     const { isLoadingProCheck } = useSelector(state => state.video);
-    const { translate } = useLocales()
+    const { translate } = useLocales();
+    const { user } = useAuth();
+    const handleProCheck = () => {
+        if (user?.proCheckCredits > 0) {
+            onRequestReview();
+            setOpen(false);
+            if (closeDrawer) closeDrawer();
+        } else {
+            setShowPaymentDrawer(true)
+        }
+    }
     return (
         <Grid container direction="row" alignItems="center" p={3}>
             <Grid item xs={12}>
@@ -115,18 +131,13 @@ const ReviewContent = ({ setOpen, closeDrawer, onRequestReview }) => {
                     <Typography variant="body2" color="text.secondary" textAlign="center">
                         {translate("reviewRequestBox.subtitle")}
                     </Typography>
-                    <PremiumContainer />
                     <LoadingButton
                         variant="contained"
                         color="primary"
                         fullWidth
                         sx={{ py: 1.5 }}
                         loading={isLoadingProCheck}
-                        onClick={() => {
-                            onRequestReview();
-                            setOpen(false);
-                            if (closeDrawer) closeDrawer();
-                        }}
+                        onClick={handleProCheck}
                     >
                         {translate("reviewRequestBox.cta")}
                     </LoadingButton>

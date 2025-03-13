@@ -333,6 +333,37 @@ function AuthProvider({ children }) {
 
   };
 
+  const loginWithApple = async () => {
+    try {
+      console.log('loginWithApple');
+      const appleSignInPlugin = await import('@capacitor-community/apple-sign-in');
+      const { SignInWithApple } = appleSignInPlugin;
+      const options = {
+        clientId: 'pro.snowmatch',
+        redirectURI: '',
+        scopes: 'email name',
+        state: '12345', // Ensure this is a dynamically generated state for production
+        nonce: 'nonce', // Ensure this is a securely generated nonce for production
+      };
+
+      const signin = await SignInWithApple.authorize(options);
+      console.log('Apple login success', signin.response.identityToken);
+      // TODO: BACK END EP FALTA
+      await axios.post('/api/auth/apple/login', {
+        idToken: signin.response.identityToken
+      })
+      // signInWithApple({
+      //   idToken: signin.response.identityToken,
+      //   firstName: signin.response.givenName,
+      //   lastName: signin.response.familyName,
+      // });
+      // Handle the response from the signin
+
+    } catch (error) {
+      console.error(`Apple Login Failed: ${error.message || error}`); // Log the actual error message
+    }
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -346,7 +377,8 @@ function AuthProvider({ children }) {
         updateUser,
         refreshUser,
         addToPremium,
-        deleteAccount
+        deleteAccount,
+        loginWithApple
       }}
     >
       {children}

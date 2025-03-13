@@ -16,6 +16,8 @@ import { IconButtonAnimate } from '../../../components/animate';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import useLocales from 'src/hooks/useLocales';
 import { InAppBrowser } from '@capacitor/inappbrowser';
+import { Dialog } from '@capacitor/dialog';
+
 
 // ----------------------------------------------------------------------
 
@@ -45,10 +47,6 @@ const GUEST_MENU_OPTIONS = [
   {
     label: 'SignUpAsAPRO',
     linkTo: '/auth/register',
-  },
-  {
-    label: 'SignUpAsAGuest',
-    linkTo: '/auth/guest-register',
   },
   {
     label: 'LogIn',
@@ -92,6 +90,18 @@ export default function AccountPopover() {
     }
   };
 
+  const handleDeleteAccount = async () => {
+    const { value } = await Dialog.confirm({
+      title: 'Eliminar cuenta',
+      message: '¿Estás seguro de que deseas eliminar tu cuenta? Esta acción no se puede deshacer.',
+      okButtonTitle: 'Eliminar',
+      cancelButtonTitle: 'Cancelar',
+    });
+  
+    if (value) {
+      deleteAccount();
+    }
+  };
   return (
     <>
       <IconButtonAnimate
@@ -171,9 +181,7 @@ export default function AccountPopover() {
         }
         {isAuthenticated &&
           <MenuItem 
-            onClick={async () => {
-              deleteAccount()
-            }}
+            onClick={handleDeleteAccount}
             sx={{ m: 1 }}>
             {translate("accountPopover.deleteAccount")}
           </MenuItem>

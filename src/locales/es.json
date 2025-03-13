@@ -995,7 +995,10 @@
         "registerTeacher": "Quiero trabajar con SnowMatch",
         "registerTitle": "Registrarme",
         "registerDescription": "Completá tus datos para registrarte",
-        "learnMessage": "Aprendé a esquiar con SnowMatch"
+        "learnMessage": "Aprendé a esquiar con SnowMatch",
+        "signIn": "Iniciar sesión",
+        "appleSignIn": "Continuar con Apple",
+        "emailSignIn": "Continuar con Email"
     },
     "registerForm": {
         "name": "Nombre",

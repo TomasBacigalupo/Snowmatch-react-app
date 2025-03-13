@@ -1,8 +1,9 @@
+import { useState } from 'react';
 import { capitalCase } from 'change-case';
 import { Link as RouterLink } from 'react-router-dom';
 // @mui
 import { styled } from '@mui/material/styles';
-import { Box, Card, Stack, Link, Alert, Tooltip, Container, Typography } from '@mui/material';
+import { Box, Card, Stack, Link, Container, Typography, Button } from '@mui/material';
 // routes
 import { PATH_AUTH, PATH_GUEST } from '../../routes/paths';
 // hooks
@@ -11,10 +12,10 @@ import useResponsive from '../../hooks/useResponsive';
 // components
 import Page from '../../components/Page';
 import Logo from '../../components/Logo';
-import Image from '../../components/Image';
 // sections
 import { LoginForm } from '../../sections/auth/login';
 import useLocales from 'src/hooks/useLocales';
+import AppleLoginButton from 'src/sections/auth/AppleLoginButton';
 
 // ----------------------------------------------------------------------
 
@@ -41,15 +42,6 @@ const HeaderStyle = styled('header')(({ theme }) => ({
   },
 }));
 
-const SectionStyle = styled(Card)(({ theme }) => ({
-  width: '100%',
-  maxWidth: 464,
-  display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'center',
-  margin: theme.spacing(2, 0, 2, 2),
-}));
-
 const ContentStyle = styled('div')(({ theme }) => ({
   maxWidth: 480,
   margin: 'auto',
@@ -64,12 +56,11 @@ const ContentStyle = styled('div')(({ theme }) => ({
 
 export default function Login() {
   const { method } = useAuth();
-
   const smUp = useResponsive('up', 'sm');
-
   const mdUp = useResponsive('up', 'md');
+  const { translate } = useLocales();
 
-  const {translate} = useLocales();
+  const [showForm, setShowForm] = useState(false);
 
   return (
     <Page title="Login">
@@ -82,8 +73,8 @@ export default function Login() {
               <Link variant="subtitle2" component={RouterLink} to={PATH_AUTH.registerStudent}>
                 {translate('auth.getStartedFree')}
               </Link>
-              <><br /></>
-              {translate('auth.notATeacher')} {''}
+              <br />
+              {translate('auth.notATeacher')} {' '}
               <Link variant="subtitle2" component={RouterLink} to={PATH_GUEST.root}>
                 Match
               </Link>
@@ -91,52 +82,44 @@ export default function Login() {
           )}
         </HeaderStyle>
 
-        {mdUp && (
-          <SectionStyle>
-            <Box sx={{
-              padding: '10px',
-              paddingTop: '80px',
-              textAlign: 'center'
-            }}>
-              <iframe width="414" height="736" src="https://www.youtube.com/embed/fq3I-CRurQU" title="SnowMatch, la app que te conecta con tu instructor de ski o snowboard ideal" frameBorder="10" allow="autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" ></iframe>
-            </Box>
-          </SectionStyle>
-        )}
-
         <Container maxWidth="sm">
           <ContentStyle>
             <Stack direction="row" alignItems="center" sx={{ mb: 5 }}>
               <Box sx={{ flexGrow: 1 }}>
-                <Typography variant="h4" gutterBottom>
-                  {translate('auth.signInToSnowmatch')}
+                <Typography textAlign='center' variant="h4" gutterBottom>
+                  {translate('auth.signIn')}
                 </Typography>
-                <Typography sx={{ color: 'text.secondary' }}>{translate('auth.signInToSnowmatchDetails')}</Typography>
               </Box>
-
-              {/* <Tooltip title={capitalCase(method)} placement="right">
-                <>
-                  <Image
-                    disabledEffect
-                    src={`https://minimal-assets-api.vercel.app/assets/icons/auth/ic_${method}.png`}
-                    sx={{ width: 32, height: 32 }}
-                  />
-                </>
-              </Tooltip> */}
             </Stack>
+            {!showForm ? (
+              <Stack spacing={2}>
+                <AppleLoginButton />
+                <Button
+                  variant="outlined"
+                  color="primary"
+                  onClick={() => setShowForm(true)}
+                  fullWidth
+                >
+                  {translate('auth.emailSignIn')}
+                </Button>
+              </Stack>
+            ) : (
+              <>
+                <LoginForm />
+                <Box mt={2}>
+                  <AppleLoginButton />
+                </Box>
 
-            {/* <Alert severity="info" sx={{ mb: 3 }}>
-              Use email : <strong>demo@snowmatch.pro</strong> / password :<strong> demo1234</strong>
-            </Alert> */}
+                <Typography variant="body2" align="center" sx={{ mt: 3 }}>
+                  {translate('auth.dontHaveAccount')}{' '}
+                  <Link variant="subtitle2" component={RouterLink} to={PATH_AUTH.registerStudent}>
+                    {translate('auth.getStarted')}
+                  </Link>
+                </Typography>
+              </>
+            )}
 
-            <LoginForm />
 
-
-            <Typography variant="body2" align="center" sx={{ mt: 3 }}>
-              {translate('auth.dontHaveAccount')}{' '}
-              <Link variant="subtitle2" component={RouterLink} to={PATH_AUTH.registerStudent}>
-                {translate('auth.getStarted')}
-              </Link>
-            </Typography>
           </ContentStyle>
         </Container>
       </RootStyle>

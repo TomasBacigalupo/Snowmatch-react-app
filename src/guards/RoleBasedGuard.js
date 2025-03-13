@@ -36,7 +36,7 @@ export default function RoleBasedGuard({ accessibleRoles, children }) {
   
 
   if (!accessibleRoles.includes(currentRole)) { 
-    enqueueSnackbar('You should not be here', { variant: 'error' })
+    // enqueueSnackbar('You should not be here', { variant: 'error' })
     if (isStudent) {
       return <Navigate to={'/'} />
     }

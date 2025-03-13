@@ -3,11 +3,15 @@ PODS:
     - CapacitorCordova
   - CapacitorCamera (6.1.2):
     - Capacitor
+  - CapacitorCommunityAppleSignIn (7.0.0):
+    - Capacitor
   - CapacitorCommunityMedia (7.0.1):
     - Capacitor
     - SDWebImage
   - CapacitorCordova (6.2.0)
   - CapacitorDevice (7.0.0):
+    - Capacitor
+  - CapacitorDialog (7.0.0):
     - Capacitor
   - CapacitorFilesystem (6.0.3):
     - Capacitor
@@ -34,9 +38,11 @@ PODS:
 DEPENDENCIES:
   - "Capacitor (from `../../node_modules/@capacitor/ios`)"
   - "CapacitorCamera (from `../../node_modules/@capacitor/camera`)"
+  - "CapacitorCommunityAppleSignIn (from `../../node_modules/@capacitor-community/apple-sign-in`)"
   - "CapacitorCommunityMedia (from `../../node_modules/@capacitor-community/media`)"
   - "CapacitorCordova (from `../../node_modules/@capacitor/ios`)"
   - "CapacitorDevice (from `../../node_modules/@capacitor/device`)"
+  - "CapacitorDialog (from `../../node_modules/@capacitor/dialog`)"
   - "CapacitorFilesystem (from `../../node_modules/@capacitor/filesystem`)"
   - "CapacitorGeolocation (from `../../node_modules/@capacitor/geolocation`)"
   - "CapacitorInappbrowser (from `../../node_modules/@capacitor/inappbrowser`)"
@@ -56,12 +62,16 @@ EXTERNAL SOURCES:
     :path: "../../node_modules/@capacitor/ios"
   CapacitorCamera:
     :path: "../../node_modules/@capacitor/camera"
+  CapacitorCommunityAppleSignIn:
+    :path: "../../node_modules/@capacitor-community/apple-sign-in"
   CapacitorCommunityMedia:
     :path: "../../node_modules/@capacitor-community/media"
   CapacitorCordova:
     :path: "../../node_modules/@capacitor/ios"
   CapacitorDevice:
     :path: "../../node_modules/@capacitor/device"
+  CapacitorDialog:
+    :path: "../../node_modules/@capacitor/dialog"
   CapacitorFilesystem:
     :path: "../../node_modules/@capacitor/filesystem"
   CapacitorGeolocation:
@@ -80,9 +90,11 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   Capacitor: 1f3c7b9802d958cd8c4eb63895fff85dff2e1eea
   CapacitorCamera: 9052bd3f464f135ba983feccd8ac1266272f0549
+  CapacitorCommunityAppleSignIn: 9f938324c6939545f001fa66a2eaaf3a93fda64e
   CapacitorCommunityMedia: 93af2d4e36ce412f04f4f5c28d6ed8bf74ccdf66
   CapacitorCordova: b33e7f4aa4ed105dd43283acdd940964374a87d9
   CapacitorDevice: 62066b65e148a133df7b8c5bf972ba835b329748
+  CapacitorDialog: 0c8fcf2de9464df5f28c070c02d5aa0dfd80047a
   CapacitorFilesystem: fa3099b3c3aa43a1b51362d0c999301ab1a9a752
   CapacitorGeolocation: 0d4eeb930b58a6896ec0b495a0f638fb49df69db
   CapacitorInappbrowser: 7ff2c75c4cfc178cbbb99fbe382b2381bcc187c6
@@ -94,6 +106,6 @@ SPEC CHECKSUMS:
   OSInAppBrowserLib: c3d0b21a0c8b6d81e69117ad08bb6b8a4849c4e1
   SDWebImage: 73c6079366fea25fa4bb9640d5fb58f0893facd8
 
-PODFILE CHECKSUM: b8c95b216b5f86080ba439d7a82153d80823c77a
+PODFILE CHECKSUM: ffb29480b9b1a9b5c378a0de8a6c4ee0ff649dda
 
 COCOAPODS: 1.14.2

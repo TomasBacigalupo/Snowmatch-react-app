@@ -11,14 +11,21 @@ import {
     Radio,
     RadioGroup,
     Card,
-    CardContent
+    CardContent,
+    AvatarGroup,
+    Avatar,
+    Grid
 } from "@mui/material";
 import useLocales from "src/hooks/useLocales";
+import useAuth from "src/hooks/useAuth";
+import { addCredits } from "src/redux/slices/video";
+import { useDispatch } from "src/redux/store";
 
 
 const { store, ProductType, Platform } = window.CdvPurchase || {};
 const platformName = Capacitor.getPlatform() === "android" ? Platform.GOOGLE_PLAY : Platform.APPLE_APPSTORE;
 const productId = "pro.videos.hundred";
+
 
 const productIds = ["pro.snowmatch.oneshot", "pro.snowmatch.progress", "pro.videos.hundred"]
 
@@ -63,9 +70,10 @@ const PremiumContainer = ({
     const [iapProduct, setIapProduct] = useState(null);
     const [errorMessage, setErrorMessage] = useState("");
     const [loading, setLoading] = useState(false);
-    const {translate} = useLocales();
+    const { translate } = useLocales();
     const [selectedMembership, setSelectedMembership] = useState("basic");
-
+    const { user } = useAuth()
+    const dispatch = useDispatch()
 
     useEffect(() => {
         if (!window.CdvPurchase || !window.CdvPurchase.store) {
@@ -164,10 +172,14 @@ const PremiumContainer = ({
                 });
 
                 // Manejar compra aprobada
-                store.when(productId).approved((product) => {
-                    console.log("[DEBUG] Compra aprobada:", product);
-                    product.finish();
-                });
+                productIds.map(p => {
+                    store.when(p).approved((product) => {
+                        console.log("[DEBUG] Compra aprobada:", product);
+                        dispatch(addCredits(user.id,1))
+                        product.finish();
+                    });
+                })
+                
 
                 setLoading(false);
             } catch (error) {
@@ -180,14 +192,14 @@ const PremiumContainer = ({
         setupStore();
     }, []);
 
-    const orderProduct = async () => {
+    const orderProduct = async (id) => {
         if (!iapProduct) {
             console.error("❌ El producto aún no está disponible.");
         }
 
         try {
-            console.log("[DEBUG] Intentando comprar:", store.get(selectedMembership));
-            await store.order(store.get(selectedMembership).offers[0]);
+            console.log("[DEBUG] Intentando comprar:", store.get(id));
+            await store.order(store.get(id).offers[0]);
             console.log("✅ Compra iniciada");
         } catch (error) {
             console.error("❌ Error al iniciar la compra:", JSON.stringify(error));
@@ -195,87 +207,103 @@ const PremiumContainer = ({
         }
     };
 
+    const handleSelect = (id) => {
+        setSelectedMembership(id)
+        orderProduct(id)
+    }
+
     return (
-
-        <Box width="100%">
-            <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
-                <RadioGroup
-                    sx={{ width: "100%" }}
-                    value={selectedMembership}
-                    onChange={(e) => setSelectedMembership(e.target.value)}
-                >
-                    {memberships.map((membership) => {
-                        const isEnabled = true
-
-                        return (
-                            <Card
-                                key={membership.id}
-                                sx={{
-                                    mb: 2,
-                                    width: "100%",
-                                    borderRadius: 2,
-                                    border: selectedMembership === membership.id && isEnabled
-                                        ? "2px solid #1976d2"
-                                        : "2px solid transparent",
-                                    transition: "0.3s",
-                                    opacity: isEnabled ? 1 : 0.6, // Baja opacidad para las deshabilitadas
-                                    position: "relative",
-                                    "&:hover": isEnabled ? { boxShadow: 3 } : {}, // No aplicar hover si está deshabilitado
-                                }}
-                                onClick={() => isEnabled && setSelectedMembership(membership.id)} // Solo seleccionable si está habilitado
+        <Grid container direction="row" alignItems="center" px={2} pt={1}>
+            <Grid item xs={12}>
+                <Stack direction="column" alignItems="center" spacing={1}>
+                    <Box sx={{ display: "flex", justifyContent: "center" }}>
+                        <AvatarGroup max={3} sx={{ "& .MuiAvatar-root": { width: 48, height: 48, border: "2px solid white" } }}>
+                            <Avatar src="/assets/pro/1.png" />
+                            <Avatar src="/assets/pro/2.png" />
+                            <Avatar src="/assets/pro/3.png" />
+                        </AvatarGroup>
+                    </Box><Typography variant="h6" fontWeight="bold">
+                        {translate("reviewRequestBox.title")}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary" textAlign="center">
+                        {translate("reviewRequestBox.subtitle")}
+                    </Typography>
+                    <Box width="100%">
+                        <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+                            <RadioGroup
+                                sx={{ width: "100%" }}
+                                value={selectedMembership}
+                                onChange={(e) => setSelectedMembership(e.target.value)}
                             >
-                                <CardContent sx={{py:2}}>
-                                    <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%" }}>
-                                        <Radio sx={{ display: "none" }} value={membership.id} disabled={!isEnabled} />
-                                        <Box sx={{ flexGrow: 1, pl: 1 }}>
-                                            <Typography variant="h6">
-                                                {translate(`memberships.${membership.id}.name`)}{" "}
-                                                <Typography component="span" color="textSecondary">
-                                                    ({membership.price})
-                                                </Typography>
-                                            </Typography>
-                                            <Box component="ul" sx={{ pl: 2, mt: 1 }}>
-                                                {membership.benefits.map((benefit, idx) => (
-                                                    <Typography key={benefit} variant="body2" component="li">
-                                                         {translate(`memberships.${membership.id}.benefits.${idx+1}`)}
-                                                    </Typography>
-                                                ))}
-                                            </Box>
-                                        </Box>
-                                    </Box>
-                                    {!isEnabled && (
-                                        <Box
+                                {memberships.map((membership) => {
+                                    const isEnabled = true
+
+                                    return (
+                                        <Card
+                                            key={membership.id}
                                             sx={{
-                                                position: "absolute",
-                                                top: 0,
-                                                left: 0,
+                                                mb: 2,
                                                 width: "100%",
-                                                height: "100%",
-                                                backgroundColor: "rgba(0,0,0,0.2)",
-                                                display: "flex",
-                                                alignItems: "center",
-                                                justifyContent: "center",
                                                 borderRadius: 2,
+                                                border: selectedMembership === membership.id && isEnabled
+                                                    ? "2px solid #1976d2"
+                                                    : "2px solid transparent",
+                                                transition: "0.3s",
+                                                opacity: isEnabled ? 1 : 0.6, // Baja opacidad para las deshabilitadas
+                                                position: "relative",
+                                                "&:hover": isEnabled ? { boxShadow: 3 } : {}, // No aplicar hover si está deshabilitado
                                             }}
+                                            onClick={() => handleSelect(membership.id)} // Solo seleccionable si está habilitado
                                         >
-                                            <Typography variant="body1" color="white" sx={{ fontWeight: "bold", textTransform: "uppercase" }}>
-                                                Próximamente
-                                            </Typography>
-                                        </Box>
-                                    )}
-                                </CardContent>
-                            </Card>
-                        );
-                    })}
-                </RadioGroup>
-            </Box>
-            {/* Botones de acción */}
-            <Stack spacing={2}>
-                <Button variant="outlined" color="primary" onClick={orderProduct} fullWidth>
-                    Probar compra
-                </Button>
-            </Stack>
-        </Box>
+                                            <CardContent sx={{ py: 2 }}>
+                                                <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%" }}>
+                                                    <Radio sx={{ display: "none" }} value={membership.id} disabled={!isEnabled} />
+                                                    <Box sx={{ flexGrow: 1, pl: 1 }}>
+                                                        <Typography variant="h6">
+                                                            {translate(`memberships.${membership.id}.name`)}{" "}
+                                                            <Typography component="span" color="textSecondary">
+                                                                ({membership.price})
+                                                            </Typography>
+                                                        </Typography>
+                                                        <Box component="ul" sx={{ pl: 2, mt: 1 }}>
+                                                            {membership.benefits.map((benefit, idx) => (
+                                                                <Typography key={benefit} variant="body2" component="li">
+                                                                    {translate(`memberships.${membership.id}.benefits.${idx + 1}`)}
+                                                                </Typography>
+                                                            ))}
+                                                        </Box>
+                                                    </Box>
+                                                </Box>
+                                                {!isEnabled && (
+                                                    <Box
+                                                        sx={{
+                                                            position: "absolute",
+                                                            top: 0,
+                                                            left: 0,
+                                                            width: "100%",
+                                                            height: "100%",
+                                                            backgroundColor: "rgba(0,0,0,0.2)",
+                                                            display: "flex",
+                                                            alignItems: "center",
+                                                            justifyContent: "center",
+                                                            borderRadius: 2,
+                                                        }}
+                                                    >
+                                                        <Typography variant="body1" color="white" sx={{ fontWeight: "bold", textTransform: "uppercase" }}>
+                                                            Próximamente
+                                                        </Typography>
+                                                    </Box>
+                                                )}
+                                            </CardContent>
+                                        </Card>
+                                    );
+                                })}
+                            </RadioGroup>
+                        </Box>
+                    </Box>
+                </Stack>
+            </Grid>
+        </Grid>
     );
 };
 

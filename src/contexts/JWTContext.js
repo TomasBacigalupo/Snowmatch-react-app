@@ -125,7 +125,8 @@ const AuthContext = createContext({
   updateUser: () => Promise.resolve(),
   refreshUser: () => { },
   addToPremium: () => Promise.resolve(),
-  deleteAccount: () => Promise.resolve()
+  deleteAccount: () => Promise.resolve(),
+  loginWithApple: () => Promise.resolve()
 });
 
 // ----------------------------------------------------------------------
@@ -205,15 +206,15 @@ function AuthProvider({ children }) {
     });
 
     let permStatus = await PushNotifications.checkPermissions();
-  
+
     if (permStatus.receive === 'prompt') {
       permStatus = await PushNotifications.requestPermissions();
     }
-  
+
     if (permStatus.receive !== 'granted') {
       throw new Error('User denied permissions!');
     }
-  
+
     await PushNotifications.register();
   }
 
@@ -238,7 +239,7 @@ function AuthProvider({ children }) {
   };
 
   const deleteAccount = async () => {
-     axios.delete('/api/users/deleteAccount');
+    axios.delete('/api/users/deleteAccount');
     setSession(null);
     dispatch({ type: 'LOGOUT' });
   };
@@ -257,7 +258,7 @@ function AuthProvider({ children }) {
     const accessToken = user.token;
     setSession(accessToken);
     window.localStorage.setItem('accessToken', accessToken);
-    if(role !== 'STUDENT'){
+    if (role !== 'STUDENT') {
       const signedUrl = await axios.get(`/api/images/preSignedUrlImage/${entity}`)
       await fetch(signedUrl.data, {
         method: 'PUT',
@@ -347,20 +348,28 @@ function AuthProvider({ children }) {
       };
 
       const signin = await SignInWithApple.authorize(options);
-      console.log('Apple login success', signin.response.identityToken);
-      // TODO: BACK END EP FALTA
-      await axios.post('/api/auth/apple/login', {
-        idToken: signin.response.identityToken
-      })
-      // signInWithApple({
-      //   idToken: signin.response.identityToken,
-      //   firstName: signin.response.givenName,
-      //   lastName: signin.response.familyName,
-      // });
-      // Handle the response from the signin
+      console.log('Apple login successeeeee', signin.response.identityToken);
 
-    } catch (error) {
-      console.error(`Apple Login Failed: ${error.message || error}`); // Log the actual error message
+
+      const response = await axios.post('/api/auth/apple/login', {
+        "idToken": signin.response.identityToken
+      });
+
+      const user = response.data;
+      const accessToken = user.token;
+      setSession(accessToken);
+      window.localStorage.setItem('accessToken', accessToken);
+      registerNotifications();
+      dispatch({
+        type: 'REGISTER',
+        payload: {
+          user,
+          isAuthenticated: true
+        },
+      });
+    }
+    catch (e) {
+      console.log("error", e)
     }
   };
 

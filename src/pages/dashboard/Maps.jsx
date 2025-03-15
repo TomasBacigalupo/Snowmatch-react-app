@@ -95,8 +95,10 @@ export default function Maps() {
         zoom: 14,
         pitch: 45,
         bearing: -20,
-        cooperativeGestures: true
+        cooperativeGestures: false,
+        touchZoomRotate: false
       });
+      map.touchZoomRotate.enable();
 
       // Agregar marcador para el centro de esquí seleccionado
       new mapboxgl.Marker().setLngLat([resort.lon, resort.lat]).addTo(map);
@@ -174,7 +176,7 @@ export default function Maps() {
       </Container>
 
       {/* Contenedor principal para el mapa */}
-      <Box id="map-container" style={{ width: '100%', height: '300px' }}></Box>
+      <Box id="map-container" style={{ width: '100%', height: '100dvh' }}></Box>
     </Page>
   );
 }

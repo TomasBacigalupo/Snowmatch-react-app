@@ -5,7 +5,7 @@ import { styled } from '@mui/material/styles';
 import { Box, StepConnector, Button, TextField, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
-import { getCart, createBilling, calculatePrice, calculateDiscount } from '../../redux/slices/teachers';
+import { getCart, createBilling, calculatePrice, calculateDiscount, updateUserPhoneAndName } from '../../redux/slices/teachers';
 // hooks
 import useIsMountedRef from '../../hooks/useIsMountedRef';
 import useSettings from '../../hooks/useSettings';
@@ -33,6 +33,7 @@ import { sum } from 'lodash';
 import ReactPixel from 'react-facebook-pixel';
 import useLocales from 'src/hooks/useLocales';
 import { fCurrency } from 'src/utils/formatNumber';
+import CompleteUserInfo from 'src/sections/@dashboard/e-commerce/checkout/CompleteUserInfo';
 
 console.log(process.env.REACT_APP_MERCADO_PAGO_PUBLIC_KEY)
 initMercadoPago(process.env.REACT_APP_MERCADO_PAGO_PUBLIC_KEY, { locale: 'es-AR' });
@@ -61,6 +62,14 @@ export default function EcommerceCheckoutProduct() {
     const { discount, subtotal, shipping, card } = checkout;
     const total = calculatePrice(product, checkout.events.length)
     const [discountCode, setDiscountCode] = useState('');
+    const [userInfo, setUserInfo] = useState({
+        name: '',
+        phone: ''
+    });
+
+    const handleUserInfoChange = (info) => {
+        setUserInfo(info);
+    };
     useEffect(() => {
         if (isMountedRef.current) {
             dispatch(getCart(events));
@@ -182,6 +191,38 @@ export default function EcommerceCheckoutProduct() {
         return `${day}/${month}`;
     };
 
+    const onSubmitMercadoPago = () => {
+        if (userInfo.name && userInfo.phone) {
+            dispatch(updateUserPhoneAndName(
+                userInfo.phone,
+                userInfo.name
+            ));
+        }
+        const phoneNumber = '+5492944263223';
+        const _message = encodeURIComponent(
+            `Experiencia: ${product.name}\nDias de clase:${events.map(e => '\n- ' + formatDate(e.date) + ' - ' + translate(e.lessonTime)).toString()}\nCantidad de personas: ${adults}\nComentario: *${message}*\n${discountCode ? `Cupon: ${discountCode}` : ''}\n*Total: ${fCurrency(bookingPriceWithouDiscount - discount)}*`
+        );
+        const url = `https://api.whatsapp.com/send?phone=${phoneNumber}&text=${_message}`;
+
+        window.open(url, '_blank');
+    }
+
+    const onSubmitPix = () => {
+        if (userInfo.name && userInfo.phone) {
+            dispatch(updateUserPhoneAndName(
+                userInfo.phone,
+                userInfo.name
+            ));
+        }
+        const phoneNumber = '+5492944263223';
+        const _message = encodeURIComponent(
+            `Experiência: ${product.name}\nDias de aula:${events.map(e => '\n- ' + formatDate(e.date) + ' - ' + translate(e.lessonTime)).toString()}\nQuantidade de pessoas: ${adults}\nComentário: *${message}*\nTotal: ${fCurrency(bookingPrice)}`
+        );
+        const url = `https://api.whatsapp.com/send?phone=${phoneNumber}&text=${_message}`;
+
+        window.open(url, '_blank');
+    }
+
     // const handleBook = () => {
     //     dispatch( (
     //         1,
@@ -231,6 +272,7 @@ export default function EcommerceCheckoutProduct() {
           <CheckoutOrderComplete open={isComplete} />
         )} */}
                 <CheckoutCart />
+                {!user.cellphone && <CompleteUserInfo onUserInfoChange={handleUserInfoChange} />}
                 <CheckoutMessage />
                 <CheckoutProductGuests />
                 <Box marginTop={2}>
@@ -262,15 +304,7 @@ export default function EcommerceCheckoutProduct() {
                 <CheckoutOrderComplete open={bookSuccess} />
                 {!isTeacher && <Box mx={2}>
                     <Button
-                        onClick={() => {
-                            const phoneNumber = '+5492944263223';
-                            const _message = encodeURIComponent(
-                                `Experiencia: ${product.name}\nDias de clase:${events.map(e => '\n- ' + formatDate(e.date) + ' - ' + translate(e.lessonTime)).toString()}\nCantidad de personas: ${adults}\nComentario: *${message}*\n${discountCode ? `Cupon: ${discountCode}` : ''}\n*Total: ${fCurrency(bookingPriceWithouDiscount - discount)}*`
-                            );
-                            const url = `https://api.whatsapp.com/send?phone=${phoneNumber}&text=${_message}`;
-
-                            window.open(url, '_blank');
-                        }}
+                        onClick={onSubmitMercadoPago}
                         variant='contained'
                         fullWidth
                         sx={{
@@ -281,15 +315,7 @@ export default function EcommerceCheckoutProduct() {
                 {!isTeacher &&
                     <Box mx={2} marginTop={2}>
                         <Button
-                            onClick={() => {
-                                const phoneNumber = '+5492944263223';
-                                const _message = encodeURIComponent(
-                                    `Experiência: ${product.name}\nDias de aula:${events.map(e => '\n- ' + formatDate(e.date) + ' - ' + translate(e.lessonTime)).toString()}\nQuantidade de pessoas: ${adults}\nComentário: *${message}*\nTotal: ${fCurrency(bookingPrice)}`
-                                );
-                                const url = `https://api.whatsapp.com/send?phone=${phoneNumber}&text=${_message}`;
-
-                                window.open(url, '_blank');
-                            }}
+                            onClick={onSubmitPix}
                             variant='outlined'
                             fullWidth
                             sx={{

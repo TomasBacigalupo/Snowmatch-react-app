@@ -101,59 +101,57 @@ export default function Maps() {
       map.touchZoomRotate.enable();
 
       // Agregar marcador para el centro de esquí seleccionado
-      new mapboxgl.Marker().setLngLat([resort.lon, resort.lat]).addTo(map);
+      // new mapboxgl.Marker().setLngLat([resort.lon, resort.lat]).addTo(map);
 
-      // Agregar pistas de esquí y medios de elevación desde OpenStreetMap (opcional)
       map.on("load", () => {
+        // Add terrain
         map.addSource('mapbox-dem', {
           type: 'raster-dem',
-          url: 'mapbox://mapbox.mapbox-terrain-dem-v1',
+          url: 'mapbox://mapbox.terrain-rgb',
           tileSize: 512
         });
         map.setTerrain({ 'source': 'mapbox-dem', 'exaggeration': 1.5 });
-        map.addSource('osm-ski', {
+
+        // Add ski pistes and lifts source
+        map.addSource('ski-data', {
           type: 'vector',
-          url: 'mapbox://mapbox.2opop9hr'
-        });
-        map.on('click', 'ski-trails', (e) => {
-          console.log('Propiedades de la pista:', e.features[0].properties);
-        });
-        // Pistas de esquí (puedes personalizar el color)
-        map.addLayer({
-          id: 'ski-trails',
-          type: 'line',
-          source: 'osm-ski',
-          'source-layer': 'transportation',
-          filter: ['==', 'class', 'piste'],
-          paint: {
-            'line-color': [
-              'match',
-              ['get', 'piste:difficulty'],
-              '1', '#4CAF50',       // Verde - Novato
-              '2', '#2196F3',       // Azul - Fácil
-              '3', '#FFC107',       // Amarillo - Intermedio
-              '4', '#F44336',       // Rojo - Avanzado
-              '5', '#9C27B0',       // Morado - Experto
-              '#000' // Valor por defecto
-            ],
-            'line-width': 4
-          }
+          url: 'mapbox://mapbox.mapbox-streets-v8'
         });
 
-        // Medios de elevación (ejemplo de líneas para lifts)
+        // Medios de elevación
         map.addLayer({
           id: 'ski-lifts',
           type: 'line',
-          source: 'osm-ski',
-          'source-layer': 'transportation',
-          filter: ['==', 'class', 'aerialway'],
+          source: 'ski-data',
+          'source-layer': 'road',
+          filter: ['==', ['get', 'class'], 'aerialway'],
           paint: {
-            'line-color': '#3F51B5',
+            'line-color': '#000000',
             'line-width': 3,
             'line-dasharray': [2, 2]
           }
         });
 
+        // Pistas de esquí
+        map.addLayer({
+          id: 'ski-runs',
+          type: 'line',
+          source: 'ski-data',
+          'source-layer': 'road',
+          filter: ['==', ['get', 'class'], 'ski'],
+          paint: {
+            'line-color': [
+              'match',
+              ['get', 'piste_difficulty'],
+              'novice', '#008000',      // Verde para principiantes
+              'easy', '#0000FF',        // Azul para intermedias
+              'intermediate', '#FF0000', // Rojo para avanzadas
+              'expert', '#000000',      // Negro para expertos
+              '#808080'                 // Gris por defecto
+            ],
+            'line-width': 3
+          }
+        });
       });
     }
   }, [selectedTab]);

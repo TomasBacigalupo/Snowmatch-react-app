@@ -580,6 +580,23 @@ export function updateTeacher(teacher) {
   }
 }
 
+
+// ----------------------------------------------------------------------
+
+export function updateUserPhoneAndName(phone, name) {
+  return async () => {
+    try {
+      const encodedName = encodeURIComponent(name);
+      const resp = await axios.put(`/api/users/contact_info?phone=${phone}&fullName=${encodedName}`)
+      return resp;
+    } catch (error) {
+      console.error(error);
+      return error;
+    }
+  }
+}
+
+
 // ----------------------------------------------------------------------
 
 export function changeProfilePicture(picture, callBack) {

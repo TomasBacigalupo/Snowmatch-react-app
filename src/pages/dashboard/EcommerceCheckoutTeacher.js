@@ -5,7 +5,7 @@ import { styled } from '@mui/material/styles';
 import { Box, StepConnector, Button, MenuItem, FormControl, TextField, InputLabel, Select, InputAdornment } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
-import { getCart, createBilling, applyDiscount, calculateDiscount } from '../../redux/slices/teachers';
+import { getCart, createBilling, applyDiscount, calculateDiscount, updateLoggedUser, updateUserPhoneAndName } from '../../redux/slices/teachers';
 // hooks
 import useIsMountedRef from '../../hooks/useIsMountedRef';
 import useSettings from '../../hooks/useSettings';
@@ -32,6 +32,7 @@ import ReactPixel from 'react-facebook-pixel';
 import { fCurrency } from 'src/utils/formatNumber';
 import useLocales from 'src/hooks/useLocales';
 import useAuth from 'src/hooks/useAuth';
+import CompleteUserInfo from 'src/sections/@dashboard/e-commerce/checkout/CompleteUserInfo';
 console.log(process.env.REACT_APP_MERCADO_PAGO_PUBLIC_KEY)
 initMercadoPago(process.env.REACT_APP_MERCADO_PAGO_PUBLIC_KEY, { locale: 'es-AR' });
 
@@ -93,6 +94,15 @@ export default function EcommerceCheckoutTeacher() {
   const { user } = useAuth();
   const isTeacher = user?.role === 'TEACHER';
   const [discountCode, setDiscountCode] = useState('');
+  const [userInfo, setUserInfo] = useState({
+    name: '',
+    phone: ''
+  });
+
+  const handleUserInfoChange = (info) => {
+    setUserInfo(info);
+  };
+
   useEffect(() => {
     if (isMountedRef.current) {
       dispatch(getCart(events));
@@ -212,12 +222,29 @@ export default function EcommerceCheckoutTeacher() {
     return `${day}/${month}`;
   };
 
+  const onSubmitPix = () => {
+    if (userInfo.name && userInfo.phone) {
+      dispatch(updateUserPhoneAndName(
+        userInfo.phone,
+        userInfo.name
+      ));
+    }
+    const phoneNumber = '+5492944263223';
+    const _message = encodeURIComponent(
+      `Aula particular - ${teacher.name} - ${teacher.id}\nDias de aula:${events.map(e => '\n- ' + formatDate(e.date) + ' - ' + translate(e.lessonTime)).toString()}\nCrianças: ${children}\nAdultos: ${adults}\nComentário: *${message}*\n${discountCode ? `Cupon: ${discountCode}` : ''}\n*Total: ${fCurrency(bookingPrice)}*`
+    );
+    const url = `https://api.whatsapp.com/send?phone=${phoneNumber}&text=${_message}`;
+
+    window.open(url, '_blank');
+  }
+
   if (loadingPayment) {
     return <LoadingScreen />
   } else {
     return (
       <Page title="Teacher: Match">
         <CheckoutCart />
+        {!user.cellphone && <CompleteUserInfo onUserInfoChange={handleUserInfoChange} />}
         <CheckoutMessage />
         <CheckoutGuests />
         <Box marginTop={2}>
@@ -253,7 +280,7 @@ export default function EcommerceCheckoutTeacher() {
                 onClick={() => {
                   const phoneNumber = '+5492944263223';
                   const _message = encodeURIComponent(
-                    `Clase privada - ${teacher.name} - ${teacher.id}\nDias de clase:${events.map(e => '\n- ' + formatDate(e.date) + ' - ' + translate(e.lessonTime)).toString()}\nNiños: ${children}\nAdultos: ${adults}\nComentario: *${message}*\n${discountCode ? `Cupon: ${discountCode}`: ''}\n*Total: ${fCurrency(bookingPrice)}*`
+                    `Clase privada - ${teacher.name} - ${teacher.id}\nDias de clase:${events.map(e => '\n- ' + formatDate(e.date) + ' - ' + translate(e.lessonTime)).toString()}\nNiños: ${children}\nAdultos: ${adults}\nComentario: *${message}*\n${discountCode ? `Cupon: ${discountCode}` : ''}\n*Total: ${fCurrency(bookingPrice)}*`
                   );
                   const url = `https://api.whatsapp.com/send?phone=${phoneNumber}&text=${_message}`;
 
@@ -268,15 +295,7 @@ export default function EcommerceCheckoutTeacher() {
         </Box>
         {!isTeacher && <Box mx={2}>
           <Button
-            onClick={() => {
-              const phoneNumber = '+5492944263223';
-              const _message = encodeURIComponent(
-                `Aula particular - ${teacher.name} - ${teacher.id}\nDias de aula:${events.map(e => '\n- ' + formatDate(e.date) + ' - ' + translate(e.lessonTime)).toString()}\nCrianças: ${children}\nAdultos: ${adults}\nComentário: *${message}*\n${discountCode ? `Cupon: ${discountCode}`: ''}\n*Total: ${fCurrency(bookingPrice)}*`
-              );
-              const url = `https://api.whatsapp.com/send?phone=${phoneNumber}&text=${_message}`;
-
-              window.open(url, '_blank');
-            }}
+            onClick={onSubmitPix}
             variant='contained'
             fullWidth
             sx={{

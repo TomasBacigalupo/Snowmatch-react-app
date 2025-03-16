@@ -75,7 +75,18 @@ export default function LabelBottomNavigation() {
   return (
     <Box sx={{ pb: `calc(env(safe-area-inset-bottom) + ${isMobile ? '56px' : '16px'})`, height: '100px' }} ref={ref}>
       <CssBaseline />
-      <Paper sx={{ position: 'fixed', bottom: 0, paddingBottom: '30px' + "calc(env(safe-area-inset-bottom)", left: 0, right: 0, height: '100px' }} elevation={3}>
+      <Paper 
+        sx={{ 
+          position: 'fixed', 
+          bottom: 0, 
+          left: 0, 
+          right: 0, 
+          width: '100%',
+          height: 'auto',
+          paddingBottom: 'env(safe-area-inset-bottom)' 
+        }} 
+        elevation={3}
+      >
         <BottomNavigation
           showLabels
           value={value}
@@ -83,8 +94,12 @@ export default function LabelBottomNavigation() {
             setValue(newValue);
           }}
           sx={{
-            paddingBottom: 'env(safe-area-inset-bottom)',
-            height: `0px + env(safe-area-inset-bottom)`,
+            width: '100%',
+            minHeight: 56,
+            '& .MuiBottomNavigationAction-root': {
+              minWidth: 'auto',
+              padding: '6px 12px',
+            },
           }}
         >
           <BottomNavigationAction

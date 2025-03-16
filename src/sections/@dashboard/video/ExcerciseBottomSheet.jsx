@@ -407,34 +407,33 @@ export default function ExcerciseBottomSheet({ open, onClose, onOpen, course, de
                             <Box>
                                 <Paper
                                     sx={{
-                                        border: '2px solid', // Borde
-                                        borderColor: 'primary.dark', // Color primario oscuro
-                                        borderRadius: 2, // Bordes redondeados
-                                        p: 2, // Padding
+                                        border: '2px solid',
+                                        borderColor: 'primary.dark',
+                                        borderRadius: 2,
+                                        p: 2,
                                     }}
                                 >
                                     <Markdown>
-                                        El objetivo de este ejercicio es desafiar tu inclinacion al esquiar llevando tus esquies al maximo de angulacion posible. Te animas?
+                                        {translate('course.exercise.objective')}
                                     </Markdown>
                                 </Paper>
                             </Box>
                             
                             <Box sx={{ p: 3 }}>
                                 <DoDontList
-                                    title="Cómo paso el ejercicio?"
+                                    title={translate('course.exercise.howToPass')}
                                     doItems={[
-                                        "When rolling onto your edges, keep your shins perfectly parallel.",
-                                        "Think about rolling your inside ski, your outside ski will follow.",
-                                        "Balance against the outside ski.",
+                                        translate('course.exercise.do.1'),
+                                        translate('course.exercise.do.2'),
+                                        translate('course.exercise.do.3'),
                                     ]}
                                     dontItems={[
-                                        "When rolling onto your edges, keep your shins perfectly parallel.",
-                                        "Think about rolling your inside ski, your outside ski will follow.",
-                                        "Balance against the outside ski.",
+                                        translate('course.exercise.dont.1'),
+                                        translate('course.exercise.dont.2'),
+                                        translate('course.exercise.dont.3'),
                                     ]}
                                 />
                             </Box>
-                            {/* Header con icono y título */}
                             <Box display="flex" alignItems="center" gap={1} mb={1}>
                                 <Box
                                     component="img"
@@ -442,18 +441,9 @@ export default function ExcerciseBottomSheet({ open, onClose, onOpen, course, de
                                     sx={{ width: 140, height: 140, objectFit: "contain" }}
                                 />
                                 <Typography variant="h3" sx={{ color: "primary.dark" }}>
-                                    SnowMatch AI Corrigirá tu video
+                                    {translate('course.exercise.aiCorrection')}
                                 </Typography>
                             </Box>
-                            {/* <Typography variant="h2" textAlign='left'>
-                                {translate(`course.${course}.title`)}
-                            </Typography>
-                            <Typography variant="subtitle1" textAlign='left'>
-                                {translate(`course.${course}.description`)}
-                            </Typography>
-                            <Typography variant="body1" textAlign='left'>
-                                {translate(`course.${course}.fundamentals`)}
-                            </Typography> */}
                         </Box>
 
                         <Button variant="contained" sx={{ py: 2, my: 2 }} fullWidth onClick={async () => {

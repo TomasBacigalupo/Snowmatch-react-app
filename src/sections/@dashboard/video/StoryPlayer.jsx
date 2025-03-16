@@ -73,10 +73,26 @@ const StoryPlayer = () => {
           bottom: 10,
           left: 0,
           right: 0,
-          padding: "5px",
+          padding: "0 16px",
+          display: 'flex',
+          gap: '4px'
         }}
       >
-        <LinearProgress variant="determinate" value={progress} sx={{ height: 4, color: 'white' }} />
+        {videos.map((_, index) => (
+          <LinearProgress
+            key={index}
+            variant="determinate"
+            value={index < currentIndex ? 100 : index === currentIndex ? progress : 0}
+            sx={{
+              height: 4,
+              flex: 1,
+              backgroundColor: 'rgba(255, 255, 255, 0.3)',
+              '& .MuiLinearProgress-bar': {
+                backgroundColor: 'white',
+              }
+            }}
+          />
+        ))}
       </Box>
     </Box>
   );

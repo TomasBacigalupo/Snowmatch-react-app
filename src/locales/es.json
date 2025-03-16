@@ -1143,6 +1143,21 @@
         "pendingReview": "Esperando calificación"
     },
     "course": {
+        "exercise": {
+            "objective": "El objetivo de este ejercicio es desafiar tu inclinacion al esquiar llevando tus esquies al maximo de angulacion posible. Te animas?",
+            "howToPass": "Cómo paso el ejercicio?",
+            "do": {
+                "1": "When rolling onto your edges, keep your shins perfectly parallel.",
+                "2": "Think about rolling your inside ski, your outside ski will follow.",
+                "3": "Balance against the outside ski."
+            },
+            "dont": {
+                "1": "When rolling onto your edges, keep your shins perfectly parallel.",
+                "2": "Think about rolling your inside ski, your outside ski will follow.",
+                "3": "Balance against the outside ski."
+            },
+            "aiCorrection": "SnowMatch AI Corrigirá tu video"
+        },
         "AI_CHALLANGE_1": {
             "title": "Carving challange"
         },
@@ -1324,27 +1339,27 @@
             "name": "Single Shot",
             "price": "$10 USD",
             "benefits": {
-                "1" :"📹 1 corrección de video por un experto",
-                "2" :"🧠 Snowmatch Intelligence",
-                "3" :"🎯 Perfecto para probar la experiencia"
-        }
+                "1": "📹 1 corrección de video por un experto",
+                "2": "🧠 Snowmatch Intelligence",
+                "3": "🎯 Perfecto para probar la experiencia"
+            }
         },
         "pro.snowmatch.progress": {
             "name": "Progress Pack",
             "price": "$50 USD",
             "benefits": {
-                "1" :"📹 10 correcciones de video para mejorar progresivamente",
-                "2" :"🧠 Snowmatch Intelligence",
-                "3" :"🔥 Desbloquea tu siguiente nivel de esquí"
+                "1": "📹 10 correcciones de video para mejorar progresivamente",
+                "2": "🧠 Snowmatch Intelligence",
+                "3": "🔥 Desbloquea tu siguiente nivel de esquí"
             }
         },
         "pro.videos.hundred": {
             "name": "Master Pack",
             "price": "$100 USD",
             "benefits": {
-                "1" :"📹 100 correcciones de video para un entrenamiento intensivo",
-                "2" :"🧠 Snowmatch Intelligence",
-                "3" :"🥇 Acceso exclusivo a contenido premium"
+                "1": "📹 100 correcciones de video para un entrenamiento intensivo",
+                "2": "🧠 Snowmatch Intelligence",
+                "3": "🥇 Acceso exclusivo a contenido premium"
             }
         }
     },

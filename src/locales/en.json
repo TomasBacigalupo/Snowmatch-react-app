@@ -568,5 +568,22 @@
   "BUMPS_DEMO_1": {
     "title": "First Demo",
     "subtitle": "Blue Carving"
+  },
+  "course": {
+    "exercise": {
+      "objective": "El objetivo de este ejercicio es desafiar tu inclinacion al esquiar llevando tus esquies al maximo de angulacion posible. Te animas?",
+      "howToPass": "Cómo paso el ejercicio?",
+      "do": {
+        "1": "When rolling onto your edges, keep your shins perfectly parallel.",
+        "2": "Think about rolling your inside ski, your outside ski will follow.",
+        "3": "Balance against the outside ski."
+      },
+      "dont": {
+        "1": "When rolling onto your edges, keep your shins perfectly parallel.",
+        "2": "Think about rolling your inside ski, your outside ski will follow.",
+        "3": "Balance against the outside ski."
+      },
+      "aiCorrection": "SnowMatch AI Corrigirá tu video"
+    }
   }
 }

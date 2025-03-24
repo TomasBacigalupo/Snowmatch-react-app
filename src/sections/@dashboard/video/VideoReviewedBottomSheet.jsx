@@ -16,6 +16,7 @@ import { VideoReviewStatus } from "./VideoReviewStatus";
 import VideoAnalyticsChart from "./VideoAnalyticsChart";
 import SnowMatchIntelligenceBox from "./SnowMatchIntelligenceBox";
 import { useSnackbar } from "notistack";
+import MobileHeader from "src/components/MobileHeader";
 
 export default function VideoReviewedBottomSheet({ open, onClose, onOpen, selectedVideo }) {
     const theme = useTheme();
@@ -23,7 +24,7 @@ export default function VideoReviewedBottomSheet({ open, onClose, onOpen, select
     const [isPlaying, setIsPlaying] = useState(false);
     const dispatch = useDispatch();
     const { analizeExists, isLoadingExists } = useSelector(state => state.video);
-    const [ isProCheckRequested, setIsProCheckRequested ]  = useState(selectedVideo?.proCheck);
+    const [isProCheckRequested, setIsProCheckRequested] = useState(selectedVideo?.proCheck);
     const { enqueueSnackbar } = useSnackbar();
 
     useEffect(() => {
@@ -66,6 +67,9 @@ export default function VideoReviewedBottomSheet({ open, onClose, onOpen, select
                 },
             }}
         >
+            {selectedVideo && (
+                <MobileHeader onBack={onClose} title={translate(`course.${selectedVideo.course}.title`)}/>
+            )}
             <Box
                 sx={{
                     width: '100vw',
@@ -78,39 +82,6 @@ export default function VideoReviewedBottomSheet({ open, onClose, onOpen, select
             >
                 {selectedVideo && (
                     <>
-                        {/* Botón de cierre */}
-                        <Box
-                            display="flex"
-                            alignItems="center"
-                            justifyContent="center"
-                            position="relative"
-                            mt={2}
-                            mx={2}
-                            sx={{ borderBottom: "2px solid #EBEBEB" }} // Línea inferior estilo Airbnb
-                        >
-
-                            {/* Botón de cierre - Alineado a la izquierda */}
-                            <Box mr="auto">
-                                <IconButton edge="start" color="inherit" onClick={onClose} aria-label="close">
-                                    <ArrowBack />
-                                </IconButton>
-                            </Box>
-
-                            {/* Título del curso - Centrado basado en su propio tamaño */}
-                            <Typography
-                                variant="h4"
-                                sx={{
-                                    position: "absolute",
-                                    left: "50%",
-                                    transform: "translateX(-50%)",
-                                    fontWeight: 600,
-                                    color: "#222222" // Color oscuro como Airbnb 
-                                }}
-                            >
-                                {translate(`course.${selectedVideo.course}.title`)}
-                            </Typography>
-                        </Box>
-
                         {/* Video */}
                         <Box mb={2}>
                             {!isPlaying ? (
@@ -200,13 +171,26 @@ export default function VideoReviewedBottomSheet({ open, onClose, onOpen, select
                                             width: "100%"
                                         }}
                                     >
-                                        <Markdown>{selectedVideo.comment}</Markdown>
+                                        <Markdown
+                                            components={{
+                                                h1: (props) => <Typography variant="h6" {...props} />,
+                                                h2: (props) => <Typography variant="h6" {...props} />,
+                                                h3: (props) => <Typography variant="h6" {...props} />,
+                                                h4: (props) => <Typography variant="h6" {...props} />,
+                                                h5: (props) => <Typography variant="h6" {...props} />,
+                                                h6: (props) => <Typography variant="h6" {...props} />,
+                                                ul: (props) => <ul style={{ listStyleType: 'disc', marginLeft: '1px' }} {...props} />,
+                                                li: (props) => <li style={{ fontSize: '14px', marginLeft: '1px', marginTop: '5px' }} {...props} />,
+                                            }}
+                                        >
+                                            {selectedVideo.comment}
+                                        </Markdown>
                                     </Box>
                                 </>
                             )}
                         </Box>
 
-                        <SnowMatchIntelligenceBox video={selectedVideo}/>
+                        <SnowMatchIntelligenceBox video={selectedVideo} />
 
                         {!selectedVideo.proCheck && !isProCheckRequested && !selectedVideo.reviewed && <Box marginTop={5}>
                             <ReviewRequestBox onRequestReview={handleRequestProCheck} />

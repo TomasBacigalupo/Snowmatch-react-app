@@ -8,6 +8,13 @@ import ReactPlayer from "react-player";
 import { useState } from "react";
 import Markdown from "src/components/Markdown";
 
+const safeSliceMarkdown = (text, length) => {
+    if (!text) return "";
+    if (text.length <= length) return text;
+    let sliced = text.slice(0, length);
+    return sliced.substring(0, sliced.lastIndexOf(" ")) + "..."; // Corta en el último espacio
+};
+
 const SnowMatchIntelligenceBox = ({ video }) => {
 
     const [isPlayingAnalized, setIsPlayingAlaized] = useState(false);
@@ -35,9 +42,20 @@ const SnowMatchIntelligenceBox = ({ video }) => {
 
         {/* Descripción */}
         {video?.aiComment &&
-            <Typography variant="body1" color="text.primary" mb={2}>
-                {video?.aiComment?.slice(0, 145)}...
-            </Typography>
+            <Markdown
+            components={{
+                h1: (props) => <Typography variant="body1" {...props} />,
+                h2: (props) => <Typography variant="body1" {...props} />,
+                h3: (props) => <Typography variant="body1" {...props} />,
+                h4: (props) => <Typography variant="body1" {...props} />,
+                h5: (props) => <Typography variant="body1" {...props} />,
+                h6: (props) => <Typography variant="body1" {...props} />,
+                ul: (props) => <ul style={{ listStyleType: 'disc', marginLeft: '1px' }} {...props} />,
+                li: (props) => <li style={{ fontSize: '14px', marginLeft: '1px', marginTop: '5px' }} {...props} />,
+            }}
+        >
+                {safeSliceMarkdown(video?.aiComment, 145)}
+            </Markdown>
         }
 
         {!video?.aiComment &&
@@ -149,7 +167,18 @@ const SnowMatchIntelligenceBox = ({ video }) => {
                             />
                         )}
                         <Box px={2} pt={2}>
-                            <Markdown>{video?.aiComment}</Markdown>
+                            <Markdown
+                                components={{
+                                    h1: (props) => <Typography variant="h6" {...props} />,
+                                    h2: (props) => <Typography variant="h6" {...props} />,
+                                    h3: (props) => <Typography variant="h6" {...props} />,
+                                    h4: (props) => <Typography variant="h6" {...props} />,
+                                    h5: (props) => <Typography variant="h6" {...props} />,
+                                    h6: (props) => <Typography variant="h6" {...props} />,
+                                    ul: (props) => <ul style={{ listStyleType: 'disc', marginLeft: '1px' }} {...props} />,
+                                    li: (props) => <li style={{ fontSize: '14px', marginLeft: '1px', marginTop: '5px' }} {...props} />,
+                                }}
+                            >{video?.aiComment}</Markdown>
                         </Box>
                     </Box>
                 }

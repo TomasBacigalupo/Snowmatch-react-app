@@ -20,6 +20,8 @@ import { getLeaderBoard } from "src/redux/slices/video";
 import ReactPlayer from "react-player";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import VideoAnalyticsChart from "./VideoAnalyticsChart";
+import MobileHeader from "src/components/MobileHeader";
+import Markdown from "src/components/Markdown";
 
 // Datos del leaderboard
 const leaderboardData = [
@@ -30,6 +32,13 @@ const leaderboardData = [
     { rank: 5, name: "Flor Rainelli", time: "1:28", speed: "34.6 km/h", date: "17 Jun 2019", avatar: "/path-to-avatar" },
     { rank: 87, name: "Tomas Bacigalupo", time: "2:10", speed: "23.4 km/h", date: "8 Oct 2024", avatar: "/path-to-avatar", isUser: true },
 ];
+
+const safeSliceMarkdown = (text, length) => {
+    if (!text) return "";
+    if (text.length <= length) return text;
+    let sliced = text.slice(0, length);
+    return sliced.substring(0, sliced.lastIndexOf(" ")) + "..."; // Corta en el último espacio
+};
 
 export default function LeaderBoardRightDrawer({ open, onClose, onOpen, course }) {
     const dispatch = useDispatch()
@@ -52,127 +61,122 @@ export default function LeaderBoardRightDrawer({ open, onClose, onOpen, course }
                     open={open}
                     onClose={onClose}
                     onOpen={onOpen}
+                    ModalProps={{
+                        keepMounted: true,
+                    }}
                     PaperProps={{
                         sx: {
-                            width: "100vw",
-                            maxWidth: "100vw",
-                            paddingTop: "env(safe-area-inset-top)",
-                            paddingBottom: "env(safe-area-inset-bottom)",
-                            paddingX: 2,
+                            height: '100%',
+                            maxHeight: '100%',
+                            paddingTop: 'env(safe-area-inset-bottom)',
+                            paddingBottom: 'env(safe-area-inset-bottom)',
+                            width: '100vw',
+                            maxWidth: '100%',
                         },
                     }}
                 >
-                    {/* Encabezado con filtros */}
+                    <MobileHeader onBack={onClose} title="Leaderboards" />
                     <Box
-                        display="flex"
-                        alignItems="center"
-                        justifyContent="space-between"
-                        borderBottom="1px solid #ddd"
+                        sx={{
+                            width: '100vw',
+                            maxWidth: '100%',
+                            height: '100%',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            overflow: 'auto',
+                        }}
                     >
-                        <IconButton onClick={onClose}>
-                            <ArrowBack />
-                        </IconButton>
-                        <Typography variant="h6" sx={{ flex: 1, textAlign: "center" }}>
-                            Leaderboards
-                        </Typography>
-                        {/* Elemento vacío para equilibrar el espacio */}
-                        <Box sx={{ width: 48 }} />
-                    </Box>
 
-                    {/* <Stack direction="row" spacing={1} mt={2} justifyContent="center">
+                        {/* <Stack direction="row" spacing={1} mt={2} justifyContent="center">
                 <Chip label="All-Time" color="primary" variant="filled" />
                 <Chip label="All-Time (Men)" variant="outlined" />
                 <Chip label="All-Time (Women)" variant="outlined" />
                 <Chip label="This Year" variant="outlined" />
               </Stack> */}
 
-                    {/* Mejor tiempo destacado */}
-                    <Box mt={3} textAlign="center">
-                        <Avatar src={leaderboardData[0].avatar} sx={{ width: 80, height: 80, mx: "auto" }} />
-                        <Typography variant="h4" fontWeight="bold">{leaders[0].score}</Typography>
-                        <Box display="flex" alignItems="center" justifyContent="center">
-                            <CrownIcon sx={{ color: "gold", mr: 1 }} />
-                            <Typography variant="subtitle1" fontWeight="bold">{leaders[0].user.name}</Typography>
+                        {/* Mejor tiempo destacado */}
+                        <Box mt={3} textAlign="center">
+                            <Avatar src={leaderboardData[0].avatar} sx={{ width: 80, height: 80, mx: "auto" }} />
+                            <Typography variant="h4" fontWeight="bold">{leaders[0].score}</Typography>
+                            <Box display="flex" alignItems="center" justifyContent="center">
+                                <CrownIcon sx={{ color: "gold", mr: 1 }} />
+                                <Typography variant="subtitle1" fontWeight="bold">{leaders[0].user.name}</Typography>
+                            </Box>
+                        </Box>
+                        <Divider sx={{ my: 2 }} />
+                        {/* Lista del leaderboard */}
+                        <List>
+                            {leaders.map((video, index) => (
+                                <React.Fragment key={index}>
+                                    <ListItem
+                                        sx={{
+                                            backgroundColor: video.isUser ? "rgba(255, 165, 0, 0.2)" : "transparent",
+                                            borderRadius: video.isUser ? 2 : 0,
+                                        }}
+                                        onClick={() => {
+                                            setSelectedLeader(video)
+                                            setOpenLeaderDetails(true)
+                                        }}
+                                    >
+                                        <Typography variant="h6" sx={{ width: 30, fontWeight: index === 1 ? "bold" : "normal" }}>
+                                            {index + 1}
+                                        </Typography>
+                                        <ListItemAvatar>
+                                            <Avatar src={video.user.avatar} />
+                                        </ListItemAvatar>
+                                        <ListItemText
+                                            primary={video.user.name}
+                                            secondary={`${video.score}`}
+                                        />
+                                        <Typography variant="body2" color="text.secondary">{video.date}</Typography>
+                                    </ListItem>
+                                    {index < leaders.length - 1 && <Divider />}
+                                </React.Fragment>
+                            ))}
+                        </List>
+
+                        {/* Sección de mejora personal */}
+                        <Box mt={2} textAlign="center" p={2} sx={{ backgroundColor: "#f7f7f7", borderRadius: 2 }}>
+                            <Typography variant="body2" color="text.secondary">
+                                <strong>Top 34%</strong> - Take <strong>13s</strong> off to move up <strong>35 spots</strong>
+                            </Typography>
                         </Box>
                     </Box>
-
-                    <Divider sx={{ my: 2 }} />
-
-                    {/* Lista del leaderboard */}
-                    <List>
-                        {leaders.map((video, index) => (
-                            <React.Fragment key={index}>
-                                <ListItem
-                                    sx={{
-                                        backgroundColor: video.isUser ? "rgba(255, 165, 0, 0.2)" : "transparent",
-                                        borderRadius: video.isUser ? 2 : 0,
-                                    }}
-                                    onClick={() => {
-                                        setSelectedLeader(video)
-                                        setOpenLeaderDetails(true)
-                                    }}
-                                >
-                                    <Typography variant="h6" sx={{ width: 30, fontWeight: index === 1 ? "bold" : "normal" }}>
-                                        {index + 1}
-                                    </Typography>
-                                    <ListItemAvatar>
-                                        <Avatar src={video.user.avatar} />
-                                    </ListItemAvatar>
-                                    <ListItemText
-                                        primary={video.user.name}
-                                        secondary={`${video.score}`}
-                                    />
-                                    <Typography variant="body2" color="text.secondary">{video.date}</Typography>
-                                </ListItem>
-                                {index < leaders.length - 1 && <Divider />}
-                            </React.Fragment>
-                        ))}
-                    </List>
-
-                    {/* Sección de mejora personal */}
-                    <Box mt={2} textAlign="center" p={2} sx={{ backgroundColor: "#f7f7f7", borderRadius: 2 }}>
-                        <Typography variant="body2" color="text.secondary">
-                            <strong>Top 34%</strong> - Take <strong>13s</strong> off to move up <strong>35 spots</strong>
-                        </Typography>
-                    </Box>
                 </SwipeableDrawer>
-
                 {selectedLeader &&
                     <SwipeableDrawer
                         anchor="bottom"
                         open={openLeaderDetails}
                         onClose={() => setOpenLeaderDetails(false)}
                         onOpen={() => setOpenLeaderDetails(true)}
+                        ModalProps={{
+                            keepMounted: true,
+                        }}
                         PaperProps={{
                             sx: {
-                                width: "100vw",
-                                height: "100dvh",
-                                maxWidth: "100vw",
-                                paddingTop: "env(safe-area-inset-top)",
-                                paddingBottom: "env(safe-area-inset-bottom)",
-                                paddingX: 2,
+                                height: '100%',
+                                maxHeight: '100%',
+                                paddingTop: 'env(safe-area-inset-bottom)',
+                                paddingBottom: 'env(safe-area-inset-bottom)',
+                                width: '100vw',
+                                maxWidth: '100%',
                             },
                         }}
                     >
                         {/* Encabezado con filtros */}
+                        <MobileHeader onBack={() => setOpenLeaderDetails(false)} title={selectedLeader?.user?.name} />
                         <Box
-                            display="flex"
-                            alignItems="center"
-                            justifyContent="space-between"
-                            borderBottom="1px solid #ddd"
+                            sx={{
+                                width: '100vw',
+                                maxWidth: '100%',
+                                height: '100%',
+                                display: 'flex',
+                                flexDirection: 'column',
+                                overflow: 'auto',
+                            }}
                         >
-                            {/* Elemento vacío para equilibrar el espacio */}
-                            <Box sx={{ width: 48 }} />
-                            <Typography variant="h6" sx={{ flex: 1, textAlign: "center" }}>
-                                {selectedLeader?.user?.name}
-                            </Typography>
-                            <IconButton onClick={() => setOpenLeaderDetails(false)}>
-                                <CloseIcon />
-                            </IconButton>
-                            
-                        </Box>
-                        {selectedLeader &&
-                                <Box mb={2}>
+                            {selectedLeader &&
+                                <Box mb={2} px={2}>
                                     {!isPlayingAnalized ? (
                                         <Box
                                             position="relative"
@@ -222,13 +226,26 @@ export default function LeaderBoardRightDrawer({ open, onClose, onOpen, course }
                                         />
                                     )}
                                     {selectedLeader?.analysisData && <VideoAnalyticsChart turnData={selectedLeader?.analysisData} />}
-                                    
-                                    <Typography variant="body1" color="text.primary" mb={2}>
-                                        {selectedLeader?.aiComment}
-                                    </Typography>
+                                    {selectedLeader?.aiComment &&
+                                        <Markdown
+                                            components={{
+                                                h1: (props) => <Typography variant="body1" {...props} />,
+                                                h2: (props) => <Typography variant="body1" {...props} />,
+                                                h3: (props) => <Typography variant="body1" {...props} />,
+                                                h4: (props) => <Typography variant="body1" {...props} />,
+                                                h5: (props) => <Typography variant="body1" {...props} />,
+                                                h6: (props) => <Typography variant="body1" {...props} />,
+                                                ul: (props) => <ul style={{ listStyleType: 'disc', marginLeft: '1px' }} {...props} />,
+                                                li: (props) => <li style={{ fontSize: '14px', marginLeft: '1px', marginTop: '5px' }} {...props} />,
+                                            }}
+                                        >
+                                            {safeSliceMarkdown(selectedLeader?.aiComment, 145)}
+                                        </Markdown>
+                                    }
                                 </Box>
                             }
-                    </SwipeableDrawer>
+                        </Box>
+                    </SwipeableDrawer >
                 }
             </>
         );

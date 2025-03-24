@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Typography, Button, Box, useMediaQuery, Container, Grid, Card, CardContent, CardMedia, TextField, SvgIcon, ToggleButtonGroup, ToggleButton, CircularProgress } from '@mui/material';
+import { Typography, Button, Box, useMediaQuery, Container, Grid, Card, CardContent, CardMedia, TextField, SvgIcon, ToggleButtonGroup, ToggleButton, CircularProgress, CardActions, Paper, IconButton } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { useTheme } from '@mui/material/styles';
 import Page from '../../components/Page';
@@ -16,6 +16,11 @@ import AnalyticsChallangeWidget from 'src/sections/@dashboard/general/analytics/
 import LeaderBoardRightDrawer from 'src/sections/@dashboard/video/LeaderBoardRightDrawer';
 import { buyProduct, getProducts } from 'src/services/inAppPurchaseService'
 import PremiumContainer from 'src/sections/payment/Premiumcontainer';
+import useAuth from 'src/hooks/useAuth';
+import { Help, HelpOutline } from '@mui/icons-material';
+import LastVideo from 'src/sections/@dashboard/video/LastVideo';
+import ProCheckBox from 'src/sections/@dashboard/video/ProCheckBox';
+import LatestTips from 'src/sections/@dashboard/video/LatestTips';
 // ----------------------------------------------------------------------
 
 
@@ -338,6 +343,20 @@ export default function VideoUpload() {
                         {/* <Grid item xs={12}>
                             <AnalyticsUserProgress />
                         </Grid> */}
+                        <Grid item xs={12}>
+                            <ProCheckBox />
+                        </Grid>
+
+                        {videos && videos.length > 0 && <LastVideo
+                            video={[...videos]
+                                .sort((a, b) => b.id - a.id)
+                                .slice(0, 1)[0]}
+                        />}
+                        {videos && videos.filter(video => video.reviewed).length > 0 && <Grid item xs={12}>
+                            <LatestTips videos={[...videos]
+                                .filter(video => video.comment)
+                                .sort((a, b) => b.id - a.id)} />
+                        </Grid>}
                         {levels.map((level) => (
                             <Level
                                 course={level.course}

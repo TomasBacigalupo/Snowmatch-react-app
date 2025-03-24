@@ -62,12 +62,12 @@ const ReviewRequestBox = ({ isOpen, closeDrawer, onRequestReview }) => {
                     }}
                     PaperProps={{
                         sx: {
-                            height: user.proCheckCredits > 0 ? 'fit' : '100%',
+                            height: user?.proCheckCredits > 0 ? 'fit' : '100%',
                             maxHeight: '100%',
                             width: '100vw',
                             maxWidth: '100vw',
-                            paddingTop: user.proCheckCredits > 0 ? '2' : "env(safe-area-inset-top)",
-                            borderRadius: user.proCheckCredits > 0 ? '16px' : "0"
+                            paddingTop: user?.proCheckCredits > 0 ? '2' : "env(safe-area-inset-top)",
+                            borderRadius: user?.proCheckCredits > 0 ? '16px' : "0"
                         },
                     }}
                 >
@@ -80,7 +80,7 @@ const ReviewRequestBox = ({ isOpen, closeDrawer, onRequestReview }) => {
                         }}
                     >
                         {/* Encabezado con Cierre */}
-                        {user.proCheckCredits === 0 && <Box px={2} display="flex" justifyContent="space-between" alignItems="center">
+                        {user?.proCheckCredits === 0 && <Box px={2} display="flex" justifyContent="space-between" alignItems="center">
                             <Typography variant="h6" fontWeight={600}>
                                 Pro Check
                             </Typography>
@@ -89,9 +89,9 @@ const ReviewRequestBox = ({ isOpen, closeDrawer, onRequestReview }) => {
                             </IconButton>
                         </Box>}
 
-                        {user.proCheckCredits === 0 && <Divider />}
-                        {user.proCheckCredits === 0 && <PremiumContainer />}
-                        {user.proCheckCredits > 0 && <ReviewContent setOpen={setOpen} closeDrawer={closeDrawer} onRequestReview={onRequestReview} />}
+                        {user?.proCheckCredits === 0 && <Divider />}
+                        {user?.proCheckCredits === 0 && <PremiumContainer />}
+                        {user?.proCheckCredits > 0 && <ReviewContent setOpen={setOpen} closeDrawer={closeDrawer} onRequestReview={onRequestReview} />}
 
                     </Box>
                 </SwipeableDrawer>

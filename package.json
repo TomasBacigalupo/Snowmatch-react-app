@@ -158,6 +158,7 @@
     "react-slick": "^0.28.0",
     "react-snap": "^1.23.0",
     "react-swipeable": "^7.0.2",
+    "react-swipeable-views": "^0.14.0",
     "react-youtube": "^10.1.0",
     "react-zoom-pan-pinch": "^3.7.0",
     "recharts": "^2.15.1",

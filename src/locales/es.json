@@ -786,7 +786,7 @@
             "metaTitle": "Freeride por bosques y nieve onda",
             "metaDescription": " Para los esquiadores más aventureros que quieren aprender a esquiar",
             "descriptionPreview": "Aprendé a esquiar fuera de pista. Intermedios/avanzados.",
-            "description": "La clase de <b>freeride (estilo libre)</b> es una increíble experiencia fuera de pista, orientada a los esquiadores amantes de la aventura y del contacto con la naturaleza. El instructor te enseñará y te llevará a esquiar por alucinantes <b>bosques nevados y nieve onda sin pisar*.</b><br/>Además, te explicará <b>la técnica para que puedas esquiar en lugares con “bumps”</b> (montículos de nieve que se forman en la pista), y domines todo tipo de bajadas.<br/>En este curso aprenderás las <b>nociones básicas del freeride</b>, para que puedas disfrutar de este estilo de forma divertida y sin peligro. Con una progresión acorde, <b>al finalizar estarás capacitado para esquiar en cualquier condición y tipo de nieve y pendiente.</b><br/>*<i>Las actividades realizadas durante la clase dependerán de las condiciones meteorológicas y de la montaña ese día.</i>",
+            "description": "La clase de <b>freeride (estilo libre)</b> es una increíble experiencia fuera de pista, orientada a los esquiadores amantes de la aventura y del contacto con la naturaleza. El instructor te enseñará y te llevará a esquiar por alucinantes <b>bosques nevados y nieve onda sin pisar*.</b><br/>Además, te explicará <b>la técnica para que puedas esquiar en lugares con bumps</b> (montículos de nieve que se forman en la pista), y domines todo tipo de bajadas.<br/>En este curso aprenderás las <b>nociones básicas del freeride</b>, para que puedas disfrutar de este estilo de forma divertida y sin peligro. Con una progresión acorde, <b>al finalizar estarás capacitado para esquiar en cualquier condición y tipo de nieve y pendiente.</b><br/>*<i>Las actividades realizadas durante la clase dependerán de las condiciones meteorológicas y de la montaña ese día.</i>",
             "skiLevel": "Intermedios/Avanzados",
             "totalStudents": "Entre 1 y 5 personas",
             "meetingPoint": "Base Cerro Catedral",
@@ -935,6 +935,14 @@
         "question8": "¿Qué beneficios tengo por ser parte de SnowMatch?",
         "answer8": "Andá a la pestaña PRO Deal de SnowMatch y conocé beneficios exclusivos para los instructores. Hay increíbles descuentos que te esperan."
     },
+    "uploadedVideos": {
+        "empty": {
+            "title": "No hay videos subidos",
+            "description": "Sube un video para comenzar con el análisis de IA"
+        },
+        "title": "Videos Subidos",
+        "reviewed": "Videos Calificados"
+    },
     "notifications": {
         "title": "Notificaciones",
         "new_title": "Sin leer",
@@ -943,7 +951,45 @@
         "mark_all_read": "Marcar todas como leídas",
         "new_notifications": "Tenés {{totalUnread}} nuevas notificaciones",
         "description": {
-            "hired": "Match! Quieren disfrutar de la montaña con vos."
+            "hired": "Match! Quieren disfrutar de la montaña con vos.",
+            "procheck_requested": "ProCheck Solicitado"
+        },
+        "empty": {
+            "title": "No hay notificaciones",
+            "description": "Sube tu primer video y comienza a recibir feedback de los mejores instructores de esquí y AI"
+        }
+    },
+    "snowmatch": {
+        "intelligence": {
+            "title": "SnowMatch Intelligence",
+            "description": "Mira tu análisis de video en tiempo real",
+            "analyze": "Análisis Completo",
+            "aiAnalysis": "Análisis de IA",
+            "videoAnalysis": "Análisis de Video",
+            "technicalBreakdown": "Desglose Técnico",
+            "improveYourTechnique": "Mejora Tu Técnica",
+            "watchAnalyzed": "Ver Video Analizado",
+            "aiInsights": "Insights de IA",
+            "keyPoints": "Puntos Clave",
+            "overallAnalysis": "Análisis General",
+            "technicalDetails": "Detalles Técnicos",
+            "recommendations": "Recomendaciones",
+            "viewFullReport": "Ver Reporte Completo"
+        }
+    },
+    "procheck": {
+        "credits": {
+            "title": "ProCheck Credits",
+            "subtitle": "Usa tus créditos para obtener correcciones de profesionales",
+            "available": "Créditos disponibles",
+            "use_credits": "Usa tus créditos para obtener retroalimentación profesional sobre tu técnica",
+            "purchase_credits": "Usa tus créditos para obtener retroalimentación profesional sobre tu técnica"
+        },
+        "actions": {
+            "get_first_correction": "Obtener mi primera corrección",
+            "get_procheck": "Obtener ProCheck para el Último Video",
+            "upload_new": "Subir Nuevo Video",
+            "buy_credits": "Comprar Créditos ProCheck"
         }
     },
     "selectTime": {
@@ -998,7 +1044,10 @@
         "learnMessage": "Aprendé a esquiar con SnowMatch",
         "signIn": "Iniciar sesión",
         "appleSignIn": "Continuar con Apple",
-        "emailSignIn": "Continuar con Email"
+        "emailSignIn": "Continuar con Email",
+        "continueWithGoogle": "Continuar con Google",
+        "continueWithApple": "Continuar con Apple",
+        "continueWithEmail": "Continuar con Email"
     },
     "registerForm": {
         "name": "Nombre",
@@ -1047,7 +1096,7 @@
             },
             "chapi": {
                 "title": "¿Te animás a dar una vuelta por el SnowPark?",
-                "description": "👉Antes de ir, tené en cuenta estos 3️⃣ tips que nos trae Juan Chapitel, instructor de esquí en Chapelco. Respetar”: La palabra más importante si sos principiante (y sino, también). Respetar las señales, las velocidades y sobre todo su nivel."
+                "description": "👉Antes de ir, tené en cuenta estos 3️⃣ tips que nos trae Juan Chapitel, instructor de esquí en Chapelco. Respetar: La palabra más importante si sos principiante (y sino, también). Respetar las señales, las velocidades y sobre todo su nivel."
             },
             "chapi2": {
                 "title": "¿Dónde van las manos?",
@@ -1140,7 +1189,20 @@
         "upload": "Subir video",
         "complete": "Completar nivel",
         "try": "Mejorar puntaje",
-        "pendingReview": "Esperando calificación"
+        "pendingReview": "Esperando calificación",
+        "yourSkiProgress": "Tu Progreso en Esquí",
+        "completed": "completado",
+        "joinSkiLessons": "Perfecciona tu técnica paso a paso",
+        "startYourJourney": "Obtén feedback personalizado en cada ejecicio para mejorar tu técnica. Los mejores instructores te guiarán en cada paso.",
+        "goToFirstLevel": "Ir al Primer Nivel",
+        "levels": {
+            "beginner": "Principiante",
+            "intermediate": "Intermedio",
+            "advanced": "Avanzado",
+            "beginnerDesc": "Aprende lo básico",
+            "intermediateDesc": "Perfecciona tu técnica",
+            "advancedDesc": "Domina las pistas"
+        }
     },
     "course": {
         "exercise": {
@@ -1271,6 +1333,16 @@
             "title": "Clavado de Baston",
             "description": "Timing de clavado de baston en pista",
             "fundamentals": "El clavado de baston es una herramienta fundamental para el equilibrio y la rotacion de cadera en la pista"
+        },
+        "DEMO": {
+            "title": "Análisis de Video Demo",
+            "description": "Sube tu video demo para análisis",
+            "fundamentals": "Aprende los fundamentos de la técnica de esquí a través del análisis de video"
+        },
+        "GENERAL_UPLOAD": {
+            "title": "Análisis de Video",
+            "description": "Sube tu video para análisis profesional",
+            "fundamentals": "Obtén retroalimentación sobre tu técnica de esquí de nuestra IA e instructores profesionales"
         }
     },
     "videoCoachScreen": {
@@ -1283,7 +1355,14 @@
         "uploadVideo": "Subir video",
         "completeLevel": "Completar nivel",
         "tryBetterScore": "Mejorar puntaje",
-        "pendingReview": "Esperando calificación"
+        "pendingReview": "Esperando calificación",
+        "score": "Puntuación de Rendimiento",
+        "excellentPerformance": "¡Excelente! Tu técnica es sobresaliente",
+        "goodPerformance": "¡Buen trabajo! Sigue practicando para mejorar",
+        "needsImprovement": "Hay espacio para mejorar. Sigue trabajando en tu técnica",
+        "scoreDetails": "Puntuación General de Rendimiento",
+        "technicalScore": "Puntuación Técnica",
+        "styleScore": "Puntuación de Estilo"
     },
     "video_upload_bottom_sheet": {
         "upload_video": "Subir video",
@@ -1367,5 +1446,53 @@
         "title": "Obtén una revisión de un SnowMatch Pro",
         "subtitle": "Un instructor experto analizará tu video y te dará consejos para mejorar tu técnica.",
         "cta": "Solicitar revisión"
+    },
+    "latestTips": {
+        "title": "Consejos de Expertos",
+        "readMore": "Leer Más"
+    },
+    "videoDemo": {
+        "title": "Análisis profesional de esquí por SnowMatch Intelligence",
+        "uploadButton": "Analizar mi esquiada con AI"
+    },
+    "bottomNavigation": {
+        "status": "Estado",
+        "academy": "Academia",
+        "match": "Match",
+        "lessons": "Clases",
+        "maps": "Mapas"
+    },
+    "lastVideo": {
+        "title": "Último Video",
+        "subtitle": "Solicita feedback profesional de tu último video",
+        "aiStatus": {
+            "pending": "Análisis de IA en Progreso",
+            "completed": "Análisis de IA Completado",
+            "processing": "Procesando Video"
+        },
+        "proCheck": {
+            "request": "Solicitar ProCheck",
+            "pending": "ProCheck Pendiente"
+        }
+    },
+    "video": {
+        "status": {
+            "waitingProCheck": "Esperando análisis del Pro",
+            "proChecked": "Análisis del Pro completado",
+            "score": "Puntuación"
+        },
+        "action": {
+            "showAnalysis": "Ver Análisis",
+            "proCheck": "ProCheck"
+        },
+        "aiStatus": {
+            "pending": "Análisis de IA en Progreso",
+            "completed": "Análisis de IA Completado",
+            "processing": "Procesando Video"
+        }
+    },
+    "leaderboard": {
+        "title": "Tabla de Posiciones",
+        "improvement": "Top {{percent}}% - Mejora {{time}}s para subir {{spots}} posiciones"
     }
 }

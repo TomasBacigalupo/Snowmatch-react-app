@@ -16,6 +16,9 @@ export default function AppleLoginButton() {
             fullWidth
             variant="outlined"
             sx={{
+                maxWidth: 300,
+                mx: 'auto', // Centers the button
+                borderRadius: '50px', // Full border radius
                 color: theme => theme.palette.common.black, // Color del texto
                 borderColor: theme => theme.palette.common.black, // Borde del botón
                 '&:hover': {
@@ -27,7 +30,7 @@ export default function AppleLoginButton() {
             startIcon={<AppleIcon color='black' />}
             onClick={handleAppleLogin}
         >
-            {translate('auth.appleSignIn')}
+            {translate('auth.continueWithApple')}
         </Button>
     );
 }

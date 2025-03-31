@@ -6,7 +6,6 @@ import {
   Box,
   List,
   Badge,
-  Button,
   Avatar,
   Tooltip,
   Divider,
@@ -15,6 +14,8 @@ import {
   ListSubheader,
   ListItemAvatar,
   ListItemButton,
+  SwipeableDrawer,
+  Stack,
 } from '@mui/material';
 // utils
 import { fToNow } from '../../../utils/formatTime';
@@ -23,8 +24,8 @@ import { _notifications } from '../../../_mock';
 // components
 import Iconify from '../../../components/Iconify';
 import Scrollbar from '../../../components/Scrollbar';
-import MenuPopover from '../../../components/MenuPopover';
 import { IconButtonAnimate } from '../../../components/animate';
+import MobileHeader from 'src/components/MobileHeader';
 // redux
 import { useDispatch, useSelector } from '../../../redux/store';
 import { getNotifications, readNotifications } from 'src/redux/slices/notifications';
@@ -38,37 +39,59 @@ import useLocales from 'src/hooks/useLocales';
 // ----------------------------------------------------------------------
 
 export default function NotificationsPopover() {
-
-  const [open, setOpen] = useState(null);
-  const { translate } = useLocales()
+  const [open, setOpen] = useState(false);
+  const { translate } = useLocales();
   const { user } = useAuth();
   const dispatch = useDispatch();
-  const wtf = useSelector((state) => state);
-  const { notifications } = useSelector(state => state.notifications)
+  const { notifications } = useSelector(state => state.notifications);
   const totalUnread = notifications.filter((item) => item.unread === true).length;
 
-
-  const handleOpen = (event) => {
-    setOpen(event.currentTarget);
+  const handleOpen = () => {
+    setOpen(true);
   };
 
   const handleClose = () => {
-    // if(totalUnread > 0){
-    //   handleMarkAllAsRead()
-    // }
-    setOpen(null);
+    setOpen(false);
   };
 
   const handleMarkAllAsRead = () => {
-    dispatch(readNotifications())
+    dispatch(readNotifications());
   };
-
 
   useEffect(() => {
     dispatch(getNotifications(user?.email));
   }, [dispatch, user?.email]);
 
-  const N = wtf.notifications.notifications;
+  const renderEmptyState = () => (
+    <Stack
+      spacing={2}
+      alignItems="center"
+      justifyContent="center"
+      sx={{ 
+        height: '100%', 
+        py: 8,
+        px: 2
+      }}
+    >
+      <Iconify
+        icon="mdi:snowflake"
+        sx={{
+          width: 80,
+          height: 80,
+          color: 'primary.main',
+          opacity: 0.3
+        }}
+      />
+      <Box sx={{ textAlign: 'center' }}>
+        <Typography variant="h6" gutterBottom>
+          {translate('notifications.empty.title')}
+        </Typography>
+        <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+          {translate('notifications.empty.description')}
+        </Typography>
+      </Box>
+    </Stack>
+  );
 
   return (
     <>
@@ -78,70 +101,87 @@ export default function NotificationsPopover() {
         </Badge>
       </IconButtonAnimate>
 
-      <MenuPopover
-        open={Boolean(open)}
-        anchorEl={open}
+      <SwipeableDrawer
+        anchor="right"
+        open={open}
         onClose={handleClose}
-        sx={{ width: 360, p: 0, mt: 1.5, ml: 0.75 }}
+        onOpen={handleOpen}
+        disableSwipeToOpen={false}
+        ModalProps={{
+          keepMounted: true,
+        }}
+        PaperProps={{
+          sx: {
+            height: '100%',
+            maxHeight: '100%',
+            paddingTop: 'env(safe-area-inset-bottom)',
+            paddingBottom: 'env(safe-area-inset-bottom)',
+            width: '100vw',
+            maxWidth: '100%',
+          },
+        }}
       >
-        <Box sx={{ display: 'flex', alignItems: 'center', py: 2, px: 2.5 }}>
-          <Box sx={{ flexGrow: 1 }}>
-            <Typography variant="subtitle1">{translate("notifications.title")}</Typography>
-            {totalUnread > 0 && <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-              {translate('notifications.new_notifications', { totalUnread })}
-            </Typography>}
-            {totalUnread === 0 && <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-              {translate("notifications.no_new_title")}
-            </Typography>}
-          </Box>
+        <MobileHeader 
+          onBack={handleClose} 
+          title={translate("notifications.title")}
+          action={
+            totalUnread > 0 && (
+              <Tooltip title={translate("notifications.mark_all_read")}>
+                <IconButtonAnimate color="primary" onClick={handleMarkAllAsRead}>
+                  <Iconify icon="eva:done-all-fill" width={20} height={20} />
+                </IconButtonAnimate>
+              </Tooltip>
+            )
+          }
+        />
 
-          {totalUnread > 0 && (
-            <Tooltip title={translate("notifications.mark_all_read")}>
-              <IconButtonAnimate color="primary" onClick={handleMarkAllAsRead}>
-                <Iconify icon="eva:done-all-fill" width={20} height={20} />
-              </IconButtonAnimate>
-            </Tooltip>
+        <Box
+          sx={{
+            width: '100vw',
+            maxWidth: '100%',
+            height: '100%',
+            display: 'flex',
+            flexDirection: 'column',
+            overflow: 'auto',
+          }}
+        >
+          {notifications.length > 0 ? (
+            <Scrollbar sx={{ height: { xs: '100%', sm: 'auto' } }}>
+              {totalUnread > 0 && (
+                <List
+                  disablePadding
+                  subheader={
+                    <ListSubheader disableSticky sx={{ py: 1, px: 2.5, typography: 'overline' }}>
+                      {translate("notifications.new_title")}
+                    </ListSubheader>
+                  }
+                >
+                  {notifications.filter(n => n.unread).map((notification) => (
+                    <NotificationItem key={notification.id} notification={notification} />
+                  ))}
+                </List>
+              )}
+
+              {totalUnread < notifications.length && (
+                <List
+                  disablePadding
+                  subheader={
+                    <ListSubheader disableSticky sx={{ py: 1, px: 2.5, typography: 'overline' }}>
+                      {translate("notifications.old_title")}
+                    </ListSubheader>
+                  }
+                >
+                  {notifications.filter(n => !n.unread).map((notification) => (
+                    <NotificationItem key={notification.id} notification={notification} />
+                  ))}
+                </List>
+              )}
+            </Scrollbar>
+          ) : (
+            renderEmptyState()
           )}
         </Box>
-
-        <Divider sx={{ borderStyle: 'dashed' }} />
-
-        <Scrollbar sx={{ height: { xs: 340, sm: 'auto' } }}>
-          {totalUnread > 0 && <List
-            disablePadding
-            subheader={
-              <ListSubheader disableSticky sx={{ py: 1, px: 2.5, typography: 'overline' }}>
-                {translate("notifications.new_title")}
-              </ListSubheader>
-            }
-          >
-            {notifications.filter(n => n.unread).map((notification) => (
-              <NotificationItem key={notification.id} notification={notification} />
-            ))}
-          </List>}
-          {totalUnread < notifications.length &&
-            <List
-              disablePadding
-              subheader={
-                <ListSubheader disableSticky sx={{ py: 1, px: 2.5, typography: 'overline' }}>
-                  {translate("notifications.old_title")}
-                </ListSubheader>
-              }
-            >
-              {notifications.filter(n => !n.unread).map((notification) => (
-                <NotificationItem key={notification.id} notification={notification} />
-              ))}
-            </List>}
-        </Scrollbar>
-
-        {/* <Divider sx={{ borderStyle: 'dashed' }} />
-
-        <Box sx={{ p: 1 }}>
-          <Button fullWidth disableRipple>
-            View All
-          </Button>
-        </Box> */}
-      </MenuPopover>
+      </SwipeableDrawer>
     </>
   );
 }

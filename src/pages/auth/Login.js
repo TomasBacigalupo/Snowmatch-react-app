@@ -4,6 +4,7 @@ import { Link as RouterLink } from 'react-router-dom';
 // @mui
 import { styled } from '@mui/material/styles';
 import { Box, Card, Stack, Link, Container, Typography, Button } from '@mui/material';
+import EmailIcon from '@mui/icons-material/Email';
 // routes
 import { PATH_AUTH, PATH_GUEST } from '../../routes/paths';
 // hooks
@@ -16,6 +17,7 @@ import Logo from '../../components/Logo';
 import { LoginForm } from '../../sections/auth/login';
 import useLocales from 'src/hooks/useLocales';
 import AppleLoginButton from 'src/sections/auth/AppleLoginButton';
+import GoogleLoginButton from 'src/sections/auth/GoogleLoginButton';
 
 // ----------------------------------------------------------------------
 
@@ -92,22 +94,37 @@ export default function Login() {
               </Box>
             </Stack>
             {!showForm ? (
-              <Stack spacing={2}>
+              <Stack spacing={2} alignItems="center">
                 <AppleLoginButton />
+                <GoogleLoginButton />
                 <Button
                   variant="outlined"
-                  color="primary"
                   onClick={() => setShowForm(true)}
                   fullWidth
+                  startIcon={<EmailIcon />}
+                  sx={{
+                    maxWidth: 300,
+                    borderRadius: '50px',
+                    color: theme => theme.palette.common.black,
+                    borderColor: theme => theme.palette.common.black,
+                    '&:hover': {
+                      backgroundColor: theme => theme.palette.common.black,
+                      color: theme => theme.palette.common.white,
+                      borderColor: theme => theme.palette.common.black,
+                    }
+                  }}
                 >
-                  {translate('auth.emailSignIn')}
+                  {translate('auth.continueWithEmail')}
                 </Button>
               </Stack>
             ) : (
               <>
                 <LoginForm />
                 <Box mt={2}>
-                  <AppleLoginButton />
+                  <Stack spacing={2}>
+                    <AppleLoginButton />
+                    <GoogleLoginButton />
+                  </Stack>
                 </Box>
 
                 <Typography variant="body2" align="center" sx={{ mt: 3 }}>
@@ -118,8 +135,6 @@ export default function Login() {
                 </Typography>
               </>
             )}
-
-
           </ContentStyle>
         </Container>
       </RootStyle>

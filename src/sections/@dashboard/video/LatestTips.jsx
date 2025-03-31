@@ -4,6 +4,7 @@ import { ChevronLeft, ChevronRight } from "@mui/icons-material";
 import SwipeableViews from "react-swipeable-views";
 import Markdown from "src/components/Markdown";
 import VideoReviewedBottomSheet from "./VideoReviewedBottomSheet";
+import useLocales from "src/hooks/useLocales";
 
 const tips = [
     {
@@ -28,6 +29,7 @@ const safeSliceMarkdown = (text, length) => {
     return sliced.substring(0, sliced.lastIndexOf(" ")) + "..."; // Corta en el último espacio
 };
 const LatestTips = ({ videos }) => {
+    const { translate } = useLocales();
     const [isVideoDetailOpen, setIsVideoDetailOpen] = useState(false);
     const [index, setIndex] = useState(0);
     const [selectedVideo, setSelectedVideo] = useState(null)
@@ -46,73 +48,165 @@ const LatestTips = ({ videos }) => {
     }
 
     return (
-        <Box>
-            <Box display="flex" justifyContent="space-between" alignItems="center" mx={2}>
-                <Typography variant="h6" sx={{ fontWeight: "bold", textAlign: "left" }}>
-                    Pro Tips
+        <Box
+            sx={{
+                borderRadius: '0px',
+                mx: -2, // Negative margin to extend background
+                px: 2, // Padding to maintain content alignment
+                mt: 2, // Top margin for separation from previous components
+            }}
+        >
+            <Box
+                display="flex"
+                justifyContent="space-between"
+                alignItems="center"
+                sx={{
+                    borderRadius: '0px',
+                    backgroundColor: '#fff',
+                    p: 2,
+                }}
+            >
+                <Typography
+                    variant="h6"
+                    sx={{
+                        fontWeight: 600,
+                        fontSize: '1.1rem',
+                        color: '#1d1d1f'
+                    }}
+                >
+                    {translate('latestTips.title')}
                 </Typography>
-                <Box display="flex" justifyContent="space-between" alignItems="center" >
-                    <IconButton onClick={handleBack}>
+                <Box
+                    display="flex"
+                    alignItems="center"
+                    sx={{
+                        borderRadius: '0px',
+                        '& .MuiIconButton-root': {
+                            color: '#86868b',
+                            '&:hover': {
+                                color: '#1d1d1f',
+                                backgroundColor: 'rgba(0,0,0,0.04)'
+                            }
+                        }
+                    }}
+                >
+                    <IconButton onClick={handleBack} size="small">
                         <ChevronLeft />
                     </IconButton>
-                    
-                    <IconButton onClick={handleNext}>
+                    <IconButton onClick={handleNext} size="small">
                         <ChevronRight />
                     </IconButton>
                 </Box>
             </Box>
-            <SwipeableViews index={index} onChangeIndex={setIndex}>
+
+            <SwipeableViews
+                index={index}
+                onChangeIndex={setIndex}
+                style={{ 
+                    overflow: 'visible', 
+                    borderRadius: '0px',
+                    pb: 0
+                }}
+                containerStyle={{ 
+                    height: 'fit-content',
+                    overflow: 'visible',
+                    pb: 0
+                }}
+            >
                 {videos.map((tip) => (
-                    <CardContent key={tip.id}>
-                        <Box display="flex" alignItems="center" justifyContent="flex-start" mb={2}>
-                            <Avatar src={tip?.reviewer?.imageLink} sx={{ width: 50, height: 50, mr: 1 }} />
-                            <Box textAlign="left">
-                                <Typography variant="subtitle1" fontWeight="bold">
-                                    {tip?.reviewer?.name}
-                                </Typography>
-                            </Box>
-                        </Box>
-                        <Markdown
-                            mb={1}
-                            components={{
-                                h1: (props) => <Typography variant="body1" {...props} />,
-                                h2: (props) => <Typography variant="body1" {...props} />,
-                                h3: (props) => <Typography variant="body1" {...props} />,
-                                h4: (props) => <Typography variant="body1" {...props} />,
-                                h5: (props) => <Typography variant="body1" {...props} />,
-                                h6: (props) => <Typography variant="body1" {...props} />,
-                                ul: (props) => <ul style={{ listStyleType: 'disc', marginLeft: '1px' }} {...props} />,
-                                li: (props) => <li style={{ fontSize: '14px', marginLeft: '1px', marginTop: '5px' }} {...props} />,
+                    <Card
+                        key={tip.id}
+                        sx={{
+                            backgroundColor: '#fff',
+                            borderRadius: '0px',
+                            pb: 0,
+                            height: '100%',
+                            '& .MuiCardContent-root': {
+                                height: '100%',
+                                pb: 0
+                            }
+                        }}
+                    >
+                        <CardContent
+                            sx={{
+                                px: 2,
+                                pt: 2,
+                                pb: 0
                             }}
                         >
-                            {safeSliceMarkdown(tip?.comment, 100)}
-                        </Markdown>
-                        <Button mt={1} variant="outlined" fullWidth onClick={(tip) => handleReadMore(tip)}>Read More</Button>
-                    </CardContent>
+                            <Box
+                                display="flex"
+                                alignItems="center"
+                                mb={1.5}
+                            >
+                                <Avatar
+                                    src={tip?.reviewer?.imageLink}
+                                    sx={{
+                                        width: 44,
+                                        height: 44,
+                                        mr: 1.5,
+                                        border: '2px solid #fff',
+                                        boxShadow: '0 2px 8px rgba(0,0,0,0.08)'
+                                    }}
+                                />
+                                <Box>
+                                    <Typography
+                                        variant="subtitle1"
+                                        sx={{
+                                            fontWeight: 600,
+                                            fontSize: '0.95rem',
+                                            color: '#1d1d1f',
+                                            lineHeight: 1.2
+                                        }}
+                                    >
+                                        {tip?.reviewer?.name}
+                                    </Typography>
+                                </Box>
+                            </Box>
+
+                            <Markdown
+                                components={{
+                                    h1: (props) => <Typography variant="body1" {...props} />,
+                                    h2: (props) => <Typography variant="body1" {...props} />,
+                                    h3: (props) => <Typography variant="body1" {...props} />,
+                                    h4: (props) => <Typography variant="body1" {...props} />,
+                                    h5: (props) => <Typography variant="body1" {...props} />,
+                                    h6: (props) => <Typography variant="body1" {...props} />,
+                                    ul: (props) => <ul style={{ listStyleType: 'disc', marginLeft: '1px' }} {...props} />,
+                                    li: (props) => <li style={{ fontSize: '14px', marginLeft: '1px', marginTop: '5px' }} {...props} />,
+                                }}
+                                sx={{
+                                    mb: 3,
+                                    color: '#424245',
+                                    fontSize: '0.925rem',
+                                    lineHeight: 1.4
+                                }}
+                            >
+                                {safeSliceMarkdown(tip?.comment, 100)}
+                            </Markdown>
+
+                            <Button
+                                variant="outlined"
+                                fullWidth
+                                onClick={() => handleReadMore(tip)}
+                                sx={{
+                                    textTransform: 'none',
+                                    mt: 1
+                                }}
+                            >
+                                {translate('latestTips.readMore')}
+                            </Button>
+                        </CardContent>
+                    </Card>
                 ))}
             </SwipeableViews>
-            {/* Indicador de Dots */}
-            <Box display="flex" justifyContent="center" alignItems="center" my={2}>
-                {tips.map((_, i) => (
-                    <Box
-                        key={i}
-                        sx={{
-                            width: 8,
-                            height: 8,
-                            borderRadius: "50%",
-                            backgroundColor: i === index ? "primary.main" : "gray",
-                            mx: 0.5,
-                            transition: "background-color 0.3s ease",
-                        }}
-                    />
-                ))}
-            </Box>
-            <VideoReviewedBottomSheet
+
+            {isVideoDetailOpen && <VideoReviewedBottomSheet
                 open={isVideoDetailOpen}
                 onClose={() => setIsVideoDetailOpen(false)}
                 onOpen={() => setIsVideoDetailOpen(true)}
                 selectedVideo={selectedVideo}
-            />
+            />}
         </Box>
     );
 };

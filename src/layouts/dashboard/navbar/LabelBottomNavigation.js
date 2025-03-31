@@ -17,6 +17,7 @@ import DownhillSkiingIcon from '@mui/icons-material/DownhillSkiing';
 import PropTypes from 'prop-types';
 import WorkspacePremiumIcon from '@mui/icons-material/WorkspacePremium';
 import MapIcon from '@mui/icons-material/Map';
+import useLocales from 'src/hooks/useLocales';
 
 LabelBottomNavigation.propTypes = {
   onOpenSidebar: PropTypes.func,
@@ -30,13 +31,14 @@ export default function LabelBottomNavigation() {
   const [open, setOpen] = React.useState(false);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const { translate } = useLocales();
 
   // Mapping between paths and BottomNavigation values
   const getPathValue = (path) => {
-    if(path?.includes("map")){
+    if (path?.includes("map")) {
       return 5
     }
-    if(path?.includes("upload")){
+    if (path?.includes("upload")) {
       return 0
     }
     switch (path) {
@@ -69,22 +71,22 @@ export default function LabelBottomNavigation() {
     }
   }, [location.pathname]);
 
-  if(value === null){
+  if (value === null) {
     return <></>
   }
   return (
     <Box sx={{ pb: `calc(env(safe-area-inset-bottom) + ${isMobile ? '56px' : '16px'})`, height: '100px' }} ref={ref}>
       <CssBaseline />
-      <Paper 
-        sx={{ 
-          position: 'fixed', 
-          bottom: 0, 
-          left: 0, 
-          right: 0, 
+      <Paper
+        sx={{
+          position: 'fixed',
+          bottom: 0,
+          left: 0,
+          right: 0,
           width: '100%',
           height: 'auto',
-          paddingBottom: 'env(safe-area-inset-bottom)' 
-        }} 
+          paddingBottom: 'env(safe-area-inset-bottom)'
+        }}
         elevation={3}
       >
         <BottomNavigation
@@ -103,27 +105,36 @@ export default function LabelBottomNavigation() {
           }}
         >
           <BottomNavigationAction
-            label="Status"
+            label={translate('bottomNavigation.status')}
             icon={<BarChartIcon />}
             component={RouterLink}
             to={PATH_GUEST.videoCoach}
           />
           <BottomNavigationAction
-            label="Academy"
+            label={translate('bottomNavigation.academy')}
             icon={<WorkspacePremiumIcon />}
             component={RouterLink}
             to={PATH_GUEST.training}
           />
           {console.log(value)}
           <BottomNavigationAction
-            label="Match"
+            label={translate('bottomNavigation.match')}
             icon={<Logo disabled={value != 3} disabledLink={true} sx={{ height: '25px', width: '25px' }} />}
             component={RouterLink}
-            to={PATH_GUEST.school}
+            to={'/match/independent?resort=Cerro%20Catedral'}
           />
-          <BottomNavigationAction label="Lessons" component={RouterLink} to={PATH_GUEST.root + '/lessons'} icon={<DownhillSkiingIcon />} />
-
-          <BottomNavigationAction label="Maps" component={RouterLink} to={'/maps/chapelco'} icon={<MapIcon />} />
+          <BottomNavigationAction 
+            label={translate('bottomNavigation.lessons')} 
+            component={RouterLink} 
+            to={PATH_GUEST.root + '/lessons'} 
+            icon={<DownhillSkiingIcon />} 
+          />
+          <BottomNavigationAction 
+            label={translate('bottomNavigation.maps')} 
+            component={RouterLink} 
+            to={'/maps/chapelco'} 
+            icon={<MapIcon />} 
+          />
         </BottomNavigation>
       </Paper>
     </Box>

@@ -479,7 +479,10 @@
     "terms": "Terms of Service",
     "and": "and",
     "privacy": "Privacy Policy",
-    "notATeacher": "Not a teacher?"
+    "notATeacher": "Not a teacher?",
+    "continueWithGoogle": "Continue with Google",
+    "continueWithApple": "Continue with Apple",
+    "continueWithEmail": "Continue with Email"
   },
   "registerForm": {
     "name": "First name",
@@ -584,6 +587,133 @@
         "3": "Balance against the outside ski."
       },
       "aiCorrection": "SnowMatch AI Corrigirá tu video"
+    },
+    "DEMO": {
+      "title": "Demo Video Analysis",
+      "description": "Upload your demo video for analysis",
+      "fundamentals": "Learn the fundamentals of ski technique through video analysis"
+    },
+    "GENERAL_UPLOAD": {
+      "title": "Video Analysis",
+      "description": "Upload your video for professional analysis",
+      "fundamentals": "Get feedback on your skiing technique from our AI and professional instructors"
     }
+  },
+  "notifications": {
+    "procheck_requested": "ProCheck Requested",
+    "empty": {
+      "title": "No notifications yet",
+      "description": "Upload your first video and start receiving feedback from the best ski instructors and AI"
+    }
+  },
+  "uploadedVideos": {
+    "empty": {
+      "title": "No videos uploaded yet",
+      "description": "Upload a video to get started with AI analysis"
+    },
+    "title": "Uploaded Videos",
+    "reviewed": "Reviewed Videos"
+  },
+  "snowmatch": {
+    "intelligence": {
+      "title": "SnowMatch Intelligence",
+      "description": "Watch your video analysis in real time",
+      "analyze": "Complete Analysis",
+      "aiAnalysis": "AI Analysis",
+      "videoAnalysis": "Video Analysis",
+      "technicalBreakdown": "Technical Breakdown",
+      "improveYourTechnique": "Improve Your Technique",
+      "watchAnalyzed": "Watch Analyzed Video",
+      "aiInsights": "AI Insights",
+      "keyPoints": "Key Points",
+      "overallAnalysis": "Overall Analysis",
+      "technicalDetails": "Technical Details",
+      "recommendations": "Recommendations",
+      "viewFullReport": "View Full Report"
+    }
+  },
+  "procheck": {
+    "credits": {
+      "title": "ProCheck Credits",
+      "subtitle": "Use your credits to get professional feedback on your technique",
+      "available": "Available credits",
+      "use_credits": "Use your credits to get professional feedback on your technique",
+      "purchase_credits": "Use your credits to get professional feedback on your technique"
+    },
+    "actions": {
+      "get_first_correction": "Get my first video correction",
+      "get_procheck": "Get ProCheck for Latest Video", 
+      "upload_new": "Upload New Video",
+      "buy_credits": "Buy ProCheck Credits"
+    }
+  },
+  "videoCoachScreen": {
+    "profile": "Profile",
+    "uploaded_videos": "Uploaded Videos",
+    "score": "Performance Score",
+    "excellentPerformance": "Excellent! Your technique is outstanding",
+    "goodPerformance": "Good job! Keep practicing to improve",
+    "needsImprovement": "Room for improvement. Keep working on your technique",
+    "scoreDetails": "Overall Performance Score",
+    "technicalScore": "Technical Score",
+    "styleScore": "Style Score"
+  },
+  "latestTips": {
+    "title": "Pro Tips",
+    "readMore": "Read More"
+  },
+  "videoDemo": {
+    "title": "Professional ski analysis by SnowMatch Intelligence",
+    "uploadButton": "Analyze my skiing with AI"
+  },
+  "bottomNavigation": {
+    "status": "Status",
+    "academy": "Academy",
+    "match": "Match",
+    "lessons": "Lessons",
+    "maps": "Maps"
+  },
+  "progress": {
+    "yourSkiProgress": "Your Ski Progress",
+    "completed": "completed",
+    "joinSkiLessons": "Improve your technique step by step",
+    "startYourJourney": "Get personalized feedback on your skiing technique",
+    "goToFirstLevel": "Go to First Level",
+    "levels": {
+      "beginner": "Beginner",
+      "intermediate": "Intermediate",
+      "advanced": "Advanced",
+      "beginnerDesc": "Learn the basics",
+      "intermediateDesc": "Perfect your technique",
+      "advancedDesc": "Master the slopes"
+    }
+  },
+  "lastVideo": {
+    "title": "Latest Upload",
+    "subtitle": "Request professional feedback on your latest video",
+    "aiStatus": {
+      "pending": "AI Analysis in Progress",
+      "completed": "AI Analysis Completed",
+      "processing": "Processing Video"
+    },
+    "proCheck": {
+      "request": "Request ProCheck",
+      "pending": "ProCheck Pending"
+    }
+  },
+  "video": {
+    "status": {
+      "waitingProCheck": "Esperando análisis del Pro",
+      "proChecked": "Análisis del Pro completado",
+      "score": "Puntuación"
+    },
+    "action": {
+      "showAnalysis": "Ver Análisis",
+      "proCheck": "ProCheck"
+    }
+  },
+  "leaderboard": {
+    "title": "Leaderboards",
+    "improvement": "Top {{percent}}% - Take {{time}}s off to move up {{spots}} spots"
   }
 }

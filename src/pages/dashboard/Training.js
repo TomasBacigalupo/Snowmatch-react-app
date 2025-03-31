@@ -16,28 +16,28 @@ const sliderSettings = {
   dots: false,
   infinite: false,
   speed: 500,
-  slidesToShow: 4, // Default for large screens
+  slidesToShow: 4,
   slidesToScroll: 1,
-  variableWidth: true, // Allow dynamic width for slides
+  variableWidth: false,
   responsive: [
     {
-      breakpoint: 1280, // Medium screens
+      breakpoint: 1280,
       settings: {
         slidesToShow: 3,
       },
     },
     {
-      breakpoint: 960, // Tablet screens
+      breakpoint: 960,
       settings: {
         slidesToShow: 2,
       },
     },
     {
-      breakpoint: 600, // Mobile screens
+      breakpoint: 600,
       settings: {
         slidesToShow: 1,
-        slidesToScroll: 1, // Scroll one card at a time
-        variableWidth: true, // Show part of the next card
+        slidesToScroll: 1,
+        variableWidth: false,
       },
     },
   ],
@@ -89,302 +89,16 @@ export default function Training() {
         }
       ],
     },
-    {
-      title: 'Carving',
-      subtitle: 'Domina las pistas completando los tres ejercicios',
-      code: 'CARVING',
-      levels: [
-        {
-          code: 'CARVING_CHALLANGE_1',
-          title: 'Challenge 1 title',
-          subtitle: 'Challenge 1 subtitle',
-          cover: '/assets/courses/position.png',
-          level: 'Principiante',
-          points: 25,
-          demoUrl: 'https://snowmatchvideos.s3.us-east-1.amazonaws.com/CARVING_CHALLANGE_1.mov'
-        },
-        {
-          code: 'CARVING_CHALLANGE_2',
-          title: 'Challenge 2 title',
-          subtitle: 'Challenge 2 subtitle',
-          cover: '/assets/courses/pista.png',
-          level: 'Principiante',
-          points: 25,
-          demoUrl: 'https://snowmatchvideos.s3.us-east-1.amazonaws.com/CARVING_CHALLANGE_2.mov'
-        },
-        {
-          code: 'CARVING_CHALLANGE_3',
-          title: 'Challenge 3 title',
-          subtitle: 'Challenge 3 subtitle',
-          cover: 'https://image.snowmatch.pro/videoPosters/CARVING_CHALLANGE_3.jpg',
-          level: 'Principiante',
-          points: 25,
-          demoUrl: 'https://snowmatchvideos.s3.us-east-1.amazonaws.com/CARVING_CHALLANGE_2.mov'
-        },
-        {
-          code: 'CARVING_DEMO_1',
-          title: 'Demo 1 title',
-          subtitle: 'Demo 1 subtitle',
-          cover: '/assets/courses/position.png',
-          level: 'Principiante',
-          points: 25,
-          demoUrl: 'https://snowmatchvideos.s3.us-east-1.amazonaws.com/Screen+Recording+2024-12-29+at+4.13.17%E2%80%AFPM.mov'
-        },
-        {
-          title: 'Challenge 4 title',
-          subtitle: 'Challenge 4 subtitle',
-          cover: '/assets/courses/position.png',
-          level: 'Principiante',
-          points: 25,
-          demoUrl: 'https://snowmatchvideos.s3.us-east-1.amazonaws.com/Screen+Recording+2024-12-29+at+4.13.17%E2%80%AFPM.mov'
-        },
-        {
-          title: 'Challenge 5 title',
-          subtitle: 'Challenge 5 subtitle',
-          cover: '/assets/courses/position.png',
-          level: 'Principiante',
-          points: 25,
-          demoUrl: 'https://snowmatchvideos.s3.us-east-1.amazonaws.com/Screen+Recording+2024-12-29+at+4.13.17%E2%80%AFPM.mov'
-        },
-        {
-          title: 'Challenge 6 title',
-          subtitle: 'Challenge 6 subtitle',
-          cover: '/assets/courses/position.png',
-          level: 'Principiante',
-          points: 25,
-          demoUrl: 'https://snowmatchvideos.s3.us-east-1.amazonaws.com/Screen+Recording+2024-12-29+at+4.13.17%E2%80%AFPM.mov'
-        },
-        {
-          title: 'Demo 2 title',
-          subtitle: 'Demo 2 subtitle',
-          cover: '/assets/courses/position.png',
-          level: 'Principiante',
-          points: 25,
-          demoUrl: 'https://snowmatchvideos.s3.us-east-1.amazonaws.com/Screen+Recording+2024-12-29+at+4.13.17%E2%80%AFPM.mov'
-        },
-        {
-          title: 'Clavado de Bastón',
-          subtitle: 'Aprende a clavar el bastón en el momento justo',
-          cover: '/assets/courses/clavado.png',
-          level: 'Intermedio',
-          points: 25,
-          demoUrl: 'https://snowmatchvideos.s3.us-east-1.amazonaws.com/Tip_Como+hacer+el+clavado+de+baston.mp4'
-        },
-        {
-          title: 'Vueltas Medianas',
-          subtitle: 'Domina la velocidad en pistas azules con estilo',
-          cover: '/assets/courses/pista2.png',
-          level: 'Avanzado',
-          points: 50,
-        },
-      ],
-    },
-    {
-      title: 'Bumps',
-      subtitle: 'Descubrí tu nivel en los bumps completando desafíos',
-      code: 'BUMPS',
-      levels: [
-        {
-          code: "BUMPS_CHALLANGE_1",
-          title: 'Challange 1 title',
-          subtitle: 'Challange 1 subtitle',
-          cover: '/assets/courses/pista.png',
-          level: 'Principiante',
-          demoUrl: 'https://snowmatchvideos.s3.us-east-1.amazonaws.com/BUMPS_CHALLANGE_1.mov',
-          points: 25,
-        },
-        {
-          code: "BUMPS_CHALLANGE_2",
-          title: 'Challange 2 title',
-          subtitle: 'Challange 2 subtitle',
-          cover: 'https://image.snowmatch.pro/videoPosters/BUMPS_CHALLANGE_2.jpg',
-          level: 'Intermedio',
-          demoUrl: 'https://snowmatchvideos.s3.us-east-1.amazonaws.com/BUMPS_CHALLANGE_2.mov',
-          points: 25,
-        },
-        {
-          code: "BUMPS_CHALLANGE_3",
-          title: 'Challange 3 title',
-          subtitle: 'Challange 3 subtitle',
-          cover: 'https://image.snowmatch.pro/videoPosters/BUMPS_CHALLANGE_3.jpg',
-          level: 'Principiante',
-          demoUrl: 'https://snowmatchvideos.s3.us-east-1.amazonaws.com/BUMPS_CHALLANGE_3.mov',
-          points: 25,
-        },
-        {
-          code: "BUMPS_DEMO_1",
-          title: 'Demo 1 title',
-          subtitle: 'Demo 1 subtitle',
-          cover: '/assets/courses/pista.png',
-          level: 'Intermedio',
-          points: 25,
-        },
-        {
-          title: 'Challange 4 title',
-          subtitle: 'Challange 4 subtitle',
-          cover: '/assets/courses/carving.png',
-          level: 'Principiante',
-          points: 25,
-        },
-        {
-          title: 'Challange 5 title',
-          subtitle: 'Challange 5 subtitle',
-          cover: '/assets/courses/pista.png',
-          level: 'Intermedio',
-          points: 25,
-        },
-        {
-          title: 'Challange 6 title',
-          subtitle: 'Challange 6 subtitle',
-          cover: '/assets/courses/carving.png',
-          level: 'Principiante',
-          points: 25,
-        },
-        {
-          title: 'Demo 2 title',
-          subtitle: 'Demo 2 subtitle',
-          cover: '/assets/courses/pista.png',
-          level: 'Intermedio',
-          points: 25,
-        },
-      ],
-    },
-    {
-      title: 'Corto',
-      subtitle: 'Descubrí tu nivel en los bumps completando desafíos',
-      code: 'CORTO',
-      levels: [
-        {
-          title: 'Challange 1 title',
-          subtitle: 'Challange 1 subtitle',
-          cover: '/assets/courses/carving.png',
-          level: 'Principiante',
-          points: 25,
-        },
-        {
-          title: 'Challange 2 title',
-          subtitle: 'Challange 2 subtitle',
-          cover: '/assets/courses/pista.png',
-          level: 'Intermedio',
-          points: 25,
-        },
-        {
-          title: 'Challange 3 title',
-          subtitle: 'Challange 3 subtitle',
-          cover: '/assets/courses/carving.png',
-          level: 'Principiante',
-          points: 25,
-        },
-        {
-          title: 'Demo 1 title',
-          subtitle: 'Demo 1 subtitle',
-          cover: '/assets/courses/pista.png',
-          level: 'Intermedio',
-          points: 25,
-        },
-        {
-          title: 'Challange 4 title',
-          subtitle: 'Challange 4 subtitle',
-          cover: '/assets/courses/carving.png',
-          level: 'Principiante',
-          points: 25,
-        },
-        {
-          title: 'Challange 5 title',
-          subtitle: 'Challange 5 subtitle',
-          cover: '/assets/courses/pista.png',
-          level: 'Intermedio',
-          points: 25,
-        },
-        {
-          title: 'Challange 6 title',
-          subtitle: 'Challange 6 subtitle',
-          cover: '/assets/courses/carving.png',
-          level: 'Principiante',
-          points: 25,
-        },
-        {
-          title: 'Demo 2 title',
-          subtitle: 'Demo 2 subtitle',
-          cover: '/assets/courses/pista.png',
-          level: 'Intermedio',
-          points: 25,
-        },
-      ],
-    },
-    {
-      title: 'FreeStyle',
-      subtitle: 'Descubrí tu nivel en los bumps completando desafíos',
-      code: 'FREE_STYLE',
-      levels: [
-        {
-          title: 'Challange 1 title',
-          subtitle: 'Challange 1 subtitle',
-          cover: '/assets/courses/carving.png',
-          level: 'Principiante',
-          points: 25,
-        },
-        {
-          title: 'Challange 2 title',
-          subtitle: 'Challange 2 subtitle',
-          cover: '/assets/courses/pista.png',
-          level: 'Intermedio',
-          points: 25,
-        },
-        {
-          title: 'Challange 3 title',
-          subtitle: 'Challange 3 subtitle',
-          cover: '/assets/courses/carving.png',
-          level: 'Principiante',
-          points: 25,
-        },
-        {
-          title: 'Demo 1 title',
-          subtitle: 'Demo 1 subtitle',
-          cover: '/assets/courses/pista.png',
-          level: 'Intermedio',
-          points: 25,
-        },
-        {
-          title: 'Challange 4 title',
-          subtitle: 'Challange 4 subtitle',
-          cover: '/assets/courses/carving.png',
-          level: 'Principiante',
-          points: 25,
-        },
-        {
-          title: 'Challange 5 title',
-          subtitle: 'Challange 5 subtitle',
-          cover: '/assets/courses/pista.png',
-          level: 'Intermedio',
-          points: 25,
-        },
-        {
-          title: 'Challange 6 title',
-          subtitle: 'Challange 6 subtitle',
-          cover: '/assets/courses/carving.png',
-          level: 'Principiante',
-          points: 25,
-        },
-        {
-          title: 'Demo 2 title',
-          subtitle: 'Demo 2 subtitle',
-          cover: '/assets/courses/pista.png',
-          level: 'Intermedio',
-          points: 25,
-        },
-      ],
-    },
   ];
 
   const handleSelectCourseLevel = (course, level) => {
-    if(course.code === "AI_CHALLANGE_1" || level.code === "AI_CHALLANGE_1"){
+    if (course.code === "AI_CHALLANGE_1" || level.code === "AI_CHALLANGE_1") {
       setOpen(true)
-    }else {
+    } else {
       setOpenExcercise(true)
     }
     console.log("level", level)
-    
+
     setSelectedCourse(course.code);
     setSelectedLevelTitle(level.code);
     setSelectedLevel(level.code)
@@ -423,15 +137,22 @@ export default function Training() {
             {/* Carousel for Course Levels */}
             <Slider
               {...sliderSettings}
-              style={{ display: 'flex', position: 'relative' }}
+              style={{ 
+                display: 'flex',
+                position: 'relative',
+                width: '100%',
+                overflow: 'hidden'
+              }}
             >
               {course.levels.map((level, levelIdx) => (
                 <Box
                   key={levelIdx}
                   sx={{
-                    flex: '0 0 auto',
+                    flex: '1 0 auto',
                     marginRight: 2,
                     position: 'relative',
+                    width: '100%',
+                    maxWidth: '300px',
                   }}
                 >
                   <CourseCard
@@ -468,6 +189,17 @@ export default function Training() {
             </Slider>
           </Box>
         ))}
+        {/* Section Header */}
+        <Box display="flex" gap={2} mb={1} alignItems="center">
+          <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
+            Aprende a esquiar progressivamente
+          </Typography>
+          <Icon icon="mdi:snowflake" height="30px" />
+        </Box>
+
+        <Typography variant="subtitle1" sx={{ mb: 3 }} color="text.secondary">
+          Segui nuestros nieveles para ver hasta donde puedes llegar
+        </Typography>
         <SkiProgress />
       </Container>
       <VideoUploadBottomSheet

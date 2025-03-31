@@ -70,13 +70,13 @@ export default function Maps() {
 
   useEffect(() => {
     // Configuración específica para Android/iOS
-    if (typeof (DeviceMotionEvent ) !== 'undefined' && 
-        typeof (DeviceMotionEvent ).requestPermission === 'function') {
-      (DeviceMotionEvent )
+    if (typeof (DeviceMotionEvent) !== 'undefined' &&
+      typeof (DeviceMotionEvent).requestPermission === 'function') {
+      (DeviceMotionEvent)
         .requestPermission()
         .then((permissionState) => {
           if (permissionState === 'granted') {
-            window.addEventListener('devicemotion', () => {});
+            window.addEventListener('devicemotion', () => { });
           }
         });
     }
@@ -99,6 +99,7 @@ export default function Maps() {
         touchZoomRotate: false
       });
       map.touchZoomRotate.enable();
+      
 
       // Agregar marcador para el centro de esquí seleccionado
       // new mapboxgl.Marker().setLngLat([resort.lon, resort.lat]).addTo(map);
@@ -142,17 +143,18 @@ export default function Maps() {
           paint: {
             'line-color': [
               'match',
-              ['get', 'piste_difficulty'],
-              'novice', '#008000',      // Verde para principiantes
-              'easy', '#0000FF',        // Azul para intermedias
-              'intermediate', '#FF0000', // Rojo para avanzadas
+              ['get', 'difficulty'],
+              'easy', '#00FF00',        // Verde para principiantes
+              'intermediate', '#0000FF', // Azul para intermedios
+              'advanced', '#FF0000',    // Rojo para avanzados
               'expert', '#000000',      // Negro para expertos
-              '#808080'                 // Gris por defecto
+              '#808080'                 // Gris por defecto si no coincide
             ],
             'line-width': 3
           }
         });
       });
+      
     }
   }, [selectedTab]);
 

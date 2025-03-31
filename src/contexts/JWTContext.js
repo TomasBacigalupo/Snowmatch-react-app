@@ -126,7 +126,8 @@ const AuthContext = createContext({
   refreshUser: () => { },
   addToPremium: () => Promise.resolve(),
   deleteAccount: () => Promise.resolve(),
-  loginWithApple: () => Promise.resolve()
+  loginWithApple: () => Promise.resolve(),
+  loginWithGoogle: () => Promise.resolve()
 });
 
 // ----------------------------------------------------------------------
@@ -373,6 +374,52 @@ function AuthProvider({ children }) {
     }
   };
 
+  const loginWithGoogle = async () => {
+    try {
+      const { SocialLogin } = await import('@capgo/capacitor-social-login');
+      await SocialLogin.initialize({
+        google: {
+          iOSClientId: '864910142009-d8jai0985rn4b13jge8ng0gmf0hjejfp.apps.googleusercontent.com', // Regular client ID
+          iOSServerClientId: '864910142009-d8jai0985rn4b13jge8ng0gmf0hjejfp.apps.googleusercontent.com', // Same as iOSClientId
+        },
+      });
+      
+      const result = await SocialLogin.login({
+        provider: 'google',
+        options: {
+          scopes: ['email', 'profile'],
+          forceRefreshToken: true
+        }
+      });
+      
+      if (result.token) {
+        console.log('result1', result.result.serverAuthCode);
+        const response = await axios.post('/api/auth/google/login', {
+          idToken: result.result.serverAuthCode
+        });
+
+        const user = response.data;
+        const accessToken = user.token;
+        
+        setSession(accessToken);
+        window.localStorage.setItem('accessToken', accessToken);
+        
+        await registerNotifications();
+        
+        dispatch({
+          type: 'REGISTER',
+          payload: {
+            user,
+            isAuthenticated: true
+          },
+        });
+      }
+    } catch (error) {
+      console.error('Google login error:', error);
+      throw error;
+    }
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -387,7 +434,8 @@ function AuthProvider({ children }) {
         refreshUser,
         addToPremium,
         deleteAccount,
-        loginWithApple
+        loginWithApple,
+        loginWithGoogle
       }}
     >
       {children}

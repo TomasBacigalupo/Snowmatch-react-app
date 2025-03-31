@@ -43,7 +43,7 @@ export default function VideoReviewedBottomSheet({ open, onClose, onOpen, select
     const handleRequestProCheck = () => {
         dispatch(proCheck(selectedVideo.id))
         setIsProCheckRequested(true);
-        enqueueSnackbar("ProCheck Solicitado")
+        enqueueSnackbar(translate('notifications.procheck_requested'))
     }
 
     return (
@@ -134,10 +134,61 @@ export default function VideoReviewedBottomSheet({ open, onClose, onOpen, select
                             )}
                         </Box>
                         <Box p={2}>
-                            {/* Score */}
-                            <Typography variant="h6" gutterBottom>
-                                {translate('videoCoachScreen.score')} {selectedVideo.score}
-                            </Typography>
+                            {/* Score - Updated with circular design */}
+                            <Box 
+                                sx={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: 2,
+                                    mb: 3,
+                                    backgroundColor: theme.palette.background.neutral,
+                                    borderRadius: 2,
+                                    p: 2,
+                                }}
+                            >
+                                <Box
+                                    sx={{
+                                        position: 'relative',
+                                        width: 80,
+                                        height: 80,
+                                        borderRadius: '50%',
+                                        background: `conic-gradient(${theme.palette.primary.main} ${selectedVideo.score}%, ${theme.palette.grey[200]} 0)`,
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        '&::before': {
+                                            content: '""',
+                                            position: 'absolute',
+                                            width: '85%',
+                                            height: '85%',
+                                            borderRadius: '50%',
+                                            background: theme.palette.background.paper,
+                                        }
+                                    }}
+                                >
+                                    <Typography 
+                                        variant="h4" 
+                                        sx={{ 
+                                            position: 'relative',
+                                            fontWeight: 'bold',
+                                            color: theme.palette.primary.main 
+                                        }}
+                                    >
+                                        {parseInt(selectedVideo.score, 10)}
+                                    </Typography>
+                                </Box>
+                                <Box>
+                                    <Typography variant="h6" gutterBottom sx={{ color: theme.palette.text.primary }}>
+                                        {translate('videoCoachScreen.score')}
+                                    </Typography>
+                                    <Typography variant="body2" sx={{ color: theme.palette.text.secondary }}>
+                                        {selectedVideo.score >= 80 ? translate('videoCoachScreen.excellentPerformance') :
+                                         selectedVideo.score >= 60 ? translate('videoCoachScreen.goodPerformance') :
+                                         translate('videoCoachScreen.needsImprovement')}
+                                    </Typography>
+                                </Box>
+                            </Box>
+
                             {selectedVideo.analysisData && <VideoAnalyticsChart turnData={selectedVideo.analysisData} />}
 
                             {/* Revisor */}

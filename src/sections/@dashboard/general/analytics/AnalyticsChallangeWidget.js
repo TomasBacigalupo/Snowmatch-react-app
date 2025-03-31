@@ -17,6 +17,7 @@ const RootStyle = styled(Card)(({ theme }) => ({
     // background: `linear-gradient(to bottom, #fff, ${theme.palette.primary.light})`, // De blanco a primary.light
     color: theme.palette.primary.darker,
     position: 'relative',
+    borderRadius: '0px',
     height: 200, // Aumenté un poco la altura para el botón
 }));
 
@@ -29,7 +30,7 @@ const IconWrapperStyle = styled('div')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: '50%',
+    borderRadius: '0px',
     backgroundColor: alpha(theme.palette.primary.dark, 0.2),
 }));
 

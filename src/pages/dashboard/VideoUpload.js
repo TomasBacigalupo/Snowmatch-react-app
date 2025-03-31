@@ -21,6 +21,12 @@ import { Help, HelpOutline } from '@mui/icons-material';
 import LastVideo from 'src/sections/@dashboard/video/LastVideo';
 import ProCheckBox from 'src/sections/@dashboard/video/ProCheckBox';
 import LatestTips from 'src/sections/@dashboard/video/LatestTips';
+import VideoDemo from 'src/sections/@dashboard/video/VideoDemo';
+import UploadedVideosList from 'src/sections/@dashboard/video/UploadedVideosList';
+import StyledContainer from 'src/sections/@dashboard/video/StyledContainer';
+import VideoToggleView from 'src/sections/@dashboard/video/VideoToggleView';
+import SkiProgressBox from 'src/sections/@dashboard/video/SkiProgressBox';
+
 // ----------------------------------------------------------------------
 
 
@@ -93,10 +99,13 @@ export default function VideoUpload() {
     const dispatch = useDispatch();
     const { videos } = useSelector((state) => state.video);
 
+    const [showHeader, setShowHeader] = useState(false);
 
     useEffect(() => {
-        dispatch(getVideos());
-    }, [dispatch]);
+        if (!videos || videos.length === 0) {
+            dispatch(getVideos());
+        }
+    }, [dispatch, videos]);
 
     useEffect(() => {
         if (videos) {
@@ -130,78 +139,21 @@ export default function VideoUpload() {
         }
     }, [videos]);
 
-
-
-    const handleFileSelect = (event) => {
-        const file = event.target.files[0];
-
-        const tempVideoUrl = URL.createObjectURL(file);
-        const video = document.createElement('video');
-        video.src = tempVideoUrl;
-
-        video.onloadedmetadata = () => {
-            if (video.duration <= 30) {
-                setSelectedFile(file);
-                setVideoPreviewUrl(tempVideoUrl);
-                setVideoDuration(video.duration);
-                setActiveStep(1);
-            } else {
-                alert('Please select a video that is 30 seconds or shorter.');
-                URL.revokeObjectURL(tempVideoUrl);
-            }
+    useEffect(() => {
+        const handleScroll = () => {
+            const show = window.scrollY > 100;
+            setShowHeader(show);
         };
-    };
 
-    const handleUpload = () => {
-        if (selectedFile && videoTitle.trim()) {
-            console.log('Uploading file:', selectedFile, 'with title:', videoTitle);
-            setActiveStep(2);
-            setTimeout(() => {
-                alert('Video uploaded successfully!');
-                resetUploadState();
-                setIsOpen(false);
-            }, 1000);
-        } else {
-            alert('Please select a file and enter a title');
-        }
-    };
-
-    const resetUploadState = () => {
-        setSelectedFile(null);
-        setVideoPreviewUrl(null);
-        setVideoDuration(0);
-        setVideoTitle('');
-        setActiveStep(0);
-    };
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
 
     const handleVideoClick = (video) => {
         setSelectedVideo(video);
         setIsVideoDetailOpen(true);
     };
 
-    const handleNext = () => {
-        setActiveHowToStep((prevActiveStep) => prevActiveStep + 1);
-    };
-
-    const handleBack = () => {
-        setActiveHowToStep((prevActiveStep) => prevActiveStep - 1);
-    };
-
-    const handleReset = () => {
-        setActiveHowToStep(0);
-    };
-
-    const TrophyIcon = styled(SvgIcon)(({ theme, completed }) => ({
-        color: completed ? theme.palette.grey[500] : theme.palette.warning.main,
-        fontSize: '2rem',
-    }));
-
-    const Trophy = ({ level, ...props }) => (
-        <SvgIcon {...props} height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
-            <path d="M280-120v-80h160v-124q-49-11-87.5-41.5T296-442q-75-9-125.5-65.5T120-640v-40q0-33 23.5-56.5T200-760h80v-80h400v80h80q33 0 56.5 23.5T840-680v40q0 76-50.5 132.5T664-442q-18 46-56.5 76.5T520-324v124h160v80H280Zm0-408v-152h-80v40q0 38 22 68.5t58 43.5Zm200 128q50 0 85-35t35-85v-240H360v240q0 50 35 85t85 35Zm200-128q36-13 58-43.5t22-68.5v-40h-80v152Zm-200-52Z" />
-            <text x="50%" y="50%" textAnchor="middle" dy=".3em" fontSize="1.5rem" fill="black">{level}</text>
-        </SvgIcon>
-    );
     const CircularProgressWithLabel = ({ value }) => (
         <Box position="relative" display="inline-flex">
             <CircularProgress size={80} variant="determinate" value={value} />
@@ -225,7 +177,7 @@ export default function VideoUpload() {
 
         return (
             <Grid item xs={12} sm={6} md={4}>
-                <Card>
+                <Card sx={{ borderRadius: '0px' }}>
                     <Box
                         padding={2}
 
@@ -270,271 +222,123 @@ export default function VideoUpload() {
     };
 
     const [levels, setLevels] = useState([
-        { level: 1, course: 'CARVING', completed: false, score: 8, progress: 10 },
-        { level: 2, course: 'BUMPS', score: 10, minScore: 0, maxScore: 100, progress: 39, completed: false },
-        { level: 3, course: 'SHORT_TURNS', minScore: 0, maxScore: 100, progress: 86, completed: false, },
-        { level: 4, course: 'FREE_STYLE', minScore: 0, maxScore: 100, progress: 33, completed: false, },
+        { level: 1, course: 'CARVING', completed: false, score: 8, progress: 10 }
     ]);
 
     const [tab, setTab] = useState('profile');
     const handleChange = (event, newCategory) => {
         setTab(newCategory);
     }
-    if (tab === 'profile') {
-        return (
-            <Page title="My Progress">
-                <Container>
-                    <ToggleButtonGroup
-                        color="primary"
-                        value={tab}
-                        exclusive
-                        onChange={handleChange}
-                        aria-label="Platform"
-                        sx={{
-                            width: '100%',
-                            borderRadius: 10,
-                            justifyContent: 'space-between',
-                        }}
-                    >
-                        <ToggleButton
-                            value="profile"
-                            sx={{
-                                width: '100%',
-                                borderRadius: 15,
-                                justifyContent: 'center',
-                                fontSize: '0.75rem',
-                                '&.MuiButtonBase-root': {
-                                    borderRadius: '100px !important',
-                                },
-                            }}
-                        >
-                            {translate('videoCoachScreen.profile')}
-                        </ToggleButton>
-                        <ToggleButton
-                            value="uploaded"
-                            sx={{
-                                width: '100%',
-                                borderRadius: 15,
-                                justifyContent: 'center',
-                                fontSize: '0.75rem',
-                                '&.MuiButtonBase-root': {
-                                    borderRadius: '100px !important',
-                                },
-                            }}
-                        >
-                            {translate('videoCoachScreen.uploaded_videos')}
-                        </ToggleButton>
-                    </ToggleButtonGroup>
 
-                    {/* Updated section for displaying uploaded videos or message */}
-
-                    <Grid container spacing={1} justifyContent='space-between'>
-                        <Grid item><LeaderBoardRightDrawer
-                            open={isLeaderBoardOpen}
-                            onClose={() => setIsLeaderBoardOpen(false)}
-                            onOpen={() => setIsLeaderBoardOpen(true)}
-                            selectedChallange={selectedChallange}
-                            course={"AI_CHALLANGE_1"}
-                        /></Grid>
-                        <Grid item xs={12}>
-                            <AnalyticsChallangeWidget title="Carving Challange" total={bestCarvingChallange} chartData={carvingChallangeResults} onLeaderboardClick={() => setIsLeaderBoardOpen(true)} />
-                        </Grid>
-                        {/* muy bueno pero no tiene uso hoy: <PerformanceChart userScores={userScores} allScores={allScores} userScore={55} /> */}
-                        {/* <Grid item xs={12}>
-                            <AnalyticsUserProgress />
-                        </Grid> */}
-                        <Grid item xs={12}>
-                            <ProCheckBox />
-                        </Grid>
-
-                        {videos && videos.length > 0 && <LastVideo
-                            video={[...videos]
-                                .sort((a, b) => b.id - a.id)
-                                .slice(0, 1)[0]}
-                        />}
-                        {videos && videos.filter(video => video.reviewed).length > 0 && <Grid item xs={12}>
-                            <LatestTips videos={[...videos]
-                                .filter(video => video.comment)
-                                .sort((a, b) => b.id - a.id)} />
-                        </Grid>}
-                        {levels.map((level) => (
-                            <Level
-                                course={level.course}
-                                key={level.course}
-                                level={level.level}
-                                title={translate(`course.${level.course}.title`)}
-                                description={translate(`course.${level.course}.description`)}
-                                completed={level.completed}
-                                onClick={() => {
-                                    navigate(`/`);
-                                    // setOpen(true);
-                                }}
-                                score={level.score}
-                                minScore={level.minScore}
-                                maxScore={level.maxScore}
-                                status={level.status}
-                                progress={level.progress}
-                            />
-                        ))}
+    const renderProfileContent = () => (
+        <StyledContainer>
+            <Grid container spacing={1} justifyContent='space-between' padding={0}>
+                <LeaderBoardRightDrawer
+                    open={isLeaderBoardOpen}
+                    onClose={() => setIsLeaderBoardOpen(false)}
+                    onOpen={() => setIsLeaderBoardOpen(true)}
+                    selectedChallange={selectedChallange}
+                    course={"AI_CHALLANGE_1"}
+                />
+                {!videos || videos.length === 0 && (
+                    <Grid item xs={12} sx={{
+                        pt: 0,
+                        '&.MuiGrid-item': {
+                            paddingTop: '0 !important'
+                        }
+                    }}>
+                        <VideoDemo />
                     </Grid>
-                </Container>
+                )}
+                {carvingChallangeResults && carvingChallangeResults.length > 0 && (
+                    <Grid item xs={12}>
+                        <Box className="white-card">
+                            <AnalyticsChallangeWidget
+                                title="Carving Challange"
+                                total={bestCarvingChallange}
+                                chartData={carvingChallangeResults}
+                                onLeaderboardClick={() => setIsLeaderBoardOpen(true)}
+                            />
+                        </Box>
+                    </Grid>
+                )}
+                <Grid item xs={12}>
+                    <Box className="white-card">
+                        <ProCheckBox />
+                    </Box>
+                </Grid>
+
+                {videos && videos.length > 0 && (
+                    <Grid item xs={12}>
+                        <Box className="white-card">
+                            <LastVideo
+                                video={[...videos]
+                                    .sort((a, b) => b.id - a.id)
+                                    .slice(0, 1)[0]}
+                            />
+                        </Box>
+                    </Grid>
+                )}
+                {videos && videos.filter(video => video.reviewed).length > 0 && (
+                    <Grid item xs={12}>
+                        <Box className="white-card">
+                            <LatestTips
+                                videos={[...videos]
+                                    .filter(video => video.comment)
+                                    .sort((a, b) => b.id - a.id)}
+                            />
+                        </Box>
+                    </Grid>
+                )}
+                <Grid item xs={12} sm={6} md={4}>
+                    <SkiProgressBox progress={0} />
+                </Grid>
+            </Grid>
+        </StyledContainer>
+    );
+
+    const renderUploadedContent = () => (
+        <UploadedVideosList
+            videos={uploadedVideos}
+            onVideoClick={handleVideoClick}
+            showHeader={showHeader}
+        />
+    );
+
+    return (
+        <Page title="My Progress">
+            <Container
+                sx={{
+                    overflowX: 'hidden',
+                    maxWidth: '100%',
+                    pt: 0
+                }}
+            >
+                {videos?.length > 0 && <Box className="white-card">
+                    <VideoToggleView
+                        videos={videos}
+                        tab={tab}
+                        onTabChange={handleChange}
+                    />
+                </Box>}
+
+                {tab === 'profile' ? renderProfileContent() : renderUploadedContent()}
 
                 <VideoUploadBottomSheet
                     title={selectedLevelTitle}
                     course={selectedCourse}
                     onOpen={() => setOpen(true)}
                     open={open}
-                    onClose={() => setOpen(false)} />
-            </Page>
-        );
-    }
+                    onClose={() => setOpen(false)}
+                />
 
-    return (
-        <Page title="My Progress">
-            <Container>
-                <ToggleButtonGroup
-                    color="primary"
-                    value={tab}
-                    exclusive
-                    onChange={handleChange}
-                    aria-label="Platform"
-                    sx={{
-                        width: '100%',
-                        borderRadius: 10,
-                        justifyContent: 'space-between',
-                    }}
-                >
-                    <ToggleButton
-                        value="profile"
-                        sx={{
-                            width: '100%',
-                            borderRadius: 15,
-                            justifyContent: 'center',
-                            fontSize: '0.75rem',
-                            '&.MuiButtonBase-root': {
-                                borderRadius: '100px !important',
-                            },
-                        }}
-                    >
-                        {translate('videoCoachScreen.profile')}
-                    </ToggleButton>
-                    <ToggleButton
-                        value="uploaded"
-                        sx={{
-                            width: '100%',
-                            borderRadius: 15,
-                            justifyContent: 'center',
-                            fontSize: '0.75rem',
-                            '&.MuiButtonBase-root': {
-                                borderRadius: '100px !important',
-                            },
-                        }}
-                    >
-                        {translate('videoCoachScreen.uploaded_videos')}
-                    </ToggleButton>
-                </ToggleButtonGroup>
-
-                {/* Updated section for displaying uploaded videos or message */}
-                <Box>
-                    {uploadedVideos?.filter(video => !video?.reviewed)?.length > 0 && (
-                        <Box my={2}>
-                            <Typography variant="h6" mt={4}>
-                                {translate(`videoCoachScreen.videosPending`)}
-                            </Typography>
-                        </Box>
-                    )}
-                    {uploadedVideos?.filter(video => !video?.reviewed)?.length > 0 && (
-                        <Grid container spacing={3}>
-                            {uploadedVideos?.filter(video => !video?.reviewed).map((video) => (
-                                <Grid item xs={12} sm={6} md={4} key={video.id}>
-                                    <StyledCard onClick={() => handleVideoClick(video)}>
-                                        <CardMedia component="div">
-                                            {console.log("preview del video", `${process.env.REACT_APP_VIDEO_PREVIEW_BUCKET_URL}/${video.videoUrl}.jpg`)}
-                                            <img
-                                                src={`${process.env.REACT_APP_VIDEO_PREVIEW_BUCKET_URL}/${video.videoUrl}.jpg`}
-                                                height="140"
-                                                style={{ width: '100%', objectFit: 'cover', borderRadius: '4px' }}
-                                                controls={false}
-                                                muted
-                                            />
-                                        </CardMedia>
-                                        <CardContent>
-                                            <Typography gutterBottom variant="subtitle1">
-                                                {translate(`course.${video.course}.title`)}
-                                            </Typography>
-                                            {video.reviewed && (<Typography variant="body2" color="text.secondary">
-                                                {translate(`videoCoachScreen.score`)} {video.score}
-                                            </Typography>)}
-                                            {!video.reviewed && (<Typography variant="body2" color="text.secondary">
-                                                {translate(`videoCoachScreen.waiting_review`)}
-                                            </Typography>)}
-                                        </CardContent>
-                                    </StyledCard>
-                                </Grid>
-                            ))}
-                        </Grid>
-                    )}
-                    {uploadedVideos?.length === 0 && (
-                        <Box textAlign="center" mt={4}>
-                            <Typography variant="h6">
-                                No videos uploaded yet.
-                            </Typography>
-                            <Button
-                                variant="contained"
-                                color="primary"
-                                onClick={() => setOpen(true)}
-                                sx={{ mt: 2 }}
-                            >
-                                Upload a Video
-                            </Button>
-                        </Box>
-                    )}
-
-                    {uploadedVideos?.filter(video => video?.reviewed)?.length > 0 && (
-                        <Box my={2}><Typography variant="h6" mt={4}>
-                            Videos Calificados
-                        </Typography>
-                        </Box>
-                    )}
-                    {uploadedVideos?.filter(video => video?.reviewed)?.length > 0 && (
-                        <Grid container spacing={3}>
-                            {uploadedVideos.filter(video => video?.reviewed).map((video) => (
-                                <Grid item xs={12} sm={6} md={4} key={video.id}>
-                                    <StyledCard onClick={() => handleVideoClick(video)}>
-                                        <CardMedia component="div">
-                                            <img
-                                                src={`${process.env.REACT_APP_VIDEO_PREVIEW_BUCKET_URL}/${video.videoUrl}.jpg`}
-                                                height="140"
-                                                style={{ width: '100%', objectFit: 'cover', borderRadius: '4px' }}
-                                                controls={false}
-                                                muted
-                                            />
-                                        </CardMedia>
-                                        <CardContent>
-                                            <Typography gutterBottom variant="subtitle1">
-                                                {translate(`course.${video.course}.title`)}
-                                            </Typography>
-                                            {video.reviewed && (<Typography variant="body2" color="text.secondary">
-                                                {translate(`videoCoachScreen.score`)} {video.score}
-                                            </Typography>)}
-                                            {!video.reviewed && (<Typography variant="body2" color="text.secondary">
-                                                {translate(`videoCoachScreen.waiting_review`)}
-                                            </Typography>)}
-                                        </CardContent>
-                                    </StyledCard>
-                                </Grid>
-                            ))}
-                        </Grid>
-                    )}
-                </Box>
+                <VideoReviewedBottomSheet
+                    open={isVideoDetailOpen}
+                    onClose={() => setIsVideoDetailOpen(false)}
+                    onOpen={() => setIsVideoDetailOpen(true)}
+                    selectedVideo={selectedVideo}
+                />
             </Container>
-            <VideoReviewedBottomSheet
-                open={isVideoDetailOpen}
-                onClose={() => setIsVideoDetailOpen(false)}
-                onOpen={() => setIsVideoDetailOpen(true)}
-                selectedVideo={selectedVideo}
-            />
         </Page>
     );
-
 }

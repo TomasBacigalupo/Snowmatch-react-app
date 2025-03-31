@@ -7,6 +7,8 @@ import CloseIcon from '@mui/icons-material/Close';
 import ReactPlayer from "react-player";
 import { useState } from "react";
 import Markdown from "src/components/Markdown";
+import useLocales from "src/hooks/useLocales";
+import { useTheme } from "@mui/material/styles";
 
 const safeSliceMarkdown = (text, length) => {
     if (!text) return "";
@@ -16,7 +18,8 @@ const safeSliceMarkdown = (text, length) => {
 };
 
 const SnowMatchIntelligenceBox = ({ video }) => {
-
+    const { translate } = useLocales();
+    const theme = useTheme();
     const [isPlayingAnalized, setIsPlayingAlaized] = useState(false);
     const [snowMatchIntelligenceOpen, setSnowMatchIntelligenceOpen] = useState(false);
     console.log("video", video);
@@ -24,60 +27,165 @@ const SnowMatchIntelligenceBox = ({ video }) => {
         sx={{
             margin: 2,
             marginBottom: 6,
-            border: "1px solid #E0E0E0",
-            borderRadius: "12px",
-            padding: "16px",
-            maxWidth: "400px",
-            backgroundColor: "white",
-            boxShadow: "0px 4px 10px rgba(0,0,0,0.05)",
+            maxWidth: '400px',
+            position: 'relative',
+            padding: '1px', // Space for the gradient border
+            borderRadius: '16px',
+            background: `linear-gradient(45deg, 
+                ${theme.palette.primary.light}22, 
+                ${theme.palette.primary.main}44,
+                ${theme.palette.info.main}22,
+                ${theme.palette.success.light}44,
+                ${theme.palette.primary.light}22)`,
+            backgroundSize: '400% 400%',
+            animation: 'gradient 8s ease infinite',
+            '@keyframes gradient': {
+                '0%': {
+                    backgroundPosition: '0% 50%'
+                },
+                '50%': {
+                    backgroundPosition: '100% 50%'
+                },
+                '100%': {
+                    backgroundPosition: '0% 50%'
+                }
+            },
+            '&::before': {
+                content: '""',
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                borderRadius: '16px',
+                padding: '1px',
+                background: `linear-gradient(45deg, 
+                    ${theme.palette.primary.light}, 
+                    ${theme.palette.primary.main},
+                    ${theme.palette.info.main},
+                    ${theme.palette.success.light},
+                    ${theme.palette.primary.light})`,
+                backgroundSize: '400% 400%',
+                animation: 'gradient 8s ease infinite',
+                mask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
+                maskComposite: 'xor',
+                '-webkit-mask': 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
+                '-webkit-mask-composite': 'xor',
+                pointerEvents: 'none'
+            }
         }}
     >
-        {/* Header con icono y título */}
-        <Box display="flex" alignItems="center" gap={1} mb={1}>
-            <Logo />
-            <Typography variant="subtitle1" fontWeight={600}>
-                SnowMatch Intelligence
-            </Typography>
-        </Box>
-
-        {/* Descripción */}
-        {video?.aiComment &&
-            <Markdown
-            components={{
-                h1: (props) => <Typography variant="body1" {...props} />,
-                h2: (props) => <Typography variant="body1" {...props} />,
-                h3: (props) => <Typography variant="body1" {...props} />,
-                h4: (props) => <Typography variant="body1" {...props} />,
-                h5: (props) => <Typography variant="body1" {...props} />,
-                h6: (props) => <Typography variant="body1" {...props} />,
-                ul: (props) => <ul style={{ listStyleType: 'disc', marginLeft: '1px' }} {...props} />,
-                li: (props) => <li style={{ fontSize: '14px', marginLeft: '1px', marginTop: '5px' }} {...props} />,
-            }}
-        >
-                {safeSliceMarkdown(video?.aiComment, 145)}
-            </Markdown>
-        }
-
-        {!video?.aiComment &&
-            <Typography variant="body1" color="text.primary" mb={2}>
-                Mira el analizis de tu video en tiempo real
-            </Typography>
-        }
-
-        {/* Botón */}
-        <Button
-            variant="contained"
-            fullWidth
+        <Box
             sx={{
-                color: "white",
-                borderRadius: "8px",
-                textTransform: "none",
-                fontWeight: "bold",
+                padding: '24px',
+                borderRadius: '15px',
+                backgroundColor: 'rgba(255, 255, 255, 0.98)',
+                backdropFilter: 'blur(10px)',
+                position: 'relative',
+                zIndex: 1,
+                height: '100%',
+                boxShadow: '0 4px 24px rgba(0, 0, 0, 0.08)',
+                transition: 'all 0.3s ease',
+                '&:hover': {
+                    transform: 'translateY(-2px)',
+                    boxShadow: '0 6px 28px rgba(0, 0, 0, 0.12)',
+                }
             }}
-            onClick={() => setSnowMatchIntelligenceOpen(true)}
         >
-            Análisis completo
-        </Button>
+            {/* Header with icon and title - updated styling */}
+            <Box 
+                display="flex" 
+                alignItems="center" 
+                gap={1.5} 
+                mb={2}
+                sx={{
+                    '& .MuiTypography-root': {
+                        fontSize: '1.25rem',
+                        letterSpacing: '-0.02em'
+                    }
+                }}
+            >
+                <Logo sx={{ width: 32, height: 32 }} />
+                <Typography variant="subtitle1" fontWeight={700}>
+                    {translate('snowmatch.intelligence.title')}
+                </Typography>
+            </Box>
+
+            {/* Description - updated styling */}
+            {video?.aiComment &&
+                <Markdown
+                    components={{
+                        h1: (props) => <Typography variant="body1" sx={{ color: 'text.secondary', lineHeight: 1.6 }} {...props} />,
+                        h2: (props) => <Typography variant="body1" sx={{ color: 'text.secondary', lineHeight: 1.6 }} {...props} />,
+                        h3: (props) => <Typography variant="body1" sx={{ color: 'text.secondary', lineHeight: 1.6 }} {...props} />,
+                        h4: (props) => <Typography variant="body1" sx={{ color: 'text.secondary', lineHeight: 1.6 }} {...props} />,
+                        h5: (props) => <Typography variant="body1" sx={{ color: 'text.secondary', lineHeight: 1.6 }} {...props} />,
+                        h6: (props) => <Typography variant="body1" sx={{ color: 'text.secondary', lineHeight: 1.6 }} {...props} />,
+                        ul: (props) => <ul style={{ listStyleType: 'disc', marginLeft: '1px' }} {...props} />,
+                        li: (props) => <li style={{ fontSize: '14px', marginLeft: '1px', marginTop: '5px', color: theme.palette.text.secondary }} {...props} />,
+                    }}
+                >
+                    {safeSliceMarkdown(video?.aiComment, 145)}
+                </Markdown>
+            }
+
+            {!video?.aiComment &&
+                <Typography 
+                    variant="body1" 
+                    sx={{ 
+                        color: 'text.secondary',
+                        lineHeight: 1.6,
+                        mb: 3
+                    }}
+                >
+                    {translate('snowmatch.intelligence.description')}
+                </Typography>
+            }
+
+            {/* Button - updated with Apple-like styling */}
+            <Button
+                variant="contained"
+                fullWidth
+                sx={{
+                    mt: 2,
+                    height: '48px',
+                    color: 'white',
+                    borderRadius: '12px',
+                    textTransform: 'none',
+                    fontSize: '16px',
+                    fontWeight: '600',
+                    background: `linear-gradient(135deg, 
+                        ${theme.palette.primary.main}, 
+                        ${theme.palette.primary.dark},
+                        ${theme.palette.info.main})`,
+                    backgroundSize: '200% 200%',
+                    animation: 'gradientButton 5s ease infinite',
+                    '@keyframes gradientButton': {
+                        '0%': {
+                            backgroundPosition: '0% 50%'
+                        },
+                        '50%': {
+                            backgroundPosition: '100% 50%'
+                        },
+                        '100%': {
+                            backgroundPosition: '0% 50%'
+                        }
+                    },
+                    boxShadow: '0 2px 12px rgba(0, 0, 0, 0.12)',
+                    transition: 'all 0.3s ease',
+                    '&:hover': {
+                        transform: 'translateY(-1px)',
+                        boxShadow: '0 4px 16px rgba(0, 0, 0, 0.16)',
+                    },
+                    '&:active': {
+                        transform: 'translateY(1px)',
+                    }
+                }}
+                onClick={() => setSnowMatchIntelligenceOpen(true)}
+            >
+                {translate('snowmatch.intelligence.analyze')}
+            </Button>
+        </Box>
         <SwipeableDrawer
             anchor="bottom"
             open={snowMatchIntelligenceOpen}

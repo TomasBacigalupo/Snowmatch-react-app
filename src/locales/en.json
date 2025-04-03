@@ -710,6 +710,9 @@
     "action": {
       "showAnalysis": "Ver Análisis",
       "proCheck": "ProCheck"
+    },
+    "review": {
+      "title": "Rate Video"
     }
   },
   "leaderboard": {

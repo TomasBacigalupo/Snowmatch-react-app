@@ -1489,6 +1489,9 @@
             "pending": "Análisis de IA en Progreso",
             "completed": "Análisis de IA Completado",
             "processing": "Procesando Video"
+        },
+        "review": {
+            "title": "Calificar Video"
         }
     },
     "leaderboard": {

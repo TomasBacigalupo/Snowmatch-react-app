@@ -12,6 +12,9 @@ import { getVideosToReview, reviewVideo } from 'src/redux/slices/video';
 import { LoadingButton } from '@mui/lab';
 import ReactPlayer from 'react-player';
 import { ArrowBack } from '@mui/icons-material';
+import VideoReviewDrawer from 'src/components/VideoReviewDrawer';
+import { RateReview } from '@mui/icons-material';
+import { CheckCircle } from '@mui/icons-material';
 
 // This would typically come from your backend
 const mockUnratedVideos = [
@@ -31,6 +34,11 @@ export default function UnratedVideos() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  const [stats] = useState({
+    videosReviewed: 24,
+    videosRemaining: videosToReview?.length || 0,
+    contributionRank: "Silver Reviewer"
+  });
 
   useEffect(() => {
     dispatch(getVideosToReview());
@@ -114,43 +122,73 @@ export default function UnratedVideos() {
   const score = watch("score")
 
   return (
-    <Container>
-      <Typography variant="h4" gutterBottom>
-        Unrated Videos
-      </Typography>
-      <List>
+    <Container maxWidth="lg">
+      {/* New Header Section */}
+      <Box sx={{ 
+        textAlign: 'center', 
+        mb: 6, 
+        pt: 4,
+        pb: 3,
+        borderBottom: '1px solid #eee'
+      }}>
+        <Typography variant="h4" gutterBottom>
+          Rate Student Videos
+        </Typography>
+        <Typography variant="subtitle1" color="text.secondary" sx={{ mb: 3 }}>
+          Help improve skiing education by reviewing student techniques. Your expertise makes a difference!
+        </Typography>
+        
+        {/* Stats Bar */}
+        <Box sx={{ 
+          display: 'flex', 
+          justifyContent: 'center', 
+          gap: 4,
+          mt: 3 
+        }}>
+          <Box>
+            <Typography variant="h6">{stats.videosReviewed}</Typography>
+            <Typography variant="body2" color="text.secondary">Videos Reviewed</Typography>
+          </Box>
+          <Box>
+            <Typography variant="h6">{stats.videosRemaining}</Typography>
+            <Typography variant="body2" color="text.secondary">Pending Reviews</Typography>
+          </Box>
+          <Box>
+            <Typography variant="h6">{stats.contributionRank}</Typography>
+            <Typography variant="body2" color="text.secondary">Your Rank</Typography>
+          </Box>
+        </Box>
+      </Box>
+
+      {/* Improved Video Grid */}
+      <Box sx={{ 
+        display: 'grid', 
+        gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
+        gap: 3,
+        mb: 4 
+      }}>
         {videosToReview?.map((video) => (
           <Paper
             key={video.id}
-            elevation={3}
+            elevation={2}
             sx={{
               position: 'relative',
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'stretch',
-              padding: 2,
               borderRadius: 2,
-              border: '1px solid #ddd',
-              marginBottom: 2,
-              minHeight: 150, // Ajusta según necesidad
+              overflow: 'hidden',
+              transition: 'transform 0.2s, box-shadow 0.2s',
+              '&:hover': {
+                transform: 'translateY(-4px)',
+                boxShadow: 4,
+              }
             }}
           >
-            {/*  "comment": "Postura para velocidad: Si buscas más velocidad, inclina el cuerpo hacia adelante y mantén los esquís paralelos y bien alineados.",
-    "course": "BUMPS",
-    "id": 11,
-    "reviewed": true,
-    "score": 67.0,
-    "userId": 9,
-    "videoUrl": "9-8a1f2faa-039b-4940-b504-094b7d6bcdc9" */}
-            {/* Contenedor de avatar + texto en la misma fila */}
-            <Box sx={{ display: 'flex', alignItems: 'flex-start', flex: 1 }}>
+            <Box sx={{ position: 'relative' }}>
               <video
                 src={`${process.env.REACT_APP_VIDEO_BUCKET_URL}/${video.videoUrl}`}
                 style={{
                   width: '100%',
-                  height: '100%',
+                  height: '200px',
                   objectFit: 'cover',
-                  borderRadius: '12px', // Equivalent to `rounded-xl` in Tailwind (12px)
                 }}
                 autoPlay
                 muted
@@ -158,179 +196,75 @@ export default function UnratedVideos() {
                 playsInline
                 defaultMuted
               />
-
+              <Box sx={{
+                position: 'absolute',
+                bottom: 0,
+                left: 0,
+                right: 0,
+                background: 'linear-gradient(transparent, rgba(0,0,0,0.7))',
+                p: 2,
+                color: 'white'
+              }}>
+                <Typography variant="subtitle1" fontWeight="bold">
+                  {video.course}
+                </Typography>
+                <Typography variant="body2">
+                  By {video.user.name}
+                </Typography>
+              </Box>
             </Box>
-            <ListItemText
-              primary={video.course}
-              secondary={`Uploaded by: ${video.user.name}`}
-              sx={{
-                '& .MuiTypography-root': {
-                  fontWeight: 600,
-                },
-              }}
-            />
-            {/* Botón en la esquina inferior derecha */}
-            <Button fullWidth variant="contained" color="primary" onClick={() => handleRate(video)}>
-              Rate
-            </Button>
+            
+            <Box sx={{ p: 2 }}>
+              <Typography variant="body2" color="text.secondary" gutterBottom>
+                Skill Level: {video.skillLevel || 'Intermediate'}
+              </Typography>
+              <Typography variant="body2" color="text.secondary" gutterBottom>
+                Duration: {video.duration || '2:30'}
+              </Typography>
+              
+              <Button 
+                fullWidth 
+                variant="contained" 
+                color="primary" 
+                onClick={() => handleRate(video)}
+                sx={{ 
+                  mt: 2,
+                  textTransform: 'none',
+                  fontWeight: 600
+                }}
+                startIcon={<RateReview />}
+              >
+                Provide Feedback
+              </Button>
+            </Box>
           </Paper>
         ))}
-      </List>
-      <SwipeableDrawer
-        anchor="right"
-        open={drawerOpen}
-        onClose={handleCloseDrawer}
-        onOpen={() => { }}
-        disableSwipeToOpen={false}
-        ModalProps={{
-          keepMounted: true,
-        }}
-        PaperProps={{
-          sx: {
-            height: '100%',
-            maxHeight: '100%',
-            paddingTop: 'env(safe-area-inset-bottom)',
-            width: '100vw',
-            maxWidth: '100%',
-          },
-        }}
-      >
-        <Box
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-          position="relative"
-          mt={2}
-          mx={2}
-          sx={{
-            position: "sticky",
-            top: 0,
-            width: "100%",
-            backgroundColor: "white",
-            borderBottom: "2px solid #EBEBEB",
-            zIndex: 10,
-          }}
+      </Box>
 
-        >
-
-          {/* Botón de cierre - Alineado a la izquierda */}
-          <Box mr="auto">
-            <IconButton edge="start" color="inherit" onClick={handleCloseDrawer} aria-label="close">
-              <ArrowBack />
-            </IconButton>
-          </Box>
-
-          {/* Título del curso - Centrado basado en su propio tamaño */}
-          <Typography
-            variant="h4"
-            sx={{
-              position: "absolute",
-              left: "50%",
-              transform: "translateX(-50%)",
-              fontWeight: 600,
-              color: "#222222" // Color oscuro como Airbnb 
-            }}
-          >
-            Rate Video
+      {/* Empty State */}
+      {(!videosToReview || videosToReview.length === 0) && (
+        <Box sx={{ 
+          textAlign: 'center', 
+          py: 8,
+          color: 'text.secondary' 
+        }}>
+          <CheckCircle sx={{ fontSize: 60, mb: 2, color: 'success.main' }} />
+          <Typography variant="h6">All Caught Up!</Typography>
+          <Typography variant="body2">
+            You've reviewed all available videos. Check back later for more.
           </Typography>
         </Box>
+      )}
 
-        <FormProvider methods={methods} onSubmit={handleSubmit(handleSubmitRating)}>
-
-          <Box ref={drawerContentRef} sx={{ flex: 1, p: 2, overflow: 'auto' }}>
-            {selectedVideo && (
-              <>
-                <Typography variant="h6" gutterBottom>
-                  {selectedVideo.title}
-                </Typography>
-                <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                  <Avatar alt={selectedVideo.user.name} src={selectedVideo.imageUrl} sx={{ mr: 2 }} />
-                  <Typography variant="body1">
-                    Uploaded by {selectedVideo.user.name}
-                  </Typography>
-                </Box>
-                <Box mb={2}>
-                  {!isPlaying ? (
-                    <Box
-                      position="relative"
-                      width="100%"
-                      maxHeight="300px"
-                      sx={{ cursor: "pointer" }}
-                      onClick={() => setIsPlaying(true)}
-                    >
-                      {/* Thumbnail Image */}
-                      <Box
-                        component="img"
-                        src={`${process.env.REACT_APP_VIDEO_PREVIEW_BUCKET_URL}/${selectedVideo.videoUrl}.jpg`}
-                        alt="Video Thumbnail"
-                        sx={{
-                          width: "100%",
-                          maxHeight: "300px",
-                          objectFit: "cover",
-                        }}
-                      />
-                      {/* Play Button Overlay */}
-                      <Box
-                        position="absolute"
-                        top="50%"
-                        left="50%"
-                        sx={{
-                          transform: "translate(-50%, -50%)",
-                          backgroundColor: "rgba(0, 0, 0, 0.6)",
-                          borderRadius: "50%",
-                          width: "60px",
-                          height: "60px",
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                        }}
-                      >
-                        <PlayArrowIcon sx={{ fontSize: 40, color: "white" }} />
-                      </Box>
-                    </Box>
-                  ) : (
-                    <ReactPlayer
-                      url={`${process.env.REACT_APP_VIDEO_BUCKET_URL}/${selectedVideo.videoUrl}`}
-                      playing={isPlaying}
-                      controls
-                      style={{ maxHeight: '300px', maxWidth: '100%', }}
-                      onPause={() => setIsPlaying(false)}
-                      onPlay={() => setIsPlaying(true)}
-                    />
-                  )}
-                </Box>
-                <Box display='flex' flexDirection='column' alignItems='center' justifyContent='center' marginX="20%">
-                  <Box width="100%">
-                    <Typography textAlign="center" variant="h3">{score} pts</Typography>
-                  </Box>
-                  <Box width="100%">
-                    <RHFSlider name="score" />
-                  </Box>
-                </Box>
-                {/* Text Inputs */}
-                <Box mt={2}>
-                  <RHFTextField name="goodAspects" label="Good Aspects" multiline rows={3} fullWidth />
-                </Box>
-                <Box mt={2}>
-                  <RHFTextField name="badAspects" label="Bad Aspects" multiline rows={3} fullWidth />
-                </Box>
-                <Box mt={2}>
-                  <RHFTextField name="howToImprove" label="How to Improve" multiline rows={3} fullWidth />
-                </Box>
-                <LoadingButton
-                  fullWidth
-                  size="large"
-                  type="submit"
-                  variant="contained"
-                  loading={loading}
-                  sx={{ ':hover': { color: '#3399FF' }, py: 2, mt: 2 }}>
-                  Review
-                </LoadingButton>
-              </>
-            )}
-          </Box>
-        </FormProvider>
-      </SwipeableDrawer>
+      {/* Existing VideoReviewDrawer */}
+      <VideoReviewDrawer
+        open={drawerOpen}
+        onClose={handleCloseDrawer}
+        selectedVideo={selectedVideo}
+        loading={loading}
+        methods={methods}
+        onSubmit={handleSubmit(handleSubmitRating)}
+      />
     </Container>
   );
 }

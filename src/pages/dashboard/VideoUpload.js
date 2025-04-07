@@ -108,7 +108,7 @@ export default function VideoUpload() {
     }, [dispatch, videos]);
 
     useEffect(() => {
-        if (videos) {
+        if (videos && videos.length > 0) {
 
             setCarvingChallangeResults(videos.filter(v => v.course === "AI_CHALLANGE_1").sort((a, b) => a.id - b.id) // Sort by video.id in ascending order
                 .map(v => v.score));

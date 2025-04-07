@@ -54,26 +54,9 @@ const navConfigGuest = [
         ],
       },
       { title: 'protips', path: "https://blog.snowmatch.pro", icon: ICONS.protips },
+      { title: 'rent', path: PATH_GUEST.calculate , icon: ICONS.rental },
       // { title: 'chat', path: PATH_DASHBOARD.chat.root, icon: ICONS.chat },
      
-      // { title: 'kanban', path: PATH_DASHBOARD.kanban, icon: ICONS.kanban },
-    ],
-  },
-  // Rental
-  {
-    subheader: 'rental',
-    items: [
-      {
-        title: 'rental',
-        path: PATH_GUEST.rental,
-        icon: ICONS.rental,
-        children: [
-          { title: 'calculate', path: PATH_GUEST.calculate },
-          { title: 'rent', path: PATH_GUEST.calculate },
-        ],
-      }
-      // { title: 'chat', path: PATH_DASHBOARD.chat.root, icon: ICONS.chat },
-
       // { title: 'kanban', path: PATH_DASHBOARD.kanban, icon: ICONS.kanban },
     ],
   },

@@ -116,7 +116,6 @@ export default function LabelBottomNavigation() {
             component={RouterLink}
             to={PATH_GUEST.training}
           />
-          {console.log(value)}
           <BottomNavigationAction
             label={translate('bottomNavigation.match')}
             icon={<Logo disabled={value != 3} disabledLink={true} sx={{ height: '25px', width: '25px' }} />}

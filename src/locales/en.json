@@ -718,5 +718,51 @@
   "leaderboard": {
     "title": "Leaderboards",
     "improvement": "Top {{percent}}% - Take {{time}}s off to move up {{spots}} spots"
+  },
+  "dashboard": {
+    "whatToDo": "What would you like to do?",
+    "overview": "Dashboard Overview",
+    "actions": {
+      "rateAndHelp": {
+        "title": "Rate & Help Community",
+        "description": "Rate videos and earn rewards",
+        "button": "Start Rating"
+      },
+      "uploadVideo": {
+        "title": "Upload Video",
+        "description": "Get professional analysis",
+        "button": "Upload Now"
+      },
+      "manageCalendar": {
+        "title": "Manage Calendar",
+        "description": "Block days & availability",
+        "button": "Open Calendar"
+      }
+    },
+    "getTheMost": {
+      "title": "Get the Most from SnowMatch",
+      "subtitle": "Follow these tips to increase your earnings and visibility",
+      "support": {
+        "title": "Need Help?",
+        "description": "Get in touch with our support team",
+        "button": "Contact Support"
+      },
+      "calendar": {
+        "title": "Keep Your Calendar Updated",
+        "description": "Maintain your availability current to get more bookings",
+        "button": "Update Calendar"
+      },
+      "feedback": {
+        "title": "Give Feedback & Earn",
+        "description": "Rate student videos to earn priority rewards",
+        "button": "Start Rating"
+      },
+      "refer": {
+        "title": "Refer a Skier",
+        "description": "Share SnowMatch and earn priority rewards",
+        "button": "Share Now",
+        "reward": "Earn up to $50 per referral"
+      }
+    }
   }
 }

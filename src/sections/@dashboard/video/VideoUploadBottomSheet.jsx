@@ -278,9 +278,23 @@ export default function VideoUploadBottomSheet({ open, onClose, onOpen, course, 
             case 1:
                 return (
                     <Box my={2} display="flex" height='100%' flexDirection="column" justifyContent='space-between'>
-                        <Box my={2}>
+                        <Box>
+                            <Typography variant="h6" gutterBottom>
+                                Elige los mejores 30 segundos de tu video
+                            </Typography>
+                            <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                                Desliza los marcadores para seleccionar el segmento más destacado de tu bajada.
+                                Solo necesitamos 30 segundos de tu mejor técnica.
+                            </Typography>
+                        </Box>
+
+                        <Box my={2} sx={{ flex: 1 }}>
                             {videoPreviewUrl && (
-                                <VideoTrimmer videoUrl={videoPreviewUrl} />
+                                <VideoTrimmer 
+                                    videoUrl={videoPreviewUrl}
+                                    maxDuration={30} // Limit to 30 seconds
+                                    onTrim={handleTrim}
+                                />
                             )}
                         </Box>
 
@@ -297,11 +311,9 @@ export default function VideoUploadBottomSheet({ open, onClose, onOpen, course, 
                             }}
                             sx={{ py: 2, my: 2 }}
                         >
-                            Upload
+                            Subir Video
                         </LoadingButton>
-
                     </Box>
-
                 );
             case 2:
                 return (

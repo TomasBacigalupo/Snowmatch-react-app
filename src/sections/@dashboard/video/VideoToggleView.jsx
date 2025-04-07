@@ -32,7 +32,7 @@ const VideoToggleView = ({ videos, tab, onTabChange }) => {
             mx: 0,
             position: 'relative',
             padding: '4px 0',
-            color: "#212B36",
+            color: '#9CA3AF !important',
             '&::before': {
               content: '""',
               position: 'absolute',
@@ -47,10 +47,10 @@ const VideoToggleView = ({ videos, tab, onTabChange }) => {
             '&.Mui-selected': {
               pointerEvents: 'none',
               cursor: 'default',
-              color: "#212B36",
+              color: '#000000 !important',
             },
             '&:hover': {
-              color: "#212B36",
+              color: '#000000 !important',
             }
           },
         }}
@@ -65,10 +65,9 @@ const VideoToggleView = ({ videos, tab, onTabChange }) => {
             backgroundColor: 'transparent !important',
             transition: 'color 0.2s ease',
             pb: 0,
-            color: "#212B36" + ' !important',
+            color: 'inherit',
             '&:hover': {
               backgroundColor: 'transparent',
-              color: "#212B36",
             },
             '&::before': {
               transformOrigin: 'right !important',
@@ -94,10 +93,9 @@ const VideoToggleView = ({ videos, tab, onTabChange }) => {
             fontSize: '1rem',
             backgroundColor: 'transparent !important',
             transition: 'color 0.2s ease',
-            color: "#212B36" + ' !important',
+            color: 'inherit',
             '&:hover': {
               backgroundColor: 'transparent',
-              color: "#212B36",
             },
             '&::before': {
               transformOrigin: 'left !important',

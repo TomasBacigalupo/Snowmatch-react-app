@@ -43,7 +43,7 @@ const navConfigGuestCatedral = [
   // APP
   // ----------------------------------------------------------------------
   {
-    subheader: 'snowMatch',
+    //subheader: 'snowMatch',
     items: [
       {
         title: 'match',
@@ -54,38 +54,10 @@ const navConfigGuestCatedral = [
         ,
       },
       { title: 'protips', path: "https://blog.snowmatch.pro", icon: ICONS.protips },
-      { title: 'videoCoach', path: PATH_GUEST.videoCoach, icon: ICONS.videoCoach }
-      // { title: 'chat', path: PATH_DASHBOARD.chat.root, icon: ICONS.chat },
-
-      // { title: 'kanban', path: PATH_DASHBOARD.kanban, icon: ICONS.kanban },
-    ],
-  },
-  // Rental
-  {
-    subheader: 'rental',
-    items: [
-      {
-        title: 'rental',
-        path: PATH_GUEST.rental,
-        icon: ICONS.rental,
-        children: [
-          { title: 'calculate', path: PATH_GUEST.calculate },
-          { title: 'rent', path: PATH_GUEST.calculate },
-        ],
-      }
-      // { title: 'chat', path: PATH_DASHBOARD.chat.root, icon: ICONS.chat },
-
-      // { title: 'kanban', path: PATH_DASHBOARD.kanban, icon: ICONS.kanban },
-    ],
-  },
-  // Support
-  {
-    subheader: 'support',
-    items: [
-
+      { title: 'videoCoach', path: PATH_GUEST.videoCoach, icon: ICONS.videoCoach },
+      { title: 'rent', path: PATH_GUEST.calculate, icon: ICONS.rental },
       { title: 'contact', path: "https://blog.snowmatch.pro/soporte/preguntas-frecuentes-faq/", icon: ICONS.contactSupport },
       { title: 'help', path: "https://blog.snowmatch.pro/soporte/", icon: ICONS.help }
-
 
       // { title: 'chat', path: PATH_DASHBOARD.chat.root, icon: ICONS.chat },
 

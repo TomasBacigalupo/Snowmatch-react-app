@@ -1497,5 +1497,76 @@
     "leaderboard": {
         "title": "Tabla de Posiciones",
         "improvement": "Top {{percent}}% - Mejora {{time}}s para subir {{spots}} posiciones"
+    },
+    "dashboard": {
+        "whatToDo": "¿Qué deseas hacer?",
+        "overview": "Resumen del Panel",
+        "actions": {
+            "rateAndHelp": {
+                "title": "Califica y Ayuda",
+                "description": "Califica videos y gana recompensas",
+                "button": "Comenzar"
+            },
+            "uploadVideo": {
+                "title": "Subir Video",
+                "description": "Obtén análisis profesional",
+                "button": "Subir Ahora"
+            },
+            "manageCalendar": {
+                "title": "Gestionar Calendario",
+                "description": "Bloquea días y disponibilidad",
+                "button": "Calendario"
+            },
+            "getTheMost": {
+                "title": "Maximiza tu Experiencia SnowMatch",
+                "subtitle": "Sigue estos consejos para aumentar tus ingresos y visibilidad",
+                "support": {
+                    "title": "¿Necesitas Ayuda?",
+                    "description": "Contacta con nuestro equipo de soporte",
+                    "button": "Contactar Soporte"
+                },
+                "calendar": {
+                    "title": "Mantén tu Calendario al Día",
+                    "description": "Mantén tu disponibilidad actualizada para recibir más reservas",
+                    "button": "Actualizar"
+                },
+                "feedback": {
+                    "title": "Califica y Gana",
+                    "description": "Califica videos de estudiantes y obtén recompensas prioritarias",
+                    "button": "Comenzar"
+                },
+                "refer": {
+                    "title": "Recomienda un Esquiador",
+                    "description": "Comparte SnowMatch y gana recompensas",
+                    "button": "Compartir",
+                    "reward": "Gana hasta $50 por cada referido"
+                }
+            }
+        },
+        "getTheMost": {
+                "title": "Maximiza tu Experiencia SnowMatch",
+                "subtitle": "Sigue estos consejos para aumentar tus ingresos y visibilidad",
+                "support": {
+                    "title": "¿Necesitas Ayuda?",
+                    "description": "Contacta con nuestro equipo de soporte",
+                    "button": "Contactar Soporte"
+                },
+                "calendar": {
+                    "title": "Mantén tu Calendario al Día",
+                    "description": "Mantén tu disponibilidad actualizada para recibir más reservas",
+                    "button": "Actualizar"
+                },
+                "feedback": {
+                    "title": "Califica y Gana",
+                    "description": "Califica videos de estudiantes y obtén recompensas prioritarias",
+                    "button": "Comenzar"
+                },
+                "refer": {
+                    "title": "Recomienda un Esquiador",
+                    "description": "Comparte SnowMatch y gana recompensas",
+                    "button": "Compartir",
+                    "reward": "Gana hasta $50 por cada referido"
+                }
+            }
     }
 }

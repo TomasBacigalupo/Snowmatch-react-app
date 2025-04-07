@@ -15,11 +15,8 @@ export default function SkiProgressBox({ progress = 0 }) {
     <Card
       sx={{
         p: 3,
-        cursor: 'pointer',
-        '&:hover': { bgcolor: 'background.neutral' },
         borderRadius: '0px',
       }}
-      onClick={handleClick}
     >
       {progress > 0 ? (
         <>

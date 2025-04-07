@@ -105,7 +105,7 @@ export default function CourseLevels() {
     }, [dispatch]);
 
     useEffect(() => {
-        if (videos) {
+        if (videos && videos.length > 0) {
             setUploadedVideos(videos);
             console.log('Videos:', videos);
             let _levels = levels;

@@ -377,13 +377,21 @@ function AuthProvider({ children }) {
   const loginWithGoogle = async () => {
     try {
       const { SocialLogin } = await import('@capgo/capacitor-social-login');
-      await SocialLogin.initialize({
+      const { Capacitor } = await import('@capacitor/core');
+
+      let options = {};
+      options = {
         google: {
-          iOSClientId: '864910142009-d8jai0985rn4b13jge8ng0gmf0hjejfp.apps.googleusercontent.com', // Regular client ID
-          iOSServerClientId: '864910142009-d8jai0985rn4b13jge8ng0gmf0hjejfp.apps.googleusercontent.com', // Same as iOSClientId
+          iOSClientId: '864910142009-d8jai0985rn4b13jge8ng0gmf0hjejfp.apps.googleusercontent.com',
+          iOSServerClientId: '864910142009-d8jai0985rn4b13jge8ng0gmf0hjejfp.apps.googleusercontent.com',
+          iOSUrlScheme: 'com.googleusercontent.apps.864910142009-d8jai0985rn4b13jge8ng0gmf0hjejfp',
+          // mode: 'offline',
         },
-      });
-      
+      };
+
+      await SocialLogin.initialize(options);
+      await SocialLogin.logout({ provider: 'google' }); // limpia la sesión anterior
+
       const result = await SocialLogin.login({
         provider: 'google',
         options: {
@@ -391,21 +399,28 @@ function AuthProvider({ children }) {
           forceRefreshToken: true
         }
       });
-      
-      if (result.token) {
-        console.log('result1', result.result.serverAuthCode);
+
+      console.log('Google login result:', result);
+
+      const idToken = result?.result?.idToken;
+      const firstName = result?.result?.firstName || '';
+      const lastName = result?.result?.lastName || '';
+
+      if (idToken) {
         const response = await axios.post('/api/auth/google/login', {
-          idToken: result.result.serverAuthCode
+          "idToken": idToken,
+          "firstName": firstName,
+          "lastName": lastName
         });
 
         const user = response.data;
         const accessToken = user.token;
-        
+
         setSession(accessToken);
         window.localStorage.setItem('accessToken', accessToken);
-        
+
         await registerNotifications();
-        
+
         dispatch({
           type: 'REGISTER',
           payload: {
@@ -413,7 +428,10 @@ function AuthProvider({ children }) {
             isAuthenticated: true
           },
         });
+      } else {
+        throw new Error('No ID token returned from Google login.');
       }
+
     } catch (error) {
       console.error('Google login error:', error);
       throw error;

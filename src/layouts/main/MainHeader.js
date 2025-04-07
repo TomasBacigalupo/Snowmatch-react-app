@@ -66,6 +66,7 @@ export default function MainHeader() {
 
   return (
     <AppBar sx={{ boxShadow: 0, bgcolor: 'transparent', paddingTop: 'env(safe-area-inset-top)'}}>
+      hols
       <ToolbarStyle
         disableGutters
         sx={{
@@ -123,7 +124,6 @@ export default function MainHeader() {
           {/* {!isDesktop && <MenuMobile isOffset={isOffset} isHome={isHome} navConfig={navConfig} />} */}
         </Container>
       </ToolbarStyle>
-
       {isOffset && <ToolbarShadowStyle />}
     </AppBar>
   );

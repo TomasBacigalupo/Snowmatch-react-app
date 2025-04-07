@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { capitalCase } from 'change-case';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // @mui
 import { styled } from '@mui/material/styles';
 import { Box, Card, Stack, Link, Container, Typography, Button } from '@mui/material';
@@ -54,6 +54,18 @@ const ContentStyle = styled('div')(({ theme }) => ({
   padding: theme.spacing(12, 0),
 }));
 
+// Add this new styled component for the logo
+const LogoStyle = styled('img')({
+  width: 400,
+  marginBottom: 40,
+  alignSelf: 'center',
+  cursor: 'pointer',
+  transition: 'transform 0.2s',
+  '&:hover': {
+    transform: 'scale(1.02)',
+  },
+});
+
 // ----------------------------------------------------------------------
 
 export default function Login() {
@@ -61,6 +73,7 @@ export default function Login() {
   const smUp = useResponsive('up', 'sm');
   const mdUp = useResponsive('up', 'md');
   const { translate } = useLocales();
+  const navigate = useNavigate();
 
   const [showForm, setShowForm] = useState(false);
 
@@ -68,7 +81,7 @@ export default function Login() {
     <Page title="Login">
       <RootStyle>
         <HeaderStyle>
-          <Logo />
+          {smUp && <Logo />}
           {smUp && (
             <Typography variant="body2" sx={{ mt: { md: -2 } }} align="right">
               {translate('auth.haveAccount')} {''}
@@ -86,6 +99,13 @@ export default function Login() {
 
         <Container maxWidth="sm">
           <ContentStyle>
+            {!mdUp && (
+              <LogoStyle
+                src="/logo/snowmatch.png"
+                alt="Snowmatch Logo"
+                onClick={() => navigate('/')}
+              />
+            )}
             <Stack direction="row" alignItems="center" sx={{ mb: 5 }}>
               <Box sx={{ flexGrow: 1 }}>
                 <Typography textAlign='center' variant="h4" gutterBottom>

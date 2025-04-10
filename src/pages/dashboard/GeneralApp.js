@@ -21,6 +21,7 @@ import { getTotalClasses, getTotalClients, getTotalIncome, getConversations } fr
 import useLocales from 'src/hooks/useLocales';
 import { date } from 'yup/lib/locale';
 import { VideoLibrary, Upload, CalendarMonth, Help, EventAvailable, Star, Share, OpenInNew } from '@mui/icons-material';
+import { useNavigate } from 'react-router-dom';
 
 
 // ----------------------------------------------------------------------
@@ -41,6 +42,7 @@ export default function GeneralApp() {
   const [waiting, setWaiting] = useState(0);
   const [accepted, setAccepted] = useState(0);
   const [rejected, setRejected] = useState(0);
+  const navigate = useNavigate();
 
 
   useEffect(() => {
@@ -104,17 +106,19 @@ export default function GeneralApp() {
         <Grid container spacing={2} mb={3}>
           <Grid item xs={6}>
             <AppWidgetSummary
-              title={translate('generalApp.totalBookedHours')}
+            title={translate('generalApp.totalRatedVideos')}
+              
               total={lessonsChartData.reduce((a, b) => a + b, 0)}
               chartColor={theme.palette.chart.blue[0]}
               unit="hrs"
+              videos={true}
               sx={{ height: '100px', p: 2.5 }}
             />
           </Grid>
 
           <Grid item xs={6}>
             <AppWidgetSummary
-              title={translate('generalApp.totalRatedVideos')}
+              title={translate('generalApp.totalBookedHours')}
               total={incomeChartData.reduce((a, b) => a + b, 0)}
               chartColor={theme.palette.chart.violet[0]}
               icon="mdi:video-check"
@@ -168,6 +172,7 @@ export default function GeneralApp() {
                   sx={{
                     minWidth: '120px',
                   }}
+                  onClick={() => navigate('/dashboard/videoCoach/unrated')}
                 >
                   {translate('dashboard.actions.rateAndHelp.button')}
                 </Button>
@@ -270,6 +275,7 @@ export default function GeneralApp() {
                   sx={{
                     minWidth: '120px',
                   }}
+                  onClick={() => navigate('/dashboard/calendar')}
                 >
                   {translate('dashboard.actions.manageCalendar.button')}
                 </Button>

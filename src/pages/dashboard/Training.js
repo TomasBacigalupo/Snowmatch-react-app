@@ -88,6 +88,23 @@ export default function Training() {
           demoUrl: 'https://snowmatchvideos.s3.us-east-1.amazonaws.com/CARVING_CHALLANGE_1.mov'
         }
       ],
+    }, {
+      title: 'Progresion general',
+      subtitle: 'Segui los consejos de AI y profesores para ver hasta donde puedes llegar',
+      code: 'CHALLANGE',
+      levels: [
+        {
+          code: 'GENERAL_CHALLANGE_1',
+          title: 'General',
+          subtitle: 'General Challenge 1 subtitle',
+          cover: '/assets/courses/pista.png',
+          icon: "hugeicons:angle-01",
+          level: 'Principiante',
+          points: 25,
+          course: "GENERAL_CHALLANGE",
+          demoUrl: 'https://snowmatchvideos.s3.us-east-1.amazonaws.com/CARVING_CHALLANGE_1.mov'
+        }
+      ],
     },
   ];
 
@@ -127,32 +144,28 @@ export default function Training() {
               <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
                 {course.title}
               </Typography>
-              {idx === 0 && <Icon icon="solar:medal-ribbon-linear" height="30px" />}
+              {idx === 0 ? <Icon icon="solar:medal-ribbon-linear" height="30px" /> : <Icon icon="mdi:snowflake" height="30px" />}
             </Box>
 
             <Typography variant="subtitle1" sx={{ mb: 3 }} color="text.secondary">
               {course.subtitle}
             </Typography>
 
-            {/* Carousel for Course Levels */}
-            <Slider
-              {...sliderSettings}
-              style={{ 
+            {/* Vertical List for Course Levels */}
+            <Box
+              sx={{
                 display: 'flex',
-                position: 'relative',
+                flexDirection: 'column',
+                gap: 2,
                 width: '100%',
-                overflow: 'hidden'
               }}
             >
               {course.levels.map((level, levelIdx) => (
                 <Box
                   key={levelIdx}
                   sx={{
-                    flex: '1 0 auto',
-                    marginRight: 2,
-                    position: 'relative',
                     width: '100%',
-                    maxWidth: '300px',
+                    mx: 'auto', // Center the items horizontally
                   }}
                 >
                   <CourseCard
@@ -186,21 +199,10 @@ export default function Training() {
                   )} */}
                 </Box>
               ))}
-            </Slider>
+            </Box>
           </Box>
         ))}
-        {/* Section Header */}
-        <Box display="flex" gap={2} mb={1} alignItems="center">
-          <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
-            Aprende a esquiar progressivamente
-          </Typography>
-          <Icon icon="mdi:snowflake" height="30px" />
-        </Box>
 
-        <Typography variant="subtitle1" sx={{ mb: 3 }} color="text.secondary">
-          Segui nuestros nieveles para ver hasta donde puedes llegar
-        </Typography>
-        <SkiProgress />
       </Container>
       <VideoUploadBottomSheet
         title={selectedLevelTitle}

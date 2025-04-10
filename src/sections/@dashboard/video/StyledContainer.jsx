@@ -6,6 +6,7 @@ const StyledBox = styled(Box)(({ theme }) => ({
     backgroundColor: '#f5f5f7',
     margin: '0 -16px 0 -16px', // Negative margin to extend background
     pt: '0px',
+    mt: '0px',
     '& > *:not(:last-child)': {
         marginBottom: '12px', // Spacing between white cards
     },

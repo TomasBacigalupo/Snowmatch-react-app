@@ -299,7 +299,9 @@
         "Cancel": "Rechazadas",
         "Pending": "Pendientes",
         "Accepted": "Aceptadas",
-        "thanLastMonth": "respecto mes anterior"
+        "thanLastMonth": "respecto mes anterior",
+        "totalBookedHours": "Horas reservadas",
+        "totalRatedVideos": "Videos calificados"
     },
     "teacherDetails": {
         "title": "Clase Privada",

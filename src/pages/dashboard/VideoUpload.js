@@ -105,11 +105,10 @@ export default function VideoUpload() {
         if (!videos || videos.length === 0) {
             dispatch(getVideos());
         }
-    }, [dispatch, videos]);
+    }, [dispatch]);
 
     useEffect(() => {
         if (videos && videos.length > 0) {
-
             setCarvingChallangeResults(videos.filter(v => v.course === "AI_CHALLANGE_1").sort((a, b) => a.id - b.id) // Sort by video.id in ascending order
                 .map(v => v.score));
             const bestScore = Math.max(...videos.filter(v => v.course === "AI_CHALLANGE_1").map(v => v.score));
@@ -154,72 +153,7 @@ export default function VideoUpload() {
         setIsVideoDetailOpen(true);
     };
 
-    const CircularProgressWithLabel = ({ value }) => (
-        <Box position="relative" display="inline-flex">
-            <CircularProgress size={80} variant="determinate" value={value} />
-            <Box
-                top={0}
-                left={0}
-                bottom={0}
-                right={0}
-                position="absolute"
-                display="flex"
-                alignItems="center"
-                justifyContent="center"
-            >
-                <Typography variant="caption" component="div" color="textSecondary">
-                    {`${Math.round(value)}%`}
-                </Typography>
-            </Box>
-        </Box>
-    );
-    const Level = ({ course, level, title, description, completed, onClick, score, minScore, maxScore, status, progress }) => {
 
-        return (
-            <Grid item xs={12} sm={6} md={4}>
-                <Card sx={{ borderRadius: '0px' }}>
-                    <Box
-                        padding={2}
-
-                        display="flex"
-                        flexDirection="row"
-                        alignItems="center"
-                        justifyContent="center"
-                    // onClick={() => {
-                    //     navigate(`/match/videoCoach/courses?course=${course}`);
-                    // }}
-                    >
-                        <Box display="flex"
-                            height='100%'
-                            flexDirection="column"
-                            justifyContent="center"
-                            alignItems="center">
-                            <CircularProgressWithLabel value={progress} />
-
-                        </Box>
-                        {/* <TrophyIcon component={Trophy} level={level} completed={!completed} /> */}
-
-                        <Box
-                            paddingLeft={2}
-                            display="flex"
-                            flexDirection="column"
-                            alignItems="flex-start"
-                            justifyContent="flex-start"
-                        // onClick={() => {
-                        //     navigate(`/match/videoCoach/courses?course=${course}`);
-                        // }}
-                        >
-                            <Typography variant="h6" sx={{ mt: 2, mb: 1 }}>
-                                {title}
-                            </Typography>
-                            <Typography variant="body2">{description}</Typography>
-                        </Box>
-
-                    </Box>
-                </Card>
-            </Grid>
-        );
-    };
 
     const [levels, setLevels] = useState([
         { level: 1, course: 'CARVING', completed: false, score: 8, progress: 10 }
@@ -230,80 +164,6 @@ export default function VideoUpload() {
         setTab(newCategory);
     }
 
-    const renderProfileContent = () => (
-        <StyledContainer>
-            <Grid container spacing={1} justifyContent='space-between' padding={0}>
-                <LeaderBoardRightDrawer
-                    open={isLeaderBoardOpen}
-                    onClose={() => setIsLeaderBoardOpen(false)}
-                    onOpen={() => setIsLeaderBoardOpen(true)}
-                    selectedChallange={selectedChallange}
-                    course={"AI_CHALLANGE_1"}
-                />
-                {!videos || videos.length === 0 && (
-                    <Grid item xs={12} sx={{
-                        pt: 0,
-                        '&.MuiGrid-item': {
-                            paddingTop: '0 !important'
-                        }
-                    }}>
-                        <VideoDemo />
-                    </Grid>
-                )}
-                {carvingChallangeResults && carvingChallangeResults.length > 0 && (
-                    <Grid item xs={12}>
-                        <Box className="white-card">
-                            <AnalyticsChallangeWidget
-                                title="Carving Challange"
-                                total={bestCarvingChallange}
-                                chartData={carvingChallangeResults}
-                                onLeaderboardClick={() => setIsLeaderBoardOpen(true)}
-                            />
-                        </Box>
-                    </Grid>
-                )}
-                <Grid item xs={12}>
-                    <Box className="white-card">
-                        <ProCheckBox />
-                    </Box>
-                </Grid>
-
-                {videos && videos.length > 0 && (
-                    <Grid item xs={12}>
-                        <Box className="white-card">
-                            <LastVideo
-                                video={[...videos]
-                                    .sort((a, b) => b.id - a.id)
-                                    .slice(0, 1)[0]}
-                            />
-                        </Box>
-                    </Grid>
-                )}
-                {videos && videos.filter(video => video.reviewed).length > 0 && (
-                    <Grid item xs={12}>
-                        <Box className="white-card">
-                            <LatestTips
-                                videos={[...videos]
-                                    .filter(video => video.comment)
-                                    .sort((a, b) => b.id - a.id)}
-                            />
-                        </Box>
-                    </Grid>
-                )}
-                <Grid item xs={12} sm={6} md={4}>
-                    <SkiProgressBox progress={0} />
-                </Grid>
-            </Grid>
-        </StyledContainer>
-    );
-
-    const renderUploadedContent = () => (
-        <UploadedVideosList
-            videos={uploadedVideos}
-            onVideoClick={handleVideoClick}
-            showHeader={showHeader}
-        />
-    );
 
     return (
         <Page title="My Progress">
@@ -311,7 +171,8 @@ export default function VideoUpload() {
                 sx={{
                     overflowX: 'hidden',
                     maxWidth: '100%',
-                    pt: 0
+                    pt: 0,
+                    mt: 0
                 }}
             >
                 {videos?.length > 0 && <Box className="white-card">
@@ -322,7 +183,75 @@ export default function VideoUpload() {
                     />
                 </Box>}
 
-                {tab === 'profile' ? renderProfileContent() : renderUploadedContent()}
+                {tab === 'profile' ?
+                    <StyledContainer>
+                        <Grid container spacing={1} justifyContent='space-between' padding={0}>
+                            <LeaderBoardRightDrawer
+                                open={isLeaderBoardOpen}
+                                onClose={() => setIsLeaderBoardOpen(false)}
+                                onOpen={() => setIsLeaderBoardOpen(true)}
+                                selectedChallange={selectedChallange}
+                                course={"AI_CHALLANGE_1"}
+                            />
+                            {!videos || videos.length === 0 && (
+                                <Grid item xs={12} sx={{
+                                    pt: 0,
+                                    '&.MuiGrid-item': {
+                                        paddingTop: '0 !important'
+                                    }
+                                }}>
+                                    <VideoDemo />
+                                </Grid>
+                            )}
+                            {videos && videos.length > 0 &&carvingChallangeResults && carvingChallangeResults.length > 0 && (
+                                <Grid item xs={12}>
+                                    <Box className="white-card">
+                                        <AnalyticsChallangeWidget
+                                            title="Carving Challange"
+                                            total={bestCarvingChallange}
+                                            chartData={carvingChallangeResults}
+                                            onLeaderboardClick={() => setIsLeaderBoardOpen(true)}
+                                        />
+                                    </Box>
+                                </Grid>
+                            )}
+                            <Grid item xs={12}>
+                                <Box className="white-card">
+                                    <ProCheckBox />
+                                </Box>
+                            </Grid>
+
+                            {videos && videos.length > 0 && (
+                                <Grid item xs={12}>
+                                    <Box className="white-card">
+                                        <LastVideo
+                                            video={[...videos]
+                                                .sort((a, b) => b.id - a.id)
+                                                .slice(0, 1)[0]}
+                                        />
+                                    </Box>
+                                </Grid>
+                            )}
+                            {videos && videos.filter(video => video.reviewed).length > 0 && (
+                                <Grid item xs={12}>
+                                    <Box className="white-card">
+                                        <LatestTips
+                                            videos={[...videos]
+                                                .filter(video => video.comment)
+                                                .sort((a, b) => b.id - a.id)}
+                                        />
+                                    </Box>
+                                </Grid>
+                            )}
+                            <Grid item xs={12} sm={6} md={4}>
+                                <SkiProgressBox progress={0} />
+                            </Grid>
+                        </Grid>
+                    </StyledContainer> : <UploadedVideosList
+                        videos={uploadedVideos}
+                        onVideoClick={handleVideoClick}
+                        showHeader={showHeader}
+                    />}
 
                 <VideoUploadBottomSheet
                     title={selectedLevelTitle}

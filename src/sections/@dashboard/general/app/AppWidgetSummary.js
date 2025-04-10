@@ -31,7 +31,7 @@ AppWidgetSummary.propTypes = {
   total: PropTypes.number.isRequired,
 };
 
-export default function AppWidgetSummary({ title, percent, total, chartColor, chartData }) {
+export default function AppWidgetSummary({ title, percent, total, chartColor, chartData, videos }) {
   const theme = useTheme();
 
   const chartOptions = {
@@ -64,12 +64,9 @@ export default function AppWidgetSummary({ title, percent, total, chartColor, ch
               }),
             }}
           >
-            <Iconify width={16} height={16} icon={percent >= 0 ? 'eva:trending-up-fill' : 'eva:trending-down-fill'} />
+            {videos ? <Iconify width={16} height={16} icon="mdi:eye-check" /> : 
+            <Iconify width={16} height={16} icon="mdi:clock" />}
           </IconWrapperStyle>
-          <Typography component="span" variant="subtitle2">
-            {percent > 0 && '+'}
-            {fPercent(percent)}
-          </Typography>
         </Stack>
 
         <Typography variant="h3">{fNumber(total)}</Typography>

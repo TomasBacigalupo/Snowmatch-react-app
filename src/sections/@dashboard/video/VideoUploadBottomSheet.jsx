@@ -27,8 +27,6 @@ import AcademyWelcome from 'src/sections/@dashboard/video/AcademyWelcome';
 import Markdown from "src/components/Markdown";
 import VideoStory from "./VideoStory";
 
-
-
 const RootStyle = styled('div')(({ theme }) => ({
     right: 0,
     bottom: 0,
@@ -39,13 +37,12 @@ const RootStyle = styled('div')(({ theme }) => ({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: theme.palette.background.default,
+    overflowX: 'hidden', // Evita el desplazamiento horizontal
 }));
 
 export default function VideoUploadBottomSheet({ open, onClose, onOpen, course, demoUrl, level }) {
-
     const navigate = useNavigate();
     const { user } = useAuth();
-
 
     if (!user && open) {
         navigate(PATH_AUTH.login, { replace: true });
@@ -71,13 +68,10 @@ export default function VideoUploadBottomSheet({ open, onClose, onOpen, course, 
     const handleCloseAcademywelcome = () => {
         setOpenWelcome(false)
     }
-    const onAddToPremium = () => {
-
-    }
+    const onAddToPremium = () => {}
 
     const dispatch = useDispatch();
     const { isLoading } = useSelector((state) => state.video)
-
 
     const handleUpload = useCallback(async () => {
         console.log("handeleUpload")
@@ -118,22 +112,6 @@ export default function VideoUploadBottomSheet({ open, onClose, onOpen, course, 
             '-vf', 'scale=-2:720',  // Redimensionar a 720p manteniendo relación de aspecto
             outputFileName
         ]);
-
-        // await ffmpeg.exec([
-        //     '-i', 'input.mp4',  // Archivo de entrada
-        //     '-vf', 'scale=-2:720',  // Redimensionar a 720p manteniendo relación de aspecto
-        //     '-c:v', 'libx264',   // Códec de video optimizado para móviles
-        //     '-preset', 'fast',   // Compresión rápida pero eficiente
-        //     '-crf', '28',        // Factor de calidad (más alto = más compresión)
-        //     '-b:v', '600k',      // Bitrate de video optimizado
-        //     '-maxrate', '800k',  // Control de picos de bitrate
-        //     '-bufsize', '1200k', // Buffer de bitrate
-        //     '-r', '30',          // Limitar a 30 FPS
-        //     '-c:a', 'aac',       // Códec de audio compatible con móviles
-        //     '-b:a', '64k',       // Bitrate de audio optimizado
-        //     '-movflags', '+faststart', // Permite reproducción inmediata
-        //     'output.mp4'
-        // ]);
 
         // Read the compressed file from FFmpeg's virtual filesystem
         const compressedFileData = await ffmpeg.readFile(outputFileName);
@@ -183,11 +161,10 @@ export default function VideoUploadBottomSheet({ open, onClose, onOpen, course, 
         }
     };
 
-    useEffect(() => console.log("this is teh course"), [course])
+    useEffect(() => console.log("this is the course"), [course])
 
     const uploadVideo = async () => {
         try {
-
             await Camera.requestPermissions();
 
             const videos = await VideoPicker.pick();
@@ -251,15 +228,6 @@ export default function VideoUploadBottomSheet({ open, onClose, onOpen, course, 
                                     SnowMatch AI Corrigirá tu video
                                 </Typography>
                             </Box>
-                            {/* <Typography variant="h2" textAlign='left'>
-                                {translate(`course.${course}.title`)}
-                            </Typography>
-                            <Typography variant="subtitle1" textAlign='left'>
-                                {translate(`course.${course}.description`)}
-                            </Typography>
-                            <Typography variant="body1" textAlign='left'>
-                                {translate(`course.${course}.fundamentals`)}
-                            </Typography> */}
                         </Box>
 
                         <Button variant="contained" sx={{ py: 2, my: 2 }} fullWidth onClick={async () => {
@@ -423,6 +391,7 @@ export default function VideoUploadBottomSheet({ open, onClose, onOpen, course, 
                     sx: {
                         height: '100%',
                         maxHeight: '100%',
+                        overflowX: 'hidden', // Evita el desplazamiento horizontal
                     },
                 }}
             >
@@ -466,6 +435,7 @@ export default function VideoUploadBottomSheet({ open, onClose, onOpen, course, 
                         display: 'flex',
                         flexDirection: 'column',
                         overflow: 'auto',
+                        overflowX: 'hidden', // Evita el desplazamiento horizontal
                     }}
                 >
                     {/* <Box mb={2}>

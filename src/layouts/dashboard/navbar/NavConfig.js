@@ -27,43 +27,19 @@ const ICONS = {
   analytics: getIcon('ic_analytics'),
   dashboard: getIcon('ic_dashboard'),
   match: getIcon('ic_match'),
-  videoCoach: <VideoCallIcon/>,
+  videoCoach: <VideoCallIcon />,
 };
 
 const navConfig = [
   // GENERAL
   // ----------------------------------------------------------------------
   {
-    subheader: 'general',
     items: [
       { title: 'overview', path: PATH_DASHBOARD.general.app, icon: ICONS.dashboard },
-      { title: 'videoCoach', path: PATH_DASHBOARD.general.videoCoachRate, icon: ICONS.videoCoach }
-      
-      // { title: 'e-commerce', path: PATH_DASHBOARD.general.ecommerce, icon: ICONS.ecommerce },
-      // { title: 'analytics', path: PATH_DASHBOARD.general.analytics, icon: ICONS.analytics },
-      // { title: 'banking', path: PATH_DASHBOARD.general.banking, icon: ICONS.banking },
-      // { title: 'booking', path: PATH_DASHBOARD.general.booking, icon: ICONS.booking },
-    ],
-  },
+      { title: 'videoCoach', path: PATH_DASHBOARD.general.videoCoachRate, icon: ICONS.videoCoach },
+      { title: 'SnowMatch', path: PATH_DASHBOARD.eCommerce.shopInd, icon: ICONS.match, },
+      { title: 'clinicas', path: PATH_DASHBOARD.eCommerce.clinics, icon: ICONS.match },
 
-  // MANAGEMENT
-  // ----------------------------------------------------------------------
-
-
-  // APP
-  // ----------------------------------------------------------------------
-  {
-    subheader: 'snowMatch',
-    items: [
-      {
-        title: 'match',
-        path: PATH_DASHBOARD.eCommerce.root,
-        icon: ICONS.match,
-        children: [
-          { title: 'SnowMatch', path: PATH_DASHBOARD.eCommerce.shopInd },
-          { title: 'clinicas', path: PATH_DASHBOARD.eCommerce.clinics },
-        ],
-      },
       { title: 'calendar', path: PATH_DASHBOARD.calendar, icon: ICONS.calendar },
       {
         title: 'school',
@@ -87,12 +63,19 @@ const navConfig = [
           // },
         ],
       },
-      // {title: 'learning', path:'', icon: <SnowmatchLogoWithGraduationHat />},
-      // { title: 'chat', path: PATH_DASHBOARD.chat.root, icon: ICONS.chat },
-
-      // { title: 'kanban', path: PATH_DASHBOARD.kanban, icon: ICONS.kanban },
+      // { title: 'e-commerce', path: PATH_DASHBOARD.general.ecommerce, icon: ICONS.ecommerce },
+      // { title: 'analytics', path: PATH_DASHBOARD.general.analytics, icon: ICONS.analytics },
+      // { title: 'banking', path: PATH_DASHBOARD.general.banking, icon: ICONS.banking },
+      // { title: 'booking', path: PATH_DASHBOARD.general.booking, icon: ICONS.booking },
     ],
   },
+
+  // MANAGEMENT
+  // ----------------------------------------------------------------------
+
+
+  // APP
+  // ---------------------------------------------------------------------
 ];
 
 export default navConfig;

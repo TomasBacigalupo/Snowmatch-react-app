@@ -34,7 +34,7 @@ PODS:
     - OSInAppBrowserLib (~> 1.0)
   - CapacitorPushNotifications (7.0.0):
     - Capacitor
-  - CapacitorShare (7.0.0):
+  - CapacitorShare (7.0.1):
     - Capacitor
   - CapgoCapacitorSocialLogin (7.4.7):
     - Alamofire (~> 5.10.2)
@@ -161,7 +161,7 @@ SPEC CHECKSUMS:
   CapacitorGeolocation: 0d4eeb930b58a6896ec0b495a0f638fb49df69db
   CapacitorInappbrowser: 7ff2c75c4cfc178cbbb99fbe382b2381bcc187c6
   CapacitorPushNotifications: c4feed483e03825369c278f5bab75100fb3f94a0
-  CapacitorShare: 2fcf1758cd07e0558f6aed40d7437bf8a3a42297
+  CapacitorShare: 58d6c2da63b093e8693287b2d36db92435538435
   CapgoCapacitorSocialLogin: 0f54b39b8a0ad5f7c42e8d712578c1d7bc09ace2
   CoderpradpCapacitorPluginVideoPicker: a410fb1f4a36683bcd90d5729bf42765c5126d04
   CordovaPlugins: bb5597ee03a5bea28fbf88a0fd462515ed18ad8e

@@ -242,7 +242,7 @@ export default function EcommerceCheckoutTeacher() {
     return <LoadingScreen />
   } else {
     return (
-      <Page title="Teacher: Match">
+      <Page title="Teacher: Match" sx={{ paddingTop: 'env(safe-area-inset-top)', paddingBottom: 'env(safe-area-inset-bottom)' }}>
         <CheckoutCart />
         {!user.cellphone && <CompleteUserInfo onUserInfoChange={handleUserInfoChange} />}
         <CheckoutMessage />

@@ -540,38 +540,6 @@
     "lessons": "Lessons",
     "experienceTitle": "Experience in Catedral"
   },
-  "CARVING_CHALLENGE_1": {
-    "title": "Counting in Turns",
-    "subtitle": "Counting"
-  },
-  "CARVING_CHALLENGE_2": {
-    "title": "Balancing in the Turn",
-    "subtitle": "Balancing"
-  },
-  "CARVING_CHALLENGE_3": {
-    "title": "Controlled Movements",
-    "subtitle": "Control"
-  },
-  "CARVING_DEMO_1": {
-    "title": "First Demo",
-    "subtitle": "Blue Carving"
-  },
-  "BUMPS_CHALLENGE_1": {
-    "title": "Bumps: Slow but Steady",
-    "subtitle": "Control in Bumps"
-  },
-  "BUMPS_CHALLENGE_2": {
-    "title": "Pivoting and Flexion on the Slope",
-    "subtitle": "Pivoting and Flexion"
-  },
-  "BUMPS_CHALLENGE_3": {
-    "title": "Controlled Movements",
-    "subtitle": "Control"
-  },
-  "BUMPS_DEMO_1": {
-    "title": "First Demo",
-    "subtitle": "Blue Carving"
-  },
   "course": {
     "exercise": {
       "objective": "El objetivo de este ejercicio es desafiar tu inclinacion al esquiar llevando tus esquies al maximo de angulacion posible. Te animas?",
@@ -587,11 +555,6 @@
         "3": "Balance against the outside ski."
       },
       "aiCorrection": "SnowMatch AI Corrigirá tu video"
-    },
-    "DEMO": {
-      "title": "Demo Video Analysis",
-      "description": "Upload your demo video for analysis",
-      "fundamentals": "Learn the fundamentals of ski technique through video analysis"
     },
     "GENERAL_UPLOAD": {
       "title": "Video Analysis",
@@ -763,6 +726,28 @@
         "button": "Share Now",
         "reward": "Earn up to $50 per referral"
       }
+    }
+  },
+  "unratedVideos": {
+    "title": "Rate Student Videos",
+    "subtitle": "Help improve skiing education by reviewing student techniques. Your expertise makes a difference!",
+    "stats": {
+      "videosReviewed": "Videos Reviewed",
+      "pendingReviews": "Pending Reviews",
+      "yourRank": "Your Rank"
+    },
+    "by": "By",
+    "skillLevel": "Skill Level",
+    "intermediate": "Intermediate",
+    "duration": "Duration",
+    "provideFeedback": "Provide Feedback",
+    "emptyState": {
+      "title": "All Caught Up!",
+      "description": "You've reviewed all available videos. Check back later for more."
+    },
+    "form": {
+      "commentRequired": "Leave a comment",
+      "scoreRequired": "Rate the video"
     }
   }
 }

@@ -124,7 +124,7 @@ export default function EcommerceTeacherDetails({ isGuest = false }) {
         <meta property="og:image" content={teacher?.imageLink} />
         <meta property="og:url" content={`https://snowmatch.pro/match/teacher/${id}`} />
       </Helmet>
-      <Container maxWidth={themeStretch ? false : 'lg'} p={0}>
+      <Container maxWidth={themeStretch ? false : 'lg'} p={0} sx={{ paddingBottom: 'calc(env(safe-area-inset-bottom) + 60px)' }}>
         <HeaderBreadcrumbs
           heading={translate('teacherDetails.title')}
           links={[

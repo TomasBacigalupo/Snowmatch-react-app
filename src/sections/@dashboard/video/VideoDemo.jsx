@@ -125,8 +125,7 @@ const VideoDemo = () => {
         onClose={() => setIsUploadSheetOpen(false)}
         onOpen={() => setIsUploadSheetOpen(true)}
         demoUrl="/assets/videos/tomianalisis.mov"
-        course="DEMO"
-        level="DEMO"
+        course="GENERAL"
       />
     </Box>
   );

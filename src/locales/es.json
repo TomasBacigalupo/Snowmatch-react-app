@@ -7,8 +7,8 @@
         "teacher": "Profesor"
     },
     "demo": {
-        "title": "English",
-        "introduction": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
+        "title": "Español",
+        "introduction": "Lorem Ipsum es simplemente texto de relleno de la industria de la impresión y la composición tipográfica. Lorem Ipsum ha sido el texto de relleno estándar de la industria desde el año 1500, cuando un impresor desconocido tomó una galería de tipos y la mezcló para hacer un libro de muestras tipográficas. Ha sobrevivido no solo cinco siglos, sino también el salto a la composición tipográfica electrónica, permaneciendo esencialmente sin cambios. Se popularizó en la década de 1960 con el lanzamiento de hojas de Letraset que contenían pasajes de Lorem Ipsum, y más recientemente con software de publicación de escritorio como Aldus PageMaker incluyendo versiones de Lorem Ipsum."
     },
     "heading": {
         "clientList": "Agenda de clientes"
@@ -1230,119 +1230,9 @@
             "description": "Nuestra inteligencia artificial calculará tu inclinación durante el descenso. Recibe información valiosa para mejorar tu técnica y lleva tu entrenamiento al siguiente nivel.",
             "fundamentals": ""
         },
-        "BUMPS": {
-            "title": "Bumps",
-            "description": "Enfocado en esquiar sobre bumps con estabilidad y fluidez.",
-            "challenge1": {
-                "title": "challange1",
-                "subtitle": "challange1subtitle",
-                "description": "challange1description"
-            },
-            "challenge2": {
-                "title": "challange1",
-                "subtitle": "challange1subtitle",
-                "description": "challange1description"
-            },
-            "challenge3": {
-                "title": "challange1",
-                "subtitle": "challange1subtitle",
-                "description": "challange1description"
-            },
-            "Demo1": {
-                "title": "challange1",
-                "subtitle": "challange1subtitle",
-                "description": "challange1description"
-            }
-        },
-        "SHORT_TURNS": {
-            "title": "Corto Paralelo",
-            "description": "Giros rápidos y controlados que resaltan la agilidad.",
-            "challenge1": {
-                "title": "challange1",
-                "subtitle": "challange1subtitle",
-                "description": "challange1description"
-            },
-            "challenge2": {
-                "title": "challange1",
-                "subtitle": "challange1subtitle",
-                "description": "challange1description"
-            },
-            "challenge3": {
-                "title": "challange1",
-                "subtitle": "challange1subtitle",
-                "description": "challange1description"
-            },
-            "Demo1": {
-                "title": "challange1",
-                "subtitle": "challange1subtitle",
-                "description": "challange1description"
-            }
-        },
-        "CARVING": {
-            "title": "Carving",
-            "description": "Fundamentos del carving con control de cantos y velocidad.",
-            "challenge1": {
-                "title": "challange1",
-                "subtitle": "challange1subtitle",
-                "description": "challange1description"
-            },
-            "challenge2": {
-                "title": "challange1",
-                "subtitle": "challange1subtitle",
-                "description": "challange1description"
-            },
-            "challenge3": {
-                "title": "challange1",
-                "subtitle": "challange1subtitle",
-                "description": "challange1description"
-            },
-            "Demo1": {
-                "title": "challange1",
-                "subtitle": "challange1subtitle",
-                "description": "challange1description"
-            }
-        },
-        "FREE_STYLE": {
-            "title": "Freestyle",
-            "description": "Para quienes quieren aprender saltos y trucos básicos.",
-            "challenge1": {
-                "title": "challange1",
-                "subtitle": "challange1subtitle",
-                "description": "challange1description"
-            },
-            "challenge2": {
-                "title": "challange1",
-                "subtitle": "challange1subtitle",
-                "description": "challange1description"
-            },
-            "challenge3": {
-                "title": "challange1",
-                "subtitle": "challange1subtitle",
-                "description": "challange1description"
-            },
-            "Demo1": {
-                "title": "challange1",
-                "subtitle": "challange1subtitle",
-                "description": "challange1description"
-            }
-        },
-        "CARVING_1": {
-            "title": "Posícion Básica",
-            "description": "Cómo pararme arriba de los esquies.",
-            "fundamentals": "La actitud dinamica de equilibrio nos va a permitir mejorar la esquiada pudiendo generar el cambio de canto desde los tobillos y evitando movimientos compensatorios"
-        },
-        "CARVING_2": {
-            "title": "Clavado de Baston",
-            "description": "Timing de clavado de baston en pista",
-            "fundamentals": "El clavado de baston es una herramienta fundamental para el equilibrio y la rotacion de cadera en la pista"
-        },
-        "DEMO": {
-            "title": "Análisis de Video Demo",
-            "description": "Sube tu video demo para análisis",
-            "fundamentals": "Aprende los fundamentos de la técnica de esquí a través del análisis de video"
-        },
-        "GENERAL_UPLOAD": {
+        "GENERAL": {
             "title": "Análisis de Video",
+            "tip": "Subí un video tuyo esquiando para recibir un análisis técnico de tu desempeño. Asegurate de elegir un clip donde se te vea de cuerpo entero, en movimiento, con buena luz y sin obstáculos.",
             "description": "Sube tu video para análisis profesional",
             "fundamentals": "Obtén retroalimentación sobre tu técnica de esquí de nuestra IA e instructores profesionales"
         }
@@ -1570,5 +1460,27 @@
                     "reward": "Gana hasta $50 por cada referido"
                 }
             }
+    },
+    "unratedVideos": {
+        "title": "Calificar Videos de Estudiantes",
+        "subtitle": "Ayuda a mejorar la educación del esquí revisando las técnicas de los estudiantes. ¡Tu experiencia hace la diferencia!",
+        "stats": {
+            "videosReviewed": "Videos Revisados",
+            "pendingReviews": "Revisiones con me gusta",
+            "yourRank": "Tu Rango"
+        },
+        "by": "Por",
+        "skillLevel": "Nivel de Habilidad",
+        "intermediate": "Intermedio",
+        "duration": "Duración",
+        "provideFeedback": "Proporcionar Comentarios",
+        "emptyState": {
+            "title": "¡Todo Listo!",
+            "description": "Has revisado todos los videos disponibles. Vuelve más tarde para ver más."
+        },
+        "form": {
+            "commentRequired": "Deja un comentario",
+            "scoreRequired": "Califica el video"
+        }
     }
 }

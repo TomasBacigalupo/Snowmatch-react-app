@@ -47,9 +47,9 @@ export default function VideoReviewDrawer({
         sx: {
           height: '100%',
           maxHeight: '100%',
-          paddingTop: 'env(safe-area-inset-bottom)',
           width: '100vw',
           maxWidth: '100%',
+          backgroundColor: 'white',
         },
       }}
     >
@@ -60,6 +60,7 @@ export default function VideoReviewDrawer({
           width: "100%",
           backgroundColor: "white",
           borderBottom: "2px solid #EBEBEB",
+          paddingTop: 'env(safe-area-inset-bottom)',
           zIndex: 10,
         }}
       >

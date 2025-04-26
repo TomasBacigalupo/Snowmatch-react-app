@@ -18,6 +18,7 @@ import VideoTrimmer from "./VideoTrimmer";
 import ReactPlayer from "react-player";
 import { m } from 'framer-motion';
 import Logo from "src/components/Logo";
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 import { FFmpeg, fetchFile } from '@ffmpeg/ffmpeg';
 import { LoadingButton } from "@mui/lab";
@@ -40,7 +41,7 @@ const RootStyle = styled('div')(({ theme }) => ({
     overflowX: 'hidden', // Evita el desplazamiento horizontal
 }));
 
-export default function VideoUploadBottomSheet({ open, onClose, onOpen, course, demoUrl, level }) {
+export default function VideoUploadBottomSheet({ open, onClose, onOpen, course, demoUrl }) {
     const navigate = useNavigate();
     const { user } = useAuth();
 
@@ -68,7 +69,7 @@ export default function VideoUploadBottomSheet({ open, onClose, onOpen, course, 
     const handleCloseAcademywelcome = () => {
         setOpenWelcome(false)
     }
-    const onAddToPremium = () => {}
+    const onAddToPremium = () => { }
 
     const dispatch = useDispatch();
     const { isLoading } = useSelector((state) => state.video)
@@ -121,7 +122,7 @@ export default function VideoUploadBottomSheet({ open, onClose, onOpen, course, 
 
         console.log("compressedBlobFile", compressedBlobFile.type);
 
-        dispatch(createVideo(compressedBlobFile, level));
+        dispatch(createVideo(compressedBlobFile, course));
         setActiveStep(2);
 
     }, [selectedFile, setLoadingCompresor, setActiveStep, dispatch]);
@@ -153,15 +154,13 @@ export default function VideoUploadBottomSheet({ open, onClose, onOpen, course, 
     }
 
     const handleTrim = async (start, end) => {
-        if (!videoPreviewUrl) return;
-        const trimmedVideo = await VideoEditor.trim(videoPreviewUrl, start, end);
-        if (trimmedVideo) {
-            console.log("Trimmed video ready for upload:", trimmedVideo);
-            setSelectedFile(trimmedVideo);
-        }
+        // if (!videoPreviewUrl) return;
+        // const trimmedVideo = await VideoEditor.trim(videoPreviewUrl, start, end);
+        // if (trimmedVideo) {
+        //     console.log("Trimmed video ready for upload:", trimmedVideo);
+        //     setSelectedFile(trimmedVideo);
+        // }
     };
-
-    useEffect(() => console.log("this is the course"), [course])
 
     const uploadVideo = async () => {
         try {
@@ -196,7 +195,7 @@ export default function VideoUploadBottomSheet({ open, onClose, onOpen, course, 
                                     }}
                                 >
                                     <Markdown>
-                                        El objetivo de este ejercicio es desafiar tu inclinacion al esquiar llevando tus esquies al maximo de angulacion posible. Te animas?
+                                        {translate(`course.${course}.tip`)}
                                     </Markdown>
                                 </Paper>
                             </Box>
@@ -209,6 +208,7 @@ export default function VideoUploadBottomSheet({ open, onClose, onOpen, course, 
                                     playsInline
                                     disablePictureInPicture
                                     autoPlay={true}
+                                    muted
                                     style={{
                                         borderRadius: '12px',
                                         objectFit: 'cover',
@@ -230,14 +230,9 @@ export default function VideoUploadBottomSheet({ open, onClose, onOpen, course, 
                             </Box>
                         </Box>
 
-                        <Button variant="contained" sx={{ py: 2, my: 2 }} fullWidth onClick={async () => {
-                            if (isPremium) {
-                                await uploadVideo();
-                                setActiveStep(activeStep + 1)
-                            } else {
-                                setOpenWelcome(true)
-                            }
-
+                        <Button variant="contained" sx={{ py: 2, mt: 2, mb: "calc(env(safe-area-inset-bottom) + 5px)" }} fullWidth onClick={async () => {
+                            await uploadVideo();
+                            setActiveStep(activeStep + 1)
                         }}>
                             Start Challange
                         </Button>
@@ -252,16 +247,16 @@ export default function VideoUploadBottomSheet({ open, onClose, onOpen, course, 
                             </Typography>
                             <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
                                 Desliza los marcadores para seleccionar el segmento más destacado de tu bajada.
-                                Solo necesitamos 30 segundos de tu mejor técnica.
                             </Typography>
                         </Box>
 
                         <Box my={2} sx={{ flex: 1 }}>
                             {videoPreviewUrl && (
-                                <VideoTrimmer 
+                                <VideoTrimmer
                                     videoUrl={videoPreviewUrl}
                                     maxDuration={30} // Limit to 30 seconds
                                     onTrim={handleTrim}
+                                    isLoading={loadingCompresor}
                                 />
                             )}
                         </Box>
@@ -376,69 +371,58 @@ export default function VideoUploadBottomSheet({ open, onClose, onOpen, course, 
                 return null;
         }
     }, [activeStep, videoCourse, videoPreviewUrl, loadingCompresor, course, _progress, isPremium]);
-    if (open) {
-        return (
-            <SwipeableDrawer
-                anchor="bottom"
-                open={open}
-                onClose={onCloseWrapper}
-                onOpen={onOpen}
-                disableSwipeToOpen={false}
-                ModalProps={{
-                    keepMounted: true,
-                }}
-                PaperProps={{
-                    sx: {
-                        height: '100%',
-                        maxHeight: '100%',
-                        overflowX: 'hidden', // Evita el desplazamiento horizontal
-                    },
+
+    return (
+        <SwipeableDrawer
+            anchor="bottom"
+            open={open}
+            onClose={onCloseWrapper}
+            onOpen={onOpen}
+            disableSwipeToOpen={false}
+            ModalProps={{
+                keepMounted: true,
+            }}
+            PaperProps={{
+                sx: {
+                    height: '100%',
+                    maxHeight: '100%',
+                    overflowX: 'hidden', // Evita el desplazamiento horizontal
+                },
+            }}
+        >
+            <Box display="flex" alignItems="center" sx={{ paddingTop: 'env(safe-area-inset-top)', position: 'relative' }}>
+                <Button onClick={onCloseWrapper} sx={{ position: 'absolute', left: 0, zIndex: 1 }}>
+                    <ArrowBackIcon />
+                </Button>
+                <Typography variant="h4" sx={{ width: '100%', textAlign: 'center' }}>
+                    {translate(`course.${course}.title`)}
+                </Typography>
+                <Box width='100px' sx={{ position: 'absolute', right: 16, zIndex: 1 }}>
+                    {course != "GENERAL" && <Paper
+                        sx={{
+                            border: '2px solid', // Borde
+                            backgroundColor: 'primary.dark', // Color primario oscuro
+                            borderRadius: 2, // Bordes redondeados
+                            px: 1, // Padding
+                        }}>
+                        <Typography color="white" textAlign="center" fontWeight="bold">
+                            100 pts
+                        </Typography>
+                    </Paper>
+                    }
+                </Box>
+            </Box>
+            <Box
+                sx={{
+                    padding: theme.spacing(2),
+                    height: '100%',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    overflow: 'auto',
+                    overflowX: 'hidden', // Evita el desplazamiento horizontal
                 }}
             >
-                <Box display="flex" alignItems="center" justifyContent="space-between" sx={{ paddingTop: 'env(safe-area-inset-top)' }}>
-                    <Button onClick={onCloseWrapper} sx={{
-                        padding: '0px',
-                        fontWeight: 'normal',
-                        color: 'black',
-                        textDecoration: 'underline',
-                        '&:hover': {
-                            textDecoration: 'underline',
-                        },
-                        textAlign: 'left',
-                        width: '100px'
-                    }}>
-                        Cancelar
-                    </Button>
-                    <Typography variant="h4" align="center" sx={{ flexGrow: 1 }}>
-                        {translate(`course.${course}.title`)}
-                    </Typography>
-                    <Box width='100px' mr={2}>
-                        <Paper
-                            sx={{
-                                border: '2px solid', // Borde
-                                backgroundColor: 'primary.dark', // Color primario oscuro
-                                borderRadius: 2, // Bordes redondeados
-                                px: 1, // Padding
-                            }}>
-                            <Typography color="white" textAlign="center" fontWeight="bold">
-                                100 pts
-                            </Typography>
-
-                        </Paper>
-
-                    </Box> {/* Placeholder to balance the space */}
-                </Box>
-                <Box
-                    sx={{
-                        padding: theme.spacing(2),
-                        height: '100%',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        overflow: 'auto',
-                        overflowX: 'hidden', // Evita el desplazamiento horizontal
-                    }}
-                >
-                    {/* <Box mb={2}>
+                {/* <Box mb={2}>
                         <Stepper activeStep={activeStep} alternativeLabel={!isMobile}>
                             {steps.map((label) => (
                                 <Step key={label}>
@@ -447,16 +431,14 @@ export default function VideoUploadBottomSheet({ open, onClose, onOpen, course, 
                             ))}
                         </Stepper>
                     </Box> */}
-                    {renderStep()}
-                </Box>
-                {openWelcome && <AcademyWelcome
-                    open={openWelcome}
-                    onClose={handleCloseAcademywelcome}
-                    onAddToPremium={onAddToPremium}
-                />}
-            </SwipeableDrawer>
-        )
-    } else {
-        return <></>
-    }
+                {open && renderStep()}
+            </Box>
+            {openWelcome && <AcademyWelcome
+                open={openWelcome}
+                onClose={handleCloseAcademywelcome}
+                onAddToPremium={onAddToPremium}
+            />}
+        </SwipeableDrawer>
+    )
+
 }

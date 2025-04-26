@@ -50,14 +50,10 @@ export default function Training() {
   const { translate } = useLocales();
   const [open, setOpen] = useState(false);
   const [openExcercise, setOpenExcercise] = useState(false);
-  const [openWelcome, setOpenWelcome] = useState(false);
   const [selectedLevelTitle, setSelectedLevelTitle] = useState('');
   const [selectedCourse, setSelectedCourse] = useState('');
   const [selectedLevel, setSelectedLevel] = useState('');
   const [demoUrl, setDemoUrl] = useState('');
-  const user = useAuth()
-  const today = new Date().toISOString().split("T")[0];
-  const [isPremium, setIsPremium] = useState(user?.user?.premiumExpiration > today);
 
   const COURSES = [
     {
@@ -114,7 +110,6 @@ export default function Training() {
     } else {
       setOpenExcercise(true)
     }
-    console.log("level", level)
 
     setSelectedCourse(course.code);
     setSelectedLevelTitle(level.code);
@@ -122,17 +117,6 @@ export default function Training() {
     setDemoUrl(level.demoUrl)
   };
 
-  const handleCloseAcademywelcome = () => {
-    setOpenWelcome(false)
-    console.log(isPremium)
-    if (isPremium) {
-      setOpen(true)
-    }
-  }
-  const onAddToPremium = () => {
-    setIsPremium(true)
-    setOpen(true)
-  }
 
   return (
     <Page title={translate('training.title')}>
@@ -207,7 +191,6 @@ export default function Training() {
       <VideoUploadBottomSheet
         title={selectedLevelTitle}
         course={selectedCourse}
-        level={selectedLevel}
         onOpen={() => setOpen(true)}
         open={open}
         onClose={() => setOpen(false)}

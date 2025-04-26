@@ -158,10 +158,10 @@ export default function TeacherDetailsMobileReview({ teacher, openForm = false }
                 open={open}
                 onClose={() => setOpen(false)}
                 sx={{
-                    paddingTop: 'env(safe-area-inset-top)',
                     '& .MuiDrawer-paper': {
                         boxSizing: 'border-box', width: '100%', height: '100%', paddingBottom: 2, borderTopLeftRadius: '12px',  // Adjust the value as needed
-                        borderTopRightRadius: '12px'
+                        borderTopRightRadius: '12px',
+                        paddingTop: 'env(safe-area-inset-top)',
                     }
                 }}
             >

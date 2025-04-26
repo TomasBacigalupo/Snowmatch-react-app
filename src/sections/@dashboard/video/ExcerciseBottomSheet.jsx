@@ -347,6 +347,7 @@ export default function ExcerciseBottomSheet({ open, onClose, onOpen, course, de
                     sx: {
                         height: '100%',
                         maxHeight: '100%',
+                        paddingBottom: 'env(safe-area-inset-bottom)'
                     },
                 }}
             >
@@ -403,7 +404,7 @@ export default function ExcerciseBottomSheet({ open, onClose, onOpen, course, de
                     </Box> */}
                     <Box my={2} display="flex" height='100%' flexDirection="column" justifyContent='space-between'>
                         <Box mb={2} display="flex" flexDirection="column" >
-                        <StoryPlayer />
+                            <StoryPlayer />
                             <Box>
                                 <Paper
                                     sx={{
@@ -418,7 +419,7 @@ export default function ExcerciseBottomSheet({ open, onClose, onOpen, course, de
                                     </Markdown>
                                 </Paper>
                             </Box>
-                            
+
                             <Box sx={{ p: 3 }}>
                                 <DoDontList
                                     title={translate('course.exercise.howToPass')}
@@ -446,14 +447,9 @@ export default function ExcerciseBottomSheet({ open, onClose, onOpen, course, de
                             </Box>
                         </Box>
 
-                        <Button variant="contained" sx={{ py: 2, my: 2 }} fullWidth onClick={async () => {
-                            if (isPremium) {
-                                await uploadVideo();
-                                setActiveStep(activeStep + 1)
-                            } else {
-                                setOpenWelcome(true)
-                            }
-
+                        <Button variant="contained" sx={{ py: 2, my: 2, marginBottom: 'env(safe-area-inset-bottom)' }} fullWidth onClick={async () => {
+                            await uploadVideo();
+                            setActiveStep(activeStep + 1)
                         }}>
                             Start Challange
                         </Button>

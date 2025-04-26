@@ -5,7 +5,7 @@ import ReactPlayer from 'react-player';
 // Estilos personalizados
 const ThumbnailContainer = styled(Box)(({ theme }) => ({
   position: 'relative',
-  height: '80px',
+  height: '30px',
   backgroundColor: theme.palette.grey[200],
   borderRadius: theme.shape.borderRadius,
   marginTop: theme.spacing(2),
@@ -27,7 +27,7 @@ const SelectionWindow = styled(Box)(({ theme }) => ({
   cursor: 'move',
 }));
 
-export default function VideoTrimmer({ videoUrl }) {
+export default function VideoTrimmer({ videoUrl, isLoading }) {
   const playerRef = useRef(null);
   const containerRef = useRef(null);
   const [playing, setPlaying] = useState(false);
@@ -174,7 +174,7 @@ export default function VideoTrimmer({ videoUrl }) {
         ref={playerRef}
         url={videoUrl} 
         width="100%" 
-        height="400px"
+        height="200px"
         controls
         playing={playing}
         onDuration={handleDuration}
@@ -183,7 +183,7 @@ export default function VideoTrimmer({ videoUrl }) {
         progressInterval={100}
       />
       
-      <Box sx={{ mt: 3 }}>
+      {!isLoading && <Box sx={{ mt: 3 }}>
         <Typography variant="subtitle1" gutterBottom>
           Selecciona los mejores 30 segundos
         </Typography>
@@ -261,7 +261,7 @@ export default function VideoTrimmer({ videoUrl }) {
             {formatTime(sliderValue[1])}
           </Typography>
         </Stack>
-      </Box>
+      </Box>}
     </Box>
   );
 }

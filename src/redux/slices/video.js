@@ -16,6 +16,7 @@ const initialState = {
     isUploading: false,
     isLoadingReview: false,
     isLoadingProCheck: false,
+    isCountLoading: false,
     analizeExists: false,
     loadingPayment: false,
     error: null,
@@ -36,7 +37,8 @@ const initialState = {
     videos: [],
     progress: 0,
     leaders: [],
-    isLoadingLeaderBoard: false
+    isLoadingLeaderBoard: false,
+    commentedCount: 0
 };
 
 const slice = createSlice({
@@ -326,6 +328,11 @@ const slice = createSlice({
         clearUploadVideoState(state) {
             state.isLoading = false;
             state.isUploading = false;
+        },
+
+        getCommentedCountSuccess(state, action) {
+            state.isCountLoading = false;
+            state.commentedCount = action.payload;
         }
     },
 });
@@ -342,7 +349,7 @@ export function getVideos() {
     return async () => {
         dispatch(slice.actions.startLoading());
         try {
-            const response = await axios.get(`/api/videos/VideoReviews/myVideos`);
+            const response = await axios.get(`/api/videos/my-videos`);
             const videos = response.data
             dispatch(slice.actions.getVideosSuccess(videos));
         } catch (error) {
@@ -368,7 +375,7 @@ export function getLeaderBoard(course) {
     return async () => {
         dispatch(slice.actions.startLoadingLeaderBoard());
         try {
-            const response = await axios.get(`/api/videos/VideoReviews/leaderboard?course=${course}`);
+            const response = await axios.get(`/api/videos/leaderboard?course=${course}`);
             const leaders = response.data
             dispatch(slice.actions.getLeaderBoardSuccess(leaders));
         } catch (error) {
@@ -381,7 +388,7 @@ export function getVideosToReview() {
     return async () => {
         dispatch(slice.actions.startLoading());
         try {
-            const response = await axios.get(`/api/videos/VideoReviews`);
+            const response = await axios.get(`/api/videos?proCheck=true`);
             const videos = response.data
             dispatch(slice.actions.getVideosToReviewSuccess(videos));
         } catch (error) {
@@ -395,7 +402,7 @@ export function reviewVideo(data) {
         const {id} = data;
         try {
             dispatch(slice.actions.startLoadingReview());
-            await axios.put(`/api/videos/VideoReviews/${id}`, data);
+            await axios.post(`/api/videos/${id}/comments/ai`, data);
             dispatch(slice.actions.stopLoadingReview());
             dispatch(getVideosToReview())
         } catch (error) {
@@ -408,7 +415,7 @@ export function proCheck(id) {
     return async () => {
         try {
             dispatch(slice.actions.startLoadingProCheck());
-            await axios.put(`/api/videos/VideoReviews/proCheck/${id}`);
+            await axios.put(`/api/videos/${id}/proCheck`);
             dispatch(slice.actions.stopLoadingProCheck(id));
             dispatch(getVideos())
         } catch (error) {
@@ -462,7 +469,7 @@ export function createVideo(video, course) {
             console.log('video.type', video.type)
             console.log('course 1', course)
             dispatch(slice.actions.startLoading());
-            const response = await axios.post('/api/videos/VideoReviews',{
+            const response = await axios.post('/api/videos',{
                 course: course,
             });
             const presignedUrl = response.data.videoUrl;
@@ -515,7 +522,7 @@ export function createVideoMultipart(video, course) {
         dispatch(slice.actions.startLoading());
   
         // 1️⃣ Solicitar URL pre-firmada
-        const response = await axios.post("/api/videos/VideoReviews", {
+        const response = await axios.post("/api/videos", {
           course: course,
         });
   
@@ -559,6 +566,19 @@ function addUtcOffset(dateString) {
     return adjustedDate.toISOString(); // Convert back to the ISO 8601 format for consistency
 }
 
+
+// ----------------------------------------------------------------------
+
+export function getCommentedCount() {
+    return async () => {
+        try {
+            const response = await axios.get(`/api/videos/comments/count`);
+            dispatch(slice.actions.getCommentedCountSuccess(response.data));
+        } catch (error) {
+            dispatch(slice.actions.hasError(error));
+        }
+    };
+}
 
 // ----------------------------------------------------------------------
 

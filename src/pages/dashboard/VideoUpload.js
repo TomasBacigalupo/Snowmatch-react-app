@@ -243,9 +243,6 @@ export default function VideoUpload() {
                                     </Box>
                                 </Grid>
                             )}
-                            <Grid item xs={12} sm={6} md={4}>
-                                <SkiProgressBox progress={0} />
-                            </Grid>
                         </Grid>
                     </StyledContainer> : <UploadedVideosList
                         videos={uploadedVideos}

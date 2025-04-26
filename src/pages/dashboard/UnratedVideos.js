@@ -15,6 +15,7 @@ import { ArrowBack } from '@mui/icons-material';
 import VideoReviewDrawer from 'src/components/VideoReviewDrawer';
 import { RateReview } from '@mui/icons-material';
 import { CheckCircle } from '@mui/icons-material';
+import useLocales from 'src/hooks/useLocales';
 
 // This would typically come from your backend
 const mockUnratedVideos = [
@@ -33,6 +34,7 @@ export default function UnratedVideos() {
   const { videosToReview, isLoadingReview } = useSelector((state) => state.video);
   const [isPlaying, setIsPlaying] = useState(false);
   const [loading, setLoading] = useState(false);
+  const { translate } = useLocales();
 
   const [stats] = useState({
     videosReviewed: 24,
@@ -98,8 +100,8 @@ export default function UnratedVideos() {
   }, [drawerOpen]);
 
   const NewBlogSchema = Yup.object().shape({
-    comment: Yup.string().required('Leave a comment'),
-    score: Yup.number().required('dejale un puntaje al video')
+    comment: Yup.string().required(translate('unratedVideos.form.commentRequired')),
+    score: Yup.number().required(translate('unratedVideos.form.scoreRequired'))
   });
 
   const defaultValues = {
@@ -132,10 +134,10 @@ export default function UnratedVideos() {
         borderBottom: '1px solid #eee'
       }}>
         <Typography variant="h4" gutterBottom>
-          Rate Student Videos
+          {translate('unratedVideos.title')}
         </Typography>
         <Typography variant="subtitle1" color="text.secondary" sx={{ mb: 3 }}>
-          Help improve skiing education by reviewing student techniques. Your expertise makes a difference!
+          {translate('unratedVideos.subtitle')}
         </Typography>
         
         {/* Stats Bar */}
@@ -147,15 +149,15 @@ export default function UnratedVideos() {
         }}>
           <Box>
             <Typography variant="h6">{stats.videosReviewed}</Typography>
-            <Typography variant="body2" color="text.secondary">Videos Reviewed</Typography>
+            <Typography variant="body2" color="text.secondary">{translate('unratedVideos.stats.videosReviewed')}</Typography>
           </Box>
           <Box>
             <Typography variant="h6">{stats.videosRemaining}</Typography>
-            <Typography variant="body2" color="text.secondary">Pending Reviews</Typography>
+            <Typography variant="body2" color="text.secondary">{translate('unratedVideos.stats.pendingReviews')}</Typography>
           </Box>
           <Box>
             <Typography variant="h6">{stats.contributionRank}</Typography>
-            <Typography variant="body2" color="text.secondary">Your Rank</Typography>
+            <Typography variant="body2" color="text.secondary">{translate('unratedVideos.stats.yourRank')}</Typography>
           </Box>
         </Box>
       </Box>
@@ -209,17 +211,17 @@ export default function UnratedVideos() {
                   {video.course}
                 </Typography>
                 <Typography variant="body2">
-                  By {video.user.name}
+                  {translate('unratedVideos.by')} {video.user.name}
                 </Typography>
               </Box>
             </Box>
             
             <Box sx={{ p: 2 }}>
               <Typography variant="body2" color="text.secondary" gutterBottom>
-                Skill Level: {video.skillLevel || 'Intermediate'}
+                {translate('unratedVideos.skillLevel')}: {video.skillLevel || translate('unratedVideos.intermediate')}
               </Typography>
               <Typography variant="body2" color="text.secondary" gutterBottom>
-                Duration: {video.duration || '2:30'}
+                {translate('unratedVideos.duration')}: {video.duration || '2:30'}
               </Typography>
               
               <Button 
@@ -234,7 +236,7 @@ export default function UnratedVideos() {
                 }}
                 startIcon={<RateReview />}
               >
-                Provide Feedback
+                {translate('unratedVideos.provideFeedback')}
               </Button>
             </Box>
           </Paper>
@@ -249,9 +251,9 @@ export default function UnratedVideos() {
           color: 'text.secondary' 
         }}>
           <CheckCircle sx={{ fontSize: 60, mb: 2, color: 'success.main' }} />
-          <Typography variant="h6">All Caught Up!</Typography>
+          <Typography variant="h6">{translate('unratedVideos.emptyState.title')}</Typography>
           <Typography variant="body2">
-            You've reviewed all available videos. Check back later for more.
+            {translate('unratedVideos.emptyState.description')}
           </Typography>
         </Box>
       )}

@@ -41,12 +41,14 @@ const StoryPlayer = () => {
       sx={{
         position: "relative",
         width: "100%",
+        height: "400px",
         backgroundColor: "#000",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
         borderRadius:"16px",
-        mb:2
+        mb:2,
+        overflow: "hidden"
       }}
       onClick={goToNextStory}
     >
@@ -63,7 +65,7 @@ const StoryPlayer = () => {
         style={{
           width: "100%",
           height: "100%",
-          objectFit: "contain",
+          objectFit: "cover",
           borderRadius:"16px"
         }}
       />

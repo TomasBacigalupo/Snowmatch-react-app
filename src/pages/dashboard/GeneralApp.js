@@ -22,6 +22,7 @@ import useLocales from 'src/hooks/useLocales';
 import { date } from 'yup/lib/locale';
 import { VideoLibrary, Upload, CalendarMonth, Help, EventAvailable, Star, Share, OpenInNew } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
+import { Share as CapacitorShare } from '@capacitor/share';
 
 
 // ----------------------------------------------------------------------
@@ -34,6 +35,7 @@ export default function GeneralApp() {
   const dispatch = useDispatch();
   const { totalIncome, totalClasses, totalClients, conversations, openClinicModal } = useSelector(state => state.teachers)
   const { events } = useSelector(state => state.calendar)
+  const { commentedCount, isCountLoading } = useSelector(state => state.video)
   const { translate } = useLocales()
   const [incomeChartData, setIncomeChartData] = useState([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
   const [incomePercent, setIncomePercent] = useState(0);
@@ -106,9 +108,9 @@ export default function GeneralApp() {
         <Grid container spacing={2} mb={3}>
           <Grid item xs={6}>
             <AppWidgetSummary
-            title={translate('generalApp.totalRatedVideos')}
-              
-              total={lessonsChartData.reduce((a, b) => a + b, 0)}
+              isLoading={isCountLoading}
+              title={translate('generalApp.totalRatedVideos')}
+              total={commentedCount}
               chartColor={theme.palette.chart.blue[0]}
               unit="hrs"
               videos={true}
@@ -175,57 +177,6 @@ export default function GeneralApp() {
                   onClick={() => navigate('/dashboard/videoCoach/unrated')}
                 >
                   {translate('dashboard.actions.rateAndHelp.button')}
-                </Button>
-              </Stack>
-            </Card>
-          </Grid>
-
-          {/* Upload Video Card */}
-          <Grid item xs={12} md={4}>
-            <Card
-              sx={{
-                p: 2,
-                position: 'relative',
-                transition: 'all 0.2s',
-                cursor: 'pointer',
-                border: '1px solid',
-                borderColor: 'grey.200',
-                '&:hover': {
-                  transform: 'translateY(-4px)',
-                  borderColor: 'grey.300',
-                  bgcolor: 'grey.50'
-                },
-                bgcolor: 'background.paper',
-              }}
-            >
-              <Stack direction="row" spacing={2} alignItems="center">
-                <Box
-                  sx={{
-                    p: 1.5,
-                    borderRadius: '12px',
-                    bgcolor: 'grey.100',
-                    color: 'grey.700'
-                  }}
-                >
-                  <Upload sx={{ width: 24, height: 24 }} />
-                </Box>
-                <Box sx={{ flexGrow: 1 }}>
-                  <Typography variant="subtitle1" sx={{ mb: 0.5, fontWeight: 600 }}>
-                    {translate('dashboard.actions.uploadVideo.title')}
-                  </Typography>
-                  <Typography variant="body2" sx={{ color: 'text.secondary', mb: 1 }}>
-                    {translate('dashboard.actions.uploadVideo.description')}
-                  </Typography>
-                </Box>
-                <Button
-                  variant="outlined"
-                  size="medium"
-                  color="primary"
-                  sx={{
-                    minWidth: '120px',
-                  }}
-                >
-                  {translate('dashboard.actions.uploadVideo.button')}
                 </Button>
               </Stack>
             </Card>
@@ -325,6 +276,20 @@ export default function GeneralApp() {
                     variant="text"
                     size="large"
                     color="primary"
+                    onClick={async () => {
+                      try {
+                        await CapacitorShare.share({
+                          title: 'SnowMatch',
+                          text: 'Check out SnowMatch - Your Ultimate Snowboarding Companion!',
+                          url: window.location.origin
+                        });
+                      } catch (error) {
+                        console.error('Error sharing:', error);
+                        // Fallback for when sharing fails
+                        const shareUrl = window.location.origin;
+                        navigator.clipboard.writeText(shareUrl);
+                      }
+                    }}
                     sx={{
                       justifyContent: 'flex-start',
                       px: 0,
@@ -370,6 +335,7 @@ export default function GeneralApp() {
                     variant="text"
                     size="large"
                     color="primary"
+                    onClick={() => navigate('/dashboard/calendar')}
                     sx={{
                       justifyContent: 'flex-start',
                       px: 0,

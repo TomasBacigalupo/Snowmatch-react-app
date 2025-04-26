@@ -60,7 +60,7 @@
     "@capacitor/inappbrowser": "^2.0.0",
     "@capacitor/ios": "^6.0.0",
     "@capacitor/push-notifications": "^7.0.0",
-    "@capacitor/share": "^7.0.0",
+    "@capacitor/share": "^7.0.1",
     "@capgo/capacitor-social-login": "^7.4.7",
     "@coderpradp/capacitor-plugin-video-picker": "^6.0.2",
     "@date-io/moment": "^2.14.0",

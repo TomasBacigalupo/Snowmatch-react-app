@@ -24,7 +24,7 @@ export default function VideoReviewedBottomSheet({ open, onClose, onOpen, select
     const [isPlaying, setIsPlaying] = useState(false);
     const dispatch = useDispatch();
     const { analizeExists, isLoadingExists } = useSelector(state => state.video);
-    const [isProCheckRequested, setIsProCheckRequested] = useState(selectedVideo?.proCheck);
+    const [isProCheckRequested, setIsProCheckRequested] = useState(selectedVideo?.isProCheckRequested);
     const { enqueueSnackbar } = useSnackbar();
 
     useEffect(() => {

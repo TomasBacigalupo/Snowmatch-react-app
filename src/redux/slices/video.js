@@ -362,7 +362,7 @@ export function addCredits(id, credits) {
     return async () => {
         dispatch(slice.actions.startLoadingCredits());
         try {
-            const response = await axios.get(`/api/videos/VideoReviews/addAiCredits/${id}?credits=${credits}`);
+            const response = await axios.put(`/api/credits/pro/${id}?credits=${credits}`);
             const videos = response.data
             dispatch(slice.actions.addCreditsSuccess(videos));
         } catch (error) {

@@ -125,16 +125,8 @@ const PremiumContainer = ({
                     throw new Error("CdvPurchase no está disponible. ¿El plugin está instalado correctamente?");
                 }
 
-                // if (store.isInitialized()) {
-                //     console.warn("[CdvPurchase] La tienda ya está inicializada.");
-                //     return;
-                // }
-
                 console.log("[DEBUG] Inicializando store...");
                 store.verbosity = store.DEBUG;
-
-                // Intentar inicializar la tienda
-                console.log("[DEBUG] Tienda inicializada con éxito.");
 
                 // Registrar el producto
                 store.register([
@@ -157,13 +149,6 @@ const PremiumContainer = ({
 
                 console.log("[DEBUG] Producto registrado:", productId);
 
-                // Esperar a que la tienda esté lista
-                // await store.ready();
-                console.log("[DEBUG] Tienda lista.");
-
-                // Refrescar la tienda para cargar los productos
-                // await store.refresh();
-                console.log("[DEBUG] Tienda actualizada.");
 
                 // Escuchar cambios en el producto
                 store.when(productId).productUpdated((product) => {
@@ -175,11 +160,13 @@ const PremiumContainer = ({
                 productIds.map(p => {
                     store.when(p).approved((product) => {
                         console.log("[DEBUG] Compra aprobada:", product);
-                        dispatch(addCredits(user.id,1))
+                        if (product.state === 'approved') {
+                            dispatch(addCredits(user.id, 1))
+                        }
                         product.finish();
                     });
                 })
-                
+
 
                 setLoading(false);
             } catch (error) {

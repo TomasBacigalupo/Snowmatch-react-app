@@ -89,8 +89,8 @@ const ReviewRequestBox = ({ isOpen, closeDrawer, onRequestReview }) => {
                             </IconButton>
                         </Box>}
 
-                        {user?.proCheckCredits === 0 && <Divider />}
-                        {user?.proCheckCredits === 0 && <PremiumContainer />}
+                        <Divider />
+                        <PremiumContainer />
                         {user?.proCheckCredits > 0 && <ReviewContent setOpen={setOpen} closeDrawer={closeDrawer} onRequestReview={onRequestReview} />}
 
                     </Box>

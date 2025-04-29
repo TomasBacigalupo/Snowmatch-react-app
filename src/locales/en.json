@@ -542,6 +542,8 @@
   },
   "course": {
     "exercise": {
+      "cancel": "Cancel",
+      "startChallenge": "Start Challenge",
       "objective": "El objetivo de este ejercicio es desafiar tu inclinacion al esquiar llevando tus esquies al maximo de angulacion posible. Te animas?",
       "howToPass": "Cómo paso el ejercicio?",
       "do": {
@@ -553,9 +555,59 @@
         "1": "When rolling onto your edges, keep your shins perfectly parallel.",
         "2": "Think about rolling your inside ski, your outside ski will follow.",
         "3": "Balance against the outside ski."
-      },
-      "aiCorrection": "SnowMatch AI Corrigirá tu video"
+      }
     },
+        "AI_CHALLENGE_1": {
+            "title": "Carving Challenge",
+            "objective": "The objective of this exercise is to challenge your inclination while skiing, taking your skis to the maximum possible edge angle. Are you up for it?",
+            "do": {
+                "1": "When tilting onto your edges, keep your shins perfectly parallel.",
+                "2": "Think about tilting the inside ski first; the outside ski will follow.",
+                "3": "Balance on the outside ski to maintain stability."
+            },
+            "dont": {
+                "1": "Don't tilt only the outside ski; work with both edges.",
+                "2": "Don't neglect the inside ski; it's key for proper angulation.",
+                "3": "Don't lose pressure on the outside ski during the turn."
+            }
+        },
+        "AI_CHALLENGE_2": {
+            "title": "Bumps Challenge",
+            "objective": "The objective of this exercise is to improve your control and flow on moguls (bumps), maintaining balance and a consistent line. Are you ready to surf the bumps?",
+            "do": {
+                "1": "Keep your knees flexible and absorb each bump with your legs.",
+                "2": "Always look ahead, not at your skis.",
+                "3": "Keep your torso stable and let your legs do the work."
+            },
+            "dont": {
+                "1": "Don't stiffen up; avoid locking your legs.",
+                "2": "Don't look down; you'll lose focus if you don't look ahead.",
+                "3": "Don't let your arms drop; keep them active for balance."
+            }
+    },
+    "GENERAL_CHALLENGE_1": {
+        "title": "Video Analysis",
+        "objective": "Upload a video of yourself skiing to receive a technical analysis of your performance. Make sure to choose a clip where your full body is visible, you are moving, the lighting is good, and there are no obstacles.",
+        "description": "Upload your video for professional analysis",
+        "fundamentals": "Get feedback on your skiing technique from our AI and professional instructors",
+        "do": {
+            "1": "Ski on varied terrain that includes flat sections, steeper pitches, and (if possible) some bumps.",
+            "2": "Focus on clean turns, maintaining dynamic balance and a smooth rhythm throughout your run.",
+            "3": "Have someone record you from a distance where your entire body and skis are always visible (ideally in landscape mode)."
+        },
+        "dont": {
+            "1": "Don't ski only on easy terrain; challenge yourself with variety to show your versatility.",
+            "2": "Don't record too close or with shaky movements; avoid zooming too much and losing sight of your full movement.",
+            "3": "Don't stop mid-run unless necessary; keep flowing continuously to demonstrate control and decision-making."
+        }
+      },
+    
+      "aiCorrection": "SnowMatch AI Corrigirá tu video"
+      
+    ,
+
+
+  
     "GENERAL_UPLOAD": {
       "title": "Video Analysis",
       "description": "Upload your video for professional analysis",
@@ -630,7 +682,7 @@
     "uploadButton": "Analyze my skiing with AI"
   },
   "bottomNavigation": {
-    "status": "Status",
+    "status": "You",
     "academy": "Academy",
     "match": "Match",
     "lessons": "Lessons",

@@ -6,7 +6,7 @@ import { Icon } from "@iconify/react";
 export default function CourseCard({ post, onClick }) {
     const { translate } = useLocales();
     console.log("post", post)
-    if (post.code === "AI_CHALLANGE_1" || post.code === "AI_CHALLANGE_2") {
+    if (post.code === "AI_CHALLENGE_1" || post.code === "AI_CHALLENGE_2") {
         return (
             <Box
                 onClick={onClick}
@@ -19,6 +19,7 @@ export default function CourseCard({ post, onClick }) {
                     cursor: "pointer",
                     "&:hover": { boxShadow: 4 },
                     position: "relative",
+                    textAlign: "center"
                 }}
             >
                 {/* Upper Section: Image */}
@@ -52,10 +53,11 @@ export default function CourseCard({ post, onClick }) {
                     variant="body2"
                     sx={{
                         position: "absolute",
-                        top: 125,
+                        top: 137,
                         right: 8,
                         color: "primary.dark",
                         fontWeight: "bold",
+
                     }}
                 >
                     {post.points} pts
@@ -82,14 +84,14 @@ export default function CourseCard({ post, onClick }) {
                             mb: 1,
                         }}
                     >
-                        {translate(`${post.code}.title`)}
+                        {translate(`course.${post.code}.title`)}
                     </Typography>
                 </Box>
             </Box>
         );
     }
 
-    if (post.code === "GENERAL_CHALLANGE_1") {
+    if (post.code === "GENERAL_CHALLENGE_1") {
         return (
             <Box
                 onClick={onClick}

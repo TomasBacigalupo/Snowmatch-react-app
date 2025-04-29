@@ -36,6 +36,7 @@ const LastVideo = ({ video }) => {
     };
 
     const statusInfo = getStatusInfo(video.status);
+    console.log(video)
 
     return (
         <Box

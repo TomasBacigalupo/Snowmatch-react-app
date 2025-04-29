@@ -205,6 +205,8 @@ export default function ExcerciseBottomSheet({ open, onClose, onOpen, course, de
         }
     };
 
+    console.log(course, level)
+
     const renderStep = useCallback(() => {
         switch (activeStep) {
             case 0:
@@ -363,10 +365,10 @@ export default function ExcerciseBottomSheet({ open, onClose, onOpen, course, de
                         textAlign: 'left',
                         width: '100px'
                     }}>
-                        Cancelar
+                        {translate('course.exercise.cancel')}
                     </Button>
                     <Typography variant="h4" align="center" sx={{ flexGrow: 1 }}>
-                        {translate(`course.${course}.title`)}
+                        {translate(`course.${level}.title`)}
                     </Typography>
                     <Box width='100px' mr={2}>
                         <Paper
@@ -415,7 +417,7 @@ export default function ExcerciseBottomSheet({ open, onClose, onOpen, course, de
                                     }}
                                 >
                                     <Markdown>
-                                        {translate('course.exercise.objective')}
+                                        {translate(`course.${level}.objective`)}
                                     </Markdown>
                                 </Paper>
                             </Box>
@@ -424,14 +426,14 @@ export default function ExcerciseBottomSheet({ open, onClose, onOpen, course, de
                                 <DoDontList
                                     title={translate('course.exercise.howToPass')}
                                     doItems={[
-                                        translate('course.exercise.do.1'),
-                                        translate('course.exercise.do.2'),
-                                        translate('course.exercise.do.3'),
+                                        translate(`course.${level}.do.1`),
+                                        translate(`course.${level}.do.2`),
+                                        translate(`course.${level}.do.3`),
                                     ]}
                                     dontItems={[
-                                        translate('course.exercise.dont.1'),
-                                        translate('course.exercise.dont.2'),
-                                        translate('course.exercise.dont.3'),
+                                        translate(`course.${level}.dont.1`),
+                                        translate(`course.${level}.dont.2`),
+                                        translate(`course.${level}.dont.3`),
                                     ]}
                                 />
                             </Box>
@@ -451,7 +453,7 @@ export default function ExcerciseBottomSheet({ open, onClose, onOpen, course, de
                             await uploadVideo();
                             setActiveStep(activeStep + 1)
                         }}>
-                            Start Challange
+                           {translate('course.exercise.startChallenge')}
                         </Button>
                     </Box>
                 </Box>

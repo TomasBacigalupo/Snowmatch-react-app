@@ -62,25 +62,25 @@ export default function Training() {
       code: 'CHALLANGE',
       levels: [
         {
-          code: 'AI_CHALLANGE_1',
+          code: 'AI_CHALLENGE_1',
           title: 'Challenge 1 title',
           subtitle: 'Challenge 1 subtitle',
           cover: '/assets/courses/pista.png',
           icon: "hugeicons:angle-01",
           level: 'Principiante',
-          points: 25,
-          course: "CARVING_CHALLANGE",
+          points: 100,
+          course: "CARVING_CHALLENGE_1",
           demoUrl: 'https://snowmatchvideos.s3.us-east-1.amazonaws.com/CARVING_CHALLANGE_1.mov'
         },
         {
-          code: 'AI_CHALLANGE_2',
+          code: 'AI_CHALLENGE_2',
           title: 'Challenge 2 title',
           subtitle: 'Challenge 2 subtitle',
           cover: '/assets/courses/position.png',
           icon: 'ph:wave-sine-light',
           level: 'Principiante',
-          points: 25,
-          course: "AI_CHALLANGE_2",
+          points: 100,
+          course: "AI_CHALLENGE_2",
           demoUrl: 'https://snowmatchvideos.s3.us-east-1.amazonaws.com/CARVING_CHALLANGE_1.mov'
         }
       ],
@@ -90,14 +90,14 @@ export default function Training() {
       code: 'CHALLANGE',
       levels: [
         {
-          code: 'GENERAL_CHALLANGE_1',
+          code: 'GENERAL_CHALLENGE_1',
           title: 'General',
           subtitle: 'General Challenge 1 subtitle',
           cover: '/assets/courses/pista.png',
           icon: "hugeicons:angle-01",
           level: 'Principiante',
           points: 25,
-          course: "GENERAL_CHALLANGE",
+          course: "GENERAL_CHALLANGE_1",
           demoUrl: 'https://snowmatchvideos.s3.us-east-1.amazonaws.com/CARVING_CHALLANGE_1.mov'
         }
       ],
@@ -105,7 +105,7 @@ export default function Training() {
   ];
 
   const handleSelectCourseLevel = (course, level) => {
-    if (course.code === "AI_CHALLANGE_1" || level.code === "AI_CHALLANGE_1") {
+    if (course.code === "AI_CHALLENGE_1" || level.code === "AI_CHALLENGE_1") {
       setOpen(true)
     } else {
       setOpenExcercise(true)
@@ -188,9 +188,10 @@ export default function Training() {
         ))}
 
       </Container>
-      <VideoUploadBottomSheet
+      <ExcerciseBottomSheet
         title={selectedLevelTitle}
         course={selectedCourse}
+        level={selectedLevel}
         onOpen={() => setOpen(true)}
         open={open}
         onClose={() => setOpen(false)}

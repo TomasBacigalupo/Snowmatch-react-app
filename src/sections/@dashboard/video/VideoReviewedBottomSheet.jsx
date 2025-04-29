@@ -68,7 +68,7 @@ export default function VideoReviewedBottomSheet({ open, onClose, onOpen, select
             }}
         >
             {selectedVideo && (
-                <MobileHeader onBack={onClose} title={translate(`course.${selectedVideo.course}.title`)}/>
+                <MobileHeader onBack={onClose} title={translate(`Video comments`)}/>
             )}
             <Box
                 sx={{
@@ -151,7 +151,7 @@ export default function VideoReviewedBottomSheet({ open, onClose, onOpen, select
                                         position: 'relative',
                                         width: 80,
                                         height: 80,
-                                        borderRadius: '50%',
+                                        borderRadius: '100%',
                                         background: `conic-gradient(${theme.palette.primary.main} ${selectedVideo.score}%, ${theme.palette.grey[200]} 0)`,
                                         display: 'flex',
                                         alignItems: 'center',
@@ -174,7 +174,7 @@ export default function VideoReviewedBottomSheet({ open, onClose, onOpen, select
                                             color: theme.palette.primary.main 
                                         }}
                                     >
-                                        {parseInt(selectedVideo.score, 10)}
+                                        {parseInt(selectedVideo?.videoComments[0]?.score, 10)}
                                     </Typography>
                                 </Box>
                                 <Box>
@@ -182,8 +182,8 @@ export default function VideoReviewedBottomSheet({ open, onClose, onOpen, select
                                         {translate('videoCoachScreen.score')}
                                     </Typography>
                                     <Typography variant="body2" sx={{ color: theme.palette.text.secondary }}>
-                                        {selectedVideo.score >= 80 ? translate('videoCoachScreen.excellentPerformance') :
-                                         selectedVideo.score >= 60 ? translate('videoCoachScreen.goodPerformance') :
+                                        {selectedVideo?.videoComments[0]?.score >= 80 ? translate('videoCoachScreen.excellentPerformance') :
+                                         selectedVideo?.videoComments[0]?.score >= 60 ? translate('videoCoachScreen.goodPerformance') :
                                          translate('videoCoachScreen.needsImprovement')}
                                     </Typography>
                                 </Box>

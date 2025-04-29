@@ -26,6 +26,7 @@ import UploadedVideosList from 'src/sections/@dashboard/video/UploadedVideosList
 import StyledContainer from 'src/sections/@dashboard/video/StyledContainer';
 import VideoToggleView from 'src/sections/@dashboard/video/VideoToggleView';
 import SkiProgressBox from 'src/sections/@dashboard/video/SkiProgressBox';
+import MapLeaderboard from 'src/sections/@dashboard/general/app/MapLeaderboard';
 
 // ----------------------------------------------------------------------
 
@@ -186,12 +187,13 @@ export default function VideoUpload() {
                 {tab === 'profile' ?
                     <StyledContainer>
                         <Grid container spacing={1} justifyContent='space-between' padding={0}>
-                            <LeaderBoardRightDrawer
+                    
+                                     <LeaderBoardRightDrawer
                                 open={isLeaderBoardOpen}
                                 onClose={() => setIsLeaderBoardOpen(false)}
                                 onOpen={() => setIsLeaderBoardOpen(true)}
                                 selectedChallange={selectedChallange}
-                                course={"AI_CHALLANGE_1"}
+                                course={"AI_CHALLENGE_1"}
                             />
                             {!videos || videos.length === 0 && (
                                 <Grid item xs={12} sx={{
@@ -243,6 +245,10 @@ export default function VideoUpload() {
                                     </Box>
                                 </Grid>
                             )}
+                            <Box sx={{width:'100%'}} onClick={() => setIsLeaderBoardOpen(true)}>
+                                                        <MapLeaderboard />
+                                                        </Box>
+
                         </Grid>
                     </StyledContainer> : <UploadedVideosList
                         videos={uploadedVideos}

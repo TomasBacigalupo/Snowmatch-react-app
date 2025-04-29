@@ -112,7 +112,7 @@ const SnowMatchIntelligenceBox = ({ video }) => {
             </Box>
 
             {/* Description - updated styling */}
-            {video?.aiComment &&
+            {video?.videoComments && video?.videoComments[0]?.comment &&
                 <Markdown
                     components={{
                         h1: (props) => <Typography variant="body1" sx={{ color: 'text.secondary', lineHeight: 1.6 }} {...props} />,
@@ -125,7 +125,7 @@ const SnowMatchIntelligenceBox = ({ video }) => {
                         li: (props) => <li style={{ fontSize: '14px', marginLeft: '1px', marginTop: '5px', color: theme.palette.text.secondary }} {...props} />,
                     }}
                 >
-                    {safeSliceMarkdown(video?.aiComment, 145)}
+                    {safeSliceMarkdown(video?.videoComments[0]?.comment, 145)}
                 </Markdown>
             }
 
@@ -286,7 +286,7 @@ const SnowMatchIntelligenceBox = ({ video }) => {
                                     ul: (props) => <ul style={{ listStyleType: 'disc', marginLeft: '1px' }} {...props} />,
                                     li: (props) => <li style={{ fontSize: '14px', marginLeft: '1px', marginTop: '5px' }} {...props} />,
                                 }}
-                            >{video?.aiComment}</Markdown>
+                            >{video?.videoComments[0]?.comment}</Markdown>
                         </Box>
                     </Box>
                 }

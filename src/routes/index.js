@@ -26,7 +26,7 @@ import CourseLevels from 'src/pages/dashboard/CourseLevels';
 import BackButtonLayout from 'src/layouts/BackButtonLayout';
 import Training from 'src/pages/dashboard/Training';
 import Maps from 'src/pages/dashboard/Maps';
-
+import Feed from 'src/pages/dashboard/Feed';
 // ----------------------------------------------------------------------
 
 const Loadable = (Component) => (props) => {
@@ -127,6 +127,7 @@ export default function Router() {
         //   path: 'teacher/:id', element:
         //     <EcommerceTeacherDetails isGuest={true} />
         // },
+        { path: 'feed', element: <Feed /> },
         {
           path: 'teacher/:id/review', element:
             <AuthGuard>
@@ -275,6 +276,7 @@ export default function Router() {
       children: [
         { element: <Navigate to={PATH_AFTER_LOGIN} replace />, index: true },
         { path: 'app', element: <GeneralApp /> },
+        { path: 'feed', element: <Feed /> },
         { path: 'ecommerce', element: <GeneralEcommerce /> },
         { path: 'discounts', element: <Discounts /> },
         { path: 'analytics', element: <GeneralAnalytics /> },

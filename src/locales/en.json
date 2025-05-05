@@ -557,7 +557,7 @@
         "3": "Balance against the outside ski."
       }
     },
-        "AI_CHALLENGE_1": {
+        "CARVING": {
             "title": "Carving Challenge",
             "objective": "The objective of this exercise is to challenge your inclination while skiing, taking your skis to the maximum possible edge angle. Are you up for it?",
             "do": {
@@ -571,7 +571,7 @@
                 "3": "Don't lose pressure on the outside ski during the turn."
             }
         },
-        "AI_CHALLENGE_2": {
+        "BUMPS": {
             "title": "Bumps Challenge",
             "objective": "The objective of this exercise is to improve your control and flow on moguls (bumps), maintaining balance and a consistent line. Are you ready to surf the bumps?",
             "do": {
@@ -585,7 +585,7 @@
                 "3": "Don't let your arms drop; keep them active for balance."
             }
     },
-    "GENERAL_CHALLENGE_1": {
+    "GENERAL": {
         "title": "Video Analysis",
         "objective": "Upload a video of yourself skiing to receive a technical analysis of your performance. Make sure to choose a clip where your full body is visible, you are moving, the lighting is good, and there are no obstacles.",
         "description": "Upload your video for professional analysis",
@@ -682,6 +682,7 @@
     "uploadButton": "Analyze my skiing with AI"
   },
   "bottomNavigation": {
+    "home": "Home",
     "status": "You",
     "academy": "Academy",
     "match": "Match",

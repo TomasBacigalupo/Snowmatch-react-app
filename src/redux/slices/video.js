@@ -38,7 +38,8 @@ const initialState = {
     progress: 0,
     leaders: [],
     isLoadingLeaderBoard: false,
-    commentedCount: 0
+    commentedCount: 0,
+    isCountLoading: false
 };
 
 const slice = createSlice({
@@ -388,7 +389,7 @@ export function getVideosToReview() {
     return async () => {
         dispatch(slice.actions.startLoading());
         try {
-            const response = await axios.get(`/api/videos?proCheck=true`);
+            const response = await axios.get(`/api/videos?proCheck=true&reviewed=false`);
             const videos = response.data
             dispatch(slice.actions.getVideosToReviewSuccess(videos));
         } catch (error) {
@@ -572,8 +573,8 @@ function addUtcOffset(dateString) {
 export function getCommentedCount() {
     return async () => {
         try {
-            const response = await axios.get(`/api/videos/comments/count`);
-            dispatch(slice.actions.getCommentedCountSuccess(response.data));
+            const response = await axios.get(`/api/videos/comments/user/count`);
+            dispatch(slice.actions.getCommentedCountSuccess(response?.data?.count || 0));
         } catch (error) {
             dispatch(slice.actions.hasError(error));
         }

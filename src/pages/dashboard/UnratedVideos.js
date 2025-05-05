@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Container, Typography, List, ListItem, ListItemText, ListItemSecondaryAction, Button, SwipeableDrawer, Box, TextField, Rating, Avatar, ListItemAvatar, Paper, IconButton, Divider } from '@mui/material';
+import { Container, Typography, List, ListItem, ListItemText, ListItemSecondaryAction, Button, SwipeableDrawer, Box, TextField, Rating, Avatar, ListItemAvatar, Paper, IconButton, Divider, Skeleton } from '@mui/material';
 import { FormProvider, RHFEditor, RHFTextField, RHFSlider } from 'src/components/hook-form';
 import { useForm } from 'react-hook-form';
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
@@ -31,13 +31,13 @@ export default function UnratedVideos() {
   const [comment, setComment] = useState('');
   const drawerContentRef = useRef(null);
   const dispatch = useDispatch()
-  const { videosToReview, isLoadingReview } = useSelector((state) => state.video);
+  const { commentedCount, isCountLoading, videosToReview, isLoadingReview } = useSelector((state) => state.video);
   const [isPlaying, setIsPlaying] = useState(false);
   const [loading, setLoading] = useState(false);
   const { translate } = useLocales();
 
   const [stats] = useState({
-    videosReviewed: 24,
+    videosReviewed: commentedCount || 0,
     videosRemaining: videosToReview?.length || 0,
     contributionRank: "Silver Reviewer"
   });
@@ -148,7 +148,7 @@ export default function UnratedVideos() {
           mt: 3 
         }}>
           <Box>
-            <Typography variant="h6">{stats.videosReviewed}</Typography>
+            {isCountLoading ? <Skeleton variant="text" width={100} height={40} /> : <Typography variant="h6">{stats.videosReviewed}</Typography>}
             <Typography variant="body2" color="text.secondary">{translate('unratedVideos.stats.videosReviewed')}</Typography>
           </Box>
           <Box>

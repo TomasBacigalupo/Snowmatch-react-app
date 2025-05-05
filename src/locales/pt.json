@@ -333,11 +333,11 @@
         "allDayTimeDescrpition": "O professor estará esperando por você no ponto de encontro às 9:30 no dia da sua aula. Se você se atrasar, o professor esperará 15 minutos e depois partirá. Nenhum reembolso será feito. Esta modalidade inclui uma pausa para almoço de 1 hora. O professor indicará o horário para isso."
     },
     "products": {
-      "group": "Grupo",
-      "private": "Privado",
-      "experiences": "Experiências",
-      "lessons": "Aulas",
-      "experienceTitle": "Experiências Catedral"
+        "group": "Grupo",
+        "private": "Privado",
+        "experiences": "Experiências",
+        "lessons": "Aulas",
+        "experienceTitle": "Experiências Catedral"
     },
     "product": {
         "heading": {
@@ -563,7 +563,7 @@
         },
         "149": {
             "descriptionPreview": "Aprenda a esquiar fora de pista. Intermediários/avançados.",
-            "description": "A aula de <b>freeride (estilo livre)</b> é uma incrível experiência fora de pista, orientada para esquiadores amantes da aventura e do contato com a natureza. O instrutor vai ensinar e levar você para esquiar por incríveis <b>bosques nevados e neve fofa não compactada*.</b><br/>Além disso, explicará <b>a técnica para que você possa esquiar em lugares com “bumps”</b> (montículos de neve que se formam na pista), e dominar todo tipo de descida.<br/>Neste curso, você aprenderá as <b>noções básicas do freeride</b>, para que possa desfrutar deste estilo de forma divertida e segura. Com uma progressão adequada, <b>ao finalizar, você estará capacitado para esquiar em qualquer condição e tipo de neve e declive.</b><br/>*<i>As atividades realizadas durante a aula dependerão das condições meteorológicas e da montanha no dia.</i>",
+            "description": "A aula de <b>freeride (estilo livre)</b> é uma incrível experiência fora de pista, orientada para esquiadores amantes da aventura e do contato com a natureza. O instrutor vai ensinar e levar você para esquiar por incríveis <b>bosques nevados e neve fofa não compactada*.</b><br/>Além disso, explicará <b>a técnica para que você possa esquiar em lugares com bumps</b> (montículos de neve que se formam na pista), e dominar todo tipo de descida.<br/>Neste curso, você aprenderá as <b>noções básicas do freeride</b>, para que possa desfrutar deste estilo de forma divertida e segura. Com uma progressão adequada, <b>ao finalizar, você estará capacitado para esquiar em qualquer condição e tipo de neve e declive.</b><br/>*<i>As atividades realizadas durante a aula dependerão das condições meteorológicas e da montanha no dia.</i>",
             "skiLevel": "Intermediários/Avançados",
             "totalStudents": "Entre 1 e 5 pessoas",
             "meetingPoint": "Base Cerro Catedral",
@@ -667,5 +667,273 @@
         "ocupationDescription": "Dias para aproveitar a experiência.",
         "readMore": "Leia mais",
         "descriptionTitle": "Sobre a Experiência"
+    },
+    "course": {
+        "exercise": {
+            "cancel": "Cancelar",
+            "startChallenge": "Iniciar Desafio",
+            "objective": "O objetivo deste exercício é desafiar sua inclinação ao esquiar, levando seus esquis ao ângulo máximo possível. Você topa?",
+            "howToPass": "Como passo no exercício?",
+            "do": {
+                "1": "Ao inclinar nas bordas, mantenha suas canelas perfeitamente paralelas.",
+                "2": "Pense em inclinar o esqui interno primeiro; o esqui externo seguirá.",
+                "3": "Equilibre-se contra o esqui externo."
+            },
+            "dont": {
+                "1": "Não incline apenas o esqui externo; trabalhe com ambas as bordas.",
+                "2": "Não negligencie o esqui interno; ele é fundamental para a angulação correta.",
+                "3": "Não perca pressão no esqui externo durante a curva."
+            }
+        },
+        "CARVING": {
+            "title": "Desafio de Carving",
+            "objective": "O objetivo deste exercício é desafiar sua inclinação ao esquiar, levando seus esquis ao ângulo máximo possível. Você topa?",
+            "do": {
+                "1": "Ao inclinar nas bordas, mantenha suas canelas perfeitamente paralelas.",
+                "2": "Pense em inclinar o esqui interno primeiro; o esqui externo seguirá.",
+                "3": "Equilibre-se no esqui externo para manter a estabilidade."
+            },
+            "dont": {
+                "1": "Não incline apenas o esqui externo; trabalhe com ambas as bordas.",
+                "2": "Não negligencie o esqui interno; ele é fundamental para a angulação correta.",
+                "3": "Não perca pressão no esqui externo durante a curva."
+            }
+        },
+        "BUMPS": {
+            "title": "Desafio de Moguls",
+            "objective": "O objetivo deste exercício é melhorar seu controle e fluidez nos moguls (ondulações), mantendo o equilíbrio e uma linha consistente. Pronto para surfar nas ondulações?",
+            "do": {
+                "1": "Mantenha os joelhos flexíveis e absorva cada ondulação com as pernas.",
+                "2": "Sempre olhe para frente, não para seus esquis.",
+                "3": "Mantenha o tronco estável e deixe as pernas fazerem o trabalho."
+            },
+            "dont": {
+                "1": "Não fique rígido; evite travar as pernas.",
+                "2": "Não olhe para baixo; você perderá o foco se não olhar para frente.",
+                "3": "Não deixe os braços caírem; mantenha-os ativos para o equilíbrio."
+            }
+        },
+        "GENERAL": {
+            "title": "Análise de Vídeo",
+            "objective": "Envie um vídeo seu esquiando para receber uma análise técnica do seu desempenho. Certifique-se de escolher um clipe onde seu corpo inteiro esteja visível, você esteja em movimento, a iluminação esteja boa e não haja obstáculos.",
+            "description": "Envie seu vídeo para análise profissional",
+            "fundamentals": "Receba feedback sobre sua técnica de esqui de nossa IA e instrutores profissionais",
+            "do": {
+                "1": "Esquie em terrenos variados que incluam seções planas, inclinações mais íngremes e (se possível) algumas ondulações.",
+                "2": "Foque em curvas limpas, mantendo equilíbrio dinâmico e um ritmo suave durante toda a descida.",
+                "3": "Peça para alguém gravar você de uma distância onde seu corpo inteiro e esquis estejam sempre visíveis (idealmente no modo paisagem)."
+            },
+            "dont": {
+                "1": "Não esquie apenas em terrenos fáceis; desafie-se com variedade para mostrar sua versatilidade.",
+                "2": "Não grave muito perto ou com movimentos instáveis; evite dar muito zoom e perder a visão do seu movimento completo.",
+                "3": "Não pare no meio da descida a menos que necessário; mantenha o fluxo contínuo para demonstrar controle e tomada de decisão."
+            }
+        },
+        "GENERAL_UPLOAD": {
+            "title": "Análise de Vídeo",
+            "description": "Envie seu vídeo para análise profissional",
+            "fundamentals": "Receba feedback sobre sua técnica de esqui de nossa IA e instrutores profissionais"
+        }
+    },
+    "notifications": {
+        "procheck_requested": "ProCheck Solicitado",
+        "empty": {
+            "title": "Nenhuma notificação ainda",
+            "description": "Envie seu primeiro vídeo e comece a receber feedback dos melhores instrutores de esqui e da IA"
+        }
+    },
+    "uploadedVideos": {
+        "empty": {
+            "title": "Nenhum vídeo enviado ainda",
+            "description": "Envie um vídeo para começar com a análise de IA"
+        },
+        "title": "Vídeos Enviados",
+        "reviewed": "Vídeos Revisados"
+    },
+    "snowmatch": {
+        "intelligence": {
+            "title": "Inteligência SnowMatch",
+            "description": "Assista sua análise de vídeo em tempo real",
+            "analyze": "Análise Completa",
+            "aiAnalysis": "Análise de IA",
+            "videoAnalysis": "Análise de Vídeo",
+            "technicalBreakdown": "Análise Técnica",
+            "improveYourTechnique": "Melhore Sua Técnica",
+            "watchAnalyzed": "Assista ao Vídeo Analisado",
+            "aiInsights": "Insights da IA",
+            "keyPoints": "Pontos Principais",
+            "overallAnalysis": "Análise Geral",
+            "technicalDetails": "Detalhes Técnicos",
+            "recommendations": "Recomendações",
+            "viewFullReport": "Ver Relatório Completo"
+        }
+    },
+    "procheck": {
+        "credits": {
+            "title": "Créditos ProCheck",
+            "subtitle": "Use seus créditos para obter feedback profissional sobre sua técnica",
+            "available": "Créditos disponíveis",
+            "use_credits": "Use seus créditos para obter feedback profissional sobre sua técnica",
+            "purchase_credits": "Use seus créditos para obter feedback profissional sobre sua técnica"
+        },
+        "actions": {
+            "get_first_correction": "Obtenha minha primeira correção de vídeo",
+            "get_procheck": "Obtenha ProCheck para o Último Vídeo",
+            "upload_new": "Enviar Novo Vídeo",
+            "buy_credits": "Comprar Créditos ProCheck"
+        }
+    },
+    "videoCoachScreen": {
+        "profile": "Perfil",
+        "uploaded_videos": "Vídeos Enviados",
+        "score": "Pontuação de Desempenho",
+        "excellentPerformance": "Excelente! Sua técnica está excepcional",
+        "goodPerformance": "Bom trabalho! Continue praticando para melhorar",
+        "needsImprovement": "Espaço para melhorias. Continue trabalhando em sua técnica",
+        "scoreDetails": "Pontuação Geral de Desempenho",
+        "technicalScore": "Pontuação Técnica",
+        "styleScore": "Pontuação de Estilo"
+    },
+    "latestTips": {
+        "title": "Dicas Profissionais",
+        "readMore": "Ler Mais"
+    },
+    "videoDemo": {
+        "title": "Análise profissional de esqui pela Inteligência SnowMatch",
+        "uploadButton": "Analise meu esqui com IA"
+    },
+    "bottomNavigation": {
+        "status": "Você",
+        "academy": "Academia",
+        "match": "Match",
+        "lessons": "Aulas",
+        "maps": "Mapas"
+    },
+    "progress": {
+        "yourSkiProgress": "Seu Progresso no Esqui",
+        "completed": "completado",
+        "joinSkiLessons": "Melhore sua técnica passo a passo",
+        "startYourJourney": "Obtenha feedback personalizado sobre sua técnica de esqui",
+        "goToFirstLevel": "Ir para o Primeiro Nível",
+        "levels": {
+            "beginner": "Iniciante",
+            "intermediate": "Intermediário",
+            "advanced": "Avançado",
+            "beginnerDesc": "Aprenda o básico",
+            "intermediateDesc": "Perfeccione sua técnica",
+            "advancedDesc": "Domine as pistas"
+        }
+    },
+    "lastVideo": {
+        "title": "Último Envio",
+        "subtitle": "Solicite feedback profissional sobre seu último vídeo",
+        "aiStatus": {
+            "pending": "Análise de IA em Andamento",
+            "completed": "Análise de IA Concluída",
+            "processing": "Processando Vídeo"
+        },
+        "proCheck": {
+            "request": "Solicitar ProCheck",
+            "pending": "ProCheck Pendente"
+        }
+    },
+    "video": {
+        "status": {
+            "waitingProCheck": "Aguardando análise do Pro",
+            "proChecked": "Análise do Pro concluída",
+            "score": "Pontuação"
+        },
+        "action": {
+            "showAnalysis": "Ver Análise",
+            "proCheck": "ProCheck"
+        },
+        "review": {
+            "title": "Avaliar Vídeo"
+        }
+    },
+    "leaderboard": {
+        "title": "Classificação",
+        "improvement": "Top {{percent}}% - Reduza {{time}}s para subir {{spots}} posições"
+    },
+    "dashboard": {
+        "whatToDo": "O que você gostaria de fazer?",
+        "overview": "Visão Geral do Painel",
+        "actions": {
+            "rateAndHelp": {
+                "title": "Avalie & Ajude a Comunidade",
+                "description": "Avalie vídeos e ganhe recompensas",
+                "button": "Começar a Avaliar"
+            },
+            "uploadVideo": {
+                "title": "Enviar Vídeo",
+                "description": "Obtenha análise profissional",
+                "button": "Enviar Agora"
+            },
+            "manageCalendar": {
+                "title": "Gerenciar Calendário",
+                "description": "Bloquear dias e disponibilidade",
+                "button": "Abrir Calendário"
+            }
+        },
+        "getTheMost": {
+            "title": "Aproveite ao Máximo o SnowMatch",
+            "subtitle": "Siga estas dicas para aumentar seus ganhos e visibilidade",
+            "support": {
+                "title": "Precisa de Ajuda?",
+                "description": "Entre em contato com nossa equipe de suporte",
+                "button": "Contatar Suporte"
+            },
+            "calendar": {
+                "title": "Mantenha Seu Calendário Atualizado",
+                "description": "Mantenha sua disponibilidade atual para obter mais reservas",
+                "button": "Atualizar Calendário"
+            },
+            "feedback": {
+                "title": "Dê Feedback e Ganhe",
+                "description": "Avalie vídeos de alunos para ganhar recompensas prioritárias",
+                "button": "Começar a Avaliar"
+            },
+            "refer": {
+                "title": "Indique um Esquiador",
+                "description": "Compartilhe o SnowMatch e ganhe recompensas prioritárias",
+                "button": "Compartilhar Agora",
+                "reward": "Ganhe até $50 por indicação"
+            }
+        }
+    },
+    "unratedVideos": {
+        "title": "Avalie Vídeos de Alunos",
+        "subtitle": "Ajude a melhorar a educação no esqui revisando técnicas de alunos. Sua experiência faz a diferença!",
+        "stats": {
+            "videosReviewed": "Vídeos Revisados",
+            "pendingReviews": "Avaliações Pendentes",
+            "yourRank": "Sua Classificação"
+        },
+        "by": "Por",
+        "skillLevel": "Nível de Habilidade",
+        "intermediate": "Intermediário",
+        "duration": "Duração",
+        "provideFeedback": "Fornecer Feedback",
+        "emptyState": {
+            "title": "Tudo Atualizado!",
+            "description": "Você revisou todos os vídeos disponíveis. Volte mais tarde para mais."
+        },
+        "form": {
+            "commentRequired": "Deixe um comentário",
+            "scoreRequired": "Avalie o vídeo"
+        }
+    },
+    "auth": {
+        "haveAccount": "Já tem uma conta?",
+        "login": "Entrar",
+        "getStartedFree": "Comece totalmente grátis.",
+        "registrationMessage": "Ao se registrar, eu concordo com os",
+        "terms": "Termos de Serviço",
+        "and": "e",
+        "privacy": "Política de Privacidade",
+        "notATeacher": "Não é um professor?",
+        "continueWithGoogle": "Continuar com Google",
+        "continueWithApple": "Continuar com Apple",
+        "continueWithEmail": "Continuar com Email"
     }
 }

@@ -23,6 +23,7 @@ import { date } from 'yup/lib/locale';
 import { VideoLibrary, Upload, CalendarMonth, Help, EventAvailable, Star, Share, OpenInNew } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { Share as CapacitorShare } from '@capacitor/share';
+import { getCommentedCount } from 'src/redux/slices/video';
 
 
 // ----------------------------------------------------------------------
@@ -49,10 +50,9 @@ export default function GeneralApp() {
 
   useEffect(() => {
     dispatch(getTotalClasses())
-    dispatch(getTotalIncome())
-    dispatch(getTotalClients())
     dispatch(getEvents())
     dispatch(getConversations())
+    dispatch(getCommentedCount())
   }, [])
 
   useEffect(() => {

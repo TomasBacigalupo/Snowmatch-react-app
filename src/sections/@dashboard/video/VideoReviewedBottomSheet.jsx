@@ -192,22 +192,24 @@ export default function VideoReviewedBottomSheet({ open, onClose, onOpen, select
                             {selectedVideo.analysisData && <VideoAnalyticsChart turnData={selectedVideo.analysisData} />}
 
                             {/* Revisor */}
-                            {selectedVideo.reviewer && (
+                            {selectedVideo.reviewed && 
+                            selectedVideo.videoComments.length > 0 && 
+                            selectedVideo.videoComments.map( comment => (
                                 <>
                                     <Divider sx={{ my: 2 }} />
 
                                     {/* Info del reviewer */}
                                     <Box display="flex" alignItems="center" gap={2} sx={{ mb: 2 }}>
-                                        <Avatar src={selectedVideo.reviewer.imageLink} sx={{ bgcolor: theme.palette.primary.main, width: 48, height: 48 }}>
-                                            {selectedVideo.reviewer.name[0]}
-                                            {selectedVideo.reviewer.lastname[0]}
+                                        <Avatar src={comment.user.imageLink} sx={{ bgcolor: theme.palette.primary.main, width: 48, height: 48 }}>
+                                            {comment.user.name[0]}
+                                            {comment.user.lastname[0]}
                                         </Avatar>
                                         <Box>
                                             <Typography variant="h6">
-                                                {selectedVideo.reviewer.name} {selectedVideo.reviewer.lastname}
+                                                {comment.user.name} {comment.user.lastname}
                                             </Typography>
                                             <Typography variant="body2" color="text.secondary">
-                                                {translate("teacher.level")} {selectedVideo.reviewer.level}
+                                                {translate("teacher.level")} {comment.user.level}
                                             </Typography>
                                         </Box>
                                     </Box>
@@ -219,7 +221,19 @@ export default function VideoReviewedBottomSheet({ open, onClose, onOpen, select
                                             padding: theme.spacing(2),
                                             borderRadius: 2,
                                             alignSelf: 'flex-start',
-                                            width: "100%"
+                                            width: "100%",
+                                            position: 'relative',
+                                            '&::before': {
+                                                content: '""',
+                                                position: 'absolute',
+                                                left: '-8px',
+                                                bottom: '20px',
+                                                width: 0,
+                                                height: 0,
+                                                borderTop: '8px solid transparent',
+                                                borderBottom: '8px solid transparent',
+                                                borderRight: `8px solid ${theme.palette.grey[200]}`,
+                                            }
                                         }}
                                     >
                                         <Markdown
@@ -234,11 +248,11 @@ export default function VideoReviewedBottomSheet({ open, onClose, onOpen, select
                                                 li: (props) => <li style={{ fontSize: '14px', marginLeft: '1px', marginTop: '5px' }} {...props} />,
                                             }}
                                         >
-                                            {selectedVideo.comment}
+                                            {comment.comment}
                                         </Markdown>
                                     </Box>
                                 </>
-                            )}
+                            ))}
                         </Box>
 
                         <SnowMatchIntelligenceBox video={selectedVideo} />

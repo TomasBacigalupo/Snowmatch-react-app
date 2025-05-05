@@ -6,7 +6,7 @@ import { Icon } from "@iconify/react";
 export default function CourseCard({ post, onClick }) {
     const { translate } = useLocales();
     console.log("post", post)
-    if (post.code === "AI_CHALLENGE_1" || post.code === "AI_CHALLENGE_2") {
+    if (post.code === "CARVING" || post.code === "BUMPS") {
         return (
             <Box
                 onClick={onClick}
@@ -91,7 +91,7 @@ export default function CourseCard({ post, onClick }) {
         );
     }
 
-    if (post.code === "GENERAL_CHALLENGE_1") {
+    if (post.code === "GENERAL") {
         return (
             <Box
                 onClick={onClick}

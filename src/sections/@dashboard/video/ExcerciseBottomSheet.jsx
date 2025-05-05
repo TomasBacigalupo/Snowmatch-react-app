@@ -15,7 +15,6 @@ import { Camera, CameraSource, CameraResultType } from '@capacitor/camera';
 import { VideoEditor } from '@awesome-cordova-plugins/video-editor';
 import { VideoPicker } from '@coderpradp/capacitor-plugin-video-picker';
 import VideoTrimmer from "./VideoTrimmer";
-import ReactPlayer from "react-player";
 import { m } from 'framer-motion';
 import Logo from "src/components/Logo";
 
@@ -189,7 +188,6 @@ export default function ExcerciseBottomSheet({ open, onClose, onOpen, course, de
 
     const uploadVideo = async () => {
         try {
-
             await Camera.requestPermissions();
 
             const videos = await VideoPicker.pick();
@@ -211,7 +209,59 @@ export default function ExcerciseBottomSheet({ open, onClose, onOpen, course, de
         switch (activeStep) {
             case 0:
                 return (
-                    <></>
+                    <Box my={2} display="flex" height='100%' flexDirection="column" justifyContent='space-between'>
+                        <Box mb={2} display="flex" flexDirection="column" >
+                            <StoryPlayer />
+                            <Box>
+                                <Paper
+                                    sx={{
+                                        border: '2px solid',
+                                        borderColor: 'primary.dark',
+                                        borderRadius: 2,
+                                        p: 2,
+                                    }}
+                                >
+                                    <Markdown>
+                                        {translate(`course.${level}.objective`)}
+                                    </Markdown>
+                                </Paper>
+                            </Box>
+
+                            <Box sx={{ p: 3 }}>
+                                <DoDontList
+                                    title={translate('course.exercise.howToPass')}
+                                    doItems={[
+                                        translate(`course.${level}.do.1`),
+                                        translate(`course.${level}.do.2`),
+                                        translate(`course.${level}.do.3`),
+                                    ]}
+                                    dontItems={[
+                                        translate(`course.${level}.dont.1`),
+                                        translate(`course.${level}.dont.2`),
+                                        translate(`course.${level}.dont.3`),
+                                    ]}
+                                />
+                            </Box>
+                            <Box display="flex" alignItems="center" gap={1} mb={1}>
+                                <Box
+                                    component="img"
+                                    src="/icons/pc.jpg"
+                                    sx={{ width: 140, height: 140, objectFit: "contain" }}
+                                />
+                                <Typography variant="h3" sx={{ color: "primary.dark" }}>
+                                    {translate('course.exercise.aiCorrection')}
+                                </Typography>
+                            </Box>
+                        </Box>
+                        
+
+                        <Button variant="contained" sx={{ py: 2, my: 2, marginBottom: 'env(safe-area-inset-bottom)' }} fullWidth onClick={async () => {
+                            await uploadVideo();
+                            setActiveStep(activeStep + 1)
+                        }}>
+                           {translate('course.exercise.startChallenge')}
+                        </Button>
+                    </Box>
                 );
             case 1:
                 return (
@@ -404,64 +454,8 @@ export default function ExcerciseBottomSheet({ open, onClose, onOpen, course, de
                             ))}
                         </Stepper>
                     </Box> */}
-                    <Box my={2} display="flex" height='100%' flexDirection="column" justifyContent='space-between'>
-                        <Box mb={2} display="flex" flexDirection="column" >
-                            <StoryPlayer />
-                            <Box>
-                                <Paper
-                                    sx={{
-                                        border: '2px solid',
-                                        borderColor: 'primary.dark',
-                                        borderRadius: 2,
-                                        p: 2,
-                                    }}
-                                >
-                                    <Markdown>
-                                        {translate(`course.${level}.objective`)}
-                                    </Markdown>
-                                </Paper>
-                            </Box>
-
-                            <Box sx={{ p: 3 }}>
-                                <DoDontList
-                                    title={translate('course.exercise.howToPass')}
-                                    doItems={[
-                                        translate(`course.${level}.do.1`),
-                                        translate(`course.${level}.do.2`),
-                                        translate(`course.${level}.do.3`),
-                                    ]}
-                                    dontItems={[
-                                        translate(`course.${level}.dont.1`),
-                                        translate(`course.${level}.dont.2`),
-                                        translate(`course.${level}.dont.3`),
-                                    ]}
-                                />
-                            </Box>
-                            <Box display="flex" alignItems="center" gap={1} mb={1}>
-                                <Box
-                                    component="img"
-                                    src="/icons/pc.jpg"
-                                    sx={{ width: 140, height: 140, objectFit: "contain" }}
-                                />
-                                <Typography variant="h3" sx={{ color: "primary.dark" }}>
-                                    {translate('course.exercise.aiCorrection')}
-                                </Typography>
-                            </Box>
-                        </Box>
-
-                        <Button variant="contained" sx={{ py: 2, my: 2, marginBottom: 'env(safe-area-inset-bottom)' }} fullWidth onClick={async () => {
-                            await uploadVideo();
-                            setActiveStep(activeStep + 1)
-                        }}>
-                           {translate('course.exercise.startChallenge')}
-                        </Button>
-                    </Box>
+                    {open && renderStep()}
                 </Box>
-                {openWelcome && <AcademyWelcome
-                    open={openWelcome}
-                    onClose={handleCloseAcademywelcome}
-                    onAddToPremium={onAddToPremium}
-                />}
             </SwipeableDrawer>
         )
     } else {

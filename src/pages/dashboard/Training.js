@@ -62,25 +62,25 @@ export default function Training() {
       code: 'CHALLANGE',
       levels: [
         {
-          code: 'AI_CHALLENGE_1',
+          code: 'CARVING',
           title: 'Challenge 1 title',
           subtitle: 'Challenge 1 subtitle',
           cover: '/assets/courses/pista.png',
           icon: "hugeicons:angle-01",
           level: 'Principiante',
           points: 100,
-          course: "CARVING_CHALLENGE_1",
+          course: "CARVING",
           demoUrl: 'https://snowmatchvideos.s3.us-east-1.amazonaws.com/CARVING_CHALLANGE_1.mov'
         },
         {
-          code: 'AI_CHALLENGE_2',
+          code: 'BUMPS',
           title: 'Challenge 2 title',
           subtitle: 'Challenge 2 subtitle',
           cover: '/assets/courses/position.png',
           icon: 'ph:wave-sine-light',
           level: 'Principiante',
           points: 100,
-          course: "AI_CHALLENGE_2",
+          course: "BUMPS",
           demoUrl: 'https://snowmatchvideos.s3.us-east-1.amazonaws.com/CARVING_CHALLANGE_1.mov'
         }
       ],
@@ -90,14 +90,14 @@ export default function Training() {
       code: 'CHALLANGE',
       levels: [
         {
-          code: 'GENERAL_CHALLENGE_1',
+          code: 'GENERAL',
           title: 'General',
           subtitle: 'General Challenge 1 subtitle',
           cover: '/assets/courses/pista.png',
           icon: "hugeicons:angle-01",
           level: 'Principiante',
           points: 25,
-          course: "GENERAL_CHALLANGE_1",
+          course: "GENERAL",
           demoUrl: 'https://snowmatchvideos.s3.us-east-1.amazonaws.com/CARVING_CHALLANGE_1.mov'
         }
       ],

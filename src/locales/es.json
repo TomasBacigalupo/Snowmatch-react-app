@@ -1224,7 +1224,7 @@
             },
             "aiCorrection": "SnowMatch AI Corrigirá tu video"
         },
-        "AI_CHALLENGE_1": {
+        "CARVING": {
             "title": "Desafío de Carving",
             "objective": "El objetivo de este ejercicio es desafiar tu inclinación al esquiar, llevando tus esquíes al máximo de angulación posible. ¿Te animas?",
             "do": {
@@ -1238,47 +1238,45 @@
                 "3": "No pierdas la presión sobre el esquí externo al girar."
             }
         },
-        "AI_CHALLENGE_2": {
-"title": "Desafío de Bumps",
-    "objective": "El objetivo de este ejercicio es mejorar tu control y fluidez en los moguls (baches), manteniendo el equilibrio y una línea constante. ¿Te animas a surfear los baches?",
-    "do": {
-        "1": "Mantén las rodillas flexibles y absorbe cada bache con tus piernas.",
-        "2": "Mira siempre hacia adelante, no a tus esquís.",
-        "3": "Mantén el torso estable y deja que las piernas hagan el trabajo."
-    },
-    "dont": {
-        "1": "No te pongas rígido; evita bloquear las piernas.",
-        "2": "No mires hacia abajo; pierde el foco si no miras hacia adelante.",
-        "3": "No dejes que tus brazos caigan; mantenlos activos para el equilibrio."
-    }
+        "BUMPS": {
+            "title": "Desafío de Bumps",
+            "objective": "El objetivo de este ejercicio es mejorar tu control y fluidez en los moguls (baches), manteniendo el equilibrio y una línea constante. ¿Te animas a surfear los baches?",
+            "do": {
+                "1": "Mantén las rodillas flexibles y absorbe cada bache con tus piernas.",
+                "2": "Mira siempre hacia adelante, no a tus esquís.",
+                "3": "Mantén el torso estable y deja que las piernas hagan el trabajo."
+            },
+            "dont": {
+                "1": "No te pongas rígido; evita bloquear las piernas.",
+                "2": "No mires hacia abajo; pierde el foco si no miras hacia adelante.",
+                "3": "No dejes que tus brazos caigan; mantenlos activos para el equilibrio."
+            }
         },
         "CHALLANGE": {
             "title": "Angulación",
             "description": "Nuestra inteligencia artificial calculará tu inclinación durante el descenso. Recibe información valiosa para mejorar tu técnica y lleva tu entrenamiento al siguiente nivel.",
             "fundamentals": ""
         },
-        "GENERAL_CHALLENGE_1": {
+        "GENERAL": {
             "title": "Análisis de Video",
             "objective": "Subí un video tuyo esquiando para recibir un análisis técnico de tu desempeño. Asegurate de elegir un clip donde se te vea de cuerpo entero, en movimiento, con buena luz y sin obstáculos.",
             "description": "Sube tu video para análisis profesional",
             "fundamentals": "Obtén retroalimentación sobre tu técnica de esquí de nuestra IA e instructores profesionales",
             "do": {
-            "1": "Esquía en un terreno variado que incluya zonas planas, pendientes pronunciadas y (si es posible) algunos baches.",
-            "2": "Concéntrate en realizar giros limpios, mantener un balance dinámico y un ritmo fluido durante toda la bajada.",
-            "3": "Pide a alguien que te grabe desde una distancia donde se vea siempre todo tu cuerpo y tus esquíes (idealmente en modo horizontal)."
-        },
-        "dont": {
-            "1": "No esquíes solo en terrenos fáciles; desafíate con variedad para mostrar tu versatilidad.",
-            "2": "No grabes demasiado cerca ni con movimientos bruscos; evita hacer mucho zoom y perder de vista el movimiento completo.",
-            "3": "No te detengas a mitad de la bajada salvo que sea necesario; fluye continuamente para demostrar control y toma de decisiones."
-        }
-
+                "1": "Esquía en un terreno variado que incluya zonas planas, pendientes pronunciadas y (si es posible) algunos baches.",
+                "2": "Concéntrate en realizar giros limpios, mantener un balance dinámico y un ritmo fluido durante toda la bajada.",
+                "3": "Pide a alguien que te grabe desde una distancia donde se vea siempre todo tu cuerpo y tus esquíes (idealmente en modo horizontal)."
+            },
+            "dont": {
+                "1": "No esquíes solo en terrenos fáciles; desafíate con variedad para mostrar tu versatilidad.",
+                "2": "No grabes demasiado cerca ni con movimientos bruscos; evita hacer mucho zoom y perder de vista el movimiento completo.",
+                "3": "No te detengas a mitad de la bajada salvo que sea necesario; fluye continuamente para demostrar control y toma de decisiones."
+            }
         }
     },
     "videoCoachScreen": {
         "profile": "Progreso",
         "uploaded_videos": "Videos subidos",
-        "score": "Puntaje:",
         "review": "Correcciones:",
         "videosPending": "Videos pendientes de revisión",
         "waiting_review": "Esperando revisión",
@@ -1386,6 +1384,7 @@
         "uploadButton": "Analizar mi esquiada con AI"
     },
     "bottomNavigation": {
+        "home": "Inicio",
         "status": "Estado",
         "academy": "Academia",
         "match": "Match",
@@ -1474,30 +1473,30 @@
             }
         },
         "getTheMost": {
-                "title": "Maximiza tu Experiencia SnowMatch",
-                "subtitle": "Sigue estos consejos para aumentar tus ingresos y visibilidad",
-                "support": {
-                    "title": "¿Necesitas Ayuda?",
-                    "description": "Contacta con nuestro equipo de soporte",
-                    "button": "Contactar Soporte"
-                },
-                "calendar": {
-                    "title": "Mantén tu Calendario al Día",
-                    "description": "Mantén tu disponibilidad actualizada para recibir más reservas",
-                    "button": "Actualizar"
-                },
-                "feedback": {
-                    "title": "Califica y Gana",
-                    "description": "Califica videos de estudiantes y obtén recompensas prioritarias",
-                    "button": "Comenzar"
-                },
-                "refer": {
-                    "title": "Recomienda un Esquiador",
-                    "description": "Comparte SnowMatch y gana recompensas",
-                    "button": "Compartir",
-                    "reward": "Gana hasta $50 por cada referido"
-                }
+            "title": "Maximiza tu Experiencia SnowMatch",
+            "subtitle": "Sigue estos consejos para aumentar tus ingresos y visibilidad",
+            "support": {
+                "title": "¿Necesitas Ayuda?",
+                "description": "Contacta con nuestro equipo de soporte",
+                "button": "Contactar Soporte"
+            },
+            "calendar": {
+                "title": "Mantén tu Calendario al Día",
+                "description": "Mantén tu disponibilidad actualizada para recibir más reservas",
+                "button": "Actualizar"
+            },
+            "feedback": {
+                "title": "Califica y Gana",
+                "description": "Califica videos de estudiantes y obtén recompensas prioritarias",
+                "button": "Comenzar"
+            },
+            "refer": {
+                "title": "Recomienda un Esquiador",
+                "description": "Comparte SnowMatch y gana recompensas",
+                "button": "Compartir",
+                "reward": "Gana hasta $50 por cada referido"
             }
+        }
     },
     "unratedVideos": {
         "title": "Calificar Videos de Estudiantes",

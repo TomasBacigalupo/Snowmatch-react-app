@@ -234,13 +234,11 @@ export default function VideoUpload() {
                                     </Box>
                                 </Grid>
                             )}
-                            {videos && videos.filter(video => video.reviewed).length > 0 && (
+                            {videos && (
                                 <Grid item xs={12}>
                                     <Box className="white-card">
                                         <LatestTips
-                                            videos={[...videos]
-                                                .filter(video => video.comment)
-                                                .sort((a, b) => b.id - a.id)}
+                                            videos={[...videos]}
                                         />
                                     </Box>
                                 </Grid>

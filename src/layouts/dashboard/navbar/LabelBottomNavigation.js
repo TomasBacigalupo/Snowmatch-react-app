@@ -18,6 +18,7 @@ import PropTypes from 'prop-types';
 import WorkspacePremiumIcon from '@mui/icons-material/WorkspacePremium';
 import MapIcon from '@mui/icons-material/Map';
 import useLocales from 'src/hooks/useLocales';
+import { HomeOutlined } from '@mui/icons-material';
 
 LabelBottomNavigation.propTypes = {
   onOpenSidebar: PropTypes.func,
@@ -33,30 +34,38 @@ export default function LabelBottomNavigation() {
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const { translate } = useLocales();
 
+  const bottomNavigation = [
+    {lablelKey: 'bottomNavigation.home', icon: <HomeOutlined />, path: '/match/feed'},
+    {lablelKey: 'bottomNavigation.match', icon: <Logo disabled={value != 1} disabledLink={true} sx={{ height: '25px', width: '25px' }} />, path: '/match/independent?resort=Cerro%20Catedral'},
+    {lablelKey: 'bottomNavigation.lessons', icon: <DownhillSkiingIcon />, path: PATH_GUEST.root + '/lessons'},
+    {lablelKey: 'bottomNavigation.maps', icon: <MapIcon />, path: '/maps/chapelco'},
+    {lablelKey: 'bottomNavigation.status', icon: <BarChartIcon />, path: PATH_GUEST.videoCoach},
+  ]
+
   // Mapping between paths and BottomNavigation values
   const getPathValue = (path) => {
     if (path?.includes("map")) {
-      return 5
+      return 3
     }
     if (path?.includes("upload")) {
-      return 0
+      return 4
     }
     switch (path) {
-      case PATH_GUEST.videoCoach:
-        return 0;
+      case PATH_GUEST.root + '/lessons':
+        return 2;
       case PATH_GUEST.training:
         return 1;
       case '/upload': // Add this manually for the Upload button as it's a special case
         return 2;
       case PATH_GUEST.independent:
-        return 3;
+        return 1;
       case PATH_GUEST.root:
-        return 3;
+        return 1;
       case PATH_GUEST.school:
-        return 3;
+        return 1;
       case PATH_DASHBOARD.eCommerce.matchIndependant:
-        return 3;
-      case PATH_GUEST.root + '/lessons':
+        return 1;
+      case PATH_GUEST.videoCoach:
         return 4
       default:
         return false;
@@ -104,36 +113,15 @@ export default function LabelBottomNavigation() {
             },
           }}
         >
-          <BottomNavigationAction
-            label={translate('bottomNavigation.status')}
-            icon={<BarChartIcon />}
-            component={RouterLink}
-            to={PATH_GUEST.videoCoach}
-          />
-          <BottomNavigationAction
-            label={translate('bottomNavigation.academy')}
-            icon={<WorkspacePremiumIcon />}
-            component={RouterLink}
-            to={PATH_GUEST.training}
-          />
-          <BottomNavigationAction
-            label={translate('bottomNavigation.match')}
-            icon={<Logo disabled={value != 3} disabledLink={true} sx={{ height: '25px', width: '25px' }} />}
-            component={RouterLink}
-            to={'/match/independent?resort=Cerro%20Catedral'}
-          />
-          <BottomNavigationAction 
-            label={translate('bottomNavigation.lessons')} 
-            component={RouterLink} 
-            to={PATH_GUEST.root + '/lessons'} 
-            icon={<DownhillSkiingIcon />} 
-          />
-          <BottomNavigationAction 
-            label={translate('bottomNavigation.maps')} 
-            component={RouterLink} 
-            to={'/maps/chapelco'} 
-            icon={<MapIcon />} 
-          />
+          {bottomNavigation.map((item) => (
+            <BottomNavigationAction
+              key={item.path}
+              label={translate(item.lablelKey)}
+              icon={item.icon}
+              component={RouterLink}
+              to={item.path}
+            />
+          ))}
         </BottomNavigation>
       </Paper>
     </Box>

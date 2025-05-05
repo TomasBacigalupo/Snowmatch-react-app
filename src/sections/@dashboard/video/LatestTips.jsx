@@ -28,7 +28,7 @@ const safeSliceMarkdown = (text, length) => {
     let sliced = text.slice(0, length);
     return sliced.substring(0, sliced.lastIndexOf(" ")) + "..."; // Corta en el último espacio
 };
-const LatestTips = ({ videos }) => {
+const LatestTips = ({ video }) => {
     const { translate } = useLocales();
     const [isVideoDetailOpen, setIsVideoDetailOpen] = useState(false);
     const [index, setIndex] = useState(0);
@@ -46,6 +46,12 @@ const LatestTips = ({ videos }) => {
         setSelectedVideo(video)
         setIsVideoDetailOpen(true)
     }
+
+    // Transform videos into array of {video, comment} objects
+    const transformedVideos = video?.videoComments?.map(comment => ({
+        video: video,
+        comment: comment
+    })) || [];
 
     return (
         <Box
@@ -113,9 +119,11 @@ const LatestTips = ({ videos }) => {
                     pb: 0
                 }}
             >
-                {videos.map((tip) => (
+                {console.log('video', video)}
+                {console.log('transformedVideos', transformedVideos)}
+                {transformedVideos.map(({video, comment}) => (
                     <Card
-                        key={tip.id}
+                        key={video.id}
                         sx={{
                             backgroundColor: '#fff',
                             borderRadius: '0px',
@@ -140,7 +148,7 @@ const LatestTips = ({ videos }) => {
                                 mb={1.5}
                             >
                                 <Avatar
-                                    src={tip?.reviewer?.imageLink}
+                                    src={video?.reviewer?.imageLink}
                                     sx={{
                                         width: 44,
                                         height: 44,
@@ -159,7 +167,7 @@ const LatestTips = ({ videos }) => {
                                             lineHeight: 1.2
                                         }}
                                     >
-                                        {tip?.reviewer?.name}
+                                        {video?.reviewer?.name}
                                     </Typography>
                                 </Box>
                             </Box>
@@ -182,13 +190,13 @@ const LatestTips = ({ videos }) => {
                                     lineHeight: 1.4
                                 }}
                             >
-                                {safeSliceMarkdown(tip?.comment, 100)}
+                                {safeSliceMarkdown(comment, 100)}
                             </Markdown>
 
                             <Button
                                 variant="outlined"
                                 fullWidth
-                                onClick={() => handleReadMore(tip)}
+                                onClick={() => handleReadMore(video)}
                                 sx={{
                                     textTransform: 'none',
                                     mt: 1

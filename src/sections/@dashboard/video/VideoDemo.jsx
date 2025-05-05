@@ -5,6 +5,7 @@ import useLocales from 'src/hooks/useLocales';
 import VideoUploadBottomSheet from './VideoUploadBottomSheet';
 import { useState } from 'react';
 import Iconify from 'src/components/Iconify';
+import ExcerciseBottomSheet from './ExcerciseBottomSheet';
 
 const VideoDemo = () => {
   const navigate = useNavigate();
@@ -120,12 +121,13 @@ const VideoDemo = () => {
       </Box>
 
       {/* Add VideoUploadBottomSheet */}
-      <VideoUploadBottomSheet
+      <ExcerciseBottomSheet
         open={isUploadSheetOpen}
         onClose={() => setIsUploadSheetOpen(false)}
         onOpen={() => setIsUploadSheetOpen(true)}
         demoUrl="/assets/videos/tomianalisis.mov"
         course="GENERAL"
+        level="GENERAL"
       />
     </Box>
   );

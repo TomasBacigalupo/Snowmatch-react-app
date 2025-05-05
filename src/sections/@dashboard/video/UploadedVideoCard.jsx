@@ -23,9 +23,9 @@ function VideoCard({ video, setIsVideoDetailOpen }) {
         text: video.status   // Or your status text
     };
 
-    const needsProCheck = !video.proCheck;
-    const waitingProCheck = video.proCheck && !video.reviewed;
-    const proChecked = video.proCheck && video.reviewed;
+    const needsProCheck = !video.proCheckRequested;
+    const waitingProCheck = video.proCheckRequested && !video.reviewed;
+    const proChecked = video.proCheckRequested && video.reviewed;
     const score = video.score;
 
     const renderStatusInfo = () => {

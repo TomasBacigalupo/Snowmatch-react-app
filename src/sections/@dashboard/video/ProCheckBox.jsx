@@ -7,6 +7,7 @@ import useLocales from "src/hooks/useLocales";
 import { useState } from 'react';
 import VideoUploadBottomSheet from './VideoUploadBottomSheet';
 import Iconify from 'src/components/Iconify';
+import ExcerciseBottomSheet from "./ExcerciseBottomSheet";
 
 const ProCheckBox = ({ hasVideos = false, hasUnreviewedVideos = false }) => {
     const { user } = useAuth();
@@ -176,12 +177,12 @@ const ProCheckBox = ({ hasVideos = false, hasUnreviewedVideos = false }) => {
             </Paper>
 
             {/* Add VideoUploadBottomSheet */}
-            <VideoUploadBottomSheet
+            <ExcerciseBottomSheet
                 open={isUploadSheetOpen}
                 onClose={() => setIsUploadSheetOpen(false)}
                 onOpen={() => setIsUploadSheetOpen(true)}
                 demoUrl="/assets/videos/tomianalisis.mov"
-                course="GENERAL_UPLOAD"
+                course="GENERAL"
                 level="GENERAL"
             />
         </>

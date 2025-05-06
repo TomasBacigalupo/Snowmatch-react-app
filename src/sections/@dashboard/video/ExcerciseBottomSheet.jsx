@@ -111,7 +111,7 @@ export default function ExcerciseBottomSheet({ open, onClose, onOpen, course, de
 
         await ffmpeg.exec([
             '-i', 'input.mp4',  // Input file
-            '-b:v', '600k',    // Lower video bitrate
+            '-b:v', '3000k',    // Lower video bitrate
             '-r', '30',          // Limitar a 30 FPS
             '-preset', 'fast',   // Compresión rápida pero eficiente
             '-b:a', '64k',     // Lower audio bitrate
@@ -421,19 +421,7 @@ export default function ExcerciseBottomSheet({ open, onClose, onOpen, course, de
                         {translate(`course.${level}.title`)}
                     </Typography>
                     <Box width='100px' mr={2}>
-                        <Paper
-                            sx={{
-                                border: '2px solid', // Borde
-                                backgroundColor: 'primary.dark', // Color primario oscuro
-                                borderRadius: 2, // Bordes redondeados
-                                px: 1, // Padding
-                            }}>
-                            <Typography color="white" textAlign="center" fontWeight="bold">
-                                100 pts
-                            </Typography>
-
-                        </Paper>
-
+                        
                     </Box> {/* Placeholder to balance the space */}
                 </Box>
                 <Box

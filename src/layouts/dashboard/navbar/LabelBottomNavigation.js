@@ -16,9 +16,10 @@ import VideoUploadBottomSheet from 'src/sections/@dashboard/video/VideoUploadBot
 import DownhillSkiingIcon from '@mui/icons-material/DownhillSkiing';
 import PropTypes from 'prop-types';
 import WorkspacePremiumIcon from '@mui/icons-material/WorkspacePremium';
-import MapIcon from '@mui/icons-material/Map';
 import useLocales from 'src/hooks/useLocales';
-import { HomeOutlined } from '@mui/icons-material';
+import { HomeOutlined, MapOutlined } from '@mui/icons-material';
+import ExcerciseBottomSheet from 'src/sections/@dashboard/video/ExcerciseBottomSheet';
+import Iconify from 'src/components/Iconify';
 
 LabelBottomNavigation.propTypes = {
   onOpenSidebar: PropTypes.func,
@@ -35,36 +36,37 @@ export default function LabelBottomNavigation() {
   const { translate } = useLocales();
 
   const bottomNavigation = [
-    {lablelKey: 'bottomNavigation.home', icon: <HomeOutlined />, path: '/match/feed'},
-    {lablelKey: 'bottomNavigation.match', icon: <Logo disabled={value != 1} disabledLink={true} sx={{ height: '25px', width: '25px' }} />, path: '/match/independent?resort=Cerro%20Catedral'},
-    {lablelKey: 'bottomNavigation.lessons', icon: <DownhillSkiingIcon />, path: PATH_GUEST.root + '/lessons'},
-    {lablelKey: 'bottomNavigation.maps', icon: <MapIcon />, path: '/maps/chapelco'},
-    {lablelKey: 'bottomNavigation.status', icon: <BarChartIcon />, path: PATH_GUEST.videoCoach},
+    { lablelKey: 'bottomNavigation.home', icon: <Iconify icon="hugeicons:home-09" width="26px" height="26px" />, path: '/match/feed' },
+    { lablelKey: 'bottomNavigation.maps', icon: <Iconify icon="hugeicons:maps" width="26px" height="26px" />, path: '/maps/chapelco' },
+    { lablelKey: 'bottomNavigation.upload', icon: <Iconify icon="hugeicons:ai-video" width="26px" height="26px" />, drawer: true, path: PATH_GUEST.root + '/lessons' },
+    { lablelKey: 'bottomNavigation.lessons', icon: <Iconify icon="hugeicons:ski" width="26px" height="26px" />, path: '/match/independent?resort=Cerro%20Catedral' },
+    { lablelKey: 'bottomNavigation.profile', icon: <Iconify icon="hugeicons:user-circle-02"  width="26px" height="26px" />, path: PATH_GUEST.videoCoach },
   ]
 
   // Mapping between paths and BottomNavigation values
   const getPathValue = (path) => {
+
     if (path?.includes("map")) {
-      return 3
+      return 1
     }
     if (path?.includes("upload")) {
       return 4
     }
     switch (path) {
       case PATH_GUEST.root + '/lessons':
-        return 2;
+        return 3;
       case PATH_GUEST.training:
         return 1;
       case '/upload': // Add this manually for the Upload button as it's a special case
         return 2;
       case PATH_GUEST.independent:
-        return 1;
+        return 3;
       case PATH_GUEST.root:
-        return 1;
+        return 3;
       case PATH_GUEST.school:
-        return 1;
+        return 3;
       case PATH_DASHBOARD.eCommerce.matchIndependant:
-        return 1;
+        return 3;
       case PATH_GUEST.videoCoach:
         return 4
       default:
@@ -78,13 +80,22 @@ export default function LabelBottomNavigation() {
     if (currentValue !== false) {
       setValue(currentValue);
     }
-  }, [location.pathname]);
+  }, [location.pathname, open]);
 
   if (value === null) {
     return <></>
   }
   return (
     <Box sx={{ pb: `calc(env(safe-area-inset-bottom) + ${isMobile ? '56px' : '16px'})`, height: '100px' }} ref={ref}>
+      <ExcerciseBottomSheet
+        title={"GENERAL"}
+        course={"GENERAL"}
+        level={"GENERAL"}
+        onOpen={() => setOpen(true)}
+        open={open}
+        onClose={() => setOpen(false)}
+        demoUrl={"demoUrl"}
+      />
       <CssBaseline />
       <Paper
         sx={{
@@ -113,15 +124,28 @@ export default function LabelBottomNavigation() {
             },
           }}
         >
-          {bottomNavigation.map((item) => (
-            <BottomNavigationAction
-              key={item.path}
-              label={translate(item.lablelKey)}
-              icon={item.icon}
-              component={RouterLink}
-              to={item.path}
-            />
-          ))}
+          {bottomNavigation.map((item) => {
+            if (!item.drawer) {
+              return (
+                <BottomNavigationAction
+                  key={item.path}
+                  label={translate(item.lablelKey)}
+                  icon={item.icon}
+                  component={RouterLink}
+                  to={item.path}
+                />
+              )
+            } else {
+              return (
+                <BottomNavigationAction
+                  label={translate(item.lablelKey)}
+                  icon={item.icon}
+                  onClick={() => setOpen(true)}
+                />
+              )
+            }
+
+          })}
         </BottomNavigation>
       </Paper>
     </Box>

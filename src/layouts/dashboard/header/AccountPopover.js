@@ -121,7 +121,7 @@ export default function AccountPopover() {
           }),
         }}
       >
-        {!isAuthenticated && <AccountCircleIcon sx={{ fontSize: 40 }} />}
+        {!isAuthenticated && <AccountCircleIcon sx={{ fontSize: 30 }} />}
         {isAuthenticated && <MyAvatar />}
       </IconButtonAnimate>
 

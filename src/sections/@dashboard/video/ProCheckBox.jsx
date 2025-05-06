@@ -25,33 +25,33 @@ const ProCheckBox = ({ hasVideos = false, hasUnreviewedVideos = false }) => {
 
     return (
         <>
-            <Paper 
-                sx={{ 
+            <Paper
+                sx={{
                     borderRadius: '0px',
                     p: 3,
                     background: 'linear-gradient(to right, #ffffff, #f8f9fa)',
                 }}
             >
                 {/* Header Section with Credits */}
-                <Box sx={{ 
-                    display: 'flex', 
-                    alignItems: 'center', 
+                <Box sx={{
+                    display: 'flex',
+                    alignItems: 'center',
                     justifyContent: 'space-between',
-                    mb: 2 
+                    mb: 2
                 }}>
                     <Box sx={{ display: 'flex', alignItems: 'flex-start' }}>
                         <Box>
                             <Box sx={{ display: 'flex', alignItems: 'center', mb: 0.5 }}>
-                                <img 
-                                    src="/logo/proCheck.png" 
-                                    alt="ProCheck Credits" 
-                                    style={{ 
-                                        width: '32px', 
-                                        height: '32px', 
+                                <img
+                                    src="/logo/proCheck.png"
+                                    alt="ProCheck Credits"
+                                    style={{
+                                        width: '32px',
+                                        height: '32px',
                                         borderRadius: '8px',
                                         marginRight: '8px',
                                         marginLeft: '-4px'
-                                    }} 
+                                    }}
                                 />
                                 <Typography variant="h5">
                                     {translate('procheck.credits.title')}
@@ -62,9 +62,9 @@ const ProCheckBox = ({ hasVideos = false, hasUnreviewedVideos = false }) => {
                             </Typography>
                         </Box>
                     </Box>
-                    
-                    <Box 
-                        sx={{ 
+
+                    <Box
+                        sx={{
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
@@ -75,29 +75,8 @@ const ProCheckBox = ({ hasVideos = false, hasUnreviewedVideos = false }) => {
                             minWidth: '60px',
                         }}
                     >
-                        <Iconify
-                            icon="mdi:snowflake"
+                        <Typography
                             sx={{
-                                width: 80,
-                                height: 80,
-                                position: 'absolute',
-                                color: 'primary.main',
-                                opacity: 0.15,
-                                zIndex: 0,
-                                filter: 'drop-shadow(0 0 2px rgba(25, 118, 210, 0.3))',
-                                animation: 'shine 2s infinite',
-                                '@keyframes shine': {
-                                    '0%, 100%': {
-                                        opacity: 0.15,
-                                    },
-                                    '50%': {
-                                        opacity: 0.25,
-                                    },
-                                },
-                            }}
-                        />
-                        <Typography 
-                            sx={{ 
                                 fontWeight: 800,
                                 fontSize: '3.5rem',
                                 lineHeight: 1,
@@ -105,7 +84,8 @@ const ProCheckBox = ({ hasVideos = false, hasUnreviewedVideos = false }) => {
                                 zIndex: 1
                             }}
                         >
-                            {user?.proCheckCredits || 1}
+                            {!user ? 1 :
+                                user?.proCheckCredits || 0}
                         </Typography>
                     </Box>
                 </Box>
@@ -113,13 +93,13 @@ const ProCheckBox = ({ hasVideos = false, hasUnreviewedVideos = false }) => {
                 {/* Action Section */}
                 <Stack spacing={2}>
                     <Typography variant="body2">
-                        {translate(user?.proCheckCredits > 0 
+                        {translate(user?.proCheckCredits > 0
                             ? 'procheck.credits.use_credits'
                             : 'procheck.credits.purchase_credits'
                         )}
                     </Typography>
 
-                    {!hasVideos ? (
+                    {/* {!hasVideos ? (
                         <Button
                             variant="contained"
                             startIcon={<VideoCallIcon />}
@@ -161,7 +141,7 @@ const ProCheckBox = ({ hasVideos = false, hasUnreviewedVideos = false }) => {
                         >
                             {translate('procheck.actions.upload_new')}
                         </Button>
-                    )}
+                    )} */}
 
                     {user?.proCheckCredits <= 0 && (
                         <Button

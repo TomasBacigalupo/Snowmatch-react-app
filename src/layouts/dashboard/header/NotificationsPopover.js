@@ -34,6 +34,7 @@ import useAuth from '../../../hooks/useAuth';
 import { useEffect } from 'react';
 import Logo from 'src/components/Logo';
 import useLocales from 'src/hooks/useLocales';
+import { color } from '@mui/system';
 
 
 // ----------------------------------------------------------------------
@@ -67,8 +68,8 @@ export default function NotificationsPopover() {
       spacing={2}
       alignItems="center"
       justifyContent="center"
-      sx={{ 
-        height: '100%', 
+      sx={{
+        height: '100%',
         py: 8,
         px: 2
       }}
@@ -95,11 +96,9 @@ export default function NotificationsPopover() {
 
   return (
     <>
-      <IconButtonAnimate color={open ? 'primary' : 'default'} onClick={handleOpen} sx={{ width: 40, height: 40 }}>
-        <Badge badgeContent={totalUnread} color="error">
-          <Iconify icon="eva:bell-fill" width={20} height={20} />
-        </Badge>
-      </IconButtonAnimate>
+      <Badge badgeContent={totalUnread} color="error">
+      <Iconify onClick={handleOpen} icon="hugeicons:notification-02" width={26} height={26} />
+      </Badge>
 
       <SwipeableDrawer
         anchor="right"
@@ -121,8 +120,8 @@ export default function NotificationsPopover() {
           },
         }}
       >
-        <MobileHeader 
-          onBack={handleClose} 
+        <MobileHeader
+          onBack={handleClose}
           title={translate("notifications.title")}
           action={
             totalUnread > 0 && (

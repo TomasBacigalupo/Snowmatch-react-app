@@ -803,11 +803,13 @@
         "uploadButton": "Analise meu esqui com IA"
     },
     "bottomNavigation": {
+        "upload": "Enviar",
         "status": "Você",
         "academy": "Academia",
         "match": "Match",
         "lessons": "Aulas",
-        "maps": "Mapas"
+        "maps": "Mapas",
+        "perfil": "Perfil"
     },
     "progress": {
         "yourSkiProgress": "Seu Progresso no Esqui",

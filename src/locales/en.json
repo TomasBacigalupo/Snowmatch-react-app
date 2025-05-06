@@ -682,12 +682,14 @@
     "uploadButton": "Analyze my skiing with AI"
   },
   "bottomNavigation": {
+    "upload": "Upload",
     "home": "Home",
     "status": "You",
     "academy": "Academy",
     "match": "Match",
     "lessons": "Lessons",
-    "maps": "Maps"
+    "maps": "Maps",
+    "profile":"Profile"
   },
   "progress": {
     "yourSkiProgress": "Your Ski Progress",

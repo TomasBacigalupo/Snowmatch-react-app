@@ -21,7 +21,7 @@ const MainStyle = styled('main', {
   shouldForwardProp: (prop) => prop !== 'collapseClick',
 })(({ collapseClick, theme }) => ({
   flexGrow: 1,
-  paddingTop: `calc(env(safe-area-inset-top) + 35px)`,
+  paddingTop: `calc(env(safe-area-inset-top) + 45px)`,
   paddingBottom: 'env(safe-area-inset-bottom)',
   [theme.breakpoints.up('lg')]: {
     paddingLeft: 16,

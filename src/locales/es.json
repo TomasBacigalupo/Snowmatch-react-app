@@ -1384,12 +1384,14 @@
         "uploadButton": "Analizar mi esquiada con AI"
     },
     "bottomNavigation": {
+        "upload": "Subir",
         "home": "Inicio",
         "status": "Estado",
         "academy": "Academia",
         "match": "Match",
         "lessons": "Clases",
-        "maps": "Mapas"
+        "maps": "Mapas",
+        "profile":"Perfil"
     },
     "lastVideo": {
         "title": "Último Video",

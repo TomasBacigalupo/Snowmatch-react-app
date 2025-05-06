@@ -9,6 +9,7 @@ import useAuth from '../../../hooks/useAuth';
 import { PATH_DASHBOARD } from '../../../routes/paths';
 // components
 import MyAvatar from '../../../components/MyAvatar';
+import Logo from 'src/components/Logo';
 
 // ----------------------------------------------------------------------
 
@@ -23,6 +24,17 @@ const RootStyle = styled('div')(({ theme }) => ({
   }),
 }));
 
+// Add this new styled component for the logo
+const LogoStyle = styled('img')({
+  width: 400,
+  alignSelf: 'center',
+  cursor: 'pointer',
+  transition: 'transform 0.2s',
+  '&:hover': {
+    transform: 'scale(1.02)',
+  },
+});
+
 // ----------------------------------------------------------------------
 
 NavbarAccount.propTypes = {
@@ -31,6 +43,15 @@ NavbarAccount.propTypes = {
 
 export default function NavbarAccount({ isCollapse }) {
   const { user } = useAuth();
+
+  if (!user) return <Link underline="none" color="inherit" component={RouterLink} to={PATH_DASHBOARD.user.account}>
+    <>
+      <LogoStyle
+        src="/logo/snowmatch.png"
+        alt="Snowmatch Logo"
+      />
+    </>
+  </Link>;
 
   return (
     <Link underline="none" color="inherit" component={RouterLink} to={PATH_DASHBOARD.user.account}>
@@ -57,10 +78,10 @@ export default function NavbarAccount({ isCollapse }) {
           }}
         >
           <Typography variant="subtitle2" noWrap>
-            {user?.name }
+            {user?.name}
           </Typography>
           <Typography variant="body2" noWrap sx={{ color: 'text.secondary' }}>
-            {user?.role === 'TEACHER' ? 'PRO' : 'GUEST'}
+            {user?.role === 'TEACHER' ? 'PRO' : ''}
           </Typography>
         </Box>
       </RootStyle>

@@ -234,7 +234,7 @@ export default function VideoUpload() {
                                     </Box>
                                 </Grid>
                             )}
-                            {videos && (
+                            {videos && videos.length > 0 && (
                                 <Grid item xs={12}>
                                     <Box className="white-card">
                                         <LatestTips

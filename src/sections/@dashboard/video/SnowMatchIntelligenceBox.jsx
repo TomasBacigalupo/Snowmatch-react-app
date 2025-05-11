@@ -25,7 +25,6 @@ const SnowMatchIntelligenceBox = ({ video }) => {
     console.log("video", video);
     return <Box
         sx={{
-            margin: 2,
             marginBottom: 6,
             maxWidth: '400px',
             position: 'relative',

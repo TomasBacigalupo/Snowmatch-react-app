@@ -13,6 +13,7 @@ import { useEffect } from 'react';
 import { getProductsByBusinessId } from 'src/redux/slices/business';
 import ShopCategorizedProductCard from './ShopCategorizedProductCard';
 import { fCurrency } from 'src/utils/formatNumber';
+import { getFreeTeachers } from 'src/redux/slices/teachers';
 
 // ----------------------------------------------------------------------
 
@@ -25,11 +26,18 @@ export default function ShopStandardProducts({ loading }) {
     const { translate } = useLocales();
     const dispatch = useDispatch();
     const { products } = useSelector((state) => state.business);
+    const { teachers, sortBy, filters, teachersWithEvents, category, isLoading } = useSelector((state) => { return state.teachers })
+
     useEffect(() => {
         // prod
        dispatch(getProductsByBusinessId(13));
     //    dispatch(getProductsByBusinessId(1));
     }, []);
+
+    useEffect(() => {
+        dispatch(getFreeTeachers(filters.from, filters.to, filters.resort, 0));
+        //dispatch(getTeachersWithEvents(filters));
+      }, [dispatch, filters]);
     return (
         <Box
             sx={{
@@ -38,24 +46,28 @@ export default function ShopStandardProducts({ loading }) {
                 gridTemplateColumns: {
                     xs: 'repeat(1, 1fr)',
                 },
+                maxWidth: '100vw',
+                overflow: 'hidden',
+                width: '100%',
             }}
         >
             {loading && products && <SkeletonProductCategory />}
             {loading && products && <SkeletonProductCategory />}
             {loading && products && <SkeletonProductCategory />}
 
-            {!loading && <ShopCategorizedProductCard
+            {!loading && filters.resort === "Cerro Catedral" && <ShopCategorizedProductCard
                 product={products.find(product => product.id === 143)}
                 level='gold'
             />}
-            {!loading && <ShopCategorizedProductCard
+
+            {!loading && filters.resort === "Cerro Catedral" && <ShopCategorizedProductCard
                 product={products.find(product => product.id === 144)}
                 level='silver' />}
-            {!loading && <ShopCategorizedProductCard
+                
+            {!loading && filters.resort === "Cerro Catedral" && <ShopCategorizedProductCard
                 product={products.find(product => product.id === 145)}
                 level='bronze'
             />}
-            <Typography variant='h5'>Experiencias</Typography>
             <Box
                 sx={{
                     display: 'grid',
@@ -66,10 +78,13 @@ export default function ShopStandardProducts({ loading }) {
                         md: 'repeat(3, 1fr)',
                         lg: 'repeat(4, 1fr)',
                     },
+                    maxWidth: '100%',
+                    overflow: 'hidden',
+                    width: '100%',
                 }}
             >
-                {loading ? [...Array(5)].map((product, index) => <SkeletonProductItem key={index} />) : products.filter(product => ![143, 144, 145].includes(product.id)).map((product, index) =>
-                    product ? <ShopStandardProductCard key={index} standardProduct={product} /> : <SkeletonProductItem key={index} />
+                {loading ? [...Array(5)].map((product, index) => <SkeletonProductItem key={index} />) : teachers.map((teacher, index) =>
+                    teacher ? <ShopTeacherCard key={index} teacher={teacher} /> : <SkeletonProductItem key={index} />
                 )}
             </Box>
 

@@ -147,7 +147,6 @@ function GuestLayout() {
         minHeight: { lg: 1 },
       }}
     >        
-    
     <DashboardHeader onOpenSidebar={() => setOpen(true)} verticalLayout={verticalLayout} />
 
       <NavbarVertical isOpenSidebar={open} onCloseSidebar={() => setOpen(false)} isGuest={true} />

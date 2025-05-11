@@ -49,6 +49,9 @@ export default function LabelBottomNavigation() {
     if (path?.includes("map")) {
       return 1
     }
+    if (path?.includes("feed")) {
+      return 0
+    }
     if (path?.includes("upload")) {
       return 4
     }

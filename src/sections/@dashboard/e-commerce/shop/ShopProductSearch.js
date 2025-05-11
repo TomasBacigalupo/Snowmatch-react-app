@@ -409,7 +409,7 @@ export default function ShopProductSearch({ filters, teachers }) {
                       {values?.category[0]}
                     </Typography>
                     {filters.discipline?.length === 0 &&
-                      <Typography sx={{ fontWeight: "bold" }}>
+                      <Typography sx={{ fontWeight: "bold", textAlign:"right", width:"100%" }}>
                         Cambiar
                       </Typography>}
                     {values.discipline?.length != 0 &&

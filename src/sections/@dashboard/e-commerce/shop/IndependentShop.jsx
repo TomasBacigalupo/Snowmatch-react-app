@@ -35,7 +35,7 @@ export default function IndependentShop() {
 
     return (
         <>
-            <ToggleButtonGroup
+            {/* <ToggleButtonGroup
                 color="primary"
                 value={category}
                 exclusive
@@ -75,7 +75,7 @@ export default function IndependentShop() {
                 >
                     {translate('products.lessons')}
                 </ToggleButton>
-            </ToggleButtonGroup>
+            </ToggleButtonGroup> */}
             {/* <Drawer
                 //className={classes.drawer}
                 variant="temporary"

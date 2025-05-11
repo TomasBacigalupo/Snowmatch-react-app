@@ -12,6 +12,7 @@ import { useState } from 'react';
 import { useSelector } from 'src/redux/store';
 import EventAvailableIcon from '@mui/icons-material/EventAvailable';
 import { borderRadius } from '@mui/system';
+import Iconify from '../../../../components/Iconify';
 // ----------------------------------------------------------------------
 
 ShopTeacherCard.propTypes = {
@@ -39,20 +40,20 @@ export default function ShopTeacherCard({ teacher }) {
   return (
     <Box onClick={() => navigate(linkTo)}>
       <Box sx={{ position: 'relative' }}>
+        <Image alt={name} src={src} ratio="1/1" onError={() => setSrc('/assets/notFound.jpeg')} sx={{ borderRadius: '16px' }} />
+
         {resorts && (
           <Label
             variant="filled"
             sx={{
               top: 16,
               right: 16,
-              zIndex: 9,
               position: 'absolute',
-              textTransform: 'uppercase',
-              bgcolor: '#99FFFF'
+              bgcolor: 'white'
             }}
           >
             {/* {getResortToShow()} */}
-            {level}
+            Nivel {level}
           </Label>
         )}
         {eventsList && (
@@ -71,21 +72,27 @@ export default function ShopTeacherCard({ teacher }) {
             {eventsList.length} <EventAvailableIcon sx={{ p: 0.5, ml: 0.5 }} />
           </Label>
         )}
-        <Image alt={name} src={src} ratio="1/1" onError={() => setSrc('/assets/notFound.jpeg')} sx={{ borderRadius: '16px' }} />
       </Box>
 
-      <Stack spacing={1} sx={{ pt: 1, px: 1 }}>
+      <Stack spacing={1} sx={{ pt: 1, }}>
         <Box display='flex' justifyContent='space-between' alignItems='center'>
           <Link to={linkTo} color="inherit" component={RouterLink}>
             <Typography variant="subtitle1" noWrap>
               {name}
             </Typography>
           </Link>
-          <Rating readOnly value={stars} precision={0.5} />
+          {stars > 0 && (
+            <Stack direction="row" alignItems="center" spacing={0.5}>
+              <Typography variant="subtitle1" component="span">
+                {stars.toFixed(1)}
+              </Typography>
+              <Iconify icon="mdi:star" width={16} height={16} sx={{ color: 'warning.main' }} />
+            </Stack>
+          )}
         </Box>
         <Stack direction="row" alignItems="center" justifyContent="space-between">
           <Typography component="span" sx={{ color: 'text.disabled', }}>
-            {information}
+            {information?.length > 45 ? `${information.substring(0, 45)}...` : information}
           </Typography>
         </Stack>
       </Stack>

@@ -94,13 +94,7 @@ const VideoAnalyticsChart = ({ turnData }) => {
                 </Box>
                 <Chart options={options} series={series} type="line" height={300} />
             </Box>
-            <Divider py={3}/>
-            <Box pt={2}>
-                <Title>Turn Change</Title>
-                <Chart options={options} series={series} type="line" height={300} />
-            </Box>
         </>
-
     );
 };
 

@@ -187,8 +187,8 @@ export default function VideoUpload() {
                 {tab === 'profile' ?
                     <StyledContainer>
                         <Grid container spacing={1} justifyContent='space-between' padding={0}>
-                    
-                                     <LeaderBoardRightDrawer
+
+                            <LeaderBoardRightDrawer
                                 open={isLeaderBoardOpen}
                                 onClose={() => setIsLeaderBoardOpen(false)}
                                 onOpen={() => setIsLeaderBoardOpen(true)}
@@ -205,7 +205,7 @@ export default function VideoUpload() {
                                     <VideoDemo />
                                 </Grid>
                             )}
-                            {videos && videos.length > 0 &&carvingChallangeResults && carvingChallangeResults.length > 0 && (
+                            {videos && videos.length > 0 && carvingChallangeResults && carvingChallangeResults.length > 0 && (
                                 <Grid item xs={12}>
                                     <Box className="white-card">
                                         <AnalyticsChallangeWidget
@@ -234,18 +234,18 @@ export default function VideoUpload() {
                                     </Box>
                                 </Grid>
                             )}
-                            {videos && videos.length > 0 && (
+                            {videos && videos?.length > 0 && (
                                 <Grid item xs={12}>
                                     <Box className="white-card">
                                         <LatestTips
-                                            videos={[...videos]}
+                                            video={[...videos]}
                                         />
                                     </Box>
                                 </Grid>
                             )}
-                            <Box sx={{width:'100%'}} onClick={() => setIsLeaderBoardOpen(true)}>
-                                                        <MapLeaderboard />
-                                                        </Box>
+                            <Box sx={{ width: '100%' }} onClick={() => setIsLeaderBoardOpen(true)}>
+                                <MapLeaderboard />
+                            </Box>
 
                         </Grid>
                     </StyledContainer> : <UploadedVideosList

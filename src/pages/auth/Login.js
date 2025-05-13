@@ -18,6 +18,7 @@ import { LoginForm } from '../../sections/auth/login';
 import useLocales from 'src/hooks/useLocales';
 import AppleLoginButton from 'src/sections/auth/AppleLoginButton';
 import GoogleLoginButton from 'src/sections/auth/GoogleLoginButton';
+import { Capacitor } from '@capacitor/core';
 
 // ----------------------------------------------------------------------
 
@@ -74,6 +75,7 @@ export default function Login() {
   const mdUp = useResponsive('up', 'md');
   const { translate } = useLocales();
   const navigate = useNavigate();
+  const isIOS = Capacitor.getPlatform() === 'ios';
 
   const [showForm, setShowForm] = useState(false);
 
@@ -99,13 +101,12 @@ export default function Login() {
 
         <Container maxWidth="sm">
           <ContentStyle>
-            {!mdUp && (
-              <LogoStyle
-                src="/logo/snowmatch.png"
-                alt="Snowmatch Logo"
-                onClick={() => navigate('/')}
-              />
-            )}
+
+            <LogoStyle
+              src="/logo/snowmatch.png"
+              alt="Snowmatch Logo"
+              onClick={() => navigate('/')}
+            />
             <Stack direction="row" alignItems="center" sx={{ mb: 5 }}>
               <Box sx={{ flexGrow: 1 }}>
                 <Typography textAlign='center' variant="h4" gutterBottom>
@@ -115,8 +116,8 @@ export default function Login() {
             </Stack>
             {!showForm ? (
               <Stack spacing={2} alignItems="center">
-                <AppleLoginButton />
-                <GoogleLoginButton />
+                {isIOS && <AppleLoginButton />}
+                {isIOS && <GoogleLoginButton />}
                 <Button
                   variant="outlined"
                   onClick={() => setShowForm(true)}
@@ -142,8 +143,8 @@ export default function Login() {
                 <LoginForm />
                 <Box mt={2}>
                   <Stack spacing={2}>
-                    <AppleLoginButton />
-                    <GoogleLoginButton />
+                    {isIOS && <AppleLoginButton />}
+                    {isIOS && <GoogleLoginButton />}
                   </Stack>
                 </Box>
 

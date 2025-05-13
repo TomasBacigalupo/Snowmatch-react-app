@@ -14,12 +14,19 @@ import {
     CardContent,
     AvatarGroup,
     Avatar,
-    Grid
+    Grid,
+    CircularProgress,
+    Dialog,
+    DialogTitle,
+    DialogContent,
+    DialogActions
 } from "@mui/material";
 import useLocales from "src/hooks/useLocales";
 import useAuth from "src/hooks/useAuth";
 import { addCredits } from "src/redux/slices/video";
 import { useDispatch } from "src/redux/store";
+import AppleIcon from '@mui/icons-material/Apple';
+import WhatsAppIcon from '@mui/icons-material/WhatsApp';
 
 
 const { store, ProductType, Platform } = window.CdvPurchase || {};
@@ -70,10 +77,15 @@ const PremiumContainer = ({
     const [iapProduct, setIapProduct] = useState(null);
     const [errorMessage, setErrorMessage] = useState("");
     const [loading, setLoading] = useState(false);
+    const [paymentLoading, setPaymentLoading] = useState(false);
+    const [showPaymentDialog, setShowPaymentDialog] = useState(false);
     const { translate } = useLocales();
     const [selectedMembership, setSelectedMembership] = useState("basic");
     const { user } = useAuth()
     const dispatch = useDispatch()
+
+    const isIOS = Capacitor.getPlatform() === 'ios';
+    const isWeb = Capacitor.getPlatform() === 'web';
 
     useEffect(() => {
         if (!window.CdvPurchase || !window.CdvPurchase.store) {
@@ -194,9 +206,29 @@ const PremiumContainer = ({
         }
     };
 
+    const handlePaymentMethod = async (method) => {
+        setPaymentLoading(true);
+        try {
+            if (method === 'apple') {
+                await orderProduct(selectedMembership);
+            } else if (method === 'mercadopago') {
+                // Replace with your WhatsApp number
+                const whatsappNumber = '+5492944263223';
+                const message = `Hola, me gustaría comprar el paquete ${selectedMembership}`;
+                window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`, '_blank');
+            }
+        } catch (error) {
+            console.error("Error processing payment:", error);
+            setErrorMessage(error.message);
+        } finally {
+            setPaymentLoading(false);
+            setShowPaymentDialog(false);
+        }
+    };
+
     const handleSelect = (id) => {
-        setSelectedMembership(id)
-        orderProduct(id)
+        setSelectedMembership(id);
+        setShowPaymentDialog(true);
     }
 
     return (
@@ -239,6 +271,7 @@ const PremiumContainer = ({
                                                 opacity: isEnabled ? 1 : 0.6, // Baja opacidad para las deshabilitadas
                                                 position: "relative",
                                                 "&:hover": isEnabled ? { boxShadow: 3 } : {}, // No aplicar hover si está deshabilitado
+                                                cursor: "pointer"
                                             }}
                                             onClick={() => handleSelect(membership.id)} // Solo seleccionable si está habilitado
                                         >
@@ -290,6 +323,38 @@ const PremiumContainer = ({
                     </Box>
                 </Stack>
             </Grid>
+
+            {/* Payment Method Dialog */}
+            <Dialog open={showPaymentDialog} onClose={() => setShowPaymentDialog(false)}>
+                <DialogTitle>Selecciona tu método de pago</DialogTitle>
+                <DialogContent>
+                    <Stack spacing={2} sx={{ mt: 2 }}>
+                        {isIOS && !isWeb && (
+                            <Button
+                                variant="contained"
+                                startIcon={<AppleIcon />}
+                                onClick={() => handlePaymentMethod('apple')}
+                                disabled={paymentLoading}
+                                sx={{ py: 1.5 }}
+                            >
+                                {paymentLoading ? <CircularProgress size={24} /> : 'Pagar con Apple Pay'}
+                            </Button>
+                        )}
+                        <Button
+                            variant="contained"
+                            startIcon={<WhatsAppIcon />}
+                            onClick={() => handlePaymentMethod('mercadopago')}
+                            disabled={paymentLoading}
+                            sx={{ py: 1.5, bgcolor: '#25D366', '&:hover': { bgcolor: '#128C7E' } }}
+                        >
+                            {paymentLoading ? <CircularProgress size={24} /> : 'Pagar con Mercado Pago'}
+                        </Button>
+                    </Stack>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setShowPaymentDialog(false)}>Cancelar</Button>
+                </DialogActions>
+            </Dialog>
         </Grid>
     );
 };

@@ -7,7 +7,7 @@ import ShareIcon from '@mui/icons-material/Share';
 
 import AnalyticsIcon from '@mui/icons-material/Analytics';
 
-export default function FeedCard({ video, setSelectedVideo }) {
+export default function FeedCard({ video, setSelectedVideo, onInstructorClick }) {
     const [analyticsEnabled, setAnalyticsEnabled] = useState(false);
     const getCommentScores = (comments) => {
         if (!comments?.length) return { aiScore: null, humanScore: null };
@@ -124,13 +124,14 @@ export default function FeedCard({ video, setSelectedVideo }) {
                             sx={{
                               background: 'rgba(255, 255, 255, 0.9)',
                               backdropFilter: 'blur(8px)',
-                              borderRadius: '20px',
+                              borderRadius: '30px',
                               px: 2,
                               py: 1,
                               display: 'flex',
                               alignItems: 'center',
                               gap: 0.5,
                             }}
+                            onClick={() => {console.log("click"); onInstructorClick(aiComment?.user)}}
                           >
                             <Avatar
                               src="/assets/avatars/snow-ai.png"
@@ -160,15 +161,20 @@ export default function FeedCard({ video, setSelectedVideo }) {
                         )}
                         {humanScore !== null && (
                           <Box
+                            onClick={() => onInstructorClick(humanComment?.user)}
                             sx={{
                               background: 'rgba(255, 255, 255, 0.9)',
                               backdropFilter: 'blur(8px)',
-                              borderRadius: '20px',
+                              borderRadius: '30px',
                               px: 2,
                               py: 1,
                               display: 'flex',
                               alignItems: 'center',
                               gap: 0.5,
+                              cursor: 'pointer',
+                              '&:hover': {
+                                background: 'rgba(255, 255, 255, 0.95)',
+                              }
                             }}
                           >
                             <Avatar

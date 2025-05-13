@@ -389,7 +389,7 @@ export function getVideosToReview() {
     return async () => {
         dispatch(slice.actions.startLoading());
         try {
-            const response = await axios.get(`/api/videos?proCheckRequested=true&reviewed=false`);
+            const response = await axios.get(`/api/videos/filtered?proCheckRequested=true&reviewed=false`);
             const videos = response.data
             dispatch(slice.actions.getVideosToReviewSuccess(videos));
         } catch (error) {

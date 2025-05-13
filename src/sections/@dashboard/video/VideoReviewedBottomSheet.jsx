@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Avatar, Box, IconButton, Divider, Typography, SwipeableDrawer, Button } from "@mui/material";
+import { Avatar, Box, IconButton, Divider, Typography, SwipeableDrawer, Button, CircularProgress } from "@mui/material";
 import { useTheme } from '@mui/material/styles';
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import ReactPlayer from "react-player";
@@ -22,6 +22,7 @@ export default function VideoReviewedBottomSheet({ open, onClose, onOpen, select
     const theme = useTheme();
     const { translate } = useLocales();
     const [isPlaying, setIsPlaying] = useState(false);
+    const [isVideoLoading, setIsVideoLoading] = useState(true);
     const dispatch = useDispatch();
     const { analizeExists, isLoadingExists } = useSelector(state => state.video);
     const [isProCheckRequested, setIsProCheckRequested] = useState(selectedVideo?.isProCheckRequested);
@@ -45,6 +46,10 @@ export default function VideoReviewedBottomSheet({ open, onClose, onOpen, select
         setIsProCheckRequested(true);
         enqueueSnackbar(translate('notifications.procheck_requested'))
     }
+
+    const handleVideoLoad = () => {
+        setIsVideoLoading(false);
+    };
 
     return (
         <SwipeableDrawer
@@ -83,7 +88,7 @@ export default function VideoReviewedBottomSheet({ open, onClose, onOpen, select
                 {selectedVideo && (
                     <>
                         {/* Video */}
-                        <Box mb={2}>
+                        <Box mb={2} position="relative">
                             {!isPlaying ? (
                                 <Box
                                     position="relative"
@@ -123,14 +128,39 @@ export default function VideoReviewedBottomSheet({ open, onClose, onOpen, select
                                     </Box>
                                 </Box>
                             ) : (
-                                <ReactPlayer
-                                    url={`${process.env.REACT_APP_VIDEO_BUCKET_URL}/${selectedVideo.videoUrl}`}
-                                    playing={isPlaying}
-                                    controls
-                                    style={{ maxHeight: '300px', maxWidth: '100%', }}
-                                    onPause={() => setIsPlaying(false)}
-                                    onPlay={() => setIsPlaying(true)}
-                                />
+                                <Box position="relative">
+                                    {isVideoLoading && (
+                                        <Box
+                                            position="absolute"
+                                            top="50%"
+                                            left="50%"
+                                            sx={{
+                                                transform: "translate(-50%, -50%)",
+                                                zIndex: 1,
+                                                display: "flex",
+                                                flexDirection: "column",
+                                                alignItems: "center",
+                                                gap: 1,
+                                            }}
+                                        >
+                                            <CircularProgress size={40} />
+                                            <Typography variant="body2" color="white" sx={{ textShadow: '0 1px 2px rgba(0,0,0,0.5)' }}>
+                                                {translate('Loading video...')}
+                                            </Typography>
+                                        </Box>
+                                    )}
+                                    <ReactPlayer
+                                        url={`${process.env.REACT_APP_VIDEO_BUCKET_URL}/${selectedVideo.videoUrl}`}
+                                        playing={isPlaying}
+                                        controls
+                                        style={{ maxHeight: '300px', maxWidth: '100%' }}
+                                        onPause={() => setIsPlaying(false)}
+                                        onPlay={() => setIsPlaying(true)}
+                                        onReady={handleVideoLoad}
+                                        onBuffer={() => setIsVideoLoading(true)}
+                                        onBufferEnd={() => setIsVideoLoading(false)}
+                                    />
+                                </Box>
                             )}
                         </Box>
                         <Box px={2}>

@@ -22,6 +22,7 @@ import Markdown from 'src/components/Markdown';
 import CloseIcon from '@mui/icons-material/Close';
 import Page from 'src/components/Page';
 import FeedCard from 'src/sections/@dashboard/feed/FeedCard';
+import InstructorDetailsDrawer from 'src/sections/@dashboard/feed/InstructorDetailsDrawer';
 
 const safeSliceMarkdown = (text, length) => {
   if (!text) return "";
@@ -165,6 +166,7 @@ const Feed = () => {
   const [refreshing, setRefreshing] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const [selectedVideo, setSelectedVideo] = useState(null);
+  const [selectedInstructor, setSelectedInstructor] = useState(null);
   const { enqueueSnackbar } = useSnackbar();
   const { ref, inView } = useInView();
   const containerRef = useRef(null);
@@ -313,7 +315,12 @@ const Feed = () => {
           </Box>
         )}
         {videos.map((video) => (
-          <FeedCard key={video.id} video={video} setSelectedVideo={setSelectedVideo}/>
+          <FeedCard 
+            key={video.id} 
+            video={video} 
+            setSelectedVideo={setSelectedVideo}
+            onInstructorClick={setSelectedInstructor}
+          />
         ))}
 
         <Box
@@ -331,6 +338,12 @@ const Feed = () => {
           open={!!selectedVideo}
           onClose={() => setSelectedVideo(null)}
           comments={selectedVideo?.videoComments}
+        />
+
+        <InstructorDetailsDrawer
+          open={!!selectedInstructor}
+          onClose={() => setSelectedInstructor(null)}
+          instructor={selectedInstructor}
         />
       </Box>
     </Page>

@@ -121,24 +121,6 @@ export default function IndependentShop() {
                 </Typography>
             </Button>
             } */}
-            <Hidden mdDown>
-                {category != 'premium' && <Box
-                    color="inherit"
-                    variant="text"
-                    fullWidth sx={{
-                        position: 'absolute',
-                        left: '50%', // Position the button at 50% of the container's width
-                        transform: 'translateX(-50%)', // Move the button back by half of its own width
-                        top: 60,
-                    }}>
-                    <Typography component='h1'>
-                        Clases de ski Catedral
-                    </Typography>
-                </Box>
-                }
-            </Hidden>
-
-
         </>
     );
 }

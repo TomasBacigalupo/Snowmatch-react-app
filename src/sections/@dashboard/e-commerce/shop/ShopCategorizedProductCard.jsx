@@ -1,5 +1,5 @@
 import React from 'react';
-import { Paper, Typography, Box, Icon } from '@mui/material';
+import { Paper, Typography, Box, Icon, useTheme, useMediaQuery } from '@mui/material';
 import { Person } from '@mui/icons-material';
 import { fCurrency } from 'src/utils/formatNumber';
 import { PATH_DASHBOARD, PATH_GUEST } from 'src/routes/paths';
@@ -66,20 +66,21 @@ const ShopCategorizedProductCard = ({ level, product }) => {
     const color = getColor(level);
     const { user } = useAuth();
     const isTeacher = user?.role === 'TEACHER';
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
     const navigate = useNavigate();
     const linkTo = isTeacher ? PATH_DASHBOARD.eCommerce.viewSchoolProduct(id) : PATH_GUEST.viewProduct(id);
-    console.log({linkTo})
 
-    // Estilizamos el contenedor usando styled-components
     const AnimatedContainer = styled(Paper)(({ level }) => ({
         display: 'flex',
         alignItems: 'center',
         padding: '16px',
         position: 'relative',
-        background: getColor(level), // Aseguramos que el fondo sea blanco
+        background: getColor(level),
         borderRadius: '16px',
-        overflow: 'hidden', // Ocultamos el contenido que se desborda
+        overflow: 'hidden',
+        maxWidth: '100%',
         '&::before': {
             content: '""',
             position: 'absolute',
@@ -88,7 +89,7 @@ const ShopCategorizedProductCard = ({ level, product }) => {
             width: '200%',
             height: '100%',
             background: level === 'gold' ? `linear-gradient(135deg, transparent 10%, white 50%, transparent 90%)` : `linear-gradient(135deg, transparent 100%, white 50%, transparent 100%)`,
-            animation: level === 'gold' ? `${movingShineAnimation} 3s linear 1 forwards` : "none", // Aplicamos la animación de franja blanca
+            animation: level === 'gold' ? `${movingShineAnimation} 3s linear 1 forwards` : "none",
         },
     }));
 
@@ -99,19 +100,47 @@ const ShopCategorizedProductCard = ({ level, product }) => {
         }}>
             <Box style={{ width: '100%' }}>
                 <Box display='flex' style={{ width: '100%' }} justifyContent='space-between' alignItems='flex-start'>
-                    <Box>
-                        <Typography variant="h2" fontSize={22} gutterBottom color={getTextColor(level)}>
+                    <Box sx={{ maxWidth: '70%' }}>
+                        <Typography 
+                            variant={isMobile ? "h2" : "h4"} 
+                            fontSize={isMobile ? 22 : 16} 
+                            gutterBottom 
+                            color={getTextColor(level)}
+                            sx={{
+                                overflow: 'hidden',
+                                textOverflow: 'ellipsis',
+                                display: '-webkit-box',
+                                WebkitLineClamp: 2,
+                                WebkitBoxOrient: 'vertical',
+                            }}
+                        >
                             {title}
                         </Typography>
                     </Box>
-                    <Typography variant="h3" textAlign='end' color={getTextColor(level)}>
+                    <Typography 
+                        variant={isMobile ? "h3" : "h4"} 
+                        textAlign='end' 
+                        color={getTextColor(level)}
+                        sx={{ whiteSpace: 'nowrap' }}
+                    >
                         {fCurrency(price)}
                         <Typography component='span' variant='body2' color={'disabled'}>
                             /{time}hs
                         </Typography>
                     </Typography>
                 </Box>
-                <Typography variant="body2" gutterBottom color={getTextColor(level)}>
+                <Typography 
+                    variant="body2" 
+                    gutterBottom 
+                    color={getTextColor(level)}
+                    sx={{
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        display: '-webkit-box',
+                        WebkitLineClamp: 2,
+                        WebkitBoxOrient: 'vertical',
+                    }}
+                >
                     {description}
                 </Typography>
                 <Box display='flex' flexDirection='row' position='absolute' right={16} bottom={10}>

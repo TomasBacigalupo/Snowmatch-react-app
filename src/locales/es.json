@@ -65,6 +65,20 @@
         "search": "Buscar..."
     },
     "landingPRO": {
+        "cerro-catedral": "Cerro Catedral",
+        "cerro-chapelco": "Cerro Chapelco",
+        "cerro-la-parva": "Cerro La Parva",
+        "cerro-la-vasa": "Cerro La Vasa",
+        "cerro-los-arboles": "Cerro Los Arboles",
+        "cerro-bayo": "Cerro Bayo",
+        "cerro-cerro-negro": "Cerro Negro",
+        "cerro-el-chalten": "Cerro El Chalten",
+        "cerro-el-cascabel": "Cerro El Cascabel",
+        "cerro-la-hoya": "Cerro La Hoya",
+        "cerro-lago-hermoso": "Cerro Lago Hermoso",
+        "cerro-lomada-del-suegro": "Cerro Lomada del Suegro",
+        "cerro-los-gatos": "Cerro Los Gatos",
+        
         "heroTitle0": "¿Sos profesor?",
         "heroTitle1": "Potenciá ",
         "heroTitle2": "tu trabajo con",
@@ -82,11 +96,26 @@
         "independent": "PROs Independientes",
         "school": "PROs de Escuelas",
         "getStartedToday": "¡Formá parte de SnowMatch!",
-        "find": "Encontrá tu clase ideal",
+        "find": "Encontrá tu clase {{type}} ideal de {{discipline}} en {{resort}}",
+        "findSubtitle": "Los mejores instructores {{type}} de {{discipline}} en {{resort}}",
+        "privateInstructor": "privados",
+        "childrenInstructor": "para niños",
+        "groupInstructor": "para grupales",
+        "private": "privada",
+        "privatePlural": "privadas",
+        "group": "grupal",
+        "groupPlural": "grupales",
+        "Ski": "esqui",
+        "SnowBoard": "snowboard",
+        "children": "para niños",
+        "childrenPlural": "para niños",
+        "eLearn": "Subi tu video de {{discipline}} en {{resort}} y recibí correcciones de tu bajada",
         "start_date": "Desde",
         "end_date": "Hasta",
         "search": "Buscar",
-        "slogan": "Evitá las colas y disfrutá de la montaña de forma segura"
+        "slogan": "Evitá las colas y disfrutá de la montaña de forma segura",
+        "topTeachers": "Los mejores instructores para clases {{discipline}} {{type}} en {{resort}}",
+        "guestAgree": "Los clientes de SnowMatch están de acuerdo: estos instructores son altamente calificados para {{discipline}} {{type}} en {{resort}}"
     },
     "menu": {
         "general": "General",
@@ -917,7 +946,53 @@
         "feature7": "Gestión relación laboral con Instructores"
     },
     "faqs": {
-        "title": "Preguntas frecuentes",
+        "title": {
+            "resort": "Preguntas frecuentes sobre {{resort}}",
+            "discipline": "Preguntas frecuentes sobre {{discipline}} en {{resort}}",
+            "type": "Preguntas frecuentes sobre clases {{type}} de {{discipline}} en {{resort}}"
+        },
+        "discipline": {
+            "general": {
+                "title": "Sobre {{discipline}} en {{resort}}",
+                "items": [
+                    {
+                        "q": "¿Qué incluye una clase de {{discipline}}?",
+                        "a": "Instructor, acceso a medios y evaluación del nivel."
+                    }
+                ]
+            }
+        },
+        "resort": {
+            "general": {
+                "title": "Sobre {{resort}}",
+                "items": [
+                    {
+                        "q": "¿Dónde se encuentra {{resort}}?",
+                        "a": "{{resort}} está ubicado en la Patagonia Argentina."
+                    },
+                    {
+                        "q": "¿Qué niveles de pistas ofrece {{resort}}?",
+                        "a": "Hay pistas para todos los niveles: principiante, intermedio y avanzado."
+                    }
+                ]
+            }
+        },
+        "type": {
+            "general": {
+                "title": "Sobre clases {{type}} de {{discipline}}",
+                "items": [
+                    {
+                        "q": "¿Cuántas personas hay en una clase {{type}}?",
+                        "a": "Depende de la disponibilidad, generalmente entre 4 y 8."
+                    },
+                    {
+                        "q": "¿Se puede elegir un instructor específico?",
+                        "a": "Sí, según disponibilidad en la plataforma."
+                    }
+                ]
+            }
+        },
+        "title1": "Preguntas frecuentes",
         "question0": "¿Qué es SnowMatch?",
         "answer0": "SnowMatch es una herramienta para instructores de esquí y snowboard que te ayuda a organizar tu agenda de clientes; funciona como medio de pago; y te permite darte a conocer con cientos de alumnos que buscan diariamente un instructor. Los clientes pueden calificar tus servicios y podés acceder a estadísticas sobre tu rendimiento.",
         "question1": "¿Cómo funciona?",
@@ -1391,7 +1466,7 @@
         "match": "Match",
         "lessons": "Clases",
         "maps": "Mapas",
-        "profile":"Perfil"
+        "profile": "Perfil"
     },
     "lastVideo": {
         "title": "Último Video",

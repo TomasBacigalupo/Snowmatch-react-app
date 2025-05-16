@@ -20,7 +20,7 @@ import { searchTeachers } from 'src/services/facebook';
 import { PATH_DASHBOARD } from 'src/routes/paths';
 
 
-export default function HomeFilterTeachers() {
+export default function HomeFilterTeachers({ resort, discipline, type }) {
 
     // const advancedMatching = { em: 'some@email.com' }; // optional, more info: https://developers.facebook.com/docs/facebook-pixel/advanced/advanced-matching
     const options = {
@@ -37,18 +37,18 @@ export default function HomeFilterTeachers() {
 
     const { translate } = useLocales()
 
-
     const defaultRange = [
         new Date(),
         new Date(new Date().setDate(new Date().getDate() + 7)),
     ]
+
     const defaultValues = {
-        resort: 'Cerro Catedral',
+        resort: resort || 'Cerro Catedral',
         range: defaultRange,
         from: defaultRange[0],
         to: defaultRange[1],
         gender: [],
-        category: ["Ski"],
+        category: discipline ? [discipline] : ["Ski"],
         language: [],
         discipline: []
     };
@@ -67,40 +67,6 @@ export default function HomeFilterTeachers() {
     } = methods;
 
     const values = watch();
-
-    const onSubmitSchools = () => {
-        try {
-            dispatch(filterTeachers({
-                ...values,
-                from: values.range[0],
-                to: values.range[1]
-            }))
-            if (isTeacher) {
-                navigate('/dashboard/e-commerce/shop/school')
-            } else {
-                navigate('/match')
-            }
-        } catch (error) {
-            console.error(error);
-        }
-    };
-
-    const onSubmitIndependent = () => {
-        try {
-            dispatch(filterTeachers({
-                ...values,
-                from: values.range[0],
-                to: values.range[1]
-            }))
-            if (isTeacher) {
-                navigate('/dashboard/e-commerce/shop/independent')
-            } else {
-                navigate('/match/independent')
-            }
-        } catch (error) {
-            console.error(error);
-        }
-    };
 
     const onSubmit = () => {
         searchTeachers({
@@ -133,105 +99,57 @@ export default function HomeFilterTeachers() {
     }
 
     useEffect(() => {
-        ReactPixel.pageView(); // For tracking page view
+        ReactPixel.pageView(); // For tracking page view        
     })
 
-    return (
-        <>
-            <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-                <Grid container spacing={2}>
-                    <Grid item xs={12} md={9} justifyContent='center'>
-                        <Typography variant="h5" component='h1' sx={{ color: theme.typography.color,  }}> {translate("landingPRO.find")} </Typography>
-                    </Grid>
-                    <Grid item xs={12} md={9}>
-                        <Card sx={{ p: 3 }}>
-                            <Grid container spacing={2} alignItems='center'>
-                                <Grid item xs={12}>
-                                    <RHFSelect name="resort" label={translate("filter.resort")} placeholder="Resort">
-                                        <option value="" />
-                                        {FILTER_RESORT_OPTIONS.map((country) => (
-                                            <optgroup label={country.category}>
-                                                {country.resorts.sort().map(r => (
-                                                    <option key={r} value={r}>
-                                                        {r}
-                                                    </option>
-                                                ))}
-                                            </optgroup>
-                                        ))}
-                                    </RHFSelect>
-                                </Grid>
-                                {/* <Grid item xs={12}>
-                                    <Controller
-                                        name="range"
-                                        control={control}
-                                        render={({ field }) => (
-                                            <MobileDateRangePicker
-                                                {...field}
-                                                disablePast
-                                                defaultValue={[dayjs('2022-04-17'), dayjs('2022-04-21')]}
-                                                label={translate("landingPRO.start_date")}
-                                                inputFormat="dd/MM/yyyy"
-                                                renderInput={(startProps, endProps) => (
-                                                    <React.Fragment>
-                                                        <TextField
-                                                            {...startProps}
-                                                            label={translate("landingPRO.start_date")}
-                                                            placeholder={translate("landingPRO.start_date")}
-                                                        />
-                                                        <Box sx={{ mx: 2 }}> - </Box>
-                                                        <TextField  {...endProps}
-                                                            label={translate("landingPRO.end_date")}
-                                                            placeholder={translate("landingPRO.start_date")} />
-                                                    </React.Fragment>
-                                                )}
-                                            />
-                                        )}
-                                    />
-                                </Grid> */}
-                                <Grid item xs={5}>
-                                    <RHFMultiCheckbox name="category" options={FILTER_CATEGORY_OPTIONS} sx={{ width: 1 }} />
-                                </Grid>
-                                <Grid item xs={7}>
-                                    <HoverButton fullWidth type="submit" variant="contained" size="large" startIcon={<Iconify icon={'eva:flash-fill'} width={20} height={20} />}>
-                                        {translate("landingPRO.search")}
-                                    </HoverButton>
-                                </Grid>
+    useEffect(() => {
+        setValue('resort', resort)
+        setValue('category', discipline ? [discipline] : ["Ski"])
+    }, [resort, discipline])
 
-                            </Grid>
-                        </Card>
-                    </Grid>
-                    <Grid item xs={12} md={9} justifyContent='center'>
-                        <Typography variant="h5" component='h2' sx={{ color: theme.typography.color, mt: 1 }}> {translate("landingPRO.slogan")} </Typography>
-                    </Grid>
-                    <Grid item xs={12} md={9} justifyContent='center' container spacing={3}>
-                        {[{
-                            image: 'https://snowmatchimages.s3.amazonaws.com/profile/ClaseNin%CC%83oss.jpeg',
-                            url: 'https://snowmatch.pro/match/product/148',
-                        }, {
-                            image: 'https://snowmatchimages.s3.amazonaws.com/profile/clase-ski-catedral.jpg',
-                            url: 'https://snowmatch.pro/match/product/143'
-                        }, {
-                            image: 'https://snowmatchimages.s3.amazonaws.com/profile/clase-ski-freeride.jpg',
-                            url: 'https://snowmatch.pro/match/product/149'
-                        }].map((prod, index) => (
-                            <Grid key={index} item xs={4} container justifyContent="center">
-                                <Box
-                                    onClick={() => window.open(prod.url, '_blank')}
-                                    sx={{
-                                        width: '100%',
-                                        height: 200,
-                                        backgroundImage: `url(${prod.image})`,
-                                        backgroundSize: 'cover',
-                                        backgroundPosition: 'center',
-                                        borderRadius: 1,
-                                        all: 'clase-ski-catedral.jpg',
-                                    }}
-                                />
-                            </Grid>
-                        ))}
+    return (
+        <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+            <Grid container spacing={2}>
+                <Grid item xs={12} md={12} justifyContent='center'>
+                    <Typography variant="h3" component='h1' sx={{ color: theme.typography.color, }}>
+                        {translate("landingPRO.find", { resort: resort, discipline:  discipline ? translate(`landingPRO.${discipline}`) : "", type: type ? translate(`landingPRO.${type}`) : "" })}
+                    </Typography>
+                </Grid>
+                <Grid item xs={12} md={12} justifyContent='center'>
+                    <Typography variant="h5" component='h1' sx={{ color: theme.typography.body2, }}>
+                        {translate("landingPRO.findSubtitle", { 
+                            resort: resort, 
+                            discipline: discipline ? translate(`landingPRO.${discipline}`) : "", 
+                            type: type ? translate(`landingPRO.${type}Instructor`) : "" })}
+                    </Typography>
+                </Grid>
+                <Grid item xs={12} md={12}>
+                    <Grid container spacing={2} alignItems='center'>
+                        <Grid item xs={12}>
+                            <RHFSelect name="resort" label={translate("filter.resort")} placeholder="Resort">
+                                <option value="" />
+                                {FILTER_RESORT_OPTIONS.map((country) => (
+                                    <optgroup label={country.category}>
+                                        {country.resorts.sort().map(r => (
+                                            <option key={r} value={r}>
+                                                {r}
+                                            </option>
+                                        ))}
+                                    </optgroup>
+                                ))}
+                            </RHFSelect>
+                        </Grid>
+                        <Grid item xs={5}>
+                            <RHFMultiCheckbox name="category" options={FILTER_CATEGORY_OPTIONS} sx={{ width: 1 }} />
+                        </Grid>
+                        <Grid item xs={7}>
+                            <HoverButton fullWidth type="submit" variant="contained" size="large" startIcon={<Iconify icon={'eva:flash-fill'} width={20} height={20} />}>
+                                {translate("landingPRO.search")}
+                            </HoverButton>
+                        </Grid>
                     </Grid>
                 </Grid>
-            </FormProvider>
-        </>
+            </Grid>
+        </FormProvider>
     );
 }

@@ -182,7 +182,7 @@ export default function AccountPopover() {
         {isAuthenticated &&
           <MenuItem 
             onClick={handleDeleteAccount}
-            sx={{ m: 1 }}>
+            sx={{ m: 1, color: 'error.main' }}>
             {translate("accountPopover.deleteAccount")}
           </MenuItem>
         }

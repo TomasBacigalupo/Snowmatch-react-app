@@ -167,6 +167,7 @@ const Feed = () => {
   const [hasMore, setHasMore] = useState(true);
   const [selectedVideo, setSelectedVideo] = useState(null);
   const [selectedInstructor, setSelectedInstructor] = useState(null);
+  const [selectedTeacher, setSelectedTeacher] = useState(null);
   const { enqueueSnackbar } = useSnackbar();
   const { ref, inView } = useInView();
   const containerRef = useRef(null);

@@ -66,7 +66,6 @@ export default function MainHeader() {
 
   return (
     <AppBar sx={{ boxShadow: 0, bgcolor: 'transparent', paddingTop: 'env(safe-area-inset-top)'}}>
-      hols
       <ToolbarStyle
         disableGutters
         sx={{

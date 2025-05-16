@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 // @mui
-import { Box, Typography } from '@mui/material';
+import { Box, Grid, Typography } from '@mui/material';
 // components
 import { SkeletonProductItem, SkeletonProductCategory } from '../../../../components/skeleton';
 //
@@ -30,14 +30,14 @@ export default function ShopStandardProducts({ loading }) {
 
     useEffect(() => {
         // prod
-       dispatch(getProductsByBusinessId(13));
-    //    dispatch(getProductsByBusinessId(1));
+        dispatch(getProductsByBusinessId(13));
+        //    dispatch(getProductsByBusinessId(1));
     }, []);
 
     useEffect(() => {
         dispatch(getFreeTeachers(filters.from, filters.to, filters.resort, 0));
         //dispatch(getTeachersWithEvents(filters));
-      }, [dispatch, filters]);
+    }, [dispatch, filters]);
     return (
         <Box
             sx={{
@@ -54,20 +54,28 @@ export default function ShopStandardProducts({ loading }) {
             {loading && products && <SkeletonProductCategory />}
             {loading && products && <SkeletonProductCategory />}
             {loading && products && <SkeletonProductCategory />}
+            <Grid container spacing={3}>
+                <Grid item xs={12} md={6} lg={4}>{!loading && filters.resort === "Cerro Catedral" && <ShopCategorizedProductCard
+                    product={products.find(product => product.id === 143)}
+                    level='gold'
+                />}
+                </Grid>
+                <Grid item xs={12} md={6} lg={4}>{!loading && filters.resort === "Cerro Catedral" && <ShopCategorizedProductCard
+                    product={products.find(product => product.id === 144)}
+                    level='silver' />}
+                </Grid>
+                <Grid item xs={12} md={6} lg={4}> {!loading && filters.resort === "Cerro Catedral" && <ShopCategorizedProductCard
+                    product={products.find(product => product.id === 145)}
+                    level='bronze'
+                />}
+                </Grid>
+            </Grid>
 
-            {!loading && filters.resort === "Cerro Catedral" && <ShopCategorizedProductCard
-                product={products.find(product => product.id === 143)}
-                level='gold'
-            />}
 
-            {!loading && filters.resort === "Cerro Catedral" && <ShopCategorizedProductCard
-                product={products.find(product => product.id === 144)}
-                level='silver' />}
-                
-            {!loading && filters.resort === "Cerro Catedral" && <ShopCategorizedProductCard
-                product={products.find(product => product.id === 145)}
-                level='bronze'
-            />}
+
+
+
+
             <Box
                 sx={{
                     display: 'grid',

@@ -39,7 +39,8 @@ const initialState = {
     leaders: [],
     isLoadingLeaderBoard: false,
     commentedCount: 0,
-    isCountLoading: false
+    isCountLoading: false,
+    totalHours: 0
 };
 
 const slice = createSlice({
@@ -334,6 +335,11 @@ const slice = createSlice({
         getCommentedCountSuccess(state, action) {
             state.isCountLoading = false;
             state.commentedCount = action.payload;
+        },
+
+        getTotalHoursSuccess(state, action) {
+            state.isCountLoading = false;
+            state.totalHours = action.payload;
         }
     },
 });
@@ -580,6 +586,19 @@ export function getCommentedCount() {
         }
     };
 }
+
+export function getTotalHours() {
+    return async () => {
+        try {
+            const response = await axios.get(`/api/events/teachers/hours`);    
+            dispatch(slice.actions.getTotalHoursSuccess(response?.data?.totalHours || 0));
+        } catch (error) {
+            dispatch(slice.actions.hasError(error));
+        }
+    };
+}
+
+
 
 // ----------------------------------------------------------------------
 

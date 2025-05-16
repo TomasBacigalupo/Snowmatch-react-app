@@ -23,7 +23,7 @@ import { date } from 'yup/lib/locale';
 import { VideoLibrary, Upload, CalendarMonth, Help, EventAvailable, Star, Share, OpenInNew } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { Share as CapacitorShare } from '@capacitor/share';
-import { getCommentedCount } from 'src/redux/slices/video';
+import { getCommentedCount, getTotalHours } from 'src/redux/slices/video';
 
 
 // ----------------------------------------------------------------------
@@ -36,7 +36,7 @@ export default function GeneralApp() {
   const dispatch = useDispatch();
   const { totalIncome, totalClasses, totalClients, conversations, openClinicModal } = useSelector(state => state.teachers)
   const { events } = useSelector(state => state.calendar)
-  const { commentedCount, isCountLoading } = useSelector(state => state.video)
+  const { commentedCount, isCountLoading, totalHours } = useSelector(state => state.video)
   const { translate } = useLocales()
   const [incomeChartData, setIncomeChartData] = useState([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
   const [incomePercent, setIncomePercent] = useState(0);
@@ -53,6 +53,7 @@ export default function GeneralApp() {
     dispatch(getEvents())
     dispatch(getConversations())
     dispatch(getCommentedCount())
+    dispatch(getTotalHours())
   }, [])
 
   useEffect(() => {
@@ -121,7 +122,7 @@ export default function GeneralApp() {
           <Grid item xs={6}>
             <AppWidgetSummary
               title={translate('generalApp.totalBookedHours')}
-              total={incomeChartData.reduce((a, b) => a + b, 0)}
+              total={totalHours}
               chartColor={theme.palette.chart.violet[0]}
               icon="mdi:video-check"
               sx={{ height: '100px', p: 2.5 }}
@@ -280,13 +281,13 @@ export default function GeneralApp() {
                       try {
                         await CapacitorShare.share({
                           title: 'SnowMatch',
-                          text: 'Check out SnowMatch - Your Ultimate Snowboarding Companion!',
-                          url: window.location.origin
+                          text: translate('dashboard.getTheMost.refer.description'),
+                          url: "https://snowmatch.pro"
                         });
                       } catch (error) {
                         console.error('Error sharing:', error);
                         // Fallback for when sharing fails
-                        const shareUrl = window.location.origin;
+                        const shareUrl =  "https://snowmatch.pro";
                         navigator.clipboard.writeText(shareUrl);
                       }
                     }}
@@ -351,57 +352,12 @@ export default function GeneralApp() {
               </Box>
             </Grid>
 
-            {/* Feedback Card */}
-            <Grid item xs={12} md={6} lg={3}>
-              <Box
-                sx={{
-                  p: 2.5,
-                  height: '100%',
-                  bgcolor: 'background.paper',
-                  borderRadius: 2,
-                }}
-              >
-                <Stack spacing={2.5}>
-                  <Box sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 2,
-                  }}>
-                    <Star sx={{ width: 28, height: 28, color: 'text.primary' }} />
-                    <Typography variant="h6" sx={{ fontWeight: 600 }}>
-                      {translate('dashboard.getTheMost.feedback.title')}
-                    </Typography>
-                  </Box>
-                  
-                  <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                    {translate('dashboard.getTheMost.feedback.description')}
-                  </Typography>
-
-                  <Button
-                    variant="text"
-                    size="large"
-                    color="primary"
-                    sx={{
-                      justifyContent: 'flex-start',
-                      px: 0,
-                      '&:hover': {
-                        bgcolor: 'transparent',
-                        textDecoration: 'underline',
-                      }
-                    }}
-                  >
-                    {translate('dashboard.getTheMost.feedback.button')}
-                  </Button>
-                </Stack>
-              </Box>
-            </Grid>
-
 
             {/* Support Card */}
             <Grid item xs={12} md={6} lg={3}>
               <Card
                 component={Link}
-                href="https://blog.snowmatch.pro/support"
+                href="whatsapp://send?text=Hola%20necesito%20ayuda&phone=5492944263223"
                 target="_blank"
                 sx={{
                   p: 2,

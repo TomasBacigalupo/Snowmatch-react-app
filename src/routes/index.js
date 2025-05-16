@@ -26,6 +26,8 @@ import CourseLevels from 'src/pages/dashboard/CourseLevels';
 import BackButtonLayout from 'src/layouts/BackButtonLayout';
 import Training from 'src/pages/dashboard/Training';
 import Maps from 'src/pages/dashboard/Maps';
+import SearchPage from 'src/pages/search/resort/discipline';
+import useResponsive from '../hooks/useResponsive';
 // ----------------------------------------------------------------------
 
 const Loadable = (Component) => (props) => {
@@ -39,6 +41,7 @@ const Loadable = (Component) => (props) => {
 };
 
 export default function Router() {
+  const isMobile = true;
 
   return useRoutes([
     {
@@ -81,13 +84,6 @@ export default function Router() {
       element: <MainLayout />
     },
     {
-      path: '/chapelco',
-      element: <MainLayout />,
-      children: [
-        { path: 'instructores', element: <ChapelcoPro /> }
-      ]
-    },
-    {
       path: 'rental',
       element: (<GuestLayout />),
       children: [
@@ -118,33 +114,15 @@ export default function Router() {
       ),
       children: [
         { element: <Navigate to={'/match/school/:resort'} replace />, index: true },
-        // { path: '*', element: <EcommerceShop isGuest={true} teacherType="school" /> },
-        // { path: 'independent', element: <EcommerceShop isGuest={true} teacherType="independent" /> },
-        // { path: 'school', element: <EcommerceShop isGuest={true} teacherType="school" /> },
-        // { path: 'teacher/:id', element: <EcommerceTeacherDetails isGuest={true} /> },
-        // { path: 'product/:id', element: <EcommerceProductDetails /> },
-        // { path: 'teacher/:id/products/:productId', element: <EcommerceTeacherProducts /> },
-        { path: 'schools/:id', element: <SchoolDetails isGuest={true} /> },
+       { path: 'schools/:id', element: <SchoolDetails isGuest={true} /> },
         { path: 'schools', element: <SchoolList teacherType="school" /> },
-        // { path: '*', element: <EcommerceShop isGuest={true} teacherType="school" /> },
-        // { path: 'independent', element: <EcommerceShop isGuest={true} teacherType="independent" /> },
-        // { path: 'school', element: <EcommerceShop isGuest={true} teacherType="school" /> },
-        // {
-        //   path: 'teacher/:id', element:
-        //     <EcommerceTeacherDetails isGuest={true} />
-        // },
+        
         {
           path: 'teacher/:id/review', element:
             <AuthGuard>
               <ReviewTeacher />
             </AuthGuard>
         },
-        // {
-        //   path: 'teacher/:id/hire', element:
-        //     <AuthGuard>
-        //       <EcommerceCheckoutTeacher />
-        //     </AuthGuard>
-        // },
         {
           path: 'product/:id/hire', element:
             <AuthGuard>
@@ -411,11 +389,14 @@ export default function Router() {
       element: <MainLayout />,
       children: [
         {
-          element: <Navigate to="/match/videoCoach/upload" replace /> //changed just for app build <HomePage />
-          , index: true
+          element: isMobile ? <Navigate to="/match/videoCoach/upload" replace /> : <Navigate to="/cerro--catedral" replace />,
+          index: true
         },
         { path: 'clases-de-ski-bariloche', element: <HomePageBariloche /> },
         { path: 'clases-de-ski-lago-hermoso', element: <HomePageLagoHermoso /> },
+        { path: ':resort/:discipline/:type', element: <SearchPage/>},
+        { path: ':resort/:discipline', element: <SearchPage/>},
+        { path: ':resort', element: <SearchPage/>},
         { path: 'about-us', element: <About /> },
         { path: 'contact-us', element: <Contact /> },
         { path: 'faqs', element: <Faqs /> },

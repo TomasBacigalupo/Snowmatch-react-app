@@ -17,9 +17,10 @@ import Iconify from '../../../../components/Iconify';
 
 ShopTeacherCard.propTypes = {
   teacher: PropTypes.object,
+  fullBlack: PropTypes.bool,
 };
 
-export default function ShopTeacherCard({ teacher }) {
+export default function ShopTeacherCard({ teacher, fullBlack = false }) {
   const { name, lastname, imageLink, information, email, resorts, id, eventsList, stars, level } = teacher;
   const { filters } = useSelector(state => state.teachers)
   const navigate = useNavigate();
@@ -91,7 +92,7 @@ export default function ShopTeacherCard({ teacher }) {
           )}
         </Box>
         <Stack direction="row" alignItems="center" justifyContent="space-between">
-          <Typography component="span" sx={{ color: 'text.disabled', }}>
+          <Typography component="span" sx={{ color: fullBlack ? 'black' : 'text.disabled', }}>
             {information?.length > 45 ? `${information.substring(0, 45)}...` : information}
           </Typography>
         </Stack>

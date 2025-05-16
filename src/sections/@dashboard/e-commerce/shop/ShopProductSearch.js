@@ -4,7 +4,8 @@ import parse from 'autosuggest-highlight/parse';
 import match from 'autosuggest-highlight/match';
 import { useNavigate } from 'react-router-dom';
 import { Controller, useForm } from 'react-hook-form';
-import { useTheme } from '@mui/material/styles';
+import { useTheme} from '@mui/material/styles';
+import {useMediaQuery} from '@mui/material';
 import { formatDate } from "@fullcalendar/react";
 // @mui
 import { styled } from '@mui/material/styles';
@@ -12,7 +13,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 import {
   Accordion,
-  AccordionSummary, Link, AccordionDetails, Typography, Card, Autocomplete, InputAdornment, Popper, Paper, TextField, Drawer, Button, Box, Grid
+  AccordionSummary, Link, AccordionDetails, Typography, Card, Autocomplete, InputAdornment, Popper, Paper, TextField, Drawer, Button, Box, Grid, Modal
 } from '@mui/material';
 // hooks
 import useIsMountedRef from '../../../../hooks/useIsMountedRef';
@@ -50,6 +51,7 @@ export default function ShopProductSearch({ filters, teachers }) {
   const theme = useTheme()
   const dispatch = useDispatch()
   const { isTeacher, user } = useAuth()
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
   const isMountedRef = useIsMountedRef();
 
@@ -232,256 +234,519 @@ export default function ShopProductSearch({ filters, teachers }) {
         </Box>
       </Paper>
       <FormProvider width='100%' methods={methods} onSubmit={handleSubmit(onSubmit)}>
-        <Drawer
-          anchor="top"
-          open={isDrawerOpen}
-          onClose={handleCloseDrawer}
-          sx={{
-            '& .MuiDrawer-paper': {
-              height: '100%',
-              borderRadius: '0 0 16px 16px',
-              boxShadow: '0px 4px 20px rgba(0, 0, 0, 0.2)',
-              p: 3,
-              backgroundColor: '#F7F7F7',
-              paddingTop: 'calc(env(safe-area-inset-top, 0px) + 24px)',
-            },
-          }}
-        >
-          <Box display='flex' flexDirection='column' justifyContent='space-between' height='100%'>
+        {isMobile ? (
+          <Drawer
+            anchor="top"
+            open={isDrawerOpen}
+            onClose={handleCloseDrawer}
+            sx={{
+              '& .MuiDrawer-paper': {
+                height: '100%',
+                borderRadius: '0 0 16px 16px',
+                boxShadow: '0px 4px 20px rgba(0, 0, 0, 0.2)',
+                p: 3,
+                backgroundColor: '#F7F7F7',
+                paddingTop: 'calc(env(safe-area-inset-top, 0px) + 24px)',
+              },
+            }}
+          >
+            <Box display='flex' flexDirection='column' justifyContent='space-between' height='100%'>
 
-            <Box width='100%'>
+              <Box width='100%'>
 
-              <Accordion
-                expanded={expandedResort}
-                onChange={() => setExpandedResort(!expanded)}
-                sx={{ borderRadius: 1, my: 2, width: "100%", "&::before": { display: "none" } }}>
-                {!expandedResort && !values.resort &&
-                  <AccordionSummary sx={{
-                    borderRadius: 10
-                  }}>
-                    <Box display='flex' justifyContent='space-between' width='100%'>
-                      <Typography>{translate("filter.resort")}</Typography>
-                      <Typography sx={{ fontWeight: "bold" }}>
-                        Seleccionar montaña
-                      </Typography>
-                    </Box>
-                  </AccordionSummary>
-                }
-                {!expandedResort && values.resort &&
-                  <AccordionSummary sx={{
-                    borderRadius: 10
-                  }}>
-                    <Box display='flex' justifyContent='space-between' width='100%'>
-                      <Typography>{values.resort}</Typography>
-                      <Typography sx={{ fontWeight: "bold" }}>
-                        Cambiar Montaña
-                      </Typography>
-                    </Box>
-                  </AccordionSummary>
-                }
-                <AccordionDetails>
-                  <Typography variant='h3' mb={2}>¿A dónde vas?</Typography>
-                  <RHFSelect name="resort" label={translate("filter.resort")} placeholder="Resort">
-                    <option value="" />
-                    {FILTER_RESORT_OPTIONS.map((country) => (
-                      <optgroup key={country.category} label={country.category}>
-                        {country.resorts.sort().map((r) => (
-                          <option key={r} value={r}>
-                            {r}
-                          </option>
-                        ))}
-                      </optgroup>
-                    ))}
-                  </RHFSelect>
-                  <Box display="flex" gap={2} mt={2} overflow="auto" sx={{ scrollbarWidth: "none", "&::-webkit-scrollbar": { display: "none" } }}>
-                    {[{title:"Catedral", value:"Cerro Catedral"}, {title:"Chapelco", value:"Chapelco"}, {title:"Bayo", value:"Cerro Bayo"}, {title:"La Hoya", value:"La Hoya"}].map((resort) => (
-                      <Box
-                        key={resort}
-                        onClick={() => setValue("resort", resort.value)} // Assuming `setValue` is from react-hook-form
-                        sx={{
-                          minWidth: 100,
-                          height: 100,
-                          borderRadius: 2,
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          backgroundColor: "#F7F7F7",
-                          cursor: "pointer",
-                          fontWeight: "bold",
-                          boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
-                          "&:hover": { backgroundColor: "#EAEAEA" },
-                        }}
-                      >
-                        {resort.title}
+                <Accordion
+                  expanded={expandedResort}
+                  onChange={() => setExpandedResort(!expanded)}
+                  sx={{ borderRadius: 1, my: 2, width: "100%", "&::before": { display: "none" } }}>
+                  {!expandedResort && !values.resort &&
+                    <AccordionSummary sx={{
+                      borderRadius: 10
+                    }}>
+                      <Box display='flex' justifyContent='space-between' width='100%'>
+                        <Typography>{translate("filter.resort")}</Typography>
+                        <Typography sx={{ fontWeight: "bold" }}>
+                          Seleccionar montaña
+                        </Typography>
                       </Box>
-                    ))}
-                  </Box>
-                </AccordionDetails>
-              </Accordion>
-              <Accordion
-                expanded={expandedDates}
-                onChange={() => setExpandedDates(!expanded)}
-                sx={{ borderRadius: 1, my: 2, "&::before": { display: "none", width: '100%' } }}
-              >
-                {!expandedDates && !values.range && <AccordionSummary>
-                  <Box display='flex' justifyContent='space-between' width='100%'>
-                    <Typography>
-                      Fecha
-                    </Typography>
-                    {console.log("filters", filters)}
-                    {console.log("values", values)}
-                    <Typography sx={{ fontWeight: "bold" }}>
-                      Agregar fechas
-                    </Typography>
-                  </Box>
-                </AccordionSummary>}
-                {!expandedDates && values.range && <AccordionSummary>
-                  <Box display='flex' justifyContent='space-between' width='100%'>
-                    {`${new Date(values.range[0]).toLocaleDateString('en-GB', {
-                      day: 'numeric',
-                      month: 'numeric',
-                    })} - ${new Date(values.range[1]).toLocaleDateString('en-GB', {
-                      day: 'numeric',
-                      month: 'numeric',
-                    })}`}
-                    {console.log("filters", filters)}
-                    {console.log("values", values)}
-                    <Typography sx={{ fontWeight: "bold" }}>
-                      Cambiár fechas
-                    </Typography>
-                  </Box>
-                </AccordionSummary>}
-                <AccordionDetails>
-                  <Typography variant='h3'>¿Cúando vas?</Typography>
-                  <Controller
-                    name="range"
-                    control={control}
-                    onChange={() => setExpanded(false)}
-                    render={({ field }) => (
-                      <StaticDateRangePicker
-                        showToolbar={false}
-                        {...field}
-                        disablePast
-                        calendars={1}
-                        defaultValue={[dayjs("2022-04-17"), dayjs("2022-04-21")]}
-                        renderInput={(startProps, endProps) => (
-                          <Box display="flex" alignItems="center">
-                            <TextField
-                              {...startProps}
-                              label={translate("landingPRO.start_date")}
-                              placeholder={translate("landingPRO.start_date")}
-                            />
-                            <Box sx={{ mx: 2 }}> - </Box>
-                            <TextField
-                              {...endProps}
-                              label={translate("landingPRO.end_date")}
-                              placeholder={translate("landingPRO.start_date")}
-                            />
+                    </AccordionSummary>
+                  }
+                  {!expandedResort && values.resort &&
+                    <AccordionSummary sx={{
+                      borderRadius: 10
+                    }}>
+                      <Box display='flex' justifyContent='space-between' width='100%'>
+                        <Typography>{values.resort}</Typography>
+                        <Typography sx={{ fontWeight: "bold" }}>
+                          Cambiar Montaña
+                        </Typography>
+                      </Box>
+                    </AccordionSummary>
+                  }
+                  <AccordionDetails>
+                    <Typography variant='h3' mb={2}>¿A dónde vas?</Typography>
+                    <RHFSelect name="resort" label={translate("filter.resort")} placeholder="Resort">
+                      <option value="" />
+                      {FILTER_RESORT_OPTIONS.map((country) => (
+                        <optgroup key={country.category} label={country.category}>
+                          {country.resorts.sort().map((r) => (
+                            <option key={r} value={r}>
+                              {r}
+                            </option>
+                          ))}
+                        </optgroup>
+                      ))}
+                    </RHFSelect>
+                    <Box display="flex" gap={2} mt={2} overflow="auto" sx={{ scrollbarWidth: "none", "&::-webkit-scrollbar": { display: "none" } }}>
+                      {[{title:"Catedral", value:"Cerro Catedral"}, {title:"Chapelco", value:"Chapelco"}, {title:"Bayo", value:"Cerro Bayo"}, {title:"La Hoya", value:"La Hoya"}].map((resort) => (
+                        <Box
+                          key={resort}
+                          onClick={() => setValue("resort", resort.value)} // Assuming `setValue` is from react-hook-form
+                          sx={{
+                            minWidth: 100,
+                            height: 100,
+                            borderRadius: 2,
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            backgroundColor: "#F7F7F7",
+                            cursor: "pointer",
+                            fontWeight: "bold",
+                            boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
+                            "&:hover": { backgroundColor: "#EAEAEA" },
+                          }}
+                        >
+                          {resort.title}
+                        </Box>
+                      ))}
+                    </Box>
+                  </AccordionDetails>
+                </Accordion>
+                <Accordion
+                  expanded={expandedDates}
+                  onChange={() => setExpandedDates(!expanded)}
+                  sx={{ borderRadius: 1, my: 2, "&::before": { display: "none", width: '100%' } }}
+                >
+                  {!expandedDates && !values.range && <AccordionSummary>
+                    <Box display='flex' justifyContent='space-between' width='100%'>
+                      <Typography>
+                        Fecha
+                      </Typography>
+                      {console.log("filters", filters)}
+                      {console.log("values", values)}
+                      <Typography sx={{ fontWeight: "bold" }}>
+                        Agregar fechas
+                      </Typography>
+                    </Box>
+                  </AccordionSummary>}
+                  {!expandedDates && values.range && <AccordionSummary>
+                    <Box display='flex' justifyContent='space-between' width='100%'>
+                      {`${new Date(values.range[0]).toLocaleDateString('en-GB', {
+                        day: 'numeric',
+                        month: 'numeric',
+                      })} - ${new Date(values.range[1]).toLocaleDateString('en-GB', {
+                        day: 'numeric',
+                        month: 'numeric',
+                      })}`}
+                      {console.log("filters", filters)}
+                      {console.log("values", values)}
+                      <Typography sx={{ fontWeight: "bold" }}>
+                        Cambiár fechas
+                      </Typography>
+                    </Box>
+                  </AccordionSummary>}
+                  <AccordionDetails>
+                    <Typography variant='h3'>¿Cúando vas?</Typography>
+                    <Controller
+                      name="range"
+                      control={control}
+                      onChange={() => setExpanded(false)}
+                      render={({ field }) => (
+                        <StaticDateRangePicker
+                          showToolbar={false}
+                          {...field}
+                          disablePast
+                          calendars={1}
+                          defaultValue={[dayjs("2022-04-17"), dayjs("2022-04-21")]}
+                          renderInput={(startProps, endProps) => (
+                            <Box display="flex" alignItems="center">
+                              <TextField
+                                {...startProps}
+                                label={translate("landingPRO.start_date")}
+                                placeholder={translate("landingPRO.start_date")}
+                              />
+                              <Box sx={{ mx: 2 }}> - </Box>
+                              <TextField
+                                {...endProps}
+                                label={translate("landingPRO.end_date")}
+                                placeholder={translate("landingPRO.start_date")}
+                              />
+                            </Box>
+                          )}
+                        />
+                      )}
+                    />
+                  </AccordionDetails>
+                </Accordion>
+                <Accordion expanded={expandedDiscipline}
+                  onChange={() => setExpandedDiscipline(!expanded)} sx={{ borderRadius: 1, my: 2, width: "100%", "&::before": { display: "none" } }}>
+                  {!expandedDiscipline && values?.category?.length === 0 && <AccordionSummary >
+
+                    <Box display='flex' justifyContent='space-between' width='100%'>
+                      <Typography>
+                        Disciplina
+                      </Typography>
+                      {filters.discipline?.length === 0 &&
+                        <Typography sx={{ fontWeight: "bold" }}>
+                          Seleccionar
+                        </Typography>}
+                      {values.discipline?.length != 0 &&
+                        <Typography sx={{ fontWeight: "bold" }}>
+                          {filters.discipline[0]}
+                        </Typography>}
+                    </Box>
+                  </AccordionSummary>}
+                  {!expandedDiscipline && values?.category?.length != 0 && <AccordionSummary >
+
+                    <Box display='flex' justifyContent='space-between' width='100%'>
+                      <Typography>
+                        {values?.category[0]}
+                      </Typography>
+                      {filters.discipline?.length === 0 &&
+                        <Typography sx={{ fontWeight: "bold", textAlign:"right", width:"100%" }}>
+                          Cambiar
+                        </Typography>}
+                      {values.discipline?.length != 0 &&
+                        <Typography sx={{ fontWeight: "bold" }}>
+                          {filters.discipline[0]}
+                        </Typography>}
+                    </Box>
+                  </AccordionSummary>}
+                  <AccordionDetails>
+                    <Typography variant='h3'>¿Qué vas a hacer?</Typography>
+                    <RHFMultiCheckbox fullWidth name="category" options={FILTER_CATEGORY_OPTIONS} />
+                  </AccordionDetails>
+                </Accordion>
+
+
+                {/* <Box sx={{ my: 2 }}>
+                <Typography variant="subtitle1">Desired Teacher</Typography>
+                <Autocomplete
+                  size="medium"
+                  style={{
+                    border: 'none'
+                  }}
+                  fullWidth
+                  onClick={handleOpenDrawer}
+                  popupIcon={null}
+                  options={searchResults}
+                  onInputChange={(event, value) => handleChangeSearch(value)}
+                  getOptionLabel={(product) => product.name + " " + product.lastname}
+                  noOptionsText={<SearchNotFound searchQuery={searchQuery} />}
+                  isOptionEqualToValue={(option, value) => option.id === value.id}
+                  renderInput={(params) => (
+                    <TextField {...params} placeholder={translate('general.search')} fullWidth sx={{
+                    }} />
+                  )}
+                  renderOption={(props, product, { inputValue }) => {
+                    const { name, lastname, email, imageLink, id } = product;
+                    const matches = match(name + " " + lastname, inputValue);
+                    const parts = parse(name + " " + lastname, matches);
+
+                    return (
+                      <li {...props} onClick={() => handleClick(id)}>
+                        <Image alt={name} src={imageLink} sx={{ width: 48, height: 48, borderRadius: 1, flexShrink: 0, mr: 1.5 }} />
+                        <Link underline="none" onClick={() => handleClick(id)}>
+                          {parts.map((part, index) => (
+                            <Typography
+                              key={index}
+                              component="span"
+                              variant="subtitle2"
+                              color={part.highlight ? 'primary' : 'textPrimary'}
+                            >
+                              {part.text}
+                            </Typography>
+                          ))}
+                        </Link>
+                      </li>
+                    );
+                  }}
+                />
+              </Box> */}
+              </Box>
+
+              <Box display='flex' justifyContent='space-between'>
+                <Button onClick={handleCloseDrawer}>Borrar todo</Button>
+                {(expandedDates || expandedResort) && <HoverButton onClick={handleNext} variant="contained" size="large" startIcon={<Iconify icon={'eva:flash-fill'} width={20} height={20} />}>
+                  Next
+                </HoverButton>}
+                {(!expandedDates && !expandedResort) && <Button type='submit' onClick={onSubmit} variant="contained" size="large" startIcon={<Iconify icon={'eva:flash-fill'} width={20} height={20} />}>
+                  {translate("landingPRO.search")}
+                </Button>}
+              </Box>
+            </Box>
+          </Drawer>
+        ) : (
+          <Modal
+            open={isDrawerOpen}
+            onClose={handleCloseDrawer}
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <Box
+              sx={{
+                width: '90%',
+                maxWidth: 600,
+                maxHeight: '90vh',
+                overflow: 'auto',
+                bgcolor: '#F7F7F7',
+                borderRadius: 2,
+                boxShadow: '0px 4px 20px rgba(0, 0, 0, 0.2)',
+                p: 3,
+                position: 'relative',
+              }}
+            >
+              <Box display='flex' flexDirection='column' justifyContent='space-between' height='100%'>
+                <Box width='100%'>
+                  <Accordion
+                    expanded={expandedResort}
+                    onChange={() => setExpandedResort(!expanded)}
+                    sx={{ borderRadius: 1, my: 2, width: "100%", "&::before": { display: "none" } }}>
+                    {!expandedResort && !values.resort &&
+                      <AccordionSummary sx={{
+                        borderRadius: 10
+                      }}>
+                        <Box display='flex' justifyContent='space-between' width='100%'>
+                          <Typography>{translate("filter.resort")}</Typography>
+                          <Typography sx={{ fontWeight: "bold" }}>
+                            Seleccionar montaña
+                          </Typography>
+                        </Box>
+                      </AccordionSummary>
+                    }
+                    {!expandedResort && values.resort &&
+                      <AccordionSummary sx={{
+                        borderRadius: 10
+                      }}>
+                        <Box display='flex' justifyContent='space-between' width='100%'>
+                          <Typography>{values.resort}</Typography>
+                          <Typography sx={{ fontWeight: "bold" }}>
+                            Cambiar Montaña
+                          </Typography>
+                        </Box>
+                      </AccordionSummary>
+                    }
+                    <AccordionDetails>
+                      <Typography variant='h3' mb={2}>¿A dónde vas?</Typography>
+                      <RHFSelect name="resort" label={translate("filter.resort")} placeholder="Resort">
+                        <option value="" />
+                        {FILTER_RESORT_OPTIONS.map((country) => (
+                          <optgroup key={country.category} label={country.category}>
+                            {country.resorts.sort().map((r) => (
+                              <option key={r} value={r}>
+                                {r}
+                              </option>
+                            ))}
+                          </optgroup>
+                        ))}
+                      </RHFSelect>
+                      <Box display="flex" gap={2} mt={2} overflow="auto" sx={{ scrollbarWidth: "none", "&::-webkit-scrollbar": { display: "none" } }}>
+                        {[{title:"Catedral", value:"Cerro Catedral"}, {title:"Chapelco", value:"Chapelco"}, {title:"Bayo", value:"Cerro Bayo"}, {title:"La Hoya", value:"La Hoya"}].map((resort) => (
+                          <Box
+                            key={resort}
+                            onClick={() => setValue("resort", resort.value)} // Assuming `setValue` is from react-hook-form
+                            sx={{
+                              minWidth: 100,
+                              height: 100,
+                              borderRadius: 2,
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                              backgroundColor: "#F7F7F7",
+                              cursor: "pointer",
+                              fontWeight: "bold",
+                              boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
+                              "&:hover": { backgroundColor: "#EAEAEA" },
+                            }}
+                          >
+                            {resort.title}
                           </Box>
+                        ))}
+                      </Box>
+                    </AccordionDetails>
+                  </Accordion>
+                  <Accordion
+                    expanded={expandedDates}
+                    onChange={() => setExpandedDates(!expanded)}
+                    sx={{ borderRadius: 1, my: 2, "&::before": { display: "none", width: '100%' } }}
+                  >
+                    {!expandedDates && !values.range && <AccordionSummary>
+                      <Box display='flex' justifyContent='space-between' width='100%'>
+                        <Typography>
+                          Fecha
+                        </Typography>
+                        {console.log("filters", filters)}
+                        {console.log("values", values)}
+                        <Typography sx={{ fontWeight: "bold" }}>
+                          Agregar fechas
+                        </Typography>
+                      </Box>
+                    </AccordionSummary>}
+                    {!expandedDates && values.range && <AccordionSummary>
+                      <Box display='flex' justifyContent='space-between' width='100%'>
+                        {`${new Date(values.range[0]).toLocaleDateString('en-GB', {
+                          day: 'numeric',
+                          month: 'numeric',
+                        })} - ${new Date(values.range[1]).toLocaleDateString('en-GB', {
+                          day: 'numeric',
+                          month: 'numeric',
+                        })}`}
+                        {console.log("filters", filters)}
+                        {console.log("values", values)}
+                        <Typography sx={{ fontWeight: "bold" }}>
+                          Cambiár fechas
+                        </Typography>
+                      </Box>
+                    </AccordionSummary>}
+                    <AccordionDetails>
+                      <Typography variant='h3'>¿Cúando vas?</Typography>
+                      <Controller
+                        name="range"
+                        control={control}
+                        onChange={() => setExpanded(false)}
+                        render={({ field }) => (
+                          <StaticDateRangePicker
+                            showToolbar={false}
+                            {...field}
+                            disablePast
+                            calendars={1}
+                            defaultValue={[dayjs("2022-04-17"), dayjs("2022-04-21")]}
+                            renderInput={(startProps, endProps) => (
+                              <Box display="flex" alignItems="center">
+                                <TextField
+                                  {...startProps}
+                                  label={translate("landingPRO.start_date")}
+                                  placeholder={translate("landingPRO.start_date")}
+                                />
+                                <Box sx={{ mx: 2 }}> - </Box>
+                                <TextField
+                                  {...endProps}
+                                  label={translate("landingPRO.end_date")}
+                                  placeholder={translate("landingPRO.start_date")}
+                                />
+                              </Box>
+                            )}
+                          />
                         )}
                       />
+                    </AccordionDetails>
+                  </Accordion>
+                  <Accordion expanded={expandedDiscipline}
+                    onChange={() => setExpandedDiscipline(!expanded)} sx={{ borderRadius: 1, my: 2, width: "100%", "&::before": { display: "none" } }}>
+                    {!expandedDiscipline && values?.category?.length === 0 && <AccordionSummary >
+
+                      <Box display='flex' justifyContent='space-between' width='100%'>
+                        <Typography>
+                          Disciplina
+                        </Typography>
+                        {filters.discipline?.length === 0 &&
+                          <Typography sx={{ fontWeight: "bold" }}>
+                            Seleccionar
+                          </Typography>}
+                        {values.discipline?.length != 0 &&
+                          <Typography sx={{ fontWeight: "bold" }}>
+                            {filters.discipline[0]}
+                          </Typography>}
+                      </Box>
+                    </AccordionSummary>}
+                    {!expandedDiscipline && values?.category?.length != 0 && <AccordionSummary >
+
+                      <Box display='flex' justifyContent='space-between' width='100%'>
+                        <Typography>
+                          {values?.category[0]}
+                        </Typography>
+                        {filters.discipline?.length === 0 &&
+                          <Typography sx={{ fontWeight: "bold", textAlign:"right", width:"100%" }}>
+                            Cambiar
+                          </Typography>}
+                        {values.discipline?.length != 0 &&
+                          <Typography sx={{ fontWeight: "bold" }}>
+                            {filters.discipline[0]}
+                          </Typography>}
+                      </Box>
+                    </AccordionSummary>}
+                    <AccordionDetails>
+                      <Typography variant='h3'>¿Qué vas a hacer?</Typography>
+                      <RHFMultiCheckbox fullWidth name="category" options={FILTER_CATEGORY_OPTIONS} />
+                    </AccordionDetails>
+                  </Accordion>
+
+
+                  {/* <Box sx={{ my: 2 }}>
+                  <Typography variant="subtitle1">Desired Teacher</Typography>
+                  <Autocomplete
+                    size="medium"
+                    style={{
+                      border: 'none'
+                    }}
+                    fullWidth
+                    onClick={handleOpenDrawer}
+                    popupIcon={null}
+                    options={searchResults}
+                    onInputChange={(event, value) => handleChangeSearch(value)}
+                    getOptionLabel={(product) => product.name + " " + product.lastname}
+                    noOptionsText={<SearchNotFound searchQuery={searchQuery} />}
+                    isOptionEqualToValue={(option, value) => option.id === value.id}
+                    renderInput={(params) => (
+                      <TextField {...params} placeholder={translate('general.search')} fullWidth sx={{
+                      }} />
                     )}
+                    renderOption={(props, product, { inputValue }) => {
+                      const { name, lastname, email, imageLink, id } = product;
+                      const matches = match(name + " " + lastname, inputValue);
+                      const parts = parse(name + " " + lastname, matches);
+
+                      return (
+                        <li {...props} onClick={() => handleClick(id)}>
+                          <Image alt={name} src={imageLink} sx={{ width: 48, height: 48, borderRadius: 1, flexShrink: 0, mr: 1.5 }} />
+                          <Link underline="none" onClick={() => handleClick(id)}>
+                            {parts.map((part, index) => (
+                              <Typography
+                                key={index}
+                                component="span"
+                                variant="subtitle2"
+                                color={part.highlight ? 'primary' : 'textPrimary'}
+                              >
+                                {part.text}
+                              </Typography>
+                            ))}
+                          </Link>
+                        </li>
+                      );
+                    }}
                   />
-                </AccordionDetails>
-              </Accordion>
-              <Accordion expanded={expandedDiscipline}
-                onChange={() => setExpandedDiscipline(!expanded)} sx={{ borderRadius: 1, my: 2, width: "100%", "&::before": { display: "none" } }}>
-                {!expandedDiscipline && values?.category?.length === 0 && <AccordionSummary >
+                </Box> */}
+                </Box>
 
-                  <Box display='flex' justifyContent='space-between' width='100%'>
-                    <Typography>
-                      Disciplina
-                    </Typography>
-                    {filters.discipline?.length === 0 &&
-                      <Typography sx={{ fontWeight: "bold" }}>
-                        Seleccionar
-                      </Typography>}
-                    {values.discipline?.length != 0 &&
-                      <Typography sx={{ fontWeight: "bold" }}>
-                        {filters.discipline[0]}
-                      </Typography>}
-                  </Box>
-                </AccordionSummary>}
-                {!expandedDiscipline && values?.category?.length != 0 && <AccordionSummary >
-
-                  <Box display='flex' justifyContent='space-between' width='100%'>
-                    <Typography>
-                      {values?.category[0]}
-                    </Typography>
-                    {filters.discipline?.length === 0 &&
-                      <Typography sx={{ fontWeight: "bold", textAlign:"right", width:"100%" }}>
-                        Cambiar
-                      </Typography>}
-                    {values.discipline?.length != 0 &&
-                      <Typography sx={{ fontWeight: "bold" }}>
-                        {filters.discipline[0]}
-                      </Typography>}
-                  </Box>
-                </AccordionSummary>}
-                <AccordionDetails>
-                  <Typography variant='h3'>¿Qué vas a hacer?</Typography>
-                  <RHFMultiCheckbox fullWidth name="category" options={FILTER_CATEGORY_OPTIONS} />
-                </AccordionDetails>
-              </Accordion>
-
-
-              {/* <Box sx={{ my: 2 }}>
-              <Typography variant="subtitle1">Desired Teacher</Typography>
-              <Autocomplete
-                size="medium"
-                style={{
-                  border: 'none'
-                }}
-                fullWidth
-                onClick={handleOpenDrawer}
-                popupIcon={null}
-                options={searchResults}
-                onInputChange={(event, value) => handleChangeSearch(value)}
-                getOptionLabel={(product) => product.name + " " + product.lastname}
-                noOptionsText={<SearchNotFound searchQuery={searchQuery} />}
-                isOptionEqualToValue={(option, value) => option.id === value.id}
-                renderInput={(params) => (
-                  <TextField {...params} placeholder={translate('general.search')} fullWidth sx={{
-                  }} />
-                )}
-                renderOption={(props, product, { inputValue }) => {
-                  const { name, lastname, email, imageLink, id } = product;
-                  const matches = match(name + " " + lastname, inputValue);
-                  const parts = parse(name + " " + lastname, matches);
-
-                  return (
-                    <li {...props} onClick={() => handleClick(id)}>
-                      <Image alt={name} src={imageLink} sx={{ width: 48, height: 48, borderRadius: 1, flexShrink: 0, mr: 1.5 }} />
-                      <Link underline="none" onClick={() => handleClick(id)}>
-                        {parts.map((part, index) => (
-                          <Typography
-                            key={index}
-                            component="span"
-                            variant="subtitle2"
-                            color={part.highlight ? 'primary' : 'textPrimary'}
-                          >
-                            {part.text}
-                          </Typography>
-                        ))}
-                      </Link>
-                    </li>
-                  );
-                }}
-              />
-            </Box> */}
+                <Box display='flex' justifyContent='space-between' mt={2}>
+                  <Button onClick={handleCloseDrawer}>Borrar todo</Button>
+                  {(expandedDates || expandedResort) && (
+                    <HoverButton onClick={handleNext} variant="contained" size="large" startIcon={<Iconify icon={'eva:flash-fill'} width={20} height={20} />}>
+                      Next
+                    </HoverButton>
+                  )}
+                  {(!expandedDates && !expandedResort) && (
+                    <Button type='submit' onClick={onSubmit} variant="contained" size="large" startIcon={<Iconify icon={'eva:flash-fill'} width={20} height={20} />}>
+                      {translate("landingPRO.search")}
+                    </Button>
+                  )}
+                </Box>
+              </Box>
             </Box>
-
-            <Box display='flex' justifyContent='space-between'>
-              <Button onClick={handleCloseDrawer}>Borrar todo</Button>
-              {(expandedDates || expandedResort) && <HoverButton onClick={handleNext} variant="contained" size="large" startIcon={<Iconify icon={'eva:flash-fill'} width={20} height={20} />}>
-                Next
-              </HoverButton>}
-              {(!expandedDates && !expandedResort) && <Button type='submit' onClick={onSubmit} variant="contained" size="large" startIcon={<Iconify icon={'eva:flash-fill'} width={20} height={20} />}>
-                {translate("landingPRO.search")}
-              </Button>}
-            </Box>
-          </Box>
-        </Drawer>
+          </Modal>
+        )}
       </FormProvider>
     </>
 

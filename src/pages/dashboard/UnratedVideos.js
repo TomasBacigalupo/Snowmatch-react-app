@@ -128,7 +128,6 @@ export default function UnratedVideos() {
       {/* New Header Section */}
       <Box sx={{ 
         textAlign: 'center', 
-        mb: 6, 
         pt: 4,
         pb: 3,
         borderBottom: '1px solid #eee'
@@ -165,31 +164,53 @@ export default function UnratedVideos() {
       {/* Improved Video Grid */}
       <Box sx={{ 
         display: 'grid', 
-        gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
+        gridTemplateColumns: {
+          xs: '1fr',
+          sm: 'repeat(2, 1fr)',
+          md: 'repeat(3, 1fr)',
+          lg: 'repeat(4, 1fr)'
+        },
         gap: 3,
-        mb: 4 
+        bgcolor: 'grey.50',
+        pb: 3,
+        px: 0,
       }}>
         {videosToReview?.map((video) => (
           <Paper
             key={video.id}
-            elevation={2}
+            elevation={0}
             sx={{
               position: 'relative',
-              borderRadius: 2,
               overflow: 'hidden',
-              transition: 'transform 0.2s, box-shadow 0.2s',
-              '&:hover': {
-                transform: 'translateY(-4px)',
-                boxShadow: 4,
-              }
+              bgcolor: 'background.paper',
             }}
           >
+            {/* Video Header with User Info */}
+            <Box sx={{ 
+              p: 1.5, 
+              display: 'flex', 
+              alignItems: 'center', 
+              gap: 1,
+              borderBottom: '1px solid',
+              borderColor: 'divider'
+            }}>
+              <Avatar 
+                src={video.user.avatar} 
+                alt={video.user.name}
+                sx={{ width: 32, height: 32 }}
+              />
+              <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
+                {video.user.name}
+              </Typography>
+            </Box>
+
+            {/* Video Container */}
             <Box sx={{ position: 'relative' }}>
               <video
                 src={`${process.env.REACT_APP_VIDEO_BUCKET_URL}/${video.videoUrl}`}
                 style={{
                   width: '100%',
-                  height: '200px',
+                  height: '300px',
                   objectFit: 'cover',
                 }}
                 autoPlay
@@ -200,41 +221,61 @@ export default function UnratedVideos() {
               />
               <Box sx={{
                 position: 'absolute',
-                bottom: 0,
-                left: 0,
-                right: 0,
-                background: 'linear-gradient(transparent, rgba(0,0,0,0.7))',
-                p: 2,
-                color: 'white'
+                bottom: 8,
+                left: 8,
+                display: 'flex',
+                alignItems: 'center',
+                gap: 2
               }}>
-                <Typography variant="subtitle1" fontWeight="bold">
-                  {video.course}
-                </Typography>
-                <Typography variant="body2">
-                  {translate('unratedVideos.by')} {video.user.name}
-                </Typography>
+                {video.skillLevel && (
+                  <Typography variant="caption" sx={{ 
+                    color: 'white', 
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    gap: 0.5,
+                    textShadow: '0 1px 2px rgba(0,0,0,0.5)'
+                  }}>
+                    {video.skillLevel}
+                  </Typography>
+                )}
+                {video.duration && (
+                  <Typography variant="caption" sx={{ 
+                    color: 'white', 
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    gap: 0.5,
+                    textShadow: '0 1px 2px rgba(0,0,0,0.5)'
+                  }}>
+                    {video.duration}
+                  </Typography>
+                )}
               </Box>
             </Box>
             
-            <Box sx={{ p: 2 }}>
-              <Typography variant="body2" color="text.secondary" gutterBottom>
-                {translate('unratedVideos.skillLevel')}: {video.skillLevel || translate('unratedVideos.intermediate')}
-              </Typography>
-              <Typography variant="body2" color="text.secondary" gutterBottom>
-                {translate('unratedVideos.duration')}: {video.duration || '2:30'}
-              </Typography>
-              
+            {/* Action Buttons */}
+            <Box sx={{ 
+              p: 1.5,
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 1
+            }}>
               <Button 
                 fullWidth 
-                variant="contained" 
-                color="primary" 
+                variant="outlined" 
                 onClick={() => handleRate(video)}
                 sx={{ 
-                  mt: 2,
                   textTransform: 'none',
-                  fontWeight: 600
+                  fontWeight: 500,
+                  borderRadius: 2,
+                  py: 1,
+                  borderColor: 'rgba(0, 0, 0, 0.12)',
+                  color: 'text.primary',
+                  '&:hover': {
+                    backgroundColor: 'rgba(0, 0, 0, 0.04)',
+                    borderColor: 'rgba(0, 0, 0, 0.24)',
+                  }
                 }}
-                startIcon={<RateReview />}
+                startIcon={<RateReview sx={{ color: 'text.secondary' }} />}
               >
                 {translate('unratedVideos.provideFeedback')}
               </Button>

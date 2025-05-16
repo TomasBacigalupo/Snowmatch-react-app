@@ -155,6 +155,9 @@ export default function ExcerciseBottomSheet({ open, onClose, onOpen, course, de
         setVideoDuration(0);
         setVideoCourse('');
         setActiveStep(0);
+        setOpenWelcome(false);
+        setLoadingCompresor(false);
+        setProgress(0);
     };
 
     useEffect(() => {
@@ -165,6 +168,7 @@ export default function ExcerciseBottomSheet({ open, onClose, onOpen, course, de
 
     useEffect(() => {
         if (!open) {
+            resetUploadState();
             dispatch(clearUploadVideoState());
         }
     }, [open]);

@@ -59,7 +59,8 @@ const initialState = {
   totalClients: 0,
   conversations: [],
   loadingRate: false,
-  dollar: 420
+  dollar: 420,
+  isLoadingLoadMore: false
 };
 
 const slice = createSlice({
@@ -104,6 +105,11 @@ const slice = createSlice({
       state.isLoading = true;
     },
 
+    // START LOADING LOAD MORE
+    startLoadingLoadMore(state) {
+      state.isLoadingLoadMore = true;
+    },
+
     // HAS ERROR
     hasError(state, action) {
       state.isLoading = false;
@@ -122,6 +128,11 @@ const slice = createSlice({
       state.teachers = action.payload;
     },
 
+    //Load more teachers success
+    loadMoreTeachersSuccess(state, action) {
+      state.isLoadingLoadMore = false;
+      state.teachers = [...state.teachers, ...action.payload];
+    },
     // GET TEACHERS WITH EVENTS
     getTeachersWithEventsSuccess(state, action) {
       state.isLoading = false;
@@ -437,6 +448,24 @@ export function getFreeTeachers(startDate, endDate, resort, page, size = 20) {
       })).sort((a, b) => b.stars - a.stars);
 
       dispatch(slice.actions.getTeachersSuccess(teachers));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+export function loadMoreFreeTeachers(startDate, endDate, resort, page, size = 20) {
+  return async () => {
+    dispatch(slice.actions.startLoadingLoadMore());
+    try {
+      const response = await axios.get(`/api/users/free_teachers?
+        level=2&startDate=${startDate.toISOString().split(".")[0]}&endDate=${endDate.toISOString().split(".")[0]}&resort=${resort}&page=${page}&size=${size}`);
+      const teachers = response.data.map(t => ({
+        ...t,
+        stars: t.stars ? t.stars : 0
+      })).sort((a, b) => b.stars - a.stars);
+
+      dispatch(slice.actions.loadMoreTeachersSuccess(teachers));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }

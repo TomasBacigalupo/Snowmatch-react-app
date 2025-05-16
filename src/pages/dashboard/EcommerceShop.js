@@ -6,7 +6,7 @@ import { useForm } from 'react-hook-form';
 import { Container, Typography, Stack, Drawer, Button, Box } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
-import { getTeachers, filterTeachers, getTeachersWithEvents, resetFilters, getFreeTeachers } from '../../redux/slices/teachers';
+import { getTeachers, filterTeachers, getTeachersWithEvents, resetFilters, getFreeTeachers, loadMoreFreeTeachers } from '../../redux/slices/teachers';
 
 // routes
 import { PATH_DASHBOARD, PATH_GUEST } from '../../routes/paths';
@@ -37,6 +37,7 @@ import ShopStandardProducts from 'src/sections/@dashboard/e-commerce/shop/ShopSt
 import AirbnbFilters from 'src/sections/@dashboard/e-commerce/shop/AirbnbFilters';
 import { openCatedral } from 'src/services/facebook';
 import { Helmet } from 'react-helmet-async';
+import { LoadingButton } from '@mui/lab';
 // ----------------------------------------------------------------------
 
 function useQuery() {
@@ -55,8 +56,9 @@ export default function EcommerceShop({ isGuest = false, teacherType = "school" 
   const isTeacher = user?.role === "TEACHER"
   const query = useQuery()
   const [openFilter, setOpenFilter] = useState(false);
+  const [page, setPage] = useState(0);
 
-  const { teachers, sortBy, filters, teachersWithEvents, category, isLoading } = useSelector((state) => { return state.teachers })
+  const { teachers, sortBy, filters, teachersWithEvents, category, isLoading, isLoadingLoadMore } = useSelector((state) => { return state.teachers })
 
   useEffect(() => {
     // dispatch(getFreeTeachers
@@ -164,6 +166,10 @@ export default function EcommerceShop({ isGuest = false, teacherType = "school" 
     }
   }, [teacherType]);
 
+  const handleLoadMore = () => {
+    dispatch(loadMoreFreeTeachers(filters.from, filters.to, filters.resort, page + 1));
+    setPage(page + 1);
+  }
 
   return (
     <Page title="Match">
@@ -241,6 +247,23 @@ export default function EcommerceShop({ isGuest = false, teacherType = "school" 
         {teacherType === "independent" && category === "standard" && <ShopStandardProducts teachers={filteredTeachers} loading={isLoading} />}
         {teacherType === "independent" && category === "premium" && <ShopTeacherList teachers={filteredTeachers} loading={isLoading} />}
         {teacherType === "school" && <ShopTeacherList teachers={filteredTeachers} loading={!filteredTeachers.length && isDefault} />}
+        
+        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
+          <LoadingButton
+            loading={isLoadingLoadMore}
+            onClick={handleLoadMore}
+            variant="contained"
+            sx={{
+              bgcolor: 'black',
+              color: 'white',
+              '&:hover': {
+                bgcolor: 'grey.800',
+              },
+            }}
+          >
+            {translate('general.loadMore')}
+          </LoadingButton>
+        </Box>
       </Container>
       <><br /></>
 

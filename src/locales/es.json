@@ -34,6 +34,7 @@
         }
     },
     "general": {
+        "loadMore": "Cargar más",
         "startSearch": "Empezá tu busqueda",
         "cancel": "Cancelar",
         "AVAILABLE": "Disponible",
@@ -1580,7 +1581,7 @@
         "subtitle": "Ayuda a mejorar la educación del esquí revisando las técnicas de los estudiantes. ¡Tu experiencia hace la diferencia!",
         "stats": {
             "videosReviewed": "Videos Revisados",
-            "pendingReviews": "Revisiones con me gusta",
+            "pendingReviews": "Revisiones pendientes",
             "yourRank": "Tu Rango"
         },
         "by": "Por",

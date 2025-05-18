@@ -24,6 +24,8 @@ import { VideoLibrary, Upload, CalendarMonth, Help, EventAvailable, Star, Share,
 import { useNavigate } from 'react-router-dom';
 import { Share as CapacitorShare } from '@capacitor/share';
 import { getCommentedCount, getTotalHours } from 'src/redux/slices/video';
+import UserLessonsList from 'src/sections/@dashboard/user/list/UserLessonsList';
+import { getBookings } from 'src/redux/slices/bookings';
 
 
 // ----------------------------------------------------------------------
@@ -54,6 +56,7 @@ export default function GeneralApp() {
     dispatch(getConversations())
     dispatch(getCommentedCount())
     dispatch(getTotalHours())
+    dispatch(getBookings('ACCEPTED'))
   }, [])
 
   useEffect(() => {
@@ -107,6 +110,9 @@ export default function GeneralApp() {
     <Page title="General: App">
       <Container maxWidth={themeStretch ? false : 'xl'}>
         <Grid container spacing={2} mb={3}>
+          <Grid item xs={12}>
+            <UserLessonsList horizontal={true} />
+          </Grid>
           <Grid item xs={6}>
             <AppWidgetSummary
               isLoading={isCountLoading}

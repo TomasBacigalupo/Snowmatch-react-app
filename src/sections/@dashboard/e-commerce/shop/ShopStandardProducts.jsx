@@ -14,7 +14,7 @@ import { getProductsByBusinessId } from 'src/redux/slices/business';
 import ShopCategorizedProductCard from './ShopCategorizedProductCard';
 import { fCurrency } from 'src/utils/formatNumber';
 import { getFreeTeachers } from 'src/redux/slices/teachers';
-
+import ShopCategorizedProductAvatarCard from './ShopCategorizedProductAvatarCard';
 // ----------------------------------------------------------------------
 
 ShopStandardProducts.propTypes = {
@@ -54,27 +54,31 @@ export default function ShopStandardProducts({ loading }) {
             {loading && products && <SkeletonProductCategory />}
             {loading && products && <SkeletonProductCategory />}
             {loading && products && <SkeletonProductCategory />}
-            <Grid container spacing={3}>
-                <Grid item xs={12} md={6} lg={4}>{!loading && filters.resort === "Cerro Catedral" && <ShopCategorizedProductCard
-                    product={products.find(product => product.id === 143)}
-                    level='gold'
+            {!loading && filters.resort === "Cerro Catedral" && <Grid container spacing={3}>
+                <Grid item xs={12} md={6} lg={4}>{!loading && filters.resort === "Cerro Catedral" &&
+                    <ShopCategorizedProductCard
+                        product={products.find(product => product.id === 143)}
+                        level='gold'
+                    />}
+                </Grid>
+                <Grid item xs={12} md={6} lg={4}>{!loading && filters.resort === "Cerro Catedral" && <ShopCategorizedProductAvatarCard
+                    product={products.find(product => product.id === 144)}
+                    level='silver'
+                    avatar='/assets/avatars/chona-con-adulto.png'
                 />}
                 </Grid>
-                <Grid item xs={12} md={6} lg={4}>{!loading && filters.resort === "Cerro Catedral" && <ShopCategorizedProductCard
-                    product={products.find(product => product.id === 144)}
-                    level='silver' />}
-                </Grid>
-                <Grid item xs={12} md={6} lg={4}> {!loading && filters.resort === "Cerro Catedral" && <ShopCategorizedProductCard
+                <Grid item xs={12} md={6} lg={4}> {!loading && filters.resort === "Cerro Catedral" && <ShopCategorizedProductAvatarCard
                     product={products.find(product => product.id === 145)}
                     level='bronze'
+                    avatar='/assets/avatars/chona-con-niño.png'
                 />}
                 </Grid>
-            </Grid>
-
-
-
-
-
+                <Grid item xs={12}>
+                    <Typography variant='h6'>
+                        O elegí tu pro ideal
+                    </Typography>
+                </Grid>
+            </Grid>}
 
             <Box
                 sx={{

@@ -642,7 +642,7 @@
             "metaDescription": "Para alumnos con una o dos experiencias previas en la nieve. Aprendé a bajar pistas rojas y negras.",
             "descriptionPreview": "Corregí errores básicos y bajá pistas negras.",
             "title": "SnowMatchX | La mejor clase de esquí en Catedral",
-            "description": "La <b>clase de ski para intermedios</b> está orientada a aquellas personas que esquiaron al menos una o dos veces, es decir, que tienen una noción básica del deporte, pero que quieren seguir mejorando.<br/>Con esta clase <b>vas a corregir los típicos errores de principiantes,</b> como malas posturas y gestos erróneos. <b>Podrás dejar atrás las pistas azules, y pasar a las rojas y negras.</b>",
+            "description": "La <b>clase de ski privada</b> está orientada a aquellas personas que quieren aprovechar al maximo su instructor, desde los que nunca esquiaron hasta los que quieren seguir mejorando.<br/>Con esta clase <b>vas a corregir los típicos errores de principiantes,</b> como malas posturas y gestos erróneos. <b>Podrás dejar atrás las pistas azules, y pasar a las rojas,</b> como también <b>salír por primera vez a las pistas</b> o <b>dominar las pistas negras</b>.",
             "skiLevel": "Intermedios/Avanzados",
             "totalStudents": "Entre 1 y 5 personas",
             "meetingPoint": "Base Cerro Catedral",
@@ -743,7 +743,7 @@
                 }
             }
         },
-        "145": {
+        "148": {
             "metaTitle": "Clase de ski en Catedral para principiantes",
             "metaDescription": "Para alumnos sin experiencia previa en la nieve. Da los primeros pasos en el mundo del ski con esta clase.",
             "descriptionPreview": "Introducción al mundo del ski desde cero.",
@@ -884,7 +884,7 @@
                 }
             }
         },
-        "148": {
+        "145": {
             "metaTitle": "Clase de ski para niños",
             "metaDescription": "Para pequeños esquiadores de entre 4 y 12 años. Aprenderán a deslizarse por la nieve en un entorno recreativo y lúdico.",
             "descriptionPreview": "Los primeros pasos en la nieve. Niños de 4 a 12 años.",

@@ -876,32 +876,11 @@ export function calculatePrice(product, totalDays, time) {
 }
 
 export function calculateRequestedPrice(teacher, totalDays, time) {
-  const level = teacher.level;
-  let price = 0;
-  if (level === 1) {
-    price = 200000;
-  }
-  if (level === 2) {
-    price = 210000;
-  }
-  if (level === 3) {
-    price = 230000;
-  }
-  if (level === 4) {
-    price = 250000;
-  }
-  if (level === 5) {
-    price = 270000;
-  }
-  if (level === 0) {
-    price = 500;
-  }
-  let discountedPrice = price;
   if (time === 'FULL_DAY') {
-    return discountedPrice * 1.95;
+    return 610000;
   }
 
-  return discountedPrice;
+  return 320000;
 }
 
 export function getComissionByLevel(level, porcentage) {

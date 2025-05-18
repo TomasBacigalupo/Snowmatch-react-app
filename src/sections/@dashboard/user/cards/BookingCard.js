@@ -148,7 +148,7 @@ export default function BookingCard({ booking, showInfo = true }) {
 
     const handleCall = () => {
         //open phone app to user
-        if (isStudent) { 
+        if (isStudent) {
             const fullPhoneNumber = `${booking?.teacher?.countryCode}${booking?.teacher?.cellphone}`;
             window.open(`tel:+${fullTeacherPhoneNumber}`, '_blank');
         } else {
@@ -195,7 +195,6 @@ export default function BookingCard({ booking, showInfo = true }) {
                     <Button fullWidth variant="outlined" sx={{ mt: 2, py: 1, color: 'black', borderColor: 'black' }} onClick={handleCall}>
                         Llamar
                     </Button>
-                    <Typography variant='body2'>{booking?.teacher?.cellphone}</Typography>
                 </Box>}
                 {isAccepted && isStudent && !booking.rate && new Date(booking.eventList[0]?.start) < new Date() && <Box display='flex' flex={1} width='100%' flexDirection='column' flexGrow={1}>
                     <Button fullWidth variant="outlined" sx={{ mt: 2, py: 1, mr: 2, color: 'black', borderColor: 'black' }} onClick={() => setRateOpen(true)}>

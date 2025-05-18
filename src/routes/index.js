@@ -389,7 +389,7 @@ export default function Router() {
       element: <MainLayout />,
       children: [
         {
-          element: isMobile ? <Navigate to="/match/videoCoach/upload" replace /> : <Navigate to="/cerro--catedral" replace />,
+          element: isMobile ? <Navigate to="/match/videoCoach/upload" replace /> : <Navigate to="/cerro-catedral" replace />,
           index: true
         },
         { path: 'clases-de-ski-bariloche', element: <HomePageBariloche /> },

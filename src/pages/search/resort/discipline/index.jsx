@@ -3,7 +3,7 @@ import { styled } from '@mui/material/styles';
 // components
 // sections
 import useAuth from 'src/hooks/useAuth';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import HomeStats from 'src/sections/home/HomeStats';
 import HomePartners from 'src/sections/home/HomePartners';
 import HomeStatsHero from 'src/sections/home/HomeStatsHero';
@@ -16,8 +16,35 @@ import { useDispatch, useSelector } from 'src/redux/store';
 import { getFreeTeachers } from 'src/redux/slices/teachers';
 import useLocales from 'src/hooks/useLocales';
 import FaqsByContext from 'src/sections/home/FAQSByContext';
+import DownloadAppSection from 'src/sections/home/DounloawdAppSection';
 
 // ----------------------------------------------------------------------
+
+const RESORT_OPTIONS = [
+    { id: 'Cerro Catedral', slugs: ['cerro-catedral', 'catedral'] },
+    { id: 'Chapelco', slugs: ['cerro-chapelco', 'chapelco'] },
+    { id: 'La Hoya', slugs: ['cerro-la-hoya', 'la-hoya'] },
+    { id: 'Las Leñas', slugs: ['cerro-las-lenas', 'las-lenas'] },
+    { id: 'Caviahue', slugs: ['cerro-caviahue', 'caviahue'] },
+    { id: 'Cerro Bayo', slugs: ['cerro-bayo', 'bayo'] },
+    { id: 'Cerro Castor', slugs: ['cerro-castor', 'castor'] },
+    { id: 'Lago Hermoso', slugs: ['lago-hermoso', 'hermoso'] },
+    { id: 'Las Pendientes', slugs: ['las-pendientes', 'pendientes'] },
+    { id: 'Perito Moreno', slugs: ['perito-moreno', 'moreno'] },
+    { id: 'Aconcagua', slugs: ['aconcagua', 'concagua'] },
+    { id: 'Batea Mahuida', slugs: ['batea-mahuida', 'mahuida'] },
+    { id: 'Calafate Mountain Park', slugs: ['calafate-mountain-park', 'mountain-park'] },
+    { id: 'Vallecitos', slugs: ['vallecitos', 'vallecito'] },
+    { id: 'Monte Bianco', slugs: ['monte-bianco'] },
+    { id: 'Patagonia Heliski', slugs: ['patagonia-heliski', 'heliski'] },
+    { id: 'Los Penitentes', slugs: ['los-penitentes', 'penitentes'] },
+    { id: 'Los Puquios', slugs: ['los-puquios', 'puquios'] },
+    { id: 'Monte Fitz Roy', slugs: ['monte-fitz-roy', 'fitz-roy'] },
+    { id: 'Cerro Norris', slugs: ['cerro-norris', 'norris'] },
+    { id: 'Cerro Torre', slugs: ['cerro-torre', 'torre'] },
+    { id: 'Cerro Negro', slugs: ['cerro-negro', 'negro'] },
+    { id: 'Las Leñas', slugs: ['las-leñas', 'lenas'] },
+];
 
 const RootStyle = styled('div')(() => ({
     height: '100%',
@@ -32,7 +59,15 @@ const ContentStyle = styled('div')(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 export default function SearchPage() {
-    const { language } = useParams();
+    const { resort: resortSlug } = useParams();
+    const [resort, setResort] = useState(resortSlug);
+
+    useEffect(() => {
+        const resort = RESORT_OPTIONS.find(r => r.slugs.includes(resortSlug))
+        if (resort) {
+            setResort(resort.id)
+        }
+    }, [resortSlug])
 
     return (
         <Page title="Match a PRO">
@@ -115,6 +150,7 @@ export default function SearchPage() {
                 <ResortDisciplineHero />
                 <ContentStyle>
                     <HomeStatsHero />
+                    <DownloadAppSection resort={resort} />
                     <FaqsByContext />
                     <HomeAdvertisement />
                 </ContentStyle>

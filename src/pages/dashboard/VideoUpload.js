@@ -1,9 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Typography, Button, Box, useMediaQuery, Container, Grid, Card, CardContent, CardMedia, TextField, SvgIcon, ToggleButtonGroup, ToggleButton, CircularProgress, CardActions, Paper, IconButton } from '@mui/material';
+import { Typography, Button, Box, useMediaQuery, Container, Grid, Card, CardContent, CardMedia, TextField, SvgIcon, ToggleButtonGroup, ToggleButton, CircularProgress, CardActions, Paper, IconButton, Tab, Tabs } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { useTheme } from '@mui/material/styles';
 import Page from '../../components/Page';
 import useLocales from 'src/hooks/useLocales';
+import useTabs from 'src/hooks/useTabs';
 
 import VideoUploadBottomSheet from 'src/sections/@dashboard/video/VideoUploadBottomSheet';
 import { useDispatch, useSelector } from 'src/redux/store';
@@ -27,6 +28,8 @@ import StyledContainer from 'src/sections/@dashboard/video/StyledContainer';
 import VideoToggleView from 'src/sections/@dashboard/video/VideoToggleView';
 import SkiProgressBox from 'src/sections/@dashboard/video/SkiProgressBox';
 import MapLeaderboard from 'src/sections/@dashboard/general/app/MapLeaderboard';
+import UserLessonsList from 'src/sections/@dashboard/user/list/UserLessonsList';
+import { getBookings } from 'src/redux/slices/bookings';
 
 // ----------------------------------------------------------------------
 
@@ -68,8 +71,33 @@ const EmptyStateBox = styled(Box)(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
 }));
 
+const CustomTab = styled(Tab)(({ theme }) => ({
+    border: `1px solid ${theme.palette.divider}`,
+    paddingLeft: theme.spacing(2),
+    paddingRight: theme.spacing(2),
+    minWidth: 'auto',
+    borderRadius: '40px',
+    '&.Mui-selected': {
+        backgroundColor: 'transparent',
+        border: `1px solid black`,
+    },
+}));
+
+const TabsWrapperStyle = styled('div')(({ theme }) => ({
+    zIndex: 9,
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'flex-start',
+    position: 'relative',
+    backgroundColor: 'white',
+    '& .MuiTabs-indicator': {
+        backgroundColor: 'transparent',
+    }
+}));
+
 export default function VideoUpload() {
     const { translate } = useLocales()
+    const { currentTab, onChangeTab } = useTabs('profile');
     const [isOpen, setIsOpen] = useState(false);
     const [open, setOpen] = useState(false);
     const [selectedFile, setSelectedFile] = useState(null);
@@ -99,6 +127,7 @@ export default function VideoUpload() {
 
     const dispatch = useDispatch();
     const { videos } = useSelector((state) => state.video);
+    const { bookings } = useSelector((state) => state.bookings);
 
     const [showHeader, setShowHeader] = useState(false);
 
@@ -149,6 +178,10 @@ export default function VideoUpload() {
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
+    useEffect(() => {
+        dispatch(getBookings("ACCEPTED"))
+    }, [dispatch])
+
     const handleVideoClick = (video) => {
         setSelectedVideo(video);
         setIsVideoDetailOpen(true);
@@ -162,7 +195,9 @@ export default function VideoUpload() {
 
     const [tab, setTab] = useState('profile');
     const handleChange = (event, newCategory) => {
+        console.log('newCategory', newCategory)
         setTab(newCategory);
+        onChangeTab(newCategory);
     }
 
 
@@ -184,10 +219,12 @@ export default function VideoUpload() {
                     />
                 </Box>}
 
-                {tab === 'profile' ?
-                    <StyledContainer>
-                        <Grid container spacing={1} justifyContent='space-between' padding={0}>
 
+
+                {tab === 'profile' &&
+                    <StyledContainer>
+                        {bookings && bookings?.length > 0 && <UserLessonsList horizontal={true} />}
+                        <Grid container spacing={1} justifyContent='space-between' padding={0}>
                             <LeaderBoardRightDrawer
                                 open={isLeaderBoardOpen}
                                 onClose={() => setIsLeaderBoardOpen(false)}
@@ -234,7 +271,8 @@ export default function VideoUpload() {
                                     </Box>
                                 </Grid>
                             )}
-                            {videos && videos?.length > 0 && (
+                            {/* esperando los videitos de soleño */}
+                            {/* {videos && videos?.length > 0 && (
                                 <Grid item xs={12}>
                                     <Box className="white-card">
                                         <LatestTips
@@ -242,17 +280,20 @@ export default function VideoUpload() {
                                         />
                                     </Box>
                                 </Grid>
-                            )}
+                            )} */}
                             <Box sx={{ width: '100%' }} onClick={() => setIsLeaderBoardOpen(true)}>
                                 <MapLeaderboard />
                             </Box>
 
                         </Grid>
-                    </StyledContainer> : <UploadedVideosList
-                        videos={uploadedVideos}
-                        onVideoClick={handleVideoClick}
-                        showHeader={showHeader}
-                    />}
+                    </StyledContainer>}
+                    {tab === 'uploaded' && (
+                        <UploadedVideosList
+                            videos={uploadedVideos}
+                            onVideoClick={handleVideoClick}
+                            showHeader={showHeader}
+                        />
+                    )}
 
                 <VideoUploadBottomSheet
                     title={selectedLevelTitle}

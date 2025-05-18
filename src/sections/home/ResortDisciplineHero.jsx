@@ -186,7 +186,7 @@ const RESORT_OPTIONS = [
 const TYPE_OPTIONS = [
     { id: 'private', slugs: ['clases-privadas'] },
     { id: 'group', slugs: ['clases-grupales'] },
-    { id: 'children', slugs: ['clases-niños'] },
+    { id: 'children', slugs: ['clases-para-niños'] },
     
 ]
 

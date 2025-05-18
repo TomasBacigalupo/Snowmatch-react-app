@@ -1,5 +1,5 @@
 import { PickersDay, StaticDatePicker, StaticDateRangePicker } from "@mui/lab";
-import { Button, DialogActions, DialogContent, DialogTitle, Grid, TextField, Box, Typography, Paper } from "@mui/material";
+import { Button, DialogActions, DialogContent, DialogTitle, Grid, TextField, Box, Typography, Paper, Drawer, useMediaQuery, useTheme } from "@mui/material";
 import React, { useEffect, useState, useCallback } from "react";
 import { DialogAnimate } from "src/components/animate";
 import useLocales from "src/hooks/useLocales";
@@ -43,6 +43,8 @@ const CustomPickersDay = styled(PickersDay, {
 export default function SelectDates({ handleClose, onSubmit, isRange, product }) {
     const { translate } = useLocales()
     const dispatch = useDispatch();
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
     const { events } = useSelector(state => state.bookings);
     const { teacher } = useSelector(state => state.teachers);
     const { from, to } = useSelector(state => state.teachers.filters);
@@ -149,89 +151,110 @@ export default function SelectDates({ handleClose, onSubmit, isRange, product })
         setSelectTimeModal(false);
     }
 
+    const TimeSelectionContent = () => (
+        <>
+            <DialogTitle>{translate("conversation.time")}</DialogTitle>
+            <DialogContent>
+                <Grid container spacing={2} direction='row' justifyContent='center' paddingTop={2}>
+                    <Grid item xs={12}>
+                        <Paper
+                            onClick={morningSelected}
+                            sx={{
+                                p: 3,
+                                width: 1,
+                                border: (theme) => `solid 1px ${theme.palette.grey[500_32]}`,
+                            }}
+                        >
+                            <Typography
+                                variant="h6">
+                                {translate('checkout.morningTitle')} {product ? `${fCurrency(calculatePrice(product, 1, 'MORNING'))}` : hasPrice && fCurrency(calculateRequestedPrice(teacher, totalDays, 'MORNING'))}
+                            </Typography>
+                            <Typography
+                                variant="subtitle2">
+                                {translate('checkout.morningDescription')}
+                            </Typography>
+                            {false && <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                                <Typography variant="subtitle" sx={{ textAlign: 'end', flex: '1 1 auto' }}>
+                                    {product ? `${fCurrency(calculatePrice(product, selectedDates.length, 'MORNING') * selectedDates.length)} total` : (hasPrice && '$US 180')}
+                                </Typography>
+                            </Box>}
+                        </Paper>
+                    </Grid>
+                    <Grid item xs={12}>
+                        <Paper
+                            onClick={afternoonSelected}
+                            sx={{
+                                p: 3,
+                                width: 1,
+                                border: (theme) => `solid 1px ${theme.palette.grey[500_32]}`,
+                            }}
+                        >
+                            <Typography
+                                variant="h6">{translate('checkout.afternoonTitle')} {product ? `${fCurrency(calculatePrice(product, 1, 'AFTERNOON'))}` : hasPrice && fCurrency(calculateRequestedPrice(teacher, totalDays, 'AFTERNOON'))}
+                            </Typography>
+                            <Typography
+                                variant="subtitle2">{translate('checkout.afternoonDescription')}
+                            </Typography>
+                            {false && <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                                <Typography variant="subtitle" sx={{ textAlign: 'end', flex: '1 1 auto' }}>
+                                    {product ? `${fCurrency(calculatePrice(product, selectedDates.length, 'AFTERNOON') * selectedDates.length)} total` : hasPrice && '$US 180'}
+                                </Typography>
+                            </Box>}
+                        </Paper>
+                    </Grid>
+                    <Grid item xs={12}>
+                        <Paper
+                            onClick={allDaySelected}
+                            sx={{
+                                p: 3,
+                                width: 1,
+                                border: (theme) => `solid 1px ${theme.palette.grey[500_32]}`,
+                            }}
+                        >
+                            <Typography
+                                variant="h6">
+                                {translate('checkout.allDayTitle')}
+                                {product ? ` ${fCurrency(calculatePrice(product, 1, 'FULL_DAY'))}` : hasPrice && fCurrency(calculateRequestedPrice(teacher, totalDays, 'FULL_DAY'))}
+                            </Typography>
+                            <Typography
+                                variant="subtitle2">
+                                {translate('checkout.allDayDescription')}
+                            </Typography>
+                            {false && <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                                <Typography variant="subtitle" sx={{ textAlign: 'end', flex: '1 1 auto' }}>
+                                    {product ? `${fCurrency(calculatePrice(product, selectedDates.length, 'FULL_DAY') * selectedDates.length)} total` : hasPrice && fCurrency(calculateRequestedPrice(teacher, totalDays, 'FULL_DAY'))}
+                                </Typography>
+                            </Box>}
+                        </Paper>
+                    </Grid>
+                </Grid>
+            </DialogContent>
+        </>
+    );
+
     return (
         <React.Fragment>
-            <DialogAnimate open={selectTimeModal} onClose={() => setSelectTimeModal(false)}>
-                <DialogTitle>{translate("conversation.time")}</DialogTitle>
-                <DialogContent>
-                    <Grid container spacing={2} direction='row' justifyContent='center' paddingTop={2}>
-                        <Grid item xs={12}>
-                            <Paper
-                                onClick={morningSelected}
-                                sx={{
-                                    p: 3,
-                                    width: 1,
-                                    my: 2,
-                                    border: (theme) => `solid 1px ${theme.palette.grey[500_32]}`,
-                                }}
-                            >
-                                <Typography
-                                    variant="h6">
-                                    {translate('checkout.morningTitle')} {product ? `${fCurrency(calculatePrice(product, 1, 'MORNING'))}` : hasPrice && fCurrency(calculateRequestedPrice(teacher, totalDays, 'MORNING'))}
-                                </Typography>
-                                <Typography
-                                    variant="subtitle2">
-                                    {translate('checkout.morningDescription')}
-                                </Typography>
-                                {false && <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                                    <Typography variant="subtitle" sx={{ textAlign: 'end', flex: '1 1 auto' }}>
-                                        {product ? `${fCurrency(calculatePrice(product, selectedDates.length, 'MORNING') * selectedDates.length)} total` : (hasPrice && '$US 180')}
-                                    </Typography>
-                                </Box>}
-                            </Paper>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <Paper
-                                onClick={afternoonSelected}
-                                sx={{
-                                    p: 3,
-                                    width: 1,
-                                    my: 2,
-                                    border: (theme) => `solid 1px ${theme.palette.grey[500_32]}`,
-                                }}
-                            >
-                                <Typography
-                                    variant="h6">{translate('checkout.afternoonTitle')} {product ? `${fCurrency(calculatePrice(product, 1, 'AFTERNOON'))}` : hasPrice && fCurrency(calculateRequestedPrice(teacher, totalDays, 'AFTERNOON'))}
-                                </Typography>
-                                <Typography
-                                    variant="subtitle2">{translate('checkout.afternoonDescription')}
-                                </Typography>
-                                {false && <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                                    <Typography variant="subtitle" sx={{ textAlign: 'end', flex: '1 1 auto' }}>
-                                        {product ? `${fCurrency(calculatePrice(product, selectedDates.length, 'AFTERNOON') * selectedDates.length)} total` : hasPrice && '$US 180'}
-                                    </Typography>
-                                </Box>}
-                            </Paper>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <Paper
-                                onClick={allDaySelected}
-                                sx={{
-                                    p: 3,
-                                    width: 1,
-                                    my: 2,
-                                    border: (theme) => `solid 1px ${theme.palette.grey[500_32]}`,
-                                }}
-                            >
-                                <Typography
-                                    variant="h6">
-                                    {translate('checkout.allDayTitle')}
-                                    {product ? ` ${fCurrency(calculatePrice(product, 1, 'FULL_DAY'))}` : hasPrice && fCurrency(calculateRequestedPrice(teacher, totalDays, 'FULL_DAY'))}
-                                </Typography>
-                                <Typography
-                                    variant="subtitle2">
-                                    {translate('checkout.allDayDescription')}
-                                </Typography>
-                                {false && <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                                    <Typography variant="subtitle" sx={{ textAlign: 'end', flex: '1 1 auto' }}>
-                                        {product ? `${fCurrency(calculatePrice(product, selectedDates.length, 'FULL_DAY') * selectedDates.length)} total` : hasPrice && fCurrency(calculateRequestedPrice(teacher, totalDays, 'FULL_DAY'))}
-                                    </Typography>
-                                </Box>}
-                            </Paper>
-                        </Grid>
-                    </Grid>
-                </DialogContent>
-            </DialogAnimate>
+            {isMobile ? (
+                <Drawer
+                    anchor="bottom"
+                    open={selectTimeModal}
+                    onClose={() => setSelectTimeModal(false)}
+                    PaperProps={{
+                        sx: {
+                            borderTopLeftRadius: 16,
+                            borderTopRightRadius: 16,
+                            maxHeight: '80vh',
+                            paddingBottom: 'env(safe-area-inset-bottom)'
+                        }
+                    }}
+                >
+                    <TimeSelectionContent />
+                </Drawer>
+            ) : (
+                <DialogAnimate open={selectTimeModal} onClose={() => setSelectTimeModal(false)}>
+                    <TimeSelectionContent />
+                </DialogAnimate>
+            )}
             <Grid container width={'100%'} height={'100%'}>
                 <Grid id='custom-calendar' item xs={12} width={'100%'} height={'100%'}>
                     {!isRange && <StaticDatePicker

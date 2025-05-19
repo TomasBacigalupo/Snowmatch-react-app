@@ -23,6 +23,13 @@ const ProCheckBox = ({ hasVideos = false, hasUnreviewedVideos = false }) => {
         setIsUploadSheetOpen(true);
     };
 
+    const handleAskForCredits = () => {
+        // write to our whats app saying that the user wants to buy credits
+        const message = `Hola, me gustaría comprar créditos para ProCheck.`;
+        const url = `https://wa.me/542944263223?text=${encodeURIComponent(message)}`;
+        window.open(url, '_blank');
+    }
+
     return (
         <>
             <Paper
@@ -147,8 +154,16 @@ const ProCheckBox = ({ hasVideos = false, hasUnreviewedVideos = false }) => {
                         <Button
                             variant="outlined"
                             fullWidth
-                            onClick={handleActionClick}
-                            sx={{ py: 1.5 }}
+                            onClick={handleAskForCredits}
+                            sx={{ 
+                                py: 1.5,
+                                borderColor: 'black',
+                                color: 'black',
+                                '&:hover': {
+                                    borderColor: 'black',
+                                    backgroundColor: 'rgba(0, 0, 0, 0.04)'
+                                }
+                            }}
                         >
                             {translate('procheck.actions.buy_credits')}
                         </Button>

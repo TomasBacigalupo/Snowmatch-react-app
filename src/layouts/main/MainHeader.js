@@ -117,7 +117,9 @@ export default function MainHeader() {
             >
               {translate("landingPRO.school")}
             </HoverButton>)}
-          <LanguagePopover />
+
+          {/* just for testing */}
+          {/* <LanguagePopover /> */}
           <AccountPopover/>
 
           {/* {!isDesktop && <MenuMobile isOffset={isOffset} isHome={isHome} navConfig={navConfig} />} */}

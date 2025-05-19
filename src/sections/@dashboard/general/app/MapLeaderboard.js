@@ -5,6 +5,7 @@ import mapImage from '../../../../assets/map.png'; // Update with your actual pa
 import { dispatch, useSelector } from 'src/redux/store';
 import { getLeaderBoard } from 'src/redux/slices/video';
 import { EmojiEvents as CrownIcon } from "@mui/icons-material";
+import useLocales from 'src/hooks/useLocales';
 
 const StyledCard = styled(Card)(({ theme }) => ({
   overflow: 'hidden',
@@ -25,6 +26,8 @@ const ImageBox = styled(Box)({
 
 const MapLeaderboard = () => {
   const { leaders } = useSelector(state => state.video)
+  const { translate } = useLocales();
+  
   useEffect(() => {
     dispatch(getLeaderBoard("GENERAL"))
   }, [])
@@ -40,11 +43,28 @@ const MapLeaderboard = () => {
       </Box>}
       <CardContent>
         <Typography variant="h4" fontWeight="bold">
-          Leaderboard
+          {translate('leaderboard.title')}
         </Typography>
         <Typography variant="p4" color="text.secondary">
-          See how other skiers are doing
+          {translate('leaderboard.description')}
         </Typography>
+        <Box mt={3} display="flex" justifyContent="center">
+          <Button 
+            fullWidth
+            variant="outlined" 
+            color="inherit"
+            sx={{ 
+              borderColor: 'black',
+              color: 'black',
+              '&:hover': {
+                borderColor: 'black',
+                backgroundColor: 'rgba(0, 0, 0, 0.04)'
+              }
+            }}
+          >
+            {translate('leaderboard.title')}
+          </Button>
+        </Box>
       </CardContent>
     </StyledCard>
   );

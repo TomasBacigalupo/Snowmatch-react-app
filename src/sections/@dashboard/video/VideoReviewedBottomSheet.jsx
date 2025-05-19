@@ -88,7 +88,7 @@ export default function VideoReviewedBottomSheet({ open, onClose, onOpen, select
                 {selectedVideo && (
                     <>
                         {/* Video */}
-                        <Box mb={2} position="relative">
+                        <Box position="relative">
                             {!isPlaying ? (
                                 <Box
                                     position="relative"
@@ -163,112 +163,97 @@ export default function VideoReviewedBottomSheet({ open, onClose, onOpen, select
                                 </Box>
                             )}
                         </Box>
+                        {selectedVideo.analysisData && <VideoAnalyticsChart turnData={selectedVideo.analysisData} />}
                         <Box px={2}>
-                            {/* Score - Updated with circular design */}
+                            {/* Score - Clean mobile design */}
                             <Box
                                 sx={{
                                     display: 'flex',
-                                    alignItems: 'center',
+                                    flexDirection: 'column',
                                     gap: 2,
                                     mb: 3,
-                                    borderRadius: 3,
-                                    p: 2,
-                                    background: theme.palette.background.paper,
-                                    boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
-                                    position: 'relative',
-                                    overflow: 'hidden',
-                                    '&::before': {
-                                        content: '""',
-                                        position: 'absolute',
-                                        top: 0,
-                                        left: 0,
-                                        width: '100%',
-                                        height: '4px',
-                                        background: `linear-gradient(90deg, ${theme.palette.primary.main} ${selectedVideo?.videoComments[0]?.score}%, ${theme.palette.grey[200]} 0)`,
-                                    }
                                 }}
                             >
                                 <Box
                                     sx={{
-                                        position: 'relative',
-                                        width: 90,
-                                        height: 90,
-                                        borderRadius: '100%',
-                                        background: `conic-gradient(${theme.palette.primary.main} ${selectedVideo?.videoComments[0]?.score}%, ${theme.palette.grey[200]} 0)`,
                                         display: 'flex',
                                         alignItems: 'center',
-                                        justifyContent: 'center',
-                                        boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
-                                        '&::before': {
-                                            content: '""',
-                                            position: 'absolute',
-                                            width: '85%',
-                                            height: '85%',
-                                            borderRadius: '50%',
-                                            background: theme.palette.background.paper,
-                                            boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.1)',
-                                        }
+                                        justifyContent: 'space-between',
                                     }}
                                 >
                                     <Typography
-                                        variant="h1"
+                                        variant="h6"
                                         sx={{
-                                            position: 'relative',
+                                            color: theme.palette.text.primary,
+                                            fontWeight: 600,
+                                        }}
+                                    >
+                                        {translate('videoCoachScreen.score')}
+                                    </Typography>
+                                    <Typography
+                                        variant="h4"
+                                        sx={{
                                             fontWeight: 'bold',
-                                            fontSize: '2.5rem',
-                                            background: `linear-gradient(45deg, ${theme.palette.primary.main}, ${theme.palette.primary.dark})`,
-                                            WebkitBackgroundClip: 'text',
-                                            WebkitTextFillColor: 'transparent',
+                                            color: theme.palette.text.primary,
                                         }}
                                     >
                                         {parseInt(selectedVideo?.videoComments[0]?.score, 10)}
                                     </Typography>
                                 </Box>
-                                <Box>
-                                    <Typography
-                                        variant="h6"
-                                        gutterBottom
+
+                                {/* Progress bar */}
+                                <Box
+                                    sx={{
+                                        width: '100%',
+                                        height: '6px',
+                                        backgroundColor: theme.palette.grey[100],
+                                        borderRadius: '3px',
+                                        overflow: 'hidden',
+                                    }}
+                                >
+                                    <Box
                                         sx={{
-                                            color: theme.palette.text.primary,
-                                            fontWeight: 600,
+                                            height: '100%',
+                                            width: `${selectedVideo?.videoComments[0]?.score}%`,
+                                            backgroundColor: selectedVideo?.videoComments[0]?.score >= 80 
+                                                ? theme.palette.success.main 
+                                                : selectedVideo?.videoComments[0]?.score >= 60 
+                                                    ? theme.palette.warning.main 
+                                                    : theme.palette.error.main,
+                                            borderRadius: '3px',
+                                            transition: 'width 0.3s ease-in-out',
+                                        }}
+                                    />
+                                </Box>
+
+                                <Typography
+                                    variant="body2"
+                                    sx={{
+                                        color: theme.palette.text.secondary,
+                                        lineHeight: 1.5,
+                                    }}
+                                >
+                                    {selectedVideo?.videoComments[0]?.score >= 80 ? translate('videoCoachScreen.excellentPerformance') :
+                                        selectedVideo?.videoComments[0]?.score >= 60 ? translate('videoCoachScreen.goodPerformance') :
+                                            translate('videoCoachScreen.needsImprovement')}
+                                </Typography>
+
+                                {selectedVideo?.videoComments[0]?.score >= 80 && (
+                                    <Box
+                                        sx={{
                                             display: 'flex',
                                             alignItems: 'center',
-                                            gap: 1
+                                            gap: 0.5,
+                                            color: theme.palette.success.main,
+                                            fontSize: '0.9rem',
+                                            fontWeight: 500,
                                         }}
                                     >
-                                        {translate('videoCoachScreen.score')}
-                                        {selectedVideo?.videoComments[0]?.score >= 80 && (
-                                            <Box
-                                                component="span"
-                                                sx={{
-                                                    color: theme.palette.primary.main,
-                                                    fontSize: '0.9rem',
-                                                    fontWeight: 500,
-                                                    display: 'inline-flex',
-                                                    alignItems: 'center',
-                                                    gap: 0.5
-                                                }}
-                                            >
-                                                ★ {translate('videoCoachScreen.excellentPerformance')}
-                                            </Box>
-                                        )}
-                                    </Typography>
-                                    <Typography
-                                        variant="body2"
-                                        sx={{
-                                            color: theme.palette.text.secondary,
-                                            lineHeight: 1.5,
-                                            maxWidth: '300px'
-                                        }}
-                                    >
-                                        {selectedVideo?.videoComments[0]?.score >= 80 ? translate('videoCoachScreen.excellentPerformance') :
-                                            selectedVideo?.videoComments[0]?.score >= 60 ? translate('videoCoachScreen.goodPerformance') :
-                                                translate('videoCoachScreen.needsImprovement')}
-                                    </Typography>
-                                </Box>
+                                        ★ {translate('videoCoachScreen.excellentPerformance')}
+                                    </Box>
+                                )}
                             </Box>
 
-                            {selectedVideo.analysisData && <VideoAnalyticsChart turnData={selectedVideo.analysisData} />}
                             <SnowMatchIntelligenceBox video={selectedVideo} />
 
                             {/* Revisor */}

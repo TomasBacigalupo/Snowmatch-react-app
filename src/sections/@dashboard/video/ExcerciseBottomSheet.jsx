@@ -231,7 +231,7 @@ export default function ExcerciseBottomSheet({ open, onClose, onOpen, course, de
                                 </Paper>
                             </Box>
 
-                            <Box sx={{ p: 3 }}>
+                            {/* <Box sx={{ p: 3 }}>
                                 <DoDontList
                                     title={translate('course.exercise.howToPass')}
                                     doItems={[
@@ -245,7 +245,7 @@ export default function ExcerciseBottomSheet({ open, onClose, onOpen, course, de
                                         translate(`course.${level}.dont.3`),
                                     ]}
                                 />
-                            </Box>
+                            </Box> */}
                             <Box display="flex" alignItems="center" gap={1} mb={1}>
                                 <Box
                                     component="img"

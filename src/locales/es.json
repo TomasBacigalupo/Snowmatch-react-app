@@ -1503,7 +1503,8 @@
     },
     "leaderboard": {
         "title": "Tabla de Posiciones",
-        "improvement": "Top {{percent}}% - Mejora {{time}}s para subir {{spots}} posiciones"
+        "improvement": "Top {{percent}}% - Mejora {{time}}s para subir {{spots}} posiciones",
+        "description": "Mira cómo lo están haciendo otros esquiadores"
     },
     "dashboard": {
         "whatToDo": "¿Qué deseas hacer?",

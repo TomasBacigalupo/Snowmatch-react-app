@@ -218,7 +218,7 @@ export default function UserRentalData({isGuest=false}){
                         <Grid  container item xs={12} alignItems={'center'} textAlign='center' sx={{ width: '100%', height: 'fit-content' }}>
                             <Grid xs={12} container alignItems={'center'}>
                                 <Grid item xs={6}>
-                                    <img src='/assets/rental/austria/ski/1.png' />
+                                    <img src='/assets/rental/austria/ski/1.png' width="200" height="200" alt="Standard ski equipment" />
                                 </Grid>
                                 <Grid item xs={6} container alignItems='center'> 
                                     <Grid item xs={6} justifyContent='space-between' textAlign='center'>
@@ -233,7 +233,7 @@ export default function UserRentalData({isGuest=false}){
                             </Grid>
                             <Grid xs={12} container alignItems={'center'}>
                                 <Grid item xs={6}>
-                                    <img src='/assets/rental/austria/ski/2.png' />
+                                    <img src='/assets/rental/austria/ski/2.png' width="200" height="200" alt="Premium ski equipment" />
                                 </Grid>
                                 <Grid item xs={6} container alignItems='center'>
                                     <Grid item xs={6} justifyContent='space-between' textAlign='center'>
@@ -248,7 +248,7 @@ export default function UserRentalData({isGuest=false}){
                             </Grid>
                             <Grid xs={12} container alignItems={'center'} >
                                 <Grid item xs={6}>
-                                    <img src='/assets/rental/austria/ski/3.png' />
+                                    <img src='/assets/rental/austria/ski/3.png' width="200" height="200" alt="Gold ski equipment" />
                                 </Grid>
                                 <Grid item xs={6} container alignItems='center'>
                                     <Grid item xs={6} justifyContent='space-between' textAlign='center'>

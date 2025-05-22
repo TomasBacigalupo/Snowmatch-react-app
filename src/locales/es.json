@@ -97,8 +97,8 @@
         "independent": "PROs Independientes",
         "school": "PROs de Escuelas",
         "getStartedToday": "¡Formá parte de SnowMatch!",
-        "find": "Encontrá tu clase {{type}} ideal de {{discipline}} en {{resort}}",
-        "findSubtitle": "Los mejores instructores {{type}} de {{discipline}} en {{resort}}",
+        "find": "Clases de {{discipline}} {{type}} en {{resort}} – encontrá la ideal para vos",
+        "findSubtitle": "Instructores {{type}} expertos en {{discipline}} – disponibles en {{resort}}",
         "privateInstructor": "privados",
         "childrenInstructor": "para niños",
         "groupInstructor": "para grupales",
@@ -1598,5 +1598,25 @@
             "commentRequired": "Deja un comentario",
             "scoreRequired": "Califica el video"
         }
+    },
+    "resortsAndLessons": {
+        "title": "Resorts y Clases",
+        "lessonTypes": "Tipos de Clases",
+        "categories": "Categorías",
+        "skiLessons": "Clases de Esquí",
+        "snowboardLessons": "Clases de Snowboard",
+        "groupLessons": "Clases Grupales",
+        "privateLessons": "Clases Privadas",
+        "childrenLessons": "Clases para Niños"
+    },
+    "homeFilter": {
+        "title": "Clases de {{discipline}} en {{resort}}",
+        "subtitle": "Reserva tus clases de {{discipline}} en {{resort}} con instructores certificados. {{type}} disponibles para todos los niveles. ¡Reserva online y evita las colas!",
+        "features": {
+            "certified": "• Instructores certificados y con amplia experiencia",
+            "classes": "• {{type}} para todos los niveles",
+            "booking": "• Reserva online en menos de 1 minuto"
+        },
+        "search": "Buscar"
     }
 }

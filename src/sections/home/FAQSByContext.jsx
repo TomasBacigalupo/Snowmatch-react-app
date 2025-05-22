@@ -43,13 +43,18 @@ export default function FaqsByContext() {
             : translate('faqs.title.resort', { resort: resort ? translate(`landingPRO.${resort}`) : "" });
 
     return (
-        <Box sx={{ 
-            py: { xs: 6, md: 10 },
-            backgroundColor: theme.palette.background.neutral,
-        }}>
+        <Box 
+            component="section" 
+            aria-labelledby="faqs-heading"
+            sx={{ 
+                py: { xs: 6, md: 10 },
+                backgroundColor: theme.palette.background.neutral,
+            }}
+        >
             <Container maxWidth="md">
                 <Typography 
-                    component='h1' 
+                    id="faqs-heading"
+                    component='h2' 
                     variant="h3" 
                     gutterBottom 
                     mb={6} 
@@ -82,9 +87,14 @@ export default function FaqsByContext() {
                         }
 
                         return (
-                            <Box key={idx}>
+                            <Box 
+                                key={idx}
+                                component="article"
+                                aria-labelledby={`faq-section-${idx}`}
+                            >
                                 <Typography 
-                                    component='h2' 
+                                    id={`faq-section-${idx}`}
+                                    component='h3' 
                                     variant="h5" 
                                     gutterBottom
                                     mb={3}
@@ -114,6 +124,8 @@ export default function FaqsByContext() {
                                         >
                                             <AccordionSummary 
                                                 expandIcon={<ExpandMoreIcon />}
+                                                aria-controls={`faq-content-${i}`}
+                                                id={`faq-header-${i}`}
                                                 sx={{
                                                     px: 3,
                                                     '& .MuiAccordionSummary-content': {
@@ -122,7 +134,7 @@ export default function FaqsByContext() {
                                                 }}
                                             >
                                                 <Typography 
-                                                    component="h3" 
+                                                    component="h4" 
                                                     variant="subtitle1"
                                                     sx={{
                                                         fontWeight: 500,
@@ -133,6 +145,9 @@ export default function FaqsByContext() {
                                                 </Typography>
                                             </AccordionSummary>
                                             <AccordionDetails
+                                                id={`faq-content-${i}`}
+                                                role="region"
+                                                aria-labelledby={`faq-header-${i}`}
                                                 sx={{
                                                     px: 3,
                                                     pb: 3,

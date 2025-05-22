@@ -40,8 +40,13 @@ export default function Image({ ratio, disabledEffect = false, effect = 'blur', 
           component={LazyLoadImage}
           wrapperClassName="wrapper"
           effect={disabledEffect ? undefined : effect}
-          placeholderSrc="https://zone-assets-api.vercel.app/assets/img_placeholder.svg"
-          sx={{ width: 1, height: 1, objectFit: 'cover' }}
+          placeholderSrc="/assets/spinner.gif"
+          sx={{ 
+            width: sx?.width || 1, 
+            height: sx?.height || 1, 
+            objectFit: 'cover',
+            ...sx 
+          }}
           {...other}
         />
       </Box>
@@ -55,7 +60,11 @@ export default function Image({ ratio, disabledEffect = false, effect = 'blur', 
         lineHeight: 0,
         display: 'block',
         overflow: 'hidden',
-        '& .wrapper': { width: 1, height: 1, backgroundSize: 'cover !important' },
+        '& .wrapper': { 
+          width: sx?.width || 1, 
+          height: sx?.height || 1, 
+          backgroundSize: 'cover !important' 
+        },
         ...sx,
       }}
     >
@@ -63,8 +72,13 @@ export default function Image({ ratio, disabledEffect = false, effect = 'blur', 
         component={LazyLoadImage}
         wrapperClassName="wrapper"
         effect={disabledEffect ? undefined : effect}
-        placeholderSrc="https://zone-assets-api.vercel.app/assets/img_placeholder.svg"
-        sx={{ width: 1, height: 1, objectFit: 'cover' }}
+        placeholderSrc="/assets/spinner.gif"
+        sx={{ 
+          width: sx?.width || 1, 
+          height: sx?.height || 1, 
+          objectFit: 'cover',
+          ...sx 
+        }}
         {...other}
       />
     </Box>

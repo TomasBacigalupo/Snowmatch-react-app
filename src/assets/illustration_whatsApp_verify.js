@@ -11,7 +11,7 @@ export default function VerifyWappIllustration({ ...other }) {
 
     return (
         <Box {...other}>
-            <img src="/assets/wappVerification.png" />
+            <img src="/assets/wappVerification.png" width="300" height="300" alt="WhatsApp verification illustration" />
         </Box>
     );
 }

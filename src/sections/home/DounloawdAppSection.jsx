@@ -54,6 +54,8 @@ const StoreButton = styled('img')({
 const DownloadAppSection = ({ resort }) => {
     return (
         <Box
+            component="section"
+            aria-labelledby="download-app-heading"
             sx={{
                 py: { xs: 8, md: 12 },
                 background: 'linear-gradient(180deg, #ffffff 0%, #f8f9fa 100%)',
@@ -70,11 +72,14 @@ const DownloadAppSection = ({ resort }) => {
                 >
                     <Box sx={{ flex: 1 }}>
                         <Typography
+                            id="download-app-heading"
+                            component="h2"
                             variant="h2"
                             sx={{
-                                fontSize: { xs: '2.5rem', md: '3.5rem' },
+                                fontSize: { xs: '2rem', md: '3.5rem' },
                                 fontWeight: 700,
                                 mb: 3,
+                                textAlign: { xs: 'center', md: 'left' },
                                 background: 'linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)',
                                 backgroundClip: 'text',
                                 textFillColor: 'transparent',
@@ -82,9 +87,10 @@ const DownloadAppSection = ({ resort }) => {
                                 WebkitTextFillColor: 'transparent',
                             }}
                         >
-                            Aprende a esquiar en {resort}
+                            Tu camino para aprender a esquiar en {resort} empieza con SnowMatch
                         </Typography>
                         <Typography
+                            component="p"
                             variant="h5"
                             sx={{
                                 color: 'text.secondary',
@@ -93,7 +99,7 @@ const DownloadAppSection = ({ resort }) => {
                                 lineHeight: 1.6,
                             }}
                         >
-                            Sube videos de tu técnica y recibe correcciones personalizadas de instructores profesionales. Mejora tu estilo y disfruta más de la nieve.
+                            Conecta con instructores certificados en {resort}, reserva tus clases de esquí online y mejora tu técnica con Snow, nuestro asistente de inteligencia artificial.
                         </Typography>
                         <Box sx={{ 
                             display: 'flex', 
@@ -102,8 +108,16 @@ const DownloadAppSection = ({ resort }) => {
                             justifyContent: { xs: 'center', md: 'flex-start' },
                             alignItems: 'center'
                         }}>
-                            <Link href="https://apps.apple.com/ar/app/snowmatch/id6741247513?l=en-GB&itscg=30200&itsct=apps_box_badge&mttnsubad=6741247513" style={{ display: 'inline-block' }}>
-                                <img src="https://toolbox.marketingtools.apple.com/api/v2/badges/download-on-the-app-store/black/en-us?releaseDate=1745884800" alt="Download on the App Store" style={{ width: '245px', height: '82px', verticalAlign: 'middle', objectFit: 'contain' }}     />
+                            <Link 
+                                href="https://apps.apple.com/ar/app/snowmatch/id6741247513?l=en-GB&itscg=30200&itsct=apps_box_badge&mttnsubad=6741247513" 
+                                style={{ display: 'inline-block' }}
+                                aria-label="Descargar SnowMatch en App Store"
+                            >
+                                <img 
+                                    src="https://toolbox.marketingtools.apple.com/api/v2/badges/download-on-the-app-store/black/en-us?releaseDate=1745884800" 
+                                    alt="Download on the App Store" 
+                                    style={{ width: '245px', height: '82px', verticalAlign: 'middle', objectFit: 'contain' }} 
+                                />
                             </Link>
                             <Box sx={{ 
                                 display: { xs: 'none', md: 'flex' },
@@ -113,7 +127,7 @@ const DownloadAppSection = ({ resort }) => {
                             }}>
                                 <img 
                                     src="/qr-code.png"
-                                    alt="Scan to download SnowMatch" 
+                                    alt="Escanea para descargar SnowMatch" 
                                     style={{ 
                                         width: '100px', 
                                         height: '100px',
@@ -132,7 +146,8 @@ const DownloadAppSection = ({ resort }) => {
                             <Screen>
                                 <AppImage
                                     src="/screenshot.png"
-                                    alt="SnowMatch App Preview"
+                                    alt="SnowMatch App - Reserva clases de esquí y snowboard"
+                                    loading="lazy"
                                 />
                             </Screen>
                         </IphoneFrame>

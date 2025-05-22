@@ -15,10 +15,27 @@ import useAuth from 'src/hooks/useAuth';
 import { useTheme } from '@mui/material/styles';
 import React, { useEffect } from 'react';
 import dayjs from 'dayjs';
-import ReactPixel from 'react-facebook-pixel';
 import { searchTeachers } from 'src/services/facebook';
 import { PATH_DASHBOARD } from 'src/routes/paths';
 
+const getClassType = (type) => {
+    switch(type) {
+        case 'privada':
+            return 'Clase Privada';
+        case 'grupal':
+            return 'Clase Grupal';
+        case 'nenes':
+            return 'Clase para Niños';
+        case 'adolescentes':
+            return 'Clase para Adolescentes';
+        case 'menores':
+            return 'Clase para Menores';
+        case 'juveniles':
+            return 'Clase para Juveniles';
+        default:
+            return 'Clase';
+    }
+}
 
 export default function HomeFilterTeachers({ resort, discipline, type }) {
 
@@ -27,8 +44,6 @@ export default function HomeFilterTeachers({ resort, discipline, type }) {
         autoConfig: true, // set pixel's autoConfig. More info: https://developers.facebook.com/docs/facebook-pixel/advanced/
         debug: process.env.REACT_APP_FACEBOOK_PIXEL_ID === "DEBUG", // enable logs
     };
-
-    ReactPixel.init(process.env.REACT_APP_FACEBOOK_PIXEL_ID, {}, options);
 
     const theme = useTheme()
     const dispatch = useDispatch()
@@ -99,10 +114,6 @@ export default function HomeFilterTeachers({ resort, discipline, type }) {
     }
 
     useEffect(() => {
-        ReactPixel.pageView(); // For tracking page view        
-    })
-
-    useEffect(() => {
         setValue('resort', resort)
         setValue('category', discipline ? [discipline] : ["Ski"])
     }, [resort, discipline])
@@ -116,7 +127,7 @@ export default function HomeFilterTeachers({ resort, discipline, type }) {
                     </Typography>
                 </Grid>
                 <Grid item xs={12} md={12} justifyContent='center'>
-                    <Typography variant="h5" component='h1' sx={{ color: theme.typography.body2, }}>
+                    <Typography variant="h5" component='h2' sx={{ color: theme.typography.body2, }}>
                         {translate("landingPRO.findSubtitle", { 
                             resort: resort, 
                             discipline: discipline ? translate(`landingPRO.${discipline}`) : "", 
@@ -148,6 +159,18 @@ export default function HomeFilterTeachers({ resort, discipline, type }) {
                             </HoverButton>
                         </Grid>
                     </Grid>
+                    <Box component="div" sx={{ mb: 3 }}>
+                        <Typography
+                            component="p"
+                            variant="body2"
+                            sx={{
+                                color: 'text.secondary',
+                                textAlign: { xs: 'center', md: 'left' }
+                            }}
+                        >
+                            • Instructores certificados · {type ? getClassType(type) : 'Clases privadas y grupales'} · Reserva online en 1 minuto
+                        </Typography>
+                    </Box>
                 </Grid>
             </Grid>
         </FormProvider>

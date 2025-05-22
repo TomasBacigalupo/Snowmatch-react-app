@@ -262,6 +262,8 @@ function renderContent(notification, translate) {
         <img
           alt={notification.title}
           src="https://minimal-assets-api.vercel.app/assets/icons/ic_notification_package.svg"
+          width="32"
+          height="32"
         />
       ),
       title,
@@ -273,6 +275,8 @@ function renderContent(notification, translate) {
         <img
           alt={`${notification.notifier.name} ${notification.notifier.lastname}`}
           src="https://minimal-assets-api.vercel.app/assets/icons/ic_notification_shipping.svg"
+          width="32"
+          height="32"
         />
       ),
       title,
@@ -284,6 +288,8 @@ function renderContent(notification, translate) {
         <img
           alt={notification.title}
           src="https://minimal-assets-api.vercel.app/assets/icons/ic_notification_mail.svg"
+          width="32"
+          height="32"
         />
       ),
       title,
@@ -298,7 +304,7 @@ function renderContent(notification, translate) {
     };
   }
   return {
-    avatar: notification?.avatar ? <img alt={notification.title} src={notification?.notifier?.imageLink} /> : null,
+    avatar: notification?.avatar ? <img alt={notification.title} src={notification?.notifier?.imageLink} width="32" height="32" /> : null,
     title,
     notifier: notification?.notifier
   };

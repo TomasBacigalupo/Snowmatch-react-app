@@ -27,7 +27,6 @@ import BackButtonLayout from 'src/layouts/BackButtonLayout';
 import Training from 'src/pages/dashboard/Training';
 import Maps from 'src/pages/dashboard/Maps';
 import SearchPage from 'src/pages/search/resort/discipline';
-import useResponsive from '../hooks/useResponsive';
 // ----------------------------------------------------------------------
 
 const Loadable = (Component) => (props) => {
@@ -41,7 +40,7 @@ const Loadable = (Component) => (props) => {
 };
 
 export default function Router() {
-  const isMobile = true;
+  const isMobile = false;
 
   return useRoutes([
     {

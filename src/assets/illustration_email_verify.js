@@ -11,8 +11,8 @@ export default function VerifyEmailIllustration({ success, ...other }) {
 
   return (
     <Box {...other}>
-      {success && <img src="/assets/mail_confirmed.png" />}
-      {!success && <img src="/assets/emailVerification.png" />}
+      {success && <img src="/assets/mail_confirmed.png" width="300" height="300" alt="Email confirmed illustration" />}
+      {!success && <img src="/assets/emailVerification.png" width="300" height="300" alt="Email verification illustration" />}
     </Box>
   );
 }

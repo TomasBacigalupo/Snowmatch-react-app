@@ -45,7 +45,7 @@ export default function HomeAdvertisement() {
           <m.div>
             <Image
               visibleByDefault
-              alt="instructor-de-ski"
+              alt="Instructor de esquí certificado - SnowMatch"
               src="https://image.snowmatch.pro/profile/23-ef7b4fa1-8880-4915-9f0d-76b428e989c9"
               disabledEffect
               sx={{ maxWidth: 460 }}
@@ -54,14 +54,27 @@ export default function HomeAdvertisement() {
         </Box>
 
         <Box
+          component="article"
           sx={{
             pl: { md: 10 },
             textAlign: { xs: 'center', md: 'left' },
           }}
         >
           <Box component={m.div} variants={varFade().inDown} sx={{ color: 'common.white', mb: 5 }}>
-            <Typography variant="h2">
+            <Typography component="h2" variant="h2">
               {translate("landingPRO.getStartedToday")}
+            </Typography>
+            <Typography 
+              component="p" 
+              variant="h5" 
+              sx={{ 
+                mt: 2,
+                color: 'common.white',
+                opacity: 0.9
+              }}
+            >
+              Únete a nuestra comunidad de esquiadores y snowboarders. 
+              Aprende con los mejores instructores certificados de Argentina.
             </Typography>
           </Box>
           <m.div variants={varFade().inDown}>
@@ -71,6 +84,7 @@ export default function HomeAdvertisement() {
               target="_blank"
               rel="noopener"
               href={PATH_AUTH.register}
+              aria-label="Registrarse en SnowMatch"
               sx={{
                 whiteSpace: 'nowrap',
                 boxShadow: (theme) => theme.customShadows.z8,
@@ -79,7 +93,7 @@ export default function HomeAdvertisement() {
                 '&:hover': { bgcolor: 'grey.300' },
               }}
             >
-              SignUp
+              Registrarse
             </Button>
           </m.div>
         </Box>

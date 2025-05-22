@@ -181,13 +181,13 @@ const RESORT_OPTIONS = [
     { id: 'Cerro Negro', slugs: ['cerro-negro', 'negro'] },
     { id: 'Las Leñas', slugs: ['las-leñas', 'lenas'] },
 
-  ];
+];
 
 const TYPE_OPTIONS = [
     { id: 'private', slugs: ['clases-privadas'] },
     { id: 'group', slugs: ['clases-grupales'] },
     { id: 'children', slugs: ['clases-para-niños'] },
-    
+
 ]
 
 export default function ResortDisciplineHero() {
@@ -211,9 +211,9 @@ export default function ResortDisciplineHero() {
     useEffect(() => {
         if (SKI_OPTIONS.includes(disciplineSlug)) {
             setDiscipline('Ski')
-        } else if(disciplineSlug === 'snowboard'){
+        } else if (disciplineSlug === 'snowboard') {
             setDiscipline('SnowBoard')
-        }else{
+        } else {
             setDiscipline('Ski')
         }
         const resort = RESORT_OPTIONS.find(r => r.slugs.includes(resortSlug))
@@ -283,8 +283,10 @@ export default function ResortDisciplineHero() {
             padding: { xs: 2, md: 4, pt: 6 }
         }}>
             <RootStyle>
+
                 <CardContainer>
                     <Hidden smDown>
+
                         <ImageCard>
                             <Box
                                 component="img"
@@ -296,6 +298,9 @@ export default function ResortDisciplineHero() {
                                 }}
                             />
                         </ImageCard>
+                    </Hidden>
+                    <Hidden smUp>
+                        <img src='/logo/snowmatch.png' sx={{ height: '200px', width: '100%' }} alt='SnowMatch' />
                     </Hidden>
                     <FilterWrapper>
                         <HomeFilterTeachers resort={resort} discipline={discipline} type={type} />

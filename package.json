@@ -10,7 +10,6 @@
     "capacitor": "react-app-rewired build -f .env.dev && npx cap sync",
     "build": "react-app-rewired build -f --max-old-space-size=5000 .env.production",
     "buildAndSnap": "react-app-rewired build -f --max-old-space-size=5000 .env.production && npx react-snap",
-    "postbuild": "react-snap",
     "snap": "rm -f build/200.html build/404.html build/500.html && npx react-snap",
     "deploy-pi": "react-app-rewired --max-old-space-size=50000 build -f .env.production",
     "eject": "react-scripts eject",
@@ -386,7 +385,11 @@
       "collapseWhitespace": false,
       "removeComments": false
     },
-    "waitUntil": ["networkidle0", "load", "domcontentloaded"],
+    "waitUntil": [
+      "networkidle0",
+      "load",
+      "domcontentloaded"
+    ],
     "puppeteerIgnoreHTTPSErrors": true,
     "fixWebpackChunksIssue": false,
     "removeBlobs": true,
@@ -525,6 +528,7 @@
     "react-map-gl": "^6.1.19",
     "react-markdown": "^8.0.0",
     "react-multi-date-picker": "^3.3.4",
+    "react-number-format": "^5.4.4",
     "react-player": "^2.16.0",
     "react-quill": "^2.0.0-beta.4",
     "react-redux": "^7.2.6",

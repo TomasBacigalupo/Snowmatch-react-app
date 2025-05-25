@@ -40,7 +40,7 @@ const Loadable = (Component) => (props) => {
 };
 
 export default function Router() {
-  const isMobile = false;
+  const isMobile = true;
 
   return useRoutes([
     {

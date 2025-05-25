@@ -23,7 +23,32 @@ AdminBookingTableCard.propTypes = {
 export default function AdminBookingTableCard({ row, selected, onEditRow, onSelectRow, onConfirmRow, onDeclineRow, onWapp, onEvents }) {
     const theme = useTheme();
 
-    const { name, lastname, imageLink, role, level, authorized, state, id, emailVerified } = row.teacher;
+    const { imageLink, userComment, state, resort, adults, children, eventList, id, price } = row;
+    const { name, lastname, id: teacherId } = row.teacher;
+    const { name: studentName, lastname: studentLastname, id: studentId } = row.student;
+
+    const formatDate = (dateString) => {
+        return new Date(dateString).toLocaleDateString('es-AR', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric'
+        });
+    };
+
+    const getDateRange = () => {
+        if (!eventList?.length) return '-';
+        const dates = eventList.map(event => new Date(event.end));
+        const start = new Date(Math.min(...dates));
+        const end = new Date(Math.max(...dates));
+        return `${formatDate(start)} - ${formatDate(end)}`;
+    };
+
+    const formatPrice = (price) => {
+        return new Intl.NumberFormat('es-AR', {
+            style: 'currency',
+            currency: 'ARS'
+        }).format(price);
+    };
 
     const [openMenu, setOpenMenuActions] = useState(null);
 
@@ -36,37 +61,24 @@ export default function AdminBookingTableCard({ row, selected, onEditRow, onSele
     };
 
     return (
-        <Card sx={{ width: '100%', my: 0.5, }}>
+        <Card sx={{ width: '100%', my: 0.5 }}>
             <Box display='flex' padding={2} flexDirection='column'>
-                <Box display='flex' justifyContent='space-between'>
+                <Box display='flex' justifyContent='space-between' alignItems="flex-start">
                     <Box display='flex' flexDirection='column'>
-                        <Box display='flex' alignItems='center'>
-                            <Typography variant='h4'>
-                                {`${name} ${lastname}`}
-                            </Typography>
-                            <Iconify
-                                //todo verificar que funcione con cambios de back
-                                icon={emailVerified ? 'eva:checkmark-circle-fill' : 'eva:clock-outline'}
-                                sx={{
-                                    mx: 1,
-                                    width: 20,
-                                    height: 20,
-                                    color: 'success.main',
-                                    ...(!emailVerified && { color: 'warning.main' }),
-                                }}
-                            />
-
-                        </Box>
-                        <Box>
-                            <Label
-                                variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
-                                color={(state === 'UNAVAILABLE' && 'error') || 'success'}
-                                sx={{ textTransform: 'capitalize' }}
-                            >
-                                {state}
-                            </Label>
-                        </Box>
-
+                        <Typography variant='h6' gutterBottom>
+                            Reserva #{id}
+                        </Typography>
+                        <Label
+                            variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
+                            color={
+                                (state === 'DECLINED' && 'error') ||
+                                (state === 'PENDING' && 'warning') ||
+                                'success'
+                            }
+                            sx={{ textTransform: 'capitalize', mb: 1 }}
+                        >
+                            {state}
+                        </Label>
                     </Box>
 
                     <TableMoreMenu
@@ -82,7 +94,7 @@ export default function AdminBookingTableCard({ row, selected, onEditRow, onSele
                                     }}
                                 >
                                     <Iconify icon={'eva:calendar-fill'} />
-                                    Events
+                                    Ver clases en el calendario
                                 </MenuItem>
                                 <MenuItem
                                     onClick={() => {
@@ -91,16 +103,16 @@ export default function AdminBookingTableCard({ row, selected, onEditRow, onSele
                                     }}
                                 >
                                     <Iconify icon={'mdi:whatsapp'} />
-                                    Wapp
+                                    Contactár por Whats app
                                 </MenuItem>
                                 <MenuItem
                                     onClick={() => {
-                                        onConfirmRow();
+                                        onEditRow();
                                         handleCloseMenu();
                                     }}
                                 >
                                     <Iconify icon={'eva:edit-fill'} />
-                                    Edit
+                                    Editar
                                 </MenuItem>
                                 <MenuItem
                                     onClick={() => {
@@ -110,125 +122,65 @@ export default function AdminBookingTableCard({ row, selected, onEditRow, onSele
                                     sx={{ color: 'error.main' }}
                                 >
                                     <Iconify icon={'eva:trash-2-outline'} />
-                                    Decline
+                                    Eliminar
                                 </MenuItem>
                             </>
                         }
                     />
                 </Box>
-                <Box ml={2} display='flex'>
-                    <Box flex='1'>
-                        <Typography >
-                            {`Id: ${id}`}
+
+                <Box sx={{ mt: 2 }}>
+                    <Typography variant="subtitle2" gutterBottom>
+                        Cliente
+                    </Typography>
+                    <Typography variant="body2" gutterBottom>
+                        {`${studentName} ${studentLastname}`}
+                    </Typography>
+                    <Typography variant="caption" color="text.secondary" gutterBottom>
+                        ID: {studentId}
+                    </Typography>
+                </Box>
+
+                <Box sx={{ mt: 2 }}>
+                    <Typography variant="subtitle2" gutterBottom>
+                        Instructor
+                    </Typography>
+                    <Typography variant="body2" gutterBottom>
+                        {`${name} ${lastname}`}
+                    </Typography>
+                    <Typography variant="caption" color="text.secondary" gutterBottom>
+                        ID: {teacherId}
+                    </Typography>
+                </Box>
+
+                <Box sx={{ mt: 2 }}>
+                    <Typography variant="subtitle2" gutterBottom>
+                        Detalles de la Reserva
+                    </Typography>
+                    <Box display="flex" flexDirection="column" gap={1}>
+                        <Typography variant="body2">
+                            {`${eventList?.length || 0} clases`}
                         </Typography>
-                        <Typography >
-                            {`Level: ${level}`}
+                        <Typography variant="body2">
+                            {getDateRange()}
                         </Typography>
-                    </Box>
-                    <Box flex='1'>
-                        <Typography >
-                            {`Role: ${role}`}
+                        <Typography variant="body2">
+                            {resort}
                         </Typography>
+                        <Typography variant="body2">
+                            {`${adults} adultos, ${children} niños`}
+                        </Typography>
+                        <Typography variant="body2" color="primary.main">
+                            {formatPrice(price)}
+                        </Typography>
+                        {userComment && (
+                            <Typography variant="body2" color="text.secondary">
+                                {userComment}
+                            </Typography>
+                        )}
                     </Box>
                 </Box>
             </Box>
         </Card>
-
-        // <TableRow hover selected={selected}>
-        //     <TableCell padding="checkbox">
-        //         <Checkbox checked={selected} onClick={onSelectRow} />
-        //     </TableCell>
-
-        //     <TableCell sx={{ display: 'flex', alignItems: 'center' }}>
-        //         <Avatar alt={name} src={"imageLink"} sx={{ mr: 2 }} />
-        //         <Typography variant="subtitle2" noWrap>
-        //             {name + " " + lastname}
-        //         </Typography>
-        //     </TableCell>
-        //     <TableCell align="left">
-        //         {id}
-        //     </TableCell>
-
-        //     <TableCell align="left">
-        //         {role}
-        //     </TableCell>
-
-        //     <TableCell align="left" sx={{ textTransform: 'capitalize' }}>
-        //         {level}
-        //     </TableCell>
-
-        //     <TableCell align="center">
-        //         <Iconify
-        //             //todo verificar que funcione con cambios de back
-        //             icon={authorized ? 'eva:checkmark-circle-fill' : 'eva:clock-outline'}
-        //             sx={{
-        //                 width: 20,
-        //                 height: 20,
-        //                 color: 'success.main',
-        //                 ...(!authorized && { color: 'warning.main' }),
-        //             }}
-        //         />
-        //     </TableCell>
-
-        //     <TableCell align="left">
-        //         <Label
-        //             variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
-        //             color={(state === 'UNAVAILABLE' && 'error') || 'success'}
-        //             sx={{ textTransform: 'capitalize' }}
-        //         >
-        //             {state}
-        //         </Label>
-        //     </TableCell>
-
-        //     <TableCell align="right">
-        //         <TableMoreMenu
-        //             open={openMenu}
-        //             onOpen={handleOpenMenu}
-        //             onClose={handleCloseMenu}
-        //             actions={
-        //                 <>
-        //                     {/* <MenuItem
-        //         onClick={() => {
-        //           onDeleteRow();
-        //           handleCloseMenu();
-        //         }}
-        //         sx={{ color: 'error.main' }}
-        //       >
-        //         <Iconify icon={'eva:trash-2-outline'} />
-        //         Delete
-        //       </MenuItem> */}
-        //                     {/* <MenuItem
-        //         onClick={() => {
-        //           onEditRow();
-        //           handleCloseMenu();
-        //         }}
-        //       >
-        //         <Iconify icon={'eva:edit-fill'} />
-        //         Edit
-        //       </MenuItem> */}
-        //                     <MenuItem
-        //                         onClick={() => {
-        //                             onConfirmRow();
-        //                             handleCloseMenu();
-        //                         }}
-        //                     >
-        //                         <Iconify icon={'eva:edit-fill'} />
-        //                         Edit
-        //                     </MenuItem>
-        //                     <MenuItem
-        //                         onClick={() => {
-        //                             onDeclineRow();
-        //                             handleCloseMenu();
-        //                         }}
-        //                         sx={{ color: 'error.main' }}
-        //                     >
-        //                         <Iconify icon={'eva:trash-2-outline'} />
-        //                         Decline
-        //                     </MenuItem>
-        //                 </>
-        //             }
-        //         />
-        //     </TableCell>
-        // </TableRow>
     );
 }

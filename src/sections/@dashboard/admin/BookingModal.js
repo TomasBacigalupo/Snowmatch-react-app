@@ -1,20 +1,34 @@
-import { useEffect, useState } from 'react';
-import { Dialog, DialogContent, Select, TextField, FormControl, InputLabel, MenuItem, DialogActions, DialogTitle, Button, Box, Autocomplete, Typography } from '@mui/material';
+import { useEffect, useState, useCallback } from 'react';
+import { Dialog, DialogContent, Select, TextField, FormControl, InputLabel, MenuItem, DialogActions, DialogTitle, Button, Box, Autocomplete, Typography, IconButton, Grid } from '@mui/material';
 import { useDispatch } from 'src/redux/store';
-import { getTeachers } from 'src/redux/slices/admin';
+import { getTeachers, getTeachersAdmin } from 'src/redux/slices/admin';
 import { useSelector } from 'react-redux';
 import { createAdminBooking } from 'src/redux/slices/bookings';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { format, parseISO, addDays, isWithinInterval } from 'date-fns';
+import { NumericFormat } from 'react-number-format';
+import ShopTeacherCard from 'src/sections/@dashboard/e-commerce/shop/ShopTeacherCard';
+import { PATH_DASHBOARD } from 'src/routes/paths';
 
 const BookingModal = ({ isOpen, onClose }) => {
     const dispatch = useDispatch();
     const [formData, setFormData] = useState({
         teacher: null,
         student: null,
-        dateTimes: [{ date: '', time: '', price: '' }],
+        dateTimes: [{ date: '', time: 'ALL_DAY', price: '' }],
         resort: 'Cerro Catedral',
         children: 0,
         adults: 0,
-        comment: ''
+        comment: '',
+        teacherSearch: ''
+    });
+
+    const [dateRange, setDateRange] = useState({
+        startDate: null,
+        endDate: null
     });
 
     const [teacherId, setTeacherId] = useState(null);
@@ -55,10 +69,58 @@ const BookingModal = ({ isOpen, onClose }) => {
     const handleAddDateTime = () => {
         setFormData((prevData) => ({
             ...prevData,
-            dateTimes: [...prevData.dateTimes, { date: '', time: '', price: '' }],
+            dateTimes: [...prevData.dateTimes, { date: '', time: 'ALL_DAY', price: '' }],
         }));
     };
-   
+
+    const handleDateRangeChange = (startDate, endDate) => {
+        setDateRange({ startDate, endDate });
+        
+        if (startDate && endDate) {
+            const dates = [];
+            let currentDate = startDate;
+            
+            while (currentDate <= endDate) {
+                dates.push({
+                    date: format(currentDate, 'yyyy-MM-dd'),
+                    time: 'ALL_DAY',
+                    price: ''
+                });
+                currentDate = addDays(currentDate, 1);
+            }
+            
+            setFormData(prev => ({
+                ...prev,
+                dateTimes: dates
+            }));
+        }
+    };
+
+    const handlePriceChange = (value, index) => {
+        const updatedDateTimes = [...formData.dateTimes];
+        updatedDateTimes[index].price = value;
+        setFormData(prev => ({
+            ...prev,
+            dateTimes: updatedDateTimes
+        }));
+    };
+
+    const handleTimeChange = (value, index) => {
+        const updatedDateTimes = [...formData.dateTimes];
+        updatedDateTimes[index].time = value;
+        setFormData(prev => ({
+            ...prev,
+            dateTimes: updatedDateTimes
+        }));
+    };
+
+    const handleRemoveDate = (index) => {
+        const updatedDateTimes = formData.dateTimes.filter((_, i) => i !== index);
+        setFormData(prev => ({
+            ...prev,
+            dateTimes: updatedDateTimes
+        }));
+    };
 
     const handleSubmit = () => {
         const totalPrice = formData.dateTimes.reduce((acc, curr) => acc + Number(curr.price), 0);
@@ -95,76 +157,94 @@ const BookingModal = ({ isOpen, onClose }) => {
         setFormData({
             teacher: null,
             student: null,
-            dateTimes: [{ date: '', time: '', price: '' }],
+            dateTimes: [{ date: '', time: 'ALL_DAY', price: '' }],
             resort: 'Cerro Catedral',
             children: 0,
             adults: 0,
+            teacherSearch: ''
         });
         onClose();
     };
 
     const handleTeacherInputChange = (event, newValue) => {
-        dispatch(getTeachers(0, "TEACHER", newValue, 0));
+        // dispatch(getTeachers(0, "TEACHER", newValue, 0));
+        const filters = formData.dateTimes.map((dateTime) => ({
+            from: `${dateTime.date}T05:00:00`,
+            to: `${dateTime.date}T20:00:00`,
+            time: dateTime.time,
+        }));
+        dispatch(getTeachersAdmin(newValue, 0, filters, formData.resort));
     };
 
+    const debouncedStudentSearch = useCallback(
+        (value) => {
+            dispatch(getTeachers(0, "STUDENT", value, 0));
+        },
+        [dispatch]
+    );
+
     const handleStudentInputChange = (event, newValue) => {
-        dispatch(getTeachers(0, "STUDENT", newValue, 0));
+        // Update the form data immediately for UI responsiveness
+        setFormData((prevData) => ({
+            ...prevData,
+            studentSearch: newValue,
+        }));
+        
+        // Debounce the API call
+        const timeoutId = setTimeout(() => {
+            debouncedStudentSearch(newValue);
+        }, 500); // 500ms delay
+
+        return () => clearTimeout(timeoutId);
     };
 
     return (
-        <Dialog open={isOpen} onClose={onClose}>
+        <Dialog open={isOpen} onClose={onClose} maxWidth="md" fullWidth>
             <DialogTitle>Create Booking</DialogTitle>
             <DialogContent>
-                <FormControl fullWidth margin="normal">
-                    <Typography>Teacher</Typography>
-                    <Autocomplete
-                        id="teacher-autocomplete"
-                        options={teachers}
-                        getOptionLabel={(option) => `${option.name} ${option.lastname}`}
-                        value={formData.teacher}
-                        onChange={(e, newValue) => {
-                            setTeacherId(newValue.id);
-                            setFormData((prevData) => ({
-                                ...prevData,
-                                teacher: newValue || null,
-                            }));
-                        }}
-                        onInputChange={handleTeacherInputChange}
-                        renderInput={(params) => <TextField {...params} />}
-                    />
-                </FormControl>
-                <FormControl fullWidth margin="normal">
-                    <Typography>Student</Typography>
-                    <Autocomplete
-                        id="student-autocomplete"
-                        options={teachers}
-                        getOptionLabel={(option) => `${option.name} ${option.lastname}`}
-                        value={formData.student}
-                        onChange={(e, newValue) => {
-                            setStudentId(newValue.id);
-                            setFormData((prevData) => ({
-                                ...prevData,
-                                student: newValue || null,
-                            }));
-                        }}
-                        onInputChange={handleStudentInputChange}
-                        renderInput={(params) => <TextField {...params} />}
-                    />
-                </FormControl>
-                <FormControl fullWidth margin="normal">
-                    <InputLabel id="resort-label">Resort</InputLabel>
-                    <Select
-                        labelId="resort-label"
-                        id="resort-select"
-                        value={formData.resort}
-                        onChange={(e) => setFormData((prevData) => ({
-                            ...prevData,
-                            resort: e.target.value,
-                        }))}
-                    >
-                        <MenuItem value="Cerro Catedral">Cerro Catedral</MenuItem>
-                    </Select>
-                </FormControl>
+                <Typography variant="h6" sx={{ mb: 2 }}>Student</Typography>
+                <Grid container spacing={2}>
+                    <Grid item xs={12} md={4}>
+                        <FormControl fullWidth>
+                            <Autocomplete
+                                id="student-autocomplete"
+                                options={teachers}
+                                getOptionLabel={(option) => `${option.name} ${option.lastname}`}
+                                value={formData.student}
+                                onChange={(e, newValue) => {
+                                    setStudentId(newValue.id);
+                                    setFormData((prevData) => ({
+                                        ...prevData,
+                                        student: newValue || null,
+                                    }));
+                                }}
+                                onInputChange={handleStudentInputChange}
+                                renderInput={(params) => <TextField {...params} />}
+                            />
+                        </FormControl>
+                    </Grid>
+                    <Grid item xs={12} md={4}>
+                        <LocalizationProvider dateAdapter={AdapterDateFns}>
+                            <DatePicker
+                                label="Start Date"
+                                value={dateRange.startDate}
+                                onChange={(newValue) => handleDateRangeChange(newValue, dateRange.endDate)}
+                                renderInput={(params) => <TextField {...params} fullWidth />}
+                            />
+                        </LocalizationProvider>
+                    </Grid>
+                    <Grid item xs={12} md={4}>
+                        <LocalizationProvider dateAdapter={AdapterDateFns}>
+                            <DatePicker
+                                label="End Date"
+                                value={dateRange.endDate}
+                                onChange={(newValue) => handleDateRangeChange(dateRange.startDate, newValue)}
+                                renderInput={(params) => <TextField {...params} fullWidth />}
+                            />
+                        </LocalizationProvider>
+                    </Grid>
+                </Grid>
+
                 <TextField
                     fullWidth
                     margin="normal"
@@ -172,72 +252,177 @@ const BookingModal = ({ isOpen, onClose }) => {
                     name="comment"
                     value={formData.comment}
                     onChange={(e) => handleFormChange(e)}
+                    multiline
+                    rows={2}
                 />
 
-                <TextField
-                    fullWidth
-                    margin="normal"
-                    label="Number of Children"
-                    type="number"
-                    name="children"
-                    value={formData.children}
-                    onChange={(e) => handleFormChange(e)}
-                />
-                <TextField
-                    fullWidth
-                    margin="normal"
-                    label="Number of Adults"
-                    type="number"
-                    name="adults"
-                    value={formData.adults}
-                    onChange={(e) => handleFormChange(e)}
-                />
-                {/* Display date-time-price pairs */}
-                {formData.dateTimes.map((dateTime, index) => (
-                    <Box key={index} display="flex" alignItems="center">
+                <Grid container spacing={2} sx={{ mt: 2 }}>
+                    <Grid item xs={12} md={4}>
+                        <FormControl fullWidth>
+                            <InputLabel id="resort-label">Resort</InputLabel>
+                            <Select
+                                labelId="resort-label"
+                                id="resort-select"
+                                value={formData.resort}
+                                onChange={(e) => setFormData((prevData) => ({
+                                    ...prevData,
+                                    resort: e.target.value,
+                                }))}
+                            >
+                                <MenuItem value="Cerro Catedral">Cerro Catedral</MenuItem>
+                            </Select>
+                        </FormControl>
+                    </Grid>
+                    <Grid item xs={12} md={4}>
                         <TextField
                             fullWidth
-                            margin="normal"
-                            label={`Date ${index + 1}`}
-                            type="date"
-                            name="date"
-                            value={dateTime.date}
-                            onChange={(e) => handleFormChange(e, index)}
-                            InputLabelProps={{
-                                shrink: true,
-                            }}
+                            label="Number of Children"
+                            type="number"
+                            name="children"
+                            value={formData.children}
+                            onChange={(e) => handleFormChange(e)}
+                            inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
                         />
-                        <FormControl fullWidth margin="normal" sx={{ ml: 2 }}>
+                    </Grid>
+                    <Grid item xs={12} md={4}>
+                        <TextField
+                            fullWidth
+                            label="Number of Adults"
+                            type="number"
+                            name="adults"
+                            value={formData.adults}
+                            onChange={(e) => handleFormChange(e)}
+                            inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+                        />
+                    </Grid>
+                </Grid>
+
+                <Typography variant="h6" sx={{ mt: 3, mb: 2 }}>Selected Dates</Typography>
+                {formData.dateTimes.map((dateTime, index) => (
+                    <Box key={index} sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+                        <LocalizationProvider dateAdapter={AdapterDateFns}>
+                            <DatePicker
+                                label={`Date ${index + 1}`}
+                                value={dateTime.date ? parseISO(dateTime.date) : null}
+                                onChange={(newValue) => {
+                                    const updatedDateTimes = [...formData.dateTimes];
+                                    updatedDateTimes[index].date = newValue ? format(newValue, 'yyyy-MM-dd') : '';
+                                    setFormData(prev => ({
+                                        ...prev,
+                                        dateTimes: updatedDateTimes
+                                    }));
+                                }}
+                                renderInput={(params) => <TextField {...params} fullWidth />}
+                            />
+                        </LocalizationProvider>
+                        <FormControl fullWidth>
                             <InputLabel id={`time-label-${index}`}>Time</InputLabel>
                             <Select
                                 labelId={`time-label-${index}`}
-                                name="time"
                                 value={dateTime.time}
-                                onChange={(e) => handleFormChange(e, index)}
+                                onChange={(e) => handleTimeChange(e.target.value, index)}
+                                label="Time"
                             >
                                 <MenuItem value="MORNING">Morning</MenuItem>
                                 <MenuItem value="AFTERNOON">Afternoon</MenuItem>
                                 <MenuItem value="ALL_DAY">All Day</MenuItem>
                             </Select>
                         </FormControl>
-                        <TextField
+                        <NumericFormat
                             fullWidth
-                            margin="normal"
+                            customInput={TextField}
                             label="Price"
-                            type="number"
-                            name="price"
                             value={dateTime.price}
-                            onChange={(e) => handleFormChange(e, index)}
-                            InputLabelProps={{
-                                shrink: true,
-                            }}
-                            sx={{ ml: 2 }}
+                            onValueChange={(values) => handlePriceChange(values.value, index)}
+                            thousandSeparator=","
+                            decimalSeparator="."
+                            prefix="$"
+                            decimalScale={2}
+                            fixedDecimalScale
                         />
+                        <IconButton 
+                            onClick={() => handleRemoveDate(index)}
+                            color="error"
+                            sx={{ ml: 1 }}
+                        >
+                            <DeleteIcon />
+                        </IconButton>
                     </Box>
                 ))}
-                <Button onClick={handleAddDateTime} variant="outlined" color="primary">
-                    Add Date & Time
-                </Button>
+
+                <Typography variant="h6" sx={{ mt: 3, mb: 2 }}>Teacher</Typography>
+                <Box sx={{ display: 'flex', gap: 1, mb: 2 }}>
+                    <TextField
+                        fullWidth
+                        label="Search Teacher"
+                        value={formData.teacherSearch || ''}
+                        onChange={(e) => {
+                            setFormData((prevData) => ({
+                                ...prevData,
+                                teacherSearch: e.target.value,
+                            }));
+                            handleTeacherInputChange(e, e.target.value);
+                        }}
+                    />
+                    <Button 
+                        variant="contained" 
+                        onClick={() => handleTeacherInputChange(null, formData.teacherSearch)}
+                        sx={{ minWidth: '100px' }}
+                    >
+                        Search
+                    </Button>
+                </Box>
+                <Box
+                    sx={{
+                        display: 'grid',
+                        gap: 3,
+                        gridTemplateColumns: {
+                            xs: 'repeat(1, 1fr)',
+                            sm: 'repeat(2, 1fr)',
+                            md: 'repeat(3, 1fr)',
+                            lg: 'repeat(4, 1fr)',
+                        },
+                        maxHeight: '400px',
+                        overflowY: 'auto',
+                        mb: 3
+                    }}
+                >
+                    {teachers.map((teacher) => (
+                        <Box 
+                            key={teacher.id} 
+                            onClick={(e) => {
+                                if (e.shiftKey) {
+                                    const linkTo = PATH_DASHBOARD.eCommerce.viewTeacher(teacher.id);
+                                    window.open(linkTo, '_blank');
+                                } else {
+                                    setTeacherId(teacher.id);
+                                    setFormData((prevData) => ({
+                                        ...prevData,
+                                        teacher: teacher || null,
+                                    }));
+                                }
+                            }}
+                            sx={{ 
+                                cursor: 'pointer',
+                                border: formData.teacher?.id === teacher.id ? '2px solid #2065D1' : 'none',
+                                borderRadius: '16px',
+                                p: 1,
+                                '&:hover': {
+                                    border: '2px solid #2065D1',
+                                    opacity: 0.8
+                                }
+                            }}
+                        >
+                            <ShopTeacherCard 
+                                teacher={teacher} 
+                                disabled={true}
+                            />
+                            <Typography variant="caption" sx={{ display: 'block', textAlign: 'center', mt: 1, color: 'text.secondary' }}>
+                                {formData.teacher?.id === teacher.id ? 'Selected' : 'Click to select, Shift+Click to view profile'}
+                            </Typography>
+                        </Box>
+                    ))}
+                </Box>
             </DialogContent>
             <DialogActions>
                 <Button onClick={onClose}>Cancel</Button>

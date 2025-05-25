@@ -1,102 +1,245 @@
 import PropTypes from 'prop-types';
-import { Stack, InputAdornment, TextField, MenuItem } from '@mui/material';
+import { Stack, InputAdornment, TextField, MenuItem, Chip } from '@mui/material';
 // components
 import Iconify from '../../../../components/Iconify';
 
 // ----------------------------------------------------------------------
 
+const TEACHER_CHIPS = [
+  { name: 'Thiago', value: '1' },
+  { name: 'Agos', value: '2' },
+  { name: 'Charly', value: '3' },
+  { name: 'Fifu', value: '4' },
+  { name: 'Gonzalo', value: '5' },
+  { name: 'Sebas', value: '6' },
+  { name: 'Tadeo', value: '7' },
+  { name: 'Lola', value: '8' },
+  { name: 'Popi', value: '9' },
+  { name: 'Maite', value: '10' },
+];
+
 AdminTableToolbar.propTypes = {
   filterName: PropTypes.string,
   filterRole: PropTypes.string,
   filterLevel: PropTypes.number,
+  filterMonth: PropTypes.string,
+  filterTeacherId: PropTypes.string,
+  filterStudentId: PropTypes.string,
   onFilterName: PropTypes.func,
   onFilterRole: PropTypes.func,
   onFilterLevel: PropTypes.func,
+  onFilterMonth: PropTypes.func,
+  onFilterTeacherId: PropTypes.func,
+  onFilterStudentId: PropTypes.func,
   optionsRole: PropTypes.arrayOf(PropTypes.string),
+  bookings: PropTypes.bool,
 };
 
-export default function AdminTableToolbar({ filterName, filterRole, filterLevel, onFilterName, onFilterRole, onFilterLevel, optionsRole }) {
+export default function AdminTableToolbar({ 
+  filterName, 
+  filterRole, 
+  filterLevel, 
+  filterMonth,
+  filterTeacherId,
+  filterStudentId,
+  onFilterName, 
+  onFilterRole, 
+  onFilterLevel,
+  onFilterMonth,
+  onFilterTeacherId,
+  onFilterStudentId,
+  optionsRole,
+  bookings = false
+}) {
   return (
-    <Stack spacing={2} direction={{ xs: 'column', sm: 'row' }} sx={{ py: 2.5, px: 3 }}>
-      <TextField
-        fullWidth
-        select
-        label="Role"
-        value={filterRole}
-        onChange={onFilterRole}
-        SelectProps={{
-          MenuProps: {
-            sx: { '& .MuiPaper-root': { maxHeight: 260 } },
-          },
-        }}
-        sx={{
-          maxWidth: { sm: 240 },
-          textTransform: 'capitalize',
-        }}
-      >
-        {optionsRole.map((option) => (
-          <MenuItem
-            key={option}
-            value={option}
-            sx={{
-              mx: 1,
-              my: 0.5,
-              borderRadius: 0.75,
-              typography: 'body2',
-              textTransform: 'capitalize',
-            }}
-          >
-            {option}
-          </MenuItem>
-        ))}
-      </TextField>
-
-      <TextField
-        fullWidth
-        select
-        label="Level"
-        value={filterLevel}
-        onChange={onFilterLevel}
-        SelectProps={{
-          MenuProps: {
-            sx: { '& .MuiPaper-root': { maxHeight: 260 } },
-          },
-        }}
-        sx={{
-          maxWidth: { sm: 240 },
-          textTransform: 'capitalize',
+    <Stack spacing={2}>
+      <Stack 
+        spacing={2} 
+        direction={{ xs: 'column', sm: 'row' }} 
+        sx={{ 
+          pt: bookings ? 0 : 2.5,
+          pb: bookings ? 0 : 2.5,
+          px: bookings ? 0 : 3,
+          alignItems: 'stretch',
+          '& > *': { 
+            flex: 1,
+            display: 'flex',
+            alignItems: 'center'
+          }
         }}
       >
-        {["0", "1", "2", "3", "4", "5"].map((option) => (
-          <MenuItem
-            key={option}
-            value={option}
-            sx={{
-              mx: 1,
-              my: 0.5,
-              borderRadius: 0.75,
-              typography: 'body2',
-              textTransform: 'capitalize',
-            }}
-          >
-            {option}
-          </MenuItem>
-        ))}
-      </TextField>
+        {!bookings && (
+          <>
+            <TextField
+              fullWidth
+              select
+              label="Role"
+              value={filterRole}
+              onChange={onFilterRole}
+              SelectProps={{
+                MenuProps: {
+                  sx: { '& .MuiPaper-root': { maxHeight: 260 } },
+                },
+              }}
+              sx={{
+                maxWidth: { sm: 240 },
+                textTransform: 'capitalize',
+              }}
+            >
+              {optionsRole.map((option) => (
+                <MenuItem
+                  key={option}
+                  value={option}
+                  sx={{
+                    mx: 1,
+                    my: 0.5,
+                    borderRadius: 0.75,
+                    typography: 'body2',
+                    textTransform: 'capitalize',
+                  }}
+                >
+                  {option}
+                </MenuItem>
+              ))}
+            </TextField>
 
-      <TextField
-        fullWidth
-        value={filterName}
-        onChange={(event) => onFilterName(event.target.value)}
-        placeholder="Search Admin..."
-        InputProps={{
-          startAdornment: (
-            <InputAdornment position="start">
-              <Iconify icon={'eva:search-fill'} sx={{ color: 'text.disabled', width: 20, height: 20 }} />
-            </InputAdornment>
-          ),
-        }}
-      />
+            <TextField
+              fullWidth
+              select
+              label="Level"
+              value={filterLevel}
+              onChange={onFilterLevel}
+              SelectProps={{
+                MenuProps: {
+                  sx: { '& .MuiPaper-root': { maxHeight: 260 } },
+                },
+              }}
+              sx={{
+                maxWidth: { sm: 240 },
+                textTransform: 'capitalize',
+              }}
+            >
+              {["0", "1", "2", "3", "4", "5"].map((option) => (
+                <MenuItem
+                  key={option}
+                  value={option}
+                  sx={{
+                    mx: 1,
+                    my: 0.5,
+                    borderRadius: 0.75,
+                    typography: 'body2',
+                    textTransform: 'capitalize',
+                  }}
+                >
+                  {option}
+                </MenuItem>
+              ))}
+            </TextField>
+          </>
+        )}
+
+        {!bookings && (
+          <TextField
+            fullWidth
+            value={filterName}
+            onChange={(event) => onFilterName(event.target.value)}
+            placeholder="Search Admin..."
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <Iconify icon={'eva:search-fill'} sx={{ color: 'text.disabled', width: 20, height: 20 }} />
+                </InputAdornment>
+              ),
+            }}
+          />
+        )}
+
+        <TextField
+          fullWidth
+          select
+          label="Month"
+          value={filterMonth}
+          onChange={onFilterMonth}
+          SelectProps={{
+            MenuProps: {
+              sx: { '& .MuiPaper-root': { maxHeight: 260 } },
+            },
+          }}
+          sx={{
+            maxWidth: { sm: 240 },
+            textTransform: 'capitalize',
+          }}
+        >
+          {[
+            { value: '01', label: 'January' },
+            { value: '02', label: 'February' },
+            { value: '03', label: 'March' },
+            { value: '04', label: 'April' },
+            { value: '05', label: 'May' },
+            { value: '06', label: 'June' },
+            { value: '07', label: 'July' },
+            { value: '08', label: 'August' },
+            { value: '09', label: 'September' },
+            { value: '10', label: 'October' },
+            { value: '11', label: 'November' },
+            { value: '12', label: 'December' },
+          ].map((option) => (
+            <MenuItem
+              key={option.value}
+              value={option.value}
+              sx={{
+                mx: 1,
+                my: 0.5,
+                borderRadius: 0.75,
+                typography: 'body2',
+                textTransform: 'capitalize',
+              }}
+            >
+              {option.label}
+            </MenuItem>
+          ))}
+        </TextField>
+
+        <TextField
+          fullWidth
+          label="Teacher ID"
+          value={filterTeacherId}
+          onChange={onFilterTeacherId}
+          type="text"
+          sx={{ maxWidth: { sm: 240 } }}
+        />
+
+        <TextField
+          fullWidth
+          label="Student ID"
+          value={filterStudentId}
+          onChange={onFilterStudentId}
+          type="text"
+          sx={{ maxWidth: { sm: 240 } }}
+        />
+      </Stack>
+
+      {bookings && (
+        <Stack 
+          direction="row" 
+          spacing={1} 
+          sx={{  
+            flexWrap: 'wrap', 
+            gap: 1,
+            pb:1,
+            alignItems: 'center'
+          }}
+        >
+          {TEACHER_CHIPS.map((teacher) => (
+            <Chip
+              key={teacher.value}
+              label={teacher.name}
+              onClick={() => onFilterTeacherId(teacher.value)}
+              color={filterTeacherId === teacher.value ? 'primary' : 'default'}
+            />
+          ))}
+        </Stack>
+      )}
     </Stack>
   );
 }

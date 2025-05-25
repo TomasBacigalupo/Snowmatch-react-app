@@ -41,7 +41,7 @@ const StoryPlayer = () => {
       sx={{
         position: "relative",
         width: "100%",
-        height: "400px",
+        height: "300px",
         backgroundColor: "#000",
         display: "flex",
         alignItems: "center",

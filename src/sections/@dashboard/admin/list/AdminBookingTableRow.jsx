@@ -23,11 +23,32 @@ AdminBookingTableRow.propTypes = {
 export default function AdminBookingTableRow({ row, selected, onEditRow, onSelectRow, onConfirmRow, onDeclineRow, onWapp, onEvents }) {
     const theme = useTheme();
 
-    const { imageLink, userComment, state, resort, adults, children, eventList, id } = row;
+    const { imageLink, userComment, state, resort, adults, children, eventList, id, price } = row;
     const { name, lastname, id: teacherId, role, level } = row.teacher;
     const { name: studentName, lastname: studentLastname, id: studentId } = row.student;
 
+    const formatDate = (dateString) => {
+        return new Date(dateString).toLocaleDateString('es-AR', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric'
+        });
+    };
 
+    const getDateRange = () => {
+        if (!eventList?.length) return '-';
+        const dates = eventList.map(event => new Date(event.end));
+        const start = new Date(Math.min(...dates));
+        const end = new Date(Math.max(...dates));
+        return `${formatDate(start)} - ${formatDate(end)}`;
+    };
+
+    const formatPrice = (price) => {
+        return new Intl.NumberFormat('es-AR', {
+            style: 'currency',
+            currency: 'ARS'
+        }).format(price);
+    };
 
     const [openMenu, setOpenMenuActions] = useState(null);
 
@@ -41,7 +62,6 @@ export default function AdminBookingTableRow({ row, selected, onEditRow, onSelec
 
     return (
         <TableRow hover selected={selected}>
-
             <TableCell padding="checkbox">
                 <Checkbox checked={selected} onClick={onSelectRow} />
             </TableCell>
@@ -54,41 +74,57 @@ export default function AdminBookingTableRow({ row, selected, onEditRow, onSelec
 
             <TableCell align="left">
                 <Typography variant="subtitle2" noWrap>
-                    {`${studentName} ${studentLastname} - ${studentId}`}
+                    {`${studentName} ${studentLastname}`}
+                </Typography>
+                <Typography variant="caption" color="text.secondary">
+                    ID: {studentId}
                 </Typography>
             </TableCell>
 
-            <TableCell id='student'>
-                <Typography variant="subtitle2" noWrap>
-                    {`${name} ${lastname} - ${teacherId}`}
-                </Typography>
-            </TableCell>
-
-            
             <TableCell align="left">
-                {eventList.length}
+                <Typography variant="subtitle2" noWrap>
+                    {`${name} ${lastname}`}
+                </Typography>
+                <Typography variant="caption" color="text.secondary">
+                    ID: {teacherId}
+                </Typography>
             </TableCell>
+
+            <TableCell align="left">
+                <Typography variant="subtitle2">
+                    {eventList?.length || 0} clases
+                </Typography>
+            </TableCell>
+
+            <TableCell align="left">
+                <Typography variant="subtitle2">
+                    {getDateRange()}
+                </Typography>
+            </TableCell>
+
             <TableCell align="left">
                 {resort}
             </TableCell>
+
             <TableCell align="left">
-                {adults}
+                <Typography variant="subtitle2">
+                    {adults} adultos
+                </Typography>
+                <Typography variant="caption" color="text.secondary">
+                    {children} niños
+                </Typography>
             </TableCell>
+
             <TableCell align="left">
-                {children}
+                <Typography variant="subtitle2" color="primary.main">
+                    {formatPrice(price)}
+                </Typography>
             </TableCell>
             
             <TableCell align="left">
-                {userComment}
-            </TableCell>
-            <TableCell align="left">
-                <Label
-                    variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
-                    color={(state === 'UNAVAILABLE' && 'error') || 'success'}
-                    sx={{ textTransform: 'capitalize' }}
-                >
-                    {state}
-                </Label>
+                <Typography variant="body2" noWrap>
+                    {userComment || '-'}
+                </Typography>
             </TableCell>
 
             <TableCell align="right">

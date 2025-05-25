@@ -104,11 +104,30 @@ export function getTeachers(page, role, name, level) {
   };
 }
 
-export function getBookings(page, status) {
+export function getTeachersAdmin(name, page, filters, resort) {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`/api/admin/bookings/filter?page=${page}&state=${status}`);
+      const response = await axios.post(`/api/users/teachers/available?page=${page}&size=${20}&resort=${resort}&name=${name}`, filters);
+      dispatch(slice.actions.getTeachersSuccess(response.data));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+export function getBookings(teacherId, studentId, month, page) {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const params = new URLSearchParams();
+      if (page) params.append('page', page);
+      if (teacherId) params.append('teacherId', teacherId);
+      if (studentId) params.append('studentId', studentId);
+      if (month) params.append('month', month);
+      params.append('size', 100000);
+
+      const response = await axios.get(`/api/admin/bookings/filter?${params.toString()}`);
       dispatch(slice.actions.getBookingsSuccess(response.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));

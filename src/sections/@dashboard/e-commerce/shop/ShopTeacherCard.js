@@ -18,9 +18,10 @@ import Iconify from '../../../../components/Iconify';
 ShopTeacherCard.propTypes = {
   teacher: PropTypes.object,
   fullBlack: PropTypes.bool,
+  disabled: PropTypes.bool,
 };
 
-export default function ShopTeacherCard({ teacher, fullBlack = false }) {
+export default function ShopTeacherCard({ teacher, fullBlack = false, disabled = false }) {
   const { name, lastname, imageLink, information, email, resorts, id, eventsList, stars, level } = teacher;
   const { filters } = useSelector(state => state.teachers)
   const navigate = useNavigate();
@@ -39,7 +40,7 @@ export default function ShopTeacherCard({ teacher, fullBlack = false }) {
   }
 
   return (
-    <Box onClick={() => navigate(linkTo)}>
+    <Box onClick={() => !disabled && navigate(linkTo)} sx={{ opacity: disabled ? 0.5 : 1 }}>
       <Box sx={{ position: 'relative' }}>
         <Image alt={name} src={src} ratio="1/1" onError={() => setSrc('/assets/notFound.jpeg')} sx={{ borderRadius: '16px' }} />
 
@@ -77,7 +78,7 @@ export default function ShopTeacherCard({ teacher, fullBlack = false }) {
 
       <Stack spacing={1} sx={{ pt: 1, }}>
         <Box display='flex' justifyContent='space-between' alignItems='center'>
-          <Link to={linkTo} color="inherit" component={RouterLink}>
+          <Link to={linkTo} color="inherit" component={RouterLink} onClick={(e) => disabled && e.preventDefault()}>
             <Typography variant="subtitle1" noWrap>
               {name}
             </Typography>

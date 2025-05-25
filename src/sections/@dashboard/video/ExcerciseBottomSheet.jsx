@@ -263,7 +263,7 @@ export default function ExcerciseBottomSheet({ open, onClose, onOpen, course, de
                             await uploadVideo();
                             setActiveStep(activeStep + 1)
                         }}>
-                           {translate('course.exercise.startChallenge')}
+                           {translate('course.exercise.selectVideo')}
                         </Button>
                     </Box>
                 );

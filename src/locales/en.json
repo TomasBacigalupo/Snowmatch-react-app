@@ -544,6 +544,7 @@
     "exercise": {
       "cancel": "Cancel",
       "startChallenge": "Start Challenge",
+      "selectVideo": "Select Video",
       "objective": "El objetivo de este ejercicio es desafiar tu inclinacion al esquiar llevando tus esquies al maximo de angulacion posible. Te animas?",
       "howToPass": "Cómo paso el ejercicio?",
       "do": {

@@ -67,22 +67,24 @@ export default function VideoReviewedBottomSheet({ open, onClose, onOpen, select
                     maxHeight: '100%',
                     paddingTop: 'env(safe-area-inset-bottom)',
                     paddingBottom: 'env(safe-area-inset-bottom)',
-                    width: '100vw',
+                    width: '100%',
                     maxWidth: '100%',
+                    overflowX: 'hidden',
                 },
             }}
         >
             {selectedVideo && (
-                <MobileHeader onBack={onClose} title={translate(`Video comments`)} />
+                <MobileHeader onBack={onClose} title={"Detalles del video"} />
             )}
             <Box
                 sx={{
-                    width: '100vw',
+                    width: '100%',
                     maxWidth: '100%',
                     height: '100%',
                     display: 'flex',
                     flexDirection: 'column',
                     overflow: 'auto',
+                    overflowX: 'hidden',
                 }}
             >
                 {selectedVideo && (

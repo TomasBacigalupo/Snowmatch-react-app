@@ -33,7 +33,10 @@ export default function UserLessonsList({ horizontal = false }) {
 
   if (horizontal) {
     return (
-      <Box sx={{ position: 'relative' }}>
+      <Box sx={{ position: 'relative', bgcolor: 'background.paper' }}>
+        <Typography variant="h5" sx={{ px: 2, pt: 2 }}>
+          Mis clases
+        </Typography>
         {!isLoading && bookings.length > 1 && (
           <Box sx={{ position: 'absolute', right: 16, top: 16, zIndex: 1, display: 'flex', gap: 1 }}>
             <IconButton onClick={() => handleScroll('left')} size="small">

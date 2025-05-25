@@ -101,15 +101,15 @@ const VideoDemo = () => {
           sx={{
             textTransform: 'none',
             flex: 1,
-            background: 'linear-gradient(135deg, #2D7FF9 0%, #7B2FF9 100%)',
+            background: 'linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)',
             color: 'white',
             py: 1.5,
             transition: 'transform 0.2s ease, box-shadow 0.2s ease',
-            boxShadow: '0 4px 15px rgba(45, 127, 249, 0.2)',
+            boxShadow: '0 4px 15px rgba(33, 150, 243, 0.2)',
             '&:hover': {
-              background: 'linear-gradient(135deg, #2D7FF9 0%, #7B2FF9 100%)',
+              background: 'linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)',
               transform: 'translateY(-2px)',
-              boxShadow: '0 6px 20px rgba(45, 127, 249, 0.3)',
+              boxShadow: '0 6px 20px rgba(33, 150, 243, 0.3)',
             },
             '& .MuiButton-startIcon': {
               marginRight: 1.5

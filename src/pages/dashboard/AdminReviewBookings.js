@@ -46,6 +46,7 @@ import AdminTableCard from 'src/sections/@dashboard/admin/list/AdminTableCard';
 import AdminBookingTableRow from 'src/sections/@dashboard/admin/list/AdminBookingTableRow';
 import AdminBookingTableCard from 'src/sections/@dashboard/admin/list/AdminBookingTableCard';
 import BookingModal from 'src/sections/@dashboard/admin/BookingModal';
+import BookingSummary from 'src/sections/@dashboard/admin/list/BookingSummary';
 
 // ---------------------------------------------------------------------
 
@@ -57,15 +58,15 @@ const ROLE_OPTIONS = [
 ];
 
 const TABLE_HEAD = [
-  { id: 'id', label: 'ID', align: 'left' },  
+  { id: 'id', label: 'ID', align: 'left' },
   { id: 'student', label: 'Cliente', align: 'left' },
   { id: 'teacher', label: 'Instructor', align: 'left' },
-  { id: 'days', label: 'Días', align: 'left' },
+  { id: 'events', label: 'Clases', align: 'left' },
+  { id: 'dates', label: 'Fechas', align: 'left' },
   { id: 'resort', label: 'Montaña', align: 'left' },
-  { id: 'adults', label: 'Adultos', align: 'left' },
-  { id: 'children', label: 'Niños', align: 'left' },
+  { id: 'capacity', label: 'Capacidad', align: 'left' },
+  { id: 'price', label: 'Precio', align: 'left' },
   { id: 'comment', label: 'Comentario', align: 'left' },
-  { id: 'state', label: 'Estado', align: 'left' },
 ];
 
 // ----------------------------------------------------------------------
@@ -100,6 +101,11 @@ export default function AdminReviewBookings() {
   const [filterRole, setFilterRole] = useState(ROLE_OPTIONS[0]);
   const [filterLevel, setFilterLevel] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
+  const [filterMonth, setFilterMonth] = useState('');
+  const [filterTeacherId, setFilterTeacherId] = useState('');
+  const [filterStudentId, setFilterStudentId] = useState('');
+  const [teachers, setTeachers] = useState([]);
+  const [students, setStudents] = useState([]);
 
   const { currentTab: filterStatus, onChangeTab: onChangeFilterStatus } = useTabs('PENDING');
 
@@ -124,11 +130,22 @@ export default function AdminReviewBookings() {
     setFilterLevel(event.target.value);
   };
 
-  // const handleDeleteRow = (id) => {
-  //   const deleteRow = tableData.filter((row) => row.id !== id);
-  //   setSelected([]);
-  //   setTableData(deleteRow);
-  // };
+  const handleFilterMonth = (event) => {
+    setFilterMonth(event.target.value);
+    dispatch(getBookings(filterTeacherId, filterStudentId, event.target.value, page));
+  };
+
+  const handleFilterTeacherId = (event) => {
+    const value = event?.target?.value || event;
+    setFilterTeacherId(value);
+    dispatch(getBookings(value, filterStudentId, filterMonth, page));
+  };
+
+  const handleFilterStudentId = (event) => {
+    const value = event.target.value;
+    setFilterStudentId(value);
+    dispatch(getBookings(filterTeacherId, value, filterMonth, page));
+  };
 
   const handleDeleteRows = (selected) => {
     const deleteRows = tableData.filter((row) => !selected.includes(row.id));
@@ -165,7 +182,7 @@ export default function AdminReviewBookings() {
 
   const dispatch = useDispatch();
 
-  const { teachers, isOpenModal, isOpenEditBookingModal, selectedEmail, bookings } = useSelector((state) => { return state.admin });
+  const { teachers: reduxTeachers, isOpenModal, isOpenEditBookingModal, selectedEmail, bookings } = useSelector((state) => { return state.admin });
 
   const [reqPage, setReqPage] = useState(0);
 
@@ -176,19 +193,38 @@ export default function AdminReviewBookings() {
 
   const onChangePage3 = (event, newPage) => {
     dispatch(getTeachers(newPage, filterRole))
-    setTableData(teachers ?? [])
+    setTableData(reduxTeachers ?? [])
     setPage(newPage)
   }
 
+  const handleTeacherInputChange = (event, newValue) => {
+    dispatch(getTeachers(1, "TEACHER", newValue, 0));
+  };
+
+  const handleStudentInputChange = (event, newValue) => {
+    dispatch(getTeachers(1, "STUDENT", newValue, 0));
+  };
+
   useEffect(() => {
     setTableData(bookings ?? []);
-    console.log({bookings})
+    console.log({ bookings })
   }, [bookings]);
 
   useEffect(() => {
-    dispatch(getBookings(page, filterStatus))
-  }, [filterRole, filterName, filterLevel, page])
+    dispatch(getBookings(filterTeacherId, filterStudentId, filterMonth, page))
+  }, [page])
 
+  useEffect(() => {
+    if (reduxTeachers) {
+      setTeachers(reduxTeachers);
+    }
+  }, [reduxTeachers]);
+
+  useEffect(() => {
+    if (students) {
+      setStudents(students);
+    }
+  }, [students]);
 
   return (
     <Page title="Admin Review: List">
@@ -200,44 +236,44 @@ export default function AdminReviewBookings() {
             { name: 'Admin', href: PATH_DASHBOARD.admin.root },
             { name: 'Bookings' },
           ]}
-        // action={
-        //   <Button
-        //     variant="contained"
-        //     component={RouterLink}
-        //     to={PATH_DASHBOARD.user.new}
-        //     startIcon={<Iconify icon={'eva:plus-fill'} />}
-        //   >
-        //     New Client
-        //   </Button>
-        // }
+          action={
+            <Button
+              variant="contained"
+              startIcon={<Iconify icon="eva:plus-fill" />}
+              onClick={() => setIsOpen(true)}
+              sx={{
+                px: 3,
+                py: 1.5,
+                borderRadius: 1,
+                boxShadow: (theme) => theme.customShadows?.primary,
+                '&:hover': {
+                  boxShadow: (theme) => theme.customShadows?.primaryHover,
+                },
+              }}
+            >
+              Nueva Reserva
+            </Button>
+          }
         />
-        <Button onClick={() => setIsOpen(true)}>Create Booking</Button>
+        <AdminTableToolbar
+          filterName={filterName}
+          filterRole={filterRole}
+          filterLevel={filterLevel}
+          filterMonth={filterMonth}
+          filterTeacherId={filterTeacherId}
+          filterStudentId={filterStudentId}
+          onFilterName={handleFilterName}
+          onFilterRole={handleFilterRole}
+          onFilterLevel={handleFilterLevel}
+          onFilterMonth={handleFilterMonth}
+          onFilterTeacherId={handleFilterTeacherId}
+          onFilterStudentId={handleFilterStudentId}
+          bookings={true}
+        />
+        <BookingSummary bookings={tableData} />
         <Card>
-          <Tabs
-            allowScrollButtonsMobile
-            variant="scrollable"
-            scrollButtons="auto"
-            value={filterStatus}
-            onChange={onChangeFilterStatus}
-            sx={{ px: 2, bgcolor: 'background.neutral' }}
-          >
-            {STATUS_OPTIONS.map((tab) => (
-              <Tab disableRipple key={tab} label={tab} value={tab} />
-            ))}
-          </Tabs>
-          <BookingModal isOpen={isOpen} onClose={() => setIsOpen(false)}/>
+          <BookingModal isOpen={isOpen} onClose={() => setIsOpen(false)} />
           <Divider />
-
-          <AdminTableToolbar
-            filterName={filterName}
-            filterRole={filterRole}
-            filterLevel={filterLevel}
-            onFilterName={handleFilterName}
-            onFilterRole={handleFilterRole}
-            onFilterLevel={handleFilterLevel}
-            optionsRole={ROLE_OPTIONS}
-          />
-
           <Scrollbar>
             <Hidden smDown>
               <TableContainer sx={{ minWidth: 800, position: 'relative' }}>
@@ -309,7 +345,7 @@ export default function AdminReviewBookings() {
                   onEditRow={() => handleEditRow(row.id)}
                   onConfirmRow={() => handleConfirmRow(row.id)}
                   onDeclineRow={() => handleDeclineOpenModal(row.email)}
-                  onWapp={()=>{handleContactWapp(row.countryCode, row.cellphone, row.name)}}
+                  onWapp={() => { handleContactWapp(row.countryCode, row.cellphone, row.name) }}
                   onEvents={() => { navigate(PATH_DASHBOARD.admin.events(row.id)) }}
                 />))}
 
@@ -358,7 +394,7 @@ export default function AdminReviewBookings() {
 
 function applySortFilter({ tableData, comparator, filterName, filterStatus, filterRole }) {
   return tableData
-  
+
   if (tableData.length === 0) {
     return tableData
   }

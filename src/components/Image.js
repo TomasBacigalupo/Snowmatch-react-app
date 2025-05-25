@@ -12,7 +12,7 @@ Image.propTypes = {
   sx: PropTypes.object,
 };
 
-export default function Image({ ratio, disabledEffect = false, effect = 'blur', sx, ...other }) {
+export default function Image({ ratio, disabledEffect = false, effect = undefined, sx, ...other }) {
   if (ratio) {
     return (
       <Box

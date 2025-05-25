@@ -6,16 +6,16 @@ import Iconify from '../../../../components/Iconify';
 // ----------------------------------------------------------------------
 
 const TEACHER_CHIPS = [
-  { name: 'Thiago', value: '1' },
-  { name: 'Agos', value: '2' },
-  { name: 'Charly', value: '3' },
+  { name: 'Thiago', value: '850' },
+  { name: 'Agos', value: '897' },
+  { name: 'Charly', value: '912' },
   { name: 'Fifu', value: '4' },
-  { name: 'Gonzalo', value: '5' },
-  { name: 'Sebas', value: '6' },
-  { name: 'Tadeo', value: '7' },
+  { name: 'Gonzalo', value: '903' },
+  { name: 'Sebas', value: '904' },
+  { name: 'Tadeo', value: '905' },
   { name: 'Lola', value: '8' },
-  { name: 'Popi', value: '9' },
-  { name: 'Maite', value: '10' },
+  { name: 'Popi', value: '592' },
+  { name: 'Maite', value: '653' },
 ];
 
 AdminTableToolbar.propTypes = {

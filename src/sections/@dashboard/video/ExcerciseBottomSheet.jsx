@@ -213,8 +213,8 @@ export default function ExcerciseBottomSheet({ open, onClose, onOpen, course, de
         switch (activeStep) {
             case 0:
                 return (
-                    <Box my={2} display="flex" height='100%' flexDirection="column" justifyContent='space-between'>
-                        <Box mb={2} display="flex" flexDirection="column" >
+                    <Box my={2} display="flex" height='100%' flexDirection="column" sx={{ position: 'relative' }}>
+                        <Box mb={2} display="flex" flexDirection="column" sx={{ flex: 1, overflow: 'auto', pb: 10 }}>
                             <StoryPlayer />
                             <Box>
                                 <Paper
@@ -223,6 +223,7 @@ export default function ExcerciseBottomSheet({ open, onClose, onOpen, course, de
                                         borderColor: 'primary.dark',
                                         borderRadius: 2,
                                         p: 2,
+                                        mb: 4
                                     }}
                                 >
                                     <Markdown>
@@ -249,22 +250,74 @@ export default function ExcerciseBottomSheet({ open, onClose, onOpen, course, de
                             <Box display="flex" alignItems="center" gap={1} mb={1}>
                                 <Box
                                     component="img"
-                                    src="/icons/pc.jpg"
-                                    sx={{ width: 140, height: 140, objectFit: "contain" }}
+                                    src="/assets/avatars/snow-ai.png"
+                                    sx={{ 
+                                        width: 80, 
+                                        height: 80, 
+                                        objectFit: "cover",
+                                        borderRadius: '50%',
+                                        border: (theme) => `4px solid ${theme.palette.primary.main}`,
+                                        boxShadow: (theme) => theme.customShadows?.z8,
+                                        transition: 'transform 0.2s ease-in-out',
+                                        '&:hover': {
+                                            transform: 'scale(1.05)',
+                                        }
+                                    }}
                                 />
-                                <Typography variant="h3" sx={{ color: "primary.dark" }}>
-                                    {translate('course.exercise.aiCorrection')}
+                                <Box>
+                                    <Typography variant="h3" sx={{ color: "primary.dark" }}>
+                                        {translate('course.exercise.aiCorrection')}
+                                    </Typography>
+                                    <Typography variant="subtitle1" sx={{ color: "text.secondary" }}>
+                                        Snow es un instructor de esqui AI
+                                    </Typography>
+                                </Box>
+                            </Box>
+
+                            <Box 
+                                sx={{ 
+                                    mt: 4,
+                                    p: 3,
+                                    backgroundColor: 'background.neutral',
+                                    borderRadius: 2,
+                                    border: (theme) => `1px solid ${theme.palette.divider}`
+                                }}
+                            >
+                                <Typography variant="h6" sx={{ mb: 1, color: 'primary.dark' }}>
+                                    ¿Querés una revisión más detallada?
+                                </Typography>
+                                <Typography variant="body1" sx={{ color: 'text.secondary' }}>
+                                    También vas a poder solicitar que un instructor de SnowMatch te dé sus correcciones personalizadas.
                                 </Typography>
                             </Box>
                         </Box>
                         
-
-                        <Button variant="contained" sx={{ py: 2, my: 2, marginBottom: 'env(safe-area-inset-bottom)' }} fullWidth onClick={async () => {
-                            await uploadVideo();
-                            setActiveStep(activeStep + 1)
-                        }}>
-                           {translate('course.exercise.selectVideo')}
-                        </Button>
+                        <Box
+                            sx={{
+                                position: 'fixed',
+                                bottom: 0,
+                                left: 0,
+                                right: 0,
+                                px: 2,
+                                marginBottom: 'env(safe-area-inset-bottom)',
+                                zIndex: 1000,
+                                backgroundColor: 'background.paper'
+                            }}
+                        >
+                            <Button 
+                                variant="contained" 
+                                sx={{ 
+                                    py: 2,
+                                }} 
+                                fullWidth 
+                                onClick={async () => {
+                                    await uploadVideo();
+                                    setActiveStep(activeStep + 1)
+                                }}
+                            >
+                               {translate('course.exercise.selectVideo')}
+                            </Button>
+                        </Box>
                     </Box>
                 );
             case 1:
@@ -289,7 +342,7 @@ export default function ExcerciseBottomSheet({ open, onClose, onOpen, course, de
                             }}
                             sx={{ py: 2, my: 2 }}
                         >
-                            Upload
+                            Subir Video
                         </LoadingButton>
 
                     </Box>
@@ -360,28 +413,95 @@ export default function ExcerciseBottomSheet({ open, onClose, onOpen, course, de
                         justifyContent="center"
                         alignItems="center"
                         textAlign="center"
-                        sx={{ padding: 4, backgroundColor: '#f5f5f5', borderRadius: 2 }}
+                        sx={{ 
+                            padding: 4, 
+                            backgroundColor: 'background.paper',
+                            borderRadius: 2,
+                            boxShadow: (theme) => theme.customShadows?.z8,
+                            maxWidth: 600,
+                            mx: 'auto',
+                            my: 2
+                        }}
                     >
-                        <CheckCircleIcon
-                            sx={{ fontSize: 64, color: 'green', mb: 2 }}
+                        <Box
+                            component="img"
+                            src="/assets/avatars/snow-ai.png"
+                            sx={{ 
+                                width: 120,
+                                height: 120,
+                                mb: 3,
+                                borderRadius: '50%',
+                                border: (theme) => `4px solid ${theme.palette.primary.main}`,
+                                boxShadow: (theme) => theme.customShadows?.z8,
+                            }}
                         />
-                        <Typography variant="h5" gutterBottom>
-                            Excelente Bajada! 🎉
+                        
+                        <CheckCircleIcon
+                            sx={{ 
+                                fontSize: 48, 
+                                color: 'success.main', 
+                                mb: 2,
+                                position: 'absolute',
+                                top: 20,
+                                right: 20,
+                                backgroundColor: 'background.paper',
+                                borderRadius: '50%',
+                                padding: 0.5
+                            }}
+                        />
+
+                        <Typography variant="h4" gutterBottom sx={{ color: 'primary.main', fontWeight: 'bold' }}>
+                            ¡Video subido con éxito! 🎉
                         </Typography>
-                        <Typography variant="body1" sx={{ mb: 2 }}>
-                            SnowMatch AI corrigio tu video. Te vamos a enviar una notificacion cuando un Pro lo revise.
+
+                        <Typography variant="body1" sx={{ mb: 3, color: 'text.secondary' }}>
+                            Snow está analizando tu video. Te notificaremos cuando termine la corrección.
                         </Typography>
-                        <Typography variant="subtitle2" color="textSecondary" sx={{ mb: 3 }}>
-                            Mientras tanto podés mirar otros cursos para preparate para tu proximo Challange.
-                        </Typography>
-                        <Button
-                            variant="contained"
-                            color="primary"
-                            onClick={onCloseWrapper}
-                            sx={{ textTransform: 'none' }}
+
+                        <Box 
+                            sx={{ 
+                                width: '100%',
+                                p: 3,
+                                mb: 3,
+                                backgroundColor: 'background.neutral',
+                                borderRadius: 1,
+                                border: (theme) => `1px solid ${theme.palette.divider}`
+                            }}
                         >
-                            Close
-                        </Button>
+                            <Typography variant="subtitle1" sx={{ mb: 1, fontWeight: 'bold' }}>
+                                ¿Querés una revisión más detallada?
+                            </Typography>
+                            <Typography variant="body2" color="text.secondary">
+                                Podés solicitar que un profesor de SnowMatch revise tu video usando ProChecks para obtener feedback personalizado.
+                            </Typography>
+                        </Box>
+
+                        <Box sx={{ display: 'flex', gap: 2, width: '100%' }}>
+                            <Button
+                                variant="outlined"
+                                color="primary"
+                                onClick={onCloseWrapper}
+                                sx={{ 
+                                    flex: 1,
+                                    textTransform: 'none',
+                                    py: 1.5
+                                }}
+                            >
+                                Más tarde
+                            </Button>
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                onClick={onCloseWrapper}
+                                sx={{ 
+                                    flex: 1,
+                                    textTransform: 'none',
+                                    py: 1.5
+                                }}
+                            >
+                                Solicitar Revisión
+                            </Button>
+                        </Box>
                     </Box>
                 );
             default:

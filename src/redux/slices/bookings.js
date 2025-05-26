@@ -469,7 +469,7 @@ export function createBooking(teacherId, message, children, adults, events, tota
     };
 }
 
-export function createAdminBooking(teacherId, studentId, message, children, adults, events, totalPrice) {
+export function createAdminBooking(teacherId, studentId, message, children, adults, events, totalPrice, bookingType) {
     return async () => {
         dispatch(slice.actions.startLoading());
         try {
@@ -479,7 +479,6 @@ export function createAdminBooking(teacherId, studentId, message, children, adul
                 userComment: message,
                 eventList: events.map(e => {
                     if (e.lessonTime === 'AFTERNOON') {
-
                         return {
                             ...e,
                             start: dayjs(e.start),
@@ -506,6 +505,7 @@ export function createAdminBooking(teacherId, studentId, message, children, adul
                 adults: adults,
                 totalPrice: totalPrice,
                 price: totalPrice,
+                type: bookingType
             });
             dispatch(slice.actions.createBookingSuccess());
         } catch (error) {

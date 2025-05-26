@@ -136,7 +136,7 @@ export default function AdminReviewBookings() {
   };
 
   const handleFilterTeacherId = (event) => {
-    const value = event?.target?.value || event;
+    const value = event?.target?.value ?? event;
     setFilterTeacherId(value);
     dispatch(getBookings(value, filterStudentId, filterMonth, page));
   };

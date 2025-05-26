@@ -325,10 +325,23 @@ const PremiumContainer = ({
             </Grid>
 
             {/* Payment Method Dialog */}
-            <Dialog open={showPaymentDialog} onClose={() => setShowPaymentDialog(false)}>
-                <DialogTitle>Selecciona tu método de pago</DialogTitle>
-                <DialogContent>
-                    <Stack spacing={2} sx={{ mt: 2 }}>
+            <SwipeableDrawer
+                anchor="bottom"
+                open={showPaymentDialog}
+                onClose={() => setShowPaymentDialog(false)}
+                onOpen={() => setShowPaymentDialog(true)}
+                sx={{
+                    '& .MuiDrawer-paper': {
+                        borderTopLeftRadius: 16,
+                        borderTopRightRadius: 16,
+                        pb: 'env(safe-area-inset-bottom)',
+                        pt: 'env(safe-area-inset-top)',
+                    }
+                }}
+            >
+                <Box sx={{ p: 2 }}>
+                    <Typography variant="h6" sx={{ mb: 2 }}>Selecciona tu método de pago</Typography>
+                    <Stack spacing={2}>
                         {isIOS && !isWeb && (
                             <Button
                                 variant="contained"
@@ -349,12 +362,16 @@ const PremiumContainer = ({
                         >
                             {paymentLoading ? <CircularProgress size={24} /> : 'Pagar con Mercado Pago'}
                         </Button>
+                        <Button 
+                            variant="outlined" 
+                            onClick={() => setShowPaymentDialog(false)}
+                            sx={{ mt: 1 }}
+                        >
+                            Cancelar
+                        </Button>
                     </Stack>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={() => setShowPaymentDialog(false)}>Cancelar</Button>
-                </DialogActions>
-            </Dialog>
+                </Box>
+            </SwipeableDrawer>
         </Grid>
     );
 };

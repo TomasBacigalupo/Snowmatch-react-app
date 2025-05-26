@@ -23,7 +23,8 @@ const BookingModal = ({ isOpen, onClose }) => {
         children: 0,
         adults: 0,
         comment: '',
-        teacherSearch: ''
+        teacherSearch: '',
+        bookingType: 'ASSIGNED'
     });
 
     const [dateRange, setDateRange] = useState({
@@ -125,13 +126,13 @@ const BookingModal = ({ isOpen, onClose }) => {
     const handleSubmit = () => {
         const totalPrice = formData.dateTimes.reduce((acc, curr) => acc + Number(curr.price), 0);
         const events = formData.dateTimes.map((dateTime) => ({
-            title: 'Asignada',
+            title: formData.bookingType === 'REFERRED' ? 'Referida' : 'Asignada',
             start: dateTime.date,
             end: dateTime.date,
             lessonTime: dateTime.time,
             price: dateTime.price,
-            type: 'CLASS',
-            textColor: '#FF0000'
+            eventType: formData.bookingType === 'REFERRED' ? 'REFERRED' : 'CLASS',
+            textColor: formData.bookingType === 'REFERRED' ? '#00FF00' : '#FF0000' 
         }));
 
         console.log({
@@ -142,7 +143,8 @@ const BookingModal = ({ isOpen, onClose }) => {
             resort: formData.resort,
             children: Number(formData.children),
             adults: Number(formData.adults),
-            eventList: events
+            eventList: events,
+            bookingType: formData.bookingType
         });
 
         dispatch(createAdminBooking(
@@ -152,7 +154,8 @@ const BookingModal = ({ isOpen, onClose }) => {
             Number(formData.children),
             Number(formData.adults),
             events,
-            totalPrice));
+            totalPrice,
+            formData.bookingType));
 
         setFormData({
             teacher: null,
@@ -161,7 +164,8 @@ const BookingModal = ({ isOpen, onClose }) => {
             resort: 'Cerro Catedral',
             children: 0,
             adults: 0,
-            teacherSearch: ''
+            teacherSearch: '',
+            bookingType: 'ASIGNADO'
         });
         onClose();
     };
@@ -257,7 +261,7 @@ const BookingModal = ({ isOpen, onClose }) => {
                 />
 
                 <Grid container spacing={2} sx={{ mt: 2 }}>
-                    <Grid item xs={12} md={4}>
+                    <Grid item xs={12} md={6}>
                         <FormControl fullWidth>
                             <InputLabel id="resort-label">Resort</InputLabel>
                             <Select
@@ -273,7 +277,24 @@ const BookingModal = ({ isOpen, onClose }) => {
                             </Select>
                         </FormControl>
                     </Grid>
-                    <Grid item xs={12} md={4}>
+                    <Grid item xs={12} md={6}>
+                        <FormControl fullWidth>
+                            <InputLabel id="booking-type-label">Tipo de Reserva</InputLabel>
+                            <Select
+                                labelId="booking-type-label"
+                                id="booking-type-select"
+                                value={formData.bookingType}
+                                onChange={(e) => setFormData((prevData) => ({
+                                    ...prevData,
+                                    bookingType: e.target.value,
+                                }))}
+                            >
+                                <MenuItem value="ASSIGNED">Asignado</MenuItem>
+                                <MenuItem value="REFERRED">Referida</MenuItem>
+                            </Select>
+                        </FormControl>
+                    </Grid>
+                    <Grid item xs={12} md={6}>
                         <TextField
                             fullWidth
                             label="Number of Children"
@@ -284,7 +305,7 @@ const BookingModal = ({ isOpen, onClose }) => {
                             inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
                         />
                     </Grid>
-                    <Grid item xs={12} md={4}>
+                    <Grid item xs={12} md={6}>
                         <TextField
                             fullWidth
                             label="Number of Adults"

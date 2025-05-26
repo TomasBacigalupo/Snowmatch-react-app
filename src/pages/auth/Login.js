@@ -3,8 +3,9 @@ import { capitalCase } from 'change-case';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // @mui
 import { styled } from '@mui/material/styles';
-import { Box, Card, Stack, Link, Container, Typography, Button } from '@mui/material';
+import { Box, Card, Stack, Link, Container, Typography, Button, IconButton } from '@mui/material';
 import EmailIcon from '@mui/icons-material/Email';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 // routes
 import { PATH_AUTH, PATH_GUEST } from '../../routes/paths';
 // hooks
@@ -82,7 +83,19 @@ export default function Login() {
   return (
     <Page title="Login">
       <RootStyle>
+      {!smUp && (
+            <IconButton 
+              onClick={() => navigate(-1)} 
+              sx={{ 
+                color: 'common.black',
+                paddingTop: 'env(safe-area-inset-top)'
+              }}
+            >
+              <ArrowBackIcon />
+            </IconButton>
+          )}
         <HeaderStyle>
+          
           {smUp && <Logo />}
           {smUp && (
             <Typography variant="body2" sx={{ mt: { md: -2 } }} align="right">

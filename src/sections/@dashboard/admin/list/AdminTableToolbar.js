@@ -6,16 +6,16 @@ import Iconify from '../../../../components/Iconify';
 // ----------------------------------------------------------------------
 
 const TEACHER_CHIPS = [
-  { name: 'Thiago', value: '850' },
-  { name: 'Agos', value: '897' },
-  { name: 'Charly', value: '912' },
-  { name: 'Fifu', value: '4' },
-  { name: 'Gonzalo', value: '903' },
-  { name: 'Sebas', value: '904' },
-  { name: 'Tadeo', value: '905' },
-  { name: 'Lola', value: '8' },
-  { name: 'Popi', value: '592' },
-  { name: 'Maite', value: '653' },
+  { name: 'Thiago', value: 850 },
+  { name: 'Agos', value: 897 },
+  { name: 'Charly', value: 912 },
+  { name: 'Fifu', value: 4 },
+  { name: 'Gonzalo', value: 903 },
+  { name: 'Sebas', value: 904 },
+  { name: 'Tadeo', value: 905 },
+  { name: 'Lola', value: 8 },
+  { name: 'Popi', value: 592 },
+  { name: 'Maite', value: 653 },
 ];
 
 AdminTableToolbar.propTypes = {
@@ -171,18 +171,11 @@ export default function AdminTableToolbar({
           }}
         >
           {[
-            { value: '01', label: 'January' },
-            { value: '02', label: 'February' },
-            { value: '03', label: 'March' },
-            { value: '04', label: 'April' },
-            { value: '05', label: 'May' },
             { value: '06', label: 'June' },
             { value: '07', label: 'July' },
             { value: '08', label: 'August' },
             { value: '09', label: 'September' },
             { value: '10', label: 'October' },
-            { value: '11', label: 'November' },
-            { value: '12', label: 'December' },
           ].map((option) => (
             <MenuItem
               key={option.value}

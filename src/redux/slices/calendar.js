@@ -308,7 +308,7 @@ export function getEventsByDate(date, isSchoolAdmin, businessId) {
         const utcOffset = dateStart.getTimezoneOffset() * 60000; // Get the UTC offset in milliseconds
         const adjustedDateStart = new Date(dateStart.getTime() + utcOffset);
         const adjustedDateEnd = new Date(dateEnd.getTime() + utcOffset);
-        if (e?.source === 'APP' && e.eventType === "CLASS") {
+        if (e.eventType === "CLASS") {
           return {
             ...e,
             title: isSchoolAdmin ? (e?.assignedUsers?.length > 0 ? `${e?.assignedUsers[0]?.name} ${e?.assignedUsers[0]?.lastname}` : e?.owner?.name) : e.title ?? 'Match',
@@ -317,7 +317,20 @@ export function getEventsByDate(date, isSchoolAdmin, businessId) {
             price: e.price ?? 0,
             start: adjustedDateStart,
             end: adjustedDateEnd,
-            textColor: e.textColor ?? "#FFC107",
+            textColor: "#00FF00",
+            type: "App class"
+          };
+        }
+        if (e.eventType === "REFERRED") {
+          return {
+            ...e,
+            title: isSchoolAdmin ? (e?.assignedUsers?.length > 0 ? `${e?.assignedUsers[0]?.name} ${e?.assignedUsers[0]?.lastname}` : e?.owner?.name) : e.title ?? 'Match',
+            name: 'Clase Solicitada',
+            description: e.description ?? 'Un usuario ah solicitado una clase este dia',
+            price: e.price ?? 0,
+            start: adjustedDateStart,
+            end: adjustedDateEnd,
+            textColor: "#FFC107",
             type: "App class"
           };
         }
@@ -331,24 +344,6 @@ export function getEventsByDate(date, isSchoolAdmin, businessId) {
             start: adjustedDateStart,
             end: adjustedDateEnd,
             textColor: e.textColor ?? "#FFC107",
-            type: "App class"
-          };
-        }
-        if (e?.source === 'PRODUCT' && e.eventType === "CLASS") {
-          let title = e.title
-          if (e.title === 'PRIVATE_FULL_DAY') {
-            title = 'Clase privada día completo'
-          }
-          if (e.title === 'PRIVATE_HALF_DAY') {
-            title = 'Clase privada medio día'
-          }
-
-          return {
-            ...e,
-            title: title,
-            start: adjustedDateStart,
-            end: adjustedDateEnd,
-            textColor: "#00AB55",
             type: "App class"
           };
         }

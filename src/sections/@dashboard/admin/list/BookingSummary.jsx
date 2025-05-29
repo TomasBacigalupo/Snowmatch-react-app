@@ -33,7 +33,7 @@ export default function BookingSummary({ bookings }) {
                 const start = new Date(event.start);
                 const end = new Date(event.end);
                 const hours = (end - start) / (1000 * 60 * 60);
-                return total + hours;
+                return total + Math.min(hours, 6);
             }
             return total;
         }, 0);
@@ -41,10 +41,10 @@ export default function BookingSummary({ bookings }) {
 
     const stats = {
         total: bookings?.length || 0,
-        assignedHours: bookings?.reduce((sum, booking) => 
-            sum + calculateHoursByType(booking.eventList, 'ASIGNED'), 0) || 0,
-        requiredHours: bookings?.reduce((sum, booking) => 
-            sum + calculateHoursByType(booking.eventList, 'REQUIRED'), 0) || 0,
+        assignedHours: bookings?.filter(booking => booking.type === 'ASSIGNED').reduce((sum, booking) => 
+            sum + calculateHoursByType(booking.eventList, 'CLASS'), 0) || 0,
+        requiredHours: bookings?.filter(booking => booking.type === 'REFERRED').reduce((sum, booking) => 
+            sum + calculateHoursByType(booking.eventList, 'REFERRED'), 0) || 0,
         totalRevenue: bookings?.reduce((sum, booking) => sum + (booking.price || 0), 0) || 0,
         totalHours: bookings?.reduce((sum, booking) => 
             sum + calculateHours(booking.eventList), 0) || 0,

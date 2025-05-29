@@ -38,6 +38,7 @@ import AirbnbFilters from 'src/sections/@dashboard/e-commerce/shop/AirbnbFilters
 import { openCatedral } from 'src/services/facebook';
 import { Helmet } from 'react-helmet-async';
 import { LoadingButton } from '@mui/lab';
+import SchoolProducts from 'src/sections/@dashboard/e-commerce/shop/SchoolProducts';
 // ----------------------------------------------------------------------
 
 function useQuery() {
@@ -57,7 +58,7 @@ export default function EcommerceShop({ isGuest = false, teacherType = "school" 
   const query = useQuery()
   const [openFilter, setOpenFilter] = useState(false);
   const [page, setPage] = useState(0);
-
+  
   const { teachers, sortBy, filters, teachersWithEvents, category, isLoading, isLoadingLoadMore } = useSelector((state) => { return state.teachers })
 
   useEffect(() => {
@@ -190,8 +191,7 @@ export default function EcommerceShop({ isGuest = false, teacherType = "school" 
           sx={{ mb: 2 }}
           xs={12}
         >
-          <ShopProductSearch filters={filters} teachers={filteredTeachers} />
-
+          <ShopProductSearch filters={filters} teachers={teachers} />
 
           {/* {!isTeacher && <CartWidget />} */}
 
@@ -247,7 +247,6 @@ export default function EcommerceShop({ isGuest = false, teacherType = "school" 
         {teacherType === "independent" && category === "standard" && <ShopStandardProducts teachers={filteredTeachers} loading={isLoading} />}
         {teacherType === "independent" && category === "premium" && <ShopTeacherList teachers={filteredTeachers} loading={isLoading} />}
         {teacherType === "school" && <ShopTeacherList teachers={filteredTeachers} loading={!filteredTeachers.length && isDefault} />}
-        
         <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
           <LoadingButton
             loading={isLoadingLoadMore}
@@ -299,7 +298,7 @@ function checkOverlap(event, filter) {
 }
 
 function applyFilter(teachers, sortBy, filters, teacherType) {
-
+  return teachers;
   teachers = orderBy(teachers, ['stars'], ['desc']);
   // SORT BY
   // if (sortBy === 'featured') {

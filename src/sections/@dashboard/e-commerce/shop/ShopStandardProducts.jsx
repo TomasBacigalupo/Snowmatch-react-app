@@ -15,6 +15,7 @@ import ShopCategorizedProductCard from './ShopCategorizedProductCard';
 import { fCurrency } from 'src/utils/formatNumber';
 import { getFreeTeachers } from 'src/redux/slices/teachers';
 import ShopCategorizedProductAvatarCard from './ShopCategorizedProductAvatarCard';
+import SchoolProducts from './SchoolProducts';
 // ----------------------------------------------------------------------
 
 ShopStandardProducts.propTypes = {
@@ -73,13 +74,22 @@ export default function ShopStandardProducts({ loading }) {
                     avatar='/assets/avatars/chona-con-niño.png'
                 />}
                 </Grid>
+                {filters.resort === "Cerro Catedral" && <Grid item xs={12}>
+                    <Typography variant='h6'>
+                        Packs de SnowMatch
+                    </Typography>
+                </Grid>}
+            </Grid>}
+            {
+                filters.resort === "Cerro Catedral" && <SchoolProducts products={products} isLoading={isLoading} />
+            }
+            <Grid container spacing={3}>
                 <Grid item xs={12}>
                     <Typography variant='h6'>
                         O elegí tu pro ideal
                     </Typography>
                 </Grid>
-            </Grid>}
-
+            </Grid>
             <Box
                 sx={{
                     display: 'grid',

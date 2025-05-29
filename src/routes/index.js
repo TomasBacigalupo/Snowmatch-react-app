@@ -27,6 +27,7 @@ import BackButtonLayout from 'src/layouts/BackButtonLayout';
 import Training from 'src/pages/dashboard/Training';
 import Maps from 'src/pages/dashboard/Maps';
 import SearchPage from 'src/pages/search/resort/discipline';
+import BlogEmbed from '../pages/BlogEmbed';
 // ----------------------------------------------------------------------
 
 const Loadable = (Component) => (props) => {
@@ -241,8 +242,11 @@ export default function Router() {
         { path: 'trown', element: <RedirectToShop url={"https://www.trown.com.ar"} /> },
         { path: 'salpa', element: <RedirectToShop url={"https://www.salpa.com.ar"} /> },
         { path: 'dignos', element: <RedirectToShop url={"https://dignosofficial.com"} /> },
-
       ]
+    },
+    {
+      path: 'blog',
+      element: <BlogEmbed />
     },
 
     // Dashboard Routes

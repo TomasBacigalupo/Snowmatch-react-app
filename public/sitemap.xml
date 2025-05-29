@@ -14,6 +14,11 @@
         <priority>0.9</priority>
     </url>
     <url>
+        <loc>https://snowmatch.pro/buenos-aires</loc>
+        <changefreq>weekly</changefreq>
+        <priority>0.9</priority>
+    </url>
+    <url>
         <loc>https://snowmatch.pro/cerro-bayo</loc>
         <changefreq>weekly</changefreq>
         <priority>0.9</priority>

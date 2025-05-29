@@ -445,7 +445,7 @@ export function getFreeTeachers(startDate, endDate, resort, page, size = 20) {
       const teachers = response.data.map(t => ({
         ...t,
         stars: t.stars ? t.stars : 0
-      })).sort((a, b) => b.stars - a.stars);
+      }));
 
       dispatch(slice.actions.getTeachersSuccess(teachers));
     } catch (error) {

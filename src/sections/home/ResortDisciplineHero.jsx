@@ -157,6 +157,7 @@ const TeacherCard = styled(Box)(({ theme }) => ({
 
 const SKI_OPTIONS = ['Esqui', 'Ski', 'ski', 'esqui', 'skiing', 'skiing--lessons', 'ski--lessons', 'skiing--lessons', 'ski--lessons']
 const RESORT_OPTIONS = [
+    { id: 'Buenos Aires', slugs: ['buenos-aires', 'la-plata'] },
     { id: 'Cerro Catedral', slugs: ['cerro-catedral', 'catedral'] },
     { id: 'Chapelco', slugs: ['cerro-chapelco', 'chapelco'] },
     { id: 'La Hoya', slugs: ['cerro-la-hoya', 'la-hoya'] },

@@ -7,7 +7,7 @@ import { Box, Tab, Card, Grid, Divider, Container, Typography, Hidden, Button } 
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
-import { getTeacherWithRates, addCart, onGotoStep, getTeacherBiId } from '../../redux/slices/teachers';
+import { getTeacherWithRates, addCart, onGotoStep, getTeacherBiId, getFreeTeachers } from '../../redux/slices/teachers';
 // routes
 import { PATH_DASHBOARD, PATH_GUEST } from '../../routes/paths';
 // hooks
@@ -35,6 +35,7 @@ import Policies from '../../sections/@dashboard/e-commerce/teacher-details/Polic
 import TimeDetails from 'src/sections/@dashboard/e-commerce/teacher-details/TimeDetails';
 import { Helmet } from 'react-helmet-async';
 import { trackViewTeacher } from 'src/services/tagmanager';
+import RecommendedTeachers from 'src/sections/home/RecommendedTeachers';
 // ----------------------------------------------------------------------
 
 const PRODUCT_DESCRIPTION = [
@@ -91,7 +92,7 @@ export default function EcommerceTeacherDetails({ isGuest = false }) {
   const { id = '' } = useParams();
   const { checkout } = useSelector((state) => state.product);
   const { translate } = useLocales()
-  const { teacher, isLoading } = useSelector((state) => state.teachers);
+  const { teacher, isLoading, teachers, filters } = useSelector((state) => state.teachers);
   const { user } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
 
@@ -99,6 +100,13 @@ export default function EcommerceTeacherDetails({ isGuest = false }) {
   useEffect(() => {
     dispatch(getTeacherBiId(id));
   }, [dispatch, id]);
+
+  useEffect(() => {
+    const resort = teacher?.resorts?.lenght > 0 ? teacher?.resorts[0] : "Cerro Catedral";
+    if (teacher) {
+      dispatch(getFreeTeachers(filters.from, filters.to, resort, 0, 6));
+    }
+  }, [dispatch, teacher]);
 
   const handleAddCart = (teacher) => {
     dispatch(addCart(teacher));
@@ -199,146 +207,130 @@ export default function EcommerceTeacherDetails({ isGuest = false }) {
         />
         {!isLoading && teacher && (
           <>
-            <TeacherDetailsCarousel teacher={{ images: [teacher?.imageLink], name: teacher?.name }} />
-            <Grid container p={0}>
-              {/* <Grid item xs={12} md={6} lg={7}>
-                <TeacherDetailsCarousel teacher={{ images: [teacher?.imageLink], name: teacher?.name }} />
-              </Grid> */}
-              <Grid item xs={12} md={6} lg={5}>
-                <Hidden smUp>
-                  <TeacherDetailsSummary
-                    teacher={teacher}
-                    cart={checkout.cart}
-                    onAddCart={handleAddCart}
-                    onGotoStep={handleGotoStep}
-                  />
-                </Hidden>
-                <Hidden smDown>
-                  <Box mx={3} width='100%' mt={1} mb={2}>
-                    <Typography component='p' variant='h6'>{teacher.name}</Typography>
+            <Hidden smUp>
+              <TeacherDetailsCarousel teacher={{ images: [teacher?.imageLink], name: teacher?.name }} />
+            </Hidden>
+            <Grid container spacing={3} p={0}>
+              <Hidden smDown>
+                <Grid item xs={12} md={6} lg={7}>
+                  <TeacherDetailsCarousel teacher={{ images: [teacher?.imageLink], name: teacher?.name }} />
+
+                  <TeacherDetailsMobileReview teacher={teacher} />
+                  <Box mb={3}>
+                    <Typography component="h2" variant="h5" gutterBottom>
+                      {translate('teacherDetails.ocupation.title')}
+                    </Typography>
+                    <Typography component="p" variant="body1" paragraph>
+                      {translate('teacherDetails.ocupation.description')}
+                    </Typography>
+                    <Box onClick={() => setIsOpen(true)}>
+                      <TeacherDetailsMobileCalendar teacher={teacher} />
+                    </Box>
                   </Box>
-                </Hidden>
-                <Grid item xs={12} px={3}>
-                  <Typography component="h2" variant="body1" children={teacher.information} />
+                  <Box mb={3}>
+                    <Divider />
+                  </Box>
+                  <Policies />
+                  <Box mb={3}>
+                    <Divider />
+                  </Box>
+                  <TimeDetails />
+
                 </Grid>
-                <Grid item xs={12} px={3}>
-                  <Typography component="h3" variant="body1" children={teacher.description} />
-                </Grid>
-                <Box m={2} >
-                  <Divider />
-                </Box>
-                <Grid container>
-                  {PRODUCT_DESCRIPTION.map((item) => (
-                    <Grid item xs={12} md={4} key={item.title} width={'100%'}>
-                      <Box display='flex' alignItems='flex-start' sx={{ my: 2, ml: 2, width: '100%', textAlign: 'start' }}>
-                        <Box><IconWrapperMobileStyle>
-                          <Iconify icon={item.icon} width={16} height={16} />
-                        </IconWrapperMobileStyle></Box>
-                        <Box ml={2}>
-                          <Typography component="p" variant="subtitle1" gutterBottom>
-                            {translate("teacherDetails." + item.title)}
-                          </Typography>
-                          <Typography component="p" sx={{ color: 'text.secondary' }}>
-                            {translate('teacherDetails.' + item.description)}
-                          </Typography>
-                        </Box>
-                      </Box>
-                    </Grid>
-                  ))}
-                </Grid>
-                <Box mx={2} >
-                  <Divider />
-                </Box>
-                <Hidden smUp>
-                  <Box mt={3}>
-                    <Box px={2} pt={2}>
-                      <Typography component="p" variant="h4" gutterBottom>
+              </Hidden>
+              <Grid item xs={12} md={6} lg={5}>
+                <Box sx={{ position: 'sticky', top: 44 }}>
+                  <Hidden smDown>
+                    <Box mb={3} sx={{}}>
+                      <Typography component='h1' variant='h4' gutterBottom>{teacher.name}</Typography>
+                      <Typography component='p' variant='body1' color="text.secondary" paragraph>
+                        {teacher.information}
+                      </Typography>
+                      <Typography component='p' variant='body1' paragraph>
+                        {teacher.description}
+                      </Typography>
+                      <MobileSelectDays teacher={teacher} isOpen={isOpen} closeFather={() => setIsOpen(false)} />
+                    </Box>
+                  </Hidden>
+                  <Hidden smUp>
+                    <Hidden smUp>
+                      <TeacherDetailsSummary
+                        teacher={teacher}
+                        cart={checkout.cart}
+                        onAddCart={handleAddCart}
+                        onGotoStep={handleGotoStep}
+                      />
+                    </Hidden>
+                    <Box mb={3}>
+                      <Divider />
+                    </Box>
+                    <Hidden smUp>
+                      <Grid container>
+                        {PRODUCT_DESCRIPTION.map((item) => (
+                          <Grid item xs={12} md={4} key={item.title} width={'100%'}>
+                            <Box display='flex' alignItems='flex-start' sx={{ my: 2, ml: 2, width: '100%', textAlign: 'start' }}>
+                              <Box><IconWrapperMobileStyle>
+                                <Iconify icon={item.icon} width={16} height={16} />
+                              </IconWrapperMobileStyle></Box>
+                              <Box ml={2}>
+                                <Typography component="p" variant="subtitle1" gutterBottom>
+                                  {translate("teacherDetails." + item.title)}
+                                </Typography>
+                                <Typography component="p" sx={{ color: 'text.secondary' }}>
+                                  {translate('teacherDetails.' + item.description)}
+                                </Typography>
+                              </Box>
+                            </Box>
+                          </Grid>
+                        ))}
+                      </Grid>
+                    </Hidden>
+                    <Box mb={3}>
+                      <Divider />
+                    </Box>
+                    <Box mb={3}>
+                      <Typography component="h2" variant="h5" gutterBottom>
                         {translate('teacherDetails.ocupation.title')}
                       </Typography>
                       <Typography component="p" variant="body1" paragraph>
                         {translate('teacherDetails.ocupation.description')}
                       </Typography>
+                      <Box onClick={() => setIsOpen(true)}>
+                        <TeacherDetailsMobileCalendar teacher={teacher} />
+                      </Box>
                     </Box>
-                    <Box onClick={() => setIsOpen(true)}>
-                      <TeacherDetailsMobileCalendar teacher={teacher} />
+                    <Box mb={3}>
+                      <Divider />
                     </Box>
-                  </Box>
-                  <Box mx={2} >
-                    <Divider />
-                  </Box>
-                  <TeacherDetailsMobileReview teacher={teacher} />
-                  <Box mx={2} >
-                    <Divider />
-                  </Box>
-                  <Policies />
-                  <Box mx={2} >
-                    <Divider />
-                  </Box>
-                </Hidden>
-                <TimeDetails />
-                <MobileSelectDays teacher={teacher} isOpen={isOpen} closeFather={() => setIsOpen(false)} />
+                    <TeacherDetailsMobileReview teacher={teacher} />
+                    <Box mb={3}>
+                      <Divider />
+                    </Box>
+                    <Policies />
+                    <Box mb={3}>
+                      <Divider />
+                    </Box>
+                    <TimeDetails />
+                    <Box mb={3}>
+                      <RecommendedTeachers
+                        teachers={[]}
+                        resort={teacher?.resorts?.lenght > 0 ? teacher.resorts[0] : 'Cerro Catedral'}
+                        disciplineSlug={teacher?.discipline?.lenght > 0 ? teacher.discipline[0] : "esqui-y-snowboard"}
+                      />
+                    </Box>
+                    <MobileSelectDays teacher={teacher} isOpen={isOpen} closeFather={() => setIsOpen(false)} />
+                  </Hidden>
+                </Box>
               </Grid>
-            </Grid>
-            <Grid container sx={{ my: 1 }}>
             </Grid>
             <Hidden smDown>
-              <Card>
-                <TabContext value={value}>
-                  <Box sx={{ px: 3, bgcolor: 'background.neutral' }}>
-                    <TabList onChange={(e, value) => setValue(value)}>
-                      <Tab
-                        focusRipple={true}
-                        value="0"
-                        icon={<Iconify icon={'material-symbols:rate-review'} width={20} height={20} />}
-                        sx={{ '& .MuiTab-wrapper': { whiteSpace: 'nowrap' } }}
-                      />
-                      <Tab value="1" icon={<Iconify icon={'material-symbols:calendar-month'} width={20} height={20} />} sx={{ maxWidth: 'fit-content' }} />
-                      <Tab value="2" icon={<Iconify icon={'mingcute:profile-line'} width={20} height={20} />} sx={{ maxWidth: 'fit-content' }} />
-                    </TabList>
-                  </Box>
-
-                  <Divider />
-
-                  <TabPanel value="0">
-                    <TeacherDetailsReview teacher={teacher} />
-                  </TabPanel>
-                  <TabPanel value="1">
-                    <TeacherDetailsCalendar teacher={teacher} />
-                  </TabPanel>
-                  <TabPanel value="2">
-                    <Box sx={{ p: 3 }}>
-                      <Markdown children={teacher.information} />
-                    </Box>
-                    <Box sx={{ p: 3 }}>
-                      <Markdown children={teacher.description} />
-                    </Box>
-                  </TabPanel>
-                  {/* <TabPanel value="2">
-                  <Box sx={{ p: 3 }}>
-                    <Typography variant='body1'>{teacher.information}</Typography>
-                  </Box>
-                  <Box sx={{ p: 3 }}>
-                    <Typography variant='body1'>{teacher.description}</Typography>
-                  </Box>
-                </TabPanel> */}
-                </TabContext>
-              </Card>
-              <Grid container sx={{ my: 8 }}>
-                {PRODUCT_DESCRIPTION.map((item) => (
-                  <Grid item xs={12} md={4} key={item.title}>
-                    <Box sx={{ my: 2, mx: 'auto', maxWidth: 280, textAlign: 'center' }}>
-                      <IconWrapperStyle>
-                        <Iconify icon={item.icon} width={36} height={36} />
-                      </IconWrapperStyle>
-                      <Typography variant="subtitle1" gutterBottom>
-                        {translate("teacherDetails." + item.title)}
-                      </Typography>
-                      <Typography sx={{ color: 'text.secondary' }}>{translate('teacherDetails.' + item.description)}</Typography>
-                    </Box>
-                  </Grid>
-                ))}
-              </Grid>
-
+              <Box mb={3} ml={-4.5}>
+                <RecommendedTeachers
+                  teachers={teachers}
+                  resort={teacher?.resorts?.lenght > 0 ? teacher.resorts[0] : 'Cerro Catedral'}
+                  disciplineSlug={teacher?.discipline?.lenght > 0 ? teacher.discipline[0] : "esqui-y-snowboard"}
+                />
+              </Box>
             </Hidden>
           </>
         )}

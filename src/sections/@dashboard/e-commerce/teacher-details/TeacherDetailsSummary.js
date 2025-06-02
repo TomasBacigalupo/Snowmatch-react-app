@@ -298,7 +298,7 @@ export default function TeacherDetailsSummary({ isProduct, cart, teacher, onAddC
 
   return (
     <RootStyle {...other}>
-      <Typography variant="h5" paragraph>
+      <Typography component="p" variant="h5" paragraph>
         {name}
       </Typography>
       <TeacherSkills skills={skills} />

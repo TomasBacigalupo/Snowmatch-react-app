@@ -23,6 +23,7 @@ import { useDispatch, useSelector } from 'src/redux/store';
 import { getFreeTeachers } from 'src/redux/slices/teachers';
 import ShopTeacherCard from '../@dashboard/e-commerce/shop/ShopTeacherCard';
 import { es } from 'date-fns/locale';
+import RecommendedTeachers from './RecommendedTeachers';
 
 
 // ----------------------------------------------------------------------

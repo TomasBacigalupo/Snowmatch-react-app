@@ -7,17 +7,12 @@ import { useEffect, useState, Suspense, lazy } from 'react';
 import { Helmet } from 'react-helmet-async';
 import Page from 'src/components/Page';
 import { useParams } from 'react-router';
-import { useDispatch, useSelector } from 'src/redux/store';
-import { getFreeTeachers } from 'src/redux/slices/teachers';
 import useLocales from 'src/hooks/useLocales';
 import LoadingScreen from 'src/components/LoadingScreen';
 
 // Lazy loaded components
-const HomeStats = lazy(() => import('src/sections/home/HomeStats'));
-const HomePartners = lazy(() => import('src/sections/home/HomePartners'));
 const HomeStatsHero = lazy(() => import('src/sections/home/HomeStatsHero'));
 const HomeAdvertisement = lazy(() => import('src/sections/home/HomeAdvertisement'));
-const HomeHero = lazy(() => import('src/sections/home/HomeHero'));
 const ResortDisciplineHero = lazy(() => import('src/sections/home/ResortDisciplineHero'));
 const FaqsByContext = lazy(() => import('src/sections/home/FAQSByContext'));
 const DownloadAppSection = lazy(() => import('src/sections/home/DounloawdAppSection'));

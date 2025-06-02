@@ -19,6 +19,10 @@ const RootStyle = styled('div')(({ theme }) => ({
     '&:focus': { outline: 'none' },
   },
   position: 'relative',
+  [theme.breakpoints.up('md')]: {
+    maxWidth: '600px',
+    margin: '0',
+  },
 }));
 
 // ----------------------------------------------------------------------

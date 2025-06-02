@@ -113,10 +113,10 @@ function ReviewItem({ review }) {
             }}
           />
           <div>
-            <Typography variant="subtitle2" noWrap>
+            <Typography component="p" variant="subtitle2" noWrap>
               {raterName + " " + raterLastname}
             </Typography>
-            <Typography variant="caption" sx={{ color: 'text.secondary' }} noWrap>
+            <Typography component="p" variant="caption" sx={{ color: 'text.secondary' }} noWrap>
               {fDate(rateDate)}
             </Typography>
           </div>
@@ -140,7 +140,7 @@ function ReviewItem({ review }) {
             </Typography>
           )}
 
-          <Typography variant="body2">{comment}</Typography>
+          <Typography component="p" variant="body2">{comment}</Typography>
         </div>
       </ListItem>
     </>

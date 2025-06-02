@@ -155,21 +155,41 @@ const TeacherCard = styled(Box)(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-const SKI_OPTIONS = ['Esqui', 'Ski', 'ski', 'esqui', 'skiing', 'skiing--lessons', 'ski--lessons', 'skiing--lessons', 'ski--lessons']
+const SNOW_OPTIONS = ['snow', 'snowboard', 'snowboarding']
+const SKI_OPTIONS =
+    ['Esqui',
+        'sky',
+        'esky',
+        'eski',
+        'esky',
+        'eski',
+        'skiing',
+        'skiing--lessons',
+        'ski--lessons',
+        'skiing--lessons',
+        'Ski',
+        'ski',
+        "esquí",
+        'esqui', 'skiing', 'skiing--lessons', 'ski--lessons', 'skiing--lessons', 'ski--lessons']
 const RESORT_OPTIONS = [
     { id: 'Buenos Aires', slugs: ['buenos-aires', 'la-plata'] },
-    { id: 'Cerro Catedral', slugs: ['cerro-catedral', 'catedral'] },
-    { id: 'Chapelco', slugs: ['cerro-chapelco', 'chapelco'] },
-    { id: 'La Hoya', slugs: ['cerro-la-hoya', 'la-hoya'] },
-    { id: 'Las Leñas', slugs: ['cerro-las-lenas', 'las-lenas'] },
+    {
+        id: 'Cerro Catedral', slugs: ['cerro-catedral', 'catedral', 'catedral-de-bariloche',
+            'bariloche', 'san-carlos-de-bariloche', 'argentina', 'rio-negro', 'patagonia', 'patagonia-argentina', 'la-patagonia',
+            'el-sur', 'sur', 'sur-de-argentina', 'el-sur-de-argentina'
+        ]
+    },
+    { id: 'Chapelco', slugs: ['cerro-chapelco', 'chapelco', 'san-martin-de-los-andes', 'neuquen'] },
+    { id: 'La Hoya', slugs: ['cerro-la-hoya', 'la-hoya', 'esquel'] },
+    { id: 'Las Leñas', slugs: ['cerro-las-lenas', 'las-lenas', 'mendoza', 'san-rafael'] },
     { id: 'Caviahue', slugs: ['cerro-caviahue', 'caviahue'] },
-    { id: 'Cerro Bayo', slugs: ['cerro-bayo', 'bayo'] },
-    { id: 'Cerro Castor', slugs: ['cerro-castor', 'castor'] },
-    { id: 'Lago Hermoso', slugs: ['lago-hermoso', 'hermoso'] },
+    { id: 'Cerro Bayo', slugs: ['cerro-bayo', 'bayo', 'villa-la-angostura', 'el-bayo', 'villa', 'la-villa'] },
+    { id: 'Cerro Castor', slugs: ['cerro-castor', 'castor', 'ushuaia', 'tierra-del-fuego'] },
+    { id: 'Lago Hermoso', slugs: ['lago-hermoso', 'hermoso', 'cerro-lago-hermoso', 'san-martin', 'lago-hermoso-ski'] },
     { id: 'Las Pendientes', slugs: ['las-pendientes', 'pendientes'] },
-    { id: 'Perito Moreno', slugs: ['perito-moreno', 'moreno'] },
+    { id: 'Perito Moreno', slugs: ['perito-moreno', 'moreno', 'el-bolson', 'laderas', 'laderas-perito-moreno', 'bolson'], },
     { id: 'Aconcagua', slugs: ['aconcagua', 'concagua'] },
-    { id: 'Batea Mahuida', slugs: ['batea-mahuida', 'mahuida'] },
+    { id: 'Batea Mahuida', slugs: ['batea-mahuida', 'mahuida', 'cerro-batea-mahuida'] },
     { id: 'Calafate Mountain Park', slugs: ['calafate-mountain-park', 'mountain-park'] },
     { id: 'Vallecitos', slugs: ['vallecitos', 'vallecito'] },
     { id: 'Monte Bianco', slugs: ['monte-bianco'] },
@@ -180,7 +200,7 @@ const RESORT_OPTIONS = [
     { id: 'Cerro Norris', slugs: ['cerro-norris', 'norris'] },
     { id: 'Cerro Torre', slugs: ['cerro-torre', 'torre'] },
     { id: 'Cerro Negro', slugs: ['cerro-negro', 'negro'] },
-    { id: 'Las Leñas', slugs: ['las-leñas', 'lenas'] },
+    { id: 'Las Leñas', slugs: ['las-leñas', 'las-lenas', 'norte-de-argentina', 'el-norte-de-argentina', 'el-norte', 'norte'] },
 
 ];
 
@@ -210,13 +230,6 @@ export default function ResortDisciplineHero() {
     }, [dispatch, filters, resort, discipline]);
 
     useEffect(() => {
-        if (SKI_OPTIONS.includes(disciplineSlug)) {
-            setDiscipline('Ski')
-        } else if (disciplineSlug === 'snowboard') {
-            setDiscipline('SnowBoard')
-        } else {
-            setDiscipline('Ski')
-        }
         const resort = RESORT_OPTIONS.find(r => r.slugs.includes(resortSlug))
         if (resort) {
             setResort(resort.id)
@@ -224,6 +237,13 @@ export default function ResortDisciplineHero() {
         const type = TYPE_OPTIONS.find(t => t.slugs.includes(typeSlug))
         if (type) {
             setType(type.id)
+        }
+        if (SKI_OPTIONS.includes(disciplineSlug)) {
+            setDiscipline('Ski')
+        } else if (SNOW_OPTIONS.includes(disciplineSlug)) {
+            setDiscipline('SnowBoard')
+        } else {
+            setDiscipline(['Ski', 'SnowBoard'])
         }
     }, [disciplineSlug, resortSlug, typeSlug])
 
@@ -291,7 +311,7 @@ export default function ResortDisciplineHero() {
                         <ImageCard>
                             <Box
                                 component="img"
-                                src="/assets/bariloche.jpg"
+                                src="/assets/bariloche.webp"
                                 sx={{
                                     width: '100%',
                                     height: '100%',
@@ -301,10 +321,10 @@ export default function ResortDisciplineHero() {
                         </ImageCard>
                     </Hidden>
                     <Hidden smUp>
-                        <img src='/logo/snowmatch.png' sx={{ height: '200px', width: '100%' }} alt='SnowMatch' />
+                        <img src='/logo/snowmatch.webp' sx={{ height: '200px', width: '100%' }} alt='SnowMatch' />
                     </Hidden>
                     <FilterWrapper>
-                        <HomeFilterTeachers resort={resort} discipline={discipline} type={type} />
+                        <HomeFilterTeachers resort={resort} discipline={discipline} type={type} resortSlug={resortSlug} disciplineSlug={disciplineSlug} />
                     </FilterWrapper>
                 </CardContainer>
             </RootStyle>
@@ -312,9 +332,9 @@ export default function ResortDisciplineHero() {
             <TopTeachersSection>
                 <Box sx={{ mb: 4 }}>
                     <Typography variant='h3' sx={{ mb: 1 }}>{translate(`landingPRO.topTeachers`, {
-                        discipline: discipline ? translate(`landingPRO.${discipline}`) : "",
+                        discipline: disciplineSlug ? translate(`landingPRO.${disciplineSlug}`) : translate(`landingPRO.esqui-y-snowboard`),
                         type: type ? translate(`landingPRO.${type}Plural`) : "",
-                        resort: resort ? resort : "",
+                        resort: resort ? translate(`landingPRO.${resortSlug}`) : "",
                     })}</Typography>
                     <Typography
                         variant='body1'
@@ -324,9 +344,9 @@ export default function ResortDisciplineHero() {
                         }}
                     >
                         {translate(`landingPRO.guestAgree`, {
-                            discipline: discipline ? translate(`landingPRO.${discipline}`) : "",
+                            discipline: disciplineSlug ? translate(`landingPRO.${disciplineSlug}`) : translate(`landingPRO.esqui-y-snowboard`),
                             type: type ? translate(`landingPRO.${type}Plural`) : "",
-                            resort: resort ? resort : "",
+                            resort: resort ? translate(`landingPRO.${resortSlug}`) : "",
                         })}
                     </Typography>
                     <ScrollContainer>

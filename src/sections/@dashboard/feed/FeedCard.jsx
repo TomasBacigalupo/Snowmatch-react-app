@@ -241,6 +241,18 @@ export default function FeedCard({ video, setSelectedVideo, onInstructorClick })
                 <Button
                   fullWidth
                   startIcon={<ShareIcon />}
+                  onClick={() => {
+                    if (navigator.share) {
+                      navigator.share({
+                        title: 'SnowMatch',
+                        text: 'Check out SnowMatch - Your Skiing Performance App!',
+                        url: window.location.origin
+                      }).catch(console.error);
+                    } else {
+                      navigator.clipboard.writeText(window.location.origin);
+                      // You might want to add a toast notification here
+                    }
+                  }}
                   sx={{
                     color: 'text.secondary',
                     textTransform: 'none',
@@ -250,7 +262,7 @@ export default function FeedCard({ video, setSelectedVideo, onInstructorClick })
                     },
                   }}
                 >
-                  Share
+                  Share App
                 </Button>
               </Stack>
             </Box>

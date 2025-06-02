@@ -1,4 +1,4 @@
-import { Box, Typography, Skeleton, Drawer, IconButton, Button, Grid, Divider, Link } from '@mui/material';
+import { Box, Typography, Skeleton, Drawer, IconButton, Button, Grid, Divider, Link, useMediaQuery } from '@mui/material';
 import { alpha, styled, useTheme } from '@mui/material/styles';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
@@ -9,6 +9,7 @@ import Iconify from 'src/components/Iconify';
 import useLocales from 'src/hooks/useLocales';
 import PersonIcon from '@mui/icons-material/Person';
 import TerrainIcon from '@mui/icons-material/Terrain';
+import { useNavigate  } from 'react-router';
 
 const IconWrapperStyle = styled('div')(({ theme }) => ({
     margin: 'auto',
@@ -47,17 +48,22 @@ const LEVELS = {
     },
 };
 
-export default function SchoolProducts({ products, isLoading }) {
+export default function SchoolProducts({ products, isLoading, showPrice = false }) {
     const theme = useTheme();
     const [selectedProduct, setSelectedProduct] = useState(null);
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
     const [levelDrawerOpen, setLevelDrawerOpen] = useState(false);
     const [levelInfo, setLevelInfo] = useState({ label: '', description: '' });
     const { translate } = useLocales();
-
+    const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+    const navigate = useNavigate();
     const handleProductClick = (product) => {
-        setSelectedProduct(product);
-        setIsDrawerOpen(true);
+        if(isMobile) {
+            setSelectedProduct(product);
+            setIsDrawerOpen(true);
+        } else {
+            navigate(`/clases/bariloche/esqui/${product.id}`);
+        }
     };
 
     const handleCloseDrawer = () => {
@@ -94,7 +100,7 @@ export default function SchoolProducts({ products, isLoading }) {
                     <LoadingSkeleton />
                 ) : (
                     <Box sx={{ display: 'flex', gap: 2, }}>
-                        {products.map((product) => (
+                        {products.filter(product => ![143, 144, 145].includes(product.id)).map((product) => (
                             <Box
                                 key={product.id}
                                 onClick={() => handleProductClick(product)}
@@ -131,21 +137,32 @@ export default function SchoolProducts({ products, isLoading }) {
                                 <Typography variant="body2" color="text.secondary" sx={{ width: '100%' }} noWrap>
                                     {product.description}
                                 </Typography>
+                                {showPrice && (
+                                    <Typography component="p" variant="h6" color="text.secondary" sx={{ width: '100%' }} noWrap>
+                                        ${product.price.toLocaleString('es-AR')}
+                                    </Typography>
+                                )}
                             </Box>
                         ))}
                     </Box>
                 )}
             </Box>
 
-            <Drawer
-                anchor="right"
+            {isMobile && <Drawer
+                anchor={theme.breakpoints.down('md') ? "right" : "bottom"}
                 open={isDrawerOpen}
                 onClose={handleCloseDrawer}
                 PaperProps={{
                     sx: {
-                        width: '100%',
+                        width: theme.breakpoints.down('md') ? '100%' : '90%',
+                        maxWidth: theme.breakpoints.down('md') ? '100%' : 480,
+                        height: theme.breakpoints.down('md') ? '100%' : 'auto',
+                        maxHeight: theme.breakpoints.down('md') ? '100%' : '90vh',
                         p: 0,
                         position: 'relative',
+                        mx: 'auto',
+                        my: theme.breakpoints.down('md') ? 0 : '5vh',
+                        borderRadius: theme.breakpoints.down('md') ? 0 : 3,
                     },
                 }}
             >
@@ -161,6 +178,7 @@ export default function SchoolProducts({ products, isLoading }) {
                             top: `calc(6px + env(safe-area-inset-top))`,
                             left: 16,
                             zIndex: 2,
+                            display: theme.breakpoints.down('md') ? 'block' : 'none',
                         }}>
                             <IconButton
                                 onClick={handleCloseDrawer}
@@ -177,29 +195,34 @@ export default function SchoolProducts({ products, isLoading }) {
                         <Box
                             sx={{
                                 width: '100%',
-                                height: 380,
+                                height: theme.breakpoints.down('md') ? '400px' : '300px',
                                 backgroundImage: `url(${selectedProduct.imageLink})`,
                                 backgroundSize: 'cover',
                                 backgroundPosition: 'center',
-                                position: 'relative',
-                                marginTop: '-env(safe-area-inset-top)',
+                                position: theme.breakpoints.down('md') ? 'fixed' : 'relative',
+                                top: theme.breakpoints.down('md') ? 0 : 'auto',
+                                left: theme.breakpoints.down('md') ? 0 : 'auto',
+                                right: theme.breakpoints.down('md') ? 0 : 'auto',
+                                marginTop: theme.breakpoints.down('md') ? '-env(safe-area-inset-top)' : 0,
                                 zIndex: 0,
+                                borderRadius: theme.breakpoints.down('md') ? 0 : '12px 12px 0 0',
                             }}
                         />
 
                         <Box sx={{
                             py: 3,
                             flex: 1,
-                            overflowY: 'auto',
                             position: 'relative',
                             zIndex: 1,
-                            borderTopLeftRadius: 32,
-                            borderTopRightRadius: 32,
-                            boxShadow: 3,
+                            borderTopLeftRadius: theme.breakpoints.down('md') ? 32 : 0,
+                            borderTopRightRadius: theme.breakpoints.down('md') ? 32 : 0,
+                            boxShadow: theme.breakpoints.down('md') ? 3 : 0,
                             bgcolor: 'background.paper',
                             pb: `calc(80px + env(safe-area-inset-bottom))`,
                             width: '100%',
-                            marginTop: -20,
+                            marginTop: theme.breakpoints.down('md') ? '200px' : 0,
+                            minHeight: theme.breakpoints.down('md') ? '100vh' : 'auto',
+                            overflowY: 'auto',
                         }}>
                             <Box sx={{ px: 3 }}>
                                 <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mb: 1 }}>
@@ -267,7 +290,7 @@ export default function SchoolProducts({ products, isLoading }) {
                                     </Box>
                                 </Box>
                             </Box>
-                            <Divider  />
+                            <Divider />
                             <TimeDetails />
                             <Divider />
                             <Policies />
@@ -296,12 +319,10 @@ export default function SchoolProducts({ products, isLoading }) {
                             ))}
                         </Box>
 
-
-
                         {/* Sticky Footer */}
                         <Box
                             sx={{
-                                position: 'fixed',
+                                position: theme.breakpoints.down('md') ? 'fixed' : 'sticky',
                                 left: 0,
                                 right: 0,
                                 bottom: 0,
@@ -311,13 +332,17 @@ export default function SchoolProducts({ products, isLoading }) {
                                 alignItems: 'center',
                                 pb: `calc(0px + env(safe-area-inset-bottom))`,
                                 pointerEvents: 'none',
+                                bgcolor: theme.breakpoints.down('md') ? 'transparent' : 'background.paper',
+                                pt: theme.breakpoints.down('md') ? 0 : 2,
+                                borderTop: theme.breakpoints.down('md') ? 'none' : '1px solid',
+                                borderColor: 'divider',
                             }}
                         >
                             <Box
                                 sx={{
                                     bgcolor: 'background.paper',
                                     borderRadius: 99,
-                                    boxShadow: 3,
+                                    boxShadow: theme.breakpoints.down('md') ? 3 : 0,
                                     px: 2,
                                     py: 1.5,
                                     display: 'flex',
@@ -326,7 +351,7 @@ export default function SchoolProducts({ products, isLoading }) {
                                     maxWidth: 480,
                                     pointerEvents: 'auto',
                                     gap: 2,
-                                    mb: 3,
+                                    mb: theme.breakpoints.down('md') ? 3 : 0,
                                 }}
                             >
                                 <Box sx={{ flex: 1, minWidth: 0 }}>
@@ -357,7 +382,9 @@ export default function SchoolProducts({ products, isLoading }) {
                         </Box>
                     </Box>
                 )}
-            </Drawer>
+            </Drawer>}
+
+
 
             {/* Drawer para explicación de nivel */}
             <Drawer

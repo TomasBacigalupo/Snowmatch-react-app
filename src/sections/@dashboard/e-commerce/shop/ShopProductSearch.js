@@ -297,25 +297,52 @@ export default function ShopProductSearch({ filters, teachers }) {
                       ))}
                     </RHFSelect>
                     <Box display="flex" gap={2} mt={2} overflow="auto" sx={{ scrollbarWidth: "none", "&::-webkit-scrollbar": { display: "none" } }}>
-                      {[{title:"Catedral", value:"Cerro Catedral"}, {title:"Chapelco", value:"Chapelco"}, {title:"Bayo", value:"Cerro Bayo"}, {title:"La Hoya", value:"La Hoya"}].map((resort) => (
+                      {[{title:"Catedral", 
+                      image:"/assets/resorts/ilustrations/catedral.png", value:"Cerro Catedral"},
+                       {title:"Chapelco", image:"/assets/resorts/ilustrations/chapelco.png", value:"Chapelco"}, 
+                       {title:"Bayo", image:"/assets/resorts/ilustrations/bayo.png", value:"Cerro Bayo"}, {title:"La Hoya", image:"/assets/resorts/ilustrations/lahoya.PNG", value:"La Hoya"}].map((resort) => (
                         <Box
                           key={resort}
-                          onClick={() => setValue("resort", resort.value)} // Assuming `setValue` is from react-hook-form
+                          onClick={() => setValue("resort", resort.value)}
                           sx={{
-                            minWidth: 100,
-                            height: 100,
+                            minWidth: 120,
+                            height: 160,
                             borderRadius: 2,
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "center",
+                            justifyContent: "space-between",
+                            background: "#fff",
+                            cursor: "pointer",
+                            position: "relative",
+                            overflow: "hidden",
+                          }}
+                        >
+                          <Box sx={{ 
+                            width: "100%", 
+                            height: "120px",
                             display: "flex",
                             alignItems: "center",
                             justifyContent: "center",
-                            backgroundColor: "#F7F7F7",
-                            cursor: "pointer",
+                            p: 2,
+                            backgroundImage: `url(${resort.image})`,
+                            backgroundSize: "contain",
+                            backgroundPosition: "center",
+                            backgroundRepeat: "no-repeat"
+                          }} />
+                          <Box sx={{ 
+                            width: "100%",
+                            p: 1.5,
+                            color: "text.primary",
+                            textAlign: "center",
                             fontWeight: "bold",
-                            boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
-                            "&:hover": { backgroundColor: "#EAEAEA" },
-                          }}
-                        >
-                          {resort.title}
+                            fontSize: "1rem",
+                            borderTop: "1px solid",
+                            borderColor: "divider",
+                            backgroundColor: "background.paper"
+                          }}>
+                            {resort.title}
+                          </Box>
                         </Box>
                       ))}
                     </Box>
@@ -401,7 +428,7 @@ export default function ShopProductSearch({ filters, teachers }) {
                         </Typography>}
                       {values.discipline?.length != 0 &&
                         <Typography sx={{ fontWeight: "bold" }}>
-                          {filters.discipline[0]}
+                          {filters?.discipline.length > 0 ? filters?.discipline[0] : 'Ski'}
                         </Typography>}
                     </Box>
                   </AccordionSummary>}
@@ -417,7 +444,7 @@ export default function ShopProductSearch({ filters, teachers }) {
                         </Typography>}
                       {values.discipline?.length != 0 &&
                         <Typography sx={{ fontWeight: "bold" }}>
-                          {filters.discipline[0]}
+                          {filters?.discipline?.length > 0 ? filters?.discipline[0] : 'Ski'}
                         </Typography>}
                     </Box>
                   </AccordionSummary>}
@@ -556,22 +583,52 @@ export default function ShopProductSearch({ filters, teachers }) {
                         {[{title:"Catedral", value:"Cerro Catedral"}, {title:"Chapelco", value:"Chapelco"}, {title:"Bayo", value:"Cerro Bayo"}, {title:"La Hoya", value:"La Hoya"}].map((resort) => (
                           <Box
                             key={resort}
-                            onClick={() => setValue("resort", resort.value)} // Assuming `setValue` is from react-hook-form
+                            onClick={() => setValue("resort", resort.value)}
                             sx={{
-                              minWidth: 100,
-                              height: 100,
+                              minWidth: 120,
+                              height: 160,
                               borderRadius: 2,
+                              display: "flex",
+                              flexDirection: "column",
+                              alignItems: "center",
+                              justifyContent: "space-between",
+                              background: "#fff",
+                              cursor: "pointer",
+                              position: "relative",
+                              overflow: "hidden",
+                              boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+                              "&:hover": { 
+                                transform: "scale(1.02)",
+                                transition: "transform 0.2s ease-in-out",
+                                boxShadow: "0 4px 12px rgba(0,0,0,0.15)"
+                              },
+                            }}
+                          >
+                            <Box sx={{ 
+                              width: "100%", 
+                              height: "120px",
                               display: "flex",
                               alignItems: "center",
                               justifyContent: "center",
-                              backgroundColor: "#F7F7F7",
-                              cursor: "pointer",
+                              p: 2,
+                              backgroundImage: `url(${resort.image})`,
+                              backgroundSize: "contain",
+                              backgroundPosition: "center",
+                              backgroundRepeat: "no-repeat"
+                            }} />
+                            <Box sx={{ 
+                              width: "100%",
+                              p: 1.5,
+                              color: "text.primary",
+                              textAlign: "center",
                               fontWeight: "bold",
-                              boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
-                              "&:hover": { backgroundColor: "#EAEAEA" },
-                            }}
-                          >
-                            {resort.title}
+                              fontSize: "1rem",
+                              borderTop: "1px solid",
+                              borderColor: "divider",
+                              backgroundColor: "background.paper"
+                            }}>
+                              {resort.title}
+                            </Box>
                           </Box>
                         ))}
                       </Box>
@@ -657,7 +714,7 @@ export default function ShopProductSearch({ filters, teachers }) {
                           </Typography>}
                         {values.discipline?.length != 0 &&
                           <Typography sx={{ fontWeight: "bold" }}>
-                            {filters.discipline[0]}
+                            {filters?.discipline?.length > 0 ? filters?.discipline[0] : 'Ski'}
                           </Typography>}
                       </Box>
                     </AccordionSummary>}
@@ -673,7 +730,7 @@ export default function ShopProductSearch({ filters, teachers }) {
                           </Typography>}
                         {values.discipline?.length != 0 &&
                           <Typography sx={{ fontWeight: "bold" }}>
-                            {filters.discipline[0]}
+                            {filters?.discipline?.length > 0 ? filters?.discipline[0] : 'Ski'}
                           </Typography>}
                       </Box>
                     </AccordionSummary>}

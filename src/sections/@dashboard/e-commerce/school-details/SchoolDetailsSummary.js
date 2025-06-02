@@ -212,6 +212,7 @@ export default function SchoolDetailsSummary({ cart, business, onAddCart, onGoto
     <RootStyle {...other}>
       {(
         <Typography
+          component="p"
           variant="overline"
           sx={{
             mt: 2,
@@ -224,7 +225,7 @@ export default function SchoolDetailsSummary({ cart, business, onAddCart, onGoto
         </Typography>
       )}
 
-      <Typography variant="h5" paragraph>
+      <Typography component="p" variant="h5" paragraph>
         {business?.name}
       </Typography>
 
@@ -249,11 +250,11 @@ export default function SchoolDetailsSummary({ cart, business, onAddCart, onGoto
 
 
       <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ my: 3 }}>
-        <Typography variant="subtitle1" sx={{ mt: 0.5 }}>
+        <Typography component="p" variant="subtitle1" sx={{ mt: 0.5 }}>
           {translate('schoolDetails.information')}
         </Typography>
       </Stack>
-      <Typography variant="body1" sx={{ mt: 0.5 }} paragraph>
+      <Typography component="p" variant="body1" sx={{ mt: 0.5 }} paragraph>
         {business?.information}
       </Typography>
 
@@ -285,7 +286,7 @@ export default function SchoolDetailsSummary({ cart, business, onAddCart, onGoto
         </Stack> */}
 
       <Stack direction="row" justifyContent="space-between" sx={{ mb: 3 }}>
-        <Typography variant="subtitle1" sx={{ mt: 0.5 }}>
+        <Typography component="p" variant="subtitle1" sx={{ mt: 0.5 }}>
           {translate('schoolDetails.description')}
         </Typography>
 
@@ -303,12 +304,12 @@ export default function SchoolDetailsSummary({ cart, business, onAddCart, onGoto
             </Typography>
           </div> */}
       </Stack>
-      <Typography variant="body1" sx={{ mt: 0.5 }} paragraph>
+      <Typography component="p" variant="body1" sx={{ mt: 0.5 }} paragraph>
         {business?.description}
       </Typography>
 
       <Stack direction="row" spacing={2} sx={{ mt: 5 }}>
-        <Typography variant="body1" sx={{ mt: 0.5 }} paragraph>
+        <Typography component="p" variant="body1" sx={{ mt: 0.5 }} paragraph>
 
 
         </Typography>

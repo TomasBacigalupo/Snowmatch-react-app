@@ -1,10 +1,11 @@
 import { useEffect, useState, useCallback } from 'react';
-import { Dialog, DialogContent, Select, TextField, FormControl, InputLabel, MenuItem, DialogActions, DialogTitle, Button, Box, Autocomplete, Typography, IconButton, Grid } from '@mui/material';
+import { Dialog, DialogContent, Select, TextField, FormControl, InputLabel, MenuItem, DialogActions, DialogTitle, Button, Box, Autocomplete, Typography, IconButton, Grid, Checkbox, FormControlLabel } from '@mui/material';
 import { useDispatch } from 'src/redux/store';
 import { getTeachers, getTeachersAdmin } from 'src/redux/slices/admin';
 import { useSelector } from 'react-redux';
 import { createAdminBooking } from 'src/redux/slices/bookings';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { DateRangePicker } from '@mui/lab';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -24,7 +25,11 @@ const BookingModal = ({ isOpen, onClose }) => {
         adults: 0,
         comment: '',
         teacherSearch: '',
-        bookingType: 'ASSIGNED'
+        bookingType: 'ASSIGNED',
+        includesLaunch: false,
+        includesEquipment: false,
+        paymentStatus: 'PAID',
+        internalComment: ''
     });
 
     const [dateRange, setDateRange] = useState({
@@ -155,7 +160,11 @@ const BookingModal = ({ isOpen, onClose }) => {
             Number(formData.adults),
             events,
             totalPrice,
-            formData.bookingType));
+            formData.bookingType,
+            formData.includesLaunch,
+            formData.includesEquipment,
+            formData.paymentStatus,
+            formData.internalComment));
 
         setFormData({
             teacher: null,
@@ -165,7 +174,11 @@ const BookingModal = ({ isOpen, onClose }) => {
             children: 0,
             adults: 0,
             teacherSearch: '',
-            bookingType: 'ASIGNADO'
+            bookingType: 'ASIGNADO',
+            includesLaunch: false,
+            includesEquipment: false,
+            paymentStatus: 'PAID',
+            internalComment: ''
         });
         onClose();
     };
@@ -227,23 +240,22 @@ const BookingModal = ({ isOpen, onClose }) => {
                             />
                         </FormControl>
                     </Grid>
-                    <Grid item xs={12} md={4}>
+                    <Grid item xs={12} md={8}>
                         <LocalizationProvider dateAdapter={AdapterDateFns}>
-                            <DatePicker
-                                label="Start Date"
-                                value={dateRange.startDate}
-                                onChange={(newValue) => handleDateRangeChange(newValue, dateRange.endDate)}
-                                renderInput={(params) => <TextField {...params} fullWidth />}
-                            />
-                        </LocalizationProvider>
-                    </Grid>
-                    <Grid item xs={12} md={4}>
-                        <LocalizationProvider dateAdapter={AdapterDateFns}>
-                            <DatePicker
-                                label="End Date"
-                                value={dateRange.endDate}
-                                onChange={(newValue) => handleDateRangeChange(dateRange.startDate, newValue)}
-                                renderInput={(params) => <TextField {...params} fullWidth />}
+                            <DateRangePicker
+                                startText="Start Date"
+                                endText="End Date"
+                                value={[dateRange.startDate, dateRange.endDate]}
+                                onChange={(newValue) => {
+                                    handleDateRangeChange(newValue[0], newValue[1]);
+                                }}
+                                renderInput={(startProps, endProps) => (
+                                    <>
+                                        <TextField {...startProps} />
+                                        <Box sx={{ mx: 2 }}> to </Box>
+                                        <TextField {...endProps} />
+                                    </>
+                                )}
                             />
                         </LocalizationProvider>
                     </Grid>
@@ -295,28 +307,134 @@ const BookingModal = ({ isOpen, onClose }) => {
                         </FormControl>
                     </Grid>
                     <Grid item xs={12} md={6}>
-                        <TextField
-                            fullWidth
-                            label="Number of Children"
-                            type="number"
-                            name="children"
-                            value={formData.children}
-                            onChange={(e) => handleFormChange(e)}
-                            inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
-                        />
+                        <FormControl fullWidth>
+                            <InputLabel id="payment-status-label">Estado de Pago</InputLabel>
+                            <Select
+                                labelId="payment-status-label"
+                                id="payment-status-select"
+                                value={formData.paymentStatus}
+                                onChange={(e) => setFormData((prevData) => ({
+                                    ...prevData,
+                                    paymentStatus: e.target.value,
+                                }))}
+                            >
+                                <MenuItem value="PAID">Pagado</MenuItem>
+                                <MenuItem value="UNPAID">No Pagado</MenuItem>
+                                <MenuItem value="10_PAID">10% Pagado</MenuItem>
+                                <MenuItem value="20_PAID">20% Pagado</MenuItem>
+                                <MenuItem value="30_PAID">30% Pagado</MenuItem>
+                                <MenuItem value="40_PAID">40% Pagado</MenuItem>
+                                <MenuItem value="50_PAID">50% Pagado</MenuItem>
+                            </Select>
+                        </FormControl>
                     </Grid>
                     <Grid item xs={12} md={6}>
-                        <TextField
-                            fullWidth
-                            label="Number of Adults"
-                            type="number"
-                            name="adults"
-                            value={formData.adults}
-                            onChange={(e) => handleFormChange(e)}
-                            inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
-                        />
+                        <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+                            <FormControlLabel
+                                control={
+                                    <Checkbox
+                                        checked={formData.includesLaunch}
+                                        onChange={(e) => setFormData((prevData) => ({
+                                            ...prevData,
+                                            includesLaunch: e.target.checked,
+                                        }))}
+                                    />
+                                }
+                                label="Incluye Lunch"
+                            />
+                            <FormControlLabel
+                                control={
+                                    <Checkbox
+                                        checked={formData.includesEquipment}
+                                        onChange={(e) => setFormData((prevData) => ({
+                                            ...prevData,
+                                            includesEquipment: e.target.checked,
+                                        }))}
+                                    />
+                                }
+                                label="Incluye Equipo"
+                            />
+                        </Box>
+                    </Grid>
+                    <Grid item xs={12} md={6}>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                            <IconButton 
+                                onClick={() => setFormData(prev => ({
+                                    ...prev,
+                                    children: Math.max(0, prev.children - 1)
+                                }))}
+                                color="primary"
+                            >
+                                -
+                            </IconButton>
+                            <TextField
+                                sx={{ width: '100px' }}
+                                label="Number of Children"
+                                type="number"
+                                name="children"
+                                value={formData.children}
+                                onChange={(e) => handleFormChange(e)}
+                                inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+                            />
+                            <IconButton 
+                                onClick={() => setFormData(prev => ({
+                                    ...prev,
+                                    children: prev.children + 1
+                                }))}
+                                color="primary"
+                            >
+                                +
+                            </IconButton>
+                        </Box>
+                    </Grid>
+                    <Grid item xs={12} md={6}>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                            <IconButton 
+                                onClick={() => setFormData(prev => ({
+                                    ...prev,
+                                    adults: Math.max(0, prev.adults - 1)
+                                }))}
+                                color="primary"
+                            >
+                                -
+                            </IconButton>
+                            <TextField
+                                sx={{ width: '100px' }}
+                                label="Number of Adults"
+                                type="number"
+                                name="adults"
+                                value={formData.adults}
+                                onChange={(e) => handleFormChange(e)}
+                                inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+                            />
+                            <IconButton 
+                                onClick={() => setFormData(prev => ({
+                                    ...prev,
+                                    adults: prev.adults + 1
+                                }))}
+                                color="primary"
+                            >
+                                +
+                            </IconButton>
+                        </Box>
                     </Grid>
                 </Grid>
+
+                <TextField
+                    fullWidth
+                    margin="normal"
+                    label="Internal Comment"
+                    name="internalComment"
+                    value={formData.internalComment}
+                    onChange={(e) => setFormData((prevData) => ({
+                        ...prevData,
+                        internalComment: e.target.value,
+                    }))}
+                    multiline
+                    rows={2}
+                    inputProps={{ maxLength: 255 }}
+                    helperText={`${formData.internalComment.length}/255 characters`}
+                />
 
                 <Typography variant="h6" sx={{ mt: 3, mb: 2 }}>Selected Dates</Typography>
                 {formData.dateTimes.map((dateTime, index) => (

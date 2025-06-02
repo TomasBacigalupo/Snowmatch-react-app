@@ -33,6 +33,7 @@ const QuestionTypography = styled(Typography)(({ theme }) => ({
   
   const AnswerTypography = styled(Typography)(({ theme }) => ({
     color: theme.palette.text.secondary,
+    component: 'p',
   }));
   
 
@@ -48,7 +49,7 @@ export default function FaqsList({ id }) {
             expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" width="20px" height="20px" />}
           >
             <Trans>
-            <Typography variant="subtitle1">
+            <Typography component="h5" variant="subtitle1">
                 {translate(`product.${id}.faqs.${i}.question`)}
               </Typography>
             </Trans>

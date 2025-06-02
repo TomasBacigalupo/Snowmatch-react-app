@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 // @mui
-import { Divider, Collapse, Box, Avatar } from '@mui/material';
+import { Divider, Collapse, Box, Avatar, TextField } from '@mui/material';
 //
 import ProductDetailsReviewForm from './ProductDetailsReviewForm';
 import TeacherDetailsReviewList from './TeacherDetailsReviewList';
@@ -23,6 +23,7 @@ import Login from 'src/pages/auth/Login';
 import Register from 'src/pages/auth/Register';
 import RegisterStudent from 'src/pages/auth/RegisterStudent';
 import PageVerifyWhatsApp from 'src/pages/PageVerifyWhatsApp';
+import { updateUserPhoneAndName } from 'src/redux/slices/teachers';
 
 // ----------------------------------------------------------------------
 
@@ -34,9 +35,12 @@ TeacherDetailsMobileReview.propTypes = {
 export default function TeacherDetailsMobileReview({ teacher, openForm = false }) {
     const [reviewBox, setReviewBox] = useState(openForm);
     const navigate = useNavigate()
+    const [name, setName] = useState('')
+    const [lastName, setLastName] = useState('')
+    const [phone, setPhone] = useState('')
     const { isStudent,
         emailVerified,
-        phoneVerified } = useAuth()
+        phoneVerified, user, refreshUser } = useAuth()
 
     const [open, setOpen] = React.useState(false);
     const [openReviewModal, setOpenReviewModal] = React.useState(false);
@@ -79,9 +83,13 @@ export default function TeacherDetailsMobileReview({ teacher, openForm = false }
                 sx={{
                     paddingTop: 'env(safe-area-inset-top)',
                     '& .MuiDrawer-paper': {
-                        boxSizing: 'border-box', width: '100%', paddingBottom: 2, borderTopLeftRadius: '12px',  // Adjust the value as needed
+                        boxSizing: 'border-box', 
+                        width: '100%', 
+                        paddingBottom: 2, 
+                        borderTopLeftRadius: '12px',
                         borderTopRightRadius: '12px',
-                        height: '95%',
+                        maxHeight: '94%',
+                        height: 'auto',
                         marginTop: 'env(safe-area-inset-top)',
                         paddingX: 1,
                     }
@@ -93,13 +101,60 @@ export default function TeacherDetailsMobileReview({ teacher, openForm = false }
                     </IconButton>
                 </Box>
 
-                {!isStudent && <>
-                    <RegisterStudent />
+                {!isStudent && (
+                    <Box sx={{ mt: -2 }}>
+                        <Login fromModal={true} />
+                    </Box>
+                )}
+                {user && (!user.name || user.name === "") && <>
+                    <Box sx={{ px: 2, py: 3 }}>
+                        <Typography variant="h4" sx={{ mb: 3 }}>
+                            Completa tus datos de contacto
+                        </Typography>
+                        <TextField
+                            name='fn'
+                            label="Nombre"
+                            value={name}
+                            onChange={(event) => setName(event.target.value)} 
+                            fullWidth
+                            sx={{ mb: 2 }}
+                        />
+                        <TextField
+                            name='ln'
+                            label="Apellido"
+                            value={lastName}
+                            onChange={(event) => setLastName(event.target.value)}
+                            fullWidth
+                            sx={{ mb: 2 }}
+                        />
+                        <TextField
+                            name='phone'
+                            label="Teléfono"
+                            value={phone}
+                            onChange={(event) => setPhone(event.target.value)}
+                            fullWidth
+                            sx={{ mb: 3 }}
+                        />
+                        <Button 
+                            onClick={() => {
+                                dispatch(updateUserPhoneAndName(phone, `${name} ${lastName}`, () => {
+                                    refreshUser({...user, name: `${name} ${lastName}`})
+                                }))
+                            }}
+                            variant="contained"
+                            fullWidth
+                        >
+                            Continuar
+                        </Button>
+                    </Box>
                 </>}
                 {isStudent && !(emailVerified || phoneVerified) && <>
                     <PageVerifyWhatsApp />
                 </>}
-                {isStudent && (emailVerified || phoneVerified) && <>
+                {isStudent && !(emailVerified || phoneVerified) && <>
+                    <PageVerifyWhatsApp />
+                </>}
+                {isStudent && (emailVerified || phoneVerified) && !(!user.name || user.name === "") && <>
 
                     <Grid container p={2} spacing={3}>
                         <Grid item xs={12}>

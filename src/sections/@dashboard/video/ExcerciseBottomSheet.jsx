@@ -1,4 +1,4 @@
-import { Button, Paper, SwipeableDrawer, Typography } from "@mui/material";
+import { Button, Drawer, Paper, SwipeableDrawer, Typography } from "@mui/material";
 import { Box, useMediaQuery } from "@mui/system";
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import React, { useState, useRef, useEffect, useCallback } from 'react';
@@ -27,6 +27,7 @@ import Markdown from "src/components/Markdown";
 import VideoStory from "./VideoStory";
 import StoryPlayer from "./StoryPlayer";
 import DoDontList from "./DoDoNotList";
+import Login from "src/pages/auth/Login";
 
 
 
@@ -46,11 +47,6 @@ export default function ExcerciseBottomSheet({ open, onClose, onOpen, course, de
 
     const navigate = useNavigate();
     const { user } = useAuth();
-
-
-    if (!user && open) {
-        navigate(PATH_AUTH.login, { replace: true });
-    }
 
     const { translate } = useLocales();
     const steps = ['Ejercicio', 'Tu video', 'Subir'];
@@ -251,9 +247,9 @@ export default function ExcerciseBottomSheet({ open, onClose, onOpen, course, de
                                 <Box
                                     component="img"
                                     src="/assets/avatars/snow-ai.png"
-                                    sx={{ 
-                                        width: 80, 
-                                        height: 80, 
+                                    sx={{
+                                        width: 80,
+                                        height: 80,
                                         objectFit: "cover",
                                         borderRadius: '50%',
                                         border: (theme) => `4px solid ${theme.palette.primary.main}`,
@@ -274,8 +270,8 @@ export default function ExcerciseBottomSheet({ open, onClose, onOpen, course, de
                                 </Box>
                             </Box>
 
-                            <Box 
-                                sx={{ 
+                            <Box
+                                sx={{
                                     mt: 4,
                                     p: 3,
                                     backgroundColor: 'background.neutral',
@@ -291,7 +287,7 @@ export default function ExcerciseBottomSheet({ open, onClose, onOpen, course, de
                                 </Typography>
                             </Box>
                         </Box>
-                        
+
                         <Box
                             sx={{
                                 position: 'fixed',
@@ -304,18 +300,18 @@ export default function ExcerciseBottomSheet({ open, onClose, onOpen, course, de
                                 backgroundColor: 'background.paper'
                             }}
                         >
-                            <Button 
-                                variant="contained" 
-                                sx={{ 
+                            <Button
+                                variant="contained"
+                                sx={{
                                     py: 2,
-                                }} 
-                                fullWidth 
+                                }}
+                                fullWidth
                                 onClick={async () => {
                                     await uploadVideo();
                                     setActiveStep(activeStep + 1)
                                 }}
                             >
-                               {translate('course.exercise.selectVideo')}
+                                {translate('course.exercise.selectVideo')}
                             </Button>
                         </Box>
                     </Box>
@@ -413,8 +409,8 @@ export default function ExcerciseBottomSheet({ open, onClose, onOpen, course, de
                         justifyContent="center"
                         alignItems="center"
                         textAlign="center"
-                        sx={{ 
-                            padding: 4, 
+                        sx={{
+                            padding: 4,
                             backgroundColor: 'background.paper',
                             borderRadius: 2,
                             boxShadow: (theme) => theme.customShadows?.z8,
@@ -426,7 +422,7 @@ export default function ExcerciseBottomSheet({ open, onClose, onOpen, course, de
                         <Box
                             component="img"
                             src="/assets/avatars/snow-ai.png"
-                            sx={{ 
+                            sx={{
                                 width: 120,
                                 height: 120,
                                 mb: 3,
@@ -435,11 +431,11 @@ export default function ExcerciseBottomSheet({ open, onClose, onOpen, course, de
                                 boxShadow: (theme) => theme.customShadows?.z8,
                             }}
                         />
-                        
+
                         <CheckCircleIcon
-                            sx={{ 
-                                fontSize: 48, 
-                                color: 'success.main', 
+                            sx={{
+                                fontSize: 48,
+                                color: 'success.main',
                                 mb: 2,
                                 position: 'absolute',
                                 top: 20,
@@ -458,8 +454,8 @@ export default function ExcerciseBottomSheet({ open, onClose, onOpen, course, de
                             Snow está analizando tu video. Te notificaremos cuando termine la corrección.
                         </Typography>
 
-                        <Box 
-                            sx={{ 
+                        <Box
+                            sx={{
                                 width: '100%',
                                 p: 3,
                                 mb: 3,
@@ -481,7 +477,7 @@ export default function ExcerciseBottomSheet({ open, onClose, onOpen, course, de
                                 variant="outlined"
                                 color="primary"
                                 onClick={onCloseWrapper}
-                                sx={{ 
+                                sx={{
                                     flex: 1,
                                     textTransform: 'none',
                                     py: 1.5
@@ -493,7 +489,7 @@ export default function ExcerciseBottomSheet({ open, onClose, onOpen, course, de
                                 variant="contained"
                                 color="primary"
                                 onClick={onCloseWrapper}
-                                sx={{ 
+                                sx={{
                                     flex: 1,
                                     textTransform: 'none',
                                     py: 1.5
@@ -545,7 +541,7 @@ export default function ExcerciseBottomSheet({ open, onClose, onOpen, course, de
                         {translate(`course.${level}.title`)}
                     </Typography>
                     <Box width='100px' mr={2}>
-                        
+
                     </Box> {/* Placeholder to balance the space */}
                 </Box>
                 <Box
@@ -566,6 +562,18 @@ export default function ExcerciseBottomSheet({ open, onClose, onOpen, course, de
                             ))}
                         </Stepper>
                     </Box> */}
+
+                    
+                    <Drawer open={!user} onClose={onCloseWrapper} anchor="bottom" PaperProps={{
+                        sx: {
+                            borderTopLeftRadius: 16,
+                            borderTopRightRadius: 16,
+                        }
+                    }}>
+                    {!user && <>
+                        <Login fromModal={true} />
+                    </>}
+                    </Drawer>
                     {open && renderStep()}
                 </Box>
             </SwipeableDrawer>

@@ -20,7 +20,7 @@ export default function HeaderBreadcrumbs({ links, action, heading, moreLink = '
     <Box sx={{ mb: 5, ...sx }}>
       <Box sx={{ display: 'flex', alignItems: 'center' }}>
         <Box sx={{ flexGrow: 1 }}>
-          <Typography variant="h4" gutterBottom>
+          <Typography component="h1" variant="h4" gutterBottom>
             {heading}
           </Typography>
           {links  && <Breadcrumbs links={links} {...other} />}

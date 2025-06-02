@@ -150,12 +150,12 @@ const MobileSelectDays = ({ product, teacher, isOpen, closeFather, isRange }) =>
                     <Grid item md={8}></Grid>
                 </Hidden>
                 <Grid item xs={6} md={2} pl={2} pt={1} pb={1} justifyContent='center' textAlign='left'>
-                    <Typography variant="h4" width='100%'>
+                    <Typography component="p" variant="h4" width='100%'>
                         {isIndependant && !product && fCurrency(calculateRequestedPrice(teacher, totalDays, 'MORNING'))}
                         {product && fCurrency(calculatePrice(product, totalDays, 'MORNING'))}
                         {!isIndependant && !product && 'Contactar'}
                     </Typography>
-                    <Typography variant="body" width='100%'>
+                    <Typography component="p" variant="body" width='100%'>
                         {(isIndependant || product) && translate('checkout.halfDay3Hours')}
                     </Typography>
                 </Grid>
@@ -195,10 +195,10 @@ const MobileSelectDays = ({ product, teacher, isOpen, closeFather, isRange }) =>
                                 </IconButton>
                             </Grid>
                             <Grid item xs={12} p={2} pb={0} mb={0}>
-                                <Typography variant="h4">
+                                <Typography component="p" variant="h4">
                                     {translate('checkout.selectDays')}
                                 </Typography>
-                                <Typography variant="body">
+                                <Typography component="p" variant="body">
                                     Seleccioná los horarios disponibles para tener tu clínica
                                 </Typography>
                             </Grid>
@@ -211,18 +211,18 @@ const MobileSelectDays = ({ product, teacher, isOpen, closeFather, isRange }) =>
                                     border={2}
                                     borderColor={borderColor}
                                     onClick={() => handleClick('12 de Septiembre de 9:30 a 12:30')}
-                                ><Typography variant="h4">
+                                ><Typography component="p" variant="h4">
                                         12 de Septiembre
                                     </Typography>
-                                    <Typography variant="body">
+                                    <Typography component="p" variant="body">
                                         De 9:30hs a 12:30hs
                                     </Typography>
                                 </Box>
                                 <Box onClick={() => handleClick('13 de Septiembre de 9:30 a 12:30')} margin={2} padding={3} borderRadius={2} border={3} borderColor='black'>
-                                    <Typography variant="h4">
+                                    <Typography component="p" variant="h4">
                                         13 de Septiembre 
                                     </Typography>
-                                    <Typography variant="body">
+                                    <Typography component="p" variant="body">
                                         De 9:30hs a 12:30hs
                                     </Typography>
                                 </Box>
@@ -241,10 +241,10 @@ const MobileSelectDays = ({ product, teacher, isOpen, closeFather, isRange }) =>
                                 </IconButton>
                             </Grid>
                             <Grid item xs={12} p={2} pb={0} mb={0}>
-                                <Typography variant="h4">
+                                <Typography component="p" variant="h4">
                                     {translate('checkout.selectDays')}
                                 </Typography>
-                                <Typography variant="body">
+                                <Typography component="p" variant="body">
                                     {translate('checkout.selectDaysDescription')}
                                 </Typography>
                             </Grid>
@@ -294,10 +294,10 @@ const MobileSelectDays = ({ product, teacher, isOpen, closeFather, isRange }) =>
                             </IconButton>
                         </Grid>
                         <Grid item xs={12} p={2} pb={0} mb={0}>
-                            <Typography variant="h4">
+                            <Typography component="p" variant="h4">
                                 {translate('checkout.selectDays')}
                             </Typography>
-                            <Typography variant="body">
+                            <Typography component="p" variant="body">
                                 {translate('checkout.selectDaysDescription')}
                             </Typography>
                         </Grid>

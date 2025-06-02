@@ -21,6 +21,7 @@ export default function Breadcrumbs({ links, activeLast = false, ...other }) {
         <LinkItem link={link} />
       ) : (
         <Typography
+          component="p"
           variant="body2"
           sx={{
             maxWidth: 260,

@@ -32,6 +32,7 @@ const LINKS = [
       { name: 'Clase grupal Catedral', href: PATH_GUEST.grupales },
       { name: 'Clinica de Carrera', href: PATH_GUEST.palos },
       { name: 'FAQs', href: PATH_PAGE.faqs },
+      { name: 'Blog', href: 'https://blog.snowmatch.pro' },
     ],
   },
   {
@@ -39,7 +40,7 @@ const LINKS = [
     children: [
       { name: 'Profe de SM Tomas', href: PATH_GUEST.viewTeacher(14) },
       { name: 'Profe de SM Popi', href: PATH_GUEST.viewTeacher(592) },
-      { name: 'Profe de SM Agus', href: PATH_GUEST.viewTeacher(687) },
+      { name: 'Profe de SM Agos', href: PATH_GUEST.viewTeacher(897) },
       { name: 'Ver todos los profesores', href: '/match/independent?resort=Cerro%20Catedral' },
     ],
   },

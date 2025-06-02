@@ -612,11 +612,14 @@ export function updateTeacher(teacher) {
 
 // ----------------------------------------------------------------------
 
-export function updateUserPhoneAndName(phone, name) {
+export function updateUserPhoneAndName(phone, name, refreshUser) {
   return async () => {
     try {
       const encodedName = encodeURIComponent(name);
       const resp = await axios.put(`/api/users/contact_info?phone=${phone}&fullName=${encodedName}`)
+      if(refreshUser) {
+        refreshUser()
+      }
       return resp;
     } catch (error) {
       console.error(error);

@@ -99,7 +99,7 @@ export default function TeacherDetailsCarousel({ teacher }) {
           <Image
             onError={() => setSource('/assets/notFound.jpeg')}
             key={source}
-            alt="large image"
+            alt={`${teacher.name} enseñando esquí en bariloche`}
             src={source}
             ratio="1/1"
             onClick={() => handleOpenLightbox(source)}

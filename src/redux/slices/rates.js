@@ -3,6 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import axios from '../../utils/axios';
 //
 import { dispatch } from '../store';
+import { getTeacherBiId } from './teachers';
 
 // ----------------------------------------------------------------------
 
@@ -82,7 +83,7 @@ export function rateTeacherByID(userId, rate) {
                 teacherId: userId,
                 rate: rate
             }))
-            dispatch(getRates(userId))
+            dispatch(getTeacherBiId(userId))
         } catch (error) {
             console.error(error)
         }

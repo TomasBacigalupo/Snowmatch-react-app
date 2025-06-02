@@ -66,7 +66,9 @@ const TABLE_HEAD = [
   { id: 'resort', label: 'Montaña', align: 'left' },
   { id: 'capacity', label: 'Capacidad', align: 'left' },
   { id: 'price', label: 'Precio', align: 'left' },
-  { id: 'comment', label: 'Comentario', align: 'left' },
+  { id: 'internalComment', label: 'Comentario Interno', align: 'left' },
+  { id: 'includes', label: 'Incluye', align: 'left' },
+  { id: 'paymentStatus', label: 'Estado Pago', align: 'left' },
 ];
 
 // ----------------------------------------------------------------------

@@ -25,10 +25,10 @@ const TechDetails = ({ id }) => {
                             </Box>
                         </Grid>
                         <Grid item container direction='column' xs={9} ml={1}>
-                            <Typography variant="h6" textAlign="start" mt={1}>
+                            <Typography component="h3" variant="h6" textAlign="start" mt={1}>
                                 {item.label}
                             </Typography>
-                            <Typography variant="body2" textAlign="start">
+                            <Typography component="p" variant="body2" textAlign="start">
                                 {item.description}
                             </Typography>
                         </Grid>

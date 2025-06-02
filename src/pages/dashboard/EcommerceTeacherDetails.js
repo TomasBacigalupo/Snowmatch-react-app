@@ -117,16 +117,79 @@ export default function EcommerceTeacherDetails({ isGuest = false }) {
   return (
     <Page title={translate('teacherDetails.title')}>
       <Helmet>
-        <title>{translate('teacherDetails.title')}</title>
+        <title>
+          {translate('teacherDetails.metatitle',
+            {
+              discipline: teacher?.discipline ? `${translate(`landingPRO.${teacher?.discipline[0]}`)}` : 'Ski',
+              name: `${teacher?.name} ${teacher?.lastname}`,
+              resort: teacher?.resort?.lenght > 0 ? teacher.resort[0] : 'Bariloche'
+            })}
+        </title>
         <meta name="description" content={teacher?.information} />
         <meta property="og:title" content={teacher?.name} />
         <meta property="og:description" content={teacher?.information} />
         <meta property="og:image" content={teacher?.imageLink} />
+        <link rel="canonical" href="https://snowmatch.pro/match/teacher/${id}" />
         <meta property="og:url" content={`https://snowmatch.pro/match/teacher/${id}`} />
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Person",
+            "name": `${teacher?.name} ${teacher?.lastname}`,
+            "image": teacher?.imageLink,
+            "description": teacher?.information,
+            "jobTitle": "Instructor de Esquí",
+            "worksFor": {
+              "@type": "Organization",
+              "name": "SnowMatch",
+              "url": "https://snowmatch.pro"
+            },
+            "knowsAbout": teacher?.discipline?.map(d => translate(`landingPRO.${d}`)),
+            "location": {
+              "@type": "Place",
+              "name": teacher?.resort?.length > 0 ? teacher.resort[0] : "Bariloche",
+              "address": {
+                "@type": "PostalAddress",
+                "addressLocality": (() => {
+                  const resort = teacher?.resort?.[0]?.toLowerCase();
+                  if (resort === 'chapelco' || resort === 'las pendientes') {
+                    return "San Martín de los Andes";
+                  } else if (resort === 'castor') {
+                    return "Ushuaia";
+                  } else if (resort === 'bayo') {
+                    return "Villa La Angostura";
+                  } else {
+                    return "San Carlos de Bariloche";
+                  }
+                })(),
+                "addressRegion": (() => {
+                  const resort = teacher?.resort?.[0]?.toLowerCase();
+                  if (resort === 'cerro castor') {
+                    return "Tierra del Fuego";
+                  } else if (resort === 'chapelco' || resort === 'las pendientes') {
+                    return "Neuquén";
+                  } else if (resort === 'bayo') {
+                    return "Neuquén";
+                  } else {
+                    return "Río Negro";
+                  }
+                })(),
+                "addressCountry": "AR"
+              }
+            },
+            "url": `https://snowmatch.pro/match/teacher/${id}`,
+            "sameAs": teacher?.socialMedia || []
+          })}
+        </script>
       </Helmet>
       <Container maxWidth={themeStretch ? false : 'lg'} p={0} sx={{ paddingBottom: 'calc(env(safe-area-inset-bottom) + 60px)' }}>
         <HeaderBreadcrumbs
-          heading={translate('teacherDetails.title')}
+          heading={translate('teacherDetails.h1',
+            {
+              discipline: teacher?.discipline ? `${translate(`landingPRO.${teacher?.discipline[0]}`)}` : 'Ski',
+              name: `${teacher?.name} ${teacher?.lastname}`,
+              resort: teacher?.resort?.lenght > 0 ? teacher.resort[0] : 'Bariloche'
+            })}
           links={[
             // !isGuest? { name: translate("breadcrumb.dashboard', href: PATH_DASHBOARD.root} : {name: 'Home', href: '/'},
             !isGuest ? { name: 'Match', href: PATH_DASHBOARD.eCommerce.shop, } : { name: 'Match', href: PATH_GUEST.independent },
@@ -152,14 +215,14 @@ export default function EcommerceTeacherDetails({ isGuest = false }) {
                 </Hidden>
                 <Hidden smDown>
                   <Box mx={3} width='100%' mt={1} mb={2}>
-                    <Typography variant='h6'>{teacher.name}</Typography>
+                    <Typography component='p' variant='h6'>{teacher.name}</Typography>
                   </Box>
                 </Hidden>
                 <Grid item xs={12} px={3}>
-                  <Markdown children={teacher.information} />
+                  <Typography component="h2" variant="body1" children={teacher.information} />
                 </Grid>
                 <Grid item xs={12} px={3}>
-                  <Markdown children={teacher.description} />
+                  <Typography component="h3" variant="body1" children={teacher.description} />
                 </Grid>
                 <Box m={2} >
                   <Divider />
@@ -172,10 +235,10 @@ export default function EcommerceTeacherDetails({ isGuest = false }) {
                           <Iconify icon={item.icon} width={16} height={16} />
                         </IconWrapperMobileStyle></Box>
                         <Box ml={2}>
-                          <Typography variant="subtitle1" gutterBottom>
+                          <Typography component="p" variant="subtitle1" gutterBottom>
                             {translate("teacherDetails." + item.title)}
                           </Typography>
-                          <Typography sx={{ color: 'text.secondary' }}>
+                          <Typography component="p" sx={{ color: 'text.secondary' }}>
                             {translate('teacherDetails.' + item.description)}
                           </Typography>
                         </Box>
@@ -189,10 +252,10 @@ export default function EcommerceTeacherDetails({ isGuest = false }) {
                 <Hidden smUp>
                   <Box mt={3}>
                     <Box px={2} pt={2}>
-                      <Typography variant="h4" gutterBottom>
+                      <Typography component="p" variant="h4" gutterBottom>
                         {translate('teacherDetails.ocupation.title')}
                       </Typography>
-                      <Typography variant="body1" paragraph>
+                      <Typography component="p" variant="body1" paragraph>
                         {translate('teacherDetails.ocupation.description')}
                       </Typography>
                     </Box>

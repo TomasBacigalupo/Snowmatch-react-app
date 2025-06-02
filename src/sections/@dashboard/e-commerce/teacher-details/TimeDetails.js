@@ -14,10 +14,10 @@ const TimeDetails = () => {
         <>
             <Grid container justifyContent={'center'} alignItems={'center'} onClick={() => setOpen(true)}>
                 <Grid item xs={12} p={3}>
-                    <Typography variant="h4" gutterBottom>
+                    <Typography component="h2" variant="h4" gutterBottom>
                         {translate('lessonTime.title')}
                     </Typography>
-                    <Typography variant="body1" paragraph>
+                    <Typography component="p" variant="body1" paragraph>
                     {translate('lessonTime.morningTime')}<br />
                             {translate('lessonTime.afternoonTime')}<br />
                             {translate('lessonTime.allDayTime')}

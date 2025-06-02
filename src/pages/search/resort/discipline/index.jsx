@@ -27,18 +27,24 @@ const StudentTestimonials = lazy(() => import('src/sections/home/StudentTestimon
 // ----------------------------------------------------------------------
 
 const RESORT_OPTIONS = [
-  { id: 'Cerro Catedral', slugs: ['cerro-catedral', 'catedral'] },
-  { id: 'Chapelco', slugs: ['cerro-chapelco', 'chapelco'] },
-  { id: 'La Hoya', slugs: ['cerro-la-hoya', 'la-hoya'] },
-  { id: 'Las Leñas', slugs: ['cerro-las-lenas', 'las-lenas'] },
+  { id: 'Buenos Aires', slugs: ['buenos-aires', 'la-plata'] },
+  {
+    id: 'Cerro Catedral', slugs: ['cerro-catedral', 'catedral', 'catedral-de-bariloche',
+      'bariloche', 'san-carlos-de-bariloche', 'argentina', 'rio-negro', 'patagonia', 'patagonia-argentina', 'la-patagonia',
+      'el-sur', 'sur', 'sur-de-argentina', 'el-sur-de-argentina'
+    ]
+  },
+  { id: 'Chapelco', slugs: ['cerro-chapelco', 'chapelco', 'san-martin-de-los-andes', 'neuquen'] },
+  { id: 'La Hoya', slugs: ['cerro-la-hoya', 'la-hoya', 'esquel'] },
+  { id: 'Las Leñas', slugs: ['cerro-las-lenas', 'las-lenas', 'mendoza', 'san-rafael'] },
   { id: 'Caviahue', slugs: ['cerro-caviahue', 'caviahue'] },
-  { id: 'Cerro Bayo', slugs: ['cerro-bayo', 'bayo'] },
-  { id: 'Cerro Castor', slugs: ['cerro-castor', 'castor'] },
-  { id: 'Lago Hermoso', slugs: ['lago-hermoso', 'hermoso'] },
+  { id: 'Cerro Bayo', slugs: ['cerro-bayo', 'bayo', 'villa-la-angostura', 'el-bayo', 'villa', 'la-villa'] },
+  { id: 'Cerro Castor', slugs: ['cerro-castor', 'castor', 'ushuaia', 'tierra-del-fuego'] },
+  { id: 'Lago Hermoso', slugs: ['lago-hermoso', 'hermoso', 'cerro-lago-hermoso', 'san-martin', 'lago-hermoso-ski'] },
   { id: 'Las Pendientes', slugs: ['las-pendientes', 'pendientes'] },
-  { id: 'Perito Moreno', slugs: ['perito-moreno', 'moreno'] },
+  { id: 'Perito Moreno', slugs: ['perito-moreno', 'moreno', 'el-bolson', 'laderas', 'laderas-perito-moreno', 'bolson'], },
   { id: 'Aconcagua', slugs: ['aconcagua', 'concagua'] },
-  { id: 'Batea Mahuida', slugs: ['batea-mahuida', 'mahuida'] },
+  { id: 'Batea Mahuida', slugs: ['batea-mahuida', 'mahuida', 'cerro-batea-mahuida'] },
   { id: 'Calafate Mountain Park', slugs: ['calafate-mountain-park', 'mountain-park'] },
   { id: 'Vallecitos', slugs: ['vallecitos', 'vallecito'] },
   { id: 'Monte Bianco', slugs: ['monte-bianco'] },
@@ -49,7 +55,8 @@ const RESORT_OPTIONS = [
   { id: 'Cerro Norris', slugs: ['cerro-norris', 'norris'] },
   { id: 'Cerro Torre', slugs: ['cerro-torre', 'torre'] },
   { id: 'Cerro Negro', slugs: ['cerro-negro', 'negro'] },
-  { id: 'Las Leñas', slugs: ['las-leñas', 'lenas'] },
+  { id: 'Las Leñas', slugs: ['las-leñas', 'las-lenas', 'norte-de-argentina', 'el-norte-de-argentina', 'el-norte', 'norte'] },
+
 ];
 
 const RootStyle = styled('div')(() => ({
@@ -64,34 +71,47 @@ const ContentStyle = styled('div')(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-const getClassType = (type) => {
-  switch (type) {
-    case 'privada':
-      return 'Clase Privada';
-    case 'grupal':
-      return 'Clase Grupal';
-    case 'nenes':
-      return 'Clase para Niños';
-    case 'adolescentes':
-      return 'Clase para Adolescentes';
-    case 'menores':
-      return 'Clase para Menores';
-    case 'juveniles':
-      return 'Clase para Juveniles';
-    default:
-      return 'Clase';
-  }
-}
+
 
 const getCanonicalSlug = (slug) => {
-  const resort = RESORT_OPTIONS.find((r) => r.slugs.includes(slug));
-  return resort?.slugs[0] || slug; // usamos el slug canónico (el primero)
+  return slug; // usamos el slug canónico (el primero)
 };
 
 export default function SearchPage() {
   const { resort: resortSlug, discipline, type } = useParams();
   const [resort, setResort] = useState(resortSlug);
+  const { translate } = useLocales();
+  const getClassType = (type) => {
+    if (!type) return 'Clase';
 
+    // Map the type to its translation key
+    const typeMap = {
+      'grupales': 'grupales',
+      'privadas': 'privadas',
+      'niños': 'niños',
+      'adultos': 'adultos',
+      'amigos': 'amigos',
+      'familias': 'familias',
+      'estudiantes': 'estudiantes',
+      'profesionales': 'profesionales',
+      'principiantes': 'principiante',
+      'expertos': 'expertos',
+      'free-ride': 'free-ride',
+      'freeride': 'freeride',
+      'fuera-de-pista': 'fuera-de-pista',
+      'pista': 'pista',
+      'bumps': 'bumps',
+      'freestyle': 'freestyle',
+      'slalom': 'slalom',
+      'park': 'park',
+      'saltos': 'saltos'
+    };
+
+    const translationKey = typeMap[type];
+    if (!translationKey) return 'Clase';
+
+    return `Clase ${translate(`landingPRO.${translationKey}`)}`;
+  }
   useEffect(() => {
     const resort = RESORT_OPTIONS.find(r => r.slugs.includes(resortSlug))
     if (resort) {
@@ -102,9 +122,19 @@ export default function SearchPage() {
   const getDisciplineName = (disc) => {
     switch (disc) {
       case 'ski':
+      case 'esqui':
         return 'Ski';
+      case 'snow':
       case 'snowboard':
         return 'Snowboard';
+      case 'sky':
+      case 'eski':
+        return 'Ski';
+      case 'esqui-y-snowboard':
+      case 'esquí-y-snowboard':
+      case 'esqui-y-snow':
+      case 'ski-y-snow':
+        return 'Ski y Snowboard';
       default:
         return 'Ski y Snowboard';
     }
@@ -122,32 +152,97 @@ export default function SearchPage() {
       features.push(
         {
           "@type": "LocationFeatureSpecification",
-          "name": "Clases Privadas",
+          "name": translate('landingPRO.privadas'),
           "value": true
         },
         {
           "@type": "LocationFeatureSpecification",
-          "name": "Clases Grupales",
+          "name": translate('landingPRO.grupales'),
           "value": true
         },
         {
           "@type": "LocationFeatureSpecification",
-          "name": "Clases para Niños",
+          "name": translate('landingPRO.niños'),
           "value": true
         },
         {
           "@type": "LocationFeatureSpecification",
-          "name": "Clases para Adolescentes",
+          "name": translate('landingPRO.adultos'),
           "value": true
         },
         {
           "@type": "LocationFeatureSpecification",
-          "name": "Clases para Menores",
+          "name": translate('landingPRO.amigos'),
           "value": true
         },
         {
           "@type": "LocationFeatureSpecification",
-          "name": "Clases para Juveniles",
+          "name": translate('landingPRO.familias'),
+          "value": true
+        },
+        {
+          "@type": "LocationFeatureSpecification",
+          "name": translate('landingPRO.estudiantes'),
+          "value": true
+        },
+        {
+          "@type": "LocationFeatureSpecification",
+          "name": translate('landingPRO.profesionales'),
+          "value": true
+        },
+        {
+          "@type": "LocationFeatureSpecification",
+          "name": translate('landingPRO.principiante'),
+          "value": true
+        },
+        {
+          "@type": "LocationFeatureSpecification",
+          "name": translate('landingPRO.expertos'),
+          "value": true
+        },
+        {
+          "@type": "LocationFeatureSpecification",
+          "name": translate('landingPRO.free-ride'),
+          "value": true
+        },
+        {
+          "@type": "LocationFeatureSpecification",
+          "name": translate('landingPRO.freeride'),
+          "value": true
+        },
+        {
+          "@type": "LocationFeatureSpecification",
+          "name": translate('landingPRO.fuera-de-pista'),
+          "value": true
+        },
+        {
+          "@type": "LocationFeatureSpecification",
+          "name": translate('landingPRO.pista'),
+          "value": true
+        },
+        {
+          "@type": "LocationFeatureSpecification",
+          "name": translate('landingPRO.bumps'),
+          "value": true
+        },
+        {
+          "@type": "LocationFeatureSpecification",
+          "name": translate('landingPRO.freestyle'),
+          "value": true
+        },
+        {
+          "@type": "LocationFeatureSpecification",
+          "name": translate('landingPRO.slalom'),
+          "value": true
+        },
+        {
+          "@type": "LocationFeatureSpecification",
+          "name": translate('landingPRO.park'),
+          "value": true
+        },
+        {
+          "@type": "LocationFeatureSpecification",
+          "name": translate('landingPRO.saltos'),
           "value": true
         }
       );
@@ -156,31 +251,31 @@ export default function SearchPage() {
   }
 
   return (
-    <Page title={`Clases de ${discipline || 'ski y snowboard'} en ${resort} - SnowMatch`}>
+    <Page title={`Clases de ${discipline ? translate(`landingPRO.${discipline}`) : 'ski y snowboard'} en ${translate(`landingPRO.${resortSlug}`)} - SnowMatch`}>
       <Helmet>
-        <title>{`Clases de ${discipline || 'ski y snowboard'} en ${resort} - Reserva Online | SnowMatch`}</title>
-        <meta name="description" content={`Reserva clases de ${discipline || 'ski y snowboard'} en ${resort}. Instructores certificados, clases privadas y grupales. ¡Reserva online y evita colas!`} />
-        <meta name="keywords" content={`clases de ${discipline || 'ski y snowboard'}, ${resort}, instructores certificados, clases privadas, clases grupales, reserva online`} />
+        <title>{`Clases de ${discipline ? translate(`landingPRO.${discipline}`) : 'ski y snowboard'} en ${translate(`landingPRO.${resortSlug}`)} - Reserva Online | SnowMatch`}</title>
+        <meta name="description" content={`Reserva clases de ${discipline ? translate(`landingPRO.${discipline}`) : 'ski y snowboard'} en ${resort}. Instructores certificados, clases privadas y grupales. ¡Reserva online y evita colas!`} />
+        <meta name="keywords" content={`clases de ${discipline ? translate(`landingPRO.${discipline}`) : 'ski y snowboard'}, ${resort}, instructores certificados, clases privadas, clases grupales, reserva online`} />
 
         {/* Open Graph / Facebook */}
         <meta property="og:type" content="website" />
-        <meta property="og:title" content={`Clases de ${discipline || 'ski y snowboard'} en ${resort} - Reserva Online | SnowMatch`} />
-        <meta property="og:description" content={`Reserva clases de ${discipline || 'ski y snowboard'} en ${resort}. Instructores certificados, clases privadas y grupales. ¡Reserva online y evita colas!`} />
+        <meta property="og:title" content={`Clases de ${discipline ? translate(`landingPRO.${discipline}`) : 'ski y snowboard'} en ${resort} - Reserva Online | SnowMatch`} />
+        <meta property="og:description" content={`Reserva clases de ${discipline ? translate(`landingPRO.${discipline}`) : 'ski y snowboard'} en ${resort}. Instructores certificados, clases privadas y grupales. ¡Reserva online y evita colas!`} />
         <meta property="og:image" content="https://snowmatchimages.s3.amazonaws.com/profile/ClaseNiñoss.jpeg" />
-        <meta property="og:url" content={`https://snowmatch.pro/clases/${resortSlug}${discipline ? '/' + discipline : ''}${type ? '/' + type : ''}`} />
+        <meta property="og:url" content={`https://snowmatch.pro/${resortSlug}${discipline ? `/${discipline}` : ''}${type ? '/' + type : ''}`} />
         <meta property="og:site_name" content="SnowMatch" />
         <meta property="og:locale" content="es_ES" />
 
         {/* Twitter */}
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content={`Clases de ${discipline || 'ski y snowboard'} en ${resort} - Reserva Online | SnowMatch`} />
-        <meta name="twitter:description" content={`Reserva clases de ${discipline || 'ski y snowboard'} en ${resort}. Instructores certificados, clases privadas y grupales. ¡Reserva online y evita colas!`} />
+        <meta name="twitter:title" content={`Clases de ${discipline ? translate(`landingPRO.${discipline}`) : 'ski y snowboard'} en ${resort} - Reserva Online | SnowMatch`} />
+        <meta name="twitter:description" content={`Reserva clases de ${discipline ? translate(`landingPRO.${discipline}`) : 'ski y snowboard'} en ${resort}. Instructores certificados, clases privadas y grupales. ¡Reserva online y evita colas!`} />
         <meta name="twitter:image" content="https://snowmatchimages.s3.amazonaws.com/profile/ClaseNiñoss.jpeg" />
 
         {/* Canonical URL */}
         <link
           rel="canonical"
-          href={`https://snowmatch.pro/clases/${getCanonicalSlug(resortSlug)}${discipline ? '/' + discipline : ''}${type ? '/' + type : ''}`}
+          href={`https://snowmatch.pro/${getCanonicalSlug(resortSlug)}${discipline ? '/' + discipline : ''}${type ? '/' + type : ''}`}
         />
         {/* Schema.org markup */}
         <script type="application/ld+json">
@@ -188,9 +283,9 @@ export default function SearchPage() {
                     {
                         "@context": "https://schema.org",
                         "@type": "SportsActivityLocation",
-                        "name": "SnowMatch - ${getClassType(type)} de ${getDisciplineName(discipline)} en ${resort}",
-                        "description": "${getClassType(type)} de ${getDisciplineName(discipline)} en ${resort} para todos los niveles",
-                        "url": "https://snowmatch.pro/clases/${resortSlug}${discipline ? '/' + discipline : ''}${type ? '/' + type : ''}",
+                        "name": "SnowMatch - ${getClassType(type)} ${discipline ? 'de ' + translate(`landingPRO.${discipline}`) : 'de ski y snowboard'} en ${translate(`landingPRO.${resortSlug}`)}",
+                        "description": "${getClassType(type)} ${discipline ? 'de ' + translate(`landingPRO.${discipline}`) : 'de ski y snowboard'} en ${translate(`landingPRO.${resortSlug}`)} para todos los niveles",
+                        "url": "https://snowmatch.pro/${resortSlug}${discipline ? '/' + discipline : ''}${type ? '/' + type : ''}",
                         "address": {
                             "@type": "PostalAddress",
                             "addressCountry": "AR",
@@ -207,8 +302,8 @@ export default function SearchPage() {
                             "availability": "https://schema.org/InStock",
                             "itemOffered": {
                                 "@type": "Service",
-                                "name": "${getClassType(type)} de ${getDisciplineName(discipline)} en ${resort}",
-                                "description": "${getClassType(type)} de ${getDisciplineName(discipline)} en ${resort}",
+                                "name": "${getClassType(type)} ${discipline ? 'de ' + translate(`landingPRO.${discipline}`) : 'de ski y snowboard'} en ${translate(`landingPRO.${resortSlug}`)}",
+                                "description": "${getClassType(type)} ${discipline ? 'de ' + translate(`landingPRO.${discipline}`) : 'de ski y snowboard'} en ${translate(`landingPRO.${resortSlug}`)}",
                                 "serviceType": "Clases de esquí",
                                 "provider": {
                                     "@type": "Organization",

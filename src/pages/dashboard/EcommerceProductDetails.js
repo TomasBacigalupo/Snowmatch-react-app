@@ -130,11 +130,11 @@ export default function EcommerceTeacherDetails({ isGuest = false }) {
 
 
   return (
-    <Page title={translate('products.experienceTitle')} meta={
+    <Page title={translate('products.experienceTitle', { name: product?.name })} meta={
       <meta name="og:description" content={translate(`product.${id}.metaDescription`)} />
     }>
       <Helmet>
-        <title>SnowMatchX</title>
+        <title>{translate('products.experienceMetaTitle', { name: product?.name })}</title>
         <meta name="description" content={translate(`product.${id}.metaDescription`)} />
         <meta property="og:title" content={translate(`product.${id}.metaTitle`)} />
         <meta property="og:description" content={translate(`product.${id}.metaDesc`)} />
@@ -143,7 +143,7 @@ export default function EcommerceTeacherDetails({ isGuest = false }) {
       </Helmet>
       <Container maxWidth={themeStretch ? false : 'lg'} p={0}>
         <HeaderBreadcrumbs
-          heading={translate('products.experienceTitle')}
+          heading={translate('products.experienceTitle', { name: product?.name })}
           links={[
             // !isGuest? { name: translate("breadcrumb.dashboard', href: PATH_DASHBOARD.root} : {name: 'Home', href: '/'},
             !isGuest ? { name: translate('products.experiences'), href: PATH_GUEST.independent, } : { name: 'Match', href: PATH_GUEST.independent },
@@ -160,7 +160,7 @@ export default function EcommerceTeacherDetails({ isGuest = false }) {
               <Grid item xs={12} md={6} lg={5} container spacing={1} >
                 <Hidden smUp>
                   <Box mx={3} width='100%' mt={1} mb={2}>
-                  <Typography variant='h6'>{product.name}</Typography>
+                  <Typography component="h2" variant='h6'>{product.name}</Typography>
                   </Box>
 
                   <TechDetails id={product.id} />
@@ -209,7 +209,7 @@ export default function EcommerceTeacherDetails({ isGuest = false }) {
 
                 <Hidden smDown>
                   <Box mx={3} width='100%' mt={1} mb={2}>
-                    <Typography variant='h6'>{product.name}</Typography>
+                    <Typography component="h2" variant='h6'>{product.name}</Typography>
                   </Box>
                   <TechDetails id={product.id} />
                   <Box mx={2} width='100%' mt={2}>
@@ -279,10 +279,10 @@ export default function EcommerceTeacherDetails({ isGuest = false }) {
                       <IconWrapperStyle>
                         <Iconify icon={item.icon} width={36} height={36} />
                       </IconWrapperStyle>
-                      <Typography variant="subtitle1" gutterBottom>
+                      <Typography component="p" variant="subtitle1" gutterBottom>
                         {translate("teacherDetails." + item.title)}
                       </Typography>
-                      <Typography sx={{ color: 'text.secondary' }}>{translate('teacherDetails.' + item.description)}</Typography>
+                      <Typography component="p" sx={{ color: 'text.secondary' }}>{translate('teacherDetails.' + item.description)}</Typography>
                     </Box>
                   </Grid>
                 ))}

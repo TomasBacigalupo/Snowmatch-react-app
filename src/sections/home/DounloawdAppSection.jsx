@@ -145,7 +145,7 @@ const DownloadAppSection = ({ resort }) => {
                         <IphoneFrame>
                             <Screen>
                                 <AppImage
-                                    src="/screenshot.png"
+                                    src="/screenshot.webp"
                                     alt="SnowMatch App - Reserva clases de esquí y snowboard"
                                     loading="lazy"
                                 />

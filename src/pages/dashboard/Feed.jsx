@@ -52,7 +52,10 @@ const CommentsDrawer = ({ open, onClose, comments }) => {
         sx: {
           borderTopLeftRadius: 16,
           borderTopRightRadius: 16,
-          maxHeight: '80vh',
+          minHeight: '30vh',
+          maxHeight: '90vh',
+          height: 'auto',
+          overflow: 'auto',
         },
       }}
     >
@@ -66,94 +69,96 @@ const CommentsDrawer = ({ open, onClose, comments }) => {
           </IconButton>
         </Box>
         <Divider sx={{ mb: 2 }} />
-        {comments.map((comment, index) => (
-          <Box key={comment.id}>
-            <Box sx={{ mb: 3 }}>
-              <Stack direction="row" spacing={1} alignItems="center">
-                <Avatar
-                  src={comment.aiComment ? "/assets/avatars/snow-ai.png" : comment.user.imageS3}
-                  sx={{ width: 40, height: 40 }}
-                />
-                <Box>
-                  <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
-                    {comment.aiComment ? "Snow" : `${comment.user.name} ${comment.user.lastname}`}
-                  </Typography>
-                  <Stack direction="row" spacing={1}>
-                    {comment.proCheckComment && (
-                      <Chip
-                        label="Pro"
-                        size="small"
-                        color="primary"
-                        sx={{ height: 20, fontSize: '0.7rem' }}
-                      />
-                    )}
-                    {comment.aiComment && (
-                      <Chip
-                        label="AI"
-                        size="small"
-                        color="secondary"
-                        sx={{ height: 20, fontSize: '0.7rem' }}
-                      />
-                    )}
-                  </Stack>
-                </Box>
-              </Stack>
-              <Box sx={{ mt: 1 }}>
-                <Markdown
-                  components={{
-                    h1: (props) => <Typography variant="body1" {...props} />,
-                    h2: (props) => <Typography variant="body1" {...props} />,
-                    h3: (props) => <Typography variant="body1" {...props} />,
-                    h4: (props) => <Typography variant="body1" {...props} />,
-                    h5: (props) => <Typography variant="body1" {...props} />,
-                    h6: (props) => <Typography variant="body1" {...props} />,
-                    ul: (props) => <ul style={{ listStyleType: 'disc', marginLeft: '1px' }} {...props} />,
-                    li: (props) => <li style={{ fontSize: '14px', marginLeft: '1px', marginTop: '5px' }} {...props} />,
-                  }}
-                  sx={{
-                    color: 'text.secondary',
-                    fontSize: '0.875rem',
-                    lineHeight: 1.6,
-                  }}
-                >
-                  {expandedComments[comment.id]
-                    ? comment.comment
-                    : safeSliceMarkdown(comment.comment, 100)}
-                </Markdown>
-                {comment.comment.length > 100 && (
-                  <Button
-                    onClick={() => toggleComment(comment.id)}
+        <Box sx={{ maxHeight: 'calc(90vh - 80px)', overflow: 'auto', pb: 'env(safe-area-inset-bottom)' }}>
+          {comments.map((comment, index) => (
+            <Box key={comment.id}>
+              <Box sx={{ mb: 3 }}>
+                <Stack direction="row" spacing={1} alignItems="center">
+                  <Avatar
+                    src={comment.aiComment ? "/assets/avatars/snow-ai.png" : comment.user.imageS3}
+                    sx={{ width: 40, height: 40 }}
+                  />
+                  <Box>
+                    <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
+                      {comment.aiComment ? "Snow" : `${comment.user.name} ${comment.user.lastname}`}
+                    </Typography>
+                    <Stack direction="row" spacing={1}>
+                      {comment.proCheckComment && (
+                        <Chip
+                          label="Pro"
+                          size="small"
+                          color="primary"
+                          sx={{ height: 20, fontSize: '0.7rem' }}
+                        />
+                      )}
+                      {comment.aiComment && (
+                        <Chip
+                          label="AI"
+                          size="small"
+                          color="secondary"
+                          sx={{ height: 20, fontSize: '0.7rem' }}
+                        />
+                      )}
+                    </Stack>
+                  </Box>
+                </Stack>
+                <Box sx={{ mt: 1 }}>
+                  <Markdown
+                    components={{
+                      h1: (props) => <Typography variant="body1" {...props} />,
+                      h2: (props) => <Typography variant="body1" {...props} />,
+                      h3: (props) => <Typography variant="body1" {...props} />,
+                      h4: (props) => <Typography variant="body1" {...props} />,
+                      h5: (props) => <Typography variant="body1" {...props} />,
+                      h6: (props) => <Typography variant="body1" {...props} />,
+                      ul: (props) => <ul style={{ listStyleType: 'disc', marginLeft: '1px' }} {...props} />,
+                      li: (props) => <li style={{ fontSize: '14px', marginLeft: '1px', marginTop: '5px' }} {...props} />,
+                    }}
                     sx={{
-                      mt: 1,
-                      textTransform: 'none',
-                      color: 'primary.main',
+                      color: 'text.secondary',
                       fontSize: '0.875rem',
-                      p: 0,
-                      minWidth: 'auto',
-                      '&:hover': {
-                        background: 'none',
-                        textDecoration: 'underline',
-                      },
+                      lineHeight: 1.6,
                     }}
                   >
-                    {expandedComments[comment.id] ? 'Show less' : 'Read more'}
-                  </Button>
-                )}
+                    {expandedComments[comment.id]
+                      ? comment.comment
+                      : safeSliceMarkdown(comment.comment, 100)}
+                  </Markdown>
+                  {comment.comment.length > 100 && (
+                    <Button
+                      onClick={() => toggleComment(comment.id)}
+                      sx={{
+                        mt: 1,
+                        textTransform: 'none',
+                        color: 'primary.main',
+                        fontSize: '0.875rem',
+                        p: 0,
+                        minWidth: 'auto',
+                        '&:hover': {
+                          background: 'none',
+                          textDecoration: 'underline',
+                        },
+                      }}
+                    >
+                      {expandedComments[comment.id] ? 'Show less' : 'Read more'}
+                    </Button>
+                  )}
+                </Box>
               </Box>
+              {index < comments.length - 1 && (
+                <Divider
+                  sx={{
+                    mb: 3,
+                    opacity: 0.5,
+                    '&::before, &::after': {
+                      borderColor: 'divider',
+                    }
+                  }}
+                />
+              )}
             </Box>
-            {index < comments.length - 1 && (
-              <Divider
-                sx={{
-                  mb: 3,
-                  opacity: 0.5,
-                  '&::before, &::after': {
-                    borderColor: 'divider',
-                  }
-                }}
-              />
-            )}
-          </Box>
-        ))}
+          ))}
+        </Box>
       </Box>
     </SwipeableDrawer>
   );

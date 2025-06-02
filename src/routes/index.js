@@ -28,6 +28,7 @@ import Training from 'src/pages/dashboard/Training';
 import Maps from 'src/pages/dashboard/Maps';
 import SearchPage from 'src/pages/search/resort/discipline';
 import BlogEmbed from '../pages/BlogEmbed';
+import SnowMatchLanding from 'src/pages/search/resort/discipline/videos';
 // ----------------------------------------------------------------------
 
 const Loadable = (Component) => (props) => {
@@ -88,6 +89,20 @@ export default function Router() {
       element: (<GuestLayout />),
       children: [
         { path: 'calculate', element: <Rental isGuest={true} /> }
+      ]
+    },
+    {
+      path: 'clases',
+      element: (
+        <RoleBasedGuard accessibleRoles={['GUEST', 'STUDENT']}>
+          <BackButtonLayout />
+        </RoleBasedGuard>
+
+      ),
+      children: [
+        { path: 'instructores/:id', element: <EcommerceTeacherDetails isGuest={true} /> },
+        { path: 'bariloche/esqui/:id', element: <EcommerceProductDetails /> },
+        { path: 'bariloche/snowboard/:id', element: <EcommerceProductDetails /> },
       ]
     },
     {
@@ -395,6 +410,8 @@ export default function Router() {
           element: isMobile ? <Navigate to="/match/videoCoach/upload" replace /> : <Navigate to="/cerro-catedral" replace />,
           index: true
         },
+        { path: 'escuela-de-esqui-y-snowboard', element: <SnowMatchLanding /> },
+        { path: 'tips-esqui-snowboard/:tip', element: <SnowMatchLanding /> },
         { path: 'clases-de-ski-bariloche', element: <HomePageBariloche /> },
         { path: 'clases-de-ski-lago-hermoso', element: <HomePageLagoHermoso /> },
         { path: ':resort/:discipline/:type', element: <SearchPage/>},

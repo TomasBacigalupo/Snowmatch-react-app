@@ -34,7 +34,7 @@ const MapLeaderboard = () => {
   return (
     <StyledCard>
       {leaders && leaders.length > 0 && <Box mt={3} textAlign="center">
-        <Avatar src={""} sx={{ width: 80, height: 80, mx: "auto" }} />
+        <Avatar src={leaders[0]?.user?.imageS3} sx={{ width: 80, height: 80, mx: "auto" }} />
         <Typography variant="h4" fontWeight="bold">{leaders[0].score}</Typography>
         <Box display="flex" alignItems="center" justifyContent="center">
           <CrownIcon sx={{ color: "gold", mr: 1 }} />

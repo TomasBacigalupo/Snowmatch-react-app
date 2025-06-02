@@ -150,10 +150,10 @@ export default function ReviewTeacher() {
                                         <IconWrapperStyle>
                                             <Iconify icon={item.icon} width={36} height={36} />
                                         </IconWrapperStyle>
-                                        <Typography variant="subtitle1" gutterBottom>
+                                        <Typography component="p" variant="subtitle1" gutterBottom>
                                             {translate("teacherDetails." + item.title)}
                                         </Typography>
-                                        <Typography sx={{ color: 'text.secondary' }}>{translate('teacherDetails.' + item.description)}</Typography>
+                                        <Typography component="p" sx={{ color: 'text.secondary' }}>{translate('teacherDetails.' + item.description)}</Typography>
                                     </Box>
                                 </Grid>
                             ))}

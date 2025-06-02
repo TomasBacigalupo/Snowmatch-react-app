@@ -62,25 +62,25 @@ export default function TeacherDetailsReviewOverview({ teacher, onOpen }) {
 
   const getSafetyAvg = () => {
     if (rates?.length === 0) return 0
-    return Math.floor(rates?.map(r => r.safety).reduce((total, safety) => total + safety) * 100 / (rates?.length * 3))
+    return Math.floor(rates?.map(r => r.safety).reduce((total, safety) => total + safety) * 100 / (rates?.length * 2))
   }
 
   const getFunAvg = () => {
     if (rates?.length === 0) return 0
-    return Math.floor(rates?.map(r => r.fun).reduce((total, fun) => total + fun) * 100 / (rates?.length * 3))
+    return Math.floor(rates?.map(r => r.fun).reduce((total, fun) => total + fun) * 100 / (rates?.length * 2))
   }
 
   return (
     <Grid container>
       <GridStyle item xs={12} md={4}>
-        <Typography variant="subtitle1" gutterBottom>
+        <Typography component="p" variant="subtitle1" gutterBottom>
          {translate('teacherDetails.ratingAVG')}
         </Typography>
-        <Typography variant="h2" gutterBottom sx={{ color: getStarsAvg() > 3 ? 'success.main' : 'error.main' }}>
+        <Typography component="p" variant="h2" gutterBottom sx={{ color: getStarsAvg() > 3 ? 'success.main' : 'error.main' }}>
           {getStarsAvg()}/5
         </Typography>
         <RatingStyle readOnly value={getStarsAvg()} precision={0.1} />
-        <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+        <Typography component="p" variant="body2" sx={{ color: 'text.secondary' }}>
           ({fShortenNumber(rates?.length)}
           &nbsp;reviews)
         </Typography>
@@ -134,10 +134,18 @@ ProgressItem.propTypes = {
 };
 
 function ProgressItem({ star, total, name }) {
-  const { reviewCount } = star;
   return (
     <Stack direction="row" alignItems="center" spacing={1.5}>
-      <Typography variant="subtitle2">{name}</Typography>
+      <Typography 
+        component="p" 
+        variant="subtitle1" 
+        sx={{ 
+          minWidth: 80,
+          fontWeight: 500
+        }}
+      >
+        {name}
+      </Typography>
       <LinearProgress
         variant="determinate"
         value={star}
@@ -145,11 +153,10 @@ function ProgressItem({ star, total, name }) {
           mx: 2,
           flexGrow: 1,
           bgcolor: 'divider',
+          height: 8,
+          borderRadius: 4,
         }}
       />
-      <Typography variant="body2" sx={{ color: 'text.secondary', minWidth: 64, textAlign: 'right' }}>
-        {fShortenNumber(total)}
-      </Typography>
     </Stack>
   );
 }

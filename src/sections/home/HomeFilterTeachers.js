@@ -37,7 +37,7 @@ const getClassType = (type) => {
     }
 }
 
-export default function HomeFilterTeachers({ resort, discipline, type }) {
+export default function HomeFilterTeachers({ resort, discipline, type, resortSlug, disciplineSlug }) {
 
     // const advancedMatching = { em: 'some@email.com' }; // optional, more info: https://developers.facebook.com/docs/facebook-pixel/advanced/advanced-matching
     const options = {
@@ -63,9 +63,8 @@ export default function HomeFilterTeachers({ resort, discipline, type }) {
         from: defaultRange[0],
         to: defaultRange[1],
         gender: [],
-        category: discipline ? [discipline] : ["Ski"],
-        language: [],
-        discipline: []
+        category: discipline ? discipline : ["Ski", "SnowBoard"],
+        language: []
     };
 
     const methods = useForm({
@@ -115,7 +114,7 @@ export default function HomeFilterTeachers({ resort, discipline, type }) {
 
     useEffect(() => {
         setValue('resort', resort)
-        setValue('category', discipline ? [discipline] : ["Ski"])
+        setValue('category', discipline ? discipline : ["Ski", "SnowBoard"])
     }, [resort, discipline])
 
     return (
@@ -123,14 +122,17 @@ export default function HomeFilterTeachers({ resort, discipline, type }) {
             <Grid container spacing={2}>
                 <Grid item xs={12} md={12} justifyContent='center'>
                     <Typography variant="h3" component='h1' sx={{ color: theme.typography.color, }}>
-                        {translate("landingPRO.find", { resort: resort, discipline:  discipline ? translate(`landingPRO.${discipline}`) : "", type: type ? translate(`landingPRO.${type}`) : "" })}
+                        {translate("landingPRO.find", { resort: 
+                            resortSlug ? translate(`landingPRO.${resortSlug}`) : resort, 
+                            discipline: disciplineSlug ? translate(`landingPRO.${disciplineSlug}`) : translate(`landingPRO.ski&snowboard`),  
+                            type: type ? translate(`landingPRO.${type}`) : "" })}
                     </Typography>
                 </Grid>
                 <Grid item xs={12} md={12} justifyContent='center'>
                     <Typography variant="h5" component='h2' sx={{ color: theme.typography.body2, }}>
                         {translate("landingPRO.findSubtitle", { 
-                            resort: resort, 
-                            discipline: discipline ? translate(`landingPRO.${discipline}`) : "", 
+                            resort: resortSlug ? translate(`landingPRO.${resortSlug}`) : resort, 
+                            discipline: disciplineSlug ? translate(`landingPRO.${disciplineSlug}`) : translate(`landingPRO.ski&snowboard`), 
                             type: type ? translate(`landingPRO.${type}Instructor`) : "" })}
                     </Typography>
                 </Grid>

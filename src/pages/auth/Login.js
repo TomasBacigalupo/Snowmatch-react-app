@@ -57,20 +57,20 @@ const ContentStyle = styled('div')(({ theme }) => ({
 }));
 
 // Add this new styled component for the logo
-const LogoStyle = styled('img')({
-  width: 400,
-  marginBottom: 40,
+const LogoStyle = styled('img')(({ fromModal }) => ({
+  width: fromModal ? 200 : 400,
+  marginBottom: fromModal ? 20 : 40,
   alignSelf: 'center',
   cursor: 'pointer',
   transition: 'transform 0.2s',
   '&:hover': {
     transform: 'scale(1.02)',
   },
-});
+}));
 
 // ----------------------------------------------------------------------
 
-export default function Login() {
+export default function Login({fromModal = false}) {
   const { method } = useAuth();
   const smUp = useResponsive('up', 'sm');
   const mdUp = useResponsive('up', 'md');
@@ -83,7 +83,7 @@ export default function Login() {
   return (
     <Page title="Login">
       <RootStyle>
-      {!smUp && (
+      {!smUp && !fromModal && (
             <IconButton 
               onClick={() => navigate(-1)} 
               sx={{ 
@@ -94,31 +94,35 @@ export default function Login() {
               <ArrowBackIcon />
             </IconButton>
           )}
-        <HeaderStyle>
-          
-          {smUp && <Logo />}
-          {smUp && (
-            <Typography variant="body2" sx={{ mt: { md: -2 } }} align="right">
-              {translate('auth.haveAccount')} {''}
-              <Link variant="subtitle2" component={RouterLink} to={PATH_AUTH.registerStudent}>
-                {translate('auth.getStartedFree')}
-              </Link>
-              <br />
-              {translate('auth.notATeacher')} {' '}
-              <Link variant="subtitle2" component={RouterLink} to={PATH_GUEST.root}>
-                Match
-              </Link>
-            </Typography>
-          )}
-        </HeaderStyle>
+        {!fromModal && (
+          <HeaderStyle>
+            {smUp && <Logo />}
+            {smUp && (
+              <Typography variant="body2" sx={{ mt: { md: -2 } }} align="right">
+                {translate('auth.haveAccount')} {''}
+                <Link variant="subtitle2" component={RouterLink} to={PATH_AUTH.registerStudent}>
+                  {translate('auth.getStartedFree')}
+                </Link>
+                <br />
+                {translate('auth.notATeacher')} {' '}
+                <Link variant="subtitle2" component={RouterLink} to={PATH_GUEST.root}>
+                  Match
+                </Link>
+              </Typography>
+            )}
+          </HeaderStyle>
+        )}
 
         <Container maxWidth="sm">
-          <ContentStyle>
-
+          <ContentStyle sx={{ 
+            padding: fromModal ? theme => theme.spacing(4, 0) : theme => theme.spacing(12, 0),
+            minHeight: fromModal ? 'auto' : '100vh'
+          }}>
             <LogoStyle
               src="/logo/snowmatch.png"
               alt="Snowmatch Logo"
               onClick={() => navigate('/')}
+              fromModal={fromModal}
             />
             <Stack direction="row" alignItems="center" sx={{ mb: 5 }}>
               <Box sx={{ flexGrow: 1 }}>

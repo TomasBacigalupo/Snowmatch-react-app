@@ -255,6 +255,12 @@ export const { openModal, closeModal, selectEvent, changeMessage, bookingPending
 
 export function getBookings(state) {
     return async () => {
+        const accessToken = window.localStorage.getItem('accessToken');
+        if (!accessToken) {
+            dispatch(slice.actions.hasError(new Error('No authentication token found')));
+            return;
+        }
+
         dispatch(slice.actions.startLoading());
         try {
             const response = await axios.get(`/api/bookings?state=${state}`);

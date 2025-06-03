@@ -47,6 +47,7 @@ import AdminBookingTableRow from 'src/sections/@dashboard/admin/list/AdminBookin
 import AdminBookingTableCard from 'src/sections/@dashboard/admin/list/AdminBookingTableCard';
 import BookingModal from 'src/sections/@dashboard/admin/BookingModal';
 import BookingSummary from 'src/sections/@dashboard/admin/list/BookingSummary';
+import useAuth from 'src/hooks/useAuth';
 
 // ---------------------------------------------------------------------
 
@@ -92,6 +93,8 @@ export default function AdminReviewBookings() {
     onChangePage,
     onChangeRowsPerPage,
   } = useTable();
+
+  const {user} = useAuth();
 
   const { themeStretch } = useSettings();
 
@@ -213,7 +216,7 @@ export default function AdminReviewBookings() {
   }, [bookings]);
 
   useEffect(() => {
-    dispatch(getBookings(filterTeacherId, filterStudentId, filterMonth, page))
+    user && dispatch(getBookings(filterTeacherId, filterStudentId, filterMonth, page))
   }, [page])
 
   useEffect(() => {

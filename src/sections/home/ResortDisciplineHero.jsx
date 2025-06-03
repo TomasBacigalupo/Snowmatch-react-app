@@ -202,6 +202,7 @@ const RESORT_OPTIONS = [
     { id: 'Cerro Torre', slugs: ['cerro-torre', 'torre'] },
     { id: 'Cerro Negro', slugs: ['cerro-negro', 'negro'] },
     { id: 'Las Leñas', slugs: ['las-leñas', 'las-lenas', 'norte-de-argentina', 'el-norte-de-argentina', 'el-norte', 'norte'] },
+    { id: 'Portillo', slugs: ['portillo'] },
 
 ];
 

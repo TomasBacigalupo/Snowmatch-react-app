@@ -64,6 +64,7 @@ const TabsWrapperStyle = styled('div')(({ theme }) => ({
 
 export default function UserLessons() {
     const { themeStretch } = useSettings();
+    const {user} = useAuth();
 
     const { isTeacher, isStudent } = useAuth();
 
@@ -83,7 +84,7 @@ export default function UserLessons() {
     useEffect(() => {        
         if(currentTab === 'pending')
             dispatch(getBookings("PENDING"))
-        else if(currentTab === 'upcoming')
+        else if(user && currentTab === 'upcoming')
             dispatch(getBookings("ACCEPTED"))
     }, [dispatch, currentTab])
 

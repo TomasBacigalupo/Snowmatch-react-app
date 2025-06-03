@@ -83,25 +83,25 @@ export default function ShopStandardProducts({ loading }) {
             {
                 filters.resort === "Cerro Catedral" && <SchoolProducts products={products} isLoading={isLoading} />
             }
-            <Grid container spacing={3}>
-                <Grid item xs={12}>
-                    <Typography variant='h6'>
-                        O elegí tu pro ideal
-                    </Typography>
+            {filters.resort === "Cerro Catedral" && (
+                <Grid container spacing={3}>
+                    <Grid item xs={12}>
+                        <Typography variant='h6'>
+                            O elegí tu pro ideal
+                        </Typography>
+                    </Grid>
                 </Grid>
-            </Grid>
+            )}
             <Box
                 sx={{
                     display: 'grid',
-                    gap: 3,
+                    gap: 2,
                     gridTemplateColumns: {
-                        xs: 'repeat(2, 1fr)',
+                        xs: 'repeat(1, 1fr)',
                         sm: 'repeat(2, 1fr)',
                         md: 'repeat(3, 1fr)',
                         lg: 'repeat(4, 1fr)',
                     },
-                    maxWidth: '100%',
-                    overflow: 'hidden',
                     width: '100%',
                 }}
             >

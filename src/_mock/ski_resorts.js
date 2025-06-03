@@ -48,4 +48,5 @@ export const ski_resorts = [
   { title: "Winter Park", category: "United States" },
   { title: "Wolf Creek Ski Area", category: "United States" },
   { title: "Buenos Aires", category: "Argentina" },
+  { title: "Portillo", category: "Chile" },
 ]

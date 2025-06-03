@@ -108,6 +108,7 @@ export default function VideoUpload() {
     const [videoTitle, setVideoTitle] = useState('');
     const videoRef = useRef(null);
     const theme = useTheme();
+    const {user} = useAuth();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
     const [uploadedVideos, setUploadedVideos] = useState(sampleUploadedVideos);
     const [selectedVideo, setSelectedVideo] = useState(null);
@@ -132,7 +133,7 @@ export default function VideoUpload() {
     const [showHeader, setShowHeader] = useState(false);
 
     useEffect(() => {
-        if (!videos || videos.length === 0) {
+        if (user && !videos || videos.length === 0) {
             dispatch(getVideos());
         }
     }, [dispatch]);
@@ -223,7 +224,7 @@ export default function VideoUpload() {
 
                 {tab === 'profile' &&
                     <StyledContainer>
-                        {bookings && bookings?.length > 0 && <UserLessonsList horizontal={true} />}
+                        {user && bookings && bookings?.length > 0 && <UserLessonsList horizontal={true} />}
                         <Grid container spacing={1} justifyContent='space-between' padding={0}>
                             <LeaderBoardRightDrawer
                                 open={isLeaderBoardOpen}

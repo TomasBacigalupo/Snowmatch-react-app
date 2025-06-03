@@ -56,7 +56,7 @@ export default function GeneralApp() {
     dispatch(getConversations())
     dispatch(getCommentedCount())
     dispatch(getTotalHours())
-    dispatch(getBookings('ACCEPTED'))
+    user && dispatch(getBookings('ACCEPTED'))
   }, [])
 
   useEffect(() => {

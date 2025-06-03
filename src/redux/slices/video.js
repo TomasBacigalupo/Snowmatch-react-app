@@ -354,6 +354,12 @@ export const { openModal, closeModal, selectEvent, changeMessage, bookingPending
 
 export function getVideos() {
     return async () => {
+        const accessToken = window.localStorage.getItem('accessToken');
+        if (!accessToken) {
+            dispatch(slice.actions.hasError(new Error('No authentication token found')));
+            return;
+        }
+
         dispatch(slice.actions.startLoading());
         try {
             const response = await axios.get(`/api/videos/my-videos`);
@@ -424,7 +430,7 @@ export function proCheck(id) {
             dispatch(slice.actions.startLoadingProCheck());
             await axios.put(`/api/videos/${id}/proCheck`);
             dispatch(slice.actions.stopLoadingProCheck(id));
-            dispatch(getVideos())
+            // dispatch(getVideos())
         } catch (error) {
             dispatch(slice.actions.hasError(error));
             dispatch(slice.actions.stopLoadingProCheck(0));

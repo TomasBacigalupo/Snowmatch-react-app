@@ -45,7 +45,8 @@ export const FILTER_RATING_OPTIONS = ['up4Star', 'up3Star', 'up2Star', 'up1Star'
 export const FILTER_LANGUAGE_OPTIONS = ['Español', 'English', 'Portugues', 'Italiano']
 
 export const FILTER_RESORT_OPTIONS = [
-  { category: "Argentina", resorts: [ 'Caviahue', 'Cerro Bayo', 'Cerro Castor', 'Cerro Catedral', 'Chapelco', 'La Hoya', 'Las Leñas', 'Las Pendientes', 'Perito Moreno', 'Lago Hermoso', 'Buenos Aires'] }
+  { category: "Argentina", resorts: [ 'Caviahue', 'Cerro Bayo', 'Cerro Castor', 'Cerro Catedral', 'Chapelco', 'La Hoya', 'Las Leñas', 'Las Pendientes', 'Perito Moreno', 'Lago Hermoso', 'Buenos Aires'] },
+  { category: "Chile", resorts: [ 'Portillo']}
 ]
 
 

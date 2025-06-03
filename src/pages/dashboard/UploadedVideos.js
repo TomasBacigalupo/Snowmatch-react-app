@@ -4,6 +4,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { useDispatch } from 'src/redux/store';
 import { getVideos } from 'src/redux/slices/video';
 import { useSelector } from 'react-redux';
+import useAuth from 'src/hooks/useAuth';
 
 // This would typically come from your backend
 const mockVideos = [
@@ -15,8 +16,9 @@ const mockVideos = [
 export default function UploadedVideos() {
   const {videos} = useSelector((state) => state.video);
   const dispatch = useDispatch();
+  const {user} = useAuth();
   useEffect(() => {
-    dispatch(getVideos());
+    user && dispatch(getVideos());
   }, [dispatch]);
   const handleDelete = (id) => {
     // Implement delete logic here

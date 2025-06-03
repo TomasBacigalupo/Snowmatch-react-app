@@ -3,6 +3,9 @@ import orderBy from 'lodash/orderBy';
 // form
 import { useForm } from 'react-hook-form';
 // @mui
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme, } from '@mui/material/styles';
+// @mui
 import { Container, Typography, Stack, Drawer, Button, Box } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
@@ -58,6 +61,8 @@ export default function EcommerceShop({ isGuest = false, teacherType = "school" 
   const query = useQuery()
   const [openFilter, setOpenFilter] = useState(false);
   const [page, setPage] = useState(0);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   
   const { teachers, sortBy, filters, teachersWithEvents, category, isLoading, isLoadingLoadMore } = useSelector((state) => { return state.teachers })
 
@@ -191,7 +196,9 @@ export default function EcommerceShop({ isGuest = false, teacherType = "school" 
           sx={{ mb: 2 }}
           xs={12}
         >
-          <ShopProductSearch filters={filters} teachers={teachers} />
+          {isMobile && 
+            <ShopProductSearch filters={filters} teachers={teachers} />
+          }
 
           {/* {!isTeacher && <CartWidget />} */}
 

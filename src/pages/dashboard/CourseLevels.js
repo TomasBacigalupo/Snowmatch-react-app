@@ -19,6 +19,7 @@ import { AnalyticsCurrentSubject, AnalyticsUserProgress } from 'src/sections/@da
 import Markdown from 'src/components/Markdown';
 import Breadcrumbs from 'src/components/Breadcrumbs';
 import ReactPlayer from 'react-player';
+import useAuth from 'src/hooks/useAuth';
 
 const Input = styled('input')({
     display: 'none',
@@ -92,6 +93,7 @@ export default function CourseLevels() {
     const [isVideoDetailOpen, setIsVideoDetailOpen] = useState(false);
     const [selectedLevelTitle, setSelectedLevelTitle] = useState('');
     const [selectedCourse, setSelectdCourse] = useState('');
+    const {user} = useAuth();
 
 
 
@@ -101,8 +103,8 @@ export default function CourseLevels() {
     const { videos } = useSelector((state) => state.video);
 
     useEffect(() => {
-        dispatch(getVideos());
-    }, [dispatch]);
+        if(user){dispatch(getVideos());}
+    }, [dispatch, user]);
 
     useEffect(() => {
         if (videos && videos.length > 0) {

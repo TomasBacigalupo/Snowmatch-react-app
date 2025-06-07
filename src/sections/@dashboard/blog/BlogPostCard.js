@@ -443,7 +443,7 @@ BlogPostCard.propTypes = {
 export default function BlogPostCard({ post, index }) {
   const isDesktop = useResponsive('up', 'md');
 
-  const { cover, title, view, comment, share, author, createdAt, id } = post;
+  const { title, view, comment, share, author, createdAt, id, cover, slug } = post;
 
   const latestPost = index === 0 || index === 1 || index === 2;
 
@@ -462,9 +462,9 @@ export default function BlogPostCard({ post, index }) {
             position: 'absolute',
           }}
         />
-        <PostContent title={title} view={view} comment={comment} share={share} createdAt={createdAt} index={index} />
+        <PostContent title={title} view={view} comment={comment} share={share} createdAt={createdAt} index={index} slug={slug} />
         <OverlayStyle />
-        <Image alt="cover" src={cover} sx={{ height: 360 }} />
+        <img alt="cover" src={cover} sx={{ height: 360 }} />
       </Card>
     );
   }
@@ -495,7 +495,7 @@ export default function BlogPostCard({ post, index }) {
             position: 'absolute',
           }}
         />
-        <Image alt="cover" src={post?.imageCover} ratio="4/3" />
+        <Image alt="cover" src={cover} ratio="4/3" />
       </Box>
 
       <PostContent title={title} view={view} description={post?.description} comment={comment} share={share} createdAt={createdAt} id={id}/>
@@ -515,9 +515,10 @@ PostContent.propTypes = {
   description: PropTypes.string,
 };
 
-export function PostContent({ title, view, comment, share, createdAt, index, description, id }) {
+export function PostContent({ title, view, comment, share, createdAt, index, description, slug }) {
   const isDesktop = useResponsive('up', 'md');
-  const linkTo = PATH_DASHBOARD.blog.view(id);
+  const linkFormer = (slug) => `/noticias/${slug}`
+  const linkTo = linkFormer(slug);
 
   const latestPostLarge = index === 0;
   const latestPostSmall = index === 1 || index === 2;
@@ -554,8 +555,7 @@ export function PostContent({ title, view, comment, share, createdAt, index, des
       >
         {fDate(createdAt)}
       </Typography>
-
-      <Link to={linkTo} color="inherit" component={RouterLink}>
+      <Link to={``} color="inherit" component={RouterLink}>
         <TextMaxLine variant={isDesktop && latestPostLarge ? 'h5' : 'subtitle2'} line={2} persistent>
           {title}
         </TextMaxLine>

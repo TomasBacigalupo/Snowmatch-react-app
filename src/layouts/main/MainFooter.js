@@ -32,7 +32,7 @@ const LINKS = [
       { name: 'Clase grupal Catedral', href: PATH_GUEST.grupales },
       { name: 'Clinica de Carrera', href: PATH_GUEST.palos },
       { name: 'FAQs', href: PATH_PAGE.faqs },
-      { name: 'Blog', href: 'https://blog.snowmatch.pro' },
+      { name: 'Blog', href: "/noticias" },
     ],
   },
   {

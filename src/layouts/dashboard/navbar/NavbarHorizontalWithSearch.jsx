@@ -8,13 +8,14 @@ import { HEADER } from '../../../config';
 import { NavSectionHorizontal } from '../../../components/nav-section';
 //
 import navConfig from './NavConfig';
+import { PATH_DASHBOARD, PATH_GUEST } from 'src/routes/paths';
 
 
 // ----------------------------------------------------------------------
 
 
 const RootStyle = styled(AppBar)(({ theme, isScrolled }) => ({
-  transition: theme.transitions.create('top', {
+  transition: theme.transitions.create(['top', 'transform', 'opacity'], {
     easing: theme.transitions.easing.easeInOut,
     duration: theme.transitions.duration.shorter,
   }),
@@ -23,8 +24,10 @@ const RootStyle = styled(AppBar)(({ theme, isScrolled }) => ({
   zIndex: theme.zIndex.appBar,
   padding: theme.spacing(1, 0),
   boxShadow: theme.customShadows.z8,
-  top: isScrolled ? HEADER.DASHBOARD_DESKTOP_OFFSET_HEIGHT + 12 : HEADER.DASHBOARD_DESKTOP_OFFSET_HEIGHT + 60,
-  backgroundColor: theme.palette.background.default,
+  top: HEADER.DASHBOARD_DESKTOP_OFFSET_HEIGHT + 45,
+  backgroundColor: 'white',
+  transform: isScrolled ? 'translateY(-100%)' : 'translateY(0)',
+  opacity: isScrolled ? 0 : 1,
 }));
 
 // ----------------------------------------------------------------------
@@ -45,7 +48,17 @@ function NavbarHorizontalWithSearch() {
   return (
     <RootStyle isScrolled={isScrolled}>
       <Container maxWidth={false}>
-        <NavSectionHorizontal navConfig={navConfig} />
+        <NavSectionHorizontal navConfig={
+          [
+            {
+              items: [
+                { title: '📰 Noticias', path: "/noticias", },
+                { title: '🎥 Video Correcciones', path: PATH_DASHBOARD.general.videoCoachRate,   },
+                { title: '🎿 Rental', path: PATH_GUEST.calculate,  },
+              ],
+            }
+          ]
+        } />
       </Container>
     </RootStyle>
   );

@@ -31,9 +31,9 @@ export default function ShopStandardProducts({ loading }) {
 
     useEffect(() => {
         // prod
-        dispatch(getProductsByBusinessId(13));
-        //    dispatch(getProductsByBusinessId(1));
-    }, []);
+        const businessId = filters.resort === "Lago Hermoso" ? 8 : 13;
+        dispatch(getProductsByBusinessId(businessId));
+    }, [filters.resort]);
 
     useEffect(() => {
         dispatch(getFreeTeachers(filters.from, filters.to, filters.resort, 0));
@@ -74,16 +74,25 @@ export default function ShopStandardProducts({ loading }) {
                     avatar='/assets/avatars/chona-con-niño.png'
                 />}
                 </Grid>
-                {filters.resort === "Cerro Catedral" && <Grid item xs={12}>
+                {filters.resort === "Cerro Catedral"  && <Grid item xs={12}>
                     <Typography variant='h6'>
                         Packs de SnowMatch
                     </Typography>
                 </Grid>}
             </Grid>}
+            {filters.resort === "Lago Hermoso" && (
+                <Grid container spacing={3}>
+                    <Grid item xs={12}>
+                        <Typography variant='h6'>
+                            SnowMatch packs Lago Hermoso
+                        </Typography>
+                    </Grid>
+                </Grid>
+            )}
             {
-                filters.resort === "Cerro Catedral" && <SchoolProducts products={products} isLoading={isLoading} />
+                (filters.resort === "Cerro Catedral" || filters.resort === "Lago Hermoso") && <SchoolProducts products={products} isLoading={isLoading} />
             }
-            {filters.resort === "Cerro Catedral" && (
+            {(filters.resort === "Cerro Catedral" || filters.resort === "Lago Hermoso") && (
                 <Grid container spacing={3}>
                     <Grid item xs={12}>
                         <Typography variant='h6'>

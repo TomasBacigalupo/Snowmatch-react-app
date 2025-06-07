@@ -251,9 +251,7 @@ export default function EcommerceShop({ isGuest = false, teacherType = "school" 
         )}
         {/* manotaso de ahogado muestro todos */}
         {/* {teacherType == "independent" && <ShopTeacherList teachers={teachersWithEvents} loading={!filteredTeachers.length && isDefault} />} */}
-        {teacherType === "independent" && category === "standard" && <ShopStandardProducts teachers={filteredTeachers} loading={isLoading} />}
-        {teacherType === "independent" && category === "premium" && <ShopTeacherList teachers={filteredTeachers} loading={isLoading} />}
-        {teacherType === "school" && <ShopTeacherList teachers={filteredTeachers} loading={!filteredTeachers.length && isDefault} />}
+        <ShopStandardProducts teachers={filteredTeachers} loading={isLoading} />
         <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
           <LoadingButton
             loading={isLoadingLoadMore}

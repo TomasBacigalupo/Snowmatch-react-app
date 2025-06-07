@@ -29,6 +29,8 @@ import Maps from 'src/pages/dashboard/Maps';
 import SearchPage from 'src/pages/search/resort/discipline';
 import BlogEmbed from '../pages/BlogEmbed';
 import SnowMatchLanding from 'src/pages/search/resort/discipline/videos';
+import GhostWrapper from 'src/pages/dashboard/GhostWrapper';
+import GhostPostWrapper from 'src/pages/dashboard/GhostPostWrapper';
 // ----------------------------------------------------------------------
 
 const Loadable = (Component) => (props) => {
@@ -42,7 +44,7 @@ const Loadable = (Component) => (props) => {
 };
 
 export default function Router() {
-  const isMobile = true;
+  const isMobile = false;
 
   return useRoutes([
     {
@@ -129,9 +131,9 @@ export default function Router() {
       ),
       children: [
         { element: <Navigate to={'/match/school/:resort'} replace />, index: true },
-       { path: 'schools/:id', element: <SchoolDetails isGuest={true} /> },
+        { path: 'schools/:id', element: <SchoolDetails isGuest={true} /> },
         { path: 'schools', element: <SchoolList teacherType="school" /> },
-        
+
         {
           path: 'teacher/:id/review', element:
             <AuthGuard>
@@ -260,8 +262,21 @@ export default function Router() {
       ]
     },
     {
-      path: 'blog',
-      element: <BlogEmbed />
+      element: (<MainLayout />),
+      children: [
+        {
+          path: 'noticias',
+          element: <GhostWrapper />
+        },
+      ]
+    },
+    {
+      element: (<BackButtonLayout />),
+      children: [
+        {
+          path: 'noticias/:slug',
+          element: <GhostPostWrapper />
+        }]
     },
 
     // Dashboard Routes
@@ -414,9 +429,9 @@ export default function Router() {
         { path: 'tips-esqui-snowboard/:tip', element: <SnowMatchLanding /> },
         { path: 'clases-de-ski-bariloche', element: <HomePageBariloche /> },
         { path: 'clases-de-ski-lago-hermoso', element: <HomePageLagoHermoso /> },
-        { path: ':resort/:discipline/:type', element: <SearchPage/>},
-        { path: ':resort/:discipline', element: <SearchPage/>},
-        { path: ':resort', element: <SearchPage/>},
+        { path: ':resort/:discipline/:type', element: <SearchPage /> },
+        { path: ':resort/:discipline', element: <SearchPage /> },
+        { path: ':resort', element: <SearchPage /> },
         { path: 'about-us', element: <About /> },
         { path: 'contact-us', element: <Contact /> },
         { path: 'faqs', element: <Faqs /> },

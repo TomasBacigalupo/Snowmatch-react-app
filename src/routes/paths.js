@@ -144,10 +144,10 @@ export const PATH_DASHBOARD = {
     demoView: path(ROOTS_DASHBOARD, '/invoice/e99f09a7-dd88-49d5-b1c8-1daf80c2d7b5'),
   },
   blog: {
-    root: path(ROOTS_DASHBOARD, '/blog'),
+    root: path(ROOTS_DASHBOARD, '/noticias'),
     posts: path(ROOTS_DASHBOARD, '/blog/posts'),
     new: path(ROOTS_DASHBOARD, '/blog/new'),
-    view: (id) => `/protips/posts/${id}`,
+    view: (id) => `/noticias/${id}`,
     demoView: path(ROOTS_DASHBOARD, '/blog/post/apply-these-7-secret-techniques-to-improve-event'),
   },
   admin: {

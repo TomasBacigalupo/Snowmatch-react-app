@@ -53,7 +53,7 @@ const navConfigGuestCatedral = [
         // { title: 'Schools', path: PATH_GUEST.schools },
         ,
       },
-      { title: 'protips', path: "https://blog.snowmatch.pro", icon: ICONS.protips },
+      { title: 'protips', path: "/noticias", icon: ICONS.protips },
       { title: 'videoCoach', path: PATH_GUEST.videoCoach, icon: ICONS.videoCoach },
       { title: 'rent', path: PATH_GUEST.calculate, icon: ICONS.rental },
       { title: 'contact', path: "https://blog.snowmatch.pro/soporte/preguntas-frecuentes-faq/", icon: ICONS.contactSupport },

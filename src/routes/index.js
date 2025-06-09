@@ -418,6 +418,24 @@ export default function Router() {
       ],
     },
     {
+      path: '/pt',
+      element: <MainLayout />,
+      children: [
+        {
+          element: isMobile ? <Navigate to="/match/videoCoach/upload" replace /> : <Navigate to="/cerro-catedral" replace />,
+          index: true
+        },
+        { path: 'escola-de-esqui-e-snowboard', element: <SnowMatchLanding /> },
+        { path: 'escuela-de-esqui-y-snowboard', element: <SnowMatchLanding /> },
+        { path: ':resort/:discipline/:type', element: <SearchPage /> },
+        { path: ':resort/:discipline', element: <SearchPage /> },
+        { path: ':resort', element: <SearchPage /> },
+        { path: 'about-us', element: <About /> },
+        { path: 'contact-us', element: <Contact /> },
+        { path: 'faqs', element: <Faqs /> },
+      ],
+    },
+    {
       path: '/',
       element: <MainLayout />,
       children: [

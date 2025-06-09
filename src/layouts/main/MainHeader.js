@@ -119,7 +119,7 @@ export default function MainHeader() {
             </HoverButton>)}
 
           {/* just for testing */}
-          {/* <LanguagePopover /> */}
+          <LanguagePopover />
           <AccountPopover/>
 
           {/* {!isDesktop && <MenuMobile isOffset={isOffset} isHome={isHome} navConfig={navConfig} />} */}

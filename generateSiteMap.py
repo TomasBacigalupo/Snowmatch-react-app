@@ -10,7 +10,7 @@ resorts = [
     "chapelco", "cerro-chapelco", "san-martin-de-los-andes", "neuquen", "villa-la-angostura",
     "bayo", "cerro-bayo", "el-bayo", "villa", "la-villa", "laderas", "perito-moreno",
     "laderas-perito-moreno", "bolson", "el-bolson", "las-leñas", "mendoza", "san-rafael",
-    "castor", "tierra-del-fuego", "ushuaia", "lago-hermoso", "hermoso", "lago-hermoso-ski"
+    "castor", "tierra-del-fuego", "ushuaia", "lago-hermoso", "hermoso", "lago-hermoso-ski", "buenos-aires"
 ]
 disciplines = [
     "ski", "esqui", "snow", "snowboard", "sky", "eski", "esqui-y-snowboard",
@@ -113,6 +113,7 @@ blog_urls = [
     "/noticias/todo-lo-que-necesitas-saber-antes-de-tu-clase-de-esqui-con-snowmatch-2",
     "/noticias/que-es-la-posicion-dinamica-de-equilibrio-y-por-que-deberias-incorporarla-al-esquiar",
     "/escuela-de-esqui-y-snowboard",
+    "/escola-de-esqui-e-snowboard"
 ]
 
 # Configuración del sitemap
@@ -131,11 +132,28 @@ for resort in resorts:
     ET.SubElement(url, "changefreq").text = "weekly"
     ET.SubElement(url, "priority").text = "0.8"
 
+# Generar URLs en portugués para /pt/resorts
+for resort in resorts:
+    url = ET.SubElement(urlset, "url")
+    ET.SubElement(url, "loc").text = f"{base_url}/pt/{resort}"
+    ET.SubElement(url, "lastmod").text = today
+    ET.SubElement(url, "changefreq").text = "weekly"
+    ET.SubElement(url, "priority").text = "0.8"
+
 # Generar URLs para /resorts/disciplines
 for resort in resorts:
     for discipline in disciplines:
         url = ET.SubElement(urlset, "url")
         ET.SubElement(url, "loc").text = f"{base_url}/{resort}/{discipline}"
+        ET.SubElement(url, "lastmod").text = today
+        ET.SubElement(url, "changefreq").text = "weekly"
+        ET.SubElement(url, "priority").text = "0.7"
+
+# Generar URLs en portugués para /pt/resorts/disciplines
+for resort in resorts:
+    for discipline in disciplines:
+        url = ET.SubElement(urlset, "url")
+        ET.SubElement(url, "loc").text = f"{base_url}/pt/{resort}/{discipline}"
         ET.SubElement(url, "lastmod").text = today
         ET.SubElement(url, "changefreq").text = "weekly"
         ET.SubElement(url, "priority").text = "0.7"
@@ -151,6 +169,17 @@ for resort in resorts:
             ET.SubElement(url, "changefreq").text = "weekly"
             ET.SubElement(url, "priority").text = "0.6"
 
+# Generar URLs en portugués para /pt/resorts/disciplines/types
+for resort in resorts:
+    for discipline in disciplines:
+        for type_ in types:
+            url = ET.SubElement(urlset, "url")
+            ET.SubElement(
+                url, "loc").text = f"{base_url}/pt/{resort}/{discipline}/{type_}"
+            ET.SubElement(url, "lastmod").text = today
+            ET.SubElement(url, "changefreq").text = "weekly"
+            ET.SubElement(url, "priority").text = "0.6"
+
 # Generar URLs para /match/teacher/{id}
 for teacher_url in teacher_urls:
     url = ET.SubElement(urlset, "url")
@@ -159,10 +188,26 @@ for teacher_url in teacher_urls:
     ET.SubElement(url, "changefreq").text = "weekly"
     ET.SubElement(url, "priority").text = "0.5"
 
+# Generar URLs en portugués para /pt/match/teacher/{id}
+for teacher_url in teacher_urls:
+    url = ET.SubElement(urlset, "url")
+    ET.SubElement(url, "loc").text = f"{base_url}/pt{teacher_url}"
+    ET.SubElement(url, "lastmod").text = today
+    ET.SubElement(url, "changefreq").text = "weekly"
+    ET.SubElement(url, "priority").text = "0.5"
+
 # Generar URLs para blog
 for blog_url in blog_urls:
     url = ET.SubElement(urlset, "url")
     ET.SubElement(url, "loc").text = f"{base_url}{blog_url}"
+    ET.SubElement(url, "lastmod").text = today
+    ET.SubElement(url, "changefreq").text = "weekly"
+    ET.SubElement(url, "priority").text = "0.7"
+
+# Generar URLs en portugués para blog
+for blog_url in blog_urls:
+    url = ET.SubElement(urlset, "url")
+    ET.SubElement(url, "loc").text = f"{base_url}/pt{blog_url}"
     ET.SubElement(url, "lastmod").text = today
     ET.SubElement(url, "changefreq").text = "weekly"
     ET.SubElement(url, "priority").text = "0.7"

@@ -93,6 +93,7 @@ export default function EcommerceTeacherDetails({ isGuest = false }) {
   const { checkout } = useSelector((state) => state.product);
   const { translate } = useLocales()
   const { teacher, isLoading, teachers, filters } = useSelector((state) => state.teachers);
+  const { rates } = useSelector((state) => state.rates);
   const { user } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
 
@@ -130,7 +131,7 @@ export default function EcommerceTeacherDetails({ isGuest = false }) {
             {
               discipline: teacher?.discipline ? `${translate(`landingPRO.${teacher?.discipline[0]}`)}` : 'Ski',
               name: `${teacher?.name} ${teacher?.lastname}`,
-              resort: teacher?.resort?.lenght > 0 ? teacher.resort[0] : 'Bariloche'
+              resort: teacher?.resorts?.lenght > 0 ? teacher.resorts[0] : 'Bariloche'
             })}
         </title>
         <meta name="description" content={teacher?.information} />
@@ -142,53 +143,162 @@ export default function EcommerceTeacherDetails({ isGuest = false }) {
         <script type="application/ld+json">
           {JSON.stringify({
             "@context": "https://schema.org",
-            "@type": "Person",
-            "name": `${teacher?.name} ${teacher?.lastname}`,
+            "@type": "SportsActivityLocation",
+            "name": `${teacher?.name} ${teacher?.lastname} - Instructor de Esquí`,
             "image": teacher?.imageLink,
             "description": teacher?.information,
-            "jobTitle": "Instructor de Esquí",
-            "worksFor": {
-              "@type": "Organization",
-              "name": "SnowMatch",
-              "url": "https://snowmatch.pro"
+            "provider": {
+              "@type": "Person",
+              "name": `${teacher?.name} ${teacher?.lastname}`,
+              "image": teacher?.imageLink,
+              "jobTitle": "Instructor de Esquí",
+              "worksFor": {
+                "@type": "Organization",
+                "name": "SnowMatch",
+                "url": "https://snowmatch.pro"
+              },
+              "knowsAbout": teacher?.discipline?.map(d => translate(`landingPRO.${d}`))
             },
-            "knowsAbout": teacher?.discipline?.map(d => translate(`landingPRO.${d}`)),
-            "location": {
-              "@type": "Place",
-              "name": teacher?.resort?.length > 0 ? teacher.resort[0] : "Bariloche",
-              "address": {
-                "@type": "PostalAddress",
-                "addressLocality": (() => {
-                  const resort = teacher?.resort?.[0]?.toLowerCase();
-                  if (resort === 'chapelco' || resort === 'las pendientes') {
-                    return "San Martín de los Andes";
-                  } else if (resort === 'castor') {
-                    return "Ushuaia";
-                  } else if (resort === 'bayo') {
-                    return "Villa La Angostura";
-                  } else {
-                    return "San Carlos de Bariloche";
-                  }
-                })(),
-                "addressRegion": (() => {
-                  const resort = teacher?.resort?.[0]?.toLowerCase();
-                  if (resort === 'cerro castor') {
-                    return "Tierra del Fuego";
-                  } else if (resort === 'chapelco' || resort === 'las pendientes') {
-                    return "Neuquén";
-                  } else if (resort === 'bayo') {
-                    return "Neuquén";
-                  } else {
-                    return "Río Negro";
-                  }
-                })(),
-                "addressCountry": "AR"
-              }
+            "address": {
+              "@type": "PostalAddress",
+              "addressLocality": (() => {
+                const resort = teacher?.resort?.[0]?.toLowerCase();
+                if (resort === 'chapelco' || resort === 'las pendientes') {
+                  return "San Martín de los Andes";
+                } else if (resort === 'cerro castor') {
+                  return "Ushuaia";
+                } else if (resort === 'bayo') {
+                  return "Villa La Angostura";
+                } else {
+                  return "San Carlos de Bariloche";
+                }
+              })(),
+              "addressRegion": (() => {
+                const resort = teacher?.resort?.[0]?.toLowerCase();
+                if (resort === 'cerro castor') {
+                  return "Tierra del Fuego";
+                } else if (resort === 'chapelco' || resort === 'las pendientes') {
+                  return "Neuquén";
+                } else if (resort === 'bayo') {
+                  return "Neuquén";
+                } else {
+                  return "Río Negro";
+                }
+              })(),
+              "addressCountry": "AR"
             },
             "url": `https://snowmatch.pro/match/teacher/${id}`,
-            "sameAs": teacher?.socialMedia || []
+            "sameAs": teacher?.socialMedia || [],
+            "aggregateRating": {
+              "@type": "AggregateRating",
+              "ratingValue": rates?.length > 0 ? Math.floor(rates?.map(r => r.stars).reduce((total, stars) => total + stars) / rates?.length) : 0,
+              "reviewCount": rates?.length || 0,
+              "bestRating": 5,
+              "worstRating": 1
+            },
+            "review": rates?.map(rate => ({
+              "@type": "Review",
+              "reviewRating": {
+                "@type": "Rating",
+                "ratingValue": rate.stars,
+                "bestRating": 5,
+                "worstRating": 1
+              },
+              "author": {
+                "@type": "Person",
+                "name": `${rate.raterName} ${rate.raterLastname}`
+              },
+              "datePublished": rate.rateDate,
+              "reviewBody": rate.comment,
+              "itemReviewed": {
+                "@type": "SportsActivityLocation",
+                "name": `${teacher?.name} ${teacher?.lastname} - Instructor de Esquí`,
+                "url": `https://snowmatch.pro/match/teacher/${id}`,
+                "address": {
+                  "@type": "PostalAddress",
+                  "addressLocality": (() => {
+                    const resort = teacher?.resort?.[0]?.toLowerCase();
+                    if (resort === 'chapelco' || resort === 'las pendientes') {
+                      return "San Martín de los Andes";
+                    } else if (resort === 'cerro castor') {
+                      return "Ushuaia";
+                    } else if (resort === 'bayo') {
+                      return "Villa La Angostura";
+                    } else {
+                      return "San Carlos de Bariloche";
+                    }
+                  })(),
+                  "addressRegion": (() => {
+                    const resort = teacher?.resort?.[0]?.toLowerCase();
+                    if (resort === 'cerro castor') {
+                      return "Tierra del Fuego";
+                    } else if (resort === 'chapelco' || resort === 'las pendientes') {
+                      return "Neuquén";
+                    } else if (resort === 'bayo') {
+                      return "Neuquén";
+                    } else {
+                      return "Río Negro";
+                    }
+                  })(),
+                  "addressCountry": "AR"
+                }
+              }
+            })) || [],
+            "mainEntity": {
+              "@type": "FAQPage",
+              "mainEntity": [
+                {
+                  "@type": "Question",
+                  "name": translate("144.faqs.0.question"),
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": translate("144.faqs.0.answer")
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": translate("144.faqs.1.question"),
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": translate("144.faqs.1.answer")
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": translate("144.faqs.2.question"),
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": translate("144.faqs.2.answer")
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": translate("144.faqs.3.question"),
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": translate("144.faqs.3.answer")
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": translate("144.faqs.4.question"),
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": translate("144.faqs.4.answer")
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": translate("144.faqs.5.question"),
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": translate("144.faqs.5.answer")
+                  }
+                }
+              ]
+            }
           })}
-        </script>
+        </script> 
       </Helmet>
       <Container maxWidth={themeStretch ? false : 'lg'} p={0} sx={{ paddingBottom: 'calc(env(safe-area-inset-bottom) + 60px)' }}>
         <HeaderBreadcrumbs

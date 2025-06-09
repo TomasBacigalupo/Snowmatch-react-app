@@ -1,3 +1,5 @@
+import PropTypes from 'prop-types';
+import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import {
     Container,
@@ -11,6 +13,7 @@ import {
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import useLocales from 'src/hooks/useLocales';
+import Iconify from 'src/components/Iconify';
 
 const FAQ_SECTIONS = [
     {
@@ -31,6 +34,11 @@ export default function FaqsByContext() {
     const { resort, discipline, type } = useParams();
     const { translate } = useLocales();
     const theme = useTheme();
+    const [expanded, setExpanded] = useState(false);
+
+    const handleChange = (panel) => (event, isExpanded) => {
+        setExpanded(isExpanded ? panel : false);
+    };
 
     const title = type
         ? translate('faqs.title.type', {
@@ -41,6 +49,25 @@ export default function FaqsByContext() {
         : discipline
             ? translate('faqs.title.discipline', { resort: resort ? translate(`landingPRO.${resort}`) : "", discipline })
             : translate('faqs.title.resort', { resort: resort ? translate(`landingPRO.${resort}`) : "" });
+
+    const faqs = [
+        {
+            question: `¿Qué necesito para tomar clases de ${discipline ? translate(`landingPRO.${discipline}`) : 'ski y snowboard'}?`,
+            answer: `Para tomar clases necesitas: ropa de abrigo adecuada, guantes, gafas de sol o antiparras, protector solar, y el equipo de ${discipline ? translate(`landingPRO.${discipline}`) : 'ski/snowboard'} que puedes alquilar en el centro de esquí. El instructor te ayudará a ajustar todo el equipo correctamente.`
+        },
+        {
+            question: `¿Cuánto dura una clase de ${discipline ? translate(`landingPRO.${discipline}`) : 'ski y snowboard'}?`,
+            answer: 'Las clases privadas suelen durar 2 horas, mientras que las grupales pueden extenderse hasta 3 horas. También ofrecemos clases de día completo para aquellos que quieren una experiencia más intensiva.'
+        },
+        {
+            question: '¿Qué nivel de experiencia necesito para tomar clases?',
+            answer: 'Ofrecemos clases para todos los niveles, desde principiantes absolutos hasta expertos. Nuestros instructores se adaptan a tu nivel y objetivos específicos, asegurando una experiencia personalizada y segura.'
+        },
+        {
+            question: `¿Cómo reservo una clase de ${discipline ? translate(`landingPRO.${discipline}`) : 'ski y snowboard'}?`,
+            answer: 'Puedes reservar tus clases directamente a través de nuestra plataforma SnowMatch. Solo necesitas seleccionar la fecha, el tipo de clase que prefieres (privada o grupal) y el nivel. El pago se realiza de forma segura online.'
+        }
+    ];
 
     return (
         <Box 
@@ -64,114 +91,68 @@ export default function FaqsByContext() {
                         color: theme.palette.text.primary,
                     }}
                 >
-                    {title}
+                    {translate("landingPRO.faqs.title", {
+                        resort: resort ? translate(`landingPRO.${resort}`) : "",
+                        discipline: discipline ? translate(`landingPRO.${discipline}`) : translate(`landingPRO.ski&snowboard`),
+                        type: type ? translate(`landingPRO.${type}`) : ""
+                    })}
                 </Typography>
 
                 <Stack spacing={3}>
-                    {FAQ_SECTIONS.filter((s) => s.condition({ resort, discipline, type })).map((section, idx) => {
-                        const label = translate(`faqs.${section.key}.title`, {
-                            resort: resort ? translate(`landingPRO.${resort}`) : "",
-                            discipline: discipline,
-                            type: type ? translate(`landingPRO.${type}`) : ""
-                        });
-
-                        // Get all FAQ questions and answers
-                        const faqs = [];
-                        let i = 0;
-                        while (translate(`faqs.question${i}`, { defaultValue: null }) !== null) {
-                            faqs.push({
-                                q: translate(`faqs.question${i}`),
-                                a: translate(`faqs.answer${i}`)
-                            });
-                            i++;
-                        }
-
-                        return (
-                            <Box 
-                                key={idx}
-                                component="article"
-                                aria-labelledby={`faq-section-${idx}`}
+                    {[1,2,3,4,5,6,7].map((faq, index) => (
+                        <Accordion
+                            key={index}
+                            expanded={expanded === `panel${index}`}
+                            onChange={handleChange(`panel${index}`)}
+                            sx={{
+                                '&:before': {
+                                    display: 'none',
+                                },
+                                mb: 2,
+                                borderRadius: '8px !important',
+                                '&.Mui-expanded': {
+                                    boxShadow: (theme) => theme.customShadows.z8,
+                                },
+                            }}
+                        >
+                            <AccordionSummary
+                                expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />}
+                                sx={{
+                                    px: 3,
+                                    borderRadius: '8px !important',
+                                    '&.Mui-expanded': {
+                                        borderBottom: (theme) => `solid 1px ${theme.palette.divider}`,
+                                    },
+                                }}
                             >
-                                <Typography 
-                                    id={`faq-section-${idx}`}
-                                    component='h3' 
-                                    variant="h5" 
-                                    gutterBottom
-                                    mb={3}
-                                    sx={{
-                                        fontWeight: 600,
-                                        color: theme.palette.text.primary,
-                                    }}
-                                >
-                                    {label}
+                                <Typography variant="subtitle1">{translate(`landingPRO.faqs.${index + 1}.q`,
+                                    {
+                                        resort: resort ? translate(`landingPRO.${resort}`) : "",
+                                        discipline: discipline ? translate(`landingPRO.${discipline}`) : translate(`landingPRO.ski&snowboard`),
+                                        type: type ? translate(`landingPRO.${type}`) : ""
+                                    }
+                                )}</Typography>
+                            </AccordionSummary>
+                            <AccordionDetails sx={{ px: 3, py: 2 }}>
+                                <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                                    {translate(`landingPRO.faqs.${index + 1}.a`,
+                                        {
+                                            resort: resort ? translate(`landingPRO.${resort}`) : "",
+                                            discipline: discipline ? translate(`landingPRO.${discipline}`) : translate(`landingPRO.ski&snowboard`),
+                                            type: type ? translate(`landingPRO.${type}`) : ""
+                                        }
+                                    )}
                                 </Typography>
-
-                                <Stack spacing={2}>
-                                    {faqs.map((faq, i) => (
-                                        <Accordion 
-                                            key={i}
-                                            sx={{
-                                                boxShadow: 'none',
-                                                border: `1px solid ${theme.palette.divider}`,
-                                                borderRadius: '8px !important',
-                                                '&:before': {
-                                                    display: 'none',
-                                                },
-                                                '&.Mui-expanded': {
-                                                    margin: '8px 0',
-                                                },
-                                            }}
-                                        >
-                                            <AccordionSummary 
-                                                expandIcon={<ExpandMoreIcon />}
-                                                aria-controls={`faq-content-${i}`}
-                                                id={`faq-header-${i}`}
-                                                sx={{
-                                                    px: 3,
-                                                    '& .MuiAccordionSummary-content': {
-                                                        my: 2,
-                                                    },
-                                                }}
-                                            >
-                                                <Typography 
-                                                    component="h4" 
-                                                    variant="subtitle1"
-                                                    sx={{
-                                                        fontWeight: 500,
-                                                        color: theme.palette.text.primary,
-                                                    }}
-                                                >
-                                                    {faq.q}
-                                                </Typography>
-                                            </AccordionSummary>
-                                            <AccordionDetails
-                                                id={`faq-content-${i}`}
-                                                role="region"
-                                                aria-labelledby={`faq-header-${i}`}
-                                                sx={{
-                                                    px: 3,
-                                                    pb: 3,
-                                                }}
-                                            >
-                                                <Typography 
-                                                    component="p" 
-                                                    variant="body1"
-                                                    sx={{
-                                                        color: theme.palette.text.secondary,
-                                                        lineHeight: 1.6,
-                                                    }}
-                                                >
-                                                    {faq.a}
-                                                </Typography>
-                                            </AccordionDetails>
-                                        </Accordion>
-                                    ))}
-                                </Stack>
-                            </Box>
-                        );
-                    })}
+                            </AccordionDetails>
+                        </Accordion>
+                    ))}
                 </Stack>
             </Container>
         </Box>
     );
 }
+
+FaqsByContext.propTypes = {
+    discipline: PropTypes.string,
+    type: PropTypes.string,
+};

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Helmet } from "react-helmet-async";
 import { Box, Typography, Card, Collapse, IconButton, Paper, styled, Button, Modal, FormControl, InputLabel, Select, MenuItem, Accordion, AccordionSummary, AccordionDetails, useTheme, useMediaQuery } from "@mui/material";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -9,6 +9,7 @@ import SchoolProducts from "src/sections/@dashboard/e-commerce/shop/SchoolProduc
 import { getProductsByBusinessId } from "src/redux/slices/business";
 import { useNavigate } from 'react-router-dom';
 import Iconify from "src/components/Iconify";
+import useLocales from "src/hooks/useLocales";
 
 
 const TopTeachersSection = styled(Box)(({ theme }) => ({
@@ -41,16 +42,6 @@ const ScrollContainer = styled(Box)(({ theme }) => ({
     },
 }));
 
-const seo = {
-    title: "Escuela de Esquí y Snowboard en Bariloche | SnowMatch",
-    description: "Descubre las mejores clases, consejos, técnicas y videos de instructores certificados para mejorar tu esquí y snowboard en Bariloche. Reserva tu clase personalizada con SnowMatch.",
-    keywords: "esquí, snowboard, tips, consejos, Bariloche, clases, instructores, técnica, videos, SnowMatch",
-    url: "https://snowmatch.com/escuela-de-esqui-y-snowboard",
-    canonical: "https://snowmatch.com/escuela-de-esqui-y-snowboard",
-    author: "SnowMatch",
-    publisher: "SnowMatch"
-};
-
 const tips = [
     {
         tip: "Carving",
@@ -65,7 +56,7 @@ const tips = [
         donot3: "Enfocate en la parte final del giro, eso te va a dar más equilibrio y ayudar al cuerpo a adaptarse mejor al ejercicio.",
         videos: [
             {
-                url: "https://snowmatchvideos.s3.us-east-1.amazonaws.com/tips/vcortadas.mov",
+                url: "https://video.snowmatch.pro/tips/vcortadas.mov",
                 thumbnail: "https://s3.amazonaws.com/tu-bucket/thumbnails/clavado-baston-1.jpg",
                 title: "Clavado de bastón - Técnica 1",
                 description: "Demostración de cómo clavar el bastón correctamente."
@@ -99,7 +90,7 @@ const tips = [
         donot3: "No frenes en cada giro: Intentá mantenerte en movimiento, sin parar en cada vuelta, para conservar el ritmo.",
         videos: [
             {
-                url: "https://snowmatchvideos.s3.us-east-1.amazonaws.com/tips/Jaime2.mov",
+                url: "https://video.snowmatch.pro/tips/Jaime2.mov",
                 thumbnail: "https://s3.amazonaws.com/tu-bucket/thumbnails/posicion-basica-1.jpg",
                 title: "Posición básica - Introducción",
                 description: "Cómo mantener la posición básica en esquí."
@@ -126,7 +117,7 @@ const tips = [
         donot3: "No bloquear las rodillas",
         videos: [
             {
-                url: "https://snowmatchvideos.s3.us-east-1.amazonaws.com/tips/snowmatch1.mov",
+                url: "https://video.snowmatch.pro/tips/snowmatch1.mov",
                 thumbnail: "https://s3.amazonaws.com/tu-bucket/thumbnails/posicion-basica-1.jpg",
                 title: "Posición básica - Introducción",
                 description: "Cómo mantener la posición básica en esquí."
@@ -154,7 +145,7 @@ const tips = [
         donot3: "No tomes posiciones defensivas.",
         videos: [
             {
-                url: "https://snowmatchvideos.s3.us-east-1.amazonaws.com/tips/snowmatch-follow-cam.mov",
+                url: "https://video.snowmatch.pro/tips/snowmatch-follow-cam.mov",
                 thumbnail: "https://s3.amazonaws.com/tu-bucket/thumbnails/posicion-basica-1.jpg",
                 title: "Posición básica - Introducción",
                 description: "Cómo mantener la posición básica en esquí."
@@ -182,7 +173,7 @@ const tips = [
         donot3: "Evita rotar el torso hacia adentro.",
         videos: [
             {
-                url: "https://snowmatchvideos.s3.us-east-1.amazonaws.com/tips/cortadas1.mov",
+                url: "https://video.snowmatch.pro/tips/cortadas1.mov",
                 thumbnail: "https://s3.amazonaws.com/tu-bucket/thumbnails/posicion-basica-1.jpg",
                 title: "Posición básica - Introducción",
                 description: "Cómo mantener la posición básica en esquí."
@@ -210,7 +201,7 @@ const tips = [
         donot3: "No uses los bastones para frenar.",
         videos: [
             {
-                url: "https://snowmatchvideos.s3.us-east-1.amazonaws.com/tips/frenada.mp4",
+                url: "https://video.snowmatch.pro/tips/frenada.mp4",
                 thumbnail: "https://s3.amazonaws.com/tu-bucket/thumbnails/posicion-basica-1.jpg",
                 title: "Posición básica - Introducción",
                 description: "Cómo mantener la posición básica en esquí."
@@ -230,16 +221,57 @@ const tips = [
 
 function TipCard({ tipObj, onReserve }) {
     const [expanded, setExpanded] = useState(false);
+    const [isVisible, setIsVisible] = useState(false);
+    const videoRef = useRef(null);
     const mainVideo = tipObj.videos && tipObj.videos[0];
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                setIsVisible(entry.isIntersecting);
+                if (entry.isIntersecting && videoRef.current) {
+                    videoRef.current.play().catch(() => {
+                        // Silently handle autoplay errors
+                    });
+                } else if (videoRef.current) {
+                    videoRef.current.pause();
+                }
+            },
+            {
+                threshold: 0.5,
+            }
+        );
+
+        if (videoRef.current) {
+            observer.observe(videoRef.current);
+        }
+
+        return () => {
+            if (videoRef.current) {
+                observer.unobserve(videoRef.current);
+            }
+        };
+    }, []);
 
     return (
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, height: '80dvh', width: '100%', alignItems: 'center' }}>
+        <Box sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 2,
+            width: '100%',
+            maxWidth: { xs: '100%', sm: 340 },
+            minWidth: { xs: 'unset', sm: 340 },
+            alignItems: 'center',
+            mb: { xs: 2, sm: 0 },
+            height: { xs: 'auto', sm: '80dvh' }
+        }}>
             <Card
                 sx={{
-                    width: { xs: '100%', sm: 340 },
-                    minWidth: { xs: 'unset', sm: 340 },
-                    height: '100%',
-                    maxHeight: '545px',
+                    width: '100%',
+                    height: { xs: 'auto', sm: '100%' },
+                    maxHeight: { xs: 'none', sm: '545px' },
                     flex: 1,
                     borderRadius: 4,
                     boxShadow: 4,
@@ -249,29 +281,37 @@ function TipCard({ tipObj, onReserve }) {
                     p: 0,
                     background: 'transparent',
                     position: 'relative',
-                    maxWidth: 400,
-                    mx: { xs: 2, sm: 0 },
+                    mx: { xs: 0, sm: 0 },
                 }}
             >
                 <Box sx={{
                     position: 'relative',
                     width: '100%',
-                    height: '100%',
-                    maxHeight: '545px',
+                    height: { xs: 'auto', sm: '100%' },
+                    maxHeight: { xs: 'none', sm: '545px' },
                     borderRadius: 4,
                     overflow: 'hidden',
                     boxShadow: 2,
                     flex: 1,
+                    aspectRatio: { xs: '9/16', sm: 'auto' },
                 }}>
                     {mainVideo && (
                         <video
+                            ref={videoRef}
                             src={mainVideo.url}
                             poster={mainVideo.thumbnail}
-                            autoPlay
                             loop
                             muted
                             playsInline
-                            style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', maxHeight: '565px' }}
+                            preload="metadata"
+                            style={{
+                                width: '100%',
+                                height: '100%',
+                                objectFit: 'cover',
+                                display: 'block',
+                                opacity: isVisible ? 1 : 0.7,
+                                transition: 'opacity 0.3s ease'
+                            }}
                         />
                     )}
 
@@ -322,21 +362,34 @@ function TipCard({ tipObj, onReserve }) {
                         </Paper>
                     </Collapse>
                 </Box>
-
             </Card>
-            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mt: 1 }}>
+            <Box sx={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                mt: 1,
+                width: '100%',
+                px: { xs: 2, sm: 0 }
+            }}>
                 <Box>
-                    <Typography component="p" variant="h6" >
+                    <Typography component="p" variant="h6" sx={{ fontSize: { xs: '1.1rem', sm: '1.25rem' } }}>
                         {tipObj.tip}
                     </Typography>
-                    <Typography component="h2" variant="body2" >
+                    <Typography component="h2" variant="body2" sx={{ fontSize: { xs: '0.875rem', sm: '1rem' } }}>
                         {tipObj.subtitle}
                     </Typography>
                 </Box>
                 <Button
                     variant="contained"
                     color="primary"
-                    sx={{ borderRadius: 2, fontWeight: 700, boxShadow: 2, ml: 2, minWidth: 150 }}
+                    sx={{
+                        borderRadius: 2,
+                        fontWeight: 700,
+                        boxShadow: 2,
+                        ml: 2,
+                        minWidth: { xs: 120, sm: 150 },
+                        fontSize: { xs: '0.875rem', sm: '1rem' }
+                    }}
                     onClick={onReserve}
                 >
                     Reservar
@@ -436,6 +489,7 @@ const ReservationModal = ({ open, onClose }) => {
 const VideoAnalysisModal = ({ open, onClose }) => {
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+    const { translate } = useLocales()
     return (
         <Modal
             open={open}
@@ -459,10 +513,10 @@ const VideoAnalysisModal = ({ open, onClose }) => {
                 }}
             >
                 <Typography id="video-analysis-modal-title" variant="h6" component="h2" sx={{ mb: 3 }}>
-                    Análisis de Video
+                    {translate('landingSchool.videoModal.title')}
                 </Typography>
                 <Typography variant="body1" sx={{ mb: 3 }}>
-                    Podés subir un video para que Snow, nuestra IA, o cualquiera de nuestros instructores lo analice y te dé feedback personalizado. Descargá nuestra app para acceder a esta función.
+                {translate('landingSchool.videoModal.description')}    
                 </Typography>
                 <Box sx={{ display: 'flex', justifyContent: 'center' }}>
                     <Button
@@ -479,7 +533,7 @@ const VideoAnalysisModal = ({ open, onClose }) => {
                             },
                         }}
                     >
-                        Descargar App
+                        {translate('landingSchool.videoModal.cta')}
                     </Button>
                 </Box>
             </Paper>
@@ -494,6 +548,432 @@ export default function SnowMatchLanding() {
     const [isReservationModalOpen, setIsReservationModalOpen] = useState(false);
     const [isVideoAnalysisModalOpen, setIsVideoAnalysisModalOpen] = useState(false);
     const navigate = useNavigate();
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+    const { translate, onChangeLang } = useLocales()
+
+    useEffect(() => {
+        if (window.location.pathname.includes('/pt')) {
+          onChangeLang('pt');
+        } else{
+          onChangeLang('es');
+        }
+      }, []);
+
+    const seo = {
+        title: translate('landingSchool.title'),
+        description: translate('landingSchool.description'),
+        keywords: translate('landingSchool.keywords'),
+        url: translate('landingSchool.url'),
+        canonical: translate('landingSchool.canonical'),
+        author: "SnowMatch",
+        publisher: "SnowMatch"
+    };
+
+    const JSONLD = () => {
+        const jsonLd = {
+            "@context": "https://schema.org",
+            "@type": "SportsActivityLocation",
+            "name": "SnowMatch - Escuela de Esquí y Snowboard en Bariloche",
+            "description": "Escuela de esquí y snowboard en Cerro Catedral, Bariloche. Clases particulares y grupales para todos los niveles, con instructores certificados internacionalmente.",
+            "url": "https://snowmatch.com/escuela-de-esqui-y-snowboard",
+            "telephone": "+54-9-2944-263223",
+            "address": {
+                "@type": "PostalAddress",
+                "streetAddress": "Cerro Catedral",
+                "addressLocality": "San Carlos de Bariloche",
+                "addressRegion": "Río Negro",
+                "postalCode": "8400",
+                "addressCountry": "AR"
+            },
+            "geo": {
+                "@type": "GeoCoordinates",
+                "latitude": "-41.1674",
+                "longitude": "-71.4382"
+            },
+            "openingHoursSpecification": {
+                "@type": "OpeningHoursSpecification",
+                "dayOfWeek": [
+                    "Monday",
+                    "Tuesday",
+                    "Wednesday",
+                    "Thursday",
+                    "Friday",
+                    "Saturday",
+                    "Sunday"
+                ],
+                "opens": "09:00",
+                "closes": "18:00"
+            },
+            "offers": {
+                "@type": "AggregateOffer",
+                "priceCurrency": "ARS",
+                "availability": "https://schema.org/InStock",
+                "offerCount": "3",
+                "offers": [
+                    {
+                        "@type": "Offer",
+                        "name": "Clase Particular de Esquí",
+                        "description": "Clase personalizada de esquí con instructor certificado",
+                        "price": "25000",
+                        "priceCurrency": "ARS",
+                        "availability": "https://schema.org/InStock"
+                    },
+                    {
+                        "@type": "Offer",
+                        "name": "Clase Grupal de Esquí",
+                        "description": "Clase grupal de esquí para hasta 6 personas",
+                        "price": "8000",
+                        "priceCurrency": "ARS",
+                        "availability": "https://schema.org/InStock"
+                    },
+                    {
+                        "@type": "Offer",
+                        "name": "Clase de Snowboard",
+                        "description": "Clase personalizada de snowboard con instructor certificado",
+                        "price": "25000",
+                        "priceCurrency": "ARS",
+                        "availability": "https://schema.org/InStock"
+                    },
+                    {
+                        "@type": "Offer",
+                        "name": "Clase de niños",
+                        "description": "Clase para niños con instructor certificado",
+                        "price": "13000",
+                        "priceCurrency": "ARS",
+                        "availability": "https://schema.org/InStock"
+                    },
+                    {
+                        "@type": "Offer",
+                        "name": "Clase de Freeride",
+                        "description": "Clase de freeride con instructor certificado",
+                        "price": "25000",
+                        "priceCurrency": "ARS",
+                        "availability": "https://schema.org/InStock"
+                    },
+                    {
+                        "@type": "Offer",
+                        "name": "Clase de Freestyle",
+                        "description": "Clase de freestyle con instructor certificado",
+                        "price": "25000",
+                        "priceCurrency": "ARS",
+                        "availability": "https://schema.org/InStock"
+                    },
+                    {
+                        "@type": "Offer",
+                        "name": "Clase de Pista",
+                        "description": "Clase de pista con instructor certificado",
+                        "price": "25000",
+                        "priceCurrency": "ARS",
+                        "availability": "https://schema.org/InStock"
+                    },
+                    {
+                        "@type": "Offer",
+                        "name": "Clase Familiar",
+                        "description": "Clase para familias con instructor certificado",
+                        "price": "25000",
+                        "priceCurrency": "ARS",
+                        "availability": "https://schema.org/InStock"
+                    },
+                    {
+                        "@type": "Offer",
+                        "name": "Clase de esqui con equipos",
+                        "description": "Clase de esqui con equipos incluidos con instructor certificado",
+                        "price": "31000",
+                        "priceCurrency": "ARS",
+                        "availability": "https://schema.org/InStock"
+                    },
+                    {
+                        "@type": "Offer",
+                        "name": "Clase de snowboard con equipos",
+                        "description": "Clase de snowboard con equipos incluidos con instructor certificado",
+                        "price": "31000",
+                        "priceCurrency": "ARS",
+                        "availability": "https://schema.org/InStock"
+                    }
+                ]
+            },
+            "hasOfferCatalog": {
+                "@type": "OfferCatalog",
+                "name": "clases de Esquí y Snowboard",
+                "itemListElement": [
+                    {
+                        "@type": "OfferCatalog",
+                        "name": "Cursos para Principiantes",
+                        "itemListElement": [
+                            {
+                                "@type": "Offer",
+                                "itemOffered": {
+                                    "@type": "Course",
+                                    "name": "Curso Básico de Esquí",
+                                    "description": "Aprende los fundamentos del esquí en 3 clases"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "@type": "OfferCatalog",
+                        "name": "Cursos Avanzados",
+                        "itemListElement": [
+                            {
+                                "@type": "Offer",
+                                "itemOffered": {
+                                    "@type": "Course",
+                                    "name": "Técnica Avanzada de Esquí",
+                                    "description": "Perfecciona tu técnica con instructores de nivel 5"
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            "employee": tips.map(tip => ({
+                "@type": "Person",
+                "name": `${tip.instructor.name} ${tip.instructor.lastname}`,
+                "jobTitle": "Instructor de Esquí",
+                "description": tip.instructor.information,
+                "image": tip.instructor.imageLink,
+                "knowsAbout": ["Esquí", "Snowboard", "Técnica de Esquí", "Enseñanza de Esquí"],
+                "award": [`Nivel ${tip.instructor.level}`]
+            })),
+            "review": {
+                "@type": "AggregateRating",
+                "ratingValue": "4.8",
+                "reviewCount": "150"
+            },
+            "sameAs": [
+                "https://www.instagram.com/snow.match",
+            ],
+            "mainEntity": {
+                "@type": "FAQPage",
+                "mainEntity": [
+                    {
+                        "@type": "Question",
+                        "name": translate('landingSchool.faqs.1.q'),
+                        "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": translate('landingSchool.faqs.1.a')
+                        }
+                    },
+                    {
+                        "@type": "Question",
+                        "name": translate('landingSchool.faqs.2.q'),
+                        "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": translate('landingSchool.faqs.2.a')
+                        }
+                    },
+                    {
+                        "@type": "Question",
+                        "name": translate('landingSchool.faqs.3.q'),
+                        "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": translate('landingSchool.faqs.3.a')
+                        }
+                    },
+                    {
+                        "@type": "Question",
+                        "name": translate('landingSchool.faqs.4.q'),
+                        "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": translate('landingSchool.faqs.4.a')
+                        }
+                    },
+                    {
+                        "@type": "Question",
+                        "name": translate('landingSchool.faqs.5.q'),
+                        "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": translate('landingSchool.faqs.5.a')
+                        }
+                    }
+                ]
+            }
+        };
+
+        return (
+            <script type="application/ld+json">
+                {JSON.stringify(jsonLd)}
+            </script>
+        );
+    };
+
+    const tips = [
+        {
+            tip: "Carving",
+            subtitle: "Clase de esqui en pista",
+            teacherId: 1,
+            description: "Vas a poner casi todo tu peso en la pierna exterior y acortar la pierna interior. Esto va a inclinar tus caderas hacia el interior del giro, pero cuidado: mantené la cabeza centrada.",
+            do1: "Elegí una pista suave, que conozcas bien y con poca gente.",
+            do2: "Hacé giros amplios, así tenés tiempo de ajustar cuánto ángulo necesitás en cada uno.",
+            do3: "Hacé giros amplios, así tenés tiempo de ajustar cuánto ángulo necesitás en cada uno.",
+            donot1: "No lo intentes en pistas empinadas, es contraproducente porque este ejercicio requiere tiempo para acostumbrarse.",
+            donot2: "No pongas peso en la pierna interior, casi todo debe ir en la pierna exterior.",
+            donot3: "Enfocate en la parte final del giro, eso te va a dar más equilibrio y ayudar al cuerpo a adaptarse mejor al ejercicio.",
+            videos: [
+                {
+                    url: "https://snowmatchvideos.s3.us-east-1.amazonaws.com/tips/vcortadas.mov",
+                    thumbnail: "https://s3.amazonaws.com/tu-bucket/thumbnails/clavado-baston-1.jpg",
+                    title: "Clavado de bastón - Técnica 1",
+                    description: "Demostración de cómo clavar el bastón correctamente."
+                },
+                {
+                    url: "https://s3.amazonaws.com/tu-bucket/videos/clavado-baston-2.mp4",
+                    thumbnail: "https://s3.amazonaws.com/tu-bucket/thumbnails/clavado-baston-2.jpg",
+                    title: "Clavado de bastón - Técnica 2",
+                    description: "Variación avanzada del clavado de bastón."
+                }
+            ],
+            instructor: {
+                name: "Maricu",
+                lastname: "Manzano",
+                imageLink: "https://image.snowmatch.pro/profile/Screenshot+2024-07-27+at+7.01.23%E2%80%AFPM.png",
+                information: "Instructors certificado con más de 10 años de experiencia en esquí alpino.",
+                level: "Nivel 4",
+                stars: 4.8
+            }
+        },
+        {
+            tip: "Bumps",
+            subtitle: "Clase de Bumps",
+            teacherId: 248,
+            description: "Cuando esquiás en bumps (moguls), elegí bien tu línea. Buscá un camino claro, que no sea demasiado empinado y con bumps de un tamaño manejable. Esto te va a ayudar a mantener el control y ganar confianza.",
+            do1: "Elegí bien el terreno: Esquiá en una pista donde te sientas cómodo con el tamaño de los bumps — lo ideal es que sean de tamaño chico a mediano.",
+            do2: "Mirá hacia adelante: Mantené la vista en la línea que vas a seguir, así podés anticiparte y adaptarte a tiempo.",
+            do3: "Usá los bastones: El uso constante de los bastones te ayuda a mantener el ritmo y estabiliza la parte superior del cuerpo, que debe mirar siempre hacia abajo de la pista.",
+            donot1: "Evitar lo desconocido: No bajes por pistas que no conocés, especialmente si no podés ver toda la bajada desde el inicio.",
+            donot2: "Evitar lo desconocido: No bajes por pistas que no conocés, especialmente si no podés ver toda la bajada desde el inicio.",
+            donot3: "No frenes en cada giro: Intentá mantenerte en movimiento, sin parar en cada vuelta, para conservar el ritmo.",
+            videos: [
+                {
+                    url: "https://snowmatchvideos.s3.us-east-1.amazonaws.com/tips/Jaime2.mov",
+                    thumbnail: "https://s3.amazonaws.com/tu-bucket/thumbnails/posicion-basica-1.jpg",
+                    title: "Posición básica - Introducción",
+                    description: "Cómo mantener la posición básica en esquí."
+                }
+            ],
+            instructor: {
+                name: "Jaime",
+                lastname: "",
+                imageLink: "https://image.snowmatch.pro/profile/248-d18fd41a-42c0-402b-b55c-bbecd6265999",
+                information: "Especialista en bumps y freestyle con más de 8 años de experiencia enseñando.",
+                level: "Nivel 4",
+                stars: 4.9
+            }
+        }, {
+            tip: "Balance",
+            subtitle: "Clase de esqui para nivel avanzados",
+            teacherId: 14,
+            description: "Mantene el peso centrado. Bajá el centro de gravedad. Si es necesario exajerá la apertura de brasos",
+            do1: "Flexionar las rodillas",
+            do2: "Mantener el peso centrado",
+            do3: "Mirar hacia adelante",
+            donot1: "No encorvar la espalda",
+            donot2: "No mirar los esquís",
+            donot3: "No bloquear las rodillas",
+            videos: [
+                {
+                    url: "https://snowmatchvideos.s3.us-east-1.amazonaws.com/tips/snowmatch1.mov",
+                    thumbnail: "https://s3.amazonaws.com/tu-bucket/thumbnails/posicion-basica-1.jpg",
+                    title: "Posición básica - Introducción",
+                    description: "Cómo mantener la posición básica en esquí."
+                }
+            ],
+            instructor: {
+                name: "Tomas",
+                lastname: "Soleño",
+                imageLink: "https://image.snowmatch.pro/profile/Screenshot+2024-07-27+at+6.32.53%E2%80%AFPM.png",
+                information: "Instructor especializado en técnica avanzada y competición.",
+                level: "Nivel 5",
+                stars: 5.0
+            }
+        },
+        {
+            tip: "Clavado de bastón",
+            subtitle: "Clase de esqui para nivel intermedio",
+            teacherId: 897,
+            description: "Para hacer una buena plantada de bastón necesitás: Subir los brazos a tu campo de visión y abrir un poco las manos hacia afuera. Mantener el pecho mirando hacia abajo de la pendiente.. Tocar suavemente la nieve con la punta del bastón, mientras terminás el giro anterior y antes de cambiar de canto.",
+            do1: "Practicalo en una pista fácil y larga, donde puedas concentrarte en incorporar algo nuevo.",
+            do2: "Mantene la cabeza centrada y mirando hacia abajo de la pendiente.",
+            do3: "Bajá el centro de gravedad hacia el exterior de la curva.",
+            donot1: "No te inclines hacia el interior de la curva.",
+            donot2: "Evita velocidades altas.",
+            donot3: "No tomes posiciones defensivas.",
+            videos: [
+                {
+                    url: "https://snowmatchvideos.s3.us-east-1.amazonaws.com/tips/snowmatch-follow-cam.mov",
+                    thumbnail: "https://s3.amazonaws.com/tu-bucket/thumbnails/posicion-basica-1.jpg",
+                    title: "Posición básica - Introducción",
+                    description: "Cómo mantener la posición básica en esquí."
+                }
+            ],
+            instructor: {
+                name: "Agostina",
+                lastname: "",
+                imageLink: "https://image.snowmatch.pro/profile/agos_casuscelli.jpeg",
+                information: "Instructora especializada en técnica intermedia y perfeccionamiento.",
+                level: "Nivel 3",
+                stars: 4.7
+            }
+        },
+        {
+            tip: "Vueltas cortadas",
+            subtitle: "Clinica de esqui",
+            teacherId: 23,
+            description: "Para este ejercicio vas a tener que adoptar una posición más agresiva, ya que la velocidad y las fuerzas serán mayores. Lo ideal es hacerlo en pistas azules. El giro cuesta arriba te va a ayudar a reconocer las sensaciones que buscás en los giros normales.",
+            do1: "Poné todo tu peso en el esquí exterior.",
+            do2: "Rotá el tobillo y las rodillas hacia adentro.",
+            do3: "Esquiá más rápido de lo habitual para generar la presión necesaria.",
+            donot1: "No pierdas el control, ir más rápido no significa descontrolarse.",
+            donot2: "No te tires solo hacia adentro: por más que te inclines, también tenés que volver con el cuerpo al centro.",
+            donot3: "Evita rotar el torso hacia adentro.",
+            videos: [
+                {
+                    url: "https://snowmatchvideos.s3.us-east-1.amazonaws.com/tips/cortadas1.mov",
+                    thumbnail: "https://s3.amazonaws.com/tu-bucket/thumbnails/posicion-basica-1.jpg",
+                    title: "Posición básica - Introducción",
+                    description: "Cómo mantener la posición básica en esquí."
+                }
+            ],
+            instructor: {
+                name: "Mathias",
+                lastname: "Pinna",
+                imageLink: "https://image.snowmatch.pro/profile/Screenshot+2024-07-27+at+6.47.12%E2%80%AFPM.png",
+                information: "Especialista en técnica avanzada e integrante del equipo de Demostradores.",
+                level: "Nivel 5",
+                stars: 4.8
+            }
+        },
+        {
+            tip: "Frenada",
+            subtitle: "Clase de esqui para principiantes",
+            teacherId: 592,
+            description: "Mantené las puntas de los esquís separadas aproximadamente un puño entre sí. Abrí las colas de los esquís hacia afuera.",
+            do1: "Mantené el equilibrio: Flexioná tobillos y rodillas, con las manos siempre hacia adelante.",
+            do2: "Mirá hacia donde querés ir.",
+            do3: "Sentí la espinilla presionando contra la lengüeta de la bota.",
+            donot1: "No mires tus pies.",
+            donot2: "No te inclines hacia la nieve con las manos.",
+            donot3: "No uses los bastones para frenar.",
+            videos: [
+                {
+                    url: "https://snowmatchvideos.s3.us-east-1.amazonaws.com/tips/frenada.mp4",
+                    thumbnail: "https://s3.amazonaws.com/tu-bucket/thumbnails/posicion-basica-1.jpg",
+                    title: "Posición básica - Introducción",
+                    description: "Cómo mantener la posición básica en esquí."
+                }
+            ],
+            instructor: {
+                name: "Popi",
+                lastname: "Dods",
+                imageLink: "https://image.snowmatch.pro/profile/592-3ccf90b1-5c8a-4f64-9989-aa7b161479e9",
+                information: "Instructora especializada en principiantes y primeros pasos en la nieve. Docente.",
+                level: "Nivel 2",
+                stars: 4.9
+            }
+        }
+        // Puedes agregar más tips aquí
+    ];
 
     useEffect(() => {
         dispatch(getProductsByBusinessId(13));
@@ -519,20 +999,21 @@ export default function SnowMatchLanding() {
                 <meta name="author" content={seo.author} />
                 <meta name="publisher" content={seo.publisher} />
             </Helmet>
+            <JSONLD />
             <Box
                 sx={{
                     display: 'flex',
                     flexDirection: { xs: 'column', md: 'row' },
                     minHeight: '100vh',
                     background: '#f5f6fa',
-                    py: { xs: 8, md: 12 },
-                    px: { xs: 2, sm: 0 },
+                    py: { xs: 4, md: 12 },
+                    px: { xs: 0, sm: 2 },
                 }}
             >
                 <Box
                     sx={{
                         flex: { xs: 'unset', md: '0 0 460px' },
-                        px: { xs: 0, sm: 4, md: 4 },
+                        px: { xs: 2, sm: 4, md: 4 },
                         display: 'flex',
                         flexDirection: 'column',
                         justifyContent: 'center',
@@ -549,15 +1030,16 @@ export default function SnowMatchLanding() {
                         variant="h2"
                         sx={{
                             mb: 4,
-                            textAlign: { xs: 'center', md: 'left' }
+                            textAlign: { xs: 'center', md: 'left' },
+                            fontSize: { xs: '2rem', sm: '2.5rem', md: '3rem' }
                         }}
                     >
-                        Escuela de esquí y snowboard en Bariloche
+                        {translate('landingSchool.h1')}
                     </Typography>
                     <Box
                         sx={{
-                            display: { xs: 'none', md: 'flex' },
-                            flexDirection: 'row',
+                            display: { xs: 'flex', md: 'flex' },
+                            flexDirection: { xs: 'column', sm: 'row' },
                             gap: 2,
                             width: '100%',
                         }}
@@ -580,7 +1062,7 @@ export default function SnowMatchLanding() {
                             variant="contained"
                             onClick={handleOpenReservationModal}
                         >
-                            Reservar clase
+                            {translate('landingSchool.bookNow')}
                         </Button>
                     </Box>
                 </Box>
@@ -588,13 +1070,14 @@ export default function SnowMatchLanding() {
                     sx={{
                         flex: 1,
                         display: 'flex',
-                        alignItems: { xs: 'center', md: 'flex-start' },
-                        overflowX: { xs: 'visible', md: 'auto' },
+                        alignItems: { xs: 'flex-start', md: 'flex-start' },
+                        overflowX: { xs: 'auto', md: 'auto' },
                         pl: { xs: 0, md: 8 },
                         ml: { xs: 0, md: 8 },
                         width: '100%',
-                        height: { xs: 320, sm: '81vh' },
-                        minHeight: { xs: 320, sm: 540 },
+                        height: { xs: 'auto', sm: '81vh' },
+                        minHeight: { xs: 'auto', sm: 540 },
+                        mt: { xs: 2, md: 0 },
                     }}
                 >
                     <Box
@@ -606,7 +1089,7 @@ export default function SnowMatchLanding() {
                             alignItems: { xs: 'center', sm: 'flex-start' },
                             height: '100%',
                             minHeight: '100%',
-                            px: { xs: 0, sm: undefined }, // quitar padding horizontal en mobile
+                            px: { xs: 2, sm: undefined },
                         }}
                     >
                         {tips.map((tip, idx) => (
@@ -923,7 +1406,7 @@ export default function SnowMatchLanding() {
                                         flex: 1,
                                     }}
                                 >
-                                    Reservar clase
+                                    {translate('landingSchool.bookNow')}
                                 </Button>
                             </Box>
                         </Box>
@@ -932,57 +1415,69 @@ export default function SnowMatchLanding() {
             ))}
 
             {/* Sección de Preguntas Frecuentes */}
-            <Box sx={{ width: '100%', maxWidth: 800, px: {xs:2, sm: 'auto'}, mb: 10, mt: 8 }}>
-                <Typography variant="h3" sx={{ mb: 3, fontWeight: 700 }}>
-                    Preguntas Frecuentes sobre nuestras clases de esquí
+            <Box 
+                sx={{ 
+                    width: '100%', 
+                    maxWidth: 800, 
+                    mx: 'auto',
+                    px: { xs: 2, sm: 4 },
+                    mb: 10, 
+                    mt: 8,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center'
+                }}
+            >
+                <Typography variant="h3" sx={{ mb: 3, fontWeight: 700, textAlign: 'center' }}>
+                    {translate('landingSchool.faqs.title')}
                 </Typography>
 
-                <Typography sx={{ mb: 4 }}>
-                    En esta sección respondemos las dudas más comunes sobre nuestras clases de esquí en Cerro Catedral, desde cómo comenzar si sos principiante hasta cómo mejorar tu técnica si ya tenés experiencia. Nuestros instructores certificados te guían en cada paso, ya sea que estés buscando clases particulares, grupales o para niños. Si tenés más preguntas, no dudes en contactarnos.
+                <Typography sx={{ mb: 4, textAlign: 'center' }}>
+                    {translate('landingSchool.faqs.subtitle')}
                 </Typography>
 
                 <Accordion>
                     <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                        ¿Qué tipos de clases de esquí ofrecen?
+                        {translate('landingSchool.faqs.1.q')}
                     </AccordionSummary>
                     <AccordionDetails>
-                        Ofrecemos clases particulares, grupales, para adultos, niños y niveles avanzados. También contamos con clases enfocadas en técnicas específicas como carving, esquí en nieve virgen (fuera de pista) y slalom. Todas nuestras clases están diseñadas por instructores profesionales con certificación internacional.
+                        {translate('landingSchool.faqs.1.a')}
                     </AccordionDetails>
                 </Accordion>
 
                 <Accordion>
                     <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                        ¿Necesito experiencia previa para tomar clases?
+                        {translate('landingSchool.faqs.2.q')}
                     </AccordionSummary>
                     <AccordionDetails>
-                        No. Nuestras clases están diseñadas para todos los niveles, desde principiantes que nunca se pusieron un par de esquís hasta esquiadores avanzados que buscan perfeccionar su técnica. Contamos con pistas adaptadas y métodos de enseñanza progresivos.
+                        {translate('landingSchool.faqs.2.a')}
                     </AccordionDetails>
                 </Accordion>
 
                 <Accordion>
                     <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                        ¿Dónde se realizan las clases y qué necesito llevar?
+                        {translate('landingSchool.faqs.3.q')}
                     </AccordionSummary>
                     <AccordionDetails>
-                        Las clases se dictan en Cerro Catedral, en el sector Base del Cerro. Recomendamos venir con ropa térmica, antiparras, protector solar y el equipo de esquí (esquís, bastones y botas). Si no tenés equipo, podemos ayudarte con el alquiler.
+                        {translate('landingSchool.faqs.3.a')}
                     </AccordionDetails>
                 </Accordion>
 
                 <Accordion>
                     <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                        ¿Cuánto tiempo tarda en aprender a esquiar?
+                        {translate('landingSchool.faqs.4.q')}
                     </AccordionSummary>
                     <AccordionDetails>
-                        El tiempo varía según cada persona, pero en general, los principiantes logran esquiar en pistas verdes (fáciles) después de 2 a 3 clases. Nuestro enfoque personalizado acelera el proceso y garantiza que aprendas a esquiar con confianza y seguridad.
+                        {translate('landingSchool.faqs.4.a')}
                     </AccordionDetails>
                 </Accordion>
 
                 <Accordion>
                     <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                        ¿Cómo reservo una clase y cuáles son los precios?
+                        {translate('landingSchool.faqs.5.q')}
                     </AccordionSummary>
                     <AccordionDetails>
-                        Podés reservar directamente desde nuestra web, por WhatsApp o acercándote a nuestro punto de información en la base del cerro. Los precios varían según el tipo de clase (particular o grupal) y la duración. Consultá nuestra sección de tarifas para más detalles actualizados.
+                        {translate('landingSchool.faqs.5.a')}
                     </AccordionDetails>
                 </Accordion>
             </Box>

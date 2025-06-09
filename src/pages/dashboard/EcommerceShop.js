@@ -187,7 +187,7 @@ export default function EcommerceShop({ isGuest = false, teacherType = "school" 
         <meta property="og:image" content="https://snowmatchimages.s3.amazonaws.com/profile/ClaseNiñoss.jpeg" />
         <meta property="og:url" content="https://snowmatch.pro" />
       </Helmet>
-      <Container maxWidth={themeStretch ? false : 'lg'}>
+      <Container maxWidth={themeStretch ? false : 'lg'} sx={{paddingTop: 'env(safe-area-inset-top)'}}>
         <Stack
           spacing={{ xs: 0, sm: 3 }}
           direction={{ xs: 'row', sm: 'row' }}

@@ -75,7 +75,8 @@ const getCanonicalSlug = (slug) => {
 export default function SearchPage() {
   const { resort: resortSlug, discipline, type } = useParams();
   const [resort, setResort] = useState(resortSlug);
-  const { translate } = useLocales();
+  const { translate, onChangeLang } = useLocales();
+
   const getClassType = (type) => {
     if (!type) return 'Clase';
 
@@ -107,6 +108,15 @@ export default function SearchPage() {
 
     return `Clase ${translate(`landingPRO.${translationKey}`)}`;
   }
+
+  useEffect(() => {
+    if (window.location.pathname.includes('/pt')) {
+      onChangeLang('pt');
+    } else {
+      onChangeLang('es');
+    }
+  }, []);
+
   useEffect(() => {
     const resort = RESORT_OPTIONS.find(r => r.slugs.includes(resortSlug))
     if (resort) {
@@ -274,49 +284,148 @@ export default function SearchPage() {
         />
         {/* Schema.org markup */}
         <script type="application/ld+json">
-          {`
-                    {
-                        "@context": "https://schema.org",
-                        "@type": "SportsActivityLocation",
-                        "name": "SnowMatch - ${getClassType(type)} ${discipline ? 'de ' + translate(`landingPRO.${discipline}`) : 'de ski y snowboard'} en ${translate(`landingPRO.${resortSlug}`)}",
-                        "description": "${getClassType(type)} ${discipline ? 'de ' + translate(`landingPRO.${discipline}`) : 'de ski y snowboard'} en ${translate(`landingPRO.${resortSlug}`)} para todos los niveles",
-                        "url": "https://snowmatch.pro/${resortSlug}${discipline ? '/' + discipline : ''}${type ? '/' + type : ''}",
-                        "address": {
-                            "@type": "PostalAddress",
-                            "addressCountry": "AR",
-                            "addressRegion": "Patagonia"
-                        },
-                        "geo": {
-                            "@type": "GeoCoordinates",
-                            "latitude": "-41.1335",
-                            "longitude": "-71.3103"
-                        },
-                        "offers": {
-                            "@type": "AggregateOffer",
-                            "priceCurrency": "ARS",
-                            "availability": "https://schema.org/InStock",
-                            "itemOffered": {
-                                "@type": "Service",
-                                "name": "${getClassType(type)} ${discipline ? 'de ' + translate(`landingPRO.${discipline}`) : 'de ski y snowboard'} en ${translate(`landingPRO.${resortSlug}`)}",
-                                "description": "${getClassType(type)} ${discipline ? 'de ' + translate(`landingPRO.${discipline}`) : 'de ski y snowboard'} en ${translate(`landingPRO.${resortSlug}`)}",
-                                "serviceType": "Clases de esquí",
-                                "provider": {
-                                    "@type": "Organization",
-                                    "name": "SnowMatch",
-                                    "url": "https://snowmatch.pro",
-                                    "logo": "https://snowmatch.pro/logo/snowmatch.png"
-                                }
-                            }
-                        },
-                        "sport": ${discipline ? `["${getDisciplineName(discipline)}"]` : '["Ski", "Snowboard"]'},
-                        "amenityFeature": ${JSON.stringify(getAmenityFeatures())},
-                        "aggregateRating": {
-                            "@type": "AggregateRating",
-                            "ratingValue": "4.8",
-                            "reviewCount": "150"
-                        }
-                    }
-                    `}
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "SportsActivityLocation",
+            "name": `SnowMatch - ${getClassType(type)} ${discipline ? 'de ' + translate(`landingPRO.${discipline}`) : 'de ski y snowboard'} en ${translate(`landingPRO.${resortSlug}`)}`,
+            "description": `${getClassType(type)} ${discipline ? 'de ' + translate(`landingPRO.${discipline}`) : 'de ski y snowboard'} en ${translate(`landingPRO.${resortSlug}`)} para todos los niveles`,
+            "url": `https://snowmatch.pro/${resortSlug}${discipline ? '/' + discipline : ''}${type ? '/' + type : ''}`,
+            "address": {
+              "@type": "PostalAddress",
+              "addressCountry": "AR",
+              "addressRegion": "Patagonia"
+            },
+            "geo": {
+              "@type": "GeoCoordinates",
+              "latitude": "-41.1335",
+              "longitude": "-71.3103"
+            },
+            "offers": {
+              "@type": "AggregateOffer",
+              "priceCurrency": "ARS",
+              "availability": "https://schema.org/InStock",
+              "itemOffered": {
+                "@type": "Service",
+                "name": `${getClassType(type)} ${discipline ? 'de ' + translate(`landingPRO.${discipline}`) : 'de ski y snowboard'} en ${translate(`landingPRO.${resortSlug}`)}`,
+                "description": `${getClassType(type)} ${discipline ? 'de ' + translate(`landingPRO.${discipline}`) : 'de ski y snowboard'} en ${translate(`landingPRO.${resortSlug}`)}`,
+                "serviceType": "Clases de esquí",
+                "provider": {
+                  "@type": "Organization",
+                  "name": "SnowMatch",
+                  "url": "https://snowmatch.pro",
+                  "logo": "https://snowmatch.pro/logo/snowmatch.png"
+                }
+              }
+            },
+            "sport": discipline ? [getDisciplineName(discipline)] : ["Ski", "Snowboard"],
+            "amenityFeature": getAmenityFeatures(),
+            "aggregateRating": {
+              "@type": "AggregateRating",
+              "ratingValue": "4.8",
+              "reviewCount": "150"
+            },
+            "mainEntity": {
+              "@type": "FAQPage",
+              "mainEntity": [
+                {
+                  "@type": "Question",
+                  "name": translate(`landingPRO.faqs.1.q`, {
+                    resort: resort ? translate(`landingPRO.${resort}`) : "",
+                    discipline: discipline ? translate(`landingPRO.${discipline}`) : translate(`landingPRO.ski&snowboard`),
+                    type: type ? translate(`landingPRO.${type}`) : ""
+                  }),
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": translate(`landingPRO.faqs.1.a`, {
+                      resort: resort ? translate(`landingPRO.${resort}`) : "",
+                      discipline: discipline ? translate(`landingPRO.${discipline}`) : translate(`landingPRO.ski&snowboard`),
+                      type: type ? translate(`landingPRO.${type}`) : ""
+                    })
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": translate(`landingPRO.faqs.2.q`, {
+                    resort: resort ? translate(`landingPRO.${resort}`) : "",
+                    discipline: discipline ? translate(`landingPRO.${discipline}`) : translate(`landingPRO.ski&snowboard`),
+                    type: type ? translate(`landingPRO.${type}`) : ""
+                  }),
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": translate(`landingPRO.faqs.2.a`, {
+                      resort: resort ? translate(`landingPRO.${resort}`) : "",
+                      discipline: discipline ? translate(`landingPRO.${discipline}`) : translate(`landingPRO.ski&snowboard`),
+                      type: type ? translate(`landingPRO.${type}`) : ""
+                    })
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": translate(`landingPRO.faqs.3.q`, {
+                    resort: resort ? translate(`landingPRO.${resort}`) : "",
+                    discipline: discipline ? translate(`landingPRO.${discipline}`) : translate(`landingPRO.ski&snowboard`),
+                    type: type ? translate(`landingPRO.${type}`) : ""
+                  }),
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": translate(`landingPRO.faqs.3.a`, {
+                      resort: resort ? translate(`landingPRO.${resort}`) : "",
+                      discipline: discipline ? translate(`landingPRO.${discipline}`) : translate(`landingPRO.ski&snowboard`),
+                      type: type ? translate(`landingPRO.${type}`) : ""
+                    })
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": translate(`landingPRO.faqs.4.q`, {
+                    resort: resort ? translate(`landingPRO.${resort}`) : "",
+                    discipline: discipline ? translate(`landingPRO.${discipline}`) : translate(`landingPRO.ski&snowboard`),
+                    type: type ? translate(`landingPRO.${type}`) : ""
+                  }),
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": translate(`landingPRO.faqs.4.a`, {
+                      resort: resort ? translate(`landingPRO.${resort}`) : "",
+                      discipline: discipline ? translate(`landingPRO.${discipline}`) : translate(`landingPRO.ski&snowboard`),
+                      type: type ? translate(`landingPRO.${type}`) : ""
+                    })
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": translate(`landingPRO.faqs.5.q`, {
+                    resort: resort ? translate(`landingPRO.${resort}`) : "",
+                    discipline: discipline ? translate(`landingPRO.${discipline}`) : translate(`landingPRO.ski&snowboard`),
+                    type: type ? translate(`landingPRO.${type}`) : ""
+                  }),
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": translate(`landingPRO.faqs.5.a`, {
+                      resort: resort ? translate(`landingPRO.${resort}`) : "",
+                      discipline: discipline ? translate(`landingPRO.${discipline}`) : translate(`landingPRO.ski&snowboard`),
+                      type: type ? translate(`landingPRO.${type}`) : ""
+                    })
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": translate(`landingPRO.faqs.6.q`, {
+                    resort: resort ? translate(`landingPRO.${resort}`) : "",
+                    discipline: discipline ? translate(`landingPRO.${discipline}`) : translate(`landingPRO.ski&snowboard`),
+                    type: type ? translate(`landingPRO.${type}`) : ""
+                  }),
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": translate(`landingPRO.faqs.6.a`, {
+                      resort: resort ? translate(`landingPRO.${resort}`) : "",
+                      discipline: discipline ? translate(`landingPRO.${discipline}`) : translate(`landingPRO.ski&snowboard`),
+                      type: type ? translate(`landingPRO.${type}`) : ""
+                    })
+                  }
+                }
+              ]
+            }
+          })}
         </script>
       </Helmet>
       <RootStyle>
@@ -338,7 +447,7 @@ export default function SearchPage() {
             <StudentTestimonials />
           </Suspense>
           <Suspense fallback={<LoadingScreen />}>
-            <FaqsByContext />
+            <FaqsByContext discipline={discipline} type={type} />
           </Suspense>
           <Suspense fallback={<LoadingScreen />}>
             <ResortsAndLessonsSection />

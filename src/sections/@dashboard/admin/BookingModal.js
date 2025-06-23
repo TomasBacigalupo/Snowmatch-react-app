@@ -320,11 +320,11 @@ const BookingModal = ({ isOpen, onClose }) => {
                             >
                                 <MenuItem value="PAID">Pagado</MenuItem>
                                 <MenuItem value="UNPAID">No Pagado</MenuItem>
-                                <MenuItem value="10_PAID">10% Pagado</MenuItem>
-                                <MenuItem value="20_PAID">20% Pagado</MenuItem>
-                                <MenuItem value="30_PAID">30% Pagado</MenuItem>
-                                <MenuItem value="40_PAID">40% Pagado</MenuItem>
-                                <MenuItem value="50_PAID">50% Pagado</MenuItem>
+                                <MenuItem value="PAID_10">10% Pagado</MenuItem>
+                                <MenuItem value="PAID_20">20% Pagado</MenuItem>
+                                <MenuItem value="PAID_30">30% Pagado</MenuItem>
+                                <MenuItem value="PAID_40">40% Pagado</MenuItem>
+                                <MenuItem value="PAID_50">50% Pagado</MenuItem>
                             </Select>
                         </FormControl>
                     </Grid>
@@ -340,7 +340,7 @@ const BookingModal = ({ isOpen, onClose }) => {
                                         }))}
                                     />
                                 }
-                                label="Incluye Lunch"
+                                label="Incluye Almuerzo"
                             />
                             <FormControlLabel
                                 control={
@@ -369,7 +369,7 @@ const BookingModal = ({ isOpen, onClose }) => {
                             </IconButton>
                             <TextField
                                 sx={{ width: '100px' }}
-                                label="Number of Children"
+                                label="Niños"
                                 type="number"
                                 name="children"
                                 value={formData.children}
@@ -400,7 +400,7 @@ const BookingModal = ({ isOpen, onClose }) => {
                             </IconButton>
                             <TextField
                                 sx={{ width: '100px' }}
-                                label="Number of Adults"
+                                label="Adultos"
                                 type="number"
                                 name="adults"
                                 value={formData.adults}

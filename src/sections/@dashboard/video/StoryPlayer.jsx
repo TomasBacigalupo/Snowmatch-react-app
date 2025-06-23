@@ -48,7 +48,8 @@ const StoryPlayer = () => {
         justifyContent: "center",
         borderRadius:"16px",
         mb:2,
-        overflow: "hidden"
+        overflow: "hidden",
+        minHeight: "220px"
       }}
       onClick={goToNextStory}
     >

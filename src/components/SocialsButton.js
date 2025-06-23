@@ -35,10 +35,10 @@ export default function SocialsButton({ initialColor = false, simple = true, lin
       path: links.ytUrl?"https://www.youtube.com/channel/"+links.ytUrl : undefined,
     },
     {
-      name: 'Twitter',
-      icon: 'eva:twitter-fill',
+      name: 'WhatsApp',
+      icon: 'logos:whatsapp-icon',
       socialColor: '#00AAEC',
-      path: links.twUrl?"https://www.twitter.com/"+links.twUrl : undefined,
+      path: links.twUrl? "https://www.twitter.com/"+links.twUrl : "https://wa.me/5492944263223",
     },
   ];
 

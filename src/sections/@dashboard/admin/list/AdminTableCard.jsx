@@ -18,9 +18,10 @@ AdminTableCard.propTypes = {
     onDeleteRow: PropTypes.func,
     onWapp: PropTypes.func,
     onEvents: PropTypes.func,
+    onClick: PropTypes.func,
 };
 
-export default function AdminTableCard({ row, selected, onEditRow, onSelectRow, onConfirmRow, onDeclineRow, onWapp, onEvents }) {
+export default function AdminTableCard({ row, selected, onEditRow, onSelectRow, onConfirmRow, onDeclineRow, onWapp, onEvents, onClick }) {
     const theme = useTheme();
 
     const { name, lastname, imageLink, role, level, authorized, state, id, emailVerified } = row;
@@ -36,7 +37,14 @@ export default function AdminTableCard({ row, selected, onEditRow, onSelectRow, 
     };
 
     return (
-        <Card sx={{ width: '100%', my: 0.5, }}>
+        <Card 
+            sx={{ 
+                width: '100%', 
+                my: 0.5,
+                cursor: 'pointer'
+            }}
+            onClick={onClick}
+        >
             <Box display='flex' padding={2} flexDirection='column'>
                 <Box display='flex' justifyContent='space-between'>
                     <Box display='flex' flexDirection='column'>
@@ -76,7 +84,8 @@ export default function AdminTableCard({ row, selected, onEditRow, onSelectRow, 
                         actions={
                             <>
                                 <MenuItem
-                                    onClick={() => {
+                                    onClick={(e) => {
+                                        e.stopPropagation();
                                         onEvents();
                                         handleCloseMenu();
                                     }}
@@ -85,7 +94,8 @@ export default function AdminTableCard({ row, selected, onEditRow, onSelectRow, 
                                     Events
                                 </MenuItem>
                                 <MenuItem
-                                    onClick={() => {
+                                    onClick={(e) => {
+                                        e.stopPropagation();
                                         onWapp();
                                         handleCloseMenu();
                                     }}
@@ -94,7 +104,8 @@ export default function AdminTableCard({ row, selected, onEditRow, onSelectRow, 
                                     Wapp
                                 </MenuItem>
                                 <MenuItem
-                                    onClick={() => {
+                                    onClick={(e) => {
+                                        e.stopPropagation();
                                         onConfirmRow();
                                         handleCloseMenu();
                                     }}
@@ -103,7 +114,8 @@ export default function AdminTableCard({ row, selected, onEditRow, onSelectRow, 
                                     Edit
                                 </MenuItem>
                                 <MenuItem
-                                    onClick={() => {
+                                    onClick={(e) => {
+                                        e.stopPropagation();
                                         onDeclineRow();
                                         handleCloseMenu();
                                     }}

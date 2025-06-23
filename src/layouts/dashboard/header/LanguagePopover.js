@@ -31,7 +31,7 @@ export default function LanguagePopover() {
       case 'en':
         return 'emojione:flag-for-united-states'
       case 'pt':
-        return 'flag:br-4x3'
+        return 'emojione:flag-for-brazil'
     }
     return ''
   }
@@ -47,7 +47,7 @@ export default function LanguagePopover() {
           backgroundColor: ''
         }}
       >
-        <Iconify icon={getIcon(currentLang.value)} />
+        <Iconify icon={"hugeicons:internet"} />
       </IconButtonAnimate>
 
       <MenuPopover

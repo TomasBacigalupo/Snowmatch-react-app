@@ -218,7 +218,7 @@ export default function ResortDisciplineHero() {
     const { translate } = useLocales()
     const { resort: resortSlug, discipline: disciplineSlug, type: typeSlug } = useParams();
     const [discipline, setDiscipline] = useState(disciplineSlug)
-    const [resort, setResort] = useState(resortSlug)
+    const [resort, setResort] = useState(resortSlug || 'Cerro Catedral')
     const [type, setType] = useState(typeSlug)
 
     const [value, setValue] = useState(0);
@@ -235,6 +235,8 @@ export default function ResortDisciplineHero() {
         const resort = RESORT_OPTIONS.find(r => r.slugs.includes(resortSlug))
         if (resort) {
             setResort(resort.id)
+        }else{
+            setResort('Cerro Catedral')
         }
         const type = TYPE_OPTIONS.find(t => t.slugs.includes(typeSlug))
         if (type) {
@@ -336,7 +338,7 @@ export default function ResortDisciplineHero() {
                     <Typography variant='h3' sx={{ mb: 1 }}>{translate(`landingPRO.topTeachers`, {
                         discipline: disciplineSlug ? translate(`landingPRO.${disciplineSlug}`) : translate(`landingPRO.esqui-y-snowboard`),
                         type: type ? translate(`landingPRO.${type}Plural`) : "",
-                        resort: resort ? translate(`landingPRO.${resortSlug}`) : "",
+                        resort: resort ? translate(`landingPRO.${resortSlug || 'bariloche'}`) : "",
                     })}</Typography>
                     <Typography
                         variant='body1'

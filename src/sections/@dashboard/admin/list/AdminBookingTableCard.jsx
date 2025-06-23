@@ -15,12 +15,14 @@ AdminBookingTableCard.propTypes = {
     selected: PropTypes.bool,
     onEditRow: PropTypes.func,
     onSelectRow: PropTypes.func,
+    onConfirmRow: PropTypes.func,
+    onDeclineRow: PropTypes.func,
     onDeleteRow: PropTypes.func,
     onWapp: PropTypes.func,
     onEvents: PropTypes.func,
 };
 
-export default function AdminBookingTableCard({ row, selected, onEditRow, onSelectRow, onConfirmRow, onDeclineRow, onWapp, onEvents }) {
+export default function AdminBookingTableCard({ row, selected, onEditRow, onSelectRow, onConfirmRow, onDeclineRow, onWapp, onEvents, onDeleteRow }) {
     const theme = useTheme();
 
     const { imageLink, userComment, state, resort, adults, children, eventList, id, price } = row;
@@ -116,7 +118,7 @@ export default function AdminBookingTableCard({ row, selected, onEditRow, onSele
                                 </MenuItem>
                                 <MenuItem
                                     onClick={() => {
-                                        onDeclineRow();
+                                        onDeleteRow();
                                         handleCloseMenu();
                                     }}
                                     sx={{ color: 'error.main' }}

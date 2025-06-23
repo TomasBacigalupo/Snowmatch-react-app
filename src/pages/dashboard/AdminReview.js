@@ -210,21 +210,6 @@ export default function AdminReview() {
         />
 
         <Card>
-          <Tabs
-            allowScrollButtonsMobile
-            variant="scrollable"
-            scrollButtons="auto"
-            value={filterStatus}
-            onChange={onChangeFilterStatus}
-            sx={{ px: 2, bgcolor: 'background.neutral' }}
-          >
-            {STATUS_OPTIONS.map((tab) => (
-              <Tab disableRipple key={tab} label={tab} value={tab} />
-            ))}
-          </Tabs>
-
-          <Divider />
-
           <AdminTableToolbar
             filterName={filterName}
             filterRole={filterRole}
@@ -233,6 +218,11 @@ export default function AdminReview() {
             onFilterRole={handleFilterRole}
             onFilterLevel={handleFilterLevel}
             optionsRole={ROLE_OPTIONS}
+            showSearchAdmin={false}
+            showRole={false}
+            showMonth={false}
+            showTeacherId={false}
+            showStudentId={false}
           />
 
           <Scrollbar>
@@ -333,7 +323,7 @@ export default function AdminReview() {
           </Box>
         </Card>
         <DialogAnimate open={isOpenModal} onClose={handleDeclineCloseModal}>
-          <DialogTitle>{'Seguro que queres declinar?'}</DialogTitle>
+          <DialogTitle>{'Seguro que queres Eliminar la reserva?'}</DialogTitle>
           <DeclineForm
             email={selectedEmail}
             onCancel={handleDeclineCloseModal}

@@ -7,14 +7,19 @@ import {
   Container,
   Typography,
   Stack,
+  Box,
 } from '@mui/material';
 import { PATH_DASHBOARD, PATH_GUEST, PATH_PAGE } from '../../routes/paths';
 import Logo from '../../components/Logo';
 import SocialsButton from '../../components/SocialsButton';
 
-const RootStyle = styled('footer')(({ theme }) => ({
+const RootStyle = styled('div')(({ theme }) => ({
   position: 'relative',
   backgroundColor: theme.palette.background.default,
+  minHeight: '300px', // Altura mínima fija
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'flex-end'
 }));
 
 const LINKS = [
@@ -25,6 +30,7 @@ const LINKS = [
       { name: 'SnowMatchX', href: PATH_GUEST.snowMatchX },
       { name: 'Intermedios', href: PATH_GUEST.intermedios },
       { name: 'Principiantes', href: PATH_GUEST.principiantes },
+      { name: 'Heliski', href: '/heliski' },
       { name: 'Clinic', href: PATH_GUEST.clinic },
       { name: 'Family', href: PATH_GUEST.family },
       { name: 'Children', href: PATH_GUEST.children },
@@ -54,6 +60,7 @@ const LINKS = [
   {
     headline: 'Contacto',
     children: [
+      { name: 'Whats App', href: 'https://wa.me/5492944263223' },
       { name: 'office@snowmatch.pro', href: 'mailto:office@snowmatch.pro' },
       { name: 'San Martín de los Andes, Patagonia Argentina', href: 'https://goo.gl/maps/...'} // reemplazá con link real
     ],
@@ -73,20 +80,28 @@ export default function MainFooter() {
         >
           {/* Logo + Intro + Redes */}
           <Grid item xs={12} md={3}>
-            <Logo sx={{ mx: { xs: 'auto', md: 'inherit' }, mb: 2 }} />
-            <Typography variant="body2" sx={{ maxWidth: 300 }}>
-              Elevá tu experiencia en la nieve con SnowMatch.
-            </Typography>
-            <Stack
-              direction="row"
-              justifyContent={{ xs: 'center', md: 'flex-start' }}
-              sx={{ mt: 3 }}
-            >
-              <SocialsButton
-                sx={{ mx: 0.5 }}
-                links={{ instagram: 'https://www.instagram.com/snow.match' }}
-              />
-            </Stack>
+            <Box sx={{ 
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: { xs: 'center', md: 'flex-start' },
+              height: '100%',
+              minHeight: '200px' // Altura mínima para el contenedor del logo
+            }}>
+              <Logo sx={{ mb: 2 }} />
+              <Typography variant="body2" sx={{ maxWidth: 300 }}>
+                Elevá tu experiencia en la nieve con SnowMatch.
+              </Typography>
+              <Stack
+                direction="row"
+                justifyContent={{ xs: 'center', md: 'flex-start' }}
+                sx={{ mt: 3 }}
+              >
+                <SocialsButton
+                  sx={{ mx: 0.5 }}
+                  links={{ instagram: 'https://www.instagram.com/snow.match' }}
+                />
+              </Stack>
+            </Box>
           </Grid>
 
           {/* Links */}

@@ -66,8 +66,13 @@
         "search": "Buscar..."
     },
     "landingPRO": {
+        "title": "Clases de {{discipline}} {{type}} en {{resort}} - Reserva Online | SnowMatch",
+        "description": "Instructores certificados, clases privadas y grupales en {{resort}}. ¡Reserva online y evita colas!",
+        "keywords": "clases de {{discipline}} {{type}} en {{resort}}, instructores certificados, clases privadas, clases grupales, reserva online",
         "cerro-catedral": "Cerro Catedral",
         "cerro-chapelco": "Cerro Chapelco",
+        "portillo": "Portillo",
+        "principiantes": "Principiantes",
         "cerro-la-parva": "Cerro La Parva",
         "cerro-la-vasa": "Cerro La Vasa",
         "cerro-los-arboles": "Cerro Los Arboles",
@@ -340,6 +345,7 @@
         "newProduct": "Nueva Clase",
         "admin": "Administrador",
         "review teachers": "Revisar Pros",
+        "review clients": "Revisar Clientes",
         "review bookings": "Revisar Bookings",
         "school_teachers": "profesores de escuela",
         "pending_teachers": "profesores pendientes",
@@ -362,7 +368,7 @@
         "all": "Todos",
         "clinicas": "Clinicas",
         "videoCoach": "VideoCoach",
-        "contact": "Conactar soporte",
+        "contact": "Contactar soporte",
         "help": "Ayuda"
     },
     "calendar": {
@@ -501,10 +507,10 @@
     "accountPopover": {
         "Profile": "Mi Perfíl",
         "Settings": "Ajustes",
-        "SignUpAsAPRO": "Quiero ser PRO",
-        "SignUpAsAGuest": "Sign Up",
-        "LogIn": "Log In",
-        "logOut": "Log Out",
+        "SignUpAsAPRO": "Quiero ser Instructor",
+        "SignUpAsAGuest": "Crear cuenta",
+        "LogIn": "Iniciar sesión",
+        "logOut": "Cerrar sesión",
         "help": "Ayuda",
         "deleteAccount": "Eliminar mi cuenta",
         "Lessons": "Mis clases",
@@ -666,12 +672,23 @@
         "pending_teachers": "Profesores pendientes"
     },
     "completeOrder": {
-        "order": "Su codigo de clase SnowMatch es: ",
-        "thanksMessage": "Match! Gracias por usar SnowMatch",
-        "info": "Vamos a contactar al Pro y ponerlo en contacto con usted a la brevedad. Cualquier consulta no dude en contactarnos. "
+        "order": "Tu código SnowMatch es: ",
+        "thanksMessage": "¡Match! Gracias por confiar en SnowMatch",
+        "info": "Tu PRO se pondrá en contacto contigo pronto.",
+        "contactSchool": "Contacta a la escuela SnowMatch para pagar y confirmar tu reserva",
+        "contactTeacherAndPay": "Contacta al instructor para pagar y confirmar tu reserva",
+        "bookingSuccess": "¡Reserva exitosa!",
+        "importantInformationSchool": "• Usa ropa cómoda y abrigada\n• Llega 15 minutos antes de tu clase\n• El instructor te estará esperando en el SnowMatch Point",
+        "importantInformationTeacher": "• El instructor te contactará en las próximas 24 horas\n• Podrás coordinar horarios y detalles de pago\n• Asegúrate de tener tu equipo de esquí listo",
+        "bookings": "Reservas",
+        "videoCorrection": "Video correcciones",
+        "importantInformation": "Información Importante"
     },
     "checkout": {
+        "book": "Reservar",
         "privates": "Clase Privada",
+        "payAndContact": "Pagar y contactar",
+        "bookAndContact": "Reservar y contactar",
         "deal_with_pro": "Arregle con el PRO",
         "free": "Gratis",
         "morning": "Mañana",
@@ -839,7 +856,7 @@
             "descriptionPreview": "Corregí errores básicos y bajá pistas negras.",
             "title": "SnowMatchX | La mejor clase de esquí en Catedral",
             "description": "La <b>clase de ski privada</b> está orientada a aquellas personas que quieren aprovechar al maximo su instructor, desde los que nunca esquiaron hasta los que quieren seguir mejorando.<br/>Con esta clase <b>vas a corregir los típicos errores de principiantes,</b> como malas posturas y gestos erróneos. <b>Podrás dejar atrás las pistas azules, y pasar a las rojas,</b> como también <b>salír por primera vez a las pistas</b> o <b>dominar las pistas negras</b>.",
-            "skiLevel": "Intermedios/Avanzados",
+            "skiLevel": "Todos los niveles",
             "totalStudents": "Entre 1 y 5 personas",
             "meetingPoint": "Base Cerro Catedral",
             "faqs": {
@@ -1085,7 +1102,7 @@
             "metaDescription": "Para pequeños esquiadores de entre 4 y 12 años. Aprenderán a deslizarse por la nieve en un entorno recreativo y lúdico.",
             "descriptionPreview": "Los primeros pasos en la nieve. Niños de 4 a 12 años.",
             "description": "La <b>clase de ski para niños/as</b> es una <b>experiencia de aprendizaje y juego</b> para los más chicos de la familia. Con profes <b>especialistas en trabajo con infancias,</b> el curso combina momentos lúdicos y recreativos en la nieve, con enseñanza básica del ski.<br/>Los alumnos entrarán en contacto con la nieve, aprenderán a ponerse y sacarse los esquíes, a <b>deslizarse en lugares con poca pendiente</b> y a disfrutar entre risas y juegos de los divertidísimos caminitos de montaña.",
-            "skiLevel": "Intermedios/Avanzados",
+            "skiLevel": "Todos los niveles",
             "totalStudents": "Entre 1 y 5 personas",
             "meetingPoint": "Base Cerro Catedral",
             "faqs": {
@@ -1854,5 +1871,119 @@
                 "a": "Podés reservar directamente desde nuestra web, por WhatsApp o acercándote a nuestro punto de información en la base del cerro. Los precios varían según el tipo de clase (particular o grupal) y la duración. Consultá nuestra sección de tarifas para más detalles actualizados."
             }
         }
+    },
+    "heliski": {
+        "title1": "HELISKI ",
+        "title2": "experiencia ski en helicotero",
+        "subtitle1": "Trazá tu ruta con IBEX HELISKI",
+        "subtitle2": "Más de 10 años volando en la Patagonia",
+        "subtitle3": "Expertos en aventuras de montaña en helicóptero",
+        "button": "Reservá ahora",
+        "description": "Heliski en Bariloche",
+        "keywords": "heliski, Bariloche, esquí, snowboard, tips, consejos, clases, instructores, técnica, videos, SnowMatch",
+        "totalDays": "Total de días",
+        "totalRiders": "Total de personas",
+        "askToBook": "Solicitá tu reserva",
+        "send": "Enviar",
+        "planning": "Planificación",
+        "planningDescription": "Cada jornada de Heliski arranca con un análisis detallado del clima y las condiciones de la nieve en la zona, hecho por nuestros especialistas.",
+        "safeAndCrew": "Seguridad y equipo",
+        "safeAndCrewDescription": "Al inicio de la actividad, todos los participantes reciben una charla completa de seguridad, protocolos y planificación del día.",
+        "premiumService": "Servicio Premium",
+        "premiumServiceDescription": "Espacio exclusivo con comida y barra libre, a cargo de un chef privado. Viví el lujo y la comodidad después de un día épico en la montaña.",
+        "bookNow": "Reservá ahora",
+        "faqs": {
+            "title": "Respondemos tus dudas",
+            "1": {
+                "q": "Si voy con mi grupo de amigos, ¿vamos a esquiar juntos todo el día?",
+                "a": "Los grupos de más de 4 personas suelen dividirse según el nivel de esquí para asegurar la mejor experiencia para todos. Si tienen un nivel parecido, harán los recorridos juntos."
+            },
+            "2": {
+                "q": "¿Cuál es el mejor momento de la temporada para esquiar?",
+                "a": "Cada zona de los Andes tiene su mejor momento en distintas fechas. Por eso ajustamos nuestras operaciones según las condiciones. Consultá nuestro calendario de disponibilidad para encontrar las mejores fechas."
+            },
+            "3": {
+                "q": "¿Cuántas bajadas hacemos por grupo?",
+                "a": "Cada programa varía según las condiciones y el ritmo del grupo. En nuestra experiencia, nunca terminamos un día de Heliski sin que los clientes estén felices y satisfechos."
+            },
+            "4": {
+                "q": "¿Qué nivel de esquí necesito para hacer heliski?",
+                "a": "Recomendamos tener al menos un nivel intermedio sólido para disfrutar bien la experiencia. De todas formas, no es una actividad extrema ni difícil. La mayoría de nuestros clientes son familias o grupos de amigos, y nos adaptamos al nivel de cada uno."
+            },
+            "5": {
+                "q": "¿Qué ropa tengo que llevar?",
+                "a": "Vestite como si fueras a un centro de esquí, no hace falta mochila. Te damos una Black Diamond Jetforce Airbag con el equipo de seguridad para avalanchas incluido. Importante: no se pueden llevar prendas sueltas dentro del helicóptero."
+            },
+            "6": {
+                "q": "¿Qué pasa si no podemos volar durante mi estadía?",
+                "a": "IBEX HELISKI te permite reprogramar tu día de Heliski sin costo adicional en cualquier momento de la temporada 2025/2026. Si preferís, también ofrecemos un reembolso del 80% del valor."
+            }
+        },
+        "locations": {
+            "title": "Lugares de despegue",
+            "catedral": {
+                "title": "Heliski en Bariloche",
+                "description": "El Cerro Catedral es un centro de esquí en Argentina. Es el más grande del país y el más visitado por turistas.",
+                "price": "Desde USD 1.150 por persona"
+            },
+            "chapelco": {
+                "price": "Desde USD 1.150 por persona",
+                "title": "Heliski en Chapelco",
+                "description": "El Cerro Chapelco es un centro de esquí en Argentina. Sus fuera de pista son increíbles y permiten disfrutar de la naturaleza en su máxima expresión."
+            },
+            "cholila": {
+                "price": "Desde USD 1.150 por persona",
+                "title": "Heliski en Cholila",
+                "description": "Cholila ofrece una experiencia de esquí única en medio de un paraíso natural intacto."
+            }
+        },
+        "info": {
+            "title": "3.000 hectáreas de pura aventura",
+            "description": "Todos nuestros programas tienen un máximo de 8 esquiadores, lo que garantiza una experiencia única y personalizada."
+        },
+        "fees": {
+            "title": "Precios estimados",
+            "week": {
+                "title": "Semana de Heliski All Inclusive",
+                "3riders": "Hasta 3 personas: USD 35.900",
+                "8riders": "Hasta 8 personas: USD 68.900"
+            },
+            "twoDays": {
+                "title": "2 días de Heliski",
+                "3riders": "Hasta 3 personas: USD 10.100",
+                "8riders": "Hasta 8 personas: USD 15.200"
+            },
+            "singleDay": {
+                "title": "One Shot",
+                "3riders": "Hasta 3 personas: USD 7.500",
+                "8riders": "Hasta 8 personas: USD 9.200"
+            }
+        },
+        "readyToBook": {
+            "title": "¿Listo para tu próxima aventura?",
+            "description": "Reservá tu día de Heliski y viví una experiencia única en la Patagonia con IBEX HELISKI.",
+            "button": "Reservar ahora"
+        },
+        "meta": {
+            "title": "Heliski en Bariloche Patagonia | SnowMatch by IBEX HELISKI",
+            "description": "Heliski en Bariloche – viví tu experiencia en la Patagonia | SnowMatch by IBEX HELISKI",
+            "keywords": "heliski, Bariloche, esquí, snowboard, tips, consejos, clases, instructores, técnica, videos, SnowMatch"
+        },
+        "requestToBook": "Hola quiero reservar la experiencia heliski en {{mountain}} para {{riders}} personas y {{days}} días"
+    },
+    "skiLevel": {
+        "FIRST_TIME": "Desde Principiantes",
+        "BEGINNER": "Principiante",
+        "INTERMEDIATE": "Intermedio",
+        "ADVANCED": "Avanzado",
+        "EXPERT": "Expertos"
+    },
+    "totalStudents": "Hasta 5 esquiadores",
+    "meetingPoint": {
+        "Cerro Catedral": "Escuela SnowMatch Cerro Catedral",
+        "Chapelco": "Escuela SnowMatch Cerro Chapelco"
+    },
+    "contactMessage": {
+        "private": "Clase particular - {{name}} - {{id}}\nDias de clase:{{events}}\nNiños: {{children}}\nAdultos: {{adults}}\nComentário: *{{message}}*\n*Total: {{total}}*"
     }
 }

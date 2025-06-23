@@ -112,7 +112,24 @@ export default function PageVerifyWhatsApp() {
                         </Typography>
 
                         <m.div variants={varBounce().in}>
-                            <VerifyEmailIllustration sx={{ height: 160, my: { xs: 5, sm: 10 } }} />
+                            <VerifyEmailIllustration 
+                                sx={{ 
+                                    height: 200, 
+                                    width: '100%',
+                                    maxWidth: 300,
+                                    margin: '0 auto',
+                                    display: 'flex',
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    my: { xs: 5, sm: 10 },
+                                    '& img': {
+                                        width: '100%',
+                                        height: '100%',
+                                        objectFit: 'contain',
+                                        objectPosition: 'center'
+                                    }
+                                }} 
+                            />
                         </m.div>
                         <VerifyCodeForm />
                         {loading && (

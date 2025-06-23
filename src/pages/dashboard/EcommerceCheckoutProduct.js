@@ -321,8 +321,7 @@ export default function EcommerceCheckoutProduct() {
                             sx={{
                                 py: 1.5
                             }}
-                            style={{ m: 2, color: 'white', backgroundColor: '#820AD1' }}
-                        >Pagar com PIX</Button>
+                            >Pagar</Button>
                     </Box>
                 }
                 {isTeacher && <Box mx={2}>

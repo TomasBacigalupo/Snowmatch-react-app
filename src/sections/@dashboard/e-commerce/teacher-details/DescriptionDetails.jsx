@@ -7,15 +7,31 @@ import Button from '@mui/material/Button';
 import useLocales from 'src/hooks/useLocales';
 import Markdown from 'src/components/Markdown';
 
-const DescriptionDetails = ({ id }) => {
+const DescriptionDetails = ({ id, product }) => {
     const { translate } = useLocales();
     const [open, setOpen] = React.useState(false);
+
+    const getProductDescriptionShort = (id, product) => {
+        console.log(id, product)
+        if(id === 143 || id === 145 || id === 144){
+            return translate(`product.${id}.description`).slice(0, 200) + '...'
+        }
+        return product?.description?.slice(0, 200) + '...'
+    }
+
+    const getProductDescription = (id, product) => {
+        console.log(id, product)
+        if(id === 143 || id === 145 || id === 144){
+            return translate(`product.${id}.description`)
+        }
+        return product?.description
+    }
 
     return (
         <>
             <Grid container justifyContent={'center'} alignItems={'center'} onClick={() => setOpen(true)}>
                 <Grid item xs={12} p={3}>
-                    <Markdown children={`${translate(`product.${id}.description`).slice(0, 200)}...`} />
+                    <Markdown children={`${getProductDescriptionShort(id, product)}`} />
                     <Button onClick={() => setOpen(true)} sx={{
                         padding: '0px',
                         color: 'black',
@@ -52,7 +68,7 @@ const DescriptionDetails = ({ id }) => {
                         </Typography>
                     </Grid>
                     <Grid item xs={12} p={2}>
-                        <Markdown children={translate(`product.${id}.description`)} />
+                        <Markdown children={getProductDescription(id, product)} />
                     </Grid>
                 </Grid>
             </Drawer>

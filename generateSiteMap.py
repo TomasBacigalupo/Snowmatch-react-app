@@ -4,17 +4,20 @@ from datetime import datetime
 
 # Listas de entrada
 resorts = [
-    "cerro-catedral", "rio-negro", "bariloche", "san-carlos-de-bariloche", "catedral",
-    "patagonia", "patagonia-argentina", "la-patagonia", "argentina", "sur", "el-sur",
-    "norte", "el-norte", "sur-de-argentina", "norte-de-argentina", "el-norte-de-argentina",
-    "chapelco", "cerro-chapelco", "san-martin-de-los-andes", "neuquen", "villa-la-angostura",
-    "bayo", "cerro-bayo", "el-bayo", "villa", "la-villa", "laderas", "perito-moreno",
+    "bariloche",
+    "lago-hermoso",
+    "cerro-bayo",
+    "cerro-chapelco",
+    "cerro-bayo",
+    "laderas", "perito-moreno",
     "laderas-perito-moreno", "bolson", "el-bolson", "las-leñas", "mendoza", "san-rafael",
-    "castor", "tierra-del-fuego", "ushuaia", "lago-hermoso", "hermoso", "lago-hermoso-ski", "buenos-aires"
+    "castor", 
+    "buenos-aires",
+    "portillo",
 ]
+
 disciplines = [
-    "ski", "esqui", "snow", "snowboard", "sky", "eski", "esqui-y-snowboard",
-    "esquí-y-snowboard", "esqui-y-snow", "ski-y-snow"
+    "ski", "snow", "snowboard",
 ]
 types = [
     "grupales", "privadas", "niños", "adultos", "amigos", "familias", "estudiantes",
@@ -113,7 +116,8 @@ blog_urls = [
     "/noticias/todo-lo-que-necesitas-saber-antes-de-tu-clase-de-esqui-con-snowmatch-2",
     "/noticias/que-es-la-posicion-dinamica-de-equilibrio-y-por-que-deberias-incorporarla-al-esquiar",
     "/escuela-de-esqui-y-snowboard",
-    "/escola-de-esqui-e-snowboard"
+    "/escola-de-esqui-e-snowboard",
+    "/heliski"
 ]
 
 # Configuración del sitemap
@@ -196,6 +200,7 @@ for teacher_url in teacher_urls:
     ET.SubElement(url, "changefreq").text = "weekly"
     ET.SubElement(url, "priority").text = "0.5"
 
+
 # Generar URLs para blog
 for blog_url in blog_urls:
     url = ET.SubElement(urlset, "url")
@@ -208,6 +213,14 @@ for blog_url in blog_urls:
 for blog_url in blog_urls:
     url = ET.SubElement(urlset, "url")
     ET.SubElement(url, "loc").text = f"{base_url}/pt{blog_url}"
+    ET.SubElement(url, "lastmod").text = today
+    ET.SubElement(url, "changefreq").text = "weekly"
+    ET.SubElement(url, "priority").text = "0.7"
+
+# Generar URLs en ingles para blog
+for blog_url in blog_urls:
+    url = ET.SubElement(urlset, "url")
+    ET.SubElement(url, "loc").text = f"{base_url}/en{blog_url}"
     ET.SubElement(url, "lastmod").text = today
     ET.SubElement(url, "changefreq").text = "weekly"
     ET.SubElement(url, "priority").text = "0.7"

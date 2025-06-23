@@ -234,6 +234,19 @@ export function getBusinessMembers() {
     };
 }
 
+export function getBusinessMembersByBusinessId(businessId) {
+    return async () => {
+        dispatch(slice.actions.startLoading());
+        try {
+            const response = await axios.get(`/api/business/${businessId}/members`);
+            const teachers = response.data;
+            dispatch(slice.actions.getMembersSuccess(teachers));
+        } catch (error) {
+            dispatch(slice.actions.hasError(error));
+        }
+    };
+}
+
 
 // ----------------------------------------------------------------------
 

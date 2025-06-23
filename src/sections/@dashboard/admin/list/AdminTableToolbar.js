@@ -13,9 +13,10 @@ const TEACHER_CHIPS = [
   { name: 'Gonzalo', value: 903 },
   { name: 'Sebas', value: 904 },
   { name: 'Tadeo', value: 905 },
-  { name: 'Lola', value: 8 },
+  { name: 'Lola', value: 977 },
   { name: 'Popi', value: 592 },
   { name: 'Maite', value: 653 },
+  { name: 'Oriana', value: 974 },
 ];
 
 AdminTableToolbar.propTypes = {
@@ -49,7 +50,16 @@ export default function AdminTableToolbar({
   onFilterTeacherId,
   onFilterStudentId,
   optionsRole,
-  bookings = false
+  bookings = false,
+  showRole = true,
+  showLevel = true,
+  showMountain = true,
+  showTeacher = true,
+  showName = true,
+  showMonth = true,
+  showTeacherId = true,
+  showStudentId = true,
+  showSearchAdmin = true
 }) {
   return (
     <Stack spacing={2}>
@@ -68,7 +78,7 @@ export default function AdminTableToolbar({
           }
         }}
       >
-        {!bookings && (
+        {!bookings && showRole && (
           <>
             <TextField
               fullWidth
@@ -138,7 +148,23 @@ export default function AdminTableToolbar({
           </>
         )}
 
-        {!bookings && (
+        {!bookings && showName && (
+          <TextField
+            fullWidth 
+            value={filterName}
+            onChange={(event) => onFilterName(event.target.value)}
+            placeholder="Search Admin..."
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <Iconify icon={'eva:search-fill'} sx={{ color: 'text.disabled', width: 20, height: 20 }} />
+                </InputAdornment>
+              ),
+            }}
+          />
+        )}
+
+        {!bookings && showSearchAdmin && (
           <TextField
             fullWidth
             value={filterName}
@@ -154,7 +180,7 @@ export default function AdminTableToolbar({
           />
         )}
 
-        <TextField
+        {showMonth && <TextField
           fullWidth
           select
           label="Month"
@@ -191,25 +217,25 @@ export default function AdminTableToolbar({
               {option.label}
             </MenuItem>
           ))}
-        </TextField>
+        </TextField>}
 
-        <TextField
+        {showTeacherId && <TextField
           fullWidth
           label="Teacher ID"
           value={filterTeacherId}
           onChange={onFilterTeacherId}
           type="text"
           sx={{ maxWidth: { sm: 240 } }}
-        />
+        />}
 
-        <TextField
+        {showStudentId && <TextField
           fullWidth
           label="Student ID"
           value={filterStudentId}
           onChange={onFilterStudentId}
           type="text"
           sx={{ maxWidth: { sm: 240 } }}
-        />
+        />}
       </Stack>
 
       {bookings && (

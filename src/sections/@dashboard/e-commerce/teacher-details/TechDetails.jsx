@@ -4,12 +4,19 @@ import { Grid, IconButton, Box } from '@mui/material';
 import Iconify from 'src/components/Iconify';
 import { useTranslation } from 'react-i18next';
 
-const TechDetails = ({ id }) => {
+const TechDetails = ({ id, product }) => {
     const { t } = useTranslation();
+
+    const getSkiLevel = (id, product ) => {
+        if(id === 143 || id === 144 || id === 145){
+            return t(`product.${id}.skiLevel`);
+        }
+        return t(`skiLevel.${product?.studentLevel}`);
+    }
     const iconData = [
-        { icon: 'mdi:ski', label: t(`product.skiLevel`), description: t(`product.${id}.skiLevel`) },
-        { icon: 'mdi:account-group', label: t(`product.totalStudents`), description: t(`product.${id}.totalStudents`) },
-        { icon: 'mdi:map-marker', label: t(`product.meetingPoint`), description: t(`product.${id}.meetingPoint`) },
+        { icon: 'mdi:ski', label: t(`product.skiLevel`), description: getSkiLevel(id, product ) },
+        { icon: 'mdi:account-group', label: t(`product.totalStudents`), description: t(`totalStudents`) },
+        { icon: 'mdi:map-marker', label: t(`product.meetingPoint`), description: t(`meetingPoint.${product?.resort}`) },
     ];
 
     return (

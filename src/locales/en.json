@@ -52,6 +52,9 @@
     }
   },
   "landingPRO": {
+    "title": "Lessons of {{discipline}} {{type}} in {{resort}} - Online Booking | SnowMatch",
+    "description": "Certified instructors, private and group classes in {{resort}}. Book online and avoid queues!",
+    "keywords": "lessons of {{discipline}} {{type}} in {{resort}}, certified instructors, private classes, group classes, online booking",
     "heroTitle0": "Are you an instructor?",
     "heroTitle1": "Take your job to",
     "heroTitle2": "the next level with",
@@ -73,7 +76,8 @@
     "start_date": "Start date",
     "end_date": "End date",
     "search": "Search",
-    "slogan": "Avoid queues and enjoy the mountain"
+    "slogan": "Avoid queues and enjoy the mountain",
+    "principiantes": "Beginners"
   },
   "menu": {
     "general": "General",
@@ -352,9 +356,21 @@
   "completeOrder": {
     "order": "Your SnowMatch code is: ",
     "thanksMessage": "Match! Thanks for trusting in SnowMatch",
-    "info": "Your Pro will get in touch with you soon."
+    "info": "Your Pro will get in touch with you soon.",
+    "contactSchool": "Contact SnowMatch school to pay and confirm your reservation",
+    "contactTeacherAndPay": "Contact the instructor to pay and confirm your reservation",
+    "bookingSuccess": "Booking successful!",
+    "importantInformationSchool": "• Wear comfortable and warm clothing\n• Arrive 15 minutes before your class\n• The instructor will be waiting for you at the SnowMatch Point",
+    "importantInformationTeacher": "• The instructor will contact you in the next 24 hours\n• You can coordinate schedules and payment details\n• Make sure you have your ski equipment ready",
+    "bookings": "Booking",
+    "videoCorrection": "Video Correction",
+    "importantInformation": "Important Information"
   },
   "checkout": {
+    "payAndContact": "Pay and contact",
+    "bookAndContact": "Book and contact",
+    "book": "Book",
+    "pay": "Pay",
     "deal_with_pro": "Deal with PRO",
     "free": "Free",
     "morning": "Morning",
@@ -558,57 +574,51 @@
         "3": "Balance against the outside ski."
       }
     },
-        "CARVING": {
-            "title": "Carving Challenge",
-            "objective": "The objective of this exercise is to challenge your inclination while skiing, taking your skis to the maximum possible edge angle. Are you up for it?",
-            "do": {
-                "1": "When tilting onto your edges, keep your shins perfectly parallel.",
-                "2": "Think about tilting the inside ski first; the outside ski will follow.",
-                "3": "Balance on the outside ski to maintain stability."
-            },
-            "dont": {
-                "1": "Don't tilt only the outside ski; work with both edges.",
-                "2": "Don't neglect the inside ski; it's key for proper angulation.",
-                "3": "Don't lose pressure on the outside ski during the turn."
-            }
-        },
-        "BUMPS": {
-            "title": "Bumps Challenge",
-            "objective": "The objective of this exercise is to improve your control and flow on moguls (bumps), maintaining balance and a consistent line. Are you ready to surf the bumps?",
-            "do": {
-                "1": "Keep your knees flexible and absorb each bump with your legs.",
-                "2": "Always look ahead, not at your skis.",
-                "3": "Keep your torso stable and let your legs do the work."
-            },
-            "dont": {
-                "1": "Don't stiffen up; avoid locking your legs.",
-                "2": "Don't look down; you'll lose focus if you don't look ahead.",
-                "3": "Don't let your arms drop; keep them active for balance."
-            }
+    "CARVING": {
+      "title": "Carving Challenge",
+      "objective": "The objective of this exercise is to challenge your inclination while skiing, taking your skis to the maximum possible edge angle. Are you up for it?",
+      "do": {
+        "1": "When tilting onto your edges, keep your shins perfectly parallel.",
+        "2": "Think about tilting the inside ski first; the outside ski will follow.",
+        "3": "Balance on the outside ski to maintain stability."
+      },
+      "dont": {
+        "1": "Don't tilt only the outside ski; work with both edges.",
+        "2": "Don't neglect the inside ski; it's key for proper angulation.",
+        "3": "Don't lose pressure on the outside ski during the turn."
+      }
+    },
+    "BUMPS": {
+      "title": "Bumps Challenge",
+      "objective": "The objective of this exercise is to improve your control and flow on moguls (bumps), maintaining balance and a consistent line. Are you ready to surf the bumps?",
+      "do": {
+        "1": "Keep your knees flexible and absorb each bump with your legs.",
+        "2": "Always look ahead, not at your skis.",
+        "3": "Keep your torso stable and let your legs do the work."
+      },
+      "dont": {
+        "1": "Don't stiffen up; avoid locking your legs.",
+        "2": "Don't look down; you'll lose focus if you don't look ahead.",
+        "3": "Don't let your arms drop; keep them active for balance."
+      }
     },
     "GENERAL": {
-        "title": "Video Analysis",
-        "objective": "Upload a video of yourself skiing to receive a technical analysis of your performance. Make sure to choose a clip where your full body is visible, you are moving, the lighting is good, and there are no obstacles.",
-        "description": "Upload your video for professional analysis",
-        "fundamentals": "Get feedback on your skiing technique from our AI and professional instructors",
-        "do": {
-            "1": "Ski on varied terrain that includes flat sections, steeper pitches, and (if possible) some bumps.",
-            "2": "Focus on clean turns, maintaining dynamic balance and a smooth rhythm throughout your run.",
-            "3": "Have someone record you from a distance where your entire body and skis are always visible (ideally in landscape mode)."
-        },
-        "dont": {
-            "1": "Don't ski only on easy terrain; challenge yourself with variety to show your versatility.",
-            "2": "Don't record too close or with shaky movements; avoid zooming too much and losing sight of your full movement.",
-            "3": "Don't stop mid-run unless necessary; keep flowing continuously to demonstrate control and decision-making."
-        }
+      "title": "Video Analysis",
+      "objective": "Upload a video of yourself skiing to receive a technical analysis of your performance. Make sure to choose a clip where your full body is visible, you are moving, the lighting is good, and there are no obstacles.",
+      "description": "Upload your video for professional analysis",
+      "fundamentals": "Get feedback on your skiing technique from our AI and professional instructors",
+      "do": {
+        "1": "Ski on varied terrain that includes flat sections, steeper pitches, and (if possible) some bumps.",
+        "2": "Focus on clean turns, maintaining dynamic balance and a smooth rhythm throughout your run.",
+        "3": "Have someone record you from a distance where your entire body and skis are always visible (ideally in landscape mode)."
       },
-    
-      "aiCorrection": "SnowMatch AI Corrigirá tu video"
-      
-    ,
-
-
-  
+      "dont": {
+        "1": "Don't ski only on easy terrain; challenge yourself with variety to show your versatility.",
+        "2": "Don't record too close or with shaky movements; avoid zooming too much and losing sight of your full movement.",
+        "3": "Don't stop mid-run unless necessary; keep flowing continuously to demonstrate control and decision-making."
+      }
+    },
+    "aiCorrection": "SnowMatch AI Corrigirá tu video",
     "GENERAL_UPLOAD": {
       "title": "Video Analysis",
       "description": "Upload your video for professional analysis",
@@ -658,7 +668,7 @@
     },
     "actions": {
       "get_first_correction": "Get my first video correction",
-      "get_procheck": "Get ProCheck for Latest Video", 
+      "get_procheck": "Get ProCheck for Latest Video",
       "upload_new": "Upload New Video",
       "buy_credits": "Buy ProCheck Credits"
     }
@@ -690,7 +700,7 @@
     "match": "Match",
     "lessons": "Lessons",
     "maps": "Maps",
-    "profile":"Profile"
+    "profile": "Profile"
   },
   "progress": {
     "yourSkiProgress": "Your Ski Progress",
@@ -805,5 +815,107 @@
       "commentRequired": "Leave a comment",
       "scoreRequired": "Rate the video"
     }
+  },
+  "heliski": {
+    "title1": "HELISKI",
+    "title2": "Helicopter Ski Experience",
+    "subtitle1": "Chart your route with IBEX HELISKI",
+    "subtitle2": "Over 10 years flying in Patagonia",
+    "subtitle3": "Experts in mountain helicopter adventures",
+    "button": "Book now",
+    "description": "Heliski in Bariloche",
+    "keywords": "heliski, Bariloche, ski, snowboard, tips, advice, lessons, instructors, technique, videos, SnowMatch",
+    "totalDays": "Total days",
+    "totalRiders": "Total riders",
+    "askToBook": "Request your booking",
+    "send": "Send",
+    "planning": "Planning",
+    "planningDescription": "Every Heliski day starts with a detailed analysis of the weather and snow conditions in the area, carried out by our specialists.",
+    "safeAndCrew": "Safety & Team",
+    "safeAndCrewDescription": "At the beginning of the activity, all participants receive a full safety briefing, including protocols and the day's plan.",
+    "premiumService": "Premium Service",
+    "premiumServiceDescription": "Private lodge with food and open bar, led by a private chef. Enjoy luxury and comfort after an epic day in the mountains.",
+    "bookNow": "Book now",
+    "faqs": {
+      "title": "Your questions answered",
+      "1": {
+        "q": "If I go with my group of friends, will we ski together all day?",
+        "a": "Groups larger than 4 people are usually divided by skill level to ensure the best experience for everyone. If your levels are similar, you'll ski together."
+      },
+      "2": {
+        "q": "When’s the best time of the season to go skiing?",
+        "a": "Each area of the Andes peaks at different times. That’s why we adjust our operations based on the conditions. Check our availability calendar to find the best dates."
+      },
+      "3": {
+        "q": "How many runs do we do per group?",
+        "a": "Each program varies based on conditions and group pace. In our experience, we've never ended a Heliski day without our clients feeling thrilled and satisfied."
+      },
+      "4": {
+        "q": "What skiing level is required for heliskiing?",
+        "a": "We recommend at least a strong intermediate level to fully enjoy the experience. That said, heliskiing isn’t necessarily extreme or difficult. Most of our clients are families or groups of friends, and we tailor the adventure to each person’s level."
+      },
+      "5": {
+        "q": "What kind of clothing should I bring?",
+        "a": "Dress like you would for a ski resort — no need to bring a backpack. We provide each client with a Black Diamond Jetforce Airbag pack that includes avalanche safety gear. Please note: no loose clothing is allowed inside the helicopter."
+      },
+      "6": {
+        "q": "What if we can’t fly during my stay?",
+        "a": "IBEX HELISKI allows you to reschedule your Heliski day at no extra cost at any time during the 2025/2026 season. If you prefer, we offer an 80% refund."
+      }
+    },
+    "locations": {
+      "title": "Take-off Locations",
+      "catedral": {
+        "title": "Heliski in Bariloche",
+        "description": "Cerro Catedral is a ski resort in Argentina. It's the largest in the country and the most visited by tourists.",
+        "price": "From USD 1,150 per person"
+      },
+      "chapelco": {
+        "title": "Heliski in Chapelco",
+        "description": "Cerro Catedral is a ski resort in Argentina. It's the largest in the country and the most visited by tourists.",
+        "price": "From USD 1,150 per person"
+      },
+      "cholila": {
+        "title": "Heliski in Cholila",
+        "description": "Cholila is a ski resort in Argentina. It's the largest in the country and the most visited by tourists.",
+        "price": "From USD 1,150 per person"
+      }
+    },
+    "info": {
+      "title": "3,000 Hectares of Pure Adventure",
+      "description": "All our programs are limited to a maximum of 8 skiers, ensuring a unique and personalized experience."
+    },
+    "fees": {
+      "title": "Estimated Prices",
+      "week": {
+        "title": "All-Inclusive Heliski Week",
+        "3riders": "Up to 3 people: USD 35,900",
+        "8riders": "Up to 8 people: USD 68,900"
+      },
+      "twoDays": {
+        "title": "2 Days of Heliski",
+        "3riders": "Up to 3 people: USD 10,100",
+        "8riders": "Up to 8 people: USD 15,200"
+      },
+      "singleDay": {
+        "title": "One Shot",
+        "3riders": "Up to 3 people: USD 7,500",
+        "8riders": "Up to 8 people: USD 9,200"
+      }
+    },
+    "readyToBook": {
+      "title": "Ready for your next adventure?",
+      "description": "Book your Heliski day and enjoy a once-in-a-lifetime experience in Patagonia with IBEX HELISKI.",
+      "button": "Book now"
+    },
+    "meta": {
+      "title": "Heliski in Bariloche Patagonia | SnowMatch by IBEX HELISKI",
+      "description": "Heliski in Bariloche – your experience in Patagonia | SnowMatch by IBEX HELISKI",
+      "keywords": "heliski, Bariloche, ski, snowboard, tips, advice, lessons, instructors, technique, videos, SnowMatch"
+    },
+    "requestToBook": "Hi! I’d like to book the heliski experience in {{mountain}} for {{riders}} people and {{days}} days"
+  },
+  "contactMessage": {
+    "private": "Private class - {{name}} - {{id}}\nClass days:{{events}}\nChildren: {{children}}\nAdults: {{adults}}\nComment: *{{message}}*\n*Total: {{total}}*"
   }
 }

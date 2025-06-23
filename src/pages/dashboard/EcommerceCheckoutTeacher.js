@@ -222,18 +222,74 @@ export default function EcommerceCheckoutTeacher() {
     return `${day}/${month}`;
   };
 
-  const onSubmitPix = () => {
+  const onSubmitPay = () => {
+
     if (userInfo.name && userInfo.phone) {
       dispatch(updateUserPhoneAndName(
         userInfo.phone,
         userInfo.name
       ));
     }
+
+    dispatch(createBooking(
+      teacher.id,
+      message,
+      children,
+      adults,
+      events,
+      bookingPrice,
+      teacher.resorts[0]
+    ));
+
     const phoneNumber = '+5492944263223';
-    const _message = encodeURIComponent(
-      `Aula particular - ${teacher.name} - ${teacher.id}\nDias de aula:${events.map(e => '\n- ' + formatDate(e.date) + ' - ' + translate(e.lessonTime)).toString()}\nCrianças: ${children}\nAdultos: ${adults}\nComentário: *${message}*\n${discountCode ? `Cupon: ${discountCode}` : ''}\n*Total: ${fCurrency(bookingPrice)}*`
-    );
-    const url = `https://api.whatsapp.com/send?phone=${phoneNumber}&text=${_message}`;
+    const _message = translate('contactMessage.private', {
+      name: teacher.name,
+      id: teacher.id,
+      events: events.map(e => '\n- ' + formatDate(e.date) + ' - ' + translate(e.lessonTime)).toString(),
+      children: children,
+      adults: adults,
+      message: message,
+      discountCode: discountCode,
+      total: fCurrency(bookingPrice)
+    });
+    const url = `https://api.whatsapp.com/send?phone=${phoneNumber}&text=${encodeURIComponent(_message)}`;
+
+    window.open(url, '_blank');
+  }
+
+  const onSubmitContact = () => {
+
+    if (userInfo.name && userInfo.phone) {
+      dispatch(updateUserPhoneAndName(
+        userInfo.phone,
+        userInfo.name
+      ));
+    }
+
+    dispatch(createBooking(
+      teacher.id,
+      message,
+      children,
+      adults,
+      events,
+      bookingPrice,
+      teacher.resorts[0]
+    ));
+
+    const phoneNumber = `+${teacher?.countryCode}${teacher?.cellphone}`;
+
+    const _message = translate('contactMessage.private', {
+      name: teacher.name,
+      id: teacher.id,
+      events: events.map(e => '\n- ' + formatDate(e.date) + ' - ' + translate(e.lessonTime)).toString(),
+      children: children,
+      adults: adults,
+      message: message,
+      discountCode: discountCode,
+      total: fCurrency(bookingPrice)
+    });
+
+    const url = `https://api.whatsapp.com/send?phone=${phoneNumber}&text=${encodeURIComponent(_message)}`;
 
     window.open(url, '_blank');
   }
@@ -264,7 +320,7 @@ export default function EcommerceCheckoutTeacher() {
           />
         </Box>
         <Box marginTop={2}>
-          {bookingPrice > 0 && preferenceId && !createBookingError &&
+          {bookingPrice === 0 && preferenceId && !createBookingError &&
             // <Payment
             //   initialization={initialization}
             //   customization={customization}
@@ -293,18 +349,31 @@ export default function EcommerceCheckoutTeacher() {
             </Box>
           }
         </Box>
-        {!isTeacher && <Box mx={2}>
+        {!isTeacher && bookingPrice != 0 && <Box mx={2}>
           <Button
-            onClick={onSubmitPix}
+            onClick={onSubmitPay}
             variant='contained'
             fullWidth
             sx={{
               py: 1.5
             }}
-            style={{ m: 2, color: 'white', backgroundColor: '#820AD1' }}
-          >Pagar com PIX</Button>
+            style={{ m: 2, color: 'white' }}
+          >{translate('checkout.book')}</Button>
         </Box>}
-        <CheckoutOrderComplete open={bookSuccess} />
+        {bookingPrice === 0 && teacher && <Box mx={2}>
+          <Button
+            onClick={onSubmitContact}
+            variant='contained'
+            fullWidth
+            sx={{
+              py: 1.5
+            }}
+            style={{ m: 2, color: 'white' }}
+          >
+            {translate('checkout.bookAndContact')}
+          </Button>
+        </Box>}
+        <CheckoutOrderComplete open={bookSuccess} teacher={teacher} />
         {bookingPrice < 0 &&
           <Box marginTop={2} marginX={1}>
             <Button onClick={onSubmit} variant='contained' fullWidth style={{ m: 2 }}> Book And Pay </Button>
@@ -326,14 +395,6 @@ export default function EcommerceCheckoutTeacher() {
             </Button>
           </Box>
         )}
-
-        <Box marginTop={2}>
-          {bookingPrice === 0 && teacher && <Button variant="contained" fullWidth onClick={() => {
-            window.open(`https://wa.me/${teacher?.countryCode}${teacher?.cellphone}`, '_blank');
-          }}>
-            Contactar al profesor
-          </Button>}
-        </Box>
         {isTeacher && <Box mx={2}>
           <TextField
             value={client}

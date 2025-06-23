@@ -22,7 +22,10 @@ export default function BookingSummary({ bookings }) {
             const start = new Date(event.start);
             const end = new Date(event.end);
             const hours = (end - start) / (1000 * 60 * 60);
-            return total + hours;
+            if (hours == 4){
+                return total + 3;
+            }
+            return total + Math.min(hours, 6);
         }, 0);
     };
 
@@ -33,6 +36,9 @@ export default function BookingSummary({ bookings }) {
                 const start = new Date(event.start);
                 const end = new Date(event.end);
                 const hours = (end - start) / (1000 * 60 * 60);
+                if (hours == 4){
+                    return total + 3;
+                }
                 return total + Math.min(hours, 6);
             }
             return total;

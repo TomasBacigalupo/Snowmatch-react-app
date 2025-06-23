@@ -206,7 +206,8 @@ export default function AdminConfirmForm({ isEdit, currentTeacher, documents }) 
         <Grid item xs={12} md={4}>
           <Card sx={{ py: 10, px: 3 }}>
             <Box sx={{ mb: 0 }}>
-              <Image alt={'certificate'} src={currentTeacher?.imageLink} ratio="1/1" />
+              {console.log(currentTeacher)}
+              <Image alt={'certificate'} src={`https://image.snowmatch.pro/profile/${currentTeacher?.imagekey}`} ratio="1/1" />
               <Typography variant="subtitle2" noWrap>
                 {`${currentTeacher?.name} ${currentTeacher?.lastname}`}
               </Typography>
@@ -274,8 +275,6 @@ export default function AdminConfirmForm({ isEdit, currentTeacher, documents }) 
 
               <RHFMultipleSelect name="disciplines" label={translate("general.form.disciplines")} list={["Ski", "SnowBoard"]} />
               <RHFMultipleSelect name="speaks" label={translate("general.form.languages")} list={["Español", "English", "Portugues", "Italiano"]} />
-              <RHFTextField name="zenriseClient" label="Zenrise Client" />
-              <RHFTextField name="zenriseSecret" label="Zenrise Secret" />
               <Stack sx={{ mt: 3 }}>
                 <RHFSwitch
                   name="authorized"

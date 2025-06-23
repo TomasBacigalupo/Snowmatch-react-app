@@ -62,6 +62,10 @@ const GUEST_MENU_OPTIONS = [
     linkTo: '/auth/register',
   },
   {
+    label: 'SignUpAsAGuest',
+    linkTo: '/auth/guest-register',
+  },
+  {
     label: 'LogIn',
     linkTo: '/auth/login',
   },
@@ -189,8 +193,6 @@ export default function AccountPopover() {
               onClick={handleClose}
               sx={{ py: 1.5 }}
             >
-              {option.label === 'SignUpAsAPRO' && <PersonAddIcon sx={{ mr: 2 }} />}
-              {option.label === 'LogIn' && <LoginIcon sx={{ mr: 2 }} />}
               {translate("accountPopover." + option.label)}
             </MenuItem>
           ))}
@@ -229,7 +231,6 @@ export default function AccountPopover() {
             handleClose();
           }}
         >
-          <HelpIcon sx={{ mr: 2 }} />
           {translate("accountPopover.help")}
         </MenuItem>
       )}

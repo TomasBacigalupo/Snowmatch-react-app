@@ -51,6 +51,9 @@
         }
     },
     "landingPRO": {
+        "title": "Aulas de {{discipline}} {{type}} em {{resort}} - Reserva Online | SnowMatch",
+        "description": "Instructores certificados, aulas privadas e grupais en {{resort}}. ¡Reserva online y evita colas!",
+        "keywords": "aulas de {{discipline}} {{type}} em {{resort}}, instructores certificados, aulas privadas, aulas grupais, reserva online",
         "heroTitle1": "Realçe",
         "heroTitle2": "seu trabalho com",
         "desc1": "Administre os seus clientes em um só lugar.",
@@ -86,6 +89,7 @@
         "guestAgree": "Os clientes do SnowMatch concordam: estes instrutores são altamente qualificados para {{discipline}} {{type}} em {{resort}}",
         "cerro-catedral": "Cerro Catedral",
         "cerro-chapelco": "Cerro Chapelco",
+        "portillo": "Portillo",
         "cerro-la-parva": "Cerro La Parva",
         "cerro-la-vasa": "Cerro La Vasa",
         "cerro-los-arboles": "Cerro Los Arboles",
@@ -245,6 +249,7 @@
         "backcountry": "backcountry",
         "backcountryPlural": "backcountry",
         "backcountryInstructor": "para backcountry",
+        "principiantes": "Principiantes",
         "faqs": {
             "title": "Preguntas Frecuentes sobre nuestras clases de {{discipline}} {{type}} en {{resort}}",
             "subtitle": "En esta sección respondemos las dudas más comunes sobre nuestras clases de {{discipline}} {{type}} en {{resort}}, desde cómo comenzar si sos principiante hasta cómo mejorar tu técnica si ya tenés experiencia. Nuestros instructores certificados te guían en cada paso, ya sea que estés buscando clases particulares, grupales o para niños. Si tenés más preguntas, no dudes en contactarnos.",
@@ -445,6 +450,10 @@
         "close": "Fechar"
     },
     "checkout": {
+        "payAndContact": "Pagar e contactar",
+        "bookAndContact": "Reservar e contactar",
+        "book": "Reservar",
+        "pay": "Pagar",
         "deal_with_pro": "Tratar com PRO",
         "free": "Grátis",
         "morning": "Manhã",
@@ -1188,5 +1197,107 @@
                 "a": "As aulas são ministradas no Cerro Catedral, no setor Base do Cerro. Recomendamos vir com roupa térmica, óculos de proteção, protetor solar e o equipamento de esqui (esquis, bastões e botas). Se não tiver equipamento, podemos ajudar com o aluguel."
             }
         }
+    },
+    "heliski": {
+        "title1": "HELISKI ",
+        "title2": "Experiência nas alturas",
+        "subtitle1": "Trace sua rota com a IBEX HELISKI",
+        "subtitle2": "+10 anos voando na Patagônia",
+        "subtitle3": "Mestres em montanhismo com helicóptero",
+        "button": "Reserve agora",
+        "description": "Heliski em Bariloche",
+        "keywords": "heliski, Bariloche, esqui, snowboard, dicas, conselhos, aulas, instrutores, técnica, vídeos, SnowMatch",
+        "totalDays": "Total de dias",
+        "totalRiders": "Total de pessoas",
+        "askToBook": "Solicite sua reserva",
+        "send": "Enviar",
+        "planning": "Planejamento",
+        "planningDescription": "Cada dia de Heliski começa com uma análise minuciosa das condições climáticas e da neve na área onde o programa será realizado, feita por nossos especialistas.",
+        "safeAndCrew": "Segurança e Equipe",
+        "safeAndCrewDescription": "Todos os participantes recebem no início da atividade um briefing completo sobre segurança, protocolos e plano do dia.",
+        "premiumService": "Serviço Premium",
+        "premiumServiceDescription": "Espaço privativo com comida e open bar, comandado por um chef particular. Viva o luxo e o conforto após um dia incrível nas montanhas.",
+        "bookNow": "Reserve agora",
+        "faqs": {
+            "title": "Suas dúvidas, respondidas",
+            "1": {
+                "q": "Se eu for com meu grupo de amigos, vamos esquiar juntos o dia todo?",
+                "a": "Grupos com mais de 4 pessoas geralmente são divididos de acordo com o nível de esqui para garantir a melhor experiência para todos. Se todos estiverem no mesmo nível, os percursos serão os mesmos para todo o grupo."
+            },
+            "2": {
+                "q": "Qual é a melhor época da temporada para esquiar?",
+                "a": "Cada local nos Andes tem seu melhor período em datas diferentes da temporada. Por isso, ajustamos nossas operações conforme as condições. Consulte nosso calendário de disponibilidade para encontrar as melhores datas!"
+            },
+            "3": {
+                "q": "Quantas descidas faremos por grupo?",
+                "a": "Cada programa varia conforme as condições e o ritmo do grupo. Pela nossa experiência, nunca terminamos um dia de Heliski sem que os clientes estejam plenamente satisfeitos."
+            },
+            "4": {
+                "q": "Qual nível de esqui preciso ter para fazer heliski?",
+                "a": "Recomendamos que os clientes tenham pelo menos um nível intermediário sólido para curtir a atividade com conforto. De qualquer forma, vale destacar que a atividade não é necessariamente difícil ou extrema. A maioria dos nossos clientes são famílias ou grupos de amigos, e nos adaptamos ao nível de cada um."
+            },
+            "5": {
+                "q": "Que tipo de roupa devo levar?",
+                "a": "Vista-se como se fosse para uma estação de esqui, não precisa trazer mochila. Fornecemos a todos os clientes uma mochila Black Diamond Jetforce Airbag, que inclui equipamentos de segurança para avalanche. Importante: não podemos deixar roupas soltas dentro do helicóptero."
+            },
+            "6": {
+                "q": "O que acontece se não conseguirmos voar durante minha estadia?",
+                "a": "A IBEX HELISKI oferece a possibilidade de remarcar a operação de Heliski sem custo adicional em qualquer momento da temporada 2025/2026. Se necessário, realizamos o reembolso de 80% do valor da operação."
+            }
+        },
+        "locations": {
+            "title": "Locais de decolagem",
+            "catedral": {
+                "title": "Heliski em Bariloche",
+                "description": "Cerro Catedral é uma estação de esqui na Argentina. É a maior do país e a mais visitada por turistas.",
+                "price": "A partir de US$ 1.150 por pessoa"
+            },
+            "chapelco": {
+                "price": "A partir de US$ 1.150 por pessoa",
+                "title": "Heliski em Chapelco",
+                "description": "Cerro Catedral é uma estação de esqui na Argentina. É a maior do país e a mais visitada por turistas."
+            },
+            "cholila": {
+                "price": "A partir de US$ 1.150 por pessoa",
+                "title": "Heliski em Cholila",
+                "description": "Cerro Catedral é uma estação de esqui na Argentina. É a maior do país e a mais visitada por turistas."
+            }
+        },
+        "info": {
+            "title": "3.000 Hectares de pura aventura",
+            "description": "Todos os nossos programas têm capacidade máxima de até 8 esquiadores. Isso garante uma experiência única e personalizada."
+        },
+        "fees": {
+            "title": "Preços estimados",
+            "week": {
+                "title": "Semana Heliski All Inclusive",
+                "3riders": "Até 3 participantes: US$ 35.900",
+                "8riders": "Até 8 participantes: US$ 68.900"
+            },
+            "twoDays": {
+                "title": "2 Dias de Heliski",
+                "3riders": "Até 3 participantes: US$ 10.100",
+                "8riders": "Até 8 participantes: US$ 15.200"
+            },
+            "singleDay": {
+                "title": "One Shot",
+                "3riders": "Até 3 participantes: US$ 7.500",
+                "8riders": "Até 8 participantes: US$ 9.200"
+            }
+        },
+        "readyToBook": {
+            "title": "Pronto para sua próxima aventura?",
+            "description": "Reserve seu dia de Heliski e aproveite uma experiência única na Patagônia com a IBEX HELISKI.",
+            "button": "Reservar agora"
+        },
+        "meta": {
+            "title": "Heliski em Bariloche Patagônia | SnowMatch by IBEX HELISKI",
+            "description": "Heliski em Bariloche: sua experiência na Patagônia | SnowMatch by IBEX HELISKI",
+            "keywords": "heliski, Bariloche, esqui, snowboard, dicas, conselhos, aulas, instrutores, técnica, vídeos, SnowMatch"
+        },
+        "requestToBook": "Olá! Quero reservar a experiência de heliski em {{mountain}} para {{riders}} pessoas e {{days}} dias"
+    },
+    "contactMessage": {
+        "private": "Aula particular - {{name}} - {{id}}\nDias de aula:{{events}}\nCrianças: {{children}}\nAdultos: {{adults}}\nComentário: *{{message}}*\n*Total: {{total}}*"
     }
 }

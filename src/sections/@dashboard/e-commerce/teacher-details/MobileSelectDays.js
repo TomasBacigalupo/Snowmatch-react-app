@@ -13,16 +13,22 @@ import { useSelector } from 'src/redux/store';
 import { fCurrency } from 'src/utils/formatNumber';
 import { Hidden, Dialog } from '@mui/material';
 import { useTheme } from '@mui/system';
+import useAuth from 'src/hooks/useAuth';
+import Login from 'src/pages/auth/Login';
 
 const MobileSelectDays = ({ product, teacher, isOpen, closeFather, isRange }) => {
     const { translate } = useLocales();
     const { filters } = useSelector((state) => state.teachers);
     const { from, to } = filters;
     const [open, setOpen] = React.useState(isOpen);
+    const [loginModalOpen, setLoginModalOpen] = useState(false);
+    const [pendingDates, setPendingDates] = useState(null);
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const { isAuthenticated } = useAuth();
     const isIndependant = teacher?.resorts?.includes('Cerro Catedral');
-    const handleSubmitSelectedDates = useCallback((dates) => {
+
+    const processSelectedDates = useCallback((dates) => {
         if (!product && !isRange && isIndependant) {
             dates.forEach((date) => {
                 let lessonTime = "MORNING"
@@ -113,8 +119,36 @@ const MobileSelectDays = ({ product, teacher, isOpen, closeFather, isRange }) =>
                 navigate('hire');
             })
         }
+    }, [product, isRange, isIndependant, teacher, dispatch, navigate]);
 
-    })
+    const handleSubmitSelectedDates = useCallback((dates) => {
+        if (!isAuthenticated) {
+            // Store the dates and show login modal
+            setPendingDates(dates);
+            setLoginModalOpen(true);
+            return;
+        }
+        
+        // User is authenticated, proceed with booking
+        processSelectedDates(dates);
+    }, [isAuthenticated, processSelectedDates]);
+
+    // Handle successful login
+    const handleLoginSuccess = useCallback(() => {
+        setLoginModalOpen(false);
+        if (pendingDates) {
+            processSelectedDates(pendingDates);
+            setPendingDates(null);
+        }
+    }, [pendingDates, processSelectedDates]);
+
+    // Listen for authentication changes
+    useEffect(() => {
+        if (isAuthenticated && pendingDates) {
+            handleLoginSuccess();
+        }
+    }, [isAuthenticated, pendingDates, handleLoginSuccess]);
+
     //calculate total days between to and from
     const totalDays = Math.floor((to - from) / (1000 * 60 * 60 * 24));
     const [borderColor, setBorderColor] = useState('black');
@@ -395,6 +429,26 @@ const MobileSelectDays = ({ product, teacher, isOpen, closeFather, isRange }) =>
                     </Grid>
                 </Dialog>
             </Hidden>
+
+            {/* Login Modal */}
+            <Drawer
+                anchor="bottom"
+                open={loginModalOpen}
+                onClose={() => setLoginModalOpen(false)}
+                PaperProps={{
+                    sx: {
+                        borderTopLeftRadius: 24,
+                        borderTopRightRadius: 24,
+                        height: '90vh',
+                        maxHeight: '90vh',
+                    },
+                }}
+            >
+                <Box sx={{ p: 2, display: 'flex', justifyContent: 'center' }}>
+                    <Box sx={{ width: 40, height: 6, borderRadius: 3, bgcolor: 'grey.300' }} />
+                </Box>
+                <Login fromModal={true} />
+            </Drawer>
         </>
 
     );

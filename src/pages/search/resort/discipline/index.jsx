@@ -9,6 +9,7 @@ import Page from 'src/components/Page';
 import { useParams } from 'react-router';
 import useLocales from 'src/hooks/useLocales';
 import LoadingScreen from 'src/components/LoadingScreen';
+import { Hidden } from '@mui/material';
 
 // Lazy loaded components
 const HomeStatsHero = lazy(() => import('src/sections/home/HomeStatsHero'));
@@ -56,12 +57,18 @@ const RESORT_OPTIONS = [
 
 const RootStyle = styled('div')(() => ({
   height: '100%',
+  minHeight: '100vh',
+  display: 'flex',
+  flexDirection: 'column'
 }));
 
 const ContentStyle = styled('div')(({ theme }) => ({
   overflow: 'hidden',
   position: 'relative',
   backgroundColor: theme.palette.background.default,
+  flex: 1,
+  display: 'flex',
+  flexDirection: 'column'
 }));
 
 // ----------------------------------------------------------------------
@@ -74,8 +81,8 @@ const getCanonicalSlug = (slug) => {
 
 export default function SearchPage() {
   const { resort: resortSlug, discipline, type } = useParams();
-  const [resort, setResort] = useState(resortSlug);
-  const { translate, onChangeLang } = useLocales();
+  const [resort, setResort] = useState(resortSlug || 'Cerro Catedral');
+  const { translate, onChangeLang, currentLang } = useLocales();
 
   const getClassType = (type) => {
     if (!type) return 'Clase';
@@ -258,18 +265,18 @@ export default function SearchPage() {
   return (
     <Page title={`Clases de ${discipline ? translate(`landingPRO.${discipline}`) : 'ski y snowboard'} en ${translate(`landingPRO.${resortSlug}`)} - SnowMatch`}>
       <Helmet>
-        <title>{`Clases de ${discipline ? translate(`landingPRO.${discipline}`) : 'ski y snowboard'} en ${translate(`landingPRO.${resortSlug}`)} - Reserva Online | SnowMatch`}</title>
-        <meta name="description" content={`Reserva clases de ${discipline ? translate(`landingPRO.${discipline}`) : 'ski y snowboard'} en ${resort}. Instructores certificados, clases privadas y grupales. ¡Reserva online y evita colas!`} />
-        <meta name="keywords" content={`clases de ${discipline ? translate(`landingPRO.${discipline}`) : 'ski y snowboard'}, ${resort}, instructores certificados, clases privadas, clases grupales, reserva online`} />
+        <title>{translate('landingPRO.title', { discipline: discipline ? translate(`landingPRO.${discipline}`) : 'ski y snowboard', type: type ? translate(`landingPRO.${type}`) : '', resort: translate(`landingPRO.${resortSlug}`) })}</title>
+        <meta name="keywords" content={translate('landingPRO.keywords', { discipline: discipline ? translate(`landingPRO.${discipline}`) : 'ski y snowboard', type: type ? translate(`landingPRO.${type}`) : '', resort: translate(`landingPRO.${resortSlug}`) })} />
 
         {/* Open Graph / Facebook */}
         <meta property="og:type" content="website" />
+        <meta name="apple-itunes-app" content="app-id=6741247513"/>
         <meta property="og:title" content={`Clases de ${discipline ? translate(`landingPRO.${discipline}`) : 'ski y snowboard'} en ${resort} - Reserva Online | SnowMatch`} />
-        <meta property="og:description" content={`Reserva clases de ${discipline ? translate(`landingPRO.${discipline}`) : 'ski y snowboard'} en ${resort}. Instructores certificados, clases privadas y grupales. ¡Reserva online y evita colas!`} />
+        <meta property="og:description" content={translate('landingPRO.description', { discipline: discipline ? translate(`landingPRO.${discipline}`) : 'ski y snowboard', type: type ? translate(`landingPRO.${type}`) : '', resort: translate(`landingPRO.${resortSlug}`) })} />
         <meta property="og:image" content="https://snowmatchimages.s3.amazonaws.com/profile/ClaseNiñoss.jpeg" />
-        <meta property="og:url" content={`https://snowmatch.pro/${resortSlug}${discipline ? `/${discipline}` : ''}${type ? '/' + type : ''}`} />
+        <meta property="og:url" content={`https://snowmatch.pro/${currentLang.value === 'es' ? '' : currentLang.value + '/'}${resortSlug}${discipline ? `/${discipline}` : ''}${type ? '/' + type : ''}`} />
         <meta property="og:site_name" content="SnowMatch" />
-        <meta property="og:locale" content="es_ES" />
+        <meta property="og:locale" content={currentLang.value} />
 
         {/* Twitter */}
         <meta name="twitter:card" content="summary_large_image" />
@@ -280,7 +287,7 @@ export default function SearchPage() {
         {/* Canonical URL */}
         <link
           rel="canonical"
-          href={`https://snowmatch.pro/${getCanonicalSlug(resortSlug)}${discipline ? '/' + discipline : ''}${type ? '/' + type : ''}`}
+          href={`https://snowmatch.pro/${currentLang.value === 'es' ? '' : currentLang.value + '/'}${getCanonicalSlug(resortSlug)}${discipline ? '/' + discipline : ''}${type ? '/' + type : ''}`}
         />
         {/* Schema.org markup */}
         <script type="application/ld+json">
@@ -434,7 +441,20 @@ export default function SearchPage() {
             initialResort={resort}
             initialDiscipline={discipline}
             initialType={type}
-          />
+          >
+            <Hidden smUp>
+              <img 
+                src='/logo/snowmatch.webp' 
+                style={{ 
+                  height: '200px', 
+                  width: '100%',
+                  objectFit: 'contain',
+                  aspectRatio: '16/9'
+                }} 
+                alt='SnowMatch' 
+              />
+            </Hidden>
+          </ResortDisciplineHero>
         </Suspense>
         <ContentStyle>
           <Suspense fallback={<LoadingScreen />}>

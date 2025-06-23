@@ -1,5 +1,5 @@
-import { Avatar, Box, Button, Card, CardContent, Stack, Switch, Typography } from "@mui/material";
-import { useState } from "react";
+import { Avatar, Box, Button, Card, CardContent, Stack, Switch, Typography, CircularProgress } from "@mui/material";
+import { useState, useRef, useEffect } from "react";
 import VideoPlayer from 'src/components/video-player';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
@@ -9,6 +9,91 @@ import AnalyticsIcon from '@mui/icons-material/Analytics';
 
 export default function FeedCard({ video, setSelectedVideo, onInstructorClick }) {
     const [analyticsEnabled, setAnalyticsEnabled] = useState(false);
+    const videoRef = useRef(null);
+    const [isVisible, setIsVisible] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
+    const [currentTime, setCurrentTime] = useState(0);
+
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                setIsVisible(entry.isIntersecting);
+            },
+            {
+                threshold: 0.5, // Video is considered visible when 50% is in viewport
+                rootMargin: '0px'
+            }
+        );
+
+        if (videoRef.current) {
+            observer.observe(videoRef.current);
+        }
+
+        return () => {
+            if (videoRef.current) {
+                observer.unobserve(videoRef.current);
+            }
+        };
+    }, []);
+
+    useEffect(() => {
+        if (videoRef.current) {
+            if (isVisible) {
+                videoRef.current.play().catch(console.error);
+            } else {
+                videoRef.current.pause();
+            }
+        }
+    }, [isVisible]);
+
+    // Handle analytics mode change with smooth transition
+    useEffect(() => {
+        if (videoRef.current) {
+            // Store current time before changing source
+            setCurrentTime(videoRef.current.currentTime);
+            
+            // Pause current video
+            videoRef.current.pause();
+            
+            // Show loading briefly
+            setIsLoading(true);
+            
+            // Small delay to ensure smooth transition
+            setTimeout(() => {
+                if (videoRef.current) {
+                    // Set the new source
+                    videoRef.current.src = analyticsEnabled 
+                        ? `${process.env.REACT_APP_VIDEO_ANALIZED_BUCKET_URL}/${video.videoUrl}.mp4`
+                        : `${process.env.REACT_APP_VIDEO_BUCKET_URL}/${video.videoUrl}`;
+                    
+                    // Load the new video
+                    videoRef.current.load();
+                }
+            }, 100);
+        }
+    }, [analyticsEnabled, video.videoUrl]);
+
+    const handleVideoLoad = () => {
+        setIsLoading(false);
+    };
+
+    const handleVideoError = () => {
+        setIsLoading(false);
+    };
+
+    const handleCanPlay = () => {
+        if (videoRef.current) {
+            // Resume from the same time position
+            videoRef.current.currentTime = currentTime;
+            
+            // If video was visible, start playing
+            if (isVisible) {
+                videoRef.current.play().catch(console.error);
+            }
+        }
+        setIsLoading(false);
+    };
+
     const getCommentScores = (comments) => {
         if (!comments?.length) return { aiScore: null, humanScore: null };
     
@@ -73,7 +158,26 @@ export default function FeedCard({ video, setSelectedVideo, onInstructorClick })
             </Stack>
 
             <Box sx={{ position: 'relative' }}>
+              {isLoading && (
+                <Box
+                  sx={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    backgroundColor: 'rgba(0, 0, 0, 0.05)',
+                    zIndex: 1,
+                  }}
+                >
+                  <CircularProgress size={60} />
+                </Box>
+              )}
               <video
+                ref={videoRef}
                 src={analyticsEnabled 
                   ? `${process.env.REACT_APP_VIDEO_ANALIZED_BUCKET_URL}/${video.videoUrl}.mp4`
                   : `${process.env.REACT_APP_VIDEO_BUCKET_URL}/${video.videoUrl}`
@@ -86,11 +190,13 @@ export default function FeedCard({ video, setSelectedVideo, onInstructorClick })
                   WebkitPlaysInline: true,
                   playsInline: true
                 }}
-                autoPlay
                 muted
                 loop
                 playsInline
                 defaultMuted
+                onLoadedData={handleVideoLoad}
+                onError={handleVideoError}
+                onCanPlay={handleCanPlay}
                 onClick={(e) => {
                   const video = e.target;
                   if (video.webkitEnterFullscreen) {

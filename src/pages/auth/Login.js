@@ -16,6 +16,7 @@ import Page from '../../components/Page';
 import Logo from '../../components/Logo';
 // sections
 import { LoginForm } from '../../sections/auth/login';
+import { RegisterStudentForm } from '../../sections/auth/register';
 import useLocales from 'src/hooks/useLocales';
 import AppleLoginButton from 'src/sections/auth/AppleLoginButton';
 import GoogleLoginButton from 'src/sections/auth/GoogleLoginButton';
@@ -79,6 +80,19 @@ export default function Login({fromModal = false}) {
   const isIOS = Capacitor.getPlatform() === 'ios';
 
   const [showForm, setShowForm] = useState(false);
+  const [showRegisterForm, setShowRegisterForm] = useState(false);
+
+  const handleShowRegisterForm = () => {
+    if (fromModal) {
+      setShowRegisterForm(true);
+    } else {
+      navigate(PATH_AUTH.registerStudent);
+    }
+  };
+
+  const handleBackToLogin = () => {
+    setShowRegisterForm(false);
+  };
 
   return (
     <Page title="Login">
@@ -127,50 +141,81 @@ export default function Login({fromModal = false}) {
             <Stack direction="row" alignItems="center" sx={{ mb: 5 }}>
               <Box sx={{ flexGrow: 1 }}>
                 <Typography textAlign='center' variant="h4" gutterBottom>
-                  {translate('auth.signIn')}
+                  {showRegisterForm ? translate('auth.registerTitle') : translate('auth.signIn')}
                 </Typography>
+                {showRegisterForm && (
+                  <Typography textAlign='center' sx={{ color: 'text.secondary' }}>
+                    {translate('auth.registerDescription')}
+                  </Typography>
+                )}
               </Box>
             </Stack>
-            {!showForm ? (
-              <Stack spacing={2} alignItems="center">
-                {isIOS && <AppleLoginButton />}
-                {isIOS && <GoogleLoginButton />}
-                <Button
-                  variant="outlined"
-                  onClick={() => setShowForm(true)}
-                  fullWidth
-                  startIcon={<EmailIcon />}
-                  sx={{
-                    maxWidth: 300,
-                    borderRadius: '50px',
-                    color: theme => theme.palette.common.black,
-                    borderColor: theme => theme.palette.common.black,
-                    '&:hover': {
-                      backgroundColor: theme => theme.palette.common.black,
-                      color: theme => theme.palette.common.white,
-                      borderColor: theme => theme.palette.common.black,
-                    }
-                  }}
-                >
-                  {translate('auth.continueWithEmail')}
-                </Button>
-              </Stack>
-            ) : (
+            
+            {showRegisterForm ? (
               <>
-                <LoginForm />
-                <Box mt={2}>
-                  <Stack spacing={2}>
-                    {isIOS && <AppleLoginButton />}
-                    {isIOS && <GoogleLoginButton />}
-                  </Stack>
-                </Box>
-
+                <RegisterStudentForm />
+                <Typography variant="body2" align="center" sx={{ color: 'text.secondary', mt: 3 }}>
+                  {translate('auth.registrationMessage')}&nbsp;
+                  <Link underline="always" color="text.primary" href="https://github.com/lpagn/snowmatchfiles/blob/main/Snow%20Match%20Terms%20of%20Service.pdf">
+                    {translate('auth.terms')}&nbsp;
+                  </Link>
+                  {translate('auth.and')}&nbsp;
+                  <Link underline="always" color="text.primary" href="https://github.com/lpagn/snowmatchfiles/blob/main/Snow%20Match%20Privacy%20Policy.pdf">
+                    {translate('auth.privacy')}
+                  </Link>
+                  .
+                </Typography>
                 <Typography variant="body2" align="center" sx={{ mt: 3 }}>
-                  {translate('auth.dontHaveAccount')}{' '}
-                  <Link variant="subtitle2" component={RouterLink} to={PATH_AUTH.registerStudent}>
-                    {translate('auth.getStarted')}
+                  {translate('auth.haveAccount')}{' '}
+                  <Link variant="subtitle2" component="button" onClick={handleBackToLogin} sx={{ background: 'none', border: 'none', cursor: 'pointer', color: 'primary.main' }}>
+                    {translate('auth.login')}
                   </Link>
                 </Typography>
+              </>
+            ) : (
+              <>
+                {!showForm ? (
+                  <Stack spacing={2} alignItems="center">
+                    {isIOS && <AppleLoginButton />}
+                    {isIOS && <GoogleLoginButton />}
+                    <Button
+                      variant="outlined"
+                      onClick={() => setShowForm(true)}
+                      fullWidth
+                      startIcon={<EmailIcon />}
+                      sx={{
+                        maxWidth: 300,
+                        borderRadius: '50px',
+                        color: theme => theme.palette.common.black,
+                        borderColor: theme => theme.palette.common.black,
+                        '&:hover': {
+                          backgroundColor: theme => theme.palette.common.black,
+                          color: theme => theme.palette.common.white,
+                          borderColor: theme => theme.palette.common.black,
+                        }
+                      }}
+                    >
+                      {translate('auth.continueWithEmail')}
+                    </Button>
+                  </Stack>
+                ) : (
+                  <>
+                    <LoginForm />
+                    <Box mt={2}>
+                      <Stack spacing={2}>
+                        {isIOS && <AppleLoginButton />}
+                        {isIOS && <GoogleLoginButton />}
+                      </Stack>
+                    </Box>
+
+                    <Typography variant="body2" align="center" sx={{ mt: 3 }}>
+                      {translate('auth.dontHaveAccount')}{' '}
+                      <Link variant="subtitle2" component="button" onClick={handleShowRegisterForm} sx={{ background: 'none', border: 'none', cursor: 'pointer', color: 'primary.main' }}>
+                        {translate('auth.getStarted')}
+                      </Link>
+                    </Typography>
+                  </>
+                )}
               </>
             )}
           </ContentStyle>

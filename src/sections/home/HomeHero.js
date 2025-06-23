@@ -140,7 +140,16 @@ export default function HomeHero() {
           <ContentStyle>
             <Grid container spacing={2}>
               <Hidden smUp>
-                <img src='/logo/snowmatch.png' sx={{ height: '200px', width: '100%' }} alt='SnowMatch' />
+                <img 
+                  src='/logo/snowmatch.png' 
+                  style={{ 
+                    height: '200px', 
+                    width: '100%',
+                    objectFit: 'contain',
+                    aspectRatio: '16/9'
+                  }} 
+                  alt='SnowMatch' 
+                />
               </Hidden>
               <Grid item xs={12} md={6.5}>
                 <HomeFilterTeachers />

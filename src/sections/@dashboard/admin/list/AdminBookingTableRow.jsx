@@ -14,15 +14,18 @@ import BookingDetailsDrawer from './BookingDetailsDrawer';
 AdminBookingTableRow.propTypes = {
     row: PropTypes.object,
     onEditRow: PropTypes.func,
+    onConfirmRow: PropTypes.func,
+    onDeclineRow: PropTypes.func,
     onWapp: PropTypes.func,
     onEvents: PropTypes.func,
+    onDeleteRow: PropTypes.func,
 };
 
-export default function AdminBookingTableRow({ row, onEditRow, onConfirmRow, onDeclineRow, onWapp, onEvents }) {
+export default function AdminBookingTableRow({ row, onEditRow, onConfirmRow, onDeclineRow, onWapp, onEvents, onDeleteRow }) {
     const theme = useTheme();
     const [openDrawer, setOpenDrawer] = useState(false);
 
-    const { imageLink, userComment, state, resort, adults, children, eventList, id, price, internalComment, includesLunch, includesEquipment, paymentStatus } = row;
+    const { imageLink, userComment, state, resort, adults, children, eventList, id, price, internalComment, includesLunch, includesEquipments, paymentStatus } = row;
     const { name, lastname, id: teacherId, role, level } = row.teacher;
     const { name: studentName, lastname: studentLastname, id: studentId } = row.student;
 
@@ -144,7 +147,7 @@ export default function AdminBookingTableRow({ row, onEditRow, onConfirmRow, onD
                 <TableCell align="left">
                     <Typography variant="body2">
                         {includesLunch ? '✓ Almuerzo' : '✗ Sin almuerzo'}
-                        {includesEquipment ? ' ✓ Equipo' : ' ✗ Sin equipo'}
+                        {includesEquipments ? ' ✓ Equipo' : ' ✗ Sin equipo'}
                     </Typography>
                 </TableCell>
 
@@ -198,7 +201,7 @@ export default function AdminBookingTableRow({ row, onEditRow, onConfirmRow, onD
                                 </MenuItem>
                                 <MenuItem
                                     onClick={() => {
-                                        onDeclineRow();
+                                        onDeleteRow();
                                         handleCloseMenu();
                                     }}
                                     sx={{ color: 'error.main' }}

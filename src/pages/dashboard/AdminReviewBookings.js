@@ -19,7 +19,10 @@ import {
   TablePagination,
   FormControlLabel,
   DialogTitle,
-  Hidden
+  Hidden,
+  DialogContent,
+  DialogActions,
+  Typography
 } from '@mui/material';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
@@ -39,7 +42,7 @@ import { TableEmptyRows, TableHeadCustom, TableNoData, TableSelectedActions } fr
 import { AdminTableToolbar, AdminTableRow } from '../../sections/@dashboard/admin/list';
 //cosas de fede
 import { useDispatch, useSelector } from '../../redux/store';
-import { getTeachers, openModal, closeModal, getBooking, getBookings, openEditBookingModal } from '../../redux/slices/admin'
+import { getTeachers, openModal, closeModal, getBooking, getBookings, openEditBookingModal, deleteBooking, openDeleteModal, closeDeleteModal } from '../../redux/slices/admin'
 import { DialogAnimate } from '../../components/animate';
 import DeclineForm from '../../sections/@dashboard/admin/DeclineForm';
 import AdminTableCard from 'src/sections/@dashboard/admin/list/AdminTableCard';
@@ -127,6 +130,15 @@ export default function AdminReviewBookings() {
     dispatch(closeModal());
   };
 
+  const handleDeleteCloseModal = () => {
+    dispatch(closeDeleteModal());
+  };
+
+  const handleConfirmDelete = () => {
+    dispatch(deleteBooking(selectedBookingId));
+    dispatch(closeDeleteModal());
+  };
+
   const handleFilterRole = (event) => {
     setFilterRole(event.target.value);
   };
@@ -187,7 +199,9 @@ export default function AdminReviewBookings() {
 
   const dispatch = useDispatch();
 
-  const { teachers: reduxTeachers, isOpenModal, isOpenEditBookingModal, selectedEmail, bookings } = useSelector((state) => { return state.admin });
+  const { teachers: reduxTeachers, isOpenModal, isOpenEditBookingModal, isOpenDeleteModal, selectedEmail, selectedBookingId, bookings } = useSelector((state) => { return state.admin });
+
+  console.log('Modal states:', { isOpenDeleteModal, selectedBookingId });
 
   const [reqPage, setReqPage] = useState(0);
 
@@ -216,8 +230,8 @@ export default function AdminReviewBookings() {
   }, [bookings]);
 
   useEffect(() => {
-    user && dispatch(getBookings(filterTeacherId, filterStudentId, filterMonth, page))
-  }, [page])
+    user && dispatch(getBookings(filterTeacherId, filterStudentId, filterMonth, page, rowsPerPage))
+  }, [page, rowsPerPage])
 
   useEffect(() => {
     if (reduxTeachers) {
@@ -230,6 +244,11 @@ export default function AdminReviewBookings() {
       setStudents(students);
     }
   }, [students]);
+
+  const handleDeleteRow = (id) => {
+    console.log('handleDeleteRow called with id:', id);
+    dispatch(openDeleteModal(id));
+  }
 
   return (
     <Page title="Admin Review: List">
@@ -331,6 +350,7 @@ export default function AdminReviewBookings() {
                         onDeclineRow={() => handleDeclineOpenModal(row.email)}
                         onWapp={() => { handleContactWapp(row.countryCode, row.cellphone, row.name) }}
                         onEvents={() => { navigate(PATH_DASHBOARD.admin.events(row.teacher.id)) }}
+                        onDeleteRow={() => handleDeleteRow(row.id)}
                       />))}
 
                     <TableEmptyRows height={denseHeight} emptyRows={0} />
@@ -352,7 +372,8 @@ export default function AdminReviewBookings() {
                   onDeclineRow={() => handleDeclineOpenModal(row.email)}
                   onWapp={() => { handleContactWapp(row.countryCode, row.cellphone, row.name) }}
                   onEvents={() => { navigate(PATH_DASHBOARD.admin.events(row.id)) }}
-                />))}
+                  onDeleteRow={() => handleDeleteRow(row.id)}
+                  />))}
 
             </Hidden>
 
@@ -360,7 +381,7 @@ export default function AdminReviewBookings() {
 
           <Box sx={{ position: 'relative' }}>
             <TablePagination
-              rowsPerPageOptions={[5, 10, 25]}
+              rowsPerPageOptions={[5, 10, 25, 50, 100, 200, 500, 1000, 2000, 5000, 10000, 20000, 50000, 100000]}
               component="div"
               count={-1}
               rowsPerPage={rowsPerPage}
@@ -389,6 +410,22 @@ export default function AdminReviewBookings() {
             email={selectedEmail}
             onCancel={handleDeclineCloseModal}
           ></DeclineForm>
+        </DialogAnimate>
+        <DialogAnimate open={isOpenDeleteModal} onClose={handleDeleteCloseModal}>
+          <DialogTitle>{'¿Estás seguro que quieres eliminar la reserva?'}</DialogTitle>
+          <DialogContent>
+            <Typography>
+              Esta reserva ni su información van a poder ser visibles nunca más
+            </Typography>
+          </DialogContent>
+          <DialogActions>
+            <Button variant="outlined" onClick={handleDeleteCloseModal}>
+              Cancelar
+            </Button>
+            <Button variant="contained" color="error" onClick={handleConfirmDelete}>
+              Eliminar
+            </Button>
+          </DialogActions>
         </DialogAnimate>
       </Container>
     </Page>

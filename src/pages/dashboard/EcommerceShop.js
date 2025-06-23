@@ -218,7 +218,7 @@ export default function EcommerceShop({ isGuest = false, teacherType = "school" 
 
 
         </Stack>
-        {teacherType === "independent" && <IndependentShop />}
+        {/* {teacherType === "independent" && <IndependentShop />} */}
         {/* {teacherType === "independent" && category === "premium" && <AirbnbFilters />} */}
         {!isDefault && (
           <Stack sx={{ mb: 3 }}>

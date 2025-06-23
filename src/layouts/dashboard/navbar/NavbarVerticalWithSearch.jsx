@@ -140,6 +140,7 @@ export default function NavbarVerticalWithSearch({ isOpenSidebar, onCloseSidebar
             icon: ICONS.user,
             children: [
               { title: 'review teachers', path: PATH_DASHBOARD.admin.review },
+              { title: 'review clients', path: PATH_DASHBOARD.admin.reviewClients },
               { title: 'review bookings', path: PATH_DASHBOARD.admin.bookings },
             ],
           }]})

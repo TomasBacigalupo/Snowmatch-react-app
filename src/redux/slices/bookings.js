@@ -51,6 +51,7 @@ const slice = createSlice({
         acceptBookingSuccess(state, action) {
             const bookinId = action.payload;
             state.pendingBookings = state.pendingBookings.filter((booking) => booking.id !== bookinId);
+            state.bookings = state.bookings.filter((booking) => booking.id !== bookinId);
             state.isLoading = false;
         },
 
@@ -432,14 +433,17 @@ export function setAccepted(eventId) {
     };
 }
  
-export function createBooking(teacherId, message, children, adults, events, totalPrice) {
+export function createBooking(teacherId, message, children, adults, events, totalPrice, resort) {
     return async () => {
         dispatch(slice.actions.startLoading());
         try {
             await axios.post(`/api/bookings`, {
                 teacherId: teacherId,
+                teacher:{
+                    id: teacherId,
+                },
                 userComment: message,
-                events: events.map(e => {
+                eventList: events.map(e => {
                     if (e.lessonTime === 'AFTERNOON') {
 
                         return {
@@ -465,8 +469,9 @@ export function createBooking(teacherId, message, children, adults, events, tota
                 }),
                 children: children,
                 adults: adults,
-                totalPrice: totalPrice,
-                payedReservation: totalPrice * 0.2,
+                price: totalPrice,
+                payedReservation: 0,
+                resort
             });
             dispatch(slice.actions.createBookingSuccess());
         } catch (error) {
@@ -523,8 +528,6 @@ export function createAdminBooking(teacherId, studentId, message, children, adul
         }
     };
 }
-
-
 
 
 export function bookingAndPay(teacherId, message, children, adults, events, totalPrice, formData) {

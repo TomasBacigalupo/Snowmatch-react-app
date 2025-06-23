@@ -17,8 +17,10 @@ const initialState = {
   teacher: null,
   isOpenModal: false,
   isOpenEditBookingModal: false,
+  isOpenDeleteModal: false,
   booking: null,
   selectedEmail: '',
+  selectedBookingId: null,
   documents: [],
 };
 
@@ -58,6 +60,16 @@ const slice = createSlice({
       state.bookings = action.payload;
     },
 
+    updateBookingSuccess(state, action) {
+      state.isLoading = false;
+      state.bookings = state.bookings.map(booking => booking.id === action.payload.id ? action.payload : booking);
+    },
+
+    deleteBookingSuccess(state, action) {
+      state.isLoading = false;
+      state.bookings = state.bookings.filter(booking => booking.id !== action.payload.id);
+    },
+
     getBookingsSuccess(state, action) {
       console.log(action.payload)
       state.isLoading = false;
@@ -74,10 +86,20 @@ const slice = createSlice({
       state.selectedBooking = action.payload;
     },
 
+    openDeleteModal(state, action) {
+      state.isOpenDeleteModal = true;
+      state.selectedBookingId = action.payload;
+    },
+
     // CLOSE MODAL
     closeModal(state) {
       state.isOpenModal = false;
       state.selectedEmail = null;
+    },
+
+    closeDeleteModal(state) {
+      state.isOpenDeleteModal = false;
+      state.selectedBookingId = null;
     },
   }
 });
@@ -88,7 +110,7 @@ export default slice.reducer;
 // Actions
 // export const {
 // } = slice.actions;
-export const { openModal, closeModal, getSelectedEmail, openEditBookingModal } = slice.actions;
+export const { openModal, closeModal, getSelectedEmail, openEditBookingModal, openDeleteModal, closeDeleteModal } = slice.actions;
 
 // ----------------------------------------------------------------------
 
@@ -116,7 +138,7 @@ export function getTeachersAdmin(name, page, filters, resort) {
   };
 }
 
-export function getBookings(teacherId, studentId, month, page) {
+export function getBookings(teacherId, studentId, month, page, size = 100000) {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
@@ -125,7 +147,7 @@ export function getBookings(teacherId, studentId, month, page) {
       if (teacherId) params.append('teacherId', teacherId);
       if (studentId) params.append('studentId', studentId);
       if (month) params.append('month', month);
-      params.append('size', 100000);
+      params.append('size', size);
 
       const response = await axios.get(`/api/admin/bookings/filter?${params.toString()}`);
       dispatch(slice.actions.getBookingsSuccess(response.data));
@@ -230,6 +252,18 @@ export function getBooking(bookingId) {
   };
 }
 
+export function deleteBooking(bookingId) {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.delete(`/api/admin/bookings/${bookingId}`);
+      dispatch(slice.actions.deleteBookingSuccess(response.data));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  }
+}
+
 export function createBlog(blogData) {
   console.log("pase", blogData)
   return async () => {
@@ -244,6 +278,51 @@ export function createBlog(blogData) {
           //dispatch(slice.actions.getBookingSuccess(bookings));
       } catch (error) {
         console.log(error)
+          dispatch(slice.actions.hasError(error));
+      }
+  }; 
+}
+
+export function editAdminBooking(bookingId, {
+  type,
+  teacherId,
+  studentId,
+  clientId,
+  price,
+  resort,
+  state,
+  userComment,
+  rateId,
+  children,
+  adults,
+  internalComment,
+  includesLaunch,
+  includesEquipments,
+  paymentStatus
+}) {
+  return async () => {
+      dispatch(slice.actions.startLoading());
+      try {
+          const response = await axios.put(`api/admin/bookings/${bookingId}`, {
+              id: bookingId,
+              type,
+              teacherId,
+              studentId,
+              clientId,
+              price,
+              resort,
+              state,
+              userComment,
+              rateId,
+              children,
+              adults,
+              internalComment,
+              includesLaunch,
+              includesEquipments,
+              paymentStatus
+          });
+          dispatch(slice.actions.updateBookingSuccess(response.data));
+      } catch (error) {
           dispatch(slice.actions.hasError(error));
       }
   };

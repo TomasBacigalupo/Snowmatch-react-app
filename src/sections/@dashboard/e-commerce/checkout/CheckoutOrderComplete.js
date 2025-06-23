@@ -1,7 +1,18 @@
 import { useNavigate } from 'react-router-dom';
 // @mui
 import { styled } from '@mui/material/styles';
-import { Box, Link, Button, Divider, Typography, Stack } from '@mui/material';
+import {
+  Box,
+  Button,
+  Typography,
+  Stack,
+  Card,
+  CardContent,
+  Chip,
+  Fade,
+  Alert,
+  Snackbar
+} from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../../../redux/store';
 import { resetCart } from '../../../../redux/slices/teachers';
@@ -31,53 +42,90 @@ const DialogStyle = styled(DialogAnimate)(({ theme }) => ({
 export default function CheckoutOrderComplete({ ...other }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const {translate} = useLocales();
+  const { translate } = useLocales();
 
-  const {paymentId} = useSelector(state => state.bookings)
+  const { paymentId, booking } = useSelector(state => state.bookings);
+  const { filters } = useSelector(state => state.teachers);
+
+  // Determinar si es Catedral o otro resort
+  const isCatedral = booking?.resort === 'Cerro Catedral' || filters?.resort === 'Cerro Catedral';
 
   const handleResetStep = () => {
     dispatch(resetCart());
     navigate(PATH_GUEST.protips);
   };
 
-  const downloadPDFStep = () => {
-    dispatch(resetCart());
-    
-  };
-
   return (
     <DialogStyle fullScreen {...other}>
       <Box sx={{ p: 4, maxWidth: 480, margin: 'auto' }}>
-        <Box sx={{ textAlign: 'center' }}>
-          <Typography variant="h4" paragraph>
-            {translate('completeOrder.thanksMessage')}
-          </Typography>
 
-          <OrderCompleteIllustration sx={{ height: 260, my: 10 }} />
+        {/* Header simple */}
+        <Fade in timeout={1000}>
+          <Box sx={{ textAlign: 'center', mb: 4 }}>
+            <OrderCompleteIllustration sx={{ height: 200, my: 4 }} />
 
-          <Typography align="left" paragraph>
-            {translate('completeOrder.order')} &nbsp;
-            <Link href="#">{paymentId}</Link>
-          </Typography>
+            <Typography variant="h4" sx={{ mb: 2, fontWeight: 'bold', color: 'primary.main' }}>
+              {translate('completeOrder.bookingSuccess')}
+            </Typography>
 
-          <Typography align="left" sx={{ color: 'text.secondary' }}>
-            {translate('completeOrder.info')}
-          </Typography>
-        </Box>
+            <Typography variant="h6" sx={{ color: 'text.secondary', mb: 3 }}>
+              {isCatedral
+                ? translate('completeOrder.contactSchool')
+                : translate('completeOrder.contactTeacherAndPay')
+              }
+            </Typography>
 
-        <Divider sx={{ my: 3 }} />
+            {/* Badge de estado para reservas no-Catedral */}
+            {!isCatedral && (
+              <Chip
+                label="Esperando confirmación"
+                color="warning"
+                icon={<Iconify icon="eva:clock-fill" />}
+                sx={{ mb: 2 }}
+              />
+            )}
+          </Box>
+        </Fade>
 
-        <Stack direction={{ xs: 'column-reverse', sm: 'row' }} justifyContent="space-between" spacing={2}>
-          <Button color="inherit" onClick={handleResetStep} startIcon={<Iconify icon={'eva:arrow-ios-back-fill'} />}>
-            Ver típs para mi clase
-          </Button>
-          {/* <Button
-            variant="contained"
-            startIcon={<Iconify icon={'ant-design:file-pdf-filled'} />}
-            onClick={handleResetStep}
+        {/* Información importante - La parte que te gustó */}
+        <Fade in timeout={1500}>
+          <Card sx={{ p: 3, backgroundColor: 'grey.50', mb: 4 }}>
+            <Typography variant="h6" sx={{ mb: 2, fontWeight: 'bold' }}>
+              💡 {translate('completeOrder.importantInformation')}
+            </Typography>
+            <Typography variant="body2" sx={{ mb: 2, lineHeight: 1.6 }}>
+              {isCatedral
+                ? translate('completeOrder.importantInformationSchool')
+                : translate('completeOrder.importantInformationTeacher')
+              }
+            </Typography>
+          </Card>
+        </Fade>
+
+        {/* Botones de acción */}
+        <Stack
+          direction={{ xs: 'column', sm: 'row' }}
+          justifyContent="space-between"
+          spacing={2}
+        >
+          
+          <Button
+            color="inherit"
+            onClick={() => navigate('/match/lessons')}
+            startIcon={<Iconify icon={'eva:arrow-ios-back-fill'} />}
+            variant="outlined"
+            size="large"
           >
-            {translate('checkout.download_pdf')}
-          </Button> */}
+            {translate('completeOrder.bookings')}
+          </Button>
+
+          <Button
+            variant="contained"
+            onClick={() => navigate('/')}
+            size="large"
+          >
+            {translate('completeOrder.videoCorrection')}
+          </Button>
         </Stack>
       </Box>
     </DialogStyle>

@@ -377,7 +377,7 @@ export default function CalendarForm({ event, range, onCancel, clients, members,
           }}
           renderOption={(props, student) => (
             <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-              <Avatar sx={{ marginRight: '10px' }}>{`${student?.name[0]}${student?.lastname[0]}`}</Avatar>
+              <Avatar sx={{ marginRight: '10px' }}>{`${student?.name[0]}${student?.lastname ? student?.lastname[0] : ''}`}</Avatar>
               {`${student?.name} ${student?.lastname} ${student.level}`}
             </Box>
           )}

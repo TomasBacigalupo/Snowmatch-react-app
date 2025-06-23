@@ -1,7 +1,7 @@
-import { Box, Typography, Skeleton, Drawer, IconButton, Button, Grid, Divider, Link, useMediaQuery } from '@mui/material';
+import { Box, Typography, Skeleton, Drawer, IconButton, Button, Grid, Divider, Link, useMediaQuery, TextField } from '@mui/material';
 import { alpha, styled, useTheme } from '@mui/material/styles';
 import PropTypes from 'prop-types';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import CloseIcon from '@mui/icons-material/Close';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { Policies, TimeDetails } from '../teacher-details';
@@ -10,6 +10,11 @@ import useLocales from 'src/hooks/useLocales';
 import PersonIcon from '@mui/icons-material/Person';
 import TerrainIcon from '@mui/icons-material/Terrain';
 import { useNavigate  } from 'react-router';
+import useAuth from 'src/hooks/useAuth';
+import Login from 'src/pages/auth/Login';
+import { StaticDatePicker } from '@mui/lab';
+import { format } from 'date-fns';
+import { es } from 'date-fns/locale';
 
 const IconWrapperStyle = styled('div')(({ theme }) => ({
     margin: 'auto',
@@ -54,9 +59,22 @@ export default function SchoolProducts({ products, isLoading, showPrice = false 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
     const [levelDrawerOpen, setLevelDrawerOpen] = useState(false);
     const [levelInfo, setLevelInfo] = useState({ label: '', description: '' });
+    const [loginModalOpen, setLoginModalOpen] = useState(false);
+    const [datePickerOpen, setDatePickerOpen] = useState(false);
+    const [selectedDate, setSelectedDate] = useState(null);
     const { translate } = useLocales();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
     const navigate = useNavigate();
+    const { isAuthenticated } = useAuth();
+
+    // Detectar cuando el usuario se autentica
+    useEffect(() => {
+        if (isAuthenticated && loginModalOpen) {
+            setLoginModalOpen(false);
+            setDatePickerOpen(true);
+        }
+    }, [isAuthenticated, loginModalOpen]);
+
     const handleProductClick = (product) => {
         if(isMobile) {
             setSelectedProduct(product);
@@ -69,6 +87,28 @@ export default function SchoolProducts({ products, isLoading, showPrice = false 
     const handleCloseDrawer = () => {
         setIsDrawerOpen(false);
         setSelectedProduct(null);
+    };
+
+    const handleReserveClick = () => {
+        if (!isAuthenticated) {
+            setLoginModalOpen(true);
+        } else {
+            setDatePickerOpen(true);
+        }
+    };
+
+    const handleDateSelect = (date) => {
+        setSelectedDate(date);
+        setDatePickerOpen(false);
+        
+        // Enviar WhatsApp con la fecha seleccionada
+        const formattedDate = format(date, 'EEEE dd/MM/yyyy', { locale: es });
+        const message = `Hola, me interesa reservar: ${selectedProduct.name} en Catedral para el día ${formattedDate}`;
+        const whatsappUrl = `https://wa.me/+5492944263223?text=${encodeURIComponent(message)}`;
+        window.open(whatsappUrl, '_blank');
+        
+        // Cerrar el drawer principal
+        handleCloseDrawer();
     };
 
     const LoadingSkeleton = () => (
@@ -100,7 +140,7 @@ export default function SchoolProducts({ products, isLoading, showPrice = false 
                     <LoadingSkeleton />
                 ) : (
                     <Box sx={{ display: 'flex', gap: 2, }}>
-                        {products.filter(product => ![143, 144, 145].includes(product.id)).map((product) => (
+                        {[...products].sort((a, b) => a?.lengthInMinutes - b?.lengthInMinutes).filter(product => ![143, 144, 145].includes(product.id)).map((product) => (
                             <Box
                                 key={product.id}
                                 onClick={() => handleProductClick(product)}
@@ -370,11 +410,7 @@ export default function SchoolProducts({ products, isLoading, showPrice = false 
                                         boxShadow: 'none',
                                         minWidth: 120,
                                     }}
-                                    onClick={() => {
-                                        const message = `Hola, me interesa reservar: ${selectedProduct.name} en Catedral`;
-                                        const whatsappUrl = `https://wa.me/+5492944263223?text=${encodeURIComponent(message)}`;
-                                        window.open(whatsappUrl, '_blank');
-                                    }}
+                                    onClick={handleReserveClick}
                                 >
                                     Reservar
                                 </Button>
@@ -383,8 +419,6 @@ export default function SchoolProducts({ products, isLoading, showPrice = false 
                     </Box>
                 )}
             </Drawer>}
-
-
 
             {/* Drawer para explicación de nivel */}
             <Drawer
@@ -408,6 +442,80 @@ export default function SchoolProducts({ products, isLoading, showPrice = false 
                 <Typography variant="body1" color="text.secondary" sx={{ textAlign: 'center' }}>
                     {levelInfo.description}
                 </Typography>
+            </Drawer>
+
+            {/* Login Modal */}
+            <Drawer
+                anchor="bottom"
+                open={loginModalOpen}
+                onClose={() => setLoginModalOpen(false)}
+                PaperProps={{
+                    sx: {
+                        borderTopLeftRadius: 24,
+                        borderTopRightRadius: 24,
+                        height: '90vh',
+                        maxHeight: '90vh',
+                    },
+                }}
+            >
+                <Box sx={{ p: 2, display: 'flex', justifyContent: 'center' }}>
+                    <Box sx={{ width: 40, height: 6, borderRadius: 3, bgcolor: 'grey.300' }} />
+                </Box>
+                <Login fromModal={true} />
+            </Drawer>
+
+            {/* Date Picker Drawer */}
+            <Drawer
+                anchor="bottom"
+                open={datePickerOpen}
+                onClose={() => setDatePickerOpen(false)}
+                PaperProps={{
+                    sx: {
+                        borderTopLeftRadius: 24,
+                        borderTopRightRadius: 24,
+                        p: 3,
+                        pb: `calc(32px + env(safe-area-inset-bottom))`,
+                        maxWidth: 480,
+                        mx: 'auto',
+                        height: 'auto',
+                        maxHeight: '80vh',
+                    },
+                }}
+            >
+                <Box sx={{ mb: 2, display: 'flex', justifyContent: 'center' }}>
+                    <Box sx={{ width: 40, height: 6, borderRadius: 3, bgcolor: 'grey.300' }} />
+                </Box>
+                <Typography variant="h6" fontWeight={700} sx={{ mb: 2, textAlign: 'center' }}>
+                    Selecciona una fecha
+                </Typography>
+                <StaticDatePicker
+                    displayStaticWrapperAs="desktop"
+                    openTo="day"
+                    value={selectedDate}
+                    onChange={(newValue) => {
+                        setSelectedDate(newValue);
+                    }}
+                    renderInput={(params) => <TextField {...params} />}
+                    disablePast
+                    showToolbar={false}
+                />
+                <Box sx={{ mt: 3, display: 'flex', gap: 2 }}>
+                    <Button
+                        fullWidth
+                        variant="outlined"
+                        onClick={() => setDatePickerOpen(false)}
+                    >
+                        Cancelar
+                    </Button>
+                    <Button
+                        fullWidth
+                        variant="contained"
+                        onClick={() => selectedDate && handleDateSelect(selectedDate)}
+                        disabled={!selectedDate}
+                    >
+                        Confirmar
+                    </Button>
+                </Box>
             </Drawer>
         </Box>
     );

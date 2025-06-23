@@ -31,6 +31,7 @@ import BlogEmbed from '../pages/BlogEmbed';
 import SnowMatchLanding from 'src/pages/search/resort/discipline/videos';
 import GhostWrapper from 'src/pages/dashboard/GhostWrapper';
 import GhostPostWrapper from 'src/pages/dashboard/GhostPostWrapper';
+import HeliSki from 'src/pages/search/HeliSki';
 // ----------------------------------------------------------------------
 
 const Loadable = (Component) => (props) => {
@@ -44,7 +45,7 @@ const Loadable = (Component) => (props) => {
 };
 
 export default function Router() {
-  const isMobile = false;
+  const isMobile = true;
 
   return useRoutes([
     {
@@ -384,6 +385,7 @@ export default function Router() {
           children: [
             { element: <Navigate to="/dashboard/admin/review" replace />, index: true },
             { path: 'review', element: <AdminReview /> },
+            { path: 'clients', element: <AdminReviewClients /> },
             { path: 'bookings', element: <AdminReviewBookings /> },
             { path: ':id/confirm', element: <AdminConfirm /> },
             { path: ':id/events', element: <AdminUserEvents /> },
@@ -422,10 +424,11 @@ export default function Router() {
       element: <MainLayout />,
       children: [
         {
-          element: isMobile ? <Navigate to="/match/videoCoach/upload" replace /> : <Navigate to="/cerro-catedral" replace />,
+          element: isMobile ? <Navigate to="/match/videoCoach/upload" replace /> : <Navigate to="/pt/bariloche" replace />,
           index: true
         },
         { path: 'escola-de-esqui-e-snowboard', element: <SnowMatchLanding /> },
+        { path: 'heliski', element: <HeliSki /> },
         { path: 'escuela-de-esqui-y-snowboard', element: <SnowMatchLanding /> },
         { path: ':resort/:discipline/:type', element: <SearchPage /> },
         { path: ':resort/:discipline', element: <SearchPage /> },
@@ -440,9 +443,11 @@ export default function Router() {
       element: <MainLayout />,
       children: [
         {
-          element: isMobile ? <Navigate to="/match/videoCoach/upload" replace /> : <Navigate to="/cerro-catedral" replace />,
+          element: isMobile ? <Navigate to="/match/videoCoach/upload" replace /> : <SearchPage />,
           index: true
         },
+        { path: 'heliski', element: <HeliSki /> },
+        { path: 'en/heliski', element: <HeliSki /> },
         { path: 'escuela-de-esqui-y-snowboard', element: <SnowMatchLanding /> },
         { path: 'tips-esqui-snowboard/:tip', element: <SnowMatchLanding /> },
         { path: 'clases-de-ski-bariloche', element: <HomePageBariloche /> },
@@ -519,6 +524,7 @@ const LessonDetails = Loadable(lazy(() => import('src/pages/dashboard/LessonDeta
 
 // ADMIN
 const AdminReview = Loadable(lazy(() => import('../pages/dashboard/AdminReview')));
+const AdminReviewClients = Loadable(lazy(() => import('../pages/dashboard/AdminReviewClients')));
 const AdminReviewBookings = Loadable(lazy(() => import('../pages/dashboard/AdminReviewBookings')));
 const AdminConfirm = Loadable(lazy(() => import('../pages/dashboard/AdminConfirm')));
 const AdminUserEvents = Loadable(lazy(() => import('../pages/dashboard/AdminUserEvents')));

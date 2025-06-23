@@ -128,6 +128,10 @@ export default function EcommerceTeacherDetails({ isGuest = false }) {
     console.log('product', product)
   }, [product]);
 
+  const getProductDescription = () => {
+
+  }
+
 
   return (
     <Page title={translate('products.experienceTitle', { name: product?.name })} meta={
@@ -163,11 +167,11 @@ export default function EcommerceTeacherDetails({ isGuest = false }) {
                   <Typography component="h2" variant='h6'>{product.name}</Typography>
                   </Box>
 
-                  <TechDetails id={product.id} />
+                  <TechDetails id={product.id} product={product} />
                   <Box mx={2} width='100%' mt={2}>
                     <Divider />
                   </Box>
-                  <DescriptionDetails id={product.id} />
+                  <DescriptionDetails id={product.id} product={product} />
 
                   <Box mx={2} >
                     <Divider />
@@ -211,11 +215,11 @@ export default function EcommerceTeacherDetails({ isGuest = false }) {
                   <Box mx={3} width='100%' mt={1} mb={2}>
                     <Typography component="h2" variant='h6'>{product.name}</Typography>
                   </Box>
-                  <TechDetails id={product.id} />
+                  <TechDetails id={product.id} product={product} />
                   <Box mx={2} width='100%' mt={2}>
                     <Divider />
                   </Box>
-                  <DescriptionDetails id={product.id} />
+                  <DescriptionDetails id={product.id} product={product} />
                   <Box mx={2} width='100%'>
                     <Divider />
                   </Box>

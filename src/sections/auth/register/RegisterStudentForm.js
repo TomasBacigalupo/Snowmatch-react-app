@@ -93,7 +93,7 @@ const RegisterSchema = Yup.object().shape({
                 </Stack>
 
                 <RHFTextField name="email" label="Email" />
-                {/* <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
+                <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
                     <RHFSelect name="countryCode" label={translate('registerForm.countryCode')} placeholder="Country Code">
                         <option value="" />
                         {countries.map((option) => (
@@ -103,7 +103,7 @@ const RegisterSchema = Yup.object().shape({
                         ))}
                     </RHFSelect>
                     <RHFTextField name="cellphone" label={translate('registerForm.phone')} />
-                </Stack> */}
+                </Stack>
 
 
                 <RHFTextField

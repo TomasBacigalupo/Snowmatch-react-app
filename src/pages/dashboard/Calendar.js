@@ -29,7 +29,7 @@ import { getClients } from 'src/redux/slices/clients';
 import useLocales from 'src/hooks/useLocales';
 import HoverButton from 'src/components/HoverButton';
 import LessonForm from 'src/sections/@dashboard/calendar/LessonForm';
-import { getBusinessMembers } from 'src/redux/slices/business';
+import { getBusinessMembers, getBusinessMembersByBusinessId } from 'src/redux/slices/business';
 import CalendarDayForm from 'src/sections/@dashboard/calendar/CalendarDayForm';
 import useAuth from 'src/hooks/useAuth';
 import LessonStepper from 'src/sections/@dashboard/calendar/LessonStepper';
@@ -60,6 +60,7 @@ export default function Calendar() {
     { key: 0, value: "Todos" },
     { key: 1, value: translate('menu.independent') },
     { key: 2, value: translate('menu.School') }];
+  const [hideBlock, setHideBlock] = useState(false);
 
   const [view, setView] = useState('dayGridMonth');
 
@@ -71,13 +72,17 @@ export default function Calendar() {
   const user = useAuth();
 
   useEffect(() => {
-    dispatch(getEventsByDate(date, user?.user?.role === 'SCHOOL_ADMIN', user?.user?.administeredBusiness?.id));
+    dispatch(getEventsByDate(date, user?.user?.role === 'SCHOOL_ADMIN' || user?.user?.role === 'ADMIN', user?.user?.role === 'ADMIN' ? 13 : user?.user?.role === 'SCHOOL_ADMIN' ? user?.user?.administeredBusiness?.id : null));
     dispatch(getClients());
-    dispatch(getBusinessMembers());
+    if (user?.user?.role === 'ADMIN') {
+      dispatch(getBusinessMembersByBusinessId(13));
+    } else {
+      dispatch(getBusinessMembers());
+    }
   }, [dispatch]);
 
   useEffect(() => {
-    dispatch(getEventsByDate(date, user?.user?.role === 'SCHOOL_ADMIN'));
+    dispatch(getEventsByDate(date, user?.user?.role === 'SCHOOL_ADMIN' || user?.user?.role === 'ADMIN', user?.user?.role === 'ADMIN' ? 13 : user?.user?.role === 'SCHOOL_ADMIN' ? user?.user?.administeredBusiness?.id : null));
   }, [date]);
 
   useEffect(() => {
@@ -93,6 +98,10 @@ export default function Calendar() {
   const handleFilterEvents = (event) => {
     const selectedFilter = filterOptions.find(option => option.value === event.target.value);
     setEventsFilter(selectedFilter);
+  };
+
+  const handleHideBlockChange = (event) => {
+    setHideBlock(!hideBlock);
   };
 
   const handleClickToday = () => {
@@ -186,6 +195,12 @@ export default function Calendar() {
     const memberIds = members.map(member => member.id);
 
     return events.filter(event => {
+      console.log({ event, hideBlock });
+      if (hideBlock) {
+        return event.textColor != "#FF0000"
+      }
+      return true;
+    }).filter(event => {
       const hasTeacher = event.assignedUsers.some(user => user.role === 'TEACHER');
       const teachers = event.assignedUsers.filter(user => user.role === 'TEACHER');
 
@@ -207,8 +222,8 @@ export default function Calendar() {
 
   return (
     <Page title={translate('calendar.name')}>
-      {user?.user?.role === 'SCHOOL_ADMIN' &&
-        <CalendarSelector onFilter={handleFilterEvents} filter={eventsFilter} filterOptions={filterOptions} />
+      {(user?.user?.role === 'SCHOOL_ADMIN' || user?.user?.role === 'ADMIN') &&
+        <CalendarSelector onFilter={handleFilterEvents} filter={eventsFilter} filterOptions={filterOptions} onHideBlockChange={handleHideBlockChange} hideBlock={hideBlock} />
       }
       <Card>
         <CalendarStyle>

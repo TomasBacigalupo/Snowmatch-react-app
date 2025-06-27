@@ -9,6 +9,8 @@ import Page from '../components/Page';
 import { PricingPlanCard } from '../sections/pricing';
 import useLocales from 'src/hooks/useLocales';
 import { PlanFreeIcon, PlanStarterIcon, PlanPremiumIcon } from '../assets';
+import SubscriptionComparisonTable from 'src/sections/home/SubscriptionComparisonTable';
+import FeatureListWithPlans from 'src/sections/home/FeatureListWithPlans';
 
 // ----------------------------------------------------------------------
 
@@ -16,7 +18,7 @@ export const snowmatchPricing = [
   {
     subscription: 'basic',
     icon: <PlanFreeIcon />,
-    price: 0,
+    price: 10,
     caption: 'forever',
     lists: [
       { text: '3 prototypes', isAvailable: true },
@@ -30,7 +32,7 @@ export const snowmatchPricing = [
   {
     subscription: 'starter',
     icon: <PlanStarterIcon />,
-    price: '15%',
+    price: '500',
     caption: 'saving $24 a year',
     lists: [
       { text: 'Match service', isAvailable: true },
@@ -68,7 +70,8 @@ const RootStyle = styled('div')(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 export default function Pricing() {
-  const {translate} = useLocales()
+  const {translate} = useLocales();
+
   return (
     <Page title="Pricing">
       <RootStyle>
@@ -84,26 +87,10 @@ export default function Pricing() {
           <Grid container spacing={3}>
             {[
               {
-                subscription: 'basic',
+                subscription: 'Básico',
                 icon: <PlanFreeIcon />,
-                price: 0,
+                price: 500,
                 caption: 'forever',
-                lists: [
-                  { text: translate('pricing.feature1'), isAvailable: true },
-                  { text: translate('pricing.feature2'), isAvailable: true },
-                  { text: translate('pricing.feature3'), isAvailable: false },
-                  { text: translate('pricing.feature4'), isAvailable: false },
-                  { text: translate('pricing.feature5'), isAvailable: false },
-                  { text: translate('pricing.feature6'), isAvailable: false },
-                  { text: translate('pricing.feature7'), isAvailable: false },
-                ],
-                labelAction: 'current plan',
-              },
-              {
-                subscription: 'starter',
-                icon: <PlanStarterIcon />,
-                price: '15%',
-                caption: 'Control your mountain',
                 lists: [
                   { text: translate('pricing.feature1'), isAvailable: true },
                   { text: translate('pricing.feature2'), isAvailable: true },
@@ -113,12 +100,28 @@ export default function Pricing() {
                   { text: translate('pricing.feature6'), isAvailable: false },
                   { text: translate('pricing.feature7'), isAvailable: false },
                 ],
-                labelAction: 'choose starter',
+                labelAction: 'Elegir Básico',
               },
               {
-                subscription: 'premium',
+                subscription: 'Pro',
+                icon: <PlanStarterIcon />,
+                price: '700',
+                caption: 'Instructores ilimitados',
+                lists: [
+                  { text: translate('pricing.feature1'), isAvailable: true },
+                  { text: translate('pricing.feature2'), isAvailable: true },
+                  { text: translate('pricing.feature3'), isAvailable: true },
+                  { text: translate('pricing.feature4'), isAvailable: true },
+                  { text: translate('pricing.feature5'), isAvailable: true },
+                  { text: translate('pricing.feature6'), isAvailable: true },
+                  { text: translate('pricing.feature7'), isAvailable: false },
+                ],
+                labelAction: 'Elegir Pro',
+              },
+              {
+                subscription: 'Premium',
                 icon: <PlanPremiumIcon />,
-                price: '20%',
+                price: 'Cotizá',
                 caption: 'Control & Expand',
                 lists: [
                   { text: translate('pricing.feature1'), isAvailable: true },
@@ -129,7 +132,7 @@ export default function Pricing() {
                   { text: translate('pricing.feature6'), isAvailable: true },
                   { text: translate('pricing.feature7'), isAvailable: true },
                 ],
-                labelAction: 'choose premium',
+                labelAction: 'Elegir Premium',
               },
             ].map((card, index) => (
               <Grid item xs={12} md={4} key={card.subscription}>
@@ -137,6 +140,8 @@ export default function Pricing() {
               </Grid>
             ))}
           </Grid>
+          <SubscriptionComparisonTable />
+          <FeatureListWithPlans />
         </Container>
       </RootStyle>
     </Page>

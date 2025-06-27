@@ -33,35 +33,16 @@ export default function PricingPlanCard({ card, index }) {
 
   return (
     <RootStyle>
-      {index === 1 && (
-        <Label
-          color="info"
-          sx={{
-            top: 16,
-            right: 16,
-            position: 'absolute',
-          }}
-        >
-          POPULAR
-        </Label>
-      )}
 
       <Typography variant="overline" sx={{ color: 'text.secondary' }}>
         {subscription}
       </Typography>
 
       <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2, mb: 1 }}>
-        {index === 1 || index === 2 ? (
-          <Typography variant="subtitle1" sx={{ color: 'text.secondary' }}>
-            
-          </Typography>
-        ) : (
-          ''
-        )}
         <Typography variant="h2" sx={{ mx: 1 }}>
           {price === 0 ? 'Free' : price}
         </Typography>
-        {index === 1 || index === 2 ? (
+        {index != 2 ? (
           <Typography
             gutterBottom
             component="span"
@@ -71,7 +52,7 @@ export default function PricingPlanCard({ card, index }) {
               color: 'text.secondary',
             }}
           >
-            
+            USD/mes
           </Typography>
         ) : (
           ''
@@ -82,14 +63,20 @@ export default function PricingPlanCard({ card, index }) {
         variant="caption"
         sx={{
           color: 'text.secondary',
-          mb:1
+          mb: 1
         }}
       >
-        {index === 1 || index === 2 ?
-          'Comisionado del valor de la clase' :
+        {index === 0 &&
+          
           'Acuerdo con instructores'
         }
-        
+        {index === 1 &&
+          'Hasta 10 instructores' 
+        }
+        {index === 2 && 
+          'Instructores ilimitados' 
+        }
+
       </Typography>
       <Typography
         variant="caption"
@@ -98,7 +85,18 @@ export default function PricingPlanCard({ card, index }) {
           textTransform: 'capitalize',
         }}
       >
-        {caption}
+        {index === 0 ?
+          'Instructores ilimitados' :
+          ''
+        }
+        {index === 1 ?
+          '+20 USD por instructor extra' :
+          ''
+        }
+        {index === 2 ?
+          'Gestiona tu escuela con snowmatch' :
+          ''
+        }
       </Typography>
 
       <Box sx={{ width: 80, height: 80, mt: 3 }}>{icon}</Box>
@@ -119,9 +117,12 @@ export default function PricingPlanCard({ card, index }) {
         ))}
       </Stack>
 
-      <Button onClick={()=>{
-        window.location.href = "mailto:bacigalupotomas@gmail.com";
-      }} fullWidth size="large" variant="contained" disabled={index === 0}>
+      <Button onClick={() => {
+        const plan = subscription;
+        const message = `Me gustaría usar el plan ${plan} en mi centro de esqui`;
+        const whatsappUrl = `https://wa.me/5492944367197?text=${encodeURIComponent(message)}`;
+        window.open(whatsappUrl, '_blank');
+      }} fullWidth size="large" variant="contained" >
         {labelAction}
       </Button>
     </RootStyle>

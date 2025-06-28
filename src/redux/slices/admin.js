@@ -138,7 +138,7 @@ export function getTeachersAdmin(name, page, filters, resort) {
   };
 }
 
-export function getBookings(teacherId, studentId, month, page, size = 100000) {
+export function getBookings(teacherId, studentId, month, page, size = 100000, resort) {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
@@ -147,6 +147,7 @@ export function getBookings(teacherId, studentId, month, page, size = 100000) {
       if (teacherId) params.append('teacherId', teacherId);
       if (studentId) params.append('studentId', studentId);
       if (month) params.append('month', month);
+      if (resort) params.append('resort', resort);
       params.append('size', size);
 
       const response = await axios.get(`/api/admin/bookings/filter?${params.toString()}`);

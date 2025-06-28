@@ -66,6 +66,7 @@
         "search": "Buscar..."
     },
     "landingPRO": {
+        "undefined": "en todos los cerros",
         "title": "Clases de {{discipline}} {{type}} en {{resort}} - Reserva Online | SnowMatch",
         "description": "Instructores certificados, clases privadas y grupales en {{resort}}. ¡Reserva online y evita colas!",
         "keywords": "clases de {{discipline}} {{type}} en {{resort}}, instructores certificados, clases privadas, clases grupales, reserva online",

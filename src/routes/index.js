@@ -45,7 +45,7 @@ const Loadable = (Component) => (props) => {
 };
 
 export default function Router() {
-  const isMobile = true;
+  const isMobile = false;
 
   return useRoutes([
     {
@@ -174,6 +174,18 @@ export default function Router() {
         { path: '*', element: <EcommerceShop isGuest={true} teacherType="school" /> },
         { path: 'independent', element: <EcommerceShop isGuest={true} teacherType="independent" /> },
         { path: 'school', element: <EcommerceShop isGuest={true} teacherType="school" /> },
+      ]
+    },
+    {
+      path: 'reservar-clase-ski',
+      element: (
+        <RoleBasedGuard accessibleRoles={['GUEST', 'STUDENT', 'TEACHER', 'ADMIN']}>
+          <BackButtonLayout />
+        </RoleBasedGuard>
+
+      ),
+      children: [
+        { path: ':slug', element: <EcommerceTeacherDetails isGuest={true} /> }
       ]
     },
     {

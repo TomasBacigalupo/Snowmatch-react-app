@@ -89,7 +89,7 @@ export default function EcommerceTeacherDetails({ isGuest = false }) {
   const { themeStretch } = useSettings();
   const dispatch = useDispatch();
   const [value, setValue] = useState('0');
-  const { id = '' } = useParams();
+  const { id = '', slug = '' } = useParams();
   const { checkout } = useSelector((state) => state.product);
   const { translate } = useLocales()
   const { teacher, isLoading, teachers, filters } = useSelector((state) => state.teachers);
@@ -99,8 +99,14 @@ export default function EcommerceTeacherDetails({ isGuest = false }) {
 
 
   useEffect(() => {
-    dispatch(getTeacherBiId(id));
-  }, [dispatch, id]);
+    if(id !== ''){
+      dispatch(getTeacherBiId(id));
+    }
+    if(slug !== ''){
+      const teacherId = slug.split('-').pop();
+      dispatch(getTeacherBiId(teacherId));
+    }
+  }, [dispatch, id, slug]);
 
   useEffect(() => {
     const resort = teacher?.resorts?.lenght > 0 ? teacher?.resorts[0] : "Cerro Catedral";
@@ -131,15 +137,16 @@ export default function EcommerceTeacherDetails({ isGuest = false }) {
             {
               discipline: teacher?.discipline ? `${translate(`landingPRO.${teacher?.discipline[0]}`)}` : 'Ski',
               name: `${teacher?.name} ${teacher?.lastname}`,
-              resort: teacher?.resorts?.lenght > 0 ? teacher.resorts[0] : 'Bariloche'
+              resort: teacher?.resorts?.length > 0 ? teacher.resorts[0] : 'Bariloche'
             })}
         </title>
         <meta name="description" content={teacher?.information} />
+        <meta name="keywords" content="clases de esqui, clases de snowboard, clases de ski, clases de snowboard, clases de esqui, clases de ski, clases de esqui, clases de snowboard, clases de ski, clases de snowboard, clases de esqui, clases de ski" />
         <meta property="og:title" content={teacher?.name} />
-        <meta property="og:description" content={teacher?.information} />
+        <meta property="og:description" content={teacher?.description} />
         <meta property="og:image" content={teacher?.imageLink} />
-        <link rel="canonical" href="https://snowmatch.pro/match/teacher/${id}" />
-        <meta property="og:url" content={`https://snowmatch.pro/match/teacher/${id}`} />
+        <link rel="canonical" href={`https://snowmatch.pro/reservar-clase-ski/${slug}`} />
+        <meta property="og:url" content={`https://snowmatch.pro/reservar-clase-ski/${slug}`} />
         <script type="application/ld+json">
           {JSON.stringify({
             "@context": "https://schema.org",
@@ -306,7 +313,7 @@ export default function EcommerceTeacherDetails({ isGuest = false }) {
             {
               discipline: teacher?.discipline ? `${translate(`landingPRO.${teacher?.discipline[0]}`)}` : 'Ski',
               name: `${teacher?.name} ${teacher?.lastname}`,
-              resort: teacher?.resort?.lenght > 0 ? teacher.resort[0] : 'Bariloche'
+              resort: teacher?.resorts?.length > 0 ? teacher.resorts[0] : 'Bariloche'
             })}
           links={[
             // !isGuest? { name: translate("breadcrumb.dashboard', href: PATH_DASHBOARD.root} : {name: 'Home', href: '/'},
@@ -352,7 +359,7 @@ export default function EcommerceTeacherDetails({ isGuest = false }) {
                 <Box sx={{ position: 'sticky', top: 44 }}>
                   <Hidden smDown>
                     <Box mb={3} sx={{}}>
-                      <Typography component='h1' variant='h4' gutterBottom>{teacher.name}</Typography>
+                      <Typography component='p' variant='h4' gutterBottom>{teacher.name}</Typography>
                       <Typography component='p' variant='body1' color="text.secondary" paragraph>
                         {teacher.information}
                       </Typography>

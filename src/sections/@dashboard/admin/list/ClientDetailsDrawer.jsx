@@ -1,13 +1,16 @@
-import { Drawer, Box, IconButton, Typography, Stack, Divider } from '@mui/material';
+import { Drawer, Box, IconButton, Typography, Stack, Divider, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Card } from '@mui/material';
 import Iconify from 'src/components/Iconify';
 import { useDispatch, useSelector } from 'react-redux';
-import { getTeacher } from 'src/redux/slices/admin';
+import { getTeacher, getBookings } from 'src/redux/slices/admin';
 import { useEffect } from 'react';
 import { useSnackbar } from 'notistack';
+import Label from 'src/components/Label';
+import { useTheme } from '@mui/material/styles';
 
 export default function ClientDetailsDrawer({ open, onClose, client }) {
   const dispatch = useDispatch();
-  const { teacher } = useSelector((state) => state.admin);
+  const theme = useTheme();
+  const { teacher, bookings } = useSelector((state) => state.admin);
   const { enqueueSnackbar } = useSnackbar();
 
   const handleCopyToClipboard = (text) => {
@@ -18,8 +21,33 @@ export default function ClientDetailsDrawer({ open, onClose, client }) {
   useEffect(() => {
     if (client?.id) {
       dispatch(getTeacher(client.id));
+      dispatch(getBookings(undefined, client.id, undefined, undefined, undefined, undefined)); // Get all bookings for this teacher
     }
   }, [dispatch, client?.id]);
+
+  const formatDate = (dateString) => {
+    return new Date(dateString).toLocaleDateString('es-AR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
+    });
+  };
+
+  const getDateRange = (eventList) => {
+    if (!eventList?.length) return '-';
+    const dates = eventList.map(event => new Date(event.end));
+    const start = new Date(Math.min(...dates));
+    const end = new Date(Math.max(...dates));
+    return `${formatDate(start)} - ${formatDate(end)}`;
+  };
+
+  const formatPrice = (price) => {
+    return new Intl.NumberFormat('es-AR', {
+      style: 'currency',
+      currency: 'ARS'
+    }).format(price);
+  };
+
   if (!teacher) return null;
   return (
     <Drawer
@@ -101,6 +129,82 @@ export default function ClientDetailsDrawer({ open, onClose, client }) {
           <Box>
             <Typography variant="subtitle2" color="text.secondary">Country Code</Typography>
             <Typography variant="body1">{teacher.countryCode}</Typography>
+          </Box>
+
+          {/* Bookings Section */}
+          <Box>
+            <Typography variant="h6" sx={{ mb: 2 }}>Reservas ({bookings?.length || 0})</Typography>
+            {bookings && bookings.length > 0 ? (
+              <Card>
+                <TableContainer>
+                  <Table size="small">
+                    <TableHead>
+                      <TableRow>
+                        <TableCell>ID</TableCell>
+                        <TableCell>Cliente</TableCell>
+                        <TableCell>Fechas</TableCell>
+                        <TableCell>Montaña</TableCell>
+                        <TableCell>Capacidad</TableCell>
+                        <TableCell>Precio</TableCell>
+                        <TableCell>Estado Pago</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {bookings.map((booking) => (
+                        <TableRow key={booking.id} hover>
+                          <TableCell>
+                            <Typography variant="body2">{booking.id}</Typography>
+                          </TableCell>
+                          <TableCell>
+                            <Typography variant="body2">
+                              {booking.student ? `${booking.student.name} ${booking.student.lastname}` : '-'}
+                            </Typography>
+                          </TableCell>
+                          <TableCell>
+                            <Typography variant="body2">
+                              {getDateRange(booking.eventList)}
+                            </Typography>
+                          </TableCell>
+                          <TableCell>
+                            <Typography variant="body2">{booking.resort || '-'}</Typography>
+                          </TableCell>
+                          <TableCell>
+                            <Typography variant="body2">
+                              {booking.adults || 0} adultos
+                            </Typography>
+                            <Typography variant="caption" color="text.secondary">
+                              {booking.children || 0} niños
+                            </Typography>
+                          </TableCell>
+                          <TableCell>
+                            <Typography variant="body2" color="primary.main">
+                              {formatPrice(booking.price || 0)}
+                            </Typography>
+                          </TableCell>
+                          <TableCell>
+                            <Label
+                              variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
+                              color={
+                                (booking.paymentStatus === 'PENDING' && 'warning') ||
+                                (booking.paymentStatus === 'PAID' && 'success') ||
+                                'error'
+                              }
+                              sx={{ textTransform: 'capitalize' }}
+                            >
+                              {booking.paymentStatus || 'PENDING'}
+                            </Label>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              </Card>
+            ) : (
+              <Typography variant="body2" color="text.secondary">
+                No hay reservas para este cliente.
+              </Typography>
+            )}
           </Box>
           {/* Add more client details as needed */}
         </Stack>

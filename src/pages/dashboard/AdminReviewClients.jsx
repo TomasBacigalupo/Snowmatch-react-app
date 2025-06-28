@@ -238,6 +238,7 @@ export default function AdminReviewClients() {
                         showMonth={false}
                         showStudentId={false}
                         showSearchAdmin={false}
+                        showResort={false}
                     />
 
                     <Scrollbar>

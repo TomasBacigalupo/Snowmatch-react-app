@@ -114,7 +114,7 @@ export default function AdminReviewBookings() {
   const [filterStudentId, setFilterStudentId] = useState('');
   const [teachers, setTeachers] = useState([]);
   const [students, setStudents] = useState([]);
-
+  const [filterResort, setFilterResort] = useState('');
   const { currentTab: filterStatus, onChangeTab: onChangeFilterStatus } = useTabs('PENDING');
 
   const handleFilterName = (filterName) => {
@@ -149,19 +149,24 @@ export default function AdminReviewBookings() {
 
   const handleFilterMonth = (event) => {
     setFilterMonth(event.target.value);
-    dispatch(getBookings(filterTeacherId, filterStudentId, event.target.value, page));
+    dispatch(getBookings(filterTeacherId, filterStudentId, event.target.value, page, rowsPerPage, filterResort));
+  };
+
+  const handleFilterResort = (event) => {
+    setFilterResort(event.target.value);
+    dispatch(getBookings(filterTeacherId, filterStudentId, filterMonth, page, rowsPerPage, event.target.value));
   };
 
   const handleFilterTeacherId = (event) => {
     const value = event?.target?.value ?? event;
     setFilterTeacherId(value);
-    dispatch(getBookings(value, filterStudentId, filterMonth, page));
+    dispatch(getBookings(value, filterStudentId, filterMonth, page, rowsPerPage, filterResort));
   };
 
   const handleFilterStudentId = (event) => {
     const value = event.target.value;
     setFilterStudentId(value);
-    dispatch(getBookings(filterTeacherId, value, filterMonth, page));
+    dispatch(getBookings(filterTeacherId, value, filterMonth, page, rowsPerPage, filterResort));
   };
 
   const handleDeleteRows = (selected) => {
@@ -292,6 +297,7 @@ export default function AdminReviewBookings() {
           onFilterMonth={handleFilterMonth}
           onFilterTeacherId={handleFilterTeacherId}
           onFilterStudentId={handleFilterStudentId}
+          onFilterResort={handleFilterResort}
           bookings={true}
         />
         <BookingSummary bookings={tableData} />

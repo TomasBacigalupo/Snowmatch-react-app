@@ -19,6 +19,17 @@ const TEACHER_CHIPS = [
   { name: 'Oriana', value: 974 },
 ];
 
+const RESORT_OPTIONS = [
+  'Cerro Catedral',
+  'Chapelco',
+  'Cerro Bayo',
+  'Cerro Castor',
+  'Las Pendientes',
+  'Lago Hermoso',
+  'Las Leñas',
+  'Perito Moreno',
+];
+
 AdminTableToolbar.propTypes = {
   filterName: PropTypes.string,
   filterRole: PropTypes.string,
@@ -26,12 +37,14 @@ AdminTableToolbar.propTypes = {
   filterMonth: PropTypes.string,
   filterTeacherId: PropTypes.string,
   filterStudentId: PropTypes.string,
+  filterResort: PropTypes.string,
   onFilterName: PropTypes.func,
   onFilterRole: PropTypes.func,
   onFilterLevel: PropTypes.func,
   onFilterMonth: PropTypes.func,
   onFilterTeacherId: PropTypes.func,
   onFilterStudentId: PropTypes.func,
+  onFilterResort: PropTypes.func,
   optionsRole: PropTypes.arrayOf(PropTypes.string),
   bookings: PropTypes.bool,
 };
@@ -43,12 +56,14 @@ export default function AdminTableToolbar({
   filterMonth,
   filterTeacherId,
   filterStudentId,
+  filterResort,
   onFilterName, 
   onFilterRole, 
   onFilterLevel,
   onFilterMonth,
   onFilterTeacherId,
   onFilterStudentId,
+  onFilterResort,
   optionsRole,
   bookings = false,
   showRole = true,
@@ -59,7 +74,8 @@ export default function AdminTableToolbar({
   showMonth = true,
   showTeacherId = true,
   showStudentId = true,
-  showSearchAdmin = true
+  showSearchAdmin = true,
+  showResort = true
 }) {
   return (
     <Stack spacing={2}>
@@ -146,6 +162,41 @@ export default function AdminTableToolbar({
               ))}
             </TextField>
           </>
+        )}
+
+        {showResort && (
+          <TextField
+            fullWidth
+            select
+            label="Resort"
+            value={filterResort}
+            onChange={onFilterResort}
+            SelectProps={{
+              MenuProps: {
+                sx: { '& .MuiPaper-root': { maxHeight: 260 } },
+              },
+            }}
+            sx={{
+              maxWidth: { sm: 240 },
+              textTransform: 'capitalize',
+            }}
+          >
+            {RESORT_OPTIONS.map((option) => (
+              <MenuItem
+                key={option}
+                value={option}
+                sx={{
+                  mx: 1,
+                  my: 0.5,
+                  borderRadius: 0.75,
+                  typography: 'body2',
+                  textTransform: 'capitalize',
+                }}
+              >
+                {option}
+              </MenuItem>
+            ))}
+          </TextField>
         )}
 
         {!bookings && showName && (

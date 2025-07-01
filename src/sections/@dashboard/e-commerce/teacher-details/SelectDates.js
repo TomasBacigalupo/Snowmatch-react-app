@@ -134,6 +134,16 @@ export default function SelectDates({ handleClose, onSubmit, isRange, product })
         }
         setSelectTimeModal(false);
     }
+
+    const morning2hsSelected = () => {
+        if (!isRange) {
+            selectedDates[selectedDates.length - 1].setHours(10);
+        } else {
+            selectedDates.map(date => date.setHours(10));
+        }
+        setSelectTimeModal(false);
+    }
+
     const afternoonSelected = () => {
         if (!isRange) {
             selectedDates[selectedDates.length - 1].setHours(14);
@@ -142,6 +152,16 @@ export default function SelectDates({ handleClose, onSubmit, isRange, product })
         }
         setSelectTimeModal(false);
     }
+
+    const afternoon2hsSelected = () => {
+        if (!isRange) {
+            selectedDates[selectedDates.length - 1].setHours(15);
+        } else {
+            selectedDates.map(date => date.setHours(15));
+        }
+        setSelectTimeModal(false);
+    }
+
     const allDaySelected = () => {
         if (!isRange) {
             selectedDates[selectedDates.length - 1].setHours(8);
@@ -167,7 +187,7 @@ export default function SelectDates({ handleClose, onSubmit, isRange, product })
                         >
                             <Typography
                                 variant="h6">
-                                {translate('checkout.morningTitle')} {product ? `${fCurrency(calculatePrice(product, 1, 'MORNING'))}` : hasPrice && fCurrency(calculateRequestedPrice(teacher, totalDays, 'MORNING'))}
+                                {translate('checkout.morningTitle')} (3hs) {product ? `${fCurrency(calculatePrice(product, 1, 'MORNING'))}` : hasPrice && fCurrency(calculateRequestedPrice(teacher, totalDays, 'MORNING'))}
                             </Typography>
                             <Typography
                                 variant="subtitle2">
@@ -182,6 +202,30 @@ export default function SelectDates({ handleClose, onSubmit, isRange, product })
                     </Grid>
                     <Grid item xs={12}>
                         <Paper
+                            onClick={morning2hsSelected}
+                            sx={{
+                                p: 3,
+                                width: 1,
+                                border: (theme) => `solid 1px ${theme.palette.grey[500_32]}`,
+                            }}
+                        >
+                            <Typography
+                                variant="h6">
+                                {translate('checkout.morning2hsTitle')} {product ? `${fCurrency(calculatePrice(product, 1, 'MORNING_2HS'))}` : hasPrice && fCurrency(calculateRequestedPrice(teacher, totalDays, 'MORNING_2HS'))}
+                            </Typography>
+                            <Typography
+                                variant="subtitle2">
+                                {translate('checkout.morning2hsDescription')}
+                            </Typography>
+                            {false && <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                                <Typography variant="subtitle" sx={{ textAlign: 'end', flex: '1 1 auto' }}>
+                                    {product ? `${fCurrency(calculatePrice(product, selectedDates.length, 'MORNING_2HS') * selectedDates.length)} total` : (hasPrice && '$US 180')}
+                                </Typography>
+                            </Box>}
+                        </Paper>
+                    </Grid>
+                    <Grid item xs={12}>
+                        <Paper
                             onClick={afternoonSelected}
                             sx={{
                                 p: 3,
@@ -190,7 +234,7 @@ export default function SelectDates({ handleClose, onSubmit, isRange, product })
                             }}
                         >
                             <Typography
-                                variant="h6">{translate('checkout.afternoonTitle')} {product ? `${fCurrency(calculatePrice(product, 1, 'AFTERNOON'))}` : hasPrice && fCurrency(calculateRequestedPrice(teacher, totalDays, 'AFTERNOON'))}
+                                variant="h6">{translate('checkout.afternoonTitle')} (3hs) {product ? `${fCurrency(calculatePrice(product, 1, 'AFTERNOON'))}` : hasPrice && fCurrency(calculateRequestedPrice(teacher, totalDays, 'AFTERNOON'))}
                             </Typography>
                             <Typography
                                 variant="subtitle2">{translate('checkout.afternoonDescription')}
@@ -198,6 +242,28 @@ export default function SelectDates({ handleClose, onSubmit, isRange, product })
                             {false && <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                                 <Typography variant="subtitle" sx={{ textAlign: 'end', flex: '1 1 auto' }}>
                                     {product ? `${fCurrency(calculatePrice(product, selectedDates.length, 'AFTERNOON') * selectedDates.length)} total` : hasPrice && '$US 180'}
+                                </Typography>
+                            </Box>}
+                        </Paper>
+                    </Grid>
+                    <Grid item xs={12}>
+                        <Paper
+                            onClick={afternoon2hsSelected}
+                            sx={{
+                                p: 3,
+                                width: 1,
+                                border: (theme) => `solid 1px ${theme.palette.grey[500_32]}`,
+                            }}
+                        >
+                            <Typography
+                                variant="h6">{translate('checkout.afternoon2hsTitle')} {product ? `${fCurrency(calculatePrice(product, 1, 'AFTERNOON_2HS'))}` : hasPrice && fCurrency(calculateRequestedPrice(teacher, totalDays, 'AFTERNOON_2HS'))}
+                            </Typography>
+                            <Typography
+                                variant="subtitle2">{translate('checkout.afternoonDescription')}
+                            </Typography>
+                            {false && <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                                <Typography variant="subtitle" sx={{ textAlign: 'end', flex: '1 1 auto' }}>
+                                    {product ? `${fCurrency(calculatePrice(product, selectedDates.length, 'AFTERNOON_2HS') * selectedDates.length)} total` : hasPrice && '$US 180'}
                                 </Typography>
                             </Box>}
                         </Paper>
@@ -213,7 +279,7 @@ export default function SelectDates({ handleClose, onSubmit, isRange, product })
                         >
                             <Typography
                                 variant="h6">
-                                {translate('checkout.allDayTitle')}
+                                {translate('checkout.allDayTitle')} (6hs) {` `}
                                 {product ? ` ${fCurrency(calculatePrice(product, 1, 'FULL_DAY'))}` : hasPrice && fCurrency(calculateRequestedPrice(teacher, totalDays, 'FULL_DAY'))}
                             </Typography>
                             <Typography

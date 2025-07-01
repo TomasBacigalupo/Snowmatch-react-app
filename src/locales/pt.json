@@ -457,7 +457,9 @@
         "deal_with_pro": "Tratar com PRO",
         "free": "Grátis",
         "morning": "Manhã",
+        "morning2hs": "Manhã (2hs)",
         "afternoon": "Tarde",
+        "afternoon2hs": "Tarde (2hs)",
         "all_day": "Todo o dia",
         "continue": "Continuar",
         "event_added": "Evento adicionado",
@@ -483,8 +485,12 @@
         "allDayDescription": "A aula começa às 10 da manhã e dura 6 horas",
         "morningTitle": "Manhã",
         "morningDescription": "A aula começa às 10 da manhã e dura 3 horas",
+        "morning2hsTitle": "Manhã (2hs)",
+        "morning2hsDescription": "A aula começa às 10 da manhã e dura 2 horas",
         "afternoonTitle": "Tarde",
-        "afternoonDescription": "A aula começa às 2 da tarde e dura 3 horas"
+        "afternoonDescription": "A aula começa às 2 da tarde e dura 3 horas",
+        "afternoon2hsTitle": "Tarde (2hs)",
+        "afternoon2hsDescription": "A aula começa às 2 da tarde e dura 2 horas"
     },
     "verify": {
         "title": "Verifique seu email",
@@ -1299,5 +1305,10 @@
     },
     "contactMessage": {
         "private": "Aula particular - {{name}} - {{id}}\nDias de aula:{{events}}\nCrianças: {{children}}\nAdultos: {{adults}}\nComentário: *{{message}}*\n*Total: {{total}}*"
-    }
+    },
+    "MORNING": "Manhã",
+    "MORNING_2HS": "Manhã (2hs)",
+    "AFTERNOON": "Tarde",
+    "AFTERNOON_2HS": "Tarde (2hs)",
+    "ALL_DAY": "Todo o dia"
 }

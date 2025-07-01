@@ -374,7 +374,9 @@
     "deal_with_pro": "Deal with PRO",
     "free": "Free",
     "morning": "Morning",
+    "morning2hs": "Morning (2hs)",
     "afternoon": "Afternoon",
+    "afternoon2hs": "Afternoon (2hs)",
     "all_day": "All Day",
     "continue": "Continue to find Pros",
     "event_added": "Lesson booked",
@@ -400,8 +402,12 @@
     "allDayDescription": "The class starts at 10 am and lasts 6 hours",
     "morningTitle": "Morning",
     "morningDescription": "The class starts at 10 am and lasts 3 hours",
+    "morning2hsTitle": "Morning (2hs)",
+    "morning2hsDescription": "The class starts at 10 am and lasts 2 hours",
     "afternoonTitle": "Afternoon",
-    "afternoonDescription": "The class starts at 2 pm and lasts 3 hours"
+    "afternoonDescription": "The class starts at 2 pm and lasts 3 hours",
+    "afternoon2hsTitle": "Afternoon (2hs)",
+    "afternoon2hsDescription": "The class starts at 2 pm and lasts 2 hours"
   },
   "product": {
     "heading": {
@@ -917,5 +923,10 @@
   },
   "contactMessage": {
     "private": "Private class - {{name}} - {{id}}\nClass days:{{events}}\nChildren: {{children}}\nAdults: {{adults}}\nComment: *{{message}}*\n*Total: {{total}}*"
-  }
+  },
+  "MORNING": "Morning",
+  "MORNING_2HS": "Morning (2hs)",
+  "AFTERNOON": "Afternoon",
+  "AFTERNOON_2HS": "Afternoon (2hs)",
+  "ALL_DAY": "All Day"
 }

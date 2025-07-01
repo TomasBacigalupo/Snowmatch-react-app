@@ -693,7 +693,9 @@
         "deal_with_pro": "Arregle con el PRO",
         "free": "Gratis",
         "morning": "Mañana",
+        "morning2hs": "Mañana (2hs)",
         "afternoon": "Tarde",
+        "afternoon2hs": "Tarde (2hs)",
         "allday": "Todo el día",
         "halfday": "Medio día",
         "continue": "Seguir buscando Pros",
@@ -733,8 +735,12 @@
         "allDayDescription": "La clase comienza a las 10 de la mañana y dura 6 horas. Tenés un recreo para comer ;)",
         "morningTitle": "Por la Mañana",
         "morningDescription": "La clase comienza a las 10 de la mañana y dura 3 horas",
+        "morning2hsTitle": "Por la Mañana (2hs)",
+        "morning2hsDescription": "La clase comienza a las 10 de la mañana y dura 2 horas",
         "afternoonTitle": "Por la Tarde",
-        "afternoonDescription": "La clase comienza a las 14 de la tarde y dura 3 horas"
+        "afternoonDescription": "La clase comienza a las 14 y dura 3 horas",
+        "afternoon2hsTitle": "Por la Tarde (2hs)",
+        "afternoon2hsDescription": "La clase comienza a las 14 y dura 2 horas"
     },
     "product": {
         "heading": {
@@ -1469,7 +1475,9 @@
         }
     },
     "MORNING": "Mañana",
+    "MORNING_2HS": "Mañana (2hs)",
     "AFTERNOON": "Tarde",
+    "AFTERNOON_2HS": "Tarde (2hs)",
     "ALL_DAY": "Día completo",
     "progress": {
         "title": "Progreso",

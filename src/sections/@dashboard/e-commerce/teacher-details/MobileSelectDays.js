@@ -37,9 +37,17 @@ const MobileSelectDays = ({ product, teacher, isOpen, closeFather, isRange }) =>
                     lessonTime = "AFTERNOON"
                     price = calculateRequestedPrice(teacher, 1, "AFTERNOON")
                 }
+                if (new Date(date).getHours() === 15) {
+                    lessonTime = "AFTERNOON_2HS"
+                    price = calculateRequestedPrice(teacher, 1, "AFTERNOON_2HS")
+                }
                 if (new Date(date).getHours() === 9) {
                     lessonTime = "MORNING"
                     price = calculateRequestedPrice(teacher, 1, "MORNING")
+                }
+                if (new Date(date).getHours() === 10) {
+                    lessonTime = "MORNING_2HS"
+                    price = calculateRequestedPrice(teacher, 1, "MORNING_2HS")
                 }
                 if (new Date(date).getHours() === 8) {
                     lessonTime = "ALL_DAY"
@@ -68,9 +76,17 @@ const MobileSelectDays = ({ product, teacher, isOpen, closeFather, isRange }) =>
                     lessonTime = "AFTERNOON"
                     price = calculatePrice(product, 1, "AFTERNOON")
                 }
+                if (new Date(date).getHours() === 15) {
+                    lessonTime = "AFTERNOON_2HS"
+                    price = 0
+                }
                 if (new Date(date).getHours() === 9) {
                     lessonTime = "MORNING"
                     price = calculatePrice(product, 1, "MORNING")
+                }
+                if (new Date(date).getHours() === 10) {
+                    lessonTime = "MORNING_2HS"
+                    price = calculatePrice(product, 1, "MORNING_2HS")
                 }
                 if (new Date(date).getHours() === 8) {
                     lessonTime = "ALL_DAY"
@@ -97,8 +113,16 @@ const MobileSelectDays = ({ product, teacher, isOpen, closeFather, isRange }) =>
                     lessonTime = "AFTERNOON"
                     price = 0
                 }
+                if (new Date(date).getHours() === 15) {
+                    lessonTime = "AFTERNOON_2HS"
+                    price = 0
+                }
                 if (new Date(date).getHours() === 9) {
                     lessonTime = "MORNING"
+                    price = 0
+                }
+                if (new Date(date).getHours() === 10) {
+                    lessonTime = "MORNING_2HS"
                     price = 0
                 }
                 if (new Date(date).getHours() === 8) {

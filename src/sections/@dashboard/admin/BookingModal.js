@@ -463,7 +463,9 @@ const BookingModal = ({ isOpen, onClose }) => {
                                 label="Time"
                             >
                                 <MenuItem value="MORNING">Morning</MenuItem>
+                                <MenuItem value="MORNING_2HS">Morning (2hs)</MenuItem>
                                 <MenuItem value="AFTERNOON">Afternoon</MenuItem>
+                                <MenuItem value="AFTERNOON_2HS">Afternoon (2hs)</MenuItem>
                                 <MenuItem value="ALL_DAY">All Day</MenuItem>
                             </Select>
                         </FormControl>

@@ -745,6 +745,22 @@ export function createBooking(teacherId, message, children, adults, events, tota
                             lessonTime: 'MORNING'
                         }
                     }
+                    if (e.lessonTime === 'MORNING_2HS') {
+                        return {
+                            ...e,
+                            start: utcToLocalDate(new Date(e.date).setHours(10, 0, 0, 0)),
+                            end: utcToLocalDate(new Date(e.date).setHours(12, 0, 0, 0)),
+                            lessonTime: 'MORNING_2HS'
+                        }
+                    }
+                    if (e.lessonTime === 'AFTERNOON_2HS') {
+                        return {
+                            ...e,
+                            start: utcToLocalDate(new Date(e.date).setHours(14, 0, 0, 0)),
+                            end: utcToLocalDate(new Date(e.date).setHours(16, 0, 0, 0)),
+                            lessonTime: 'AFTERNOON_2HS'
+                        }
+                    }
                     return {
                         ...e,
                         start: utcToLocalDate(new Date(e.date).setHours(10, 0, 0, 0)),
@@ -787,6 +803,22 @@ export function createAdminBooking(teacherId, studentId, message, children, adul
                             start:dayjs(e.start),
                             end: dayjs(e.start),
                             lessonTime: 'MORNING'
+                        }
+                    }
+                    if (e.lessonTime === 'MORNING_2HS') {
+                        return {
+                            ...e,
+                            start: utcToLocalDate(new Date(e.date).setHours(10, 0, 0, 0)),
+                            end: utcToLocalDate(new Date(e.date).setHours(12, 0, 0, 0)),
+                            lessonTime: 'MORNING_2HS'
+                        }
+                    }
+                    if (e.lessonTime === 'AFTERNOON_2HS') {
+                        return {
+                            ...e,
+                            start: utcToLocalDate(new Date(e.date).setHours(14, 0, 0, 0)),
+                            end: utcToLocalDate(new Date(e.date).setHours(16, 0, 0, 0)),
+                            lessonTime: 'AFTERNOON_2HS'
                         }
                     }
                     return {
@@ -836,6 +868,22 @@ export function bookingAndPay(teacherId, message, children, adults, events, tota
                             lessonTime: 'MORNING'
                         }
                     }
+                    if (e.lessonTime === 'MORNING_2HS') {
+                        return {
+                            ...e,
+                            start: utcToLocalDate(new Date(e.date).setHours(10, 0, 0, 0)),
+                            end: utcToLocalDate(new Date(e.date).setHours(12, 0, 0, 0)),
+                            lessonTime: 'MORNING_2HS'
+                        }
+                    }
+                    if (e.lessonTime === 'AFTERNOON_2HS') {
+                        return {
+                            ...e,
+                            start: utcToLocalDate(new Date(e.date).setHours(14, 0, 0, 0)),
+                            end: utcToLocalDate(new Date(e.date).setHours(16, 0, 0, 0)),
+                            lessonTime: 'AFTERNOON_2HS'
+                        }
+                    }
                     return {
                         ...e,
                         start: utcToLocalDate(new Date(e.date).setHours(10, 0, 0, 0)),
@@ -877,6 +925,22 @@ export function bookingAndPayProduct(productId, message, children, adults, event
                             start: utcToLocalDate(new Date(e.date).setHours(10, 0, 0, 0)),
                             end: utcToLocalDate(new Date(e.date).setHours(13, 0, 0, 0)),
                             lessonTime: 'MORNING'
+                        }
+                    }
+                    if (e.lessonTime === 'MORNING_2HS') {
+                        return {
+                            ...e,
+                            start: utcToLocalDate(new Date(e.date).setHours(10, 0, 0, 0)),
+                            end: utcToLocalDate(new Date(e.date).setHours(12, 0, 0, 0)),
+                            lessonTime: 'MORNING_2HS'
+                        }
+                    }
+                    if (e.lessonTime === 'AFTERNOON_2HS') {
+                        return {
+                            ...e,
+                            start: utcToLocalDate(new Date(e.date).setHours(14, 0, 0, 0)),
+                            end: utcToLocalDate(new Date(e.date).setHours(16, 0, 0, 0)),
+                            lessonTime: 'AFTERNOON_2HS'
                         }
                     }
                     return {
@@ -1057,6 +1121,22 @@ export function createPreference(teacherId, events) {
                             start: utcToLocalDate(new Date(e.date).setHours(10, 0, 0, 0)),
                             end: utcToLocalDate(new Date(e.date).setHours(13, 0, 0, 0)),
                             lessonTime: 'MORNING'
+                        }
+                    }
+                    if (e.lessonTime === 'MORNING_2HS') {
+                        return {
+                            ...e,
+                            start: utcToLocalDate(new Date(e.date).setHours(10, 0, 0, 0)),
+                            end: utcToLocalDate(new Date(e.date).setHours(12, 0, 0, 0)),
+                            lessonTime: 'MORNING_2HS'
+                        }
+                    }
+                    if (e.lessonTime === 'AFTERNOON_2HS') {
+                        return {
+                            ...e,
+                            start: utcToLocalDate(new Date(e.date).setHours(14, 0, 0, 0)),
+                            end: utcToLocalDate(new Date(e.date).setHours(16, 0, 0, 0)),
+                            lessonTime: 'AFTERNOON_2HS'
                         }
                     }
                     return {

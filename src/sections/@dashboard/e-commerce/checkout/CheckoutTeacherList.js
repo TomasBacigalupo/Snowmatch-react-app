@@ -51,8 +51,12 @@ export default function CheckoutTeacherList({ events, onDelete, onIncreaseQuanti
         switch (event?.lessonTime) {
             case 'MORNING':
                 return `${translate('checkout.morning')}`
+            case 'MORNING_2HS':
+                return `${translate('checkout.morning2hs')}`
             case 'AFTERNOON':
                 return `${translate('checkout.afternoon')}`
+            case 'AFTERNOON_2HS':
+                return `${translate('checkout.afternoon2hs')}`
             case 'FULL_DAY':
                 return `${translate('checkout.full_day')}`
             default:

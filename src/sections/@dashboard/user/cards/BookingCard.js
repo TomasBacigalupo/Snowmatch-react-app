@@ -122,10 +122,24 @@ export default function BookingCard({ booking, showInfo = true }) {
                     </Typography>
                 )
             }
+            if (start.getHours() === 10 && end.getHours() === 12) {
+                return (
+                    <Typography variant="body1" paragraph>
+                        {`${formatDate(start, { month: 'short', day: 'numeric' })} - Mañana (2hs)`}
+                    </Typography>
+                )
+            }
             if (start.getHours() === 13 && end.getHours() === 17) {
                 return (
                     <Typography variant="body1" paragraph>
                         {`${formatDate(start, { month: 'short', day: 'numeric' })} - Tarde`}
+                    </Typography>
+                )
+            }
+            if (start.getHours() === 14 && end.getHours() === 16) {
+                return (
+                    <Typography variant="body1" paragraph>
+                        {`${formatDate(start, { month: 'short', day: 'numeric' })} - Tarde (2hs)`}
                     </Typography>
                 )
             }

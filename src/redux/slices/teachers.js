@@ -875,12 +875,24 @@ export function calculatePrice(product, totalDays, time) {
   if (time === 'FULL_DAY') {
     return discountedPrice * 2;
   }
+  if (time === 'MORNING_2HS') {
+    return discountedPrice * 2;
+  }
+  if (time === 'AFTERNOON_2HS') {
+    return discountedPrice * 2;
+  }
   return discountedPrice;
 }
 
 export function calculateRequestedPrice(teacher, totalDays, time) {
   if (time === 'FULL_DAY') {
     return 610000;
+  }
+  if (time === 'MORNING_2HS') {
+    return 240000;
+  }
+  if (time === 'AFTERNOON_2HS') {
+    return 240000;
   }
 
   return 320000;

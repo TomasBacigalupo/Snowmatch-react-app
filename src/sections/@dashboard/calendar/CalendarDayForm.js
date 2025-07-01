@@ -162,6 +162,12 @@ export default function CalendarDayForm({ event, range, onCancel, clients, membe
     } else if (timeSelected === 'MORNING') {
       start.setHours(9, 0, 0, 0); // Set start time to 9:00 AM
       end.setHours(13, 0, 0, 0); // Set end time to 1:00 PM
+    } else if (timeSelected === 'MORNING_2HS') {
+      start.setHours(10, 0, 0, 0); // Set start time to 10:00 AM
+      end.setHours(12, 0, 0, 0); // Set end time to 12:00 PM
+    } else if (timeSelected === 'AFTERNOON_2HS') {
+      start.setHours(14, 0, 0, 0); // Set start time to 2:00 PM
+      end.setHours(16, 0, 0, 0); // Set end time to 4:00 PM
     } else { // Assume 'AFTERNOON'
       start.setHours(13, 0, 0, 0); // Set start time to 1:00 PM
       end.setHours(17, 0, 0, 0); // Set end time to 5:00 PM

@@ -10,6 +10,7 @@ import {
   Grid,
   Chip,
   IconButton,
+  Button,
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 // components
@@ -26,9 +27,10 @@ BookingDetailsDrawer.propTypes = {
   open: PropTypes.bool,
   onClose: PropTypes.func,
   booking: PropTypes.object,
+  refreshBookings: PropTypes.func,
 };
 
-export default function BookingDetailsDrawer({ open, onClose, booking }) {
+export default function BookingDetailsDrawer({ open, onClose, booking, refreshBookings }) {
   const theme = useTheme();
   const [editModalOpen, setEditModalOpen] = useState(false);
 
@@ -44,6 +46,17 @@ export default function BookingDetailsDrawer({ open, onClose, booking }) {
     // TODO: Implement the API call to update the booking
     console.log('Updated booking:', updatedBooking);
     setEditModalOpen(false);
+    // Refresh the bookings list after successful save
+    if (refreshBookings) {
+      refreshBookings();
+    }
+  };
+
+  const handleWhatsAppContact = (phoneNumber, name) => {
+    const message = `Hola ${name}, te contacto desde SnowMatch sobre la reserva #${booking?.id}`;
+    const encodedMessage = encodeURIComponent(message);
+    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+    window.open(whatsappUrl, '_blank');
   };
 
   const formatDate = (dateString) => {
@@ -78,6 +91,7 @@ export default function BookingDetailsDrawer({ open, onClose, booking }) {
         anchor="right"
         PaperProps={{
           sx: { 
+            paddingTop: 'env(safe-area-inset-top)',
             width: { 
               xs: '100%', 
               sm: 600,
@@ -141,35 +155,70 @@ export default function BookingDetailsDrawer({ open, onClose, booking }) {
                 </Label>
               </Stack>
             </Box>
-
             <Grid container spacing={3}>
               {/* Cliente */}
               <Grid item xs={12} md={6}>
                 <Box>
-                  <Typography variant="subtitle1" gutterBottom>
-                    Cliente
-                  </Typography>
+                  <Stack direction="row" alignItems="center" justifyContent="space-between">
+                    <Typography variant="subtitle1" gutterBottom>
+                      Cliente
+                    </Typography>
+                    {booking?.student?.cellphone && (
+                      <Button
+                        size="small"
+                        variant="outlined"
+                        startIcon={<Iconify icon="logos:whatsapp-icon" />}
+                        onClick={() => handleWhatsAppContact(booking.student.cellphone, `${booking.student.name} ${booking.student.lastname}`)}
+                        sx={{ minWidth: 'auto' }}
+                      >
+                        WhatsApp
+                      </Button>
+                    )}
+                  </Stack>
                   <Typography variant="body1">
                     {`${booking?.student.name} ${booking?.student.lastname}`}
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
                     ID: {booking?.student.id}
                   </Typography>
+                  {booking?.student?.cellphone && (
+                    <Typography variant="body2" color="text.secondary">
+                      Tel: {booking?.student.cellphone}
+                    </Typography>
+                  )}
                 </Box>
               </Grid>
 
               {/* Instructor */}
               <Grid item xs={12} md={6}>
                 <Box>
-                  <Typography variant="subtitle1" gutterBottom>
-                    Instructor
-                  </Typography>
+                  <Stack direction="row" alignItems="center" justifyContent="space-between">
+                    <Typography variant="subtitle1" gutterBottom>
+                      Instructor
+                    </Typography>
+                    {booking?.teacher?.cellphone && (
+                      <Button
+                        size="small"
+                        variant="outlined"
+                        startIcon={<Iconify icon="logos:whatsapp-icon" />}
+                        onClick={() => handleWhatsAppContact(booking.teacher.cellphone, `${booking.teacher.name} ${booking.teacher.lastname}`)}
+                        sx={{ minWidth: 'auto' }}
+                      >
+                        WhatsApp
+                      </Button>
+                    )}
+                  </Stack>
                   <Typography variant="body1">
                     {`${booking?.teacher.name} ${booking?.teacher.lastname}`}
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
                     ID: {booking?.teacher.id}
                   </Typography>
+                  {booking?.teacher?.phone && (
+                    <Typography variant="body2" color="text.secondary">
+                      Tel: {booking?.teacher.cellphone}
+                    </Typography>
+                  )}
                 </Box>
               </Grid>
             </Grid>
@@ -187,6 +236,22 @@ export default function BookingDetailsDrawer({ open, onClose, booking }) {
                   <Typography variant="body1">
                     {booking?.resort}
                   </Typography>
+                </Grid>
+                <Grid item xs={12} sm={6} md={3}>
+                  <Typography variant="body2" color="text.secondary">
+                    Tipo de Clase
+                  </Typography>
+                  <Label
+                    variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
+                    color={
+                      (booking?.type === 'REFERRED' && 'info') ||
+                      (booking?.type === 'ASSIGNED' && 'secondary') ||
+                      'default'
+                    }
+                    sx={{ px: 2, py: 1 }}
+                  >
+                    {booking?.type || 'ASSIGNED'}
+                  </Label>
                 </Grid>
                 <Grid item xs={12} sm={6} md={3}>
                   <Typography variant="body2" color="text.secondary">

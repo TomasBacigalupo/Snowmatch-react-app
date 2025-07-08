@@ -299,26 +299,34 @@ export default function EcommerceCheckoutTeacher() {
   } else {
     return (
       <Page title="Teacher: Match" sx={{ paddingTop: 'env(safe-area-inset-top)', paddingBottom: 'env(safe-area-inset-bottom)' }}>
-        <CheckoutCart />
-        {!user.cellphone && <CompleteUserInfo onUserInfoChange={handleUserInfoChange} />}
-        <CheckoutMessage />
-        <CheckoutGuests />
-        <Box marginTop={2}>
-          <CheckoutSummary
-            enableEdit
-            total={bookingPrice}
-            totalEvents={events.length}
-            subtotal={bookingPrice}
-            discount={discount}
-            shipping={shipping}
-            onEdit={() => { }}
-            bookingPrice={bookingPrice}
-            onApplyDiscount={(discountCode) => {
-              setDiscountCode(discountCode);
-              dispatch(calculateDiscount(discountCode, bookingPriceWithouDiscount));
-            }}
-          />
-        </Box>
+        <Box
+          sx={{
+            maxWidth: { xs: '100%', md: 600, lg: 800 },
+            mx: 'auto',
+            px: { xs: 0, md: 3 },
+            pb: {md: 3}
+          }}
+        >
+          <CheckoutCart />
+          {!user.cellphone && <CompleteUserInfo onUserInfoChange={handleUserInfoChange} />}
+          <CheckoutMessage />
+          <CheckoutGuests />
+          <Box marginTop={2}>
+            <CheckoutSummary
+              enableEdit
+              total={bookingPrice}
+              totalEvents={events.length}
+              subtotal={bookingPrice}
+              discount={discount}
+              shipping={shipping}
+              onEdit={() => { }}
+              bookingPrice={bookingPrice}
+              onApplyDiscount={(discountCode) => {
+                setDiscountCode(discountCode);
+                dispatch(calculateDiscount(discountCode, bookingPriceWithouDiscount));
+              }}
+            />
+          </Box>
         <Box marginTop={2}>
           {bookingPrice === 0 && preferenceId && !createBookingError &&
             // <Payment
@@ -469,6 +477,7 @@ export default function EcommerceCheckoutTeacher() {
             }}
           >Referír Clase</Button>
         </Box>}
+        </Box>
 
       </Page>
     );

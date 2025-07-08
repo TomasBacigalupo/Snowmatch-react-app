@@ -14,6 +14,7 @@ import DashboardHeader from './header';
 import NavbarVertical from './navbar/NavbarVertical';
 import NavbarHorizontal from './navbar/NavbarHorizontal';
 import LabelBottomNavigation from './navbar/LabelBottomNavigation';
+import ProfileCompletionBanner from '../../components/ProfileCompletionBanner';
 
 // ----------------------------------------------------------------------
 
@@ -75,6 +76,7 @@ function DashboardLayout() {
             },
           }}
         >
+          <ProfileCompletionBanner />
           <Outlet />
         </Box>
       </>
@@ -93,6 +95,7 @@ function DashboardLayout() {
       <NavbarVertical isOpenSidebar={open} onCloseSidebar={() => setOpen(false)} isGuest={false} />
 
       <MainStyle collapseClick={collapseClick}>
+        <ProfileCompletionBanner />
         <Outlet />
       </MainStyle>
     </Box>
@@ -134,6 +137,7 @@ function GuestLayout() {
             },
           }}
         >
+          <ProfileCompletionBanner />
           <Outlet />
         </Box>
       </>
@@ -152,6 +156,7 @@ function GuestLayout() {
       <NavbarVertical isOpenSidebar={open} onCloseSidebar={() => setOpen(false)} isGuest={true} />
 
       <MainStyle collapseClick={collapseClick}>
+        <ProfileCompletionBanner />
         <Outlet />
       </MainStyle>
       <LabelBottomNavigation onOpenSidebar={() => setOpen(true)} isGuest={true}/>

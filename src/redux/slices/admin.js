@@ -22,6 +22,7 @@ const initialState = {
   selectedEmail: '',
   selectedBookingId: null,
   documents: [],
+  successMessage: null,
 };
 
 const slice = createSlice({
@@ -101,6 +102,17 @@ const slice = createSlice({
       state.isOpenDeleteModal = false;
       state.selectedBookingId = null;
     },
+
+    // BOOKING CREATION SUCCESS
+    createBookingSuccess(state) {
+      state.isLoading = false;
+      state.successMessage = 'Booking created successfully';     
+    },
+
+    // CLEAR SUCCESS MESSAGE
+    clearSuccessMessage(state) {
+      state.successMessage = null;
+    },
   }
 });
 
@@ -108,9 +120,7 @@ const slice = createSlice({
 export default slice.reducer;
 
 // Actions
-// export const {
-// } = slice.actions;
-export const { openModal, closeModal, getSelectedEmail, openEditBookingModal, openDeleteModal, closeDeleteModal } = slice.actions;
+export const { openModal, closeModal, getSelectedEmail, openEditBookingModal, openDeleteModal, closeDeleteModal, createBookingSuccess, clearSuccessMessage } = slice.actions;
 
 // ----------------------------------------------------------------------
 
@@ -323,8 +333,10 @@ export function editAdminBooking(bookingId, {
               paymentStatus
           });
           dispatch(slice.actions.updateBookingSuccess(response.data));
+          return response.data;
       } catch (error) {
           dispatch(slice.actions.hasError(error));
+          throw error;
       }
   };
 }

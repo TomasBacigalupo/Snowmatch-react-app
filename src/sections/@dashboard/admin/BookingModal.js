@@ -1,9 +1,10 @@
 import { useEffect, useState, useCallback } from 'react';
-import { Dialog, DialogContent, Select, TextField, FormControl, InputLabel, MenuItem, DialogActions, DialogTitle, Button, Box, Autocomplete, Typography, IconButton, Grid, Checkbox, FormControlLabel } from '@mui/material';
+import { Dialog, DialogContent, Select, TextField, FormControl, InputLabel, MenuItem, DialogActions, DialogTitle, Button, Box, Autocomplete, Typography, IconButton, Grid, Checkbox, FormControlLabel, Chip } from '@mui/material';
+import { LoadingButton } from '@mui/lab';
 import { useDispatch } from 'src/redux/store';
-import { getTeachers, getTeachersAdmin } from 'src/redux/slices/admin';
+import { getTeachers, getTeachersAdmin, createBookingSuccess, clearSuccessMessage } from 'src/redux/slices/admin';
 import { useSelector } from 'react-redux';
-import { createAdminBooking } from 'src/redux/slices/bookings';
+import { createAdminBooking, setBookingSuccess } from 'src/redux/slices/bookings';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { DateRangePicker } from '@mui/lab';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -13,9 +14,11 @@ import { format, parseISO, addDays, isWithinInterval } from 'date-fns';
 import { NumericFormat } from 'react-number-format';
 import ShopTeacherCard from 'src/sections/@dashboard/e-commerce/shop/ShopTeacherCard';
 import { PATH_DASHBOARD } from 'src/routes/paths';
+import { useSnackbar } from 'notistack';
 
-const BookingModal = ({ isOpen, onClose }) => {
+const BookingModal = ({ isOpen, onClose, refreshBookings, filterTeacherId, filterStudentId, filterMonth, page, rowsPerPage, filterResort }) => {
     const dispatch = useDispatch();
+    const { enqueueSnackbar } = useSnackbar();
     const [formData, setFormData] = useState({
         teacher: null,
         student: null,
@@ -40,7 +43,8 @@ const BookingModal = ({ isOpen, onClose }) => {
     const [teacherId, setTeacherId] = useState(null);
     const [studentId, setStudentId] = useState(null);
 
-    const { teachers } = useSelector((state) => state.admin);
+    const { teachers, successMessage } = useSelector((state) => state.admin);
+    const { bookSuccess, isLoading, error } = useSelector((state) => state.bookings);
 
     useEffect(() => {
         dispatch(getTeachers(1, "TEACHER", formData.teacher, 0))
@@ -49,6 +53,48 @@ const BookingModal = ({ isOpen, onClose }) => {
     useEffect(() => {
         dispatch(getTeachers(1, "STUDENT", formData.student, 0))
     }, [formData.student])
+
+    // Handle booking creation success
+    useEffect(() => {
+        if (bookSuccess && teacherId) {
+            enqueueSnackbar('Booking created successfully', { variant: 'success' }); 
+            
+            // Reset form and close modal
+            setFormData({
+                teacher: null,
+                student: null,
+                dateTimes: [{ date: '', time: 'ALL_DAY', price: '' }],
+                resort: 'Cerro Catedral',
+                children: 0,
+                adults: 0,
+                teacherSearch: '',
+                bookingType: 'ASSIGNED',
+                includesLaunch: false,
+                includesEquipment: false,
+                paymentStatus: 'PAID',
+                internalComment: ''
+            });
+
+            setDateRange({ startDate: null, endDate: null });
+            setTeacherId(null);
+            setStudentId(null);
+
+            onClose();
+        }
+    }, [bookSuccess, dispatch, enqueueSnackbar, onClose]);
+
+    useEffect(() => {
+        if(isOpen){
+            dispatch(setBookingSuccess(false))
+        }
+    },[isOpen])
+
+    // Handle booking creation error
+    useEffect(() => {
+        if (error) {
+            enqueueSnackbar('Something went wrong. Please try again.', { variant: 'error' });
+        }
+    }, [error, enqueueSnackbar]);
 
     const handleFormChange = (event, index) => {
         const { name, value } = event.target;
@@ -164,23 +210,8 @@ const BookingModal = ({ isOpen, onClose }) => {
             formData.includesLaunch,
             formData.includesEquipment,
             formData.paymentStatus,
-            formData.internalComment));
-
-        setFormData({
-            teacher: null,
-            student: null,
-            dateTimes: [{ date: '', time: 'ALL_DAY', price: '' }],
-            resort: 'Cerro Catedral',
-            children: 0,
-            adults: 0,
-            teacherSearch: '',
-            bookingType: 'ASIGNADO',
-            includesLaunch: false,
-            includesEquipment: false,
-            paymentStatus: 'PAID',
-            internalComment: ''
-        });
-        onClose();
+            formData.internalComment,
+            formData.resort));
     };
 
     const handleTeacherInputChange = (event, newValue) => {
@@ -432,8 +463,8 @@ const BookingModal = ({ isOpen, onClose }) => {
                     }))}
                     multiline
                     rows={2}
-                    inputProps={{ maxLength: 255 }}
-                    helperText={`${formData.internalComment.length}/255 characters`}
+                    inputProps={{ maxLength: 15 }}
+                    helperText={`${formData.internalComment.length}/15 characters`}
                 />
 
                 <Typography variant="h6" sx={{ mt: 3, mb: 2 }}>Selected Dates</Typography>
@@ -491,7 +522,35 @@ const BookingModal = ({ isOpen, onClose }) => {
                     </Box>
                 ))}
 
-                <Typography variant="h6" sx={{ mt: 3, mb: 2 }}>Teacher</Typography>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mt: 3, mb: 2 }}>
+                    <Typography variant="h6">Teacher</Typography>
+                    <Box sx={{ display: 'flex', gap: 1 }}>
+                        <Chip 
+                            label="Grupal" 
+                            onClick={() => {
+                                setTeacherId(1117);
+                                setFormData((prevData) => ({
+                                    ...prevData,
+                                    teacher: { id: 1117, name: 'Grupal', lastname: '' } || null,
+                                }));
+                            }}
+                            color={teacherId === 1450 ? "primary" : "default"}
+                            variant={teacherId === 1450 ? "filled" : "outlined"}
+                        />
+                        <Chip 
+                            label="Escuelita" 
+                            onClick={() => {
+                                setTeacherId(1118);
+                                setFormData((prevData) => ({
+                                    ...prevData,
+                                    teacher: { id: 1118, name: 'Escuelita', lastname: '' } || null,
+                                }));
+                            }}
+                            color={teacherId === 1253 ? "primary" : "default"}
+                            variant={teacherId === 1253 ? "filled" : "outlined"}
+                        />
+                    </Box>
+                </Box>
                 <Box sx={{ display: 'flex', gap: 1, mb: 2 }}>
                     <TextField
                         fullWidth
@@ -567,7 +626,13 @@ const BookingModal = ({ isOpen, onClose }) => {
             </DialogContent>
             <DialogActions>
                 <Button onClick={onClose}>Cancel</Button>
-                <Button onClick={handleSubmit} variant="contained">Create Booking</Button>
+                <LoadingButton 
+                    onClick={handleSubmit} 
+                    variant="contained" 
+                    loading={isLoading}
+                >
+                    Create Booking
+                </LoadingButton>
             </DialogActions>
         </Dialog>
     );

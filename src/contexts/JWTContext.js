@@ -351,9 +351,17 @@ function AuthProvider({ children }) {
       const signin = await SignInWithApple.authorize(options);
       console.log('Apple login successeeeee', signin.response.identityToken);
 
+      // Extraer información adicional del usuario de Apple si está disponible
+      const userInfo = signin.response.user || {};
+      const firstName = userInfo.name?.firstName || '';
+      const lastName = userInfo.name?.lastName || '';
+      const email = userInfo.email || '';
 
       const response = await axios.post('/api/auth/apple/login', {
-        "idToken": signin.response.identityToken
+        "idToken": signin.response.identityToken,
+        "firstName": firstName,
+        "lastName": lastName,
+        "email": email
       });
 
       const user = response.data;
@@ -403,14 +411,32 @@ function AuthProvider({ children }) {
       console.log('Google login result:', result);
 
       const idToken = result?.result?.idToken;
-      const firstName = result?.result?.firstName || '';
-      const lastName = result?.result?.lastName || '';
+      const firstName = result?.result?.firstName || result?.result?.givenName || '';
+      const lastName = result?.result?.lastName || result?.result?.familyName || '';
+      const email = result?.result?.email || '';
+      const displayName = result?.result?.displayName || '';
+
+      // Si no tenemos firstName y lastName, intentamos extraerlos del displayName
+      let extractedFirstName = firstName;
+      let extractedLastName = lastName;
+      
+      if (!firstName && !lastName && displayName) {
+        const nameParts = displayName.split(' ');
+        if (nameParts.length >= 2) {
+          extractedFirstName = nameParts[0];
+          extractedLastName = nameParts.slice(1).join(' ');
+        } else if (nameParts.length === 1) {
+          extractedFirstName = nameParts[0];
+        }
+      }
 
       if (idToken) {
         const response = await axios.post('/api/auth/google/login', {
           "idToken": idToken,
-          "firstName": firstName,
-          "lastName": lastName
+          "firstName": extractedFirstName,
+          "lastName": extractedLastName,
+          "email": email,
+          "displayName": displayName
         });
 
         const user = response.data;

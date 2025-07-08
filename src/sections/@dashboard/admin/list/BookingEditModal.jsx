@@ -19,6 +19,13 @@ import {
 import { useDispatch } from 'react-redux';
 import { editAdminBooking } from 'src/redux/slices/admin';
 import { useState } from 'react';
+import { useSnackbar } from 'notistack';
+
+// Resort options from ShopFilterSidebar
+const RESORT_OPTIONS = [
+  { category: "Argentina", resorts: [ 'Caviahue', 'Cerro Bayo', 'Cerro Castor', 'Cerro Catedral', 'Chapelco', 'La Hoya', 'Las Leñas', 'Las Pendientes', 'Perito Moreno', 'Lago Hermoso', 'Buenos Aires'] },
+  { category: "Chile", resorts: [ 'Portillo']}
+];
 
 BookingEditModal.propTypes = {
   open: PropTypes.bool,
@@ -29,6 +36,7 @@ BookingEditModal.propTypes = {
 
 export default function BookingEditModal({ open, onClose, booking, onSave }) {
   const dispatch = useDispatch();
+  const { enqueueSnackbar } = useSnackbar();
   const [userCommentLength, setUserCommentLength] = useState(booking?.userComment?.length || 0);
   const [internalCommentLength, setInternalCommentLength] = useState(booking?.internalComment?.length || 0);
 
@@ -46,9 +54,15 @@ export default function BookingEditModal({ open, onClose, booking, onSave }) {
       includesLaunch: formData.get('includesLaunch') === 'on',
       includesEquipments: formData.get('includesEquipments') === 'on',
       state: formData.get('state'),
+      type: formData.get('type'),
+      resort: formData.get('resort'),
+      teacherId: formData.get('teacherId'),
+      studentId: formData.get('studentId'),
     };
     console.log(updatedBooking);
+    
     dispatch(editAdminBooking(booking.id, updatedBooking));
+    enqueueSnackbar('Reserva actualizada exitosamente', { variant: 'success' });
     onSave({
       ...booking,
       userComment: formData.get('userComment'),
@@ -62,6 +76,8 @@ export default function BookingEditModal({ open, onClose, booking, onSave }) {
       includesLaunch: formData.get('includesLaunch') === 'true',
       price: parseFloat(formData.get('price')),
       state: formData.get('state'),
+      type: formData.get('type'),
+      resort: formData.get('resort'),
     });
   };
 
@@ -71,7 +87,7 @@ export default function BookingEditModal({ open, onClose, booking, onSave }) {
         <DialogTitle>Editar Reserva #{booking?.id}</DialogTitle>
         <DialogContent>
           <Stack spacing={3} sx={{ mt: 2 }}>
-            <Box sx={{ display: 'flex', gap: 2 }}>
+            <Stack spacing={2} direction={{ xs: 'column', md: 'row' }}>
               <TextField
                 fullWidth
                 label="Comentario del Cliente"
@@ -95,9 +111,9 @@ export default function BookingEditModal({ open, onClose, booking, onSave }) {
                 onChange={(e) => setInternalCommentLength(e.target.value.length)}
                 helperText={`${internalCommentLength}/255 caracteres`}
               />
-            </Box>
+            </Stack>
 
-            <Box sx={{ display: 'flex', gap: 2 }}>
+            <Stack spacing={2} direction={{ xs: 'column', md: 'row' }}>
               <TextField
                 fullWidth
                 label="ID del Estudiante"
@@ -111,9 +127,9 @@ export default function BookingEditModal({ open, onClose, booking, onSave }) {
                 name="teacherId"
                 defaultValue={booking?.teacher?.id}
               />
-            </Box>
+            </Stack>
 
-            <Box sx={{ display: 'flex', gap: 2 }}>
+            <Stack spacing={2} direction={{ xs: 'column', md: 'row' }}>
               <FormControl fullWidth>
                 <InputLabel>Estado de Pago</InputLabel>
                 <Select
@@ -143,9 +159,43 @@ export default function BookingEditModal({ open, onClose, booking, onSave }) {
                   <MenuItem value="DECLINED">Rechazado</MenuItem>
                 </Select>
               </FormControl>
-            </Box>
+            </Stack>
 
-            <Box sx={{ display: 'flex', gap: 2 }}>
+            <Stack spacing={2} direction={{ xs: 'column', md: 'row' }}>
+              <FormControl fullWidth>
+                <InputLabel>Tipo de Reserva</InputLabel>
+                <Select
+                  name="type"
+                  label="Tipo de Reserva"
+                  defaultValue={booking?.type || 'ASSIGNED'}
+                >
+                  <MenuItem value="ASSIGNED">Asignado</MenuItem>
+                  <MenuItem value="REFERRED">Referido</MenuItem>
+                </Select>
+              </FormControl>
+
+              <FormControl fullWidth>
+                <InputLabel>Resort</InputLabel>
+                <Select
+                  name="resort"
+                  label="Resort"
+                  defaultValue={booking?.resort || ''}
+                >
+                  {RESORT_OPTIONS.map((country) => [
+                    <MenuItem key={`${country.category}-header`} disabled sx={{ fontWeight: 'bold', backgroundColor: 'grey.100' }}>
+                      {country.category}
+                    </MenuItem>,
+                    ...country.resorts.sort().map(resort => (
+                      <MenuItem key={resort} value={resort} sx={{ pl: 3 }}>
+                        {resort}
+                      </MenuItem>
+                    ))
+                  ]).flat()}
+                </Select>
+              </FormControl>
+            </Stack>
+
+            <Stack spacing={2} direction={{ xs: 'column', md: 'row' }}>
               <TextField
                 fullWidth
                 label="Cantidad de Adultos"
@@ -163,9 +213,9 @@ export default function BookingEditModal({ open, onClose, booking, onSave }) {
                 defaultValue={booking?.children}
                 InputProps={{ inputProps: { min: 0 } }}
               />
-            </Box>
+            </Stack>
 
-            <Box sx={{ display: 'flex', gap: 2 }}>
+            <Stack spacing={2} direction={{ xs: 'column', md: 'row' }}>
               <TextField
                 fullWidth
                 label="Precio"
@@ -190,7 +240,7 @@ export default function BookingEditModal({ open, onClose, booking, onSave }) {
                 }}
               />
 
-              <Box sx={{ display: 'flex', gap: 2, width: '100%', alignItems: 'center' }}>
+              <Stack spacing={2} direction={{ xs: 'column', sm: 'row' }} sx={{ width: '100%', alignItems: { xs: 'flex-start', sm: 'center' } }}>
                 <FormControlLabel
                   control={
                     <Switch
@@ -210,8 +260,8 @@ export default function BookingEditModal({ open, onClose, booking, onSave }) {
                   }
                   label="Incluye Almuerzo"
                 />
-              </Box>
-            </Box>
+              </Stack>
+            </Stack>
           </Stack>
         </DialogContent>
         <DialogActions>

@@ -55,14 +55,13 @@ const movingShineAnimation = keyframes`
     }
 `;
 
-const ShopCategorizedProductAvatarCard = ({ level, product, avatar = '/assets/avatars/chona-con-niño.jpg' }) => {
+const ShopCategorizedProductAvatarCard = ({ level, product, avatar = '/assets/avatars/chona-con-niño.jpg', time = 3 }) => {
     const id = product?.id;
     const price = product?.price ?? 0;
     const name = product?.name;
     const description = product?.description;
     const title = name;
     const capacity = 5;
-    const time = 3;
     const { user } = useAuth();
     const isTeacher = user?.role === 'TEACHER';
     const theme = useTheme();

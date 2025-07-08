@@ -7,7 +7,6 @@ import { Avatar, Checkbox, TableRow, TableCell, Typography, MenuItem, Box, Card 
 import Label from '../../../../components/Label';
 import Iconify from '../../../../components/Iconify';
 import { TableMoreMenu } from '../../../../components/table';
-
 // ----------------------------------------------------------------------
 
 AdminBookingTableCard.propTypes = {
@@ -20,11 +19,12 @@ AdminBookingTableCard.propTypes = {
     onDeleteRow: PropTypes.func,
     onWapp: PropTypes.func,
     onEvents: PropTypes.func,
+    refreshBookings: PropTypes.func,
 };
 
-export default function AdminBookingTableCard({ row, selected, onEditRow, onSelectRow, onConfirmRow, onDeclineRow, onWapp, onEvents, onDeleteRow }) {
+export default function AdminBookingTableCard({ row, selected, onEditRow, onSelectRow, onConfirmRow, onDeclineRow, onWapp, onEvents, onDeleteRow, refreshBookings }) {
     const theme = useTheme();
-
+    
     const { imageLink, userComment, state, resort, adults, children, eventList, id, price } = row;
     const { name, lastname, id: teacherId } = row.teacher;
     const { name: studentName, lastname: studentLastname, id: studentId } = row.student;
@@ -64,6 +64,7 @@ export default function AdminBookingTableCard({ row, selected, onEditRow, onSele
 
     return (
         <Card sx={{ width: '100%', my: 0.5 }}>
+            
             <Box display='flex' padding={2} flexDirection='column'>
                 <Box display='flex' justifyContent='space-between' alignItems="flex-start">
                     <Box display='flex' flexDirection='column'>

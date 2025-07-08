@@ -243,6 +243,10 @@ const slice = createSlice({
             state.events = action.payload;
         },
 
+        setBookingSuccess(state, action) {
+            state.bookSuccess = action.payload;
+        }
+
     },
 });
 
@@ -250,7 +254,7 @@ const slice = createSlice({
 export default slice.reducer;
 
 // Actions
-export const { openModal, closeModal, selectEvent, changeMessage, bookingPending, changeAsignedStudents, onCreateBookingError } = slice.actions;
+export const { openModal, closeModal, selectEvent, changeMessage, bookingPending, changeAsignedStudents, onCreateBookingError, setBookingSuccess } = slice.actions;
 
 // ----------------------------------------------------------------------
 
@@ -496,7 +500,7 @@ export function createBooking(teacherId, message, children, adults, events, tota
     };
 }
 
-export function createAdminBooking(teacherId, studentId, message, children, adults, events, totalPrice, bookingType, includesLaunch, includesEquipment, paymentStatus, internalComment) {
+export function createAdminBooking(teacherId, studentId, message, children, adults, events, totalPrice, bookingType, includesLaunch, includesEquipment, paymentStatus, internalComment, resort) {
     return async () => {
         dispatch(slice.actions.startLoading());
         try {
@@ -511,6 +515,22 @@ export function createAdminBooking(teacherId, studentId, message, children, adul
                             start: dayjs(e.start),
                             end: dayjs(e.start),
                             lessonTime: 'AFTERNOON'
+                        }
+                    }
+                    if (e.lessonTime === 'AFTERNOON_2HS') {
+                        return {
+                            ...e,
+                            start: dayjs(e.start),
+                            end: dayjs(e.start),
+                            lessonTime: 'AFTERNOON_2HS'
+                        }
+                    }
+                    if (e.lessonTime === 'MORNING_2HS') {
+                        return {
+                            ...e,
+                            start: dayjs(e.start),
+                            end: dayjs(e.start),
+                            lessonTime: 'MORNING_2HS'
                         }
                     }
                     if (e.lessonTime === 'MORNING') {
@@ -536,7 +556,8 @@ export function createAdminBooking(teacherId, studentId, message, children, adul
                 includesLaunch: includesLaunch,
                 includesEquipment: includesEquipment,
                 paymentStatus: paymentStatus,
-                internalComment: internalComment
+                internalComment: internalComment,
+                resort: resort
             });
             dispatch(slice.actions.createBookingSuccess());
         } catch (error) {

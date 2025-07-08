@@ -13,8 +13,30 @@ import ThemeColorPresets from './components/ThemeColorPresets';
 import ThemeLocalization from './components/ThemeLocalization';
 import MotionLazyContainer from './components/animate/MotionLazyContainer';
 import DeviceRedirect from './components/DeviceRedirect';
+import CompleteProfileModal from './components/CompleteProfileModal';
+import useCompleteProfile from './hooks/useCompleteProfile';
 
 // ----------------------------------------------------------------------
+
+function AppContent() {
+  const { showCompleteProfile, handleCompleteProfile, handleSkipCompleteProfile } = useCompleteProfile();
+
+  return (
+    <>
+      <ProgressBarStyle />
+      <ChartStyle />
+      {/* <Settings /> */}
+      <ScrollToTop />
+      <Router />
+      
+      <CompleteProfileModal
+        open={showCompleteProfile}
+        onClose={handleSkipCompleteProfile}
+        onComplete={handleCompleteProfile}
+      />
+    </>
+  );
+}
 
 export default function App() {
   return (
@@ -24,11 +46,7 @@ export default function App() {
           <RtlLayout>
             <NotistackProvider>
               <MotionLazyContainer>
-                <ProgressBarStyle />
-                <ChartStyle />
-                {/* <Settings /> */}
-                <ScrollToTop />
-                <Router />
+                <AppContent />
               </MotionLazyContainer>
             </NotistackProvider>
           </RtlLayout>

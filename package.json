@@ -1,7 +1,7 @@
 {
   "name": "SnowMatch",
   "author": "snowmatch.pro",
-  "version": "9.0.0",
+  "version": "10.0.0",
   "homepage": "https://snowmatch.pro",
   "description": "Javascript Version",
   "private": true,
@@ -24,6 +24,7 @@
     "destination": "build",
     "include": [
       "/",
+      "/all-teachers",
       "/heliski",
       "/pt/heliski",
       "/en/heliski",
@@ -828,7 +829,7 @@
       "/reservar-clase-ski/gonzalo-1031",
       "/reservar-clase-ski/luciano-1043"
     ],
-    "timeout": 300000,
+    "timeout": 900000,
     "puppeteerArgs": [
       "--no-sandbox",
       "--disable-setuid-sandbox",

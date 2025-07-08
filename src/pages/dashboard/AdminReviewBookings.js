@@ -24,6 +24,7 @@ import {
   DialogActions,
   Typography
 } from '@mui/material';
+
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // hooks
@@ -51,6 +52,7 @@ import AdminBookingTableCard from 'src/sections/@dashboard/admin/list/AdminBooki
 import BookingModal from 'src/sections/@dashboard/admin/BookingModal';
 import BookingSummary from 'src/sections/@dashboard/admin/list/BookingSummary';
 import useAuth from 'src/hooks/useAuth';
+import BookingDetailsDrawer from 'src/sections/@dashboard/admin/list/BookingDetailsDrawer';
 
 // ---------------------------------------------------------------------
 
@@ -97,14 +99,14 @@ export default function AdminReviewBookings() {
     onChangeRowsPerPage,
   } = useTable();
 
-  const {user} = useAuth();
+  const { user } = useAuth();
 
   const { themeStretch } = useSettings();
 
   const navigate = useNavigate();
 
   const [tableData, setTableData] = useState([]);
-
+  const [openDrawer, setOpenDrawer] = useState(false);
   const [filterName, setFilterName] = useState('');
   const [filterRole, setFilterRole] = useState(ROLE_OPTIONS[0]);
   const [filterLevel, setFilterLevel] = useState(0);
@@ -116,7 +118,7 @@ export default function AdminReviewBookings() {
   const [students, setStudents] = useState([]);
   const [filterResort, setFilterResort] = useState('');
   const { currentTab: filterStatus, onChangeTab: onChangeFilterStatus } = useTabs('PENDING');
-
+  const [selectedBooking, setSelectedBooking] = useState(null);
   const handleFilterName = (filterName) => {
     setFilterName(filterName);
     setPage(0);
@@ -255,6 +257,10 @@ export default function AdminReviewBookings() {
     dispatch(openDeleteModal(id));
   }
 
+  const refreshBookings = () => {
+    dispatch(getBookings(filterTeacherId, filterStudentId, filterMonth, page, rowsPerPage, filterResort));
+  }
+
   return (
     <Page title="Admin Review: List">
       <Container maxWidth={themeStretch ? false : 'lg'}>
@@ -302,7 +308,19 @@ export default function AdminReviewBookings() {
         />
         <BookingSummary bookings={tableData} />
         <Card>
-          <BookingModal isOpen={isOpen} onClose={() => setIsOpen(false)} />
+          <BookingModal
+            isOpen={isOpen}
+            onClose={() => {
+              setIsOpen(false);
+              refreshBookings();
+            }}
+            filterTeacherId={filterTeacherId}
+            filterStudentId={filterStudentId}
+            filterMonth={filterMonth}
+            page={page}
+            rowsPerPage={rowsPerPage}
+            filterResort={filterResort}
+          />
           <Divider />
           <Scrollbar>
             <Hidden smDown>
@@ -357,6 +375,7 @@ export default function AdminReviewBookings() {
                         onWapp={() => { handleContactWapp(row.countryCode, row.cellphone, row.name) }}
                         onEvents={() => { navigate(PATH_DASHBOARD.admin.events(row.teacher.id)) }}
                         onDeleteRow={() => handleDeleteRow(row.id)}
+                        refreshBookings={refreshBookings}
                       />))}
 
                     <TableEmptyRows height={denseHeight} emptyRows={0} />
@@ -368,7 +387,10 @@ export default function AdminReviewBookings() {
             </Hidden>
             <Hidden smUp>
               {tableData?.map((row) => (
-                <AdminBookingTableCard
+                <Box onClick={() =>{ 
+                  setOpenDrawer(true)
+                  setSelectedBooking(row)
+                }}><AdminBookingTableCard
                   key={row.userId}
                   row={row}
                   selected={selected.includes(row.userId)}
@@ -379,8 +401,14 @@ export default function AdminReviewBookings() {
                   onWapp={() => { handleContactWapp(row.countryCode, row.cellphone, row.name) }}
                   onEvents={() => { navigate(PATH_DASHBOARD.admin.events(row.id)) }}
                   onDeleteRow={() => handleDeleteRow(row.id)}
-                  />))}
-
+                  refreshBookings={refreshBookings}
+                /></Box>))}
+             {openDrawer && selectedBooking && <BookingDetailsDrawer
+                open={openDrawer}
+                onClose={() => setOpenDrawer(false)}
+                booking={selectedBooking}
+                refreshBookings={refreshBookings}
+              />}
             </Hidden>
 
           </Scrollbar>

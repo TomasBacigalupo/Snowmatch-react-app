@@ -55,14 +55,13 @@ const movingShineAnimation = keyframes`
     }
 `;
 
-const ShopCategorizedProductCard = ({ level, product }) => {
+const ShopCategorizedProductCard = ({ level, product, time = 3 }) => {
     const id = product?.id;
     const price = product?.price ?? 0;
     const name = product?.name;
     const description = product?.description;
     const title = name;
     const capacity = 5;
-    const time = 3;
     const color = getColor(level);
     const { user } = useAuth();
     const isTeacher = user?.role === 'TEACHER';

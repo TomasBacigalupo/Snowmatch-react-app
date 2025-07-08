@@ -90,8 +90,8 @@ export default function CheckoutCart() {
     dispatch(closeAddEventModal())
   }
   return (
-    <Grid container spacing={3}>
-      <Grid item xs={12} md={8}>
+    <Grid container spacing={3} sx={{ mt: {md: 0} }}>
+      <Grid item xs={12}>
         <Card sx={{ mb: 1, borderRadius: '0px' }}>
           {!isEmptyCart ? (
             <Scrollbar>
@@ -124,7 +124,7 @@ export default function CheckoutCart() {
           </DialogAnimate>
         </Card>
       </Grid>
-      <Hidden smDown>
+      {/* <Hidden smDown>
 
         <Grid item xs={12} md={4}>
           <CheckoutSummary
@@ -144,10 +144,10 @@ export default function CheckoutCart() {
             onClick={handleNextStep}
             loading={loading}
           >
-            Reservar Ahora
+            Reservar Ahora1
           </Button>
         </Grid>
-      </Hidden>
+      </Hidden> */}
     </Grid>
   );
 }

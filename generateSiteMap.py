@@ -117,7 +117,8 @@ blog_urls = [
     "/noticias/que-es-la-posicion-dinamica-de-equilibrio-y-por-que-deberias-incorporarla-al-esquiar",
     "/escuela-de-esqui-y-snowboard",
     "/escola-de-esqui-e-snowboard",
-    "/heliski"
+    "/heliski",
+    "/all-teachers"
 ]
 
 # Configuración del sitemap

@@ -458,6 +458,7 @@ export default function Router() {
           element: isMobile ? <Navigate to="/match/videoCoach/upload" replace /> : <SearchPage />,
           index: true
         },
+        { path: 'all-teachers', element: <AllTeachers /> },
         { path: 'heliski', element: <HeliSki /> },
         { path: 'en/heliski', element: <HeliSki /> },
         { path: 'escuela-de-esqui-y-snowboard', element: <SnowMatchLanding /> },
@@ -564,6 +565,7 @@ const NotFound = Loadable(lazy(() => import('../pages/Page404')));
 const AccessDenied = Loadable(lazy(() => import('../pages/AccessDenied')));
 const PageVerify = Loadable(lazy(() => import('../pages/PageVerify')));
 const ChapelcoPro = Loadable(lazy(() => import('../pages/pro/ChapelcoPro')));
+const AllTeachers = Loadable(lazy(() => import('../pages/AllTeachers')));
 
 //School
 const Products = Loadable(lazy(() => import('../pages/dashboard/Products')))

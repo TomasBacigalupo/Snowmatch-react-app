@@ -80,6 +80,33 @@ export default function ShopStandardProducts({ loading }) {
                     </Typography>
                 </Grid>}
             </Grid>}
+            {!loading && filters.resort === "Lago Hermoso" && <Grid container spacing={3}>
+                <Grid item xs={12} md={6} lg={4}>{!loading && filters.resort === "Lago Hermoso" &&
+                    <ShopCategorizedProductCard
+                        product={products.find(product => product.id === 67)}
+                        level='gold'
+                    />}
+                </Grid>
+                <Grid item xs={12} md={6} lg={4}>{!loading && filters.resort === "Lago Hermoso" && <ShopCategorizedProductAvatarCard
+                    product={products.find(product => product.id === 66)}
+                    level='silver'
+                    time={2}
+                    avatar='/assets/avatars/chona-con-adulto.png'
+                />}
+                </Grid>
+                <Grid item xs={12} md={6} lg={4}> {!loading && filters.resort === "Lago Hermoso" && <ShopCategorizedProductAvatarCard
+                    product={products.find(product => product.id === 61)}
+                    level='bronze'
+                    time={2}
+                    avatar='/assets/avatars/chona-con-niño.png'
+                />}
+                </Grid>
+                {filters.resort === "Cerro Catedral"  && <Grid item xs={12}>
+                    <Typography variant='h6'>
+                        Packs de SnowMatch
+                    </Typography>
+                </Grid>}
+            </Grid>}
             {filters.resort === "Lago Hermoso" && (
                 <Grid container spacing={3}>
                     <Grid item xs={12}>

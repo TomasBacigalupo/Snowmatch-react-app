@@ -19,9 +19,10 @@ AdminBookingTableRow.propTypes = {
     onWapp: PropTypes.func,
     onEvents: PropTypes.func,
     onDeleteRow: PropTypes.func,
+    refreshBookings: PropTypes.func,
 };
 
-export default function AdminBookingTableRow({ row, onEditRow, onConfirmRow, onDeclineRow, onWapp, onEvents, onDeleteRow }) {
+export default function AdminBookingTableRow({ row, onEditRow, onConfirmRow, onDeclineRow, onWapp, onEvents, onDeleteRow, refreshBookings }) {
     const theme = useTheme();
     const [openDrawer, setOpenDrawer] = useState(false);
 
@@ -219,6 +220,7 @@ export default function AdminBookingTableRow({ row, onEditRow, onConfirmRow, onD
                 open={openDrawer}
                 onClose={() => setOpenDrawer(false)}
                 booking={row}
+                refreshBookings={refreshBookings}
             />
         </>
     );

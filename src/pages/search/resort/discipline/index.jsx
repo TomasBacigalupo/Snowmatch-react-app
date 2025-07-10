@@ -270,7 +270,7 @@ export default function SearchPage() {
 
         {/* Open Graph / Facebook */}
         <meta property="og:type" content="website" />
-        <meta name="apple-itunes-app" content="app-id=6741247513"/>
+        <meta name="apple-itunes-app" content="app-id=6741247513" />
         <meta property="og:title" content={`Clases de ${discipline ? translate(`landingPRO.${discipline}`) : 'ski y snowboard'} en ${resort} - Reserva Online | SnowMatch`} />
         <meta property="og:description" content={translate('landingPRO.description', { discipline: discipline ? translate(`landingPRO.${discipline}`) : 'ski y snowboard', type: type ? translate(`landingPRO.${type}`) : '', resort: translate(`landingPRO.${resortSlug}`) })} />
         <meta property="og:image" content="https://snowmatchimages.s3.amazonaws.com/profile/ClaseNiñoss.jpeg" />
@@ -434,6 +434,18 @@ export default function SearchPage() {
             }
           })}
         </script>
+        {/* Carga el script externo */}
+        <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17189136540"></script>
+
+        {/* Inserta el script de configuración como string */}
+        <script>
+          {`
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'AW-17189136540');
+  `}
+        </script>
       </Helmet>
       <RootStyle>
         <Suspense fallback={<LoadingScreen />}>
@@ -443,15 +455,15 @@ export default function SearchPage() {
             initialType={type}
           >
             <Hidden smUp>
-              <img 
-                src='/logo/snowmatch.webp' 
-                style={{ 
-                  height: '200px', 
+              <img
+                src='/logo/snowmatch.webp'
+                style={{
+                  height: '200px',
                   width: '100%',
                   objectFit: 'contain',
                   aspectRatio: '16/9'
-                }} 
-                alt='SnowMatch' 
+                }}
+                alt='SnowMatch'
               />
             </Hidden>
           </ResortDisciplineHero>

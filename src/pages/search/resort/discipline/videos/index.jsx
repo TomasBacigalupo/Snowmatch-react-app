@@ -516,7 +516,7 @@ const VideoAnalysisModal = ({ open, onClose }) => {
                     {translate('landingSchool.videoModal.title')}
                 </Typography>
                 <Typography variant="body1" sx={{ mb: 3 }}>
-                {translate('landingSchool.videoModal.description')}    
+                    {translate('landingSchool.videoModal.description')}
                 </Typography>
                 <Box sx={{ display: 'flex', justifyContent: 'center' }}>
                     <Button
@@ -554,11 +554,11 @@ export default function SnowMatchLanding() {
 
     useEffect(() => {
         if (window.location.pathname.includes('/pt')) {
-          onChangeLang('pt');
-        } else{
-          onChangeLang('es');
+            onChangeLang('pt');
+        } else {
+            onChangeLang('es');
         }
-      }, []);
+    }, []);
 
     const seo = {
         title: translate('landingSchool.title'),
@@ -991,7 +991,7 @@ export default function SnowMatchLanding() {
                 <title>{seo.title}</title>
                 <meta name="description" content={seo.description} />
                 <meta name="keywords" content={seo.keywords} />
-                <meta name="apple-itunes-app" content="app-id=6741247513"/>
+                <meta name="apple-itunes-app" content="app-id=6741247513" />
                 <meta property="og:title" content={seo.title} />
                 <meta property="og:description" content={seo.description} />
                 <meta property="og:url" content={seo.url} />
@@ -999,6 +999,18 @@ export default function SnowMatchLanding() {
                 <meta name="robots" content="index, follow" />
                 <meta name="author" content={seo.author} />
                 <meta name="publisher" content={seo.publisher} />
+                {/* Carga el script externo */}
+                <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17189136540"></script>
+
+                {/* Inserta el script de configuración como string */}
+                <script>
+                    {`
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'AW-17189136540');
+  `}
+                </script>
             </Helmet>
             <JSONLD />
             <Box
@@ -1416,13 +1428,13 @@ export default function SnowMatchLanding() {
             ))}
 
             {/* Sección de Preguntas Frecuentes */}
-            <Box 
-                sx={{ 
-                    width: '100%', 
-                    maxWidth: 800, 
+            <Box
+                sx={{
+                    width: '100%',
+                    maxWidth: 800,
                     mx: 'auto',
                     px: { xs: 2, sm: 4 },
-                    mb: 10, 
+                    mb: 10,
                     mt: 8,
                     display: 'flex',
                     flexDirection: 'column',

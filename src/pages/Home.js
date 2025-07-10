@@ -117,6 +117,18 @@ export default function HomePage() {
           }
           `}
         </script>
+        {/* Carga el script externo */}
+        <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17189136540"></script>
+
+        {/* Inserta el script de configuración como string */}
+        <script>
+          {`
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'AW-17189136540');
+  `}
+        </script>
       </Helmet>
       <RootStyle>
         <HomeHero />

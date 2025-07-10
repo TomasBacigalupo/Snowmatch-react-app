@@ -49,6 +49,7 @@ export default function AccountGeneral() {
     speaks: Yup.array().of(Yup.string()),
     skills: Yup.array().of(Yup.string()),
     disciplines: Yup.array().of(Yup.string()),
+    sports: Yup.array().of(Yup.string()),
     resorts: Yup.array().of(Yup.string()),
     school: Yup.string(),
   });
@@ -67,6 +68,7 @@ export default function AccountGeneral() {
     speaks: user?.speaks || [],
     skills: user?.skills || [],
     disciplines: user?.disciplines || [],
+    sports: user?.sports || [],
     resorts: user?.resorts || [],
     school: user?.school || '',
   };
@@ -231,6 +233,10 @@ export default function AccountGeneral() {
 
             <Stack sx={{ mt: 3 }}>
               <RHFMultipleSelect name="resorts" label={translate("general.form.resorts")} freeSolo={true} grouped={true} list={ski_resorts} />
+            </Stack>
+
+            <Stack sx={{ mt: 3 }}>
+              <RHFMultipleSelect name="sports" label={translate("general.form.sports")} list={["SKI", "SNOWBOARD"]} />
             </Stack>
 
             <Stack sx={{ mt: 3 }}>

@@ -122,6 +122,7 @@ export default function AdminConfirmForm({ isEdit, currentTeacher, documents }) 
     ytUrl: Yup.string(),
     twUrl: Yup.string(),
     disciplines: Yup.array().of(Yup.string()),
+    sports: Yup.array().of(Yup.string()),
     authorized: Yup.boolean(),
     zenriseClient: Yup.string(),
     zenriseSecret: Yup.string(),
@@ -157,6 +158,7 @@ export default function AdminConfirmForm({ isEdit, currentTeacher, documents }) 
       zenriseClient: currentTeacher?.zenriseClient || '',
       zenriseSecret: currentTeacher?.zenriseSecret || '',
       priority: currentTeacher?.priority || 0,
+      sports: currentTeacher?.sports || [],
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentTeacher]
@@ -236,6 +238,7 @@ export default function AdminConfirmForm({ isEdit, currentTeacher, documents }) 
                   </option>
                 ))}
               </RHFSelect>
+              <RHFMultipleSelect name="sports" label={translate("general.form.sports")} list={["SKI", "SNOWBOARD"]} />
               <RHFTextField name="dni" label="DNI" />
               <RHFSelect name="countryCode" label={translate("general.form.countryCode")} placeholder={translate("general.form.countryCode")} color="error" variant="filled">
                 <option value="" />

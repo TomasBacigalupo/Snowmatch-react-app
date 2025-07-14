@@ -17,6 +17,7 @@ const TEACHER_CHIPS = [
   { name: 'Popi', value: 592 },
   { name: 'Maite', value: 653 },
   { name: 'Oriana', value: 974 },
+  { name: 'Marta', value: 902 },
 ];
 
 const RESORT_OPTIONS = [

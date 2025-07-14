@@ -517,20 +517,20 @@ export function createAdminBooking(teacherId, studentId, message, children, adul
                             lessonTime: 'AFTERNOON'
                         }
                     }
-                    if (e.lessonTime === 'AFTERNOON_2HS') {
+                    if (e.lessonTime === 'AFTERNOON_2_HS') {
                         return {
                             ...e,
                             start: dayjs(e.start),
                             end: dayjs(e.start),
-                            lessonTime: 'AFTERNOON_2HS'
+                            lessonTime: 'AFTERNOON_2_HS'
                         }
                     }
-                    if (e.lessonTime === 'MORNING_2HS') {
+                    if (e.lessonTime === 'MORNING_2_HS') {
                         return {
                             ...e,
                             start: dayjs(e.start),
                             end: dayjs(e.start),
-                            lessonTime: 'MORNING_2HS'
+                            lessonTime: 'MORNING_2_HS'
                         }
                     }
                     if (e.lessonTime === 'MORNING') {
@@ -643,12 +643,12 @@ export function bookingAndPayProduct(productId, message, children, adults, event
                             lessonTime: 'MORNING_2HS'
                         }
                     }
-                    if (e.lessonTime === 'AFTERNOON_2HS') {
+                    if (e.lessonTime === 'AFTERNOON_2_HS') {
                         return {
                             ...e,
                             start: utcToLocalDate(new Date(e.date).setHours(14, 0, 0, 0)),
                             end: utcToLocalDate(new Date(e.date).setHours(16, 0, 0, 0)),
-                            lessonTime: 'AFTERNOON_2HS'
+                            lessonTime: 'AFTERNOON_2_HS'
                         }
                     }
                     return {

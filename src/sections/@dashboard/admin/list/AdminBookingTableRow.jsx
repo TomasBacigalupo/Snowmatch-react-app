@@ -46,6 +46,31 @@ export default function AdminBookingTableRow({ row, onEditRow, onConfirmRow, onD
         return `${formatDate(start)} - ${formatDate(end)}`;
     };
 
+    const getHours = () => {
+        if (!eventList?.length) return '-';
+
+        let totalHours = 0;
+
+        eventList.forEach(event => {
+            const start = new Date(event.start);
+            const end = new Date(event.end);
+            const durationInHours = (end - start) / (1000 * 60 * 60); // Convertir milisegundos a horas
+            console.log({ durationInHours }, { event });
+            if (durationInHours == 4) {
+                totalHours += 3;
+                console.log('3hs');
+            } else if (durationInHours > 5) {
+                totalHours += 6;
+                console.log('6hs');
+            } else {
+                totalHours += durationInHours;
+                console.log('otro');
+            }
+        });
+
+        return `${Math.round(totalHours)} hs`;
+    };
+
     const formatPrice = (price) => {
         return new Intl.NumberFormat('es-AR', {
             style: 'currency',
@@ -74,10 +99,10 @@ export default function AdminBookingTableRow({ row, onEditRow, onConfirmRow, onD
 
     return (
         <>
-            <TableRow 
+            <TableRow
                 hover
                 onClick={handleRowClick}
-                sx={{ 
+                sx={{
                     cursor: 'pointer',
                     '&:hover': {
                         backgroundColor: theme.palette.action.hover,
@@ -116,6 +141,12 @@ export default function AdminBookingTableRow({ row, onEditRow, onConfirmRow, onD
 
                 <TableCell align="left">
                     <Typography variant="subtitle2">
+                        {getHours()}
+                    </Typography>
+                </TableCell>
+
+                <TableCell align="left">
+                    <Typography variant="subtitle2">
                         {getDateRange()}
                     </Typography>
                 </TableCell>
@@ -138,7 +169,7 @@ export default function AdminBookingTableRow({ row, onEditRow, onConfirmRow, onD
                         {formatPrice(price)}
                     </Typography>
                 </TableCell>
-                
+
                 <TableCell align="left">
                     <Typography variant="body2" noWrap>
                         {internalComment || '-'}

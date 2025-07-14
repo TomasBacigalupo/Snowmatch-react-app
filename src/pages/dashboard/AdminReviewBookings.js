@@ -68,6 +68,7 @@ const TABLE_HEAD = [
   { id: 'student', label: 'Cliente', align: 'left' },
   { id: 'teacher', label: 'Instructor', align: 'left' },
   { id: 'events', label: 'Clases', align: 'left' },
+  { id: 'hours', label: 'Horas', align: 'left' },
   { id: 'dates', label: 'Fechas', align: 'left' },
   { id: 'resort', label: 'Montaña', align: 'left' },
   { id: 'capacity', label: 'Capacidad', align: 'left' },

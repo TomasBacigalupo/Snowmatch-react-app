@@ -463,8 +463,8 @@ const BookingModal = ({ isOpen, onClose, refreshBookings, filterTeacherId, filte
                     }))}
                     multiline
                     rows={2}
-                    inputProps={{ maxLength: 15 }}
-                    helperText={`${formData.internalComment.length}/15 characters`}
+                    inputProps={{ maxLength: 255 }}
+                    helperText={`${formData.internalComment.length}/255 characters`}
                 />
 
                 <Typography variant="h6" sx={{ mt: 3, mb: 2 }}>Selected Dates</Typography>
@@ -494,9 +494,9 @@ const BookingModal = ({ isOpen, onClose, refreshBookings, filterTeacherId, filte
                                 label="Time"
                             >
                                 <MenuItem value="MORNING">Morning</MenuItem>
-                                <MenuItem value="MORNING_2HS">Morning (2hs)</MenuItem>
+                                <MenuItem value="MORNING_2_HS">Morning (2hs)</MenuItem>
                                 <MenuItem value="AFTERNOON">Afternoon</MenuItem>
-                                <MenuItem value="AFTERNOON_2HS">Afternoon (2hs)</MenuItem>
+                                <MenuItem value="AFTERNOON_2_HS">Afternoon (2hs)</MenuItem>
                                 <MenuItem value="ALL_DAY">All Day</MenuItem>
                             </Select>
                         </FormControl>

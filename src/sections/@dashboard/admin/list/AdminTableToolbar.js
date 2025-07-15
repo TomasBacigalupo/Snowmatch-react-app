@@ -2,6 +2,9 @@ import PropTypes from 'prop-types';
 import { Stack, InputAdornment, TextField, MenuItem, Chip } from '@mui/material';
 // components
 import Iconify from '../../../../components/Iconify';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 
 // ----------------------------------------------------------------------
 
@@ -46,20 +49,22 @@ AdminTableToolbar.propTypes = {
   onFilterTeacherId: PropTypes.func,
   onFilterStudentId: PropTypes.func,
   onFilterResort: PropTypes.func,
+  onFilterDate: PropTypes.func,
   optionsRole: PropTypes.arrayOf(PropTypes.string),
   bookings: PropTypes.bool,
 };
 
-export default function AdminTableToolbar({ 
-  filterName, 
-  filterRole, 
-  filterLevel, 
+export default function AdminTableToolbar({
+  filterName,
+  filterRole,
+  filterLevel,
   filterMonth,
   filterTeacherId,
   filterStudentId,
   filterResort,
-  onFilterName, 
-  onFilterRole, 
+  filterDate,
+  onFilterName,
+  onFilterRole,
   onFilterLevel,
   onFilterMonth,
   onFilterTeacherId,
@@ -76,25 +81,37 @@ export default function AdminTableToolbar({
   showTeacherId = true,
   showStudentId = true,
   showSearchAdmin = true,
-  showResort = true
+  showResort = true,
+  onFilterDate = null
 }) {
   return (
     <Stack spacing={2}>
-      <Stack 
-        spacing={2} 
-        direction={{ xs: 'column', sm: 'row' }} 
-        sx={{ 
+      <Stack
+        spacing={2}
+        direction={{ xs: 'column', sm: 'row' }}
+        sx={{
           pt: bookings ? 0 : 2.5,
           pb: bookings ? 0 : 2.5,
           px: bookings ? 0 : 3,
           alignItems: 'stretch',
-          '& > *': { 
+          '& > *': {
             flex: 1,
             display: 'flex',
             alignItems: 'center'
           }
         }}
       >
+        {onFilterDate && (
+          <LocalizationProvider dateAdapter={AdapterDateFns}>
+            <DatePicker
+              label="Date"
+              value={filterDate}
+              onChange={onFilterDate}
+              renderInput={(params) => <TextField {...params} fullWidth />}
+            />
+          </LocalizationProvider>
+
+        )}
         {!bookings && showRole && (
           <>
             <TextField
@@ -202,7 +219,7 @@ export default function AdminTableToolbar({
 
         {!bookings && showName && (
           <TextField
-            fullWidth 
+            fullWidth
             value={filterName}
             onChange={(event) => onFilterName(event.target.value)}
             placeholder="Search Admin..."
@@ -291,13 +308,13 @@ export default function AdminTableToolbar({
       </Stack>
 
       {bookings && (
-        <Stack 
-          direction="row" 
-          spacing={1} 
-          sx={{  
-            flexWrap: 'wrap', 
+        <Stack
+          direction="row"
+          spacing={1}
+          sx={{
+            flexWrap: 'wrap',
             gap: 1,
-            pb:1,
+            pb: 1,
             alignItems: 'center'
           }}
         >

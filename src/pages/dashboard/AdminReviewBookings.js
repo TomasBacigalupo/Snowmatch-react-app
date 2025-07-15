@@ -118,6 +118,7 @@ export default function AdminReviewBookings() {
   const [teachers, setTeachers] = useState([]);
   const [students, setStudents] = useState([]);
   const [filterResort, setFilterResort] = useState('');
+  const [filterDate, setFilterDate] = useState('');
   const { currentTab: filterStatus, onChangeTab: onChangeFilterStatus } = useTabs('PENDING');
   const [selectedBooking, setSelectedBooking] = useState(null);
   const handleFilterName = (filterName) => {
@@ -262,6 +263,14 @@ export default function AdminReviewBookings() {
     dispatch(getBookings(filterTeacherId, filterStudentId, filterMonth, page, rowsPerPage, filterResort));
   }
 
+  const handleFilterDate = (event) => {
+    console.log('handleFilterDate called with event:', event);
+    setFilterDate(event);
+    const month = event.getMonth() + 1;
+    const day = event.getDate();
+    dispatch(getBookings(filterTeacherId, filterStudentId, month, page, rowsPerPage, filterResort, day));
+  };
+
   return (
     <Page title="Admin Review: List">
       <Container maxWidth={themeStretch ? false : 'lg'}>
@@ -298,6 +307,7 @@ export default function AdminReviewBookings() {
           filterMonth={filterMonth}
           filterTeacherId={filterTeacherId}
           filterStudentId={filterStudentId}
+          filterDate={filterDate}
           onFilterName={handleFilterName}
           onFilterRole={handleFilterRole}
           onFilterLevel={handleFilterLevel}
@@ -305,6 +315,7 @@ export default function AdminReviewBookings() {
           onFilterTeacherId={handleFilterTeacherId}
           onFilterStudentId={handleFilterStudentId}
           onFilterResort={handleFilterResort}
+          onFilterDate={handleFilterDate}
           bookings={true}
         />
         <BookingSummary bookings={tableData} />

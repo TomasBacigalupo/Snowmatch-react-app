@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // @mui
-import { Box, Card, Link, Typography, Stack, Tooltip, Rating } from '@mui/material';
+import { Box, Card, Link, Typography, Stack, Tooltip, Rating, useTheme, useMediaQuery } from '@mui/material';
 // routes
 import { PATH_DASHBOARD, PATH_GUEST } from '../../../../routes/paths';
 // components
@@ -19,13 +19,16 @@ ShopTeacherCard.propTypes = {
   teacher: PropTypes.object,
   fullBlack: PropTypes.bool,
   disabled: PropTypes.bool,
+  onTeacherClick: PropTypes.func,
 };
 
-export default function ShopTeacherCard({ teacher, fullBlack = false, disabled = false }) {
+export default function ShopTeacherCard({ teacher, fullBlack = false, disabled = false, onTeacherClick }) {
   const { name, lastname, imageLink, information, email, resorts, id, eventsList, stars, level } = teacher;
   const { filters } = useSelector(state => state.teachers)
   const navigate = useNavigate();
   const [src, setSrc] = useState(imageLink)
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   const { isTeacher } = useAuth()
   const linkTo = isTeacher ? PATH_DASHBOARD.eCommerce.viewTeacher(id) : PATH_GUEST.viewTeacher(id);
@@ -39,8 +42,14 @@ export default function ShopTeacherCard({ teacher, fullBlack = false, disabled =
     return resorts[0]
   }
 
+  const handleClick = () => {
+      if (!disabled) {
+          navigate(linkTo);
+      }
+  };
+
   return (
-    <Box onClick={() => !disabled && navigate(linkTo)} sx={{ opacity: disabled ? 0.5 : 1 }}>
+    <Box onClick={handleClick} sx={{ opacity: disabled ? 0.5 : 1, cursor: disabled ? 'default' : 'pointer' }}>
       <Box sx={{ position: 'relative' }}>
         <Image alt={name} src={src} ratio="1/1" onError={() => setSrc('/assets/notFound.jpeg')} sx={{ borderRadius: '16px' }} />
 
@@ -78,7 +87,13 @@ export default function ShopTeacherCard({ teacher, fullBlack = false, disabled =
 
       <Stack spacing={1} sx={{ pt: 1, }}>
         <Box display='flex' justifyContent='space-between' alignItems='center'>
-          <Link to={linkTo} color="inherit" component={RouterLink} onClick={(e) => disabled && e.preventDefault()}>
+          <Link to={linkTo} color="inherit" component={RouterLink} onClick={(e) => {
+            if (disabled) e.preventDefault();
+            if (isMobile && onTeacherClick) {
+              e.preventDefault();
+              onTeacherClick(teacher);
+            }
+          }}>
             <Typography variant="subtitle1" noWrap>
               {name}
             </Typography>

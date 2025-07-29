@@ -9,13 +9,14 @@ import { get, orderBy } from 'lodash';
 import ShopStandardProductCard from './ShopStandardProductCard';
 import useLocales from 'src/hooks/useLocales';
 import { useDispatch, useSelector } from 'react-redux';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { getProductsByBusinessId } from 'src/redux/slices/business';
 import ShopCategorizedProductCard from './ShopCategorizedProductCard';
 import { fCurrency } from 'src/utils/formatNumber';
 import { getFreeTeachers } from 'src/redux/slices/teachers';
 import ShopCategorizedProductAvatarCard from './ShopCategorizedProductAvatarCard';
 import SchoolProducts from './SchoolProducts';
+import InstructorDetailsDrawer from '../../feed/InstructorDetailsDrawer';
 // ----------------------------------------------------------------------
 
 ShopStandardProducts.propTypes = {
@@ -28,6 +29,8 @@ export default function ShopStandardProducts({ loading }) {
     const dispatch = useDispatch();
     const { products } = useSelector((state) => state.business);
     const { teachers, sortBy, filters, teachersWithEvents, category, isLoading } = useSelector((state) => { return state.teachers })
+    const [selectedTeacher, setSelectedTeacher] = useState(null);
+    const [drawerOpen, setDrawerOpen] = useState(false);
 
     useEffect(() => {
         // prod
@@ -39,6 +42,17 @@ export default function ShopStandardProducts({ loading }) {
         dispatch(getFreeTeachers(filters.from, filters.to, filters.resort, 0));
         //dispatch(getTeachersWithEvents(filters));
     }, [dispatch, filters]);
+
+    const handleTeacherClick = (teacher) => {
+        setSelectedTeacher(teacher);
+        setDrawerOpen(true);
+    };
+
+    const handleCloseDrawer = () => {
+        setDrawerOpen(false);
+        setSelectedTeacher(null);
+    };
+
     return (
         <Box
             sx={{
@@ -142,9 +156,15 @@ export default function ShopStandardProducts({ loading }) {
                 }}
             >
                 {loading ? [...Array(5)].map((product, index) => <SkeletonProductItem key={index} />) : teachers.map((teacher, index) =>
-                    teacher ? <ShopTeacherCard key={index} teacher={teacher} /> : <SkeletonProductItem key={index} />
+                    teacher ? <ShopTeacherCard key={index} teacher={teacher} onTeacherClick={handleTeacherClick} /> : <SkeletonProductItem key={index} />
                 )}
             </Box>
+
+            <InstructorDetailsDrawer
+                open={drawerOpen}
+                onClose={handleCloseDrawer}
+                instructor={selectedTeacher}
+            />
 
         </Box>
     );

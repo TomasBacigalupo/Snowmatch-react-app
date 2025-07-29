@@ -112,6 +112,8 @@ export default function AdminReviewBookings() {
   const [filterRole, setFilterRole] = useState(ROLE_OPTIONS[0]);
   const [filterLevel, setFilterLevel] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
+  
+  console.log('AdminReviewBookings - isOpen state:', isOpen);
   const [filterMonth, setFilterMonth] = useState('');
   const [filterTeacherId, setFilterTeacherId] = useState('');
   const [filterStudentId, setFilterStudentId] = useState('');
@@ -323,6 +325,7 @@ export default function AdminReviewBookings() {
           <BookingModal
             isOpen={isOpen}
             onClose={() => {
+              console.log('BookingModal onClose called');
               setIsOpen(false);
               refreshBookings();
             }}

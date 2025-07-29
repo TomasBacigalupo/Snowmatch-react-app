@@ -82,6 +82,12 @@
 			</dict>
 		</array>
 
+		<!-- Associated Domains for Universal Links -->
+		<key>com.apple.developer.associated-domains</key>
+		<array>
+			<string>applinks:snowmatch.pro</string>
+		</array>
+
 		<key>GIDClientID</key>
 		<string>864910142009-d8jai0985rn4b13jge8ng0gmf0hjejfp.apps.googleusercontent.com</string>
 	</dict>

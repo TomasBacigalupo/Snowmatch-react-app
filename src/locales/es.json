@@ -1750,6 +1750,11 @@
                 "description": "Bloquea días y disponibilidad",
                 "button": "Calendario"
             },
+            "snowCheck": {
+                "title": "SnowCheck Asistencia",
+                "description": "Marcar asistencia para clases grupales",
+                "button": "Abrir SnowCheck"
+            },
             "getTheMost": {
                 "title": "Maximiza tu Experiencia SnowMatch",
                 "subtitle": "Sigue estos consejos para aumentar tus ingresos y visibilidad",
@@ -1800,6 +1805,19 @@
                 "button": "Compartir",
                 "reward": "Gana hasta $50 por cada referido"
             }
+        },
+        "snowCheck": {
+            "title": "SnowCheck Asistencia",
+            "selectBooking": "Selecciona una reserva grupal para marcar asistencia",
+            "searchPlaceholder": "Buscar por nombre de estudiante o resort...",
+            "noBookings": "No hay reservas grupales para hoy",
+            "groupClass": "Clase Grupal",
+            "back": "Volver a reservas",
+            "markAttendance": "Marcar asistencia para estudiantes",
+            "present": "Presente",
+            "absent": "Ausente",
+            "notesPlaceholder": "Agregar notas (opcional)",
+            "submitAttendance": "Enviar Asistencia"
         }
     },
     "unratedVideos": {

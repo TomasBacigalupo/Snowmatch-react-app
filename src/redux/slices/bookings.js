@@ -245,6 +245,39 @@ const slice = createSlice({
 
         setBookingSuccess(state, action) {
             state.bookSuccess = action.payload;
+        },
+
+        // UPDATE BOOKING WITH INVOICE
+        updateBookingWithInvoice(state, action) {
+            const { bookingId, invoiceData } = action.payload;
+            
+            // Update the specific booking in bookings array
+            state.bookings = state.bookings.map(booking => 
+                booking.id === bookingId 
+                    ? { ...booking, teacherInvoiceUrl: invoiceData.url }
+                    : booking
+            );
+            
+            // Update the current booking if it matches
+            if (state.booking && state.booking.id === bookingId) {
+                state.booking = { ...state.booking, teacherInvoiceUrl: invoiceData.url };
+            }
+            
+            // Update in pendingBookings if it exists there
+            state.pendingBookings = state.pendingBookings.map(booking => 
+                booking.id === bookingId 
+                    ? { ...booking, teacherInvoiceUrl: invoiceData.url }
+                    : booking
+            );
+            
+            // Update in upcomingBookings if it exists there
+            state.upcomingBookings = state.upcomingBookings.map(booking => 
+                booking.id === bookingId 
+                    ? { ...booking, teacherInvoiceUrl: invoiceData.url }
+                    : booking
+            );
+            
+            state.isLoading = false;
         }
 
     },
@@ -254,7 +287,7 @@ const slice = createSlice({
 export default slice.reducer;
 
 // Actions
-export const { openModal, closeModal, selectEvent, changeMessage, bookingPending, changeAsignedStudents, onCreateBookingError, setBookingSuccess } = slice.actions;
+export const { openModal, closeModal, selectEvent, changeMessage, bookingPending, changeAsignedStudents, onCreateBookingError, setBookingSuccess, updateBookingWithInvoice } = slice.actions;
 
 // ----------------------------------------------------------------------
 
@@ -268,7 +301,8 @@ export function getBookings(state) {
 
         dispatch(slice.actions.startLoading());
         try {
-            const response = await axios.get(`/api/bookings?state=${state}`);
+            const url = state === 'ALL' ? '/api/bookings' : `/api/bookings?state=${state}`;
+            const response = await axios.get(url);
             const bookings = response.data
             dispatch(slice.actions.getBookingsSuccess(bookings));
         } catch (error) {
@@ -500,7 +534,7 @@ export function createBooking(teacherId, message, children, adults, events, tota
     };
 }
 
-export function createAdminBooking(teacherId, studentId, message, children, adults, events, totalPrice, bookingType, includesLaunch, includesEquipment, paymentStatus, internalComment, resort) {
+export function createAdminBooking(teacherId, studentId, message, children, adults, events, totalPrice, bookingType, includesLaunch, includesEquipment, paymentStatus, paymentMethod, internalComment, resort) {
     return async () => {
         dispatch(slice.actions.startLoading());
         try {
@@ -557,7 +591,8 @@ export function createAdminBooking(teacherId, studentId, message, children, adul
                 includesEquipment: includesEquipment,
                 paymentStatus: paymentStatus,
                 internalComment: internalComment,
-                resort: resort
+                resort: resort,
+                bookingPaymentMethod: paymentMethod
             });
             dispatch(slice.actions.createBookingSuccess());
         } catch (error) {
@@ -857,6 +892,45 @@ export function createPreference(teacherId, events) {
             dispatch(slice.actions.cratePreferenceSuccess(response.data));
         } catch (error) {
             dispatch(slice.actions.hasError(error));
+        }
+    };
+}
+
+export function uploadInvoice(bookingId, file, teacherId, totalAmount, hours) {
+    return async () => {
+        dispatch(slice.actions.startLoading());
+        try {
+            // Step 1: Get presigned URL
+            const presignedResponse = await axios.get(`/api/bookings/preSignedUrlInvoice/${bookingId}`);
+            const presignedUrl = presignedResponse.data;
+
+            // Step 2: Upload file to S3 using presigned URL
+            const uploadResponse = await fetch(presignedUrl, {
+                method: 'PUT',
+                body: file,
+                headers: {
+                    'Content-Type': file.type,
+                },
+            });
+
+            if (!uploadResponse.ok) {
+                throw new Error('Failed to upload file to S3');
+            }
+
+            // Step 3: Update Redux state with invoice information
+            const invoiceData = {
+                url: presignedUrl.split('?')[0],
+            };
+            
+            dispatch(slice.actions.updateBookingWithInvoice({ 
+                bookingId, 
+                invoiceData 
+            }));
+
+            return { success: true };
+        } catch (error) {
+            dispatch(slice.actions.hasError(error));
+            throw error;
         }
     };
 }

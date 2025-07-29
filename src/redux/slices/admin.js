@@ -310,7 +310,8 @@ export function editAdminBooking(bookingId, {
   internalComment,
   includesLaunch,
   includesEquipments,
-  paymentStatus
+  paymentStatus,
+  bookingPaymentMethod
 }) {
   return async () => {
       dispatch(slice.actions.startLoading());
@@ -331,7 +332,8 @@ export function editAdminBooking(bookingId, {
               internalComment,
               includesLaunch,
               includesEquipments,
-              paymentStatus
+              paymentStatus,
+              bookingPaymentMethod
           });
           dispatch(slice.actions.updateBookingSuccess(response.data));
           return response.data;

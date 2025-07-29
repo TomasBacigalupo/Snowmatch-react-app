@@ -772,6 +772,11 @@
         "title": "Manage Calendar",
         "description": "Block days & availability",
         "button": "Open Calendar"
+      },
+      "snowCheck": {
+        "title": "SnowCheck Attendance",
+        "description": "Mark attendance for group classes",
+        "button": "Open SnowCheck"
       }
     },
     "getTheMost": {
@@ -798,6 +803,19 @@
         "button": "Share Now",
         "reward": "Earn up to $50 per referral"
       }
+    },
+    "snowCheck": {
+      "title": "SnowCheck Attendance",
+      "selectBooking": "Select a group booking to mark attendance",
+      "searchPlaceholder": "Search by student name or resort...",
+      "noBookings": "No group bookings for today",
+      "groupClass": "Group Class",
+      "back": "Back to bookings",
+      "markAttendance": "Mark attendance for students",
+      "present": "Present",
+      "absent": "Absent",
+      "notesPlaceholder": "Add notes (optional)",
+      "submitAttendance": "Submit Attendance"
     }
   },
   "unratedVideos": {

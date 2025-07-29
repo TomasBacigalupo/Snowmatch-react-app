@@ -1095,6 +1095,11 @@
                 "title": "Gerenciar Calendário",
                 "description": "Bloquear dias e disponibilidade",
                 "button": "Abrir Calendário"
+            },
+            "snowCheck": {
+                "title": "SnowCheck Presença",
+                "description": "Marcar presença para aulas em grupo",
+                "button": "Abrir SnowCheck"
             }
         },
         "getTheMost": {
@@ -1121,6 +1126,19 @@
                 "button": "Compartilhar Agora",
                 "reward": "Ganhe até $50 por indicação"
             }
+        },
+        "snowCheck": {
+            "title": "SnowCheck Presença",
+            "selectBooking": "Selecione uma reserva em grupo para marcar presença",
+            "searchPlaceholder": "Buscar por nome do aluno ou resort...",
+            "noBookings": "Não há reservas em grupo para hoje",
+            "groupClass": "Aula em Grupo",
+            "back": "Voltar às reservas",
+            "markAttendance": "Marcar presença para alunos",
+            "present": "Presente",
+            "absent": "Ausente",
+            "notesPlaceholder": "Adicionar notas (opcional)",
+            "submitAttendance": "Enviar Presença"
         }
     },
     "unratedVideos": {

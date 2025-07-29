@@ -41,7 +41,10 @@ import { set } from 'lodash';
 // ----------------------------------------------------------------------
 
 const RootStyle = styled('div')(({ theme }) => ({
-  padding: theme.spacing(3),
+  paddingTop: theme.spacing(3),
+  paddingBottom: theme.spacing(3),
+  paddingLeft: theme.spacing(1),
+  paddingRight: theme.spacing(2),
   [theme.breakpoints.up(1368)]: {
     padding: theme.spacing(5, 8),
   },
@@ -120,6 +123,8 @@ export default function TeacherDetailsSummary({ isProduct, cart, teacher, onAddC
     id,
     imageLink,
     lastname,
+    information,
+    description,
     level,
     name,
     stars,
@@ -302,6 +307,12 @@ export default function TeacherDetailsSummary({ isProduct, cart, teacher, onAddC
         {name}
       </Typography>
       <TeacherSkills skills={skills} />
+      <Typography component="p" variant="body1" paragraph>
+        {information}
+      </Typography>
+      <Typography component="p" variant="body1" paragraph>
+        {description}
+      </Typography>
       {/* <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         { !isProduct && <Stack direction="row" justifyContent="space-between" sx={{ mb: 3, mt: 2 }}>
           <Typography variant="subtitle1" sx={{ mt: 0.5 }}>

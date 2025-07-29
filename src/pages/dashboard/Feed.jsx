@@ -1,5 +1,4 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { useInView } from 'react-intersection-observer';
 import { Gesture } from '@capacitor/core';
 import {
   Box,
@@ -174,7 +173,6 @@ const Feed = () => {
   const [selectedInstructor, setSelectedInstructor] = useState(null);
   const [selectedTeacher, setSelectedTeacher] = useState(null);
   const { enqueueSnackbar } = useSnackbar();
-  const { ref, inView } = useInView();
   const containerRef = useRef(null);
   const startY = useRef(0);
   const currentY = useRef(0);
@@ -198,7 +196,7 @@ const Feed = () => {
       setPage(0);
       setVideos([]);
       setHasMore(true);
-      const response = await axiosInstance.get('/api/videos/feed?page=0');
+      const response = await axiosInstance.get('/api/videos/feed?page=0&pageSize=5');
       const newVideos = response.data;
       setVideos(newVideos);
       if (newVideos.length === 0) {
@@ -267,7 +265,7 @@ const Feed = () => {
 
     try {
       setLoading(true);
-      const response = await axiosInstance.get(`/api/videos/feed?page=${page}`);
+      const response = await axiosInstance.get(`/api/videos/feed?page=${page}&pageSize=5`);
       const newVideos = response.data;
 
       if (newVideos.length === 0) {
@@ -283,11 +281,16 @@ const Feed = () => {
     }
   }, [page, loading, hasMore, enqueueSnackbar]);
 
+  const handleLoadMore = () => {
+    fetchVideos();
+  };
+
+  // Load initial videos on component mount
   useEffect(() => {
-    if (inView) {
+    if (videos.length === 0 && !loading && !refreshing) {
       fetchVideos();
     }
-  }, [inView, fetchVideos]);
+  }, []);
 
   return (
     <Page title="Feed">
@@ -303,7 +306,7 @@ const Feed = () => {
           touchAction: 'pan-y'
         }}
       >
-        {refreshing || loading && (
+        {refreshing && (
           <Box
             sx={{
               position: 'absolute',
@@ -329,16 +332,54 @@ const Feed = () => {
           />
         ))}
 
-        <Box
-          ref={ref}
-          sx={{
-            display: 'flex',
-            justifyContent: 'center',
-            p: 1,
-          }}
-        >
-          {loading && !refreshing && <CircularProgress size={24} />}
-        </Box>
+        {/* Load More Button */}
+        {hasMore && (
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              p: 3,
+            }}
+          >
+            <Button
+              variant="outlined"
+              onClick={handleLoadMore}
+              disabled={loading}
+              sx={{
+                minWidth: 120,
+                height: 40,
+                borderRadius: 2,
+                textTransform: 'none',
+                fontWeight: 600,
+              }}
+            >
+              {loading ? (
+                <CircularProgress size={20} />
+              ) : (
+                'Load More'
+              )}
+            </Button>
+          </Box>
+        )}
+
+        {/* No more videos message */}
+        {!hasMore && videos.length > 0 && (
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              p: 3,
+            }}
+          >
+            <Typography
+              variant="body2"
+              color="text.secondary"
+              sx={{ textAlign: 'center' }}
+            >
+              No more videos to load
+            </Typography>
+          </Box>
+        )}
 
         <CommentsDrawer
           open={!!selectedVideo}

@@ -19,6 +19,9 @@ import ProductDetailsReviewForm from '../../e-commerce/teacher-details/ProductDe
 import ProductDetailsReviewFormMobile from '../../e-commerce/teacher-details/ProductDetailsReviewFormMobile';
 import { fCurrency } from 'src/utils/formatNumber';
 import { calculateTotalHours, getComissionByLevel, getPayByHoursLevel, getPayByLevel } from 'src/redux/slices/teachers';
+import InvoiceUpload from 'src/components/InvoiceUpload';
+import { calculateTotalEventHours } from 'src/utils/calculateHours';
+import { getHourlyRateByLevel } from 'src/utils/calculateTeacherPay';
 
 BookingCard.propTypes = {
     booking: PropTypes.object,
@@ -36,10 +39,14 @@ export default function BookingCard({ booking, showInfo = true }) {
     const [lessonState, setLessonState] = useState(booking.state)
     const [open, setOpen] = React.useState(false);
     const [rateOpen, setRateOpen] = React.useState(false);
+    const [invoiceOpen, setInvoiceOpen] = React.useState(false);
     const navigate = useNavigate()
 
     const isPending = booking.state === 'PENDING';
     const isAccepted = booking.state === 'ACCEPTED';
+    const isCatedralResort = booking?.resort?.toLowerCase().includes('catedral');
+    const isTeacher = user?.role === 'TEACHER';
+    const noInvoice = !booking?.teacherInvoiceUrl;
 
     const fullTeacherPhoneNumber = `${booking?.teacher?.countryCode}${booking?.teacher?.cellphone}`;
     const fullStudentPhoneNumber = `${booking?.student?.countryCode}${booking?.student?.cellphone}`;
@@ -215,6 +222,18 @@ export default function BookingCard({ booking, showInfo = true }) {
                         Rate
                     </Button>
                 </Box>}
+                {
+                    isAccepted
+                    && isTeacher
+                    && isCatedralResort
+                    && noInvoice
+                    && new Date(booking.eventList[0]?.start) < new Date()
+                    &&
+                    <Box display='flex' flex={1} width='100%' flexDirection='column' flexGrow={1}>
+                        <Button fullWidth variant="outlined" sx={{ mt: 2, py: 1, color: 'black', borderColor: 'black' }} onClick={() => setInvoiceOpen(true)}>
+                            Subir Factura
+                        </Button>
+                    </Box>}
             </Card>
 
             <Drawer
@@ -356,10 +375,57 @@ export default function BookingCard({ booking, showInfo = true }) {
                             <Divider />
                         </Box>
                     </Grid>
-                    <Grid item xs={12}>
+                    {isCatedralResort && isTeacher && <Grid item xs={12}>
                         <Divider sx={{ borderBottomWidth: 8, }} />
-                    </Grid>
-                    {/* <Grid item xs={12} container justifyContent='space-between'>
+                    </Grid>}
+                    {isCatedralResort && isTeacher && <Grid item xs={12} container justifyContent='space-between'>
+                        <Grid item xs={12}>
+                            <Typography variant="h3" paragraph>
+                                Detalles del pago
+                            </Typography>
+                        </Grid>
+                        <Grid item xs={6} >
+                            <Typography variant="body1" paragraph>
+                                Horas
+                            </Typography>
+                        </Grid>
+                        <Grid item xs={6} sx={{ textAlign: 'end' }}>
+                            <Typography variant="body1" paragraph>
+                                {calculateTotalEventHours(booking.eventList)}
+                            </Typography>
+                        </Grid>
+                        <Grid item xs={6} >
+                            <Typography variant="body1" paragraph>
+                                {`Valor hora por nivel`}
+                            </Typography>
+                        </Grid>
+                        <Grid item xs={6} sx={{ textAlign: 'end' }}>
+                            <Typography variant="body1" paragraph>
+                                {fCurrency(getHourlyRateByLevel(booking.teacher.level))}
+                            </Typography>
+                        </Grid>
+                        <Grid item xs={12} >
+                            <Divider sx={{
+                                borderBottomWidth: 2,
+                                mb: 1
+                            }} />
+                        </Grid>
+
+                        <Grid item xs={6} >
+                            <Typography variant="body1" paragraph>
+                                {`Total a cobrar`}
+                            </Typography>
+                        </Grid>
+                        <Grid item xs={6} sx={{ textAlign: 'end' }}>
+                            <Typography variant="body1" paragraph>
+                                {fCurrency(calculateTotalEventHours(booking.eventList) * getHourlyRateByLevel(booking.teacher.level))}
+                            </Typography>
+                        </Grid>
+                    </Grid>}
+                    {false && isCatedralResort && isTeacher && <Grid item xs={12}>
+                        <Divider sx={{ borderBottomWidth: 8, }} />
+                    </Grid>}
+                    {false && isCatedralResort && isTeacher && <Grid item xs={12} container justifyContent='space-between'> 
                         <Grid item xs={12}>
                             <Typography variant="h3" paragraph>
                                 Detalles del pago
@@ -403,7 +469,7 @@ export default function BookingCard({ booking, showInfo = true }) {
                         <Grid item xs={6} sx={{ textAlign: 'end' }}>
                             <Typography variant="body1" paragraph>
                                 {fCurrency(
-                                    (booking.price - (booking.price /1.21*0.21)) * 0.035
+                                    (booking.price - (booking.price / 1.21 * 0.21)) * 0.035
                                 )}
                             </Typography>
                         </Grid>
@@ -414,7 +480,7 @@ export default function BookingCard({ booking, showInfo = true }) {
                         </Grid>
                         <Grid item xs={6} sx={{ textAlign: 'end' }}>
                             <Typography variant="body1" paragraph>
-                                {fCurrency(booking.price - getPayByHoursLevel(user.level, calculateTotalHours(booking.eventList))- (booking.price - (booking.price /1.21*0.21)) * 0.035 - booking.price * 0.05-booking.price / 1.21 * 0.21)}
+                                {fCurrency(booking.price - getPayByHoursLevel(user.level, calculateTotalHours(booking.eventList)) - (booking.price - (booking.price / 1.21 * 0.21)) * 0.035 - booking.price * 0.05 - booking.price / 1.21 * 0.21)}
                             </Typography>
                         </Grid>
                         <Grid item xs={12} >
@@ -431,14 +497,57 @@ export default function BookingCard({ booking, showInfo = true }) {
                         </Grid>
                         <Grid item xs={6} sx={{ textAlign: 'end' }}>
                             <Typography variant="body1" paragraph>
-                                {fCurrency(getPayByHoursLevel(user.level, calculateTotalHours(booking.eventList)))}
+                                {fCurrency(calculateTotalEventHours(booking.eventList) * getHourlyRateByLevel(booking.teacher.level))}
                             </Typography>
                         </Grid>
-                    </Grid>
-                    <Grid item xs={12}>
+                    </Grid>}
+                    {isCatedralResort && isTeacher && new Date(booking.eventList[0]?.start) < new Date() && <Grid item xs={12}>
                         <Divider sx={{ borderBottomWidth: 8, }} />
-                    </Grid> */}
-                    {/* <Grid item xs={12}>
+                    </Grid>}
+                    {isCatedralResort && isTeacher && new Date(booking.eventList[0]?.start) < new Date() && <Grid item xs={12} container justifyContent='space-between'>
+                        <Grid item xs={12}>
+                            <Typography variant="h3" paragraph>
+                                Mi Factura
+                            </Typography>
+                        </Grid>
+                        {booking.teacherInvoiceUrl ? (
+                            <Grid item xs={12}>
+                                <Box display='flex' flexDirection='column' alignItems='center' sx={{ p: 2, border: '1px dashed #ccc', borderRadius: 1 }}>
+                                    <Iconify icon={'material-symbols:description'} width={40} height={40} sx={{ mb: 1, color: 'primary.main' }} />
+                                    <Typography variant="body1" paragraph>
+                                        Factura subida
+                                    </Typography>
+                                    <Button
+                                        variant="outlined"
+                                        onClick={() => window.open(booking.teacherInvoiceUrl, '_blank')}
+                                        startIcon={<Iconify icon={'material-symbols:visibility'} />}
+                                    >
+                                        Ver Factura
+                                    </Button>
+                                </Box>
+                            </Grid>
+                        ) : (
+                            <Grid item xs={12}>
+                                <Box display='flex' flexDirection='column' alignItems='center' sx={{ p: 2, border: '1px dashed #ccc', borderRadius: 1 }}>
+                                    <Iconify icon={'material-symbols:upload-file'} width={40} height={40} sx={{ mb: 1, color: 'text.secondary' }} />
+                                    <Typography variant="body1" paragraph>
+                                        No se ha subido factura
+                                    </Typography>
+                                    <Button
+                                        variant="contained"
+                                        onClick={() => setInvoiceOpen(true)}
+                                        startIcon={<Iconify icon={'material-symbols:upload'} />}
+                                    >
+                                        Subir Factura
+                                    </Button>
+                                </Box>
+                            </Grid>
+                        )}
+                    </Grid>}
+                    {isCatedralResort && isTeacher && <Grid item xs={12}>
+                        <Divider sx={{ borderBottomWidth: 8, }} />
+                    </Grid>}
+                    <Grid item xs={12}>
                         <Typography variant="h3" paragraph>
                             Notas
                         </Typography>
@@ -448,7 +557,7 @@ export default function BookingCard({ booking, showInfo = true }) {
                                 Guardar
                             </Button>
                         </Box>
-                    </Grid> */}
+                    </Grid>
                     <Grid item xs={12}>
                         <Divider sx={{ borderBottomWidth: 8, }} />
                     </Grid>
@@ -576,6 +685,43 @@ export default function BookingCard({ booking, showInfo = true }) {
                         <ProductDetailsReviewFormMobile onClose={() => {
                             setRateOpen(false)
                         }} id="move_add_review" teacherId={booking?.teacher.id} bookingId={booking.id} />
+                    </Grid>
+                </Grid>
+            </Drawer>
+            <Drawer
+                anchor="bottom"
+                open={invoiceOpen}
+                onClose={() => setInvoiceOpen(false)}
+                sx={{
+                    '& .MuiDrawer-paper': {
+                        boxSizing: 'border-box', width: '100%', paddingBottom: 2, borderTopLeftRadius: '12px',
+                        borderTopRightRadius: '12px',
+                        height: '95%',
+                        marginTop: '20px',
+                        paddingX: 1
+                    }
+                }}
+            >
+                <Box mt={1}>
+                    <IconButton onClick={() => setInvoiceOpen(false)}>
+                        <Iconify icon={'line-md:close-circle'} width={25} height={25} />
+                    </IconButton>
+                </Box>
+                <Grid container p={2} spacing={3}>
+                    <Grid item xs={12}>
+                        <Typography variant="h2" gutterBottom>
+                            Subir Factura
+                        </Typography>
+                    </Grid>
+                    <Grid item xs={12}>
+                        <Divider sx={{ pt: 2 }} />
+                    </Grid>
+                    <Grid item xs={12}>
+                        <InvoiceUpload
+                            booking={booking}
+                            teacherLevel={user?.level}
+                            onUploadSuccess={() => setInvoiceOpen(false)}
+                        />
                     </Grid>
                 </Grid>
             </Drawer>

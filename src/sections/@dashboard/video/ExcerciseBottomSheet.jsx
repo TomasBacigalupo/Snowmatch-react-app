@@ -483,7 +483,7 @@ export default function ExcerciseBottomSheet({ open, onClose, onOpen, course, de
                                     py: 1.5
                                 }}
                             >
-                                Más tarde
+                                Más tarde 
                             </Button>
                             <Button
                                 variant="contained"

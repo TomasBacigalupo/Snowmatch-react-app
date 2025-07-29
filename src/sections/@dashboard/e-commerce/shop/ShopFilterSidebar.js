@@ -46,7 +46,7 @@ export const FILTER_LANGUAGE_OPTIONS = ['Español', 'English', 'Portugues', 'Ita
 
 export const FILTER_RESORT_OPTIONS = [
   { category: "Argentina", resorts: [ 'Caviahue', 'Cerro Bayo', 'Cerro Castor', 'Cerro Catedral', 'Chapelco', 'La Hoya', 'Las Leñas', 'Las Pendientes', 'Perito Moreno', 'Lago Hermoso', 'Buenos Aires'] },
-  { category: "Chile", resorts: [ 'Portillo']}
+  { category: "Chile", resorts: [ 'Portillo', 'Antillanca', 'Corralco', 'Valle Nevado', 'La Parva', 'Villa Rica']}
 ]
 
 

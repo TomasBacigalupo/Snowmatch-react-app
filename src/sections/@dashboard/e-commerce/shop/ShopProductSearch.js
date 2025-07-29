@@ -442,10 +442,10 @@ export default function ShopProductSearch({ filters, teachers }) {
                         <Typography sx={{ fontWeight: "bold", textAlign:"right", width:"100%" }}>
                           Cambiar
                         </Typography>}
-                      {values.discipline?.length != 0 &&
+                      {/* {values.discipline?.length != 0 &&
                         <Typography sx={{ fontWeight: "bold" }}>
                           {filters?.discipline?.length > 0 ? filters?.discipline[0] : 'Ski'}
-                        </Typography>}
+                        </Typography>} */}
                     </Box>
                   </AccordionSummary>}
                   <AccordionDetails>
@@ -728,10 +728,10 @@ export default function ShopProductSearch({ filters, teachers }) {
                           <Typography sx={{ fontWeight: "bold", textAlign:"right", width:"100%" }}>
                             Cambiar
                           </Typography>}
-                        {values.discipline?.length != 0 &&
+                        {/* {values.discipline?.length != 0 &&
                           <Typography sx={{ fontWeight: "bold" }}>
                             {filters?.discipline?.length > 0 ? filters?.discipline[0] : 'Ski'}
-                          </Typography>}
+                          </Typography>} */}
                       </Box>
                     </AccordionSummary>}
                     <AccordionDetails>

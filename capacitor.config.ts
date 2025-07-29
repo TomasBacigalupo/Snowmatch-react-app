@@ -8,6 +8,21 @@ const config: CapacitorConfig = {
     // androidScheme: 'https',
     // url: 'http://localhost:3000',
   },
+  plugins: {
+    App: {
+      url: 'https://snowmatch.pro',
+      appLinks: {
+        ios: {
+          appId: 'pro.snowmatch',
+          appName: 'SnowMatch'
+        },
+        android: {
+          scheme: 'https',
+          packageName: 'pro.snowmatch'
+        }
+      }
+    }
+  }
 };
 
 export default config;

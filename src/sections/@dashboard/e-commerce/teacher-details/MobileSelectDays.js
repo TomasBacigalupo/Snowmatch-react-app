@@ -61,12 +61,13 @@ const MobileSelectDays = ({ product, teacher, isOpen, closeFather, isRange }) =>
                     resort: 'Cerro Catedral',
                     teacherId: teacher.id
                 };
+                
                 dispatch(addCart({
                     teacher: teacher,
                     event: requestEvent
                 }))
 
-                navigate('hire');
+                navigate(`/match/teacher/${teacher.id}/hire`);
             })
         } else if (product) {
             dates.forEach((date) => {

@@ -60,11 +60,21 @@ const initialState = {
   conversations: [],
   loadingRate: false,
   dollar: 420,
-  isLoadingLoadMore: false
+  isLoadingLoadMore: false,
+  // New state for attendance users
+  attendanceUsers: [],
+  attendanceUsersLoading: false,
+  attendanceUsersError: null,
+  attendanceUsersPagination: {
+    page: 0,
+    size: 5,
+    total: 0,
+    hasMore: false
+  }
 };
 
 const slice = createSlice({
-  name: 'teacher',
+  name: 'teachers',
   initialState,
   reducers: {
 
@@ -354,6 +364,49 @@ const slice = createSlice({
 
     onRateError(state, action) {
       state.loadingRate = false
+    },
+
+    // ATTENDANCE USERS
+    startLoadingAttendanceUsers(state) {
+      state.attendanceUsersLoading = true;
+      state.attendanceUsersError = null;
+    },
+
+    getAttendanceUsersSuccess(state, action) {
+      state.attendanceUsersLoading = false;
+      state.attendanceUsers = action.payload.users;
+      state.attendanceUsersPagination = {
+        page: action.payload.page,
+        size: action.payload.size,
+        total: action.payload.total,
+        hasMore: action.payload.hasMore
+      };
+    },
+
+    loadMoreAttendanceUsersSuccess(state, action) {
+      state.attendanceUsersLoading = false;
+      state.attendanceUsers = [...state.attendanceUsers, ...action.payload.users];
+      state.attendanceUsersPagination = {
+        page: action.payload.page,
+        size: action.payload.size,
+        total: action.payload.total,
+        hasMore: action.payload.hasMore
+      };
+    },
+
+    attendanceUsersError(state, action) {
+      state.attendanceUsersLoading = false;
+      state.attendanceUsersError = action.payload;
+    },
+
+    clearAttendanceUsers(state) {
+      state.attendanceUsers = [];
+      state.attendanceUsersPagination = {
+        page: 0,
+        size: 5,
+        total: 0,
+        hasMore: false
+      };
     }
   },
 });
@@ -386,7 +439,8 @@ export const {
   resetFilters,
   setPremiumTeachers,
   setStandardTeachers,
-  setLevel
+  setLevel,
+  clearAttendanceUsers
 } = slice.actions;
 
 // ----------------------------------------------------------------------
@@ -876,10 +930,10 @@ export function calculatePrice(product, totalDays, time) {
     return discountedPrice * 2;
   }
   if (time === 'MORNING_2HS') {
-    return discountedPrice * 2;
+    return 200000;
   }
   if (time === 'AFTERNOON_2HS') {
-    return discountedPrice * 2;
+    return 200000;
   }
   return discountedPrice;
 }
@@ -986,4 +1040,74 @@ export function calculateDiscount(discountCode, bookingPrice) {
   if (discountCode === 'MATCH10') {
     dispatch(slice.actions.applyDiscount(bookingPrice * 0.10))
   }
+}
+
+// ----------------------------------------------------------------------
+
+export function getAttendanceUsers(date, resort, searchTerm = '', page = 0, size = 5) {
+  return async () => {
+    dispatch(slice.actions.startLoadingAttendanceUsers());
+    try {
+      const formattedDate = date.toISOString().split('T')[0];
+      const params = new URLSearchParams({
+        date: formattedDate,
+        resort: resort,
+        page: page.toString(),
+        size: size.toString()
+      });
+      
+      if (searchTerm) {
+        params.append('search', searchTerm);
+      }
+
+      const response = await axios.get(`/api/bookings/attendance-users?${params.toString()}`);
+      
+      const payload = {
+        users: response.data.users || [],
+        page: page,
+        size: size,
+        total: response.data.total || 0,
+        hasMore: response.data.hasMore || false
+      };
+
+      dispatch(slice.actions.getAttendanceUsersSuccess(payload));
+    } catch (error) {
+      console.error('Error fetching attendance users:', error);
+      dispatch(slice.actions.attendanceUsersError(error.message));
+    }
+  };
+}
+
+export function loadMoreAttendanceUsers(date, resort, searchTerm = '', page, size = 5) {
+  return async () => {
+    dispatch(slice.actions.startLoadingAttendanceUsers());
+    try {
+      const formattedDate = date.toISOString().split('T')[0];
+      const params = new URLSearchParams({
+        date: formattedDate,
+        resort: resort,
+        page: page.toString(),
+        size: size.toString()
+      });
+      
+      if (searchTerm) {
+        params.append('search', searchTerm);
+      }
+
+      const response = await axios.get(`/api/bookings/attendance-users?${params.toString()}`);
+      
+      const payload = {
+        users: response.data.users || [],
+        page: page,
+        size: size,
+        total: response.data.total || 0,
+        hasMore: response.data.hasMore || false
+      };
+
+      dispatch(slice.actions.loadMoreAttendanceUsersSuccess(payload));
+    } catch (error) {
+      console.error('Error loading more attendance users:', error);
+      dispatch(slice.actions.attendanceUsersError(error.message));
+    }
+  };
 }

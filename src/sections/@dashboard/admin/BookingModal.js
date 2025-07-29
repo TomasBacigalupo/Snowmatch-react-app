@@ -28,10 +28,12 @@ const BookingModal = ({ isOpen, onClose, refreshBookings, filterTeacherId, filte
         adults: 0,
         comment: '',
         teacherSearch: '',
+        studentSearch: '',
         bookingType: 'ASSIGNED',
         includesLaunch: false,
         includesEquipment: false,
         paymentStatus: 'PAID',
+        paymentMethod: 'CASH',
         internalComment: ''
     });
 
@@ -46,17 +48,27 @@ const BookingModal = ({ isOpen, onClose, refreshBookings, filterTeacherId, filte
     const { teachers, successMessage } = useSelector((state) => state.admin);
     const { bookSuccess, isLoading, error } = useSelector((state) => state.bookings);
 
-    useEffect(() => {
-        dispatch(getTeachers(1, "TEACHER", formData.teacher, 0))
-    }, [formData.teacher])
+    console.log('Current state:', { bookSuccess, teacherId, isOpen });
 
     useEffect(() => {
-        dispatch(getTeachers(1, "STUDENT", formData.student, 0))
-    }, [formData.student])
+        // Only call getTeachers when teacherSearch changes, not when teacher is selected
+        if (formData.teacherSearch) {
+            dispatch(getTeachers(1, "TEACHER", formData.teacherSearch, 0))
+        }
+    }, [formData.teacherSearch])
+
+    useEffect(() => {
+        // Only call getTeachers when studentSearch changes, not when student is selected
+        if (formData.studentSearch) {
+            dispatch(getTeachers(1, "STUDENT", formData.studentSearch, 0))
+        }
+    }, [formData.studentSearch])
 
     // Handle booking creation success
     useEffect(() => {
+        console.log('useEffect bookSuccess triggered:', { bookSuccess, teacherId });
         if (bookSuccess && teacherId) {
+            console.log('Closing modal due to successful booking');
             enqueueSnackbar('Booking created successfully', { variant: 'success' }); 
             
             // Reset form and close modal
@@ -68,10 +80,12 @@ const BookingModal = ({ isOpen, onClose, refreshBookings, filterTeacherId, filte
                 children: 0,
                 adults: 0,
                 teacherSearch: '',
+                studentSearch: '',
                 bookingType: 'ASSIGNED',
                 includesLaunch: false,
                 includesEquipment: false,
                 paymentStatus: 'PAID',
+                paymentMethod: 'CASH',
                 internalComment: ''
             });
 
@@ -81,13 +95,13 @@ const BookingModal = ({ isOpen, onClose, refreshBookings, filterTeacherId, filte
 
             onClose();
         }
-    }, [bookSuccess, dispatch, enqueueSnackbar, onClose]);
+    }, [bookSuccess, teacherId, dispatch, enqueueSnackbar, onClose]);
 
     useEffect(() => {
         if(isOpen){
             dispatch(setBookingSuccess(false))
         }
-    },[isOpen])
+    },[isOpen, dispatch])
 
     // Handle booking creation error
     useEffect(() => {
@@ -210,6 +224,7 @@ const BookingModal = ({ isOpen, onClose, refreshBookings, filterTeacherId, filte
             formData.includesLaunch,
             formData.includesEquipment,
             formData.paymentStatus,
+            formData.paymentMethod,
             formData.internalComment,
             formData.resort));
     };
@@ -247,7 +262,15 @@ const BookingModal = ({ isOpen, onClose, refreshBookings, filterTeacherId, filte
     };
 
     return (
-        <Dialog open={isOpen} onClose={onClose} maxWidth="md" fullWidth>
+        <Dialog 
+            open={isOpen} 
+            onClose={(event, reason) => {
+                console.log('Dialog onClose called with reason:', reason);
+                onClose();
+            }} 
+            maxWidth="md" 
+            fullWidth
+        >
             <DialogTitle>Create Booking</DialogTitle>
             <DialogContent>
                 <Typography variant="h6" sx={{ mb: 2 }}>Student</Typography>
@@ -356,6 +379,25 @@ const BookingModal = ({ isOpen, onClose, refreshBookings, filterTeacherId, filte
                                 <MenuItem value="PAID_30">30% Pagado</MenuItem>
                                 <MenuItem value="PAID_40">40% Pagado</MenuItem>
                                 <MenuItem value="PAID_50">50% Pagado</MenuItem>
+                            </Select>
+                        </FormControl>
+                    </Grid>
+                    <Grid item xs={12} md={6}>
+                        <FormControl fullWidth>
+                            <InputLabel id="payment-method-label">Método de Pago</InputLabel>
+                            <Select
+                                labelId="payment-method-label"
+                                id="payment-method-select"
+                                value={formData.paymentMethod}
+                                onChange={(e) => setFormData((prevData) => ({
+                                    ...prevData,
+                                    paymentMethod: e.target.value,
+                                }))}
+                            >
+                                <MenuItem value="CASH">Efectivo</MenuItem>
+                                <MenuItem value="TRANSFER">Transferencia</MenuItem>
+                                <MenuItem value="DEBIT_CARD">Tarjeta de Débito</MenuItem>
+                                <MenuItem value="CREDIT_CARD">Tarjeta de Crédito</MenuItem>
                             </Select>
                         </FormControl>
                     </Grid>
@@ -528,26 +570,28 @@ const BookingModal = ({ isOpen, onClose, refreshBookings, filterTeacherId, filte
                         <Chip 
                             label="Grupal" 
                             onClick={() => {
+                                console.log('Grupal chip clicked, setting teacherId to 1117');
                                 setTeacherId(1117);
                                 setFormData((prevData) => ({
                                     ...prevData,
                                     teacher: { id: 1117, name: 'Grupal', lastname: '' } || null,
                                 }));
                             }}
-                            color={teacherId === 1450 ? "primary" : "default"}
-                            variant={teacherId === 1450 ? "filled" : "outlined"}
+                            color={teacherId === 1117 ? "primary" : "default"}
+                            variant={teacherId === 1117 ? "filled" : "outlined"}
                         />
                         <Chip 
                             label="Escuelita" 
                             onClick={() => {
+                                console.log('Escuelita chip clicked, setting teacherId to 1118');
                                 setTeacherId(1118);
                                 setFormData((prevData) => ({
                                     ...prevData,
                                     teacher: { id: 1118, name: 'Escuelita', lastname: '' } || null,
                                 }));
                             }}
-                            color={teacherId === 1253 ? "primary" : "default"}
-                            variant={teacherId === 1253 ? "filled" : "outlined"}
+                            color={teacherId === 1118 ? "primary" : "default"}
+                            variant={teacherId === 1118 ? "filled" : "outlined"}
                         />
                     </Box>
                 </Box>
@@ -591,10 +635,12 @@ const BookingModal = ({ isOpen, onClose, refreshBookings, filterTeacherId, filte
                         <Box 
                             key={teacher.id} 
                             onClick={(e) => {
+                                console.log('Teacher clicked:', teacher.id, 'Shift key:', e.shiftKey);
                                 if (e.shiftKey) {
                                     const linkTo = PATH_DASHBOARD.eCommerce.viewTeacher(teacher.id);
                                     window.open(linkTo, '_blank');
                                 } else {
+                                    console.log('Setting teacherId to:', teacher.id);
                                     setTeacherId(teacher.id);
                                     setFormData((prevData) => ({
                                         ...prevData,

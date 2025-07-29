@@ -110,7 +110,7 @@ export default function AdminConfirmForm({ isEdit, currentTeacher, documents }) 
     email: Yup.string().required('Email is required').email(),
     countryCode: Yup.string(),
     information: Yup.string().nullable().max(100),
-    description: Yup.string().nullable().max(100),
+    description: Yup.string().nullable().max(500),
     resorts: Yup.array().of(Yup.string()),
     languages: Yup.array().of(Yup.string()),
     // birth: Yup.string(),

@@ -11,7 +11,7 @@ const Policies = () => {
     return (
         <>
             <Grid container justifyContent={'center'} alignItems={'center'} onClick={() => setOpen(true)}>
-                <Grid item xs={10} pl={3} pt={3} pb={3}>
+                <Grid item xs={10} pl={2} pt={3} pb={3}>
                     <Typography variant="h4" gutterBottom>
                     {translate('policy.title')}
                     </Typography>

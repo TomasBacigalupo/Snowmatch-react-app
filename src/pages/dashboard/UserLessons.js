@@ -86,6 +86,8 @@ export default function UserLessons() {
             dispatch(getBookings("PENDING"))
         else if(user && currentTab === 'upcoming')
             dispatch(getBookings("ACCEPTED"))
+        else if(currentTab === 'all')
+            dispatch(getBookings("ALL"))
     }, [dispatch, currentTab])
 
     return (

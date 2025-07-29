@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 // @mui
 import {
   Drawer,
@@ -11,6 +11,9 @@ import {
   Chip,
   IconButton,
   Button,
+  Card,
+  CardContent,
+  Alert,
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 // components
@@ -33,6 +36,9 @@ BookingDetailsDrawer.propTypes = {
 export default function BookingDetailsDrawer({ open, onClose, booking, refreshBookings }) {
   const theme = useTheme();
   const [editModalOpen, setEditModalOpen] = useState(false);
+  const [uploadingInvoice, setUploadingInvoice] = useState(false);
+  const [uploadSuccess, setUploadSuccess] = useState(false);
+  const fileInputRef = useRef(null);
 
   const handleEditClick = () => {
     setEditModalOpen(true);
@@ -57,6 +63,56 @@ export default function BookingDetailsDrawer({ open, onClose, booking, refreshBo
     const encodedMessage = encodeURIComponent(message);
     const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
     window.open(whatsappUrl, '_blank');
+  };
+
+  const handleInvoiceUpload = (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    // Validar tipo de archivo
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'application/pdf'];
+    if (!allowedTypes.includes(file.type)) {
+      alert('Por favor selecciona un archivo válido (JPG, PNG o PDF)');
+      return;
+    }
+
+    // Validar tamaño (máximo 10MB)
+    if (file.size > 10 * 1024 * 1024) {
+      alert('El archivo es demasiado grande. Máximo 10MB permitido.');
+      return;
+    }
+
+    setUploadingInvoice(true);
+    
+    // Simular carga de archivo (aquí deberías implementar la llamada a la API)
+    setTimeout(() => {
+      console.log('Archivo a subir:', file);
+      // TODO: Implementar la API call para subir la factura
+      // const formData = new FormData();
+      // formData.append('invoice', file);
+      // formData.append('bookingId', booking.id);
+      // formData.append('teacherId', booking.teacher.id);
+      
+      setUploadingInvoice(false);
+      setUploadSuccess(true);
+      
+      // Limpiar el input
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+      
+      // Ocultar mensaje de éxito después de 3 segundos
+      setTimeout(() => setUploadSuccess(false), 3000);
+      
+      // Refresh bookings si es necesario
+      if (refreshBookings) {
+        refreshBookings();
+      }
+    }, 2000);
+  };
+
+  const handleUploadClick = () => {
+    fileInputRef.current?.click();
   };
 
   const formatDate = (dateString) => {
@@ -188,7 +244,6 @@ export default function BookingDetailsDrawer({ open, onClose, booking, refreshBo
                   )}
                 </Box>
               </Grid>
-
               {/* Instructor */}
               <Grid item xs={12} md={6}>
                 <Box>
@@ -196,17 +251,29 @@ export default function BookingDetailsDrawer({ open, onClose, booking, refreshBo
                     <Typography variant="subtitle1" gutterBottom>
                       Instructor
                     </Typography>
-                    {booking?.teacher?.cellphone && (
-                      <Button
+                    <Stack direction="row" spacing={1}>
+                      {/* <Button
                         size="small"
                         variant="outlined"
-                        startIcon={<Iconify icon="logos:whatsapp-icon" />}
-                        onClick={() => handleWhatsAppContact(booking.teacher.cellphone, `${booking.teacher.name} ${booking.teacher.lastname}`)}
+                        startIcon={<Iconify icon="eva:upload-fill" />}
+                        onClick={handleUploadClick}
+                        disabled={uploadingInvoice}
                         sx={{ minWidth: 'auto' }}
                       >
-                        WhatsApp
-                      </Button>
-                    )}
+                        {uploadingInvoice ? 'Subiendo...' : 'Cargar Factura'}
+                      </Button> */}
+                      {booking?.teacher?.cellphone && (
+                        <Button
+                          size="small"
+                          variant="outlined"
+                          startIcon={<Iconify icon="logos:whatsapp-icon" />}
+                          onClick={() => handleWhatsAppContact(booking.teacher.cellphone, `${booking.teacher.name} ${booking.teacher.lastname}`)}
+                          sx={{ minWidth: 'auto' }}
+                        >
+                          WhatsApp
+                        </Button>
+                      )}
+                    </Stack>
                   </Stack>
                   <Typography variant="body1">
                     {`${booking?.teacher.name} ${booking?.teacher.lastname}`}
@@ -226,7 +293,7 @@ export default function BookingDetailsDrawer({ open, onClose, booking, refreshBo
             {/* Detalles de la Reserva */}
             <Box>
               <Typography variant="subtitle1" gutterBottom>
-                Detalles de la Reserva
+                Detalles de la Reserva -
               </Typography>
               <Grid container spacing={3}>
                 <Grid item xs={12} sm={6} md={3}>
@@ -260,6 +327,25 @@ export default function BookingDetailsDrawer({ open, onClose, booking, refreshBo
                   <Typography variant="body1" color="primary.main">
                     {formatPrice(booking?.price)}
                   </Typography>
+                </Grid>
+                <Grid item xs={12} sm={6} md={3}>
+                  <Typography variant="body2" color="text.secondary">
+                    Método de Pago
+                  </Typography>
+                  {console.log({booking})}
+                  <Label
+                    variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
+                    color={
+                      (booking?.bookingPaymentMethod === "CASH" && 'default') ||
+                      (booking?.bookingPaymentMethod === "TRANSFER" && 'info') ||
+                      (booking?.bookingPaymentMethod === "DEBIT_CARD" && 'secondary') ||
+                      (booking?.bookingPaymentMethod === "CREDIT_CARD" && 'primary') ||
+                      'default'
+                    }
+                    sx={{ px: 2, py: 1 }}
+                  >
+                    {booking?.bookingPaymentMethod || 'PENDIENTE'}
+                  </Label>
                 </Grid>
                 <Grid item xs={12} sm={6} md={3}>
                   <Typography variant="body2" color="text.secondary">
@@ -310,6 +396,56 @@ export default function BookingDetailsDrawer({ open, onClose, booking, refreshBo
               </Grid>
             </Box>
 
+            {/* Factura del Instructor */}
+            <Box>
+              <Typography variant="subtitle1" gutterBottom>
+                Factura del Instructor
+              </Typography>
+              
+              {uploadSuccess && (
+                <Alert severity="success" sx={{ mb: 2 }}>
+                  Factura cargada exitosamente
+                </Alert>
+              )}
+
+              {booking?.teacherInvoiceUrl ? (
+                <Card>
+                  <CardContent>
+                    <Stack direction="row" alignItems="center" spacing={2}>
+                      <Iconify 
+                        icon="eva:file-text-fill" 
+                        sx={{ color: 'primary.main', fontSize: 24 }}
+                      />
+                      <Box sx={{ flexGrow: 1 }}>
+                        <Typography variant="body1" gutterBottom>
+                          Factura del Instructor
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                          Factura cargada para esta reserva
+                        </Typography>
+                      </Box>
+                      <Button
+                        variant="contained"
+                        startIcon={<Iconify icon="eva:eye-fill" />}
+                        onClick={() => window.open(booking.teacherInvoiceUrl, '_blank')}
+                      >
+                        Ver Factura
+                      </Button>
+                    </Stack>
+                  </CardContent>
+                </Card>
+              ) : (
+                <Alert severity="info" sx={{ mb: 2 }}>
+                  <Stack direction="row" alignItems="center" spacing={1}>
+                    <Iconify icon="eva:info-fill" />
+                    <Typography variant="body2">
+                      El instructor aún no ha subido la factura para esta reserva
+                    </Typography>
+                  </Stack>
+                </Alert>
+              )}
+            </Box>
+
             {/* Calendario */}
             <Box>
               <Typography variant="subtitle1" gutterBottom>
@@ -352,6 +488,15 @@ export default function BookingDetailsDrawer({ open, onClose, booking, refreshBo
         onClose={handleEditClose}
         booking={booking}
         onSave={handleEditSave}
+      />
+
+      {/* Input file oculto para cargar facturas */}
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept=".jpg,.jpeg,.png,.pdf"
+        style={{ display: 'none' }}
+        onChange={handleInvoiceUpload}
       />
     </>
   );

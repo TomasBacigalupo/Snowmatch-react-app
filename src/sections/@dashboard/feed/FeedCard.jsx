@@ -1,97 +1,375 @@
-import { Avatar, Box, Button, Card, CardContent, Stack, Switch, Typography, CircularProgress } from "@mui/material";
+import { Avatar, Box, Button, Card, CardContent, Stack, Switch, Typography, CircularProgress, IconButton } from "@mui/material";
 import { useState, useRef, useEffect } from "react";
 import VideoPlayer from 'src/components/video-player';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import ShareIcon from '@mui/icons-material/Share';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import PauseIcon from '@mui/icons-material/Pause';
 
 import AnalyticsIcon from '@mui/icons-material/Analytics';
 
 export default function FeedCard({ video, setSelectedVideo, onInstructorClick }) {
     const [analyticsEnabled, setAnalyticsEnabled] = useState(false);
-    const videoRef = useRef(null);
     const [isVisible, setIsVisible] = useState(false);
+    const [shouldLoad, setShouldLoad] = useState(false);
+    const videoRef = useRef(null);
+    const cardRef = useRef(null);
     const [isLoading, setIsLoading] = useState(true);
-    const [currentTime, setCurrentTime] = useState(0);
+    const [isPlaying, setIsPlaying] = useState(false);
+    const [hasError, setHasError] = useState(false);
+    const [buffering, setBuffering] = useState(false);
+    const [bufferedPercent, setBufferedPercent] = useState(0);
+    const [currentVideoUrl, setCurrentVideoUrl] = useState('');
 
+    // Reset video states when analytics mode changes
+    const handleAnalyticsToggle = () => {
+        const newAnalyticsEnabled = !analyticsEnabled;
+        setAnalyticsEnabled(newAnalyticsEnabled);
+        
+        // Reset all video states
+        setIsLoading(true);
+        setIsPlaying(false);
+        setHasError(false);
+        setBuffering(false);
+        setBufferedPercent(0);
+        
+        // Update the video URL
+        const newVideoUrl = newAnalyticsEnabled 
+            ? `${process.env.REACT_APP_VIDEO_ANALIZED_BUCKET_URL}/${video.videoUrl}.mp4`
+            : `${process.env.REACT_APP_VIDEO_BUCKET_URL}/${video.videoUrl}`;
+        
+        setCurrentVideoUrl(newVideoUrl);
+        
+        // Reload the video with new URL
+        if (videoRef.current) {
+            console.log('Reloading video with new URL:', newVideoUrl);
+            videoRef.current.src = newVideoUrl;
+            videoRef.current.load();
+        }
+    };
+
+    // Intersection Observer to detect when card is visible
     useEffect(() => {
         const observer = new IntersectionObserver(
-            ([entry]) => {
-                setIsVisible(entry.isIntersecting);
+            (entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        setIsVisible(true);
+                        // Add a small delay to start loading
+                        setTimeout(() => setShouldLoad(true), 100);
+                    } else {
+                        // When video goes out of view, pause it
+                        if (videoRef.current && !videoRef.current.paused) {
+                            videoRef.current.pause();
+                            setIsPlaying(false);
+                        }
+                        setIsVisible(false);
+                    }
+                });
             },
             {
-                threshold: 0.5, // Video is considered visible when 50% is in viewport
-                rootMargin: '0px'
+                rootMargin: '100px', // Start loading 100px before the video comes into view
+                threshold: 0.1
             }
         );
 
-        if (videoRef.current) {
-            observer.observe(videoRef.current);
+        if (cardRef.current) {
+            observer.observe(cardRef.current);
         }
 
         return () => {
-            if (videoRef.current) {
-                observer.unobserve(videoRef.current);
+            if (cardRef.current) {
+                observer.unobserve(cardRef.current);
             }
         };
     }, []);
 
+    // Handle video loading and autoplay for mobile
     useEffect(() => {
-        if (videoRef.current) {
-            if (isVisible) {
-                videoRef.current.play().catch(console.error);
-            } else {
-                videoRef.current.pause();
-            }
-        }
-    }, [isVisible]);
-
-    // Handle analytics mode change with smooth transition
-    useEffect(() => {
-        if (videoRef.current) {
-            // Store current time before changing source
-            setCurrentTime(videoRef.current.currentTime);
+        if (shouldLoad && videoRef.current) {
+            const video = videoRef.current;
+            let loadTimeout;
             
-            // Pause current video
-            videoRef.current.pause();
-            
-            // Show loading briefly
-            setIsLoading(true);
-            
-            // Small delay to ensure smooth transition
-            setTimeout(() => {
-                if (videoRef.current) {
-                    // Set the new source
-                    videoRef.current.src = analyticsEnabled 
-                        ? `${process.env.REACT_APP_VIDEO_ANALIZED_BUCKET_URL}/${video.videoUrl}.mp4`
-                        : `${process.env.REACT_APP_VIDEO_BUCKET_URL}/${video.videoUrl}`;
-                    
-                    // Load the new video
-                    videoRef.current.load();
+            const handleCanPlay = () => {
+                console.log('Video can play - loading complete');
+                clearTimeout(loadTimeout);
+                setIsLoading(false);
+                setHasError(false);
+                
+                // For mobile, try to autoplay muted
+                if (video.paused) {
+                    console.log('Attempting to autoplay video');
+                    const playPromise = video.play();
+                    if (playPromise !== undefined) {
+                        playPromise
+                            .then(() => {
+                                console.log('Autoplay successful');
+                                setIsPlaying(true);
+                            })
+                            .catch((error) => {
+                                console.log('Autoplay prevented:', error);
+                                // This is normal on mobile, user needs to interact
+                                setIsPlaying(false);
+                            });
+                    }
                 }
-            }, 100);
+            };
+
+            const handleCanPlayThrough = () => {
+                console.log('Video can play through - fully buffered');
+                clearTimeout(loadTimeout);
+                setIsLoading(false);
+                setHasError(false);
+            };
+
+            const handleLoadedData = () => {
+                console.log('Video loaded data - ready to play');
+                clearTimeout(loadTimeout);
+                setIsLoading(false);
+                setHasError(false);
+                
+                // Try to autoplay as soon as we have enough data
+                if (video.paused && video.readyState >= 2) { // HAVE_CURRENT_DATA
+                    console.log('Attempting to autoplay with buffered data');
+                    const playPromise = video.play();
+                    if (playPromise !== undefined) {
+                        playPromise
+                            .then(() => {
+                                console.log('Autoplay successful with buffered data');
+                                setIsPlaying(true);
+                            })
+                            .catch((error) => {
+                                console.log('Autoplay prevented with buffered data:', error);
+                                setIsPlaying(false);
+                            });
+                    }
+                } else {
+                    // If autoplay is prevented, just show the thumbnail
+                    setIsPlaying(false);
+                }
+            };
+
+            const handleProgress = () => {
+                // Check if we have enough buffered data to start playing
+                if (video.buffered.length > 0) {
+                    const bufferedEnd = video.buffered.end(video.buffered.length - 1);
+                    const currentTime = video.currentTime;
+                    const duration = video.duration || 0;
+                    
+                    // Calculate buffered percentage
+                    if (duration > 0) {
+                        const bufferedPercent = (bufferedEnd / duration) * 100;
+                        setBufferedPercent(bufferedPercent);
+                        console.log(`Buffered: ${bufferedPercent.toFixed(1)}%`);
+                    }
+                    
+                    // If we have at least 2 seconds buffered or 10% of the video, we can start
+                    const minBuffered = Math.min(2, duration * 0.1);
+                    
+                    if (bufferedEnd - currentTime >= minBuffered && video.paused && !isPlaying) {
+                        console.log('Enough buffered data, attempting to play');
+                        setBuffering(false);
+                        const playPromise = video.play();
+                        if (playPromise !== undefined) {
+                            playPromise
+                                .then(() => {
+                                    console.log('Playback started with buffered data');
+                                    setIsPlaying(true);
+                                })
+                                .catch((error) => {
+                                    console.log('Playback failed with buffered data:', error);
+                                });
+                        }
+                    } else if (bufferedEnd - currentTime < minBuffered) {
+                        setBuffering(true);
+                    }
+                }
+            };
+
+            const handleError = (e) => {
+                console.error('Video error:', e);
+                console.error('Video error details:', video.error);
+                console.error('Video src:', video.src);
+                console.error('Current video URL:', currentVideoUrl);
+                console.error('Analytics enabled:', analyticsEnabled);
+                clearTimeout(loadTimeout);
+                setIsLoading(false);
+                setHasError(true);
+                
+                // Log specific error information
+                if (video.error) {
+                    switch (video.error.code) {
+                        case 1:
+                            console.error('MEDIA_ERR_ABORTED: The video download was aborted');
+                            break;
+                        case 2:
+                            console.error('MEDIA_ERR_NETWORK: A network error occurred');
+                            break;
+                        case 3:
+                            console.error('MEDIA_ERR_DECODE: The video is corrupted or not supported');
+                            break;
+                        case 4:
+                            console.error('MEDIA_ERR_SRC_NOT_SUPPORTED: The video format is not supported');
+                            break;
+                        default:
+                            console.error('Unknown video error');
+                    }
+                }
+            };
+
+            const handleLoadStart = () => {
+                console.log('Video load started');
+                setIsLoading(true);
+                setHasError(false);
+                
+                // Set a timeout to detect if video doesn't load
+                loadTimeout = setTimeout(() => {
+                    console.error('Video load timeout - taking too long');
+                    if (isLoading) {
+                        setIsLoading(false);
+                        setHasError(true);
+                    }
+                }, 15000); // 15 seconds timeout
+            };
+
+            const handleLoadedMetadata = () => {
+                console.log('Video metadata loaded');
+                // Try to start playing as soon as we have metadata
+                if (video.readyState >= 1) { // HAVE_METADATA
+                    console.log('Metadata loaded, checking if we can start playback');
+                    handleLoadedData();
+                }
+            };
+
+            const handleWaiting = () => {
+                console.log('Video waiting for data');
+                setBuffering(true);
+            };
+
+            const handlePlaying = () => {
+                console.log('Video playing');
+                setBuffering(false);
+                setIsPlaying(true);
+            };
+
+            const handleStalled = () => {
+                console.log('Video stalled');
+                setBuffering(true);
+            };
+
+            video.addEventListener('canplay', handleCanPlay);
+            video.addEventListener('canplaythrough', handleCanPlayThrough);
+            video.addEventListener('loadeddata', handleLoadedData);
+            video.addEventListener('progress', handleProgress);
+            video.addEventListener('error', handleError);
+            video.addEventListener('loadstart', handleLoadStart);
+            video.addEventListener('loadedmetadata', handleLoadedMetadata);
+            video.addEventListener('waiting', handleWaiting);
+            video.addEventListener('playing', handlePlaying);
+            video.addEventListener('stalled', handleStalled);
+
+            return () => {
+                clearTimeout(loadTimeout);
+                video.removeEventListener('canplay', handleCanPlay);
+                video.removeEventListener('canplaythrough', handleCanPlayThrough);
+                video.removeEventListener('loadeddata', handleLoadedData);
+                video.removeEventListener('progress', handleProgress);
+                video.removeEventListener('error', handleError);
+                video.removeEventListener('loadstart', handleLoadStart);
+                video.removeEventListener('loadedmetadata', handleLoadedMetadata);
+                video.removeEventListener('waiting', handleWaiting);
+                video.removeEventListener('playing', handlePlaying);
+                video.removeEventListener('stalled', handleStalled);
+            };
         }
-    }, [analyticsEnabled, video.videoUrl]);
+    }, [shouldLoad, isLoading, isPlaying]);
+
+    // Handle app visibility changes (pause videos when app goes to background)
+    useEffect(() => {
+        const handleVisibilityChange = () => {
+            if (document.hidden && videoRef.current && !videoRef.current.paused) {
+                videoRef.current.pause();
+                setIsPlaying(false);
+            }
+        };
+
+        document.addEventListener('visibilitychange', handleVisibilityChange);
+
+        return () => {
+            document.removeEventListener('visibilitychange', handleVisibilityChange);
+        };
+    }, []);
+
+    // Debug logging for video URLs
+    useEffect(() => {
+        if (shouldLoad) {
+            const videoUrl = analyticsEnabled 
+                ? `${process.env.REACT_APP_VIDEO_ANALIZED_BUCKET_URL}/${video.videoUrl}.mp4`
+                : `${process.env.REACT_APP_VIDEO_BUCKET_URL}/${video.videoUrl}`;
+            
+            console.log('Video URL:', videoUrl);
+            console.log('Analytics enabled:', analyticsEnabled);
+            console.log('Video object:', video);
+            console.log('Environment variables:', {
+                REACT_APP_VIDEO_BUCKET_URL: process.env.REACT_APP_VIDEO_BUCKET_URL,
+                REACT_APP_VIDEO_ANALIZED_BUCKET_URL: process.env.REACT_APP_VIDEO_ANALIZED_BUCKET_URL
+            });
+        }
+    }, [shouldLoad, analyticsEnabled, video.videoUrl]);
+
+    // Initialize video URL when component loads or video changes
+    useEffect(() => {
+        const initialVideoUrl = analyticsEnabled 
+            ? `${process.env.REACT_APP_VIDEO_ANALIZED_BUCKET_URL}/${video.videoUrl}.mp4`
+            : `${process.env.REACT_APP_VIDEO_BUCKET_URL}/${video.videoUrl}`;
+        
+        setCurrentVideoUrl(initialVideoUrl);
+        console.log('Initial video URL set:', initialVideoUrl);
+    }, [video.videoUrl, analyticsEnabled]);
 
     const handleVideoLoad = () => {
         setIsLoading(false);
+        setHasError(false);
     };
 
     const handleVideoError = () => {
         setIsLoading(false);
+        setHasError(true);
     };
 
-    const handleCanPlay = () => {
+    const handlePlayPause = () => {
         if (videoRef.current) {
-            // Resume from the same time position
-            videoRef.current.currentTime = currentTime;
-            
-            // If video was visible, start playing
-            if (isVisible) {
-                videoRef.current.play().catch(console.error);
+            if (videoRef.current.paused) {
+                const playPromise = videoRef.current.play();
+                if (playPromise !== undefined) {
+                    playPromise
+                        .then(() => {
+                            setIsPlaying(true);
+                        })
+                        .catch((error) => {
+                            console.error('Play failed:', error);
+                        });
+                }
+            } else {
+                videoRef.current.pause();
+                setIsPlaying(false);
             }
         }
-        setIsLoading(false);
+    };
+
+    const handleVideoClick = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        const video = e.target;
+        
+        // Enter fullscreen
+        if (video.webkitEnterFullscreen) {
+            video.webkitEnterFullscreen();
+        } else if (video.requestFullscreen) {
+            video.requestFullscreen();
+        }
     };
 
     const getCommentScores = (comments) => {
@@ -105,8 +383,10 @@ export default function FeedCard({ video, setSelectedVideo, onInstructorClick })
           humanScore: humanComment?.score || null
         };
       };
+
     return (
         <Card 
+          ref={cardRef}
           key={video.id} 
           sx={{ 
             mb: 1,
@@ -146,19 +426,38 @@ export default function FeedCard({ video, setSelectedVideo, onInstructorClick })
                   sx={{ 
                     fontSize: '1.2rem',
                     color: 'black',
-                    opacity: analyticsEnabled[video.id] ? 1 : 0.5
+                    opacity: analyticsEnabled ? 1 : 0.5
                   }} 
                 />
                 <Switch
                   size="small"
                   checked={analyticsEnabled}
-                  onChange={() => setAnalyticsEnabled(!analyticsEnabled)}
+                  onChange={handleAnalyticsToggle}
                 />
               </Stack>
             </Stack>
 
             <Box sx={{ position: 'relative' }}>
-              {isLoading && (
+              {/* Placeholder when video is not loaded yet */}
+              {!shouldLoad && (
+                <Box
+                  sx={{
+                    width: '100%',
+                    height: '400px',
+                    backgroundColor: '#f0f0f0',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <Typography variant="body2" color="text.secondary">
+                    Loading video...
+                  </Typography>
+                </Box>
+              )}
+
+              {/* Loading indicator */}
+              {shouldLoad && isLoading && !hasError && (
                 <Box
                   sx={{
                     position: 'absolute',
@@ -167,45 +466,159 @@ export default function FeedCard({ video, setSelectedVideo, onInstructorClick })
                     right: 0,
                     bottom: 0,
                     display: 'flex',
+                    flexDirection: 'column',
                     alignItems: 'center',
                     justifyContent: 'center',
                     backgroundColor: 'rgba(0, 0, 0, 0.05)',
                     zIndex: 1,
+                    gap: 2,
                   }}
                 >
-                  <CircularProgress size={60} />
+                  <CircularProgress 
+                    size={60} 
+                    variant={buffering ? "determinate" : "indeterminate"}
+                    value={buffering ? bufferedPercent : undefined}
+                  />
+                  {buffering && (
+                    <Typography variant="caption" color="text.secondary">
+                      Buffering... {bufferedPercent.toFixed(0)}%
+                    </Typography>
+                  )}
                 </Box>
               )}
-              <video
-                ref={videoRef}
-                src={analyticsEnabled 
-                  ? `${process.env.REACT_APP_VIDEO_ANALIZED_BUCKET_URL}/${video.videoUrl}.mp4`
-                  : `${process.env.REACT_APP_VIDEO_BUCKET_URL}/${video.videoUrl}`
-                }
-                style={{
-                  width: '100%',
-                  height: '400px',
-                  objectFit: 'cover',
-                  cursor: 'pointer',
-                  WebkitPlaysInline: true,
-                  playsInline: true
-                }}
-                muted
-                loop
-                playsInline
-                defaultMuted
-                onLoadedData={handleVideoLoad}
-                onError={handleVideoError}
-                onCanPlay={handleCanPlay}
-                onClick={(e) => {
-                  const video = e.target;
-                  if (video.webkitEnterFullscreen) {
-                    video.webkitEnterFullscreen();
-                  } else if (video.requestFullscreen) {
-                    video.requestFullscreen();
-                  }
-                }}
-              />
+
+              {/* Error state */}
+              {shouldLoad && hasError && (
+                <Box
+                  sx={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    backgroundColor: 'rgba(0, 0, 0, 0.05)',
+                    zIndex: 1,
+                    gap: 2,
+                    p: 2,
+                  }}
+                >
+                  <Typography variant="body2" color="text.secondary" align="center">
+                    Error loading {analyticsEnabled ? 'analyzed' : 'original'} video
+                  </Typography>
+                  <Typography variant="caption" color="text.secondary" align="center" sx={{ fontSize: '0.7rem' }}>
+                    URL: {currentVideoUrl}
+                  </Typography>
+                  <Button 
+                    variant="outlined" 
+                    size="small"
+                    onClick={() => {
+                      setHasError(false);
+                      setIsLoading(true);
+                      if (videoRef.current) {
+                        videoRef.current.load();
+                      }
+                    }}
+                  >
+                    Retry
+                  </Button>
+                  <Button 
+                    variant="text" 
+                    size="small"
+                    onClick={() => {
+                      // Try switching to the other video type
+                      handleAnalyticsToggle();
+                    }}
+                    sx={{ fontSize: '0.7rem' }}
+                  >
+                    Try {analyticsEnabled ? 'original' : 'analyzed'} version
+                  </Button>
+                </Box>
+              )}
+
+              {/* Video element - only render when shouldLoad is true */}
+              {shouldLoad && (
+                <video
+                  key={currentVideoUrl} // Force re-render when URL changes
+                  ref={videoRef}
+                  src={currentVideoUrl || (analyticsEnabled 
+                    ? `${process.env.REACT_APP_VIDEO_ANALIZED_BUCKET_URL}/${video.videoUrl}.mp4`
+                    : `${process.env.REACT_APP_VIDEO_BUCKET_URL}/${video.videoUrl}`
+                  )}
+                  poster={`${process.env.REACT_APP_VIDEO_PREVIEW_BUCKET_URL}/${video.videoUrl}.jpg`} // Use the thumbnail from bucket
+                  style={{
+                    width: '100%',
+                    height: '400px',
+                    objectFit: 'cover',
+                    cursor: 'pointer',
+                    WebkitPlaysInline: true,
+                    playsInline: true
+                  }}
+                  muted
+                  loop
+                  playsInline
+                  preload="auto"
+                  webkit-playsinline="true"
+                  x5-playsinline="true"
+                  x5-video-player-type="h5"
+                  x5-video-player-fullscreen="false"
+                  onLoadedData={handleVideoLoad}
+                  onError={handleVideoError}
+                  onPlay={() => setIsPlaying(true)}
+                  onPause={() => setIsPlaying(false)}
+                  onClick={handleVideoClick}
+                />
+              )}
+
+              {/* Thumbnail overlay when video is paused and loaded */}
+              {shouldLoad && !isLoading && !isPlaying && !hasError && (
+                <Box
+                  sx={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    backgroundImage: `url(${process.env.REACT_APP_VIDEO_PREVIEW_BUCKET_URL}/${video.videoUrl}.jpg)`,
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                    backgroundRepeat: 'no-repeat',
+                    zIndex: 1,
+                  }}
+                />
+              )}
+              
+              {/* Play Button - Only show when paused and video is loaded */}
+              {shouldLoad && !isLoading && !isPlaying && !hasError && (
+                <Box
+                  sx={{
+                    position: 'absolute',
+                    top: '50%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)',
+                    zIndex: 2,
+                  }}
+                >
+                  <IconButton
+                    onClick={handlePlayPause}
+                    sx={{
+                      backgroundColor: 'rgba(0, 0, 0, 0.6)',
+                      color: 'white',
+                      width: 60,
+                      height: 60,
+                      '&:hover': {
+                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                      },
+                    }}
+                  >
+                    <PlayArrowIcon />
+                  </IconButton>
+                </Box>
+              )}
+              
               {video.videoComments && (
                 <Box
                   sx={{
@@ -237,7 +650,11 @@ export default function FeedCard({ video, setSelectedVideo, onInstructorClick })
                               alignItems: 'center',
                               gap: 0.5,
                             }}
-                            onClick={() => {console.log("click"); onInstructorClick(aiComment?.user)}}
+                            onClick={() => {
+                              if (aiComment?.user?.id) {
+                                window.location.href = `/match/teacher/${aiComment.user.id}`;
+                              }
+                            }}
                           >
                             <Avatar
                               src="/assets/avatars/snow-ai.png"
@@ -267,7 +684,11 @@ export default function FeedCard({ video, setSelectedVideo, onInstructorClick })
                         )}
                         {humanScore !== null && (
                           <Box
-                            onClick={() => onInstructorClick(humanComment?.user)}
+                            onClick={() => {
+                              if (humanComment?.user?.id) {
+                                window.location.href = `/match/teacher/${humanComment.user.id}`;
+                              }
+                            }}
                             sx={{
                               background: 'rgba(255, 255, 255, 0.9)',
                               backdropFilter: 'blur(8px)',
@@ -374,5 +795,5 @@ export default function FeedCard({ video, setSelectedVideo, onInstructorClick })
             </Box>
           </CardContent>
         </Card>
-    )
+    );
 }

@@ -48,6 +48,7 @@ export default function BookingEditModal({ open, onClose, booking, onSave }) {
       userComment: formData.get('userComment'),
       internalComment: formData.get('internalComment'),
       paymentStatus: formData.get('paymentStatus'),
+      bookingPaymentMethod: formData.get('bookingPaymentMethod'),
       adults: parseInt(formData.get('adults'), 10) || 0,
       children: parseInt(formData.get('children'), 10) || 0,
       price: parseFloat(formData.get('price')) || 0,
@@ -70,6 +71,7 @@ export default function BookingEditModal({ open, onClose, booking, onSave }) {
       studentId: formData.get('studentId'),
       teacherId: formData.get('teacherId'),
       paymentStatus: formData.get('paymentStatus'),
+      bookingPaymentMethod: formData.get('bookingPaymentMethod'),
       adults: parseInt(formData.get('adults'), 10),
       children: parseInt(formData.get('children'), 10),
       includesEquipments: formData.get('includesEquipments') === 'true',
@@ -147,6 +149,22 @@ export default function BookingEditModal({ open, onClose, booking, onSave }) {
                 </Select>
               </FormControl>
 
+              <FormControl fullWidth>
+                <InputLabel>Método de Pago</InputLabel>
+                <Select
+                  name="bookingPaymentMethod"
+                  label="Método de Pago"
+                  defaultValue={booking?.bookingPaymentMethod || ''}
+                >
+                  <MenuItem value="CASH">Efectivo</MenuItem>
+                  <MenuItem value="TRANSFER">Transferencia</MenuItem>
+                  <MenuItem value="DEBIT_CARD">Tarjeta de Débito</MenuItem>
+                  <MenuItem value="CREDIT_CARD">Tarjeta de Crédito</MenuItem>
+                </Select>
+              </FormControl>
+            </Stack>
+
+            <Stack spacing={2} direction={{ xs: 'column', md: 'row' }}>
               <FormControl fullWidth>
                 <InputLabel>Estado</InputLabel>
                 <Select

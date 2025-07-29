@@ -12,7 +12,8 @@ import {
   AppTopAuthors,
   AppWidgetSummary,
   AppCurrentDownload,
-  UpcomingEvents
+  UpcomingEvents,
+  BookedHoursChart
 } from '../../sections/@dashboard/general/app';
 import { useDispatch, useSelector } from 'src/redux/store';
 import { useEffect, useState } from 'react';
@@ -20,12 +21,13 @@ import { getEvents } from 'src/redux/slices/calendar';
 import { getTotalClasses, getTotalClients, getTotalIncome, getConversations } from 'src/redux/slices/teachers';
 import useLocales from 'src/hooks/useLocales';
 import { date } from 'yup/lib/locale';
-import { VideoLibrary, Upload, CalendarMonth, Help, EventAvailable, Star, Share, OpenInNew } from '@mui/icons-material';
+import { VideoLibrary, Upload, CalendarMonth, Help, EventAvailable, Star, Share, OpenInNew, CheckCircle } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { Share as CapacitorShare } from '@capacitor/share';
 import { getCommentedCount, getTotalHours } from 'src/redux/slices/video';
 import UserLessonsList from 'src/sections/@dashboard/user/list/UserLessonsList';
 import { getBookings } from 'src/redux/slices/bookings';
+import SnowCheckLeftDrawer from 'src/sections/@dashboard/general/SnowCheckLeftDrawer';
 
 
 // ----------------------------------------------------------------------
@@ -39,6 +41,7 @@ export default function GeneralApp() {
   const { totalIncome, totalClasses, totalClients, conversations, openClinicModal } = useSelector(state => state.teachers)
   const { events } = useSelector(state => state.calendar)
   const { commentedCount, isCountLoading, totalHours } = useSelector(state => state.video)
+  const { bookings } = useSelector(state => state.bookings)
   const { translate } = useLocales()
   const [incomeChartData, setIncomeChartData] = useState([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
   const [incomePercent, setIncomePercent] = useState(0);
@@ -47,6 +50,7 @@ export default function GeneralApp() {
   const [waiting, setWaiting] = useState(0);
   const [accepted, setAccepted] = useState(0);
   const [rejected, setRejected] = useState(0);
+  const [snowCheckDrawerOpen, setSnowCheckDrawerOpen] = useState(false);
   const navigate = useNavigate();
 
 
@@ -135,6 +139,18 @@ export default function GeneralApp() {
             />
           </Grid>
         </Grid>
+
+        {/* Booked Hours Chart */}
+        <Grid container spacing={2} sx={{ mb: 4 }}>
+          <Grid item xs={12} md={6}>
+            <BookedHoursChart 
+              events={bookings.flatMap(booking => booking.eventList || [])} 
+              isLoading={false} 
+            />
+          </Grid>
+        </Grid>
+
+        
 
         <Grid container spacing={2} sx={{ mb: 4 }}>
           {/* Rate Videos Card */}
@@ -237,6 +253,58 @@ export default function GeneralApp() {
                 >
                   {translate('dashboard.actions.manageCalendar.button')}
                 </Button>
+              </Stack>
+            </Card>
+          </Grid>
+
+          {/* SnowCheck Card */}
+          <Grid item xs={12} md={4}>
+            <Card
+              sx={{
+                p: 2,
+                position: 'relative',
+                transition: 'all 0.2s',
+                cursor: 'pointer',
+                border: '1px solid',
+                borderColor: 'grey.200',
+                '&:hover': {
+                  transform: 'translateY(-4px)',
+                  borderColor: 'grey.300',
+                  bgcolor: 'grey.50'
+                },
+                bgcolor: 'background.paper',
+              }}
+            >
+              <Stack direction="row" spacing={2} alignItems="center">
+                <Box
+                  sx={{
+                    p: 1.5,
+                    borderRadius: '12px',
+                    bgcolor: 'grey.100',
+                    color: 'grey.700'
+                  }}
+                >
+                  <CheckCircle sx={{ width: 24, height: 24 }} />
+                </Box>
+                <Box sx={{ flexGrow: 1 }}>
+                  <Typography variant="subtitle1" sx={{ mb: 0.5, fontWeight: 600 }}>
+                    {translate('dashboard.actions.snowCheck.title')}
+                  </Typography>
+                  <Typography variant="body2" sx={{ color: 'text.secondary', mb: 1 }}>
+                    {translate('dashboard.actions.snowCheck.description')}
+                  </Typography>
+                </Box>
+                                 <Button
+                   variant="outlined"
+                   size="medium"
+                   color="primary"
+                   sx={{
+                     minWidth: '120px',
+                   }}
+                   onClick={() => setSnowCheckDrawerOpen(true)}
+                 >
+                   {translate('dashboard.actions.snowCheck.button')}
+                 </Button>
               </Stack>
             </Card>
           </Grid>
@@ -408,6 +476,12 @@ export default function GeneralApp() {
             </Grid>
           </Grid>
         </Box>
+
+        {/* SnowCheck Left Drawer */}
+        <SnowCheckLeftDrawer 
+          open={snowCheckDrawerOpen}
+          onClose={() => setSnowCheckDrawerOpen(false)}
+        />
       </Container>
     </Page>
   );

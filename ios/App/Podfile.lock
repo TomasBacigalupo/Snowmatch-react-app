@@ -12,6 +12,8 @@ PODS:
     - PromisesObjC (~> 2.4)
   - Capacitor (6.2.0):
     - CapacitorCordova
+  - CapacitorApp (7.0.1):
+    - Capacitor
   - CapacitorCamera (6.1.2):
     - Capacitor
   - CapacitorCommunityAppleSignIn (7.0.0):
@@ -81,6 +83,7 @@ PODS:
 
 DEPENDENCIES:
   - "Capacitor (from `../../node_modules/@capacitor/ios`)"
+  - "CapacitorApp (from `../../node_modules/@capacitor/app`)"
   - "CapacitorCamera (from `../../node_modules/@capacitor/camera`)"
   - "CapacitorCommunityAppleSignIn (from `../../node_modules/@capacitor-community/apple-sign-in`)"
   - "CapacitorCommunityMedia (from `../../node_modules/@capacitor-community/media`)"
@@ -117,6 +120,8 @@ SPEC REPOS:
 EXTERNAL SOURCES:
   Capacitor:
     :path: "../../node_modules/@capacitor/ios"
+  CapacitorApp:
+    :path: "../../node_modules/@capacitor/app"
   CapacitorCamera:
     :path: "../../node_modules/@capacitor/camera"
   CapacitorCommunityAppleSignIn:
@@ -151,6 +156,7 @@ SPEC CHECKSUMS:
   AppAuth: d4f13a8fe0baf391b2108511793e4b479691fb73
   AppCheckCore: cc8fd0a3a230ddd401f326489c99990b013f0c4f
   Capacitor: 1f3c7b9802d958cd8c4eb63895fff85dff2e1eea
+  CapacitorApp: d63334c052278caf5d81585d80b21905c6f93f39
   CapacitorCamera: 9052bd3f464f135ba983feccd8ac1266272f0549
   CapacitorCommunityAppleSignIn: 9f938324c6939545f001fa66a2eaaf3a93fda64e
   CapacitorCommunityMedia: 93af2d4e36ce412f04f4f5c28d6ed8bf74ccdf66
@@ -178,6 +184,6 @@ SPEC CHECKSUMS:
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
   SDWebImage: 73c6079366fea25fa4bb9640d5fb58f0893facd8
 
-PODFILE CHECKSUM: 6c42af78540d6257c83de8d5f0caa097689732cc
+PODFILE CHECKSUM: cef15a4ab2919886d556414f783a96eaaa5b1a37
 
 COCOAPODS: 1.14.2

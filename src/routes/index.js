@@ -14,6 +14,7 @@ import AuthGuard from '../guards/AuthGuard';
 import { PATH_AFTER_LOGIN } from '../config';
 // components
 import LoadingScreen from '../components/LoadingScreen';
+import DeepLinkHandler from '../components/DeepLinkHandler';
 import Discounts from 'src/pages/dashboard/Discounts';
 import SchoolList from 'src/pages/dashboard/SchoolsList';
 import RegisterStudent from 'src/pages/auth/RegisterStudent';
@@ -32,6 +33,7 @@ import SnowMatchLanding from 'src/pages/search/resort/discipline/videos';
 import GhostWrapper from 'src/pages/dashboard/GhostWrapper';
 import GhostPostWrapper from 'src/pages/dashboard/GhostPostWrapper';
 import HeliSki from 'src/pages/search/HeliSki';
+import PrivacyPolicy from 'src/pages/PrivacyPolicy';
 // ----------------------------------------------------------------------
 
 const Loadable = (Component) => (props) => {
@@ -47,434 +49,442 @@ const Loadable = (Component) => (props) => {
 export default function Router() {
   const isMobile = false;
 
-  return useRoutes([
-    {
-      path: 'auth',
-      children: [
+  return (
+    <>
+      <DeepLinkHandler />
+      {useRoutes([
         {
-          path: 'login',
+          path: 'auth',
+          children: [
+            {
+              path: 'login',
+              element: (
+                <GuestGuard>
+                  <Login />
+                </GuestGuard>
+              ),
+            },
+            {
+              path: 'register',
+              element: (
+                <GuestGuard>
+                  <Register />
+                </GuestGuard>
+              ),
+            },
+            {
+              path: 'guest-register',
+              element: (
+                <GuestGuard>
+                  <RegisterStudent />
+                </GuestGuard>
+              ),
+            },
+            { path: 'login-unprotected', element: <Login /> },
+            { path: 'register-unprotected', element: <Register /> },
+            { path: 'reset-password', element: <ResetPassword /> },
+            { path: 'changePassword/:token', element: <ResetPassword /> },
+            { path: 'verify', element: <VerifyCode /> },
+            { path: 'verify-successful/:token', element: <PageVerificationSucceed /> }
+          ],
+        },
+        {
+          path: '*',
+          element: <MainLayout />,
+          children: [
+            { path: 'legal/privacy', element: <PrivacyPolicy /> }
+          ]
+        },
+        {
+          path: 'rental',
+          element: (<GuestLayout />),
+          children: [
+            { path: 'calculate', element: <Rental isGuest={true} /> }
+          ]
+        },
+        {
+          path: 'clases',
           element: (
-            <GuestGuard>
-              <Login />
-            </GuestGuard>
+            <RoleBasedGuard accessibleRoles={['GUEST', 'STUDENT']}>
+              <BackButtonLayout />
+            </RoleBasedGuard>
+
           ),
+          children: [
+            { path: 'instructores/:id', element: <EcommerceTeacherDetails isGuest={true} /> },
+            { path: 'bariloche/esqui/:id', element: <EcommerceProductDetails /> },
+            { path: 'bariloche/snowboard/:id', element: <EcommerceProductDetails /> },
+          ]
         },
         {
-          path: 'register',
+          path: 'match',
+          element: (<GuestLayout />),
+          children: [
+            { path: 'feed', element: <Feed /> },
+          ]
+        },
+        {
+          path: 'maps',
+          element: (<GuestLayout />),
+          children: [
+            { path: ':id', element: <Maps /> }
+          ]
+        },
+        {
+          path: 'match',
           element: (
-            <GuestGuard>
-              <Register />
-            </GuestGuard>
+            <RoleBasedGuard accessibleRoles={['GUEST', 'STUDENT']}>
+              <GuestLayout />
+            </RoleBasedGuard>
+
           ),
-        },
-        {
-          path: 'guest-register',
-          element: (
-            <GuestGuard>
-              <RegisterStudent />
-            </GuestGuard>
-          ),
-        },
-        { path: 'login-unprotected', element: <Login /> },
-        { path: 'register-unprotected', element: <Register /> },
-        { path: 'reset-password', element: <ResetPassword /> },
-        { path: 'changePassword/:token', element: <ResetPassword /> },
-        { path: 'verify', element: <VerifyCode /> },
-        { path: 'verify-successful/:token', element: <PageVerificationSucceed /> }
-      ],
-    },
-    {
-      path: '*',
-      element: <MainLayout />
-    },
-    {
-      path: 'rental',
-      element: (<GuestLayout />),
-      children: [
-        { path: 'calculate', element: <Rental isGuest={true} /> }
-      ]
-    },
-    {
-      path: 'clases',
-      element: (
-        <RoleBasedGuard accessibleRoles={['GUEST', 'STUDENT']}>
-          <BackButtonLayout />
-        </RoleBasedGuard>
-
-      ),
-      children: [
-        { path: 'instructores/:id', element: <EcommerceTeacherDetails isGuest={true} /> },
-        { path: 'bariloche/esqui/:id', element: <EcommerceProductDetails /> },
-        { path: 'bariloche/snowboard/:id', element: <EcommerceProductDetails /> },
-      ]
-    },
-    {
-      path: 'match',
-      element: (<GuestLayout />),
-      children: [
-        { path: 'feed', element: <Feed /> },
-      ]
-    },
-    {
-      path: 'maps',
-      element: (<GuestLayout />),
-      children: [
-        { path: ':id', element: <Maps /> }
-      ]
-    },
-    {
-      path: 'match',
-      element: (
-        <RoleBasedGuard accessibleRoles={['GUEST', 'STUDENT']}>
-          <GuestLayout />
-        </RoleBasedGuard>
-
-      ),
-      children: [
-        { element: <Navigate to={'/match/school/:resort'} replace />, index: true },
-        { path: 'schools/:id', element: <SchoolDetails isGuest={true} /> },
-        { path: 'schools', element: <SchoolList teacherType="school" /> },
-
-        {
-          path: 'teacher/:id/review', element:
-            <AuthGuard>
-              <ReviewTeacher />
-            </AuthGuard>
-        },
-        {
-          path: 'product/:id/hire', element:
-            <AuthGuard>
-              <EcommerceCheckoutProduct />
-            </AuthGuard>
-        },
-        { path: 'lessons', element: <UserLessons /> },
-        { path: 'lessons/:eventId', element: <LessonDetails /> },
-        {
-          path: 'videoCoach',
           children: [
-            { element: <Navigate to="/match/videoCoach/upload" replace />, index: true },
-            { path: 'upload', element: <VideoUpload /> },
-            { path: 'uploaded', element: <UploadedVideos /> },
-            { path: 'unrated', element: <UnratedVideos /> },
-            { path: 'training', element: <Training /> }
-          ],
-        },
-      ]
-    },
-    {
-      path: 'match',
-      element: (
-        <RoleBasedGuard accessibleRoles={['GUEST', 'STUDENT']}>
-          <PlainLayout />
-        </RoleBasedGuard>
+            { element: <Navigate to={'/match/school/:resort'} replace />, index: true },
+            { path: 'schools/:id', element: <SchoolDetails isGuest={true} /> },
+            { path: 'schools', element: <SchoolList teacherType="school" /> },
 
-      ),
-      children: [
-        { element: <Navigate to={'/match/school/:resort'} replace />, index: true },
-        { path: '*', element: <EcommerceShop isGuest={true} teacherType="school" /> },
-        { path: 'independent', element: <EcommerceShop isGuest={true} teacherType="independent" /> },
-        { path: 'school', element: <EcommerceShop isGuest={true} teacherType="school" /> },
-      ]
-    },
-    {
-      path: 'reservar-clase-ski',
-      element: (
-        <RoleBasedGuard accessibleRoles={['GUEST', 'STUDENT', 'TEACHER', 'ADMIN']}>
-          <BackButtonLayout />
-        </RoleBasedGuard>
-
-      ),
-      children: [
-        { path: ':slug', element: <EcommerceTeacherDetails isGuest={true} /> }
-      ]
-    },
-    {
-      path: 'match',
-      element: (
-        <RoleBasedGuard accessibleRoles={['GUEST', 'STUDENT']}>
-          <BackButtonLayout />
-        </RoleBasedGuard>
-
-      ),
-      children: [
-        { path: 'teacher/:id', element: <EcommerceTeacherDetails isGuest={true} /> },
-        { path: 'product/:id', element: <EcommerceProductDetails /> },
-        { path: 'teacher/:id/products/:productId', element: <EcommerceTeacherProducts /> },
-        {
-          path: 'teacher/:id', element:
-            <EcommerceTeacherDetails isGuest={true} />
-        },
-        {
-          path: 'teacher/:id/review', element:
-            <AuthGuard>
-              <ReviewTeacher />
-            </AuthGuard>
-        },
-        {
-          path: 'teacher/:id/hire', element:
-            <AuthGuard>
-              <EcommerceCheckoutTeacher />
-            </AuthGuard>
-        },
-        {
-          path: 'product/:id/hire', element:
-            <AuthGuard>
-              <EcommerceCheckoutProduct />
-            </AuthGuard>
-        },
-        { path: 'lessons', element: <UserLessons /> },
-        { path: 'lessons/:eventId', element: <LessonDetails /> },
-        {
-          path: 'videoCoach',
-          children: [
-            { element: <Navigate to="/match/videoCoach/upload" replace />, index: true },
-            { path: 'upload', element: <VideoUpload /> },
-            { path: 'uploaded', element: <UploadedVideos /> },
-            { path: 'unrated', element: <UnratedVideos /> },
-          ],
-        },
-      ]
-    },
-    {
-      path: 'match',
-      element: (
-        <RoleBasedGuard accessibleRoles={['GUEST', 'STUDENT']}>
-          <BackButtonLayout />
-        </RoleBasedGuard>
-
-      ),
-      children: [
-        {
-          path: 'videoCoach',
-          children: [
-            { path: 'courses', element: <CourseLevels /> },
-          ],
-        },
-      ]
-    },
-
-    {
-      element: (<GuestLayout />),
-      children: [
-        { path: 'protips', element: <BlogPosts /> },
-        { path: 'protips/posts/:id', element: <BlogPost /> },
-        {
-          path: 'protips/new', element:
-            <AuthGuard>
-              <BlogNewPost />
-            </AuthGuard>
-        },
-      ]
-    },
-    {
-      path: 'shops',
-      children: [
-        { path: 'trown', element: <RedirectToShop url={"https://www.trown.com.ar"} /> },
-        { path: 'salpa', element: <RedirectToShop url={"https://www.salpa.com.ar"} /> },
-        { path: 'dignos', element: <RedirectToShop url={"https://dignosofficial.com"} /> },
-      ]
-    },
-    {
-      element: (<MainLayout />),
-      children: [
-        {
-          path: 'noticias',
-          element: <GhostWrapper />
-        },
-      ]
-    },
-    {
-      element: (<BackButtonLayout />),
-      children: [
-        {
-          path: 'noticias/:slug',
-          element: <GhostPostWrapper />
-        }]
-    },
-
-    // Dashboard Routes
-    {
-      path: 'dashboard',
-      element: (
-        <AuthGuard>
-          <RoleBasedGuard accessibleRoles={['ADMIN', 'TEACHER', 'SCHOOL_ADMIN']}>
-            <DashboardLayout />
-          </RoleBasedGuard>
-        </AuthGuard>
-      ),
-      children: [
-        { element: <Navigate to={PATH_AFTER_LOGIN} replace />, index: true },
-        { path: 'app', element: <GeneralApp /> },
-        { path: 'ecommerce', element: <GeneralEcommerce /> },
-        { path: 'discounts', element: <Discounts /> },
-        { path: 'analytics', element: <GeneralAnalytics /> },
-        { path: 'banking', element: <GeneralBanking /> },
-        { path: 'booking', element: <GeneralBooking /> },
-        { path: 'products', element: <Products /> },
-        {
-          path: 'e-commerce',
-          children: [
-            { element: <Navigate to="/dashboard/e-commerce/shop" replace />, index: true },
-            { path: 'shop', element: <EcommerceShop /> },
-            { path: 'shop/independent', element: <EcommerceShop teacherType="independent" /> },
-            { path: 'shop/school', element: <EcommerceShop teacherType="school" /> },
-            { path: 'shop/schools', element: <SchoolList teacherType="school" /> },
-            { path: 'school/:id', element: <SchoolDetails /> },
-            { path: 'shop/school', element: <EcommerceShop teacherType="school" /> },
-            { path: 'clinics', element: <EcommerceShopClinics /> },
-            { path: 'teacher/:id', element: <EcommerceTeacherDetails /> },
-            { path: 'teacher/:id/hire', element: <EcommerceCheckoutTeacher /> },
-            { path: 'dashboard/product/:id', element: <EcommerceProductDetails /> },
-            { path: 'dashboard/product/:id/hire', element: <EcommerceCheckoutProduct /> },
-            { path: 'product/:name', element: <EcommerceProductDetails /> },
-            { path: 'product', element: <EcommerceProductList /> },
-            { path: 'product/new', element: <ProductCreate /> },
-            { path: 'product/:id/edit', element: <ProductCreate /> },
-            { path: 'private-half/', element: <PrivateProductHalf /> },
-            { path: 'private-full/', element: <PrivateProductFull /> },
-            { path: 'checkout', element: <EcommerceCheckoutTeacher /> },
-          ],
-        },
-        {
-          path: 'user',
-          children: [
-            { element: <Navigate to="/dashboard/user/profile" replace />, index: true },
-            { path: 'profile', element: <UserProfile /> },
-            { path: 'prices', element: <Prices /> },
-            { path: 'cards', element: <UserCards /> },
-            { path: 'list', element: <ClientList /> },
-            { path: 'new', element: <ClientCreate /> },
-            { path: ':name/edit', element: <ClientCreate /> },
-            { path: 'account', element: <UserAccount /> },
-            { path: 'reviews', element: <UserReviews /> },
+            {
+              path: 'teacher/:id/review', element:
+                <AuthGuard>
+                  <ReviewTeacher />
+                </AuthGuard>
+            },
+            {
+              path: 'product/:id/hire', element:
+                <AuthGuard>
+                  <EcommerceCheckoutProduct />
+                </AuthGuard>
+            },
             { path: 'lessons', element: <UserLessons /> },
             { path: 'lessons/:eventId', element: <LessonDetails /> },
-          ],
+            {
+              path: 'videoCoach',
+              children: [
+                { element: <Navigate to="/match/videoCoach/upload" replace />, index: true },
+                { path: 'upload', element: <VideoUpload /> },
+                { path: 'uploaded', element: <UploadedVideos /> },
+                { path: 'unrated', element: <UnratedVideos /> },
+                { path: 'training', element: <Training /> }
+              ],
+            },
+          ]
         },
         {
-          path: 'school',
-          children: [
-            { element: <Navigate to="/dashboard/school/list" replace />, index: true },
-            { path: 'list', element: <ClientList /> },
-            { path: 'new', element: <ClientCreate /> },
-            { path: ':name/edit', element: <ClientCreate /> },
-            { path: 'pending', element: <PendingTeachers /> },
-            { path: 'teachers', element: <PendingTeachers isPending={false} /> },
-          ],
-        },
-        {
-          path: 'invoice',
-          children: [
-            { element: <Navigate to="/dashboard/invoice/list" replace />, index: true },
-            { path: 'list', element: <InvoiceList /> },
-            { path: ':id', element: <InvoiceDetails /> },
-            { path: ':id/edit', element: <InvoiceEdit /> },
-            { path: 'new', element: <InvoiceCreate /> },
-          ],
-        },
-        {
-          path: 'mail',
-          children: [
-            { element: <Navigate to="/dashboard/mail/all" replace />, index: true },
-            { path: 'label/:customLabel', element: <Mail /> },
-            { path: 'label/:customLabel/:mailId', element: <Mail /> },
-            { path: ':systemLabel', element: <Mail /> },
-            { path: ':systemLabel/:mailId', element: <Mail /> },
-          ],
-        },
-        {
-          path: 'chat',
-          children: [
-            { element: <Chat />, index: true },
-            { path: 'new', element: <Chat /> },
-            { path: ':conversationKey', element: <Chat /> },
-          ],
-        },
-        { path: 'calendar', element: <Calendar /> },
-        { path: 'kanban', element: <Kanban /> },
-        {
-          path: 'admin',
-          children: [
-            { element: <Navigate to="/dashboard/admin/review" replace />, index: true },
-            { path: 'review', element: <AdminReview /> },
-            { path: 'clients', element: <AdminReviewClients /> },
-            { path: 'bookings', element: <AdminReviewBookings /> },
-            { path: ':id/confirm', element: <AdminConfirm /> },
-            { path: ':id/events', element: <AdminUserEvents /> },
-          ],
-        },
-        {
-          path: 'videoCoach',
-          children: [
-            { element: <Navigate to="/dashboard/videoCoach/upload" replace />, index: true },
-            { path: 'upload', element: <VideoUpload /> },
-            { path: 'uploaded', element: <UploadedVideos /> },
-            { path: 'unrated', element: <UnratedVideos /> },
-          ],
-        },
-      ],
-    },
+          path: 'match',
+          element: (
+            <RoleBasedGuard accessibleRoles={['GUEST', 'STUDENT']}>
+              <PlainLayout />
+            </RoleBasedGuard>
 
-    // Main Routes
-    {
-      path: '*',
-      element: <LogoOnlyLayout />,
-      children: [
-        { path: 'coming-soon', element: <ComingSoon /> },
-        { path: 'maintenance', element: <Maintenance /> },
-        { path: 'pricing', element: <Pricing /> },
-        { path: 'payment', element: <Payment /> },
-        { path: '500', element: <Page500 /> },
-        { path: '404', element: <NotFound /> },
-        { path: 'access-denied', element: <AccessDenied /> },
-        { path: 'verify-email', element: <PageVerify /> },
+          ),
+          children: [
+            { element: <Navigate to={'/match/school/:resort'} replace />, index: true },
+            { path: '*', element: <EcommerceShop isGuest={true} teacherType="school" /> },
+            { path: 'independent', element: <EcommerceShop isGuest={true} teacherType="independent" /> },
+            { path: 'school', element: <EcommerceShop isGuest={true} teacherType="school" /> },
+          ]
+        },
+        {
+          path: 'reservar-clase-ski',
+          element: (
+            <RoleBasedGuard accessibleRoles={['GUEST', 'STUDENT', 'TEACHER', 'ADMIN']}>
+              <BackButtonLayout />
+            </RoleBasedGuard>
+
+          ),
+          children: [
+            { path: ':slug', element: <EcommerceTeacherDetails isGuest={true} /> }
+          ]
+        },
+        {
+          path: 'match',
+          element: (
+            <RoleBasedGuard accessibleRoles={['GUEST', 'STUDENT']}>
+              <BackButtonLayout />
+            </RoleBasedGuard>
+
+          ),
+          children: [
+            { path: 'teacher/:id', element: <EcommerceTeacherDetails isGuest={true} /> },
+            { path: 'product/:id', element: <EcommerceProductDetails /> },
+            { path: 'teacher/:id/products/:productId', element: <EcommerceTeacherProducts /> },
+            {
+              path: 'teacher/:id', element:
+                <EcommerceTeacherDetails isGuest={true} />
+            },
+            {
+              path: 'teacher/:id/review', element:
+                <AuthGuard>
+                  <ReviewTeacher />
+                </AuthGuard>
+            },
+            {
+              path: 'teacher/:id/hire', element:
+                <AuthGuard>
+                  <EcommerceCheckoutTeacher />
+                </AuthGuard>
+            },
+            {
+              path: 'product/:id/hire', element:
+                <AuthGuard>
+                  <EcommerceCheckoutProduct />
+                </AuthGuard>
+            },
+            { path: 'lessons', element: <UserLessons /> },
+            { path: 'lessons/:eventId', element: <LessonDetails /> },
+            {
+              path: 'videoCoach',
+              children: [
+                { element: <Navigate to="/match/videoCoach/upload" replace />, index: true },
+                { path: 'upload', element: <VideoUpload /> },
+                { path: 'uploaded', element: <UploadedVideos /> },
+                { path: 'unrated', element: <UnratedVideos /> },
+              ],
+            },
+          ]
+        },
+        {
+          path: 'match',
+          element: (
+            <RoleBasedGuard accessibleRoles={['GUEST', 'STUDENT']}>
+              <BackButtonLayout />
+            </RoleBasedGuard>
+
+          ),
+          children: [
+            {
+              path: 'videoCoach',
+              children: [
+                { path: 'courses', element: <CourseLevels /> },
+              ],
+            },
+          ]
+        },
+
+        {
+          element: (<GuestLayout />),
+          children: [
+            { path: 'protips', element: <BlogPosts /> },
+            { path: 'protips/posts/:id', element: <BlogPost /> },
+            {
+              path: 'protips/new', element:
+                <AuthGuard>
+                  <BlogNewPost />
+                </AuthGuard>
+            },
+          ]
+        },
+        {
+          path: 'shops',
+          children: [
+            { path: 'trown', element: <RedirectToShop url={"https://www.trown.com.ar"} /> },
+            { path: 'salpa', element: <RedirectToShop url={"https://www.salpa.com.ar"} /> },
+            { path: 'dignos', element: <RedirectToShop url={"https://dignosofficial.com"} /> },
+          ]
+        },
+        {
+          element: (<MainLayout />),
+          children: [
+            {
+              path: 'noticias',
+              element: <GhostWrapper />
+            },
+          ]
+        },
+        {
+          element: (<BackButtonLayout />),
+          children: [
+            {
+              path: 'noticias/:slug',
+              element: <GhostPostWrapper />
+            }]
+        },
+
+        // Dashboard Routes
+        {
+          path: 'dashboard',
+          element: (
+            <AuthGuard>
+              <RoleBasedGuard accessibleRoles={['ADMIN', 'TEACHER', 'SCHOOL_ADMIN']}>
+                <DashboardLayout />
+              </RoleBasedGuard>
+            </AuthGuard>
+          ),
+          children: [
+            { element: <Navigate to={PATH_AFTER_LOGIN} replace />, index: true },
+            { path: 'app', element: <GeneralApp /> },
+            { path: 'ecommerce', element: <GeneralEcommerce /> },
+            { path: 'discounts', element: <Discounts /> },
+            { path: 'analytics', element: <GeneralAnalytics /> },
+            { path: 'banking', element: <GeneralBanking /> },
+            { path: 'booking', element: <GeneralBooking /> },
+            { path: 'products', element: <Products /> },
+            {
+              path: 'e-commerce',
+              children: [
+                { element: <Navigate to="/dashboard/e-commerce/shop" replace />, index: true },
+                { path: 'shop', element: <EcommerceShop /> },
+                { path: 'shop/independent', element: <EcommerceShop teacherType="independent" /> },
+                { path: 'shop/school', element: <EcommerceShop teacherType="school" /> },
+                { path: 'shop/schools', element: <SchoolList teacherType="school" /> },
+                { path: 'school/:id', element: <SchoolDetails /> },
+                { path: 'shop/school', element: <EcommerceShop teacherType="school" /> },
+                { path: 'clinics', element: <EcommerceShopClinics /> },
+                { path: 'teacher/:id', element: <EcommerceTeacherDetails /> },
+                { path: 'teacher/:id/hire', element: <EcommerceCheckoutTeacher /> },
+                { path: 'dashboard/product/:id', element: <EcommerceProductDetails /> },
+                { path: 'dashboard/product/:id/hire', element: <EcommerceCheckoutProduct /> },
+                { path: 'product/:name', element: <EcommerceProductDetails /> },
+                { path: 'product', element: <EcommerceProductList /> },
+                { path: 'product/new', element: <ProductCreate /> },
+                { path: 'product/:id/edit', element: <ProductCreate /> },
+                { path: 'private-half/', element: <PrivateProductHalf /> },
+                { path: 'private-full/', element: <PrivateProductFull /> },
+                { path: 'checkout', element: <EcommerceCheckoutTeacher /> },
+              ],
+            },
+            {
+              path: 'user',
+              children: [
+                { element: <Navigate to="/dashboard/user/profile" replace />, index: true },
+                { path: 'profile', element: <UserProfile /> },
+                { path: 'prices', element: <Prices /> },
+                { path: 'cards', element: <UserCards /> },
+                { path: 'list', element: <ClientList /> },
+                { path: 'new', element: <ClientCreate /> },
+                { path: ':name/edit', element: <ClientCreate /> },
+                { path: 'account', element: <UserAccount /> },
+                { path: 'reviews', element: <UserReviews /> },
+                { path: 'lessons', element: <UserLessons /> },
+                { path: 'lessons/:eventId', element: <LessonDetails /> },
+              ],
+            },
+            {
+              path: 'school',
+              children: [
+                { element: <Navigate to="/dashboard/school/list" replace />, index: true },
+                { path: 'list', element: <ClientList /> },
+                { path: 'new', element: <ClientCreate /> },
+                { path: ':name/edit', element: <ClientCreate /> },
+                { path: 'pending', element: <PendingTeachers /> },
+                { path: 'teachers', element: <PendingTeachers isPending={false} /> },
+              ],
+            },
+            {
+              path: 'invoice',
+              children: [
+                { element: <Navigate to="/dashboard/invoice/list" replace />, index: true },
+                { path: 'list', element: <InvoiceList /> },
+                { path: ':id', element: <InvoiceDetails /> },
+                { path: ':id/edit', element: <InvoiceEdit /> },
+                { path: 'new', element: <InvoiceCreate /> },
+              ],
+            },
+            {
+              path: 'mail',
+              children: [
+                { element: <Navigate to="/dashboard/mail/all" replace />, index: true },
+                { path: 'label/:customLabel', element: <Mail /> },
+                { path: 'label/:customLabel/:mailId', element: <Mail /> },
+                { path: ':systemLabel', element: <Mail /> },
+                { path: ':systemLabel/:mailId', element: <Mail /> },
+              ],
+            },
+            {
+              path: 'chat',
+              children: [
+                { element: <Chat />, index: true },
+                { path: 'new', element: <Chat /> },
+                { path: ':conversationKey', element: <Chat /> },
+              ],
+            },
+            { path: 'calendar', element: <Calendar /> },
+            { path: 'kanban', element: <Kanban /> },
+            {
+              path: 'admin',
+              children: [
+                { element: <Navigate to="/dashboard/admin/review" replace />, index: true },
+                { path: 'review', element: <AdminReview /> },
+                { path: 'clients', element: <AdminReviewClients /> },
+                { path: 'bookings', element: <AdminReviewBookings /> },
+                { path: ':id/confirm', element: <AdminConfirm /> },
+                { path: ':id/events', element: <AdminUserEvents /> },
+              ],
+            },
+            {
+              path: 'videoCoach',
+              children: [
+                { element: <Navigate to="/dashboard/videoCoach/upload" replace />, index: true },
+                { path: 'upload', element: <VideoUpload /> },
+                { path: 'uploaded', element: <UploadedVideos /> },
+                { path: 'unrated', element: <UnratedVideos /> },
+              ],
+            },
+          ],
+        },
+
+        // Main Routes
+        {
+          path: '*',
+          element: <LogoOnlyLayout />,
+          children: [
+            { path: 'coming-soon', element: <ComingSoon /> },
+            { path: 'maintenance', element: <Maintenance /> },
+            { path: 'pricing', element: <Pricing /> },
+            { path: 'payment', element: <Payment /> },
+            { path: '500', element: <Page500 /> },
+            { path: '404', element: <NotFound /> },
+            { path: 'access-denied', element: <AccessDenied /> },
+            { path: 'verify-email', element: <PageVerify /> },
+            { path: '*', element: <Navigate to="/404" replace /> },
+          ],
+        },
+        {
+          path: '/pt',
+          element: <MainLayout />,
+          children: [
+            {
+              element: isMobile ? <Navigate to="/match/videoCoach/upload" replace /> : <Navigate to="/pt/bariloche" replace />,
+              index: true
+            },
+            { path: 'escola-de-esqui-e-snowboard', element: <SnowMatchLanding /> },
+            { path: 'heliski', element: <HeliSki /> },
+            { path: 'escuela-de-esqui-y-snowboard', element: <SnowMatchLanding /> },
+            { path: ':resort/:discipline/:type', element: <SearchPage /> },
+            { path: ':resort/:discipline', element: <SearchPage /> },
+            { path: ':resort', element: <SearchPage /> },
+            { path: 'about-us', element: <About /> },
+            { path: 'contact-us', element: <Contact /> },
+            { path: 'faqs', element: <Faqs /> },
+          ],
+        },
+        {
+          path: '/',
+          element: <MainLayout />,
+          children: [
+            {
+              element: isMobile ? <Navigate to="/match/videoCoach/upload" replace /> : <SearchPage />,
+              index: true
+            },
+            { path: 'all-teachers', element: <AllTeachers /> },
+            { path: 'heliski', element: <HeliSki /> },
+            { path: 'en/heliski', element: <HeliSki /> },
+            { path: 'escuela-de-esqui-y-snowboard', element: <SnowMatchLanding /> },
+            { path: 'tips-esqui-snowboard/:tip', element: <SnowMatchLanding /> },
+            { path: 'clases-de-ski-bariloche', element: <HomePageBariloche /> },
+            { path: 'clases-de-ski-lago-hermoso', element: <HomePageLagoHermoso /> },
+            { path: ':resort/:discipline/:type', element: <SearchPage /> },
+            { path: ':resort/:discipline', element: <SearchPage /> },
+            { path: ':resort', element: <SearchPage /> },
+            { path: 'about-us', element: <About /> },
+            { path: 'contact-us', element: <Contact /> },
+            { path: 'faqs', element: <Faqs /> },
+          ],
+        },
         { path: '*', element: <Navigate to="/404" replace /> },
-      ],
-    },
-    {
-      path: '/pt',
-      element: <MainLayout />,
-      children: [
-        {
-          element: isMobile ? <Navigate to="/match/videoCoach/upload" replace /> : <Navigate to="/pt/bariloche" replace />,
-          index: true
-        },
-        { path: 'escola-de-esqui-e-snowboard', element: <SnowMatchLanding /> },
-        { path: 'heliski', element: <HeliSki /> },
-        { path: 'escuela-de-esqui-y-snowboard', element: <SnowMatchLanding /> },
-        { path: ':resort/:discipline/:type', element: <SearchPage /> },
-        { path: ':resort/:discipline', element: <SearchPage /> },
-        { path: ':resort', element: <SearchPage /> },
-        { path: 'about-us', element: <About /> },
-        { path: 'contact-us', element: <Contact /> },
-        { path: 'faqs', element: <Faqs /> },
-      ],
-    },
-    {
-      path: '/',
-      element: <MainLayout />,
-      children: [
-        {
-          element: isMobile ? <Navigate to="/match/videoCoach/upload" replace /> : <SearchPage />,
-          index: true
-        },
-        { path: 'all-teachers', element: <AllTeachers /> },
-        { path: 'heliski', element: <HeliSki /> },
-        { path: 'en/heliski', element: <HeliSki /> },
-        { path: 'escuela-de-esqui-y-snowboard', element: <SnowMatchLanding /> },
-        { path: 'tips-esqui-snowboard/:tip', element: <SnowMatchLanding /> },
-        { path: 'clases-de-ski-bariloche', element: <HomePageBariloche /> },
-        { path: 'clases-de-ski-lago-hermoso', element: <HomePageLagoHermoso /> },
-        { path: ':resort/:discipline/:type', element: <SearchPage /> },
-        { path: ':resort/:discipline', element: <SearchPage /> },
-        { path: ':resort', element: <SearchPage /> },
-        { path: 'about-us', element: <About /> },
-        { path: 'contact-us', element: <Contact /> },
-        { path: 'faqs', element: <Faqs /> },
-      ],
-    },
-    { path: '*', element: <Navigate to="/404" replace /> },
-  ]);
+      ])}
+    </>
+  );
 }
 
 // AUTHENTICATION

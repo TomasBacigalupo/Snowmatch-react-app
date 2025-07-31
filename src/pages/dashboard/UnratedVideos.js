@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Container, Typography, List, ListItem, ListItemText, ListItemSecondaryAction, Button, SwipeableDrawer, Box, TextField, Rating, Avatar, ListItemAvatar, Paper, IconButton, Divider, Skeleton } from '@mui/material';
+import { Container, Typography, List, ListItem, ListItemText, ListItemSecondaryAction, Button, SwipeableDrawer, Box, TextField, Rating, Avatar, ListItemAvatar, Paper, IconButton, Divider, Skeleton, Pagination } from '@mui/material';
 import { FormProvider, RHFEditor, RHFTextField, RHFSlider } from 'src/components/hook-form';
 import { useForm } from 'react-hook-form';
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
@@ -36,6 +36,10 @@ export default function UnratedVideos() {
   const [loading, setLoading] = useState(false);
   const { translate } = useLocales();
 
+  // Pagination state
+  const [page, setPage] = useState(1);
+  const [videosPerPage] = useState(12); // Show 12 videos per page (3x4 grid)
+
   const [stats] = useState({
     videosReviewed: commentedCount || 0,
     videosRemaining: videosToReview?.length || 0,
@@ -48,6 +52,17 @@ export default function UnratedVideos() {
 
   const [isScrolled, setIsScrolled] = useState(false);
 
+  // Calculate pagination
+  const indexOfLastVideo = page * videosPerPage;
+  const indexOfFirstVideo = indexOfLastVideo - videosPerPage;
+  const currentVideos = videosToReview?.slice(indexOfFirstVideo, indexOfLastVideo) || [];
+  const totalPages = Math.ceil((videosToReview?.length || 0) / videosPerPage);
+
+  const handlePageChange = (event, value) => {
+    setPage(value);
+    // Scroll to top when page changes
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   const handleRate = (video) => {
     setSelectedVideo(video);
@@ -175,7 +190,7 @@ export default function UnratedVideos() {
         pb: 3,
         px: 0,
       }}>
-        {videosToReview?.map((video) => (
+        {currentVideos?.map((video) => (
           <Paper
             key={video.id}
             elevation={0}
@@ -283,6 +298,26 @@ export default function UnratedVideos() {
           </Paper>
         ))}
       </Box>
+
+      {/* Pagination */}
+      {videosToReview && videosToReview.length > videosPerPage && (
+        <Box sx={{ 
+          display: 'flex', 
+          justifyContent: 'center', 
+          mt: 4, 
+          mb: 2 
+        }}>
+          <Pagination
+            count={totalPages}
+            page={page}
+            onChange={handlePageChange}
+            color="primary"
+            size="large"
+            showFirstButton
+            showLastButton
+          />
+        </Box>
+      )}
 
       {/* Empty State */}
       {(!videosToReview || videosToReview.length === 0) && (

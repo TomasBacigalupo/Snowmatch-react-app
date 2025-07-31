@@ -278,6 +278,39 @@ const slice = createSlice({
             );
             
             state.isLoading = false;
+        },
+
+        // UPDATE BOOKING WITH PAYOUT
+        updateBookingWithPayout(state, action) {
+            const { bookingId, payoutData } = action.payload;
+            
+            // Update the specific booking in bookings array
+            state.bookings = state.bookings.map(booking => 
+                booking.id === bookingId 
+                    ? { ...booking, teacherPayout: payoutData }
+                    : booking
+            );
+            
+            // Update the current booking if it matches
+            if (state.booking && state.booking.id === bookingId) {
+                state.booking = { ...state.booking, teacherPayout: payoutData };
+            }
+            
+            // Update in pendingBookings if it exists there
+            state.pendingBookings = state.pendingBookings.map(booking => 
+                booking.id === bookingId 
+                    ? { ...booking, teacherPayout: payoutData }
+                    : booking
+            );
+            
+            // Update in upcomingBookings if it exists there
+            state.upcomingBookings = state.upcomingBookings.map(booking => 
+                booking.id === bookingId 
+                    ? { ...booking, teacherPayout: payoutData }
+                    : booking
+            );
+            
+            state.isLoading = false;
         }
 
     },
@@ -287,7 +320,7 @@ const slice = createSlice({
 export default slice.reducer;
 
 // Actions
-export const { openModal, closeModal, selectEvent, changeMessage, bookingPending, changeAsignedStudents, onCreateBookingError, setBookingSuccess, updateBookingWithInvoice } = slice.actions;
+export const { openModal, closeModal, selectEvent, changeMessage, bookingPending, changeAsignedStudents, onCreateBookingError, setBookingSuccess, updateBookingWithInvoice, updateBookingWithPayout } = slice.actions;
 
 // ----------------------------------------------------------------------
 
@@ -928,6 +961,56 @@ export function uploadInvoice(bookingId, file, teacherId, totalAmount, hours) {
             }));
 
             return { success: true };
+        } catch (error) {
+            dispatch(slice.actions.hasError(error));
+            throw error;
+        }
+    };
+}
+
+export function createPayout(bookingId, file, teacherId, amount) {
+    return async () => {
+        dispatch(slice.actions.startLoading());
+        try {
+            //Step 1: Get presigned URL for payout receipt
+            const presignedResponse = await axios.get(`/api/payouts/preSignedUrlPayout/${bookingId}`);
+            const presignedUrl = presignedResponse.data;
+
+            //Step 2: Upload file to S3 using presigned URL
+            const uploadResponse = await fetch(presignedUrl, {
+                method: 'PUT',
+                body: file,
+                headers: {
+                    'Content-Type': file.type,
+                },
+            });
+
+            if (!uploadResponse.ok) {
+                throw new Error('Failed to upload payout receipt to S3');
+            }
+
+            // Step 3: Create payout with the uploaded file URL
+            const payoutDto = {
+                userId: teacherId,
+                bookingIds: [bookingId],
+                invoiceUrl: presignedUrl?.split('?')[0]
+            };
+
+            const payoutResponse = await axios.post('/api/payouts/', payoutDto);
+
+            // Step 4: Update Redux state with payout information
+            const payoutData = {
+                amount: amount,
+                transferDate: new Date().toISOString(),
+                receiptUrl: presignedUrl.split('?')[0]
+            };
+            
+            dispatch(slice.actions.updateBookingWithPayout({ 
+                bookingId, 
+                payoutData 
+            }));
+
+            return { success: true, data: payoutResponse.data };
         } catch (error) {
             dispatch(slice.actions.hasError(error));
             throw error;

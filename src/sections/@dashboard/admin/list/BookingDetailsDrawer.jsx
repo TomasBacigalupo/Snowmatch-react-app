@@ -14,6 +14,12 @@ import {
   Card,
   CardContent,
   Alert,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  TextField,
+  InputAdornment,
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 // components
@@ -25,6 +31,9 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import esLocale from '@fullcalendar/core/locales/es';
 import BookingEditModal from './BookingEditModal';
+// redux
+import { useDispatch } from 'react-redux';
+import { createPayout } from '../../../../redux/slices/bookings';
 
 BookingDetailsDrawer.propTypes = {
   open: PropTypes.bool,
@@ -35,10 +44,16 @@ BookingDetailsDrawer.propTypes = {
 
 export default function BookingDetailsDrawer({ open, onClose, booking, refreshBookings }) {
   const theme = useTheme();
+  const dispatch = useDispatch();
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [uploadingInvoice, setUploadingInvoice] = useState(false);
   const [uploadSuccess, setUploadSuccess] = useState(false);
+  const [payoutModalOpen, setPayoutModalOpen] = useState(false);
+  const [uploadingPayout, setUploadingPayout] = useState(false);
+  const [payoutSuccess, setPayoutSuccess] = useState(false);
+  const [payoutAmount, setPayoutAmount] = useState('');
   const fileInputRef = useRef(null);
+  const payoutFileInputRef = useRef(null);
 
   const handleEditClick = () => {
     setEditModalOpen(true);
@@ -113,6 +128,68 @@ export default function BookingDetailsDrawer({ open, onClose, booking, refreshBo
 
   const handleUploadClick = () => {
     fileInputRef.current?.click();
+  };
+
+  const handlePayoutModalOpen = () => {
+    setPayoutModalOpen(true);
+  };
+
+  const handlePayoutModalClose = () => {
+    setPayoutModalOpen(false);
+    setPayoutAmount('');
+    if (payoutFileInputRef.current) {
+      payoutFileInputRef.current.value = '';
+    }
+  };
+
+  const handlePayoutUpload = async (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    // Validar tipo de archivo
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'application/pdf'];
+    if (!allowedTypes.includes(file.type)) {
+      alert('Por favor selecciona un archivo válido (JPG, PNG o PDF)');
+      return;
+    }
+
+    // Validar tamaño (máximo 10MB)
+    if (file.size > 10 * 1024 * 1024) {
+      alert('El archivo es demasiado grande. Máximo 10MB permitido.');
+      return;
+    }
+
+    setUploadingPayout(true);
+    
+    try {
+      // Llamar a la función del Redux slice para crear el payout
+      await dispatch(createPayout(booking.id, file, booking.teacher.id, parseFloat(payoutAmount)));
+      
+      setUploadingPayout(false);
+      setPayoutSuccess(true);
+      handlePayoutModalClose();
+      
+      // Ocultar mensaje de éxito después de 3 segundos
+      setTimeout(() => setPayoutSuccess(false), 3000);
+      
+      // Refresh bookings si es necesario
+      if (refreshBookings) {
+        refreshBookings();
+      }
+    } catch (error) {
+      setUploadingPayout(false);
+      console.error('Error al crear el payout:', error);
+      alert('Error al registrar el payout. Por favor intenta nuevamente.');
+    }
+  };
+
+  const handlePayoutSubmit = () => {
+    if (!payoutAmount || payoutAmount <= 0) {
+      alert('Por favor ingresa un monto válido');
+      return;
+    }
+    
+    payoutFileInputRef.current?.click();
   };
 
   const formatDate = (dateString) => {
@@ -446,6 +523,72 @@ export default function BookingDetailsDrawer({ open, onClose, booking, refreshBo
               )}
             </Box>
 
+            {/* Payout del Instructor */}
+            <Box>
+              <Typography variant="subtitle1" gutterBottom>
+                Payout del Instructor
+              </Typography>
+              
+              {payoutSuccess && (
+                <Alert severity="success" sx={{ mb: 2 }}>
+                  Payout registrado exitosamente
+                </Alert>
+              )}
+
+              {booking?.teacherPayout ? (
+                <Card>
+                  <CardContent>
+                    <Stack direction="row" alignItems="center" spacing={2}>
+                      <Iconify 
+                        icon="eva:credit-card-fill" 
+                        sx={{ color: 'success.main', fontSize: 24 }}
+                      />
+                      <Box sx={{ flexGrow: 1 }}>
+                        <Typography variant="body1" gutterBottom>
+                          Payout del Instructor
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                          Monto transferido: {formatPrice(booking.teacherPayout.amount)}
+                        </Typography>
+                        {booking.teacherPayout.transferDate && (
+                          <Typography variant="body2" color="text.secondary">
+                            Fecha: {formatDate(booking.teacherPayout.transferDate)}
+                          </Typography>
+                        )}
+                      </Box>
+                      {booking.teacherPayout.receiptUrl && (
+                        <Button
+                          variant="contained"
+                          startIcon={<Iconify icon="eva:eye-fill" />}
+                          onClick={() => window.open(booking.teacherPayout.receiptUrl, '_blank')}
+                        >
+                          Ver Comprobante
+                        </Button>
+                      )}
+                    </Stack>
+                  </CardContent>
+                </Card>
+              ) : (
+                <Alert severity="info" sx={{ mb: 2 }}>
+                  <Stack direction="row" alignItems="center" justifyContent="space-between">
+                    <Stack direction="row" alignItems="center" spacing={1}>
+                      <Iconify icon="eva:info-fill" />
+                      <Typography variant="body2">
+                        Aún no se ha registrado el payout para esta reserva
+                      </Typography>
+                    </Stack>
+                    <Button
+                      variant="contained"
+                      startIcon={<Iconify icon="eva:plus-fill" />}
+                      onClick={handlePayoutModalOpen}
+                    >
+                      Registrar Payout
+                    </Button>
+                  </Stack>
+                </Alert>
+              )}
+            </Box>
+
             {/* Calendario */}
             <Box>
               <Typography variant="subtitle1" gutterBottom>
@@ -490,6 +633,60 @@ export default function BookingDetailsDrawer({ open, onClose, booking, refreshBo
         onSave={handleEditSave}
       />
 
+      {/* Modal para registrar payout */}
+      <Dialog open={payoutModalOpen} onClose={handlePayoutModalClose} maxWidth="sm" fullWidth>
+        <DialogTitle>
+          <Stack direction="row" alignItems="center" spacing={1}>
+            <Iconify icon="eva:credit-card-fill" />
+            <Typography variant="h6">Registrar Payout del Instructor</Typography>
+          </Stack>
+        </DialogTitle>
+        <DialogContent>
+          <Stack spacing={3} sx={{ mt: 1 }}>
+            <TextField
+              fullWidth
+              label="Monto Transferido"
+              type="number"
+              value={payoutAmount}
+              onChange={(e) => setPayoutAmount(e.target.value)}
+              InputProps={{
+                startAdornment: <InputAdornment position="start">$</InputAdornment>,
+              }}
+              helperText="Ingresa el monto que se transfirió al instructor"
+            />
+            <Box>
+              <Typography variant="body2" color="text.secondary" gutterBottom>
+                Comprobante de Transferencia
+              </Typography>
+              <Button
+                variant="outlined"
+                startIcon={<Iconify icon="eva:upload-fill" />}
+                onClick={() => payoutFileInputRef.current?.click()}
+                disabled={uploadingPayout}
+                fullWidth
+              >
+                {uploadingPayout ? 'Subiendo...' : 'Seleccionar Comprobante'}
+              </Button>
+              <Typography variant="caption" color="text.secondary" sx={{ mt: 1, display: 'block' }}>
+                Formatos permitidos: JPG, PNG, PDF (máximo 10MB)
+              </Typography>
+            </Box>
+          </Stack>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handlePayoutModalClose} disabled={uploadingPayout}>
+            Cancelar
+          </Button>
+          <Button 
+            onClick={handlePayoutSubmit} 
+            variant="contained" 
+            disabled={!payoutAmount || uploadingPayout}
+          >
+            {uploadingPayout ? 'Registrando...' : 'Registrar Payout'}
+          </Button>
+        </DialogActions>
+      </Dialog>
+
       {/* Input file oculto para cargar facturas */}
       <input
         ref={fileInputRef}
@@ -497,6 +694,15 @@ export default function BookingDetailsDrawer({ open, onClose, booking, refreshBo
         accept=".jpg,.jpeg,.png,.pdf"
         style={{ display: 'none' }}
         onChange={handleInvoiceUpload}
+      />
+
+      {/* Input file oculto para cargar comprobantes de payout */}
+      <input
+        ref={payoutFileInputRef}
+        type="file"
+        accept=".jpg,.jpeg,.png,.pdf"
+        style={{ display: 'none' }}
+        onChange={handlePayoutUpload}
       />
     </>
   );

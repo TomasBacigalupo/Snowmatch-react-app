@@ -401,7 +401,7 @@ export default function BookingCard({ booking, showInfo = true }) {
                         </Grid>
                         <Grid item xs={6} sx={{ textAlign: 'end' }}>
                             <Typography variant="body1" paragraph>
-                                {fCurrency(getHourlyRateByLevel(booking.teacher.level))}
+                                {fCurrency(getHourlyRateByLevel(booking.teacher.level, booking.type))}
                             </Typography>
                         </Grid>
                         <Grid item xs={12} >
@@ -418,7 +418,7 @@ export default function BookingCard({ booking, showInfo = true }) {
                         </Grid>
                         <Grid item xs={6} sx={{ textAlign: 'end' }}>
                             <Typography variant="body1" paragraph>
-                                {fCurrency(calculateTotalEventHours(booking.eventList) * getHourlyRateByLevel(booking.teacher.level))}
+                                {fCurrency(calculateTotalEventHours(booking.eventList) * getHourlyRateByLevel(booking.teacher.level, booking.type))}
                             </Typography>
                         </Grid>
                     </Grid>}

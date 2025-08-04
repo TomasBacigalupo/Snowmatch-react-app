@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 // @mui
 import {
   Drawer,
@@ -31,9 +31,11 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import esLocale from '@fullcalendar/core/locales/es';
 import BookingEditModal from './BookingEditModal';
+import PayoutEditModal from './PayoutEditModal';
 // redux
 import { useDispatch } from 'react-redux';
 import { createPayout } from '../../../../redux/slices/bookings';
+import { fetchPayouts } from 'src/redux/slices/admin';
 
 BookingDetailsDrawer.propTypes = {
   open: PropTypes.bool,
@@ -52,8 +54,12 @@ export default function BookingDetailsDrawer({ open, onClose, booking, refreshBo
   const [uploadingPayout, setUploadingPayout] = useState(false);
   const [payoutSuccess, setPayoutSuccess] = useState(false);
   const [payoutAmount, setPayoutAmount] = useState('');
+  const [payoutEditModalOpen, setPayoutEditModalOpen] = useState(false);
+  const [selectedPayout, setSelectedPayout] = useState(null);
   const fileInputRef = useRef(null);
   const payoutFileInputRef = useRef(null);
+  const [file, setFile] = useState(null);
+  const [filePreviewUrl, setFilePreviewUrl] = useState(null);
 
   const handleEditClick = () => {
     setEditModalOpen(true);
@@ -137,6 +143,8 @@ export default function BookingDetailsDrawer({ open, onClose, booking, refreshBo
   const handlePayoutModalClose = () => {
     setPayoutModalOpen(false);
     setPayoutAmount('');
+    setFile(null);
+    dispatch(fetchPayouts(booking.id));
     if (payoutFileInputRef.current) {
       payoutFileInputRef.current.value = '';
     }
@@ -159,8 +167,16 @@ export default function BookingDetailsDrawer({ open, onClose, booking, refreshBo
       return;
     }
 
-    setUploadingPayout(true);
+    //setUploadingPayout(true);
+    setFile(file);
     
+  };
+
+  const handlePayoutSubmit = async () => {
+    if (!payoutAmount || payoutAmount <= 0) {
+      alert('Por favor ingresa un monto válido');
+      return;
+    }
     try {
       // Llamar a la función del Redux slice para crear el payout
       await dispatch(createPayout(booking.id, file, booking.teacher.id, parseFloat(payoutAmount)));
@@ -171,11 +187,6 @@ export default function BookingDetailsDrawer({ open, onClose, booking, refreshBo
       
       // Ocultar mensaje de éxito después de 3 segundos
       setTimeout(() => setPayoutSuccess(false), 3000);
-      
-      // Refresh bookings si es necesario
-      if (refreshBookings) {
-        refreshBookings();
-      }
     } catch (error) {
       setUploadingPayout(false);
       console.error('Error al crear el payout:', error);
@@ -183,13 +194,18 @@ export default function BookingDetailsDrawer({ open, onClose, booking, refreshBo
     }
   };
 
-  const handlePayoutSubmit = () => {
-    if (!payoutAmount || payoutAmount <= 0) {
-      alert('Por favor ingresa un monto válido');
-      return;
-    }
-    
-    payoutFileInputRef.current?.click();
+  const handlePayoutEditClick = (payout) => {
+    setSelectedPayout(payout);
+    setPayoutEditModalOpen(true);
+  };
+
+  const handlePayoutEditClose = () => {
+    setPayoutEditModalOpen(false);
+    setSelectedPayout(null);
+  };
+
+  const handlePayoutEditSave = () => {
+    dispatch(fetchPayouts(booking.id));
   };
 
   const formatDate = (dateString) => {
@@ -215,6 +231,26 @@ export default function BookingDetailsDrawer({ open, onClose, booking, refreshBo
     end: event.end,
     allDay: false,
   })) || [];
+
+  useEffect(() => {
+    if (open && booking?.id) {
+      dispatch(fetchPayouts(booking.id));
+    }
+  }, [open, booking?.id, dispatch]);
+
+  // Cleanup object URL when file changes or component unmounts
+  useEffect(() => {
+    if (file && file.type.startsWith('image/')) {
+      const objectUrl = URL.createObjectURL(file);
+      setFilePreviewUrl(objectUrl);
+      
+      return () => {
+        URL.revokeObjectURL(objectUrl);
+      };
+    } else {
+      setFilePreviewUrl(null);
+    }
+  }, [file]);
 
   return (
     <>
@@ -535,7 +571,66 @@ export default function BookingDetailsDrawer({ open, onClose, booking, refreshBo
                 </Alert>
               )}
 
-              {booking?.teacherPayout ? (
+              {booking?.payouts && booking.payouts.length > 0 ? (
+                <Stack spacing={2}>
+                  {booking.payouts.map((payout, index) => (
+                    <Card key={payout.id || index}>
+                      <CardContent>
+                        <Stack direction="row" alignItems="center" spacing={2}>
+                          <Iconify 
+                            icon="eva:credit-card-fill" 
+                            sx={{ color: 'success.main', fontSize: 24 }}
+                          />
+                          <Box sx={{ flexGrow: 1 }}>
+                            <Typography variant="body1" gutterBottom>
+                              Payout #{payout.id || index + 1}
+                            </Typography>
+                            <Typography variant="body2" color="text.secondary">
+                              Monto transferido: {formatPrice(payout.amount)}
+                            </Typography>
+                            {payout.transferDate && (
+                              <Typography variant="body2" color="text.secondary">
+                                Fecha: {formatDate(payout.transferDate)}
+                              </Typography>
+                            )}
+                            {payout.status && (
+                              <Label
+                                variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
+                                color={
+                                  (payout.status === 'PENDING' && 'warning') ||
+                                  (payout.status === 'COMPLETED' && 'success') ||
+                                  'error'
+                                }
+                                sx={{ mt: 1 }}
+                              >
+                                {payout.status}
+                              </Label>
+                            )}
+                          </Box>
+                          <Stack direction="row" spacing={1}>
+                            {payout.invoiceUrl && (
+                              <Button
+                                variant="contained"
+                                startIcon={<Iconify icon="eva:eye-fill" />}
+                                onClick={() => window.open(payout.invoiceUrl, '_blank')}
+                              >
+                                Ver Comprobante
+                              </Button>
+                            )}
+                            <Button
+                              variant="outlined"
+                              startIcon={<Iconify icon="eva:edit-fill" />}
+                              onClick={() => handlePayoutEditClick(payout)}
+                            >
+                              Editar
+                            </Button>
+                          </Stack>
+                        </Stack>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </Stack>
+              ) : booking?.teacherPayout ? (
                 <Card>
                   <CardContent>
                     <Stack direction="row" alignItems="center" spacing={2}>
@@ -633,6 +728,14 @@ export default function BookingDetailsDrawer({ open, onClose, booking, refreshBo
         onSave={handleEditSave}
       />
 
+      <PayoutEditModal
+        open={payoutEditModalOpen}
+        onClose={handlePayoutEditClose}
+        payout={selectedPayout}
+        onSave={handlePayoutEditSave}
+        selectedBookingId={booking?.id}
+      />
+
       {/* Modal para registrar payout */}
       <Dialog open={payoutModalOpen} onClose={handlePayoutModalClose} maxWidth="sm" fullWidth>
         <DialogTitle>
@@ -670,6 +773,63 @@ export default function BookingDetailsDrawer({ open, onClose, booking, refreshBo
               <Typography variant="caption" color="text.secondary" sx={{ mt: 1, display: 'block' }}>
                 Formatos permitidos: JPG, PNG, PDF (máximo 10MB)
               </Typography>
+              
+              {/* File Preview */}
+              {file && (
+                <Box sx={{ mt: 2, p: 2, border: '1px solid', borderColor: 'divider', borderRadius: 1 }}>
+                  <Stack direction="row" alignItems="center" spacing={2}>
+                    <Iconify 
+                      icon={file.type.startsWith('image/') ? 'eva:image-fill' : 'eva:file-text-fill'} 
+                      sx={{ color: 'primary.main', fontSize: 24 }}
+                    />
+                    <Box sx={{ flexGrow: 1 }}>
+                      <Typography variant="body2" sx={{ fontWeight: 'medium' }}>
+                        {file.name}
+                      </Typography>
+                      <Typography variant="caption" color="text.secondary">
+                        {(file.size / 1024 / 1024).toFixed(2)} MB
+                      </Typography>
+                    </Box>
+                    <IconButton 
+                      size="small" 
+                      onClick={() => setFile(null)}
+                      color="error"
+                    >
+                      <Iconify icon="eva:close-fill" />
+                    </IconButton>
+                  </Stack>
+                  
+                  {/* Image Preview */}
+                  {file.type.startsWith('image/') && filePreviewUrl && (
+                    <Box sx={{ mt: 2, textAlign: 'center' }}>
+                      <img
+                        src={filePreviewUrl}
+                        alt="Preview"
+                        style={{
+                          maxWidth: '100%',
+                          maxHeight: '200px',
+                          objectFit: 'contain',
+                          borderRadius: '4px'
+                        }}
+                      />
+                    </Box>
+                  )}
+                  
+                  {/* PDF Preview */}
+                  {file.type === 'application/pdf' && (
+                    <Box sx={{ mt: 2, textAlign: 'center' }}>
+                      <Card variant="outlined">
+                        <CardContent>
+                          <Iconify icon="eva:file-text-fill" sx={{ fontSize: 48, color: 'error.main' }} />
+                          <Typography variant="body2" sx={{ mt: 1 }}>
+                            Vista previa no disponible para PDF
+                          </Typography>
+                        </CardContent>
+                      </Card>
+                    </Box>
+                  )}
+                </Box>
+              )}
             </Box>
           </Stack>
         </DialogContent>

@@ -1,5 +1,5 @@
 // routes
-import { PATH_GUEST } from '../../../routes/paths';
+import { PATH_DASHBOARD, PATH_GUEST } from '../../../routes/paths';
 // components
 import Label from '../../../components/Label';
 import SvgIconStyle from '../../../components/SvgIconStyle';
@@ -57,9 +57,9 @@ const navConfigGuestCatedral = [
       { title: 'videoCoach', path: PATH_GUEST.videoCoach, icon: ICONS.videoCoach },
       { title: 'rent', path: PATH_GUEST.calculate, icon: ICONS.rental },
       { title: 'contact', path: "https://blog.snowmatch.pro/soporte/preguntas-frecuentes-faq/", icon: ICONS.contactSupport },
-      { title: 'help', path: "https://blog.snowmatch.pro/soporte/", icon: ICONS.help }
+      { title: 'help', path: "https://blog.snowmatch.pro/soporte/", icon: ICONS.help },
 
-      // { title: 'chat', path: PATH_DASHBOARD.chat.root, icon: ICONS.chat },
+      { title: 'chat', path: PATH_GUEST.chat, icon: ICONS.chat },
 
       // { title: 'kanban', path: PATH_DASHBOARD.kanban, icon: ICONS.kanban },
     ],

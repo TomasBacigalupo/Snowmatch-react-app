@@ -3,11 +3,17 @@ import { capitalCase } from 'change-case';
 // @mui
 import { styled } from '@mui/material/styles';
 import { Box, Link, Avatar, Typography, AvatarGroup, IconButton } from '@mui/material';
+// router
+import { useNavigate } from 'react-router-dom';
 // utils
 import { fToNow } from '../../../utils/formatTime';
+// hooks
+import useAuth from '../../../hooks/useAuth';
 // components
 import Iconify from '../../../components/Iconify';
 import BadgeStatus from '../../../components/BadgeStatus';
+// routes
+import { PATH_GUEST, PATH_DASHBOARD } from '../../../routes/paths';
 
 // ----------------------------------------------------------------------
 
@@ -27,20 +33,27 @@ ChatHeaderDetail.propTypes = {
 
 export default function ChatHeaderDetail({ participants }) {
   const isGroup = participants.length > 1;
+  const navigate = useNavigate();
+  const { isStudent } = useAuth();
+
+  const handleBack = () => {
+    if (isStudent) {
+      navigate(PATH_GUEST.chat);
+    } else {
+      navigate(PATH_DASHBOARD.chat.root);
+    }
+  };
 
   return (
     <RootStyle>
+      <IconButton onClick={handleBack} sx={{ mr: 1 }}>
+        <Iconify icon="eva:arrow-ios-back-fill" width={20} height={20} />
+      </IconButton>
+      
       {isGroup ? <GroupAvatar participants={participants} /> : <OneAvatar participants={participants} />}
-
       <Box sx={{ flexGrow: 1 }} />
       <IconButton>
         <Iconify icon="eva:phone-fill" width={20} height={20} />
-      </IconButton>
-      <IconButton>
-        <Iconify icon="eva:video-fill" width={20} height={20} />
-      </IconButton>
-      <IconButton>
-        <Iconify icon="eva:more-vertical-fill" width={20} height={20} />
       </IconButton>
     </RootStyle>
   );

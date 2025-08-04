@@ -11,6 +11,7 @@ import {
   getParticipants,
   markConversationAsRead,
   resetActiveConversation,
+  sendMessage,
 } from '../../../redux/slices/chat';
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
@@ -80,7 +81,12 @@ export default function ChatWindow() {
 
   const handleSendMessage = async (value) => {
     try {
+      console.log('value', {value});
+      // First, optimistically add the message to the UI
       dispatch(onSendMessage(value));
+      
+      // Then send it to the API
+      await dispatch(sendMessage(conversationKey, value));
     } catch (error) {
       console.error(error);
     }

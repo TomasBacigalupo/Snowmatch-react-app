@@ -84,8 +84,8 @@ const navConfig = [
                     },
                 ],
             },
-            { title: 'discounts', path: PATH_DASHBOARD.general.discounts, icon: <DiscountIcon /> }
-            // { title: 'chat', path: PATH_DASHBOARD.chat.root, icon: ICONS.chat },
+            { title: 'discounts', path: PATH_DASHBOARD.general.discounts, icon: <DiscountIcon /> },
+            { title: 'chat', path: PATH_DASHBOARD.chat.root, icon: ICONS.chat },
 
             // { title: 'kanban', path: PATH_DASHBOARD.kanban, icon: ICONS.kanban },
         ],

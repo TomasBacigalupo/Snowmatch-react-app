@@ -113,6 +113,51 @@ const slice = createSlice({
     clearSuccessMessage(state) {
       state.successMessage = null;
     },
+
+    // FETCH PAYOUTS FOR BOOKING
+    fetchPayoutsSuccess(state, action) {
+      const { bookingId, payouts } = action.payload;
+      
+      // Update the specific booking in bookings array
+      state.bookings = state.bookings.map(booking => 
+        booking.id === bookingId 
+          ? { ...booking, payouts: payouts }
+          : booking
+      );
+      
+      // Update the current booking if it matches
+      if (state.booking && state.booking.id === bookingId) {
+        state.booking = { ...state.booking, payouts: payouts };
+      }
+      
+      state.isLoading = false;
+    },
+
+    // EDIT PAYOUT SUCCESS
+    editPayoutSuccess(state, action) {
+      const updatedPayout = action.payload;
+      
+      // Update payouts in all bookings that contain this payout
+      state.bookings = state.bookings.map(booking => {
+        if (booking.payouts) {
+          const updatedPayouts = booking.payouts.map(payout => 
+            payout.id === updatedPayout.id ? updatedPayout : payout
+          );
+          return { ...booking, payouts: updatedPayouts };
+        }
+        return booking;
+      });
+      
+      // Update the current booking if it has payouts
+      if (state.booking && state.booking.payouts) {
+        const updatedPayouts = state.booking.payouts.map(payout => 
+          payout.id === updatedPayout.id ? updatedPayout : payout
+        );
+        state.booking = { ...state.booking, payouts: updatedPayouts };
+      }
+      
+      state.isLoading = false;
+    },
   }
 });
 
@@ -339,7 +384,43 @@ export function editAdminBooking(bookingId, {
           return response.data;
       } catch (error) {
           dispatch(slice.actions.hasError(error));
-          throw error;
-      }
+                throw error;
+    }
+  };
+}
+
+export function fetchPayouts(bookingId) {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get(`/api/bookings/${bookingId}/payouts`);
+      const payouts = response.data;
+      
+      dispatch(slice.actions.fetchPayoutsSuccess({ 
+        bookingId, 
+        payouts 
+      }));
+      
+      return payouts;
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+      throw error;
+    }
+  };
+}
+
+export function editPayout(payoutId, payoutData) {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.put(`/api/payouts/${payoutId}`, payoutData);
+      
+      dispatch(slice.actions.editPayoutSuccess(response.data));
+      
+      return response.data;
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+      throw error;
+    }
   };
 }

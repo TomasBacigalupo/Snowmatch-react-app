@@ -20,7 +20,7 @@ export function NavListRoot({ list }) {
 
   const { pathname } = useLocation();
 
-  const active = getActive(list.path, pathname);
+  const active = getActive(list.path ? list.path : '/', pathname ? pathname : '/');
 
   const [open, setOpen] = useState(false);
 

@@ -5,6 +5,7 @@ import { Box, Stack, AppBar, Toolbar } from '@mui/material';
 // hooks
 import useOffSetTop from '../../../hooks/useOffSetTop';
 import useResponsive from '../../../hooks/useResponsive';
+import useAuth from '../../../hooks/useAuth';
 // utils
 import cssStyles from '../../../utils/cssStyles';
 // config
@@ -13,6 +14,10 @@ import { HEADER, NAVBAR } from '../../../config';
 import Logo from '../../../components/Logo';
 import Iconify from '../../../components/Iconify';
 import { IconButtonAnimate } from '../../../components/animate';
+// routes
+import { PATH_GUEST, PATH_DASHBOARD } from '../../../routes/paths';
+// router
+import { useNavigate } from 'react-router-dom';
 //
 import Searchbar from './Searchbar';
 import AccountPopover from './AccountPopover';
@@ -59,8 +64,17 @@ DashboardHeader.propTypes = {
 
 export default function DashboardHeader({ onOpenSidebar, isCollapse = false, verticalLayout = false }) {
   const isOffset = useOffSetTop(HEADER.DASHBOARD_DESKTOP_HEIGHT) && !verticalLayout;
-
   const isDesktop = useResponsive('up', 'lg');
+  const { isAuthenticated, isStudent, isTeacher } = useAuth();
+  const navigate = useNavigate();
+
+  const handleChatClick = () => {
+    if (isStudent) {
+      navigate(PATH_GUEST.chat);
+    } else if (isTeacher) {
+      navigate(PATH_DASHBOARD.chat.root);
+    }
+  };
 
   return (
     <RootStyle isCollapse={isCollapse} isOffset={isOffset} verticalLayout={verticalLayout}>
@@ -85,7 +99,15 @@ export default function DashboardHeader({ onOpenSidebar, isCollapse = false, ver
         <Stack direction="row" alignItems="center" spacing={{ xs: 0.5, sm: 1.5 }}>
           {/* just for testing */}
           {/* <LanguagePopover /> */}
+          
           <NotificationsPopover />
+          
+          {isAuthenticated && (
+            <IconButtonAnimate onClick={handleChatClick} sx={{ color: 'text.primary' }}>
+              <Iconify icon="eva:message-circle-fill" />
+            </IconButtonAnimate>
+          )}
+          
           {/* <ContactsPopover /> */}
           <AccountPopover />
         </Stack>

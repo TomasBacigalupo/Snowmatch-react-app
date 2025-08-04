@@ -47,7 +47,7 @@ const Loadable = (Component) => (props) => {
 };
 
 export default function Router() {
-  const isMobile = true;
+  const isMobile = false;
 
   return (
     <>
@@ -182,6 +182,8 @@ export default function Router() {
             { path: '*', element: <EcommerceShop isGuest={true} teacherType="school" /> },
             { path: 'independent', element: <EcommerceShop isGuest={true} teacherType="independent" /> },
             { path: 'school', element: <EcommerceShop isGuest={true} teacherType="school" /> },
+            { path: 'chat', element: <Chat /> },
+            { path: 'chat/:conversationKey', element: <Chat /> },
           ]
         },
         {
@@ -319,6 +321,8 @@ export default function Router() {
             { path: 'banking', element: <GeneralBanking /> },
             { path: 'booking', element: <GeneralBooking /> },
             { path: 'products', element: <Products /> },
+            { path: 'chat', element: <Chat /> },
+            { path: 'chat/:conversationKey', element: <Chat /> },
             {
               path: 'e-commerce',
               children: [

@@ -49,7 +49,7 @@ ChatConversationItem.propTypes = {
 export default function ChatConversationItem({ isSelected, conversation, isOpenSidebar, onSelectConversation }) {
   const details = getDetails(conversation, '8864c717-587d-472a-929a-8e5f298024da-0');
 
-  const displayLastActivity = conversation.messages[conversation.messages.length - 1].createdAt;
+  const displayLastActivity = conversation.messages.length > 0 ? conversation.messages[conversation.messages.length - 1].createdAt : conversation.createdAt;
 
   const isGroup = details.otherParticipants.length > 1;
   const isUnread = conversation.unreadCount > 0;
@@ -133,6 +133,7 @@ export default function ChatConversationItem({ isSelected, conversation, isOpenS
                 color: 'text.disabled',
               }}
             >
+              {console.log('displayLastActivity', displayLastActivity)}
               {formatDistanceToNowStrict(new Date(displayLastActivity), {
                 addSuffix: false,
               })}

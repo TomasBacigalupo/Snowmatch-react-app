@@ -9,7 +9,7 @@ const ROOTS_DASHBOARD = '/dashboard';
 const ROOTS_FIND_A_PRO = '/match' ;
 const ROOTS_RENTAL = '/rental';
 const ROOTS_PRO_TIPS = '/protips';
-
+const ROOTS_CHAT = '/chat';
 // ----------------------------------------------------------------------
 
 export const PATH_AUTH = {
@@ -44,6 +44,8 @@ export const PATH_GUEST = {
   viewSchoolProducts: (id, productId) => path(ROOTS_FIND_A_PRO, `/school/${id}/products/${productId}`),
   rental: ROOTS_RENTAL,
   calculate: path(ROOTS_RENTAL, `/calculate`),
+  chat:  path(ROOTS_FIND_A_PRO, ROOTS_CHAT),
+  chatView: (name) => path(ROOTS_FIND_A_PRO, `/chat/${name}`),
   checkout: (id) => path(ROOTS_FIND_A_PRO, `/teacher/${id}/hire`),
   protips: ROOTS_PRO_TIPS,
   videoCoach: path(ROOTS_FIND_A_PRO, `/videoCoach`),
@@ -84,7 +86,7 @@ export const PATH_DASHBOARD = {
   chat: {
     root: path(ROOTS_DASHBOARD, '/chat'),
     new: path(ROOTS_DASHBOARD, '/chat/new'),
-    view: (name) => path(ROOTS_DASHBOARD, `/chat/${name}`),
+    view: (name) => {console.log('name', name); return path(ROOTS_DASHBOARD, `/chat/${name}`)},
   },
   calendar: path(ROOTS_DASHBOARD, '/calendar'),
   kanban: path(ROOTS_DASHBOARD, '/kanban'),

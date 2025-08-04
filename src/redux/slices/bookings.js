@@ -311,7 +311,9 @@ const slice = createSlice({
             );
             
             state.isLoading = false;
-        }
+        },
+
+
 
     },
 });
@@ -993,7 +995,8 @@ export function createPayout(bookingId, file, teacherId, amount) {
             const payoutDto = {
                 userId: teacherId,
                 bookingIds: [bookingId],
-                invoiceUrl: presignedUrl?.split('?')[0]
+                invoiceUrl: presignedUrl?.split('?')[0],
+                amount: amount
             };
 
             const payoutResponse = await axios.post('/api/payouts/', payoutDto);
@@ -1017,3 +1020,5 @@ export function createPayout(bookingId, file, teacherId, amount) {
         }
     };
 }
+
+

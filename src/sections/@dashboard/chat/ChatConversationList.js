@@ -3,11 +3,12 @@ import { useNavigate } from 'react-router-dom';
 // @mui
 import { List } from '@mui/material';
 // routes
-import { PATH_DASHBOARD } from '../../../routes/paths';
+import { PATH_DASHBOARD, PATH_GUEST } from '../../../routes/paths';
 // components
 import { SkeletonConversationItem } from '../../../components/skeleton';
 //
 import ChatConversationItem from './ChatConversationItem';
+import useAuth from 'src/hooks/useAuth';
 
 // ----------------------------------------------------------------------
 
@@ -15,26 +16,37 @@ ChatConversationList.propTypes = {
   conversations: PropTypes.object,
   isOpenSidebar: PropTypes.bool,
   activeConversationId: PropTypes.string,
+  onSelectConversation: PropTypes.func,
   sx: PropTypes.object,
 };
 
-export default function ChatConversationList({ conversations, isOpenSidebar, activeConversationId, sx, ...other }) {
+export default function ChatConversationList({ 
+  conversations, 
+  isOpenSidebar, 
+  activeConversationId, 
+  onSelectConversation,
+  sx, 
+  ...other 
+}) {
   const navigate = useNavigate();
+  const {user} = useAuth();
 
   const handleSelectConversation = (conversationId) => {
-    let conversationKey = '';
-    const conversation = conversations.byId[conversationId];
-    if (conversation.type === 'GROUP') {
-      conversationKey = conversation.id;
-    } else {
-      const otherParticipant = conversation.participants.find(
-        (participant) => participant.id !== '8864c717-587d-472a-929a-8e5f298024da-0'
-      );
-      if (otherParticipant?.username) {
-        conversationKey = otherParticipant?.username;
-      }
+    console.log('conversationId', conversationId);
+    
+    // Si se pasa una función onSelectConversation, usarla
+    if (onSelectConversation) {
+      onSelectConversation(conversationId);
+      return;
     }
-    navigate(PATH_DASHBOARD.chat.view(conversationKey));
+    
+    // Comportamiento original para compatibilidad
+    const conversation = conversations.byId[conversationId]; 
+    if(user.role === 'STUDENT'){
+      navigate(PATH_GUEST.chatView(conversation.conversationKey));
+    }else{
+      navigate(PATH_DASHBOARD.chat.view(conversation.conversationKey));
+    }
   };
 
   const loading = !conversations.allIds.length;

@@ -59,6 +59,11 @@ const slice = createSlice({
       const conversation = action.payload;
 
       if (conversation) {
+        // Sort messages by createdAt timestamp (oldest to newest)
+        if (conversation.messages && conversation.messages.length > 0) {
+          conversation.messages.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+        }
+        
         state.conversations.byId[conversation.id] = conversation;
         state.activeConversationId = conversation.id;
         if (!state.conversations.allIds.includes(conversation.id)) {
@@ -84,6 +89,9 @@ const slice = createSlice({
       };
 
       state.conversations.byId[conversationId].messages.push(newMessage);
+      
+      // Sort messages by createdAt timestamp (oldest to newest) after adding new message
+      state.conversations.byId[conversationId].messages.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
     },
 
     markConversationAsReadSuccess(state, action) {
@@ -190,6 +198,39 @@ export function getParticipants(conversationKey) {
       dispatch(slice.actions.getParticipantsSuccess(response.data.participants));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+export function sendMessage(conversationKey, message) {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      // Send message to API
+      const response = await axios.post('/api/chat/message', {
+        conversationKey,
+        message: message.message,
+        contentType: message.contentType || 'text',
+        attachments: message.attachments || [],
+      });
+
+      // If API call is successful, update the local state
+      if (response.data.success) {
+        const messageData = {
+          conversationId: conversationKey,
+          messageId: response.data.messageId || message.messageId,
+          message: message.body,
+          contentType: message.contentType || 'text',
+          attachments: message.attachments || [],
+          createdAt: response.data.createdAt || new Date().toISOString(),
+          senderId: response.data.senderId || '8864c717-587d-472a-929a-8e5f298024da-0', // Default sender ID
+        };
+
+        dispatch(slice.actions.onSendMessage(messageData));
+      }
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+      console.error('Error sending message:', error);
     }
   };
 }

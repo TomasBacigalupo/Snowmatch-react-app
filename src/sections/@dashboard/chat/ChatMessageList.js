@@ -40,7 +40,7 @@ export default function ChatMessageList({ conversation }) {
   return (
     <>
       <Scrollbar scrollableNodeProps={{ ref: scrollRef }} sx={{ p: 3, height: 1 }}>
-        {conversation.messages.map((message) => (
+        {conversation?.messages?.map((message) => (
           <ChatMessageItem
             key={message.id}
             message={message}

@@ -39,6 +39,7 @@ const navConfig = [
       { title: 'videoCoach', path: PATH_DASHBOARD.general.videoCoachRate, icon: ICONS.videoCoach },
       { title: 'SnowMatch', path: PATH_DASHBOARD.eCommerce.shopInd, icon: ICONS.match, },
       { title: 'clinicas', path: PATH_DASHBOARD.eCommerce.clinics, icon: ICONS.match },
+      { title: 'chat', path: PATH_DASHBOARD.chat.root, icon: ICONS.chat },
 
       { title: 'calendar', path: PATH_DASHBOARD.calendar, icon: ICONS.calendar },
       {

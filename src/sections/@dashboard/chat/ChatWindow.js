@@ -83,7 +83,17 @@ export default function ChatWindow() {
     try {
       console.log('value', {value});
       // First, optimistically add the message to the UI
-      dispatch(onSendMessage(value));
+      // Ensure the message object has the correct structure for the reducer
+      const messageData = {
+        conversationId: conversationKey,
+        messageId: value.messageId,
+        message: value.message,
+        contentType: value.contentType,
+        attachments: value.attachments,
+        createdAt: value.createdAt,
+        senderId: value.senderId,
+      };
+      dispatch(onSendMessage(messageData));
       
       // Then send it to the API
       await dispatch(sendMessage(conversationKey, value));
@@ -93,7 +103,7 @@ export default function ChatWindow() {
   };
 
   return (
-    <Stack sx={{ flexGrow: 1, minWidth: '1px' }}>
+    <Stack sx={{ flexGrow: 1, minWidth: '1px',}}>
       {mode === 'DETAIL' ? (
         <ChatHeaderDetail participants={displayParticipants} />
       ) : (

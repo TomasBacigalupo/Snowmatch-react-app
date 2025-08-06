@@ -70,7 +70,7 @@ export default function Chat() {
   if (showChatWindow) {
     return (
       <Page title="Chat">
-         <Card sx={{ height: '100vh', display: 'flex' }}>
+         <Card sx={{ height: { xs: 'calc(100dvh - 104px)', md: 'calc(100dvh - 132px)' }, display: 'flex' }}>
             <ChatWindow />
           </Card>
       </Page>
@@ -84,7 +84,7 @@ export default function Chat() {
           heading="Chat"
           links={[{ name: 'Dashboard', href: PATH_DASHBOARD.root }, { name: 'Chat' }]}
         />
-        <Card sx={{ height: {xs:'100vh', md:'72vh'} , display: 'flex' }}>
+        <Card sx={{ height: { xs: 'calc(100dvh - 104px)', md: 'calc(100dvh - 132px)' }, display: 'flex' }}>
           <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column' }}>
             <Box sx={{ p: 2, borderBottom: 1, borderColor: 'divider', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <Typography variant="h6">Conversaciones</Typography>

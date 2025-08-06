@@ -88,10 +88,15 @@ const slice = createSlice({
         senderId,
       };
 
-      state.conversations.byId[conversationId].messages.push(newMessage);
+      // Use activeConversationId if conversationId is not found in byId
+      const targetConversationId = state.conversations.byId[conversationId] ? conversationId : state.activeConversationId;
       
-      // Sort messages by createdAt timestamp (oldest to newest) after adding new message
-      state.conversations.byId[conversationId].messages.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+      if (targetConversationId && state.conversations.byId[targetConversationId]) {
+        state.conversations.byId[targetConversationId].messages.push(newMessage);
+        
+        // Sort messages by createdAt timestamp (oldest to newest) after adding new message
+        state.conversations.byId[targetConversationId].messages.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+      }
     },
 
     markConversationAsReadSuccess(state, action) {

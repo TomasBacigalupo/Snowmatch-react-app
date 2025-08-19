@@ -54,7 +54,7 @@ export default function ChatMessageInput({ disabled, conversationId, onSend }) {
         message,
         contentType: 'text',
         attachments: [],
-        createdAt: new Date(),
+        createdAt: new Date().toISOString().replace(/[+-]\d{2}:?\d{2}$/, ''),
         senderId: user.id,
       });
     }

@@ -34,6 +34,8 @@ import GhostWrapper from 'src/pages/dashboard/GhostWrapper';
 import GhostPostWrapper from 'src/pages/dashboard/GhostPostWrapper';
 import HeliSki from 'src/pages/search/HeliSki';
 import PrivacyPolicy from 'src/pages/PrivacyPolicy';
+import InstructorLanding from 'src/pages/InstructorLanding';
+import InstructorLandingEN from 'src/pages/InstructorLandingEN';
 // ----------------------------------------------------------------------
 
 const Loadable = (Component) => (props) => {
@@ -47,7 +49,7 @@ const Loadable = (Component) => (props) => {
 };
 
 export default function Router() {
-  const isMobile = true;
+  const isMobile = false;
 
   return (
     <>
@@ -92,7 +94,15 @@ export default function Router() {
           path: '*',
           element: <MainLayout />,
           children: [
-            { path: 'legal/privacy', element: <PrivacyPolicy /> }
+            { path: 'legal/privacy', element: <PrivacyPolicy /> },
+            { path: 'instructor', element: <InstructorLanding /> }
+          ]
+        },
+        {
+          path: 'en',
+          element: <MainLayout />,
+          children: [
+            { path: 'instructor', element: <InstructorLandingEN /> },
           ]
         },
         {
@@ -411,6 +421,7 @@ export default function Router() {
                 { path: 'review', element: <AdminReview /> },
                 { path: 'clients', element: <AdminReviewClients /> },
                 { path: 'bookings', element: <AdminReviewBookings /> },
+                { path: 'financial', element: <AdminFinancialDashboard /> },
                 { path: ':id/confirm', element: <AdminConfirm /> },
                 { path: ':id/events', element: <AdminUserEvents /> },
               ],
@@ -477,6 +488,9 @@ export default function Router() {
             { path: 'tips-esqui-snowboard/:tip', element: <SnowMatchLanding /> },
             { path: 'clases-de-ski-bariloche', element: <HomePageBariloche /> },
             { path: 'clases-de-ski-lago-hermoso', element: <HomePageLagoHermoso /> },
+            { path: 'aspen-ski-camp', element: <AspenSkiCamp /> },
+            { path: 'vail-ski-camp', element: <VailSkiCamp /> },
+            { path: 'jackson-hole-ski-camp', element: <JacksonHoleSkiCamp /> },
             { path: ':resort/:discipline/:type', element: <SearchPage /> },
             { path: ':resort/:discipline', element: <SearchPage /> },
             { path: ':resort', element: <SearchPage /> },
@@ -553,6 +567,7 @@ const LessonDetails = Loadable(lazy(() => import('src/pages/dashboard/LessonDeta
 const AdminReview = Loadable(lazy(() => import('../pages/dashboard/AdminReview')));
 const AdminReviewClients = Loadable(lazy(() => import('../pages/dashboard/AdminReviewClients')));
 const AdminReviewBookings = Loadable(lazy(() => import('../pages/dashboard/AdminReviewBookings')));
+const AdminFinancialDashboard = Loadable(lazy(() => import('../pages/dashboard/AdminFinancialDashboard')));
 const AdminConfirm = Loadable(lazy(() => import('../pages/dashboard/AdminConfirm')));
 const AdminUserEvents = Loadable(lazy(() => import('../pages/dashboard/AdminUserEvents')));
 
@@ -580,6 +595,9 @@ const AccessDenied = Loadable(lazy(() => import('../pages/AccessDenied')));
 const PageVerify = Loadable(lazy(() => import('../pages/PageVerify')));
 const ChapelcoPro = Loadable(lazy(() => import('../pages/pro/ChapelcoPro')));
 const AllTeachers = Loadable(lazy(() => import('../pages/AllTeachers')));
+const AspenSkiCamp = Loadable(lazy(() => import('../pages/AspenSkiCamp')));
+const VailSkiCamp = Loadable(lazy(() => import('../pages/VailSkiCamp')));
+const JacksonHoleSkiCamp = Loadable(lazy(() => import('../pages/JacksonHoleSkiCamp')));
 
 //School
 const Products = Loadable(lazy(() => import('../pages/dashboard/Products')))

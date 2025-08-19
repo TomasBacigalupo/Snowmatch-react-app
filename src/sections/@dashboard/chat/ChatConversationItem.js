@@ -6,6 +6,22 @@ import { Box, Avatar, ListItemText, ListItemAvatar, ListItemButton } from '@mui/
 //
 import BadgeStatus from '../../../components/BadgeStatus';
 
+// Helper function to parse dates without timezone conversion
+const parseDateWithoutTimezone = (dateString) => {
+  if (!dateString) return new Date(0);
+  
+  // If it's already a Date object, return it
+  if (dateString instanceof Date) return dateString;
+  
+  // If it's a string, remove timezone info and parse as local time
+  if (typeof dateString === 'string') {
+    const localDateString = dateString.replace(/[+-]\d{2}:?\d{2}$/, '').replace('Z', '');
+    return new Date(localDateString);
+  }
+  
+  return new Date(0);
+};
+
 // ----------------------------------------------------------------------
 
 const AVATAR_SIZE = 48;
@@ -134,7 +150,7 @@ export default function ChatConversationItem({ isSelected, conversation, isOpenS
               }}
             >
               {console.log('displayLastActivity', displayLastActivity)}
-              {formatDistanceToNowStrict(new Date(displayLastActivity), {
+              {formatDistanceToNowStrict(parseDateWithoutTimezone(displayLastActivity), {
                 addSuffix: false,
               })}
             </Box>

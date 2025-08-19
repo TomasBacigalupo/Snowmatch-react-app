@@ -317,6 +317,75 @@
             }
         }
     },
+    "skiTrips": {
+        "hero": {
+            "title": "{{destination}} Ski Camp by Snowmatch",
+            "subtitle": "Alojamiento curado + rentals + traslados + clases. Vos elegís las fechas; nosotros armamos el resto.",
+            "bookingTitle": "Armar mi viaje",
+            "checkin": "Check-in",
+            "checkout": "Check-out",
+            "adults": "Adultos",
+            "adult": "adulto",
+            "adults_plural": "adultos",
+            "children": "Menores",
+            "child": "menor",
+            "children_plural": "menores",
+            "skiLevel": "Nivel de ski",
+            "beginner": "Principiante",
+            "intermediate": "Intermedio",
+            "advanced": "Avanzado",
+            "expert": "Experto",
+            "whatsappCTA": "Armar mi viaje por WhatsApp"
+        },
+        "benefits": {
+            "title": "¿Por qué elegir Snowmatch?",
+            "subtitle": "Todo lo que necesitas para tu viaje de ski en un solo lugar",
+            "curatedAccommodation": {
+                "title": "Alojamiento curado",
+                "description": "Hoteles y condominios seleccionados en las mejores ubicaciones."
+            },
+            "rentalDiscounts": {
+                "title": "Descuentos en rentals",
+                "description": "Equipos de ski y snowboard de alta calidad con descuentos exclusivos."
+            },
+            "doorToDoor": {
+                "title": "Traslados puerta a puerta",
+                "description": "Transporte desde el aeropuerto y entre montañas."
+            },
+            "certifiedPros": {
+                "title": "Clases con pros certificados",
+                "description": "Instructores certificados PSIA/AASI para todos los niveles."
+            },
+            "spanishSupport": {
+                "title": "Atención en español/portugués",
+                "description": "Asesoramiento personalizado en tu idioma durante todo el proceso."
+            },
+            "flexiblePayments": {
+                "title": "Pagos flexibles",
+                "description": "Opciones de pago en cuotas sin intereses y reservas con depósito mínimo."
+            }
+        },
+        "services": {
+            "title": "¿Qué incluye tu viaje?",
+            "subtitle": "Todo organizado para que solo te preocupes por disfrutar",
+            "accommodation": "Alojamiento",
+            "rentals": "Rentals",
+            "transfers": "Traslados",
+            "lessons": "Clases",
+            "consultAvailability": "Consultar disponibilidad"
+        },
+        "itinerary": {
+            "title": "Itinerario sugerido",
+            "subtitle": "Un ejemplo de cómo podría ser tu viaje perfecto",
+            "day": "Día",
+            "disclaimer": "* Este es un itinerario de ejemplo. Las actividades y horarios se pueden personalizar según tus preferencias y disponibilidad."
+        },
+        "highlights": {
+            "title": "Sobre {{destination}}",
+            "subtitle": "Descubre por qué este destino es perfecto para tu viaje de ski"
+        },
+        "floatingCTA": "Armar mi viaje ahora"
+    },
     "menu": {
         "general": "General",
         "management": "Management",
@@ -324,7 +393,7 @@
         "instructors": "Instructores",
         "calendar": "Calendario",
         "School": "Mi Escuela",
-        "Chat": "Chat",
+        "chat": "Chat",
         "clients": "Clientes",
         "newClient": "New Client",
         "profile": "ver perfil",

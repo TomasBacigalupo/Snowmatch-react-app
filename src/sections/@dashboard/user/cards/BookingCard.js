@@ -22,6 +22,7 @@ import { calculateTotalHours, getComissionByLevel, getPayByHoursLevel, getPayByL
 import InvoiceUpload from 'src/components/InvoiceUpload';
 import { calculateTotalEventHours } from 'src/utils/calculateHours';
 import { getHourlyRateByLevel } from 'src/utils/calculateTeacherPay';
+import { getConversationKey } from 'src/redux/slices/chat';
 
 BookingCard.propTypes = {
     booking: PropTypes.object,
@@ -158,12 +159,39 @@ export default function BookingCard({ booking, showInfo = true }) {
         })
     }
 
-    const handleMessage = () => {
-        //open whats app to user
-        if (isStudent) {
-            window.open(`https://api.whatsapp.com/send?phone=${fullTeacherPhoneNumber}`, '_blank');
-        } else {
-            window.open(`https://api.whatsapp.com/send?phone=${fullStudentPhoneNumber}`, '_blank');
+    const handleMessage = async () => {
+        try {
+            // Get conversation key from API
+            const user1Id = isStudent ? user.id : booking.teacher.id;
+            const user2Id = isStudent ? booking.teacher.id : user.id;
+            
+            const conversationKey = await dispatch(getConversationKey(user1Id, user2Id));
+            console.log(conversationKey, "conversationKey");
+            if (conversationKey) {
+                // Navigate to appropriate chat route based on user role
+                if (isStudent) {
+                    
+                    navigate(`/match/chat/${conversationKey}`);
+                } else {
+                    debugger
+                    navigate(`/dashboard/chat/${conversationKey}`);
+                }
+            } else {
+                // Fallback to WhatsApp if conversation key is not available
+                if (isStudent) {
+                    window.open(`https://api.whatsapp.com/send?phone=${fullTeacherPhoneNumber}`, '_blank');
+                } else {
+                    window.open(`https://api.whatsapp.com/send?phone=${fullStudentPhoneNumber}`, '_blank');
+                }
+            }
+        } catch (error) {
+            console.error('Error getting conversation key:', error);
+            // Fallback to WhatsApp on error
+            if (isStudent) {
+                window.open(`https://api.whatsapp.com/send?phone=${fullTeacherPhoneNumber}`, '_blank');
+            } else {
+                window.open(`https://api.whatsapp.com/send?phone=${fullStudentPhoneNumber}`, '_blank');
+            }
         }
     };
 

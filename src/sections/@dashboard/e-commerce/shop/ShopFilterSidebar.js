@@ -46,7 +46,10 @@ export const FILTER_LANGUAGE_OPTIONS = ['Español', 'English', 'Portugues', 'Ita
 
 export const FILTER_RESORT_OPTIONS = [
   { category: "Argentina", resorts: [ 'Caviahue', 'Cerro Bayo', 'Cerro Castor', 'Cerro Catedral', 'Chapelco', 'La Hoya', 'Las Leñas', 'Las Pendientes', 'Perito Moreno', 'Lago Hermoso', 'Buenos Aires'] },
-  { category: "Chile", resorts: [ 'Portillo', 'Antillanca', 'Corralco', 'Valle Nevado', 'La Parva', 'Villa Rica']}
+  { category: "Chile", resorts: [ 'Portillo', 'Antillanca', 'Corralco', 'Valle Nevado', 'La Parva', 'Villa Rica']},
+  { category: "USA", resorts: [ 'Aspen', 'Vail', 'Jackson Hole', 'Breckenridge', 'Keystone', 'Steamboat Springs', 'Telluride', 'Winter Park', 'Beaver Creek', 'Copper Mountain', 'Eldora', 'Keystone', 'Loveland', 'Monarch', 'Powderhorn', 'Ski Cooper', 'Ski Granby']},
+  { category: "Canada", resorts: [ 'Banff', 'Lake Louise', 'Whistler', 'Sun Peaks', 'Revelstoke', 'Kicking Horse', 'Big White', 'Panorama', 'Silver Star', 'Fernie', 'Sunshine', 'Panorama', 'Big White', 'Kicking Horse', 'Revelstoke', 'Sun Peaks', 'Whistler', 'Lake Louise', 'Banff']},
+  {category: "Europe", resorts: [ 'Chamonix', 'Courchevel', 'Les Arcs', 'Meribel', 'Tignes', 'Val d\'Isere', 'Zermatt', 'Zurich']}
 ]
 
 

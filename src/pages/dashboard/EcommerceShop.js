@@ -4,9 +4,12 @@ import orderBy from 'lodash/orderBy';
 import { useForm } from 'react-hook-form';
 // @mui
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { useTheme, } from '@mui/material/styles';
+import { useTheme, alpha } from '@mui/material/styles';
 // @mui
-import { Container, Typography, Stack, Drawer, Button, Box } from '@mui/material';
+import { Container, Typography, Stack, Drawer, Button, Box, Dialog, DialogTitle, DialogContent, DialogActions, TextField, Card, CardContent } from '@mui/material';
+import Slider from 'react-slick';
+import { CarouselDots } from '../../components/carousel';
+import Iconify from 'src/components/Iconify';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
 import { getTeachers, filterTeachers, getTeachersWithEvents, resetFilters, getFreeTeachers, loadMoreFreeTeachers } from '../../redux/slices/teachers';
@@ -177,6 +180,61 @@ export default function EcommerceShop({ isGuest = false, teacherType = "school" 
     setPage(page + 1);
   }
 
+  // No results contact modal
+  const [noResultsOpen, setNoResultsOpen] = useState(false);
+  const [autoOpened, setAutoOpened] = useState(false);
+  const CONTACT_EMAIL = 'office@snowmatch.pro';
+  const WHATSAPP_NUMBER = '5492944263223';
+
+  const formatDateInput = (date) => {
+    try {
+      if (!date) return '';
+      const d = new Date(date);
+      const yyyy = d.getFullYear();
+      const mm = String(d.getMonth() + 1).padStart(2, '0');
+      const dd = String(d.getDate()).padStart(2, '0');
+      return `${yyyy}-${mm}-${dd}`;
+    } catch (e) { return ''; }
+  };
+
+  const [lead, setLead] = useState({
+    name: '',
+    phone: '',
+    from: formatDateInput(filters.from),
+    to: formatDateInput(filters.to),
+    resort: filters.resort || '',
+  });
+
+  const openNoResultsModal = () => setNoResultsOpen(true);
+  const closeNoResultsModal = () => setNoResultsOpen(false);
+
+  useEffect(() => {
+    if (!isLoading && filteredTeachers.length === 0 && !autoOpened) {
+      setNoResultsOpen(true);
+      setAutoOpened(true);
+    }
+  }, [isLoading, filteredTeachers.length, autoOpened]);
+
+  const buildMessage = () => {
+    return `Hola Snowmatch, no encontré instructores disponibles.\n` +
+      `Nombre: ${lead.name}\n` +
+      `Teléfono: ${lead.phone}\n` +
+      `Dónde: ${lead.resort || filters.resort || '-'}\n` +
+      `Cuándo: ${lead.from || '-'} al ${lead.to || '-'}\n` +
+      `Página: ${typeof window !== 'undefined' ? window.location.href : ''}`;
+  };
+
+  const handleWhatsApp = () => {
+    const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(buildMessage())}`;
+    window.open(url, '_blank');
+  };
+
+  const handleEmail = () => {
+    const subject = 'Consulta - Clases sin disponibilidad';
+    const body = buildMessage();
+    window.location.href = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  };
+
   return (
     <Page title="Match">
       <Helmet>
@@ -252,23 +310,154 @@ export default function EcommerceShop({ isGuest = false, teacherType = "school" 
         {/* manotaso de ahogado muestro todos */}
         {/* {teacherType == "independent" && <ShopTeacherList teachers={teachersWithEvents} loading={!filteredTeachers.length && isDefault} />} */}
         <ShopStandardProducts teachers={filteredTeachers} loading={isLoading} />
-        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
-          <LoadingButton
-            loading={isLoadingLoadMore}
-            onClick={handleLoadMore}
-            variant="contained"
-            sx={{
-              bgcolor: 'black',
-              color: 'white',
-              '&:hover': {
-                bgcolor: 'grey.800',
-              },
-            }}
-          >
-            {translate('general.loadMore')}
-          </LoadingButton>
-        </Box>
+        {/* Open manual trigger if needed when empty */}
+        {!isLoading && filteredTeachers.length === 0 && (
+          <Box sx={{ mt: 3 }}>
+            <Typography variant="h6" sx={{ mb: 2, textAlign: 'center' }}>
+              No encontramos instructores disponibles para tu búsqueda. Podés reservar otros servicios ahora:
+            </Typography>
+
+            <Typography variant="subtitle1" sx={{ mb: 1 }}>Servicios</Typography>
+            <Slider
+              dots
+              arrows={false}
+              slidesToShow={2}
+              slidesToScroll={1}
+              autoplay
+              speed={600}
+              responsive={[
+                { breakpoint: 900, settings: { slidesToShow: 1 } },
+                { breakpoint: 600, settings: { slidesToShow: 1 } },
+              ]}
+              {...CarouselDots({})}
+            >
+              {[{ title: 'Pases de esquí', key: 'passes', icon: 'mdi:ski' }, { title: 'Alquiler de equipos', key: 'rental', icon: 'mdi:ski-cross-country' }].map((item) => (
+                <Box key={item.key} sx={{ px: 1 }}>
+                  <Box sx={{
+                    p: 2,
+                    borderRadius: 2,
+                    bgcolor: (theme) => alpha(theme.palette.grey[900], 0.02),
+                    border: (theme) => `1px solid ${alpha(theme.palette.grey[500], 0.16)}`,
+                  }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', mb: 1, gap: 1 }}>
+                      <Iconify icon={item.icon} width={22} height={22} />
+                      <Typography variant="subtitle1">{item.title}</Typography>
+                    </Box>
+                    <Button variant="contained" onClick={openNoResultsModal}>Consultar</Button>
+                  </Box>
+                </Box>
+              ))}
+            </Slider>
+
+            <Typography variant="subtitle1" sx={{ mt: 3, mb: 1 }}>Clases</Typography>
+            <Slider
+              dots
+              arrows={false}
+              slidesToShow={2}
+              slidesToScroll={1}
+              autoplay
+              speed={600}
+              responsive={[
+                { breakpoint: 900, settings: { slidesToShow: 1 } },
+                { breakpoint: 600, settings: { slidesToShow: 1 } },
+              ]}
+              {...CarouselDots({})}
+            >
+              {[{ title: 'Clase privada', key: 'private', icon: 'mdi:account-tie' }, { title: 'Clase para niños', key: 'kids', icon: 'mdi:baby-face-outline' }, { title: 'Clases grupales', key: 'group', icon: 'mdi:account-group' }].map((item) => (
+                <Box key={item.key} sx={{ px: 1 }}>
+                  <Box sx={{
+                    p: 2,
+                    borderRadius: 2,
+                    bgcolor: (theme) => alpha(theme.palette.grey[900], 0.02),
+                    border: (theme) => `1px solid ${alpha(theme.palette.grey[500], 0.16)}`,
+                  }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', mb: 1, gap: 1 }}>
+                      <Iconify icon={item.icon} width={22} height={22} />
+                      <Typography variant="subtitle1">{item.title}</Typography>
+                    </Box>
+                    <Button variant="contained" onClick={openNoResultsModal}>Consultar</Button>
+                  </Box>
+                </Box>
+              ))}
+            </Slider>
+          </Box>
+        )}
+        {filteredTeachers.length > 0 && (
+          <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
+            <LoadingButton
+              loading={isLoadingLoadMore}
+              onClick={handleLoadMore}
+              variant="contained"
+              sx={{
+                bgcolor: 'black',
+                color: 'white',
+                '&:hover': {
+                  bgcolor: 'grey.800',
+                },
+              }}
+            >
+              {translate('general.loadMore')}
+            </LoadingButton>
+          </Box>
+        )}
       </Container>
+      {/* No results Modal */}
+      <Dialog open={noResultsOpen} onClose={closeNoResultsModal} fullWidth maxWidth="sm">
+        <DialogTitle>No hay instructores disponibles</DialogTitle>
+        <DialogContent>
+          <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+            Dejanos tus datos y te contactamos apenas se libere un lugar o te ayudamos a encontrar una opción.
+          </Typography>
+          <Stack spacing={2} sx={{ mt: 1 }}>
+            <TextField
+              label="Nombre"
+              value={lead.name}
+              onChange={(e) => setLead({ ...lead, name: e.target.value })}
+              fullWidth
+            />
+            <TextField
+              label="Teléfono"
+              value={lead.phone}
+              onChange={(e) => setLead({ ...lead, phone: e.target.value })}
+              fullWidth
+            />
+            <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
+              <TextField
+                label="Desde"
+                type="date"
+                InputLabelProps={{ shrink: true }}
+                value={lead.from}
+                onChange={(e) => setLead({ ...lead, from: e.target.value })}
+                fullWidth
+              />
+              <TextField
+                label="Hasta"
+                type="date"
+                InputLabelProps={{ shrink: true }}
+                value={lead.to}
+                onChange={(e) => setLead({ ...lead, to: e.target.value })}
+                fullWidth
+              />
+            </Stack>
+            <TextField
+              label="Resort"
+              value={lead.resort}
+              onChange={(e) => setLead({ ...lead, resort: e.target.value })}
+              fullWidth
+            />
+          </Stack>
+        </DialogContent>
+        <DialogActions sx={{ px: 3, pb: 2 }}>
+          <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1} sx={{ width: '100%' }}>
+            <Button variant="outlined" onClick={handleEmail} fullWidth>
+              Mandar Email
+            </Button>
+            <Button variant="contained" onClick={handleWhatsApp} fullWidth>
+              Enviar por WhatsApp
+            </Button>
+          </Stack>
+        </DialogActions>
+      </Dialog>
       <><br /></>
 
     </Page>

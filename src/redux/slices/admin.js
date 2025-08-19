@@ -23,6 +23,26 @@ const initialState = {
   selectedBookingId: null,
   documents: [],
   successMessage: null,
+  payouts: [],
+  financialData: {
+    bookings: [],
+    payouts: [],
+    payments: [],
+    kpis: {
+      totalBookings: 0,
+      totalRevenue: 0,
+      pendingPayouts: 0,
+      completedPayouts: 0,
+      bookingsWithPayout: 0,
+      bookingsWithoutPayout: 0,
+      bookingsWithInvoice: 0,
+    },
+    charts: {
+      revenueTimeSeries: [],
+      paymentMethodBreakdown: [],
+      bookingsTimeSeries: [],
+    },
+  },
 };
 
 const slice = createSlice({
@@ -158,6 +178,29 @@ const slice = createSlice({
       
       state.isLoading = false;
     },
+
+    // GET FINANCIAL DATA
+    getFinancialDataSuccess(state, action) {
+      state.isLoading = false;
+      state.financialData = action.payload;
+    },
+
+        // MARK PAYOUT AS PAID
+    markPayoutAsPaidSuccess(state, action) {
+      state.isLoading = false;
+      // Update the payout in financial data if it exists
+      if (state.financialData?.payouts) {
+        state.financialData.payouts = state.financialData.payouts.map(payout =>
+          payout.id === action.payload.id ? { ...payout, status: 'paid', paidAt: new Date().toISOString() } : payout
+        );
+      }
+    },
+
+    // GET ALL PAYOUTS
+    getAllPayoutsSuccess(state, action) {
+      state.isLoading = false;
+      state.payouts = action.payload;
+    }
   }
 });
 
@@ -417,6 +460,146 @@ export function editPayout(payoutId, payoutData) {
       
       dispatch(slice.actions.editPayoutSuccess(response.data));
       
+      return response.data;
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+      throw error;
+    }
+  };
+}
+
+// Financial Dashboard Actions
+export function getFinancialData(filters) {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const params = new URLSearchParams();
+      
+      // Add filter parameters
+      if (filters.dateRange?.startDate) {
+        params.append('startDate', filters.dateRange.startDate.toISOString());
+      }
+      if (filters.dateRange?.endDate) {
+        params.append('endDate', filters.dateRange.endDate.toISOString());
+      }
+      if (filters.resort) {
+        params.append('resort', filters.resort);
+      }
+      if (filters.instructor) {
+        params.append('instructor', filters.instructor);
+      }
+      if (filters.bookingStatus && filters.bookingStatus !== 'all') {
+        params.append('bookingStatus', filters.bookingStatus);
+      }
+      if (filters.payoutStatus && filters.payoutStatus !== 'all') {
+        params.append('payoutStatus', filters.payoutStatus);
+      }
+      if (filters.paymentMethod && filters.paymentMethod !== 'all') {
+        params.append('paymentMethod', filters.paymentMethod);
+      }
+
+      const response = await axios.get(`/api/admin/financial/data?${params.toString()}`);
+      
+      // Process and structure the data
+      const financialData = {
+        bookings: response.data.bookings || [],
+        payouts: response.data.payouts || [],
+        payments: response.data.payments || [],
+        kpis: {
+          totalBookings: response.data.kpis?.totalBookings || 0,
+          totalRevenue: response.data.kpis?.totalRevenue || 0,
+          pendingPayouts: response.data.kpis?.pendingPayouts || 0,
+          completedPayouts: response.data.kpis?.completedPayouts || 0,
+          bookingsWithPayout: response.data.kpis?.bookingsWithPayout || 0,
+          bookingsWithoutPayout: response.data.kpis?.bookingsWithoutPayout || 0,
+          bookingsWithInvoice: response.data.kpis?.bookingsWithInvoice || 0,
+        },
+        charts: {
+          revenueTimeSeries: response.data.charts?.revenueTimeSeries || [],
+          paymentMethodBreakdown: response.data.charts?.paymentMethodBreakdown || [],
+          bookingsTimeSeries: response.data.charts?.bookingsTimeSeries || [],
+        },
+      };
+      
+      dispatch(slice.actions.getFinancialDataSuccess(financialData));
+      return { payload: financialData };
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+      throw error;
+    }
+  };
+}
+
+export function exportFinancialData(filters) {
+  return async () => {
+    try {
+      const params = new URLSearchParams();
+      
+      // Add filter parameters
+      if (filters.dateRange?.startDate) {
+        params.append('startDate', filters.dateRange.startDate.toISOString());
+      }
+      if (filters.dateRange?.endDate) {
+        params.append('endDate', filters.dateRange.endDate.toISOString());
+      }
+      if (filters.resort) {
+        params.append('resort', filters.resort);
+      }
+      if (filters.instructor) {
+        params.append('instructor', filters.instructor);
+      }
+      if (filters.bookingStatus && filters.bookingStatus !== 'all') {
+        params.append('bookingStatus', filters.bookingStatus);
+      }
+      if (filters.payoutStatus && filters.payoutStatus !== 'all') {
+        params.append('payoutStatus', filters.payoutStatus);
+      }
+      if (filters.paymentMethod && filters.paymentMethod !== 'all') {
+        params.append('paymentMethod', filters.paymentMethod);
+      }
+
+      const response = await axios.get(`/api/admin/financial/export?${params.toString()}`, {
+        responseType: 'blob',
+      });
+      
+      // Create download link
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `financial-data-${new Date().toISOString().split('T')[0]}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+      
+    } catch (error) {
+      console.error('Error exporting financial data:', error);
+      throw error;
+    }
+  };
+}
+
+export function markPayoutAsPaid(payoutId) {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.put(`/api/payouts/${payoutId}/mark-paid`);
+      dispatch(slice.actions.markPayoutAsPaidSuccess(response.data));
+      return response.data;
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+      throw error;
+    }
+  };
+}
+
+// Get all payouts
+export function getAllPayouts(page = 0, pageSize = 1000) {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get(`/api/payouts/?page=${page}&pageSize=${pageSize}`);
+      dispatch(slice.actions.getAllPayoutsSuccess(response.data));
       return response.data;
     } catch (error) {
       dispatch(slice.actions.hasError(error));

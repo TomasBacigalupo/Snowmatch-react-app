@@ -157,6 +157,7 @@ export const PATH_DASHBOARD = {
     review: path(ROOTS_DASHBOARD, '/admin/review'),
     reviewClients: path(ROOTS_DASHBOARD, '/admin/clients'),
     bookings: path(ROOTS_DASHBOARD, '/admin/bookings'),
+    financial: path(ROOTS_DASHBOARD, '/admin/financial'),
     confirm: (id) => path(ROOTS_DASHBOARD, `/admin/${id}/confirm`),
     events: (id) => path(ROOTS_DASHBOARD, `/admin/${id}/events`)
   }

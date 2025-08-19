@@ -538,6 +538,23 @@
     <url><loc>https://snowmatch.pro/match/teacher/903</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
     <url><loc>https://snowmatch.pro/match/teacher/879</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
 
+    <!-- Ski Trip Landing Pages -->
+    <url>
+        <loc>https://snowmatch.pro/aspen-ski-camp</loc>
+        <changefreq>weekly</changefreq>
+        <priority>0.9</priority>
+    </url>
+    <url>
+        <loc>https://snowmatch.pro/vail-ski-camp</loc>
+        <changefreq>weekly</changefreq>
+        <priority>0.9</priority>
+    </url>
+    <url>
+        <loc>https://snowmatch.pro/jackson-hole-ski-camp</loc>
+        <changefreq>weekly</changefreq>
+        <priority>0.9</priority>
+    </url>
+
     <!-- Important Pages -->
     <url>
         <loc>https://snowmatch.pro/signup</loc>

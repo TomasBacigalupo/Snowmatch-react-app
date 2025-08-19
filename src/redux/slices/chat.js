@@ -13,6 +13,34 @@ function objFromArray(array, key = 'id') {
   }, {});
 }
 
+// Helper function to parse dates consistently - ignoring timezone
+function parseDate(dateString) {
+  if (!dateString) return new Date(0);
+  
+  // If it's already a Date object, return it
+  if (dateString instanceof Date) return dateString;
+  
+  // If it's a string, try to parse it
+  if (typeof dateString === 'string') {
+    // If it's just a date (YYYY-MM-DD), add time
+    if (/^\d{4}-\d{2}-\d{2}$/.test(dateString)) {
+      return new Date(dateString + 'T00:00:00');
+    }
+    
+    // For ISO strings, parse as local time to avoid timezone issues
+    if (dateString.includes('T') || dateString.includes('Z')) {
+      // Remove timezone info and parse as local time
+      const localDateString = dateString.replace(/[+-]\d{2}:?\d{2}$/, '').replace('Z', '');
+      return new Date(localDateString);
+    }
+    
+    // For other date strings, parse normally
+    return new Date(dateString);
+  }
+  
+  return new Date(0);
+}
+
 const initialState = {
   isLoading: false,
   error: null,
@@ -61,7 +89,11 @@ const slice = createSlice({
       if (conversation) {
         // Sort messages by createdAt timestamp (oldest to newest)
         if (conversation.messages && conversation.messages.length > 0) {
-          conversation.messages.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+          conversation.messages.sort((a, b) => {
+            const dateA = parseDate(a.createdAt);
+            const dateB = parseDate(b.createdAt);
+            return dateA - dateB;
+          });
         }
         
         state.conversations.byId[conversation.id] = conversation;
@@ -92,10 +124,25 @@ const slice = createSlice({
       const targetConversationId = state.conversations.byId[conversationId] ? conversationId : state.activeConversationId;
       
       if (targetConversationId && state.conversations.byId[targetConversationId]) {
-        state.conversations.byId[targetConversationId].messages.push(newMessage);
+        // Check if message already exists to avoid duplicates
+        const existingMessageIndex = state.conversations.byId[targetConversationId].messages.findIndex(
+          (msg) => msg.id === messageId
+        );
+        
+        if (existingMessageIndex === -1) {
+          // Add new message
+          state.conversations.byId[targetConversationId].messages.push(newMessage);
+        } else {
+          // Update existing message (in case of optimistic update)
+          state.conversations.byId[targetConversationId].messages[existingMessageIndex] = newMessage;
+        }
         
         // Sort messages by createdAt timestamp (oldest to newest) after adding new message
-        state.conversations.byId[targetConversationId].messages.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+        state.conversations.byId[targetConversationId].messages.sort((a, b) => {
+          const dateA = parseDate(a.createdAt);
+          const dateB = parseDate(b.createdAt);
+          return dateA - dateB;
+        });
       }
     },
 
@@ -227,7 +274,7 @@ export function sendMessage(conversationKey, message) {
           message: message.body,
           contentType: message.contentType || 'text',
           attachments: message.attachments || [],
-          createdAt: response.data.createdAt || new Date().toISOString(),
+          createdAt: response.data.createdAt || new Date().toISOString().replace(/[+-]\d{2}:?\d{2}$/, ''),
           senderId: response.data.senderId || '8864c717-587d-472a-929a-8e5f298024da-0', // Default sender ID
         };
 
@@ -236,6 +283,30 @@ export function sendMessage(conversationKey, message) {
     } catch (error) {
       dispatch(slice.actions.hasError(error));
       console.error('Error sending message:', error);
+    }
+  };
+}
+
+// ----------------------------------------------------------------------
+
+export function getConversationKey(user1Id, user2Id) {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.post('/api/chat/conversation-key', {
+        user1Id,
+        user2Id,
+      });
+
+      console.log(response.data);
+      
+      
+      return response?.data?.conversationKey;
+     
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+      console.error('Error getting conversation key:', error);
+      return null;
     }
   };
 }

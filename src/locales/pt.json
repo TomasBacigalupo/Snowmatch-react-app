@@ -283,10 +283,80 @@
             }
         }
     },
+    "skiTrips": {
+        "hero": {
+            "title": "{{destination}} Ski Camp by Snowmatch",
+            "subtitle": "Hospedagem curada + aluguel + traslados + aulas. Você escolhe as datas; nós organizamos o resto.",
+            "bookingTitle": "Organizar minha viagem",
+            "checkin": "Check-in",
+            "checkout": "Check-out",
+            "adults": "Adultos",
+            "adult": "adulto",
+            "adults_plural": "adultos",
+            "children": "Crianças",
+            "child": "criança",
+            "children_plural": "crianças",
+            "skiLevel": "Nível de esqui",
+            "beginner": "Iniciante",
+            "intermediate": "Intermediário",
+            "advanced": "Avançado",
+            "expert": "Expert",
+            "whatsappCTA": "Organizar minha viagem por WhatsApp"
+        },
+        "benefits": {
+            "title": "Por que escolher Snowmatch?",
+            "subtitle": "Tudo que você precisa para sua viagem de esqui em um só lugar",
+            "curatedAccommodation": {
+                "title": "Hospedagem curada",
+                "description": "Hotéis e condomínios selecionados nas melhores localizações."
+            },
+            "rentalDiscounts": {
+                "title": "Descontos em aluguel",
+                "description": "Equipamentos de esqui e snowboard de alta qualidade com descontos exclusivos."
+            },
+            "doorToDoor": {
+                "title": "Traslados porta a porta",
+                "description": "Transporte do aeroporto e entre montanhas."
+            },
+            "certifiedPros": {
+                "title": "Aulas com profissionais certificados",
+                "description": "Instrutores certificados PSIA/AASI para todos os níveis."
+            },
+            "spanishSupport": {
+                "title": "Atendimento em espanhol/português",
+                "description": "Assessoria personalizada no seu idioma durante todo o processo."
+            },
+            "flexiblePayments": {
+                "title": "Pagamentos flexíveis",
+                "description": "Opções de pagamento em parcelas sem juros e reservas com depósito mínimo."
+            }
+        },
+        "services": {
+            "title": "O que inclui sua viagem?",
+            "subtitle": "Tudo organizado para que você só se preocupe em aproveitar",
+            "accommodation": "Hospedagem",
+            "rentals": "Aluguel",
+            "transfers": "Traslados",
+            "lessons": "Aulas",
+            "consultAvailability": "Consultar disponibilidade"
+        },
+        "itinerary": {
+            "title": "Roteiro sugerido",
+            "subtitle": "Um exemplo de como poderia ser sua viagem perfeita",
+            "day": "Dia",
+            "disclaimer": "* Este é um roteiro de exemplo. As atividades e horários podem ser personalizados de acordo com suas preferências e disponibilidade."
+        },
+        "highlights": {
+            "title": "Sobre {{destination}}",
+            "subtitle": "Descubra por que este destino é perfeito para sua viagem de esqui"
+        },
+        "floatingCTA": "Organizar minha viagem agora"
+    },
     "menu": {
         "general": "General",
         "management": "Organizar",
         "match": "Match",
+        "chat": "Chat",
         "instructors": "Instrutores",
         "calendar": "Calendário",
         "School": "Escola",

@@ -7,6 +7,22 @@ import { Avatar, Box, Typography } from '@mui/material';
 import Image from '../../../components/Image';
 import useAuth from 'src/hooks/useAuth';
 
+// Helper function to parse dates without timezone conversion
+const parseDateWithoutTimezone = (dateString) => {
+  if (!dateString) return new Date(0);
+  
+  // If it's already a Date object, return it
+  if (dateString instanceof Date) return dateString;
+  
+  // If it's a string, remove timezone info and parse as local time
+  if (typeof dateString === 'string') {
+    const localDateString = dateString.replace(/[+-]\d{2}:?\d{2}$/, '').replace('Z', '');
+    return new Date(localDateString);
+  }
+  
+  return new Date(0);
+};
+
 // ----------------------------------------------------------------------
 
 const RootStyle = styled('div')(({ theme }) => ({
@@ -71,7 +87,7 @@ export default function ChatMessageItem({ message, conversation, onOpenLightbox 
             }}
           >
             {!isMe && `${firstName},`}&nbsp;
-            {formatDistanceToNowStrict(new Date(message.createdAt), {
+            {formatDistanceToNowStrict(parseDateWithoutTimezone(message.createdAt), {
               addSuffix: true,
             })}
           </InfoStyle>

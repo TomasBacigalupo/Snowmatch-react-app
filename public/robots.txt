@@ -1,3 +1,11 @@
 # https://www.robotstxt.org/robotstxt.html
 User-agent: *
-Disallow:
+Allow: /
+
+# Sitemap
+Sitemap: https://snowmatch.pro/sitemap.xml
+
+# Allow all ski trip landing pages
+Allow: /aspen-ski-camp
+Allow: /vail-ski-camp
+Allow: /jackson-hole-ski-camp

@@ -14,6 +14,8 @@ resorts = [
     "castor", 
     "buenos-aires",
     "portillo",
+    # USA
+    "aspen", "vail", "jackson-hole",
 ]
 
 disciplines = [
@@ -118,7 +120,18 @@ blog_urls = [
     "/escuela-de-esqui-y-snowboard",
     "/escola-de-esqui-e-snowboard",
     "/heliski",
-    "/all-teachers"
+    "/all-teachers",
+    "/aspen-ski-camp",
+    "/vail-ski-camp",
+    "/jackson-hole-ski-camp",
+    "/pt/aspen-ski-camp",
+    "/pt/vail-ski-camp",
+    "/pt/jackson-hole-ski-camp",
+    "/en/aspen-ski-camp",
+    "/en/vail-ski-camp",
+    "/en/jackson-hole-ski-camp",
+    "/instructor",
+    "/en/instructor"
 ]
 
 # Configuración del sitemap

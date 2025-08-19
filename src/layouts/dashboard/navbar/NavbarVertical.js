@@ -139,6 +139,7 @@ export default function NavbarVertical({ isOpenSidebar, onCloseSidebar, isGuest,
               { title: 'review teachers', path: PATH_DASHBOARD.admin.review },
               { title: 'review clients', path: PATH_DASHBOARD.admin.reviewClients },
               { title: 'review bookings', path: PATH_DASHBOARD.admin.bookings },
+              { title: 'financial dashboard', path: PATH_DASHBOARD.admin.financial },
             ],
           }]})
     }

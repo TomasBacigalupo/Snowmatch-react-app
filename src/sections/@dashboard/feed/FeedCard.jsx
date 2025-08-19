@@ -1,7 +1,8 @@
-import { Avatar, Box, Button, Card, CardContent, Stack, Switch, Typography, CircularProgress, IconButton } from "@mui/material";
-import { useState, useRef, useEffect } from "react";
+import { Avatar, Box, Button, Card, CardContent, Stack, Switch, Typography, CircularProgress, IconButton, Drawer } from "@mui/material";
+import { useState, useRef, useEffect, Fragment } from "react";
 import { useDispatch } from 'react-redux';
 import { likeVideo } from 'src/redux/slices/video';
+import useAuth from 'src/hooks/useAuth';
 import VideoPlayer from 'src/components/video-player';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
@@ -9,11 +10,13 @@ import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import ShareIcon from '@mui/icons-material/Share';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import PauseIcon from '@mui/icons-material/Pause';
+import Login from 'src/pages/auth/Login';
 
 import AnalyticsIcon from '@mui/icons-material/Analytics';
 
 export default function FeedCard({ video, setSelectedVideo, onInstructorClick }) {
     const dispatch = useDispatch();
+    const { isAuthenticated } = useAuth();
     const [analyticsEnabled, setAnalyticsEnabled] = useState(false);
     const [isVisible, setIsVisible] = useState(false);
     const [shouldLoad, setShouldLoad] = useState(false);
@@ -30,6 +33,7 @@ export default function FeedCard({ video, setSelectedVideo, onInstructorClick })
     const [isLiking, setIsLiking] = useState(false);
     const [showDoubleClickHeart, setShowDoubleClickHeart] = useState(false);
     const [doubleClickPosition, setDoubleClickPosition] = useState({ x: 0, y: 0 });
+    const [loginModalOpen, setLoginModalOpen] = useState(false);
 
     // Reset video states when analytics mode changes
     const handleAnalyticsToggle = () => {
@@ -104,6 +108,12 @@ export default function FeedCard({ video, setSelectedVideo, onInstructorClick })
     const handleLikeClick = async () => {
       if (isLiking) return; // Prevent multiple clicks while processing
       
+      // Check if user is authenticated
+      if (!isAuthenticated) {
+        setLoginModalOpen(true);
+        return;
+      }
+      
       // Toggle like status
       const newLikedStatus = !isLiked;
       const previousLikedStatus = isLiked;
@@ -138,6 +148,12 @@ export default function FeedCard({ video, setSelectedVideo, onInstructorClick })
     const handleDoubleClick = (event) => {
       // Only allow double-click like when video is not already liked
       if (!isLiked && !isLiking) {
+        // Check if user is authenticated
+        if (!isAuthenticated) {
+          setLoginModalOpen(true);
+          return;
+        }
+        
         // Get click position relative to video
         const rect = event.currentTarget.getBoundingClientRect();
         const x = event.clientX - rect.left;
@@ -455,6 +471,7 @@ export default function FeedCard({ video, setSelectedVideo, onInstructorClick })
       };
 
     return (
+      <>
         <Card 
           ref={cardRef}
           key={video.id} 
@@ -957,5 +974,27 @@ export default function FeedCard({ video, setSelectedVideo, onInstructorClick })
             </Box>
           </CardContent>
         </Card>
+
+        {/* Login Modal */}
+        <Drawer
+          anchor="bottom"
+          open={loginModalOpen}
+          onClose={() => setLoginModalOpen(false)}
+          PaperProps={{
+            sx: {
+              borderTopLeftRadius: 24,
+              borderTopRightRadius: 24,
+              height: 'auto',
+              maxHeight: '40vh',
+              minHeight: '300px',
+            },
+          }}
+        >
+          <Box sx={{ p: 2, display: 'flex', justifyContent: 'center' }}>
+            <Box sx={{ width: 40, height: 6, borderRadius: 3, bgcolor: 'grey.300' }} />
+          </Box>
+          <Login fromModal={true} />
+        </Drawer>
+      </>
     );
 }

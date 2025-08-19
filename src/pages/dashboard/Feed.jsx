@@ -15,6 +15,7 @@ import {
   SwipeableDrawer,
   Switch,
   TextField,
+  Drawer,
 } from '@mui/material';
 import { useSnackbar } from 'notistack';
 import Markdown from 'src/components/Markdown';
@@ -25,6 +26,7 @@ import InstructorDetailsDrawer from 'src/sections/@dashboard/feed/InstructorDeta
 import { useDispatch, useSelector } from 'react-redux';
 import { addVideoComment, fetchFeedVideos } from 'src/redux/slices/video';
 import useAuth from 'src/hooks/useAuth';
+import Login from 'src/pages/auth/Login';
 
 const safeSliceMarkdown = (text, length) => {
   if (!text) return "";
@@ -33,7 +35,7 @@ const safeSliceMarkdown = (text, length) => {
   return sliced.substring(0, sliced.lastIndexOf(" ")) + "...";
 };
 
-const CommentsDrawer = ({ open, onClose, comments, videoId, onCommentAdded }) => {
+const CommentsDrawer = ({ open, onClose, comments, videoId, onCommentAdded, onLoginClick }) => {
   const [expandedComments, setExpandedComments] = useState({});
   const [newComment, setNewComment] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -249,10 +251,7 @@ const CommentsDrawer = ({ open, onClose, comments, videoId, onCommentAdded }) =>
               <Button
                 variant="outlined"
                 size="small"
-                onClick={() => {
-                  // TODO: Navigate to login page or show login modal
-                  console.log('Navigate to login');
-                }}
+                onClick={onLoginClick}
                 sx={{
                   textTransform: 'none',
                   fontWeight: 600,
@@ -276,6 +275,7 @@ const Feed = () => {
   const [selectedVideoId, setSelectedVideoId] = useState(null);
   const [selectedInstructor, setSelectedInstructor] = useState(null);
   const [selectedTeacher, setSelectedTeacher] = useState(null);
+  const [loginModalOpen, setLoginModalOpen] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
   const containerRef = useRef(null);
   const startY = useRef(0);
@@ -510,6 +510,7 @@ const Feed = () => {
           onCommentAdded={() => {
             console.log('onCommentAdded called, no need to update selectedVideo - it will auto-update from Redux');
           }}
+          onLoginClick={() => setLoginModalOpen(true)}
         />
 
         <InstructorDetailsDrawer
@@ -517,6 +518,26 @@ const Feed = () => {
           onClose={() => setSelectedInstructor(null)}
           instructor={selectedInstructor}
         />
+
+        {/* Login Modal */}
+        <Drawer
+          anchor="bottom"
+          open={loginModalOpen}
+          onClose={() => setLoginModalOpen(false)}
+          PaperProps={{
+            sx: {
+              borderTopLeftRadius: 24,
+              borderTopRightRadius: 24,
+              height: 'auto',
+              maxHeight: '40vh',
+            },
+          }}
+        >
+          <Box sx={{ p: 2, display: 'flex', justifyContent: 'center' }}>
+            <Box sx={{ width: 40, height: 6, borderRadius: 3, bgcolor: 'grey.300' }} />
+          </Box>
+          <Login fromModal={true} />
+        </Drawer>
       </Box>
     </Page>
   );

@@ -14,14 +14,17 @@ import {
   Button,
   SwipeableDrawer,
   Switch,
+  TextField,
 } from '@mui/material';
 import { useSnackbar } from 'notistack';
-import axiosInstance from '../../utils/axios';
 import Markdown from 'src/components/Markdown';
 import CloseIcon from '@mui/icons-material/Close';
 import Page from 'src/components/Page';
 import FeedCard from 'src/sections/@dashboard/feed/FeedCard';
 import InstructorDetailsDrawer from 'src/sections/@dashboard/feed/InstructorDetailsDrawer';
+import { useDispatch, useSelector } from 'react-redux';
+import { addVideoComment, fetchFeedVideos } from 'src/redux/slices/video';
+import useAuth from 'src/hooks/useAuth';
 
 const safeSliceMarkdown = (text, length) => {
   if (!text) return "";
@@ -30,8 +33,12 @@ const safeSliceMarkdown = (text, length) => {
   return sliced.substring(0, sliced.lastIndexOf(" ")) + "...";
 };
 
-const CommentsDrawer = ({ open, onClose, comments }) => {
+const CommentsDrawer = ({ open, onClose, comments, videoId, onCommentAdded }) => {
   const [expandedComments, setExpandedComments] = useState({});
+  const [newComment, setNewComment] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const dispatch = useDispatch();
+  const { user, isAuthenticated } = useAuth();
 
   const toggleComment = (commentId) => {
     setExpandedComments(prev => ({
@@ -40,7 +47,27 @@ const CommentsDrawer = ({ open, onClose, comments }) => {
     }));
   };
 
-  if (!comments?.length) return null;
+  const handleSubmitComment = async () => {
+    if (!newComment.trim() || isSubmitting) return;
+    
+    setIsSubmitting(true);
+    try {
+      console.log('Submitting comment:', newComment.trim());
+      await dispatch(addVideoComment(videoId, newComment.trim()));
+      setNewComment('');
+      console.log('Comment submitted successfully, calling onCommentAdded');
+      if (onCommentAdded) {
+        onCommentAdded();
+      }
+    } catch (error) {
+      console.error('Failed to add comment:', error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  // Always show the drawer if it's open, even if there are no comments
+  if (!open) return null;
 
   return (
     <SwipeableDrawer
@@ -69,7 +96,8 @@ const CommentsDrawer = ({ open, onClose, comments }) => {
         </Box>
         <Divider sx={{ mb: 2 }} />
         <Box sx={{ maxHeight: 'calc(90vh - 80px)', overflow: 'auto', pb: 'env(safe-area-inset-bottom)' }}>
-          {comments.map((comment, index) => (
+          {comments && comments.length > 0 ? (
+            comments.map((comment, index) => (
             <Box key={comment.id}>
               <Box sx={{ mb: 3 }}>
                 <Stack direction="row" spacing={1} alignItems="center">
@@ -156,7 +184,84 @@ const CommentsDrawer = ({ open, onClose, comments }) => {
                 />
               )}
             </Box>
-          ))}
+          ))
+          ) : (
+            <Box sx={{ textAlign: 'center', py: 4 }}>
+              <Typography variant="body2" color="text.secondary">
+                No comments yet. Be the first to comment!
+              </Typography>
+            </Box>
+          )}
+        </Box>
+        
+        {/* Comment Input Section */}
+        <Box sx={{ mt: 3, pt: 2, borderTop: '1px solid', borderColor: 'divider' }}>
+          <Typography variant="subtitle2" sx={{ mb: 2, fontWeight: 600 }}>
+            Add a comment
+          </Typography>
+          
+          {isAuthenticated ? (
+            <Stack direction="row" spacing={1}>
+              <TextField
+                fullWidth
+                size="small"
+                placeholder="Write your comment..."
+                value={newComment}
+                onChange={(e) => setNewComment(e.target.value)}
+                onKeyPress={(e) => {
+                  if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    handleSubmitComment();
+                  }
+                }}
+                multiline
+                maxRows={3}
+                sx={{
+                  '& .MuiOutlinedInput-root': {
+                    borderRadius: 2,
+                  }
+                }}
+              />
+              <Button
+                variant="contained"
+                onClick={handleSubmitComment}
+                disabled={!newComment.trim() || isSubmitting}
+                sx={{
+                  minWidth: 'auto',
+                  px: 2,
+                  borderRadius: 2,
+                  textTransform: 'none',
+                  fontWeight: 600,
+                }}
+              >
+                {isSubmitting ? (
+                  <CircularProgress size={20} color="inherit" />
+                ) : (
+                  'Post'
+                )}
+              </Button>
+            </Stack>
+          ) : (
+            <Box sx={{ textAlign: 'center', py: 2 }}>
+              <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                Please log in to comment
+              </Typography>
+              <Button
+                variant="outlined"
+                size="small"
+                onClick={() => {
+                  // TODO: Navigate to login page or show login modal
+                  console.log('Navigate to login');
+                }}
+                sx={{
+                  textTransform: 'none',
+                  fontWeight: 600,
+                }}
+              >
+                Log In
+              </Button>
+            </Box>
+          )}
         </Box>
       </Box>
     </SwipeableDrawer>
@@ -164,18 +269,39 @@ const CommentsDrawer = ({ open, onClose, comments }) => {
 };
 
 const Feed = () => {
-  const [videos, setVideos] = useState([]);
   const [page, setPage] = useState(0);
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [hasMore, setHasMore] = useState(true);
-  const [selectedVideo, setSelectedVideo] = useState(null);
+  const [selectedVideoId, setSelectedVideoId] = useState(null);
   const [selectedInstructor, setSelectedInstructor] = useState(null);
   const [selectedTeacher, setSelectedTeacher] = useState(null);
   const { enqueueSnackbar } = useSnackbar();
   const containerRef = useRef(null);
   const startY = useRef(0);
   const currentY = useRef(0);
+  
+  // Get videos from Redux store
+  const videos = useSelector((state) => state.video.videos);
+  const dispatch = useDispatch();
+  
+  // Get selectedVideo from Redux based on selectedVideoId
+  const selectedVideo = videos.find(v => v.id === selectedVideoId);
+  
+  // Debug: Log videos changes
+  useEffect(() => {
+    console.log('Videos updated in Redux:', videos);
+  }, [videos]);
+  
+  // Debug: Log selectedVideo changes
+  useEffect(() => {
+    console.log('SelectedVideo updated:', selectedVideo);
+  }, [selectedVideo]);
+  
+  // Debug: Log selectedVideoId changes
+  useEffect(() => {
+    console.log('SelectedVideoId changed:', selectedVideoId);
+  }, [selectedVideoId]);
 
   
 
@@ -194,11 +320,8 @@ const Feed = () => {
     try {
       setRefreshing(true);
       setPage(0);
-      setVideos([]);
       setHasMore(true);
-      const response = await axiosInstance.get('/api/videos/feed?page=0&pageSize=5');
-      const newVideos = response.data;
-      setVideos(newVideos);
+      const newVideos = await dispatch(fetchFeedVideos(0, 5));
       if (newVideos.length === 0) {
         setHasMore(false);
       } else {
@@ -209,7 +332,7 @@ const Feed = () => {
     } finally {
       setRefreshing(false);
     }
-  }, [enqueueSnackbar]);
+  }, [dispatch, enqueueSnackbar]);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -265,13 +388,11 @@ const Feed = () => {
 
     try {
       setLoading(true);
-      const response = await axiosInstance.get(`/api/videos/feed?page=${page}&pageSize=5`);
-      const newVideos = response.data;
+      const newVideos = await dispatch(fetchFeedVideos(page, 5));
 
       if (newVideos.length === 0) {
         setHasMore(false);
       } else {
-        setVideos((prev) => [...prev, ...newVideos]);
         setPage((prev) => prev + 1);
       }
     } catch (error) {
@@ -279,7 +400,7 @@ const Feed = () => {
     } finally {
       setLoading(false);
     }
-  }, [page, loading, hasMore, enqueueSnackbar]);
+  }, [page, loading, hasMore, dispatch, enqueueSnackbar]);
 
   const handleLoadMore = () => {
     fetchVideos();
@@ -290,7 +411,7 @@ const Feed = () => {
     if (videos.length === 0 && !loading && !refreshing) {
       fetchVideos();
     }
-  }, []);
+  }, [videos.length, loading, refreshing, fetchVideos]);
 
   return (
     <Page title="Feed">
@@ -327,7 +448,7 @@ const Feed = () => {
           <FeedCard 
             key={video.id} 
             video={video} 
-            setSelectedVideo={setSelectedVideo}
+            setSelectedVideo={(video) => setSelectedVideoId(video?.id || null)}
             onInstructorClick={setSelectedInstructor}
           />
         ))}
@@ -383,8 +504,12 @@ const Feed = () => {
 
         <CommentsDrawer
           open={!!selectedVideo}
-          onClose={() => setSelectedVideo(null)}
+          onClose={() => setSelectedVideoId(null)}
           comments={selectedVideo?.videoComments}
+          videoId={selectedVideo?.id}
+          onCommentAdded={() => {
+            console.log('onCommentAdded called, no need to update selectedVideo - it will auto-update from Redux');
+          }}
         />
 
         <InstructorDetailsDrawer

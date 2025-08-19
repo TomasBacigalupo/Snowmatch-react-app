@@ -1,7 +1,10 @@
 import { Avatar, Box, Button, Card, CardContent, Stack, Switch, Typography, CircularProgress, IconButton } from "@mui/material";
 import { useState, useRef, useEffect } from "react";
+import { useDispatch } from 'react-redux';
+import { likeVideo } from 'src/redux/slices/video';
 import VideoPlayer from 'src/components/video-player';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import FavoriteIcon from '@mui/icons-material/Favorite';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import ShareIcon from '@mui/icons-material/Share';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
@@ -10,6 +13,7 @@ import PauseIcon from '@mui/icons-material/Pause';
 import AnalyticsIcon from '@mui/icons-material/Analytics';
 
 export default function FeedCard({ video, setSelectedVideo, onInstructorClick }) {
+    const dispatch = useDispatch();
     const [analyticsEnabled, setAnalyticsEnabled] = useState(false);
     const [isVisible, setIsVisible] = useState(false);
     const [shouldLoad, setShouldLoad] = useState(false);
@@ -21,6 +25,9 @@ export default function FeedCard({ video, setSelectedVideo, onInstructorClick })
     const [buffering, setBuffering] = useState(false);
     const [bufferedPercent, setBufferedPercent] = useState(0);
     const [currentVideoUrl, setCurrentVideoUrl] = useState('');
+    const [isLiked, setIsLiked] = useState(video.likedByCurrentUser || false);
+    const [likesCount, setLikesCount] = useState(video.likesCount || 0);
+    const [isLiking, setIsLiking] = useState(false);
 
     // Reset video states when analytics mode changes
     const handleAnalyticsToggle = () => {
@@ -84,6 +91,12 @@ export default function FeedCard({ video, setSelectedVideo, onInstructorClick })
             }
         };
     }, []);
+
+    // Update like state when video prop changes
+    useEffect(() => {
+      setIsLiked(video.likedByCurrentUser || false);
+      setLikesCount(video.likesCount || 0);
+    }, [video.likedByCurrentUser, video.likesCount]);
 
     // Handle video loading and autoplay for mobile
     useEffect(() => {
@@ -751,22 +764,105 @@ export default function FeedCard({ video, setSelectedVideo, onInstructorClick })
                 }}
               >
                 <Button
-                  fullWidth
+                  disabled={isLiking}
+                  startIcon={isLiked ? <FavoriteIcon /> : <FavoriteBorderIcon />}
+                  onClick={async () => {
+                    if (isLiking) return; // Prevent multiple clicks while processing
+                    
+                    // Toggle like status
+                    const newLikedStatus = !isLiked;
+                    const previousLikedStatus = isLiked;
+                    const previousLikesCount = likesCount;
+                    
+                    // Set loading state
+                    setIsLiking(true);
+                    
+                    // Optimistically update local state for immediate UI feedback
+                    setIsLiked(newLikedStatus);
+                    if (newLikedStatus) {
+                      setLikesCount(prev => prev + 1);
+                    } else {
+                      setLikesCount(prev => Math.max(0, prev - 1));
+                    }
+                    
+                    try {
+                      // Dispatch Redux action to update backend and global state
+                      await dispatch(likeVideo(video.id, newLikedStatus));
+                    } catch (error) {
+                      // Revert optimistic update on error
+                      console.error('Failed to like video:', error);
+                      setIsLiked(previousLikedStatus);
+                      setLikesCount(previousLikesCount);
+                    } finally {
+                      // Clear loading state
+                      setIsLiking(false);
+                    }
+                  }}
+                  sx={{
+                    color: isLiked ? 'error.main' : 'text.secondary',
+                    textTransform: 'none',
+                    fontSize: '0.875rem',
+                    minWidth: 'auto',
+                    px: 2,
+                    transition: 'all 0.2s ease-in-out',
+                    opacity: isLiking ? 0.6 : 1,
+                    '&:hover': {
+                      backgroundColor: 'rgba(244, 67, 54, 0.08)',
+                      transform: isLiking ? 'scale(1)' : 'scale(1.05)',
+                    },
+                    '&:disabled': {
+                      cursor: 'not-allowed',
+                    },
+                  }}
+                                  >
+                    <Typography
+                      key={likesCount}
+                      sx={{
+                        transition: 'all 0.2s ease-in-out',
+                        transform: 'scale(1)',
+                        '&:hover': {
+                          transform: 'scale(1.1)',
+                        }
+                      }}
+                    >
+                      {likesCount}
+                    </Typography>
+                  </Button>
+                <Button
                   startIcon={<ChatBubbleOutlineIcon />}
                   onClick={() => setSelectedVideo(video)}
                   sx={{
                     color: 'text.secondary',
                     textTransform: 'none',
                     fontSize: '0.875rem',
+                    minWidth: 'auto',
+                    px: 2,
                     '&:hover': {
                       backgroundColor: 'transparent',
                     },
                   }}
                 >
-                  Comments
+                  <Stack direction="row" spacing={0.5} alignItems="center">
+                    <Typography variant="body2">
+                      Comments
+                    </Typography>
+                    <Typography
+                      variant="caption"
+                      sx={{
+                        color: 'text.secondary',
+                        fontWeight: 600,
+                        transition: 'all 0.2s ease-in-out',
+                        transform: 'scale(1)',
+                        '&:hover': {
+                          transform: 'scale(1.1)',
+                        }
+                      }}
+                    >
+                      ({video.videoComments?.length || 0})
+                    </Typography>
+                  </Stack>
                 </Button>
                 <Button
-                  fullWidth
                   startIcon={<ShareIcon />}
                   onClick={() => {
                     if (navigator.share) {
@@ -784,6 +880,8 @@ export default function FeedCard({ video, setSelectedVideo, onInstructorClick })
                     color: 'text.secondary',
                     textTransform: 'none',
                     fontSize: '0.875rem',
+                    minWidth: 'auto',
+                    px: 2,
                     '&:hover': {
                       backgroundColor: 'transparent',
                     },

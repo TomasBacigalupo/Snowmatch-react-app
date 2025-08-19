@@ -28,6 +28,8 @@ export default function FeedCard({ video, setSelectedVideo, onInstructorClick })
     const [isLiked, setIsLiked] = useState(video.likedByCurrentUser || false);
     const [likesCount, setLikesCount] = useState(video.likesCount || 0);
     const [isLiking, setIsLiking] = useState(false);
+    const [showDoubleClickHeart, setShowDoubleClickHeart] = useState(false);
+    const [doubleClickPosition, setDoubleClickPosition] = useState({ x: 0, y: 0 });
 
     // Reset video states when analytics mode changes
     const handleAnalyticsToggle = () => {
@@ -97,6 +99,61 @@ export default function FeedCard({ video, setSelectedVideo, onInstructorClick })
       setIsLiked(video.likedByCurrentUser || false);
       setLikesCount(video.likesCount || 0);
     }, [video.likedByCurrentUser, video.likesCount]);
+
+    // Handle like button click
+    const handleLikeClick = async () => {
+      if (isLiking) return; // Prevent multiple clicks while processing
+      
+      // Toggle like status
+      const newLikedStatus = !isLiked;
+      const previousLikedStatus = isLiked;
+      const previousLikesCount = likesCount;
+      
+      // Set loading state
+      setIsLiking(true);
+      
+      // Optimistically update local state for immediate UI feedback
+      setIsLiked(newLikedStatus);
+      if (newLikedStatus) {
+        setLikesCount(prev => prev + 1);
+      } else {
+        setLikesCount(prev => Math.max(0, prev - 1));
+      }
+      
+      try {
+        // Dispatch Redux action to update backend and global state
+        await dispatch(likeVideo(video.id, newLikedStatus));
+      } catch (error) {
+        // Revert optimistic update on error
+        console.error('Failed to like video:', error);
+        setIsLiked(previousLikedStatus);
+        setLikesCount(previousLikesCount);
+      } finally {
+        // Clear loading state
+        setIsLiking(false);
+      }
+    };
+
+    // Handle double-click to like
+    const handleDoubleClick = (event) => {
+      // Only allow double-click like when video is not already liked
+      if (!isLiked && !isLiking) {
+        // Get click position relative to video
+        const rect = event.currentTarget.getBoundingClientRect();
+        const x = event.clientX - rect.left;
+        const y = event.clientY - rect.top;
+        
+        setDoubleClickPosition({ x, y });
+        setShowDoubleClickHeart(true);
+        
+        // Auto-hide heart after animation
+        setTimeout(() => setShowDoubleClickHeart(false), 1000);
+        
+        // Trigger like action
+        handleLikeClick();
+      }
+      // If video is already liked, do nothing (silent)
+    };
 
     // Handle video loading and autoplay for mobile
     useEffect(() => {
@@ -583,8 +640,46 @@ export default function FeedCard({ video, setSelectedVideo, onInstructorClick })
                   onPlay={() => setIsPlaying(true)}
                   onPause={() => setIsPlaying(false)}
                   onClick={handleVideoClick}
+                  onDoubleClick={handleDoubleClick}
                 />
               )}
+
+              {/* Double-click heart animation overlay */}
+              {showDoubleClickHeart && (
+                <Box
+                  sx={{
+                    position: 'absolute',
+                    top: doubleClickPosition.y - 50,
+                    left: doubleClickPosition.x - 50,
+                    zIndex: 10,
+                    animation: 'heartBeat 1s ease-out forwards',
+                    '@keyframes heartBeat': {
+                      '0%': {
+                        transform: 'scale(0) rotate(0deg)',
+                        opacity: 0,
+                      },
+                      '50%': {
+                        transform: 'scale(1.2) rotate(0deg)',
+                        opacity: 1,
+                      },
+                      '100%': {
+                        transform: 'scale(1) rotate(0deg)',
+                        opacity: 0,
+                      },
+                    },
+                  }}
+                >
+                  <FavoriteIcon
+                    sx={{
+                      fontSize: '100px',
+                      color: 'error.main',
+                      filter: 'drop-shadow(0 0 10px rgba(244, 67, 54, 0.8))',
+                    }}
+                  />
+                </Box>
+              )}
+
+
 
               {/* Thumbnail overlay when video is paused and loaded */}
               {shouldLoad && !isLoading && !isPlaying && !hasError && (
@@ -766,38 +861,7 @@ export default function FeedCard({ video, setSelectedVideo, onInstructorClick })
                 <Button
                   disabled={isLiking}
                   startIcon={isLiked ? <FavoriteIcon /> : <FavoriteBorderIcon />}
-                  onClick={async () => {
-                    if (isLiking) return; // Prevent multiple clicks while processing
-                    
-                    // Toggle like status
-                    const newLikedStatus = !isLiked;
-                    const previousLikedStatus = isLiked;
-                    const previousLikesCount = likesCount;
-                    
-                    // Set loading state
-                    setIsLiking(true);
-                    
-                    // Optimistically update local state for immediate UI feedback
-                    setIsLiked(newLikedStatus);
-                    if (newLikedStatus) {
-                      setLikesCount(prev => prev + 1);
-                    } else {
-                      setLikesCount(prev => Math.max(0, prev - 1));
-                    }
-                    
-                    try {
-                      // Dispatch Redux action to update backend and global state
-                      await dispatch(likeVideo(video.id, newLikedStatus));
-                    } catch (error) {
-                      // Revert optimistic update on error
-                      console.error('Failed to like video:', error);
-                      setIsLiked(previousLikedStatus);
-                      setLikesCount(previousLikesCount);
-                    } finally {
-                      // Clear loading state
-                      setIsLiking(false);
-                    }
-                  }}
+                  onClick={handleLikeClick}
                   sx={{
                     color: isLiked ? 'error.main' : 'text.secondary',
                     textTransform: 'none',

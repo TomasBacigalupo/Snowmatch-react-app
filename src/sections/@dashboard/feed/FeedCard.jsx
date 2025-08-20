@@ -104,6 +104,13 @@ export default function FeedCard({ video, setSelectedVideo, onInstructorClick })
       setLikesCount(video.likesCount || 0);
     }, [video.likedByCurrentUser, video.likesCount]);
 
+    // Auto-close login modal when user becomes authenticated
+    useEffect(() => {
+      if (isAuthenticated && loginModalOpen) {
+        setLoginModalOpen(false);
+      }
+    }, [isAuthenticated, loginModalOpen]);
+
     // Handle like button click
     const handleLikeClick = async () => {
       if (isLiking) return; // Prevent multiple clicks while processing
@@ -975,26 +982,26 @@ export default function FeedCard({ video, setSelectedVideo, onInstructorClick })
           </CardContent>
         </Card>
 
-        {/* Login Modal */}
-        <Drawer
-          anchor="bottom"
-          open={loginModalOpen}
-          onClose={() => setLoginModalOpen(false)}
-          PaperProps={{
-            sx: {
-              borderTopLeftRadius: 24,
-              borderTopRightRadius: 24,
-              height: 'auto',
-              maxHeight: '40vh',
-              minHeight: '300px',
-            },
-          }}
-        >
-          <Box sx={{ p: 2, display: 'flex', justifyContent: 'center' }}>
-            <Box sx={{ width: 40, height: 6, borderRadius: 3, bgcolor: 'grey.300' }} />
-          </Box>
-          <Login fromModal={true} />
-        </Drawer>
+            {/* Login Modal */}
+            <Drawer
+                anchor="bottom"
+                open={loginModalOpen}
+                onClose={() => setLoginModalOpen(false)}
+                PaperProps={{
+                    sx: {
+                        borderTopLeftRadius: 24,
+                        borderTopRightRadius: 24,
+                        height: '90vh',
+                        maxHeight: '90vh',
+                    },
+                }}
+            >
+                <Box sx={{ p: 2, display: 'flex', justifyContent: 'center' }}>
+                    <Box sx={{ width: 40, height: 6, borderRadius: 3, bgcolor: 'grey.300' }} />
+                </Box>
+                <Login fromModal={true} />
+            </Drawer>
+            
       </>
     );
 }

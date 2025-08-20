@@ -116,6 +116,22 @@ const slice = createSlice({
             console.log('Updated videos state:', state.videos);
         },
 
+        // DELETE COMMENT SUCCESS
+        deleteCommentSuccess(state, action) {
+            const { videoId, commentId } = action.payload;
+            console.log('Deleting comment from video:', videoId, commentId);
+            state.videos = state.videos.map(video => {
+                if (video.id === videoId) {
+                    return {
+                        ...video,
+                        videoComments: video.videoComments.filter(comment => comment.id !== commentId)
+                    };
+                }
+                return video;
+            });
+            console.log('Updated videos state after comment deletion:', state.videos);
+        },
+
         // SET VIDEOS SUCCESS
         setVideosSuccess(state, action) {
             state.videos = action.payload;
@@ -528,6 +544,30 @@ export function addVideoComment(videoId, commentText) {
             return response.data;
         } catch (error) {
             console.error('Error adding comment:', error);
+            dispatch(slice.actions.hasError(error));
+            throw error;
+        }
+    };
+}
+
+// ----------------------------------------------------------------------
+
+export function deleteVideoComment(videoId, commentId) {
+    return async () => {
+        try {
+            console.log('Deleting comment from video:', videoId, commentId);
+            // Make API call to delete comment
+            const response = await axios.delete(`/api/videos/comment/${commentId}`);
+                        
+            // Update the state by removing the deleted comment
+            dispatch(slice.actions.deleteCommentSuccess({
+                videoId,
+                commentId
+            }));
+            
+            return response.data;
+        } catch (error) {
+            console.error('Error deleting comment:', error);
             dispatch(slice.actions.hasError(error));
             throw error;
         }

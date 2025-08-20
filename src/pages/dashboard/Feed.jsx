@@ -19,12 +19,13 @@ import {
 } from '@mui/material';
 import { useSnackbar } from 'notistack';
 import Markdown from 'src/components/Markdown';
+import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import CloseIcon from '@mui/icons-material/Close';
 import Page from 'src/components/Page';
 import FeedCard from 'src/sections/@dashboard/feed/FeedCard';
 import InstructorDetailsDrawer from 'src/sections/@dashboard/feed/InstructorDetailsDrawer';
 import { useDispatch, useSelector } from 'react-redux';
-import { addVideoComment, fetchFeedVideos } from 'src/redux/slices/video';
+import { addVideoComment, deleteVideoComment, fetchFeedVideos } from 'src/redux/slices/video';
 import useAuth from 'src/hooks/useAuth';
 import Login from 'src/pages/auth/Login';
 
@@ -54,7 +55,6 @@ const CommentsDrawer = ({ open, onClose, comments, videoId, onCommentAdded, onLo
     
     setIsSubmitting(true);
     try {
-      console.log('Submitting comment:', newComment.trim());
       await dispatch(addVideoComment(videoId, newComment.trim()));
       setNewComment('');
       console.log('Comment submitted successfully, calling onCommentAdded');
@@ -65,6 +65,18 @@ const CommentsDrawer = ({ open, onClose, comments, videoId, onCommentAdded, onLo
       console.error('Failed to add comment:', error);
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  const handleDeleteComment = async (commentId) => {
+    try {
+      await dispatch(deleteVideoComment(videoId, commentId));
+      console.log('Comment deleted successfully');
+      if (onCommentAdded) {
+        onCommentAdded();
+      }
+    } catch (error) {
+      console.error('Failed to delete comment:', error);
     }
   };
 
@@ -102,12 +114,12 @@ const CommentsDrawer = ({ open, onClose, comments, videoId, onCommentAdded, onLo
             comments.map((comment, index) => (
             <Box key={comment.id}>
               <Box sx={{ mb: 3 }}>
-                <Stack direction="row" spacing={1} alignItems="center">
+                <Stack direction="row" spacing={1} alignItems="center" sx={{ width: '100%' }}>
                   <Avatar
                     src={comment.aiComment ? "/assets/avatars/snow-ai.png" : comment.user.imageS3}
                     sx={{ width: 40, height: 40 }}
                   />
-                  <Box>
+                  <Box sx={{ flex: 1 }}>
                     <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
                       {comment.aiComment ? "Snow" : `${comment.user.name} ${comment.user.lastname}`}
                     </Typography>
@@ -130,6 +142,23 @@ const CommentsDrawer = ({ open, onClose, comments, videoId, onCommentAdded, onLo
                       )}
                     </Stack>
                   </Box>
+                  {/* Delete button - only show for comment owner and not for AI comments */}
+                  {!comment.aiComment && user && comment.user.id === user.id && (
+                    <IconButton
+                      size="small"
+                      onClick={() => handleDeleteComment(comment.id)}
+                      sx={{
+                        color: 'error.main',
+                        '&:hover': {
+                          backgroundColor: 'error.light',
+                          color: 'white',
+                        },
+                      }}
+                      title="Delete comment"
+                    >
+                      <DeleteOutlinedIcon />
+                    </IconButton>
+                  )}
                 </Stack>
                 <Box sx={{ mt: 1 }}>
                   <Markdown
@@ -277,6 +306,7 @@ const Feed = () => {
   const [selectedTeacher, setSelectedTeacher] = useState(null);
   const [loginModalOpen, setLoginModalOpen] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
+  const { isAuthenticated } = useAuth();
   const containerRef = useRef(null);
   const startY = useRef(0);
   const currentY = useRef(0);
@@ -302,6 +332,13 @@ const Feed = () => {
   useEffect(() => {
     console.log('SelectedVideoId changed:', selectedVideoId);
   }, [selectedVideoId]);
+
+  // Auto-close login modal when user becomes authenticated
+  useEffect(() => {
+    if (isAuthenticated && loginModalOpen) {
+      setLoginModalOpen(false);
+    }
+  }, [isAuthenticated, loginModalOpen]);
 
   
 
@@ -519,25 +556,25 @@ const Feed = () => {
           instructor={selectedInstructor}
         />
 
-        {/* Login Modal */}
-        <Drawer
-          anchor="bottom"
-          open={loginModalOpen}
-          onClose={() => setLoginModalOpen(false)}
-          PaperProps={{
-            sx: {
-              borderTopLeftRadius: 24,
-              borderTopRightRadius: 24,
-              height: 'auto',
-              maxHeight: '40vh',
-            },
-          }}
-        >
-          <Box sx={{ p: 2, display: 'flex', justifyContent: 'center' }}>
-            <Box sx={{ width: 40, height: 6, borderRadius: 3, bgcolor: 'grey.300' }} />
-          </Box>
-          <Login fromModal={true} />
-        </Drawer>
+            {/* Login Modal */}
+            <Drawer
+                anchor="bottom"
+                open={loginModalOpen}
+                onClose={() => setLoginModalOpen(false)}
+                PaperProps={{
+                    sx: {
+                        borderTopLeftRadius: 24,
+                        borderTopRightRadius: 24,
+                        height: '90vh',
+                        maxHeight: '90vh',
+                    },
+                }}
+            >
+                <Box sx={{ p: 2, display: 'flex', justifyContent: 'center' }}>
+                    <Box sx={{ width: 40, height: 6, borderRadius: 3, bgcolor: 'grey.300' }} />
+                </Box>
+                <Login fromModal={true} />
+            </Drawer>
       </Box>
     </Page>
   );

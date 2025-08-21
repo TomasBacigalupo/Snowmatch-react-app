@@ -85,6 +85,63 @@ const slice = createSlice({
             state.isLoadingProCheck = false;
         },
 
+        // LIKE VIDEO SUCCESS
+        likeVideoSuccess(state, action) {
+            const { videoId, isLiked, likesCount } = action.payload;
+            state.videos = state.videos.map(video => {
+                if (video.id === videoId) {
+                    return {
+                        ...video,
+                        likedByCurrentUser: isLiked,
+                        likesCount: likesCount
+                    };
+                }
+                return video;
+            });
+        },
+
+        // ADD COMMENT SUCCESS
+        addCommentSuccess(state, action) {
+            const { videoId, comment } = action.payload;
+            console.log('Adding comment to video:', videoId, comment);
+            state.videos = state.videos.map(video => {
+                if (video.id === videoId) {
+                    return {
+                        ...video,
+                        videoComments: [...(video.videoComments || []), comment]
+                    };
+                }
+                return video;
+            });
+            console.log('Updated videos state:', state.videos);
+        },
+
+        // DELETE COMMENT SUCCESS
+        deleteCommentSuccess(state, action) {
+            const { videoId, commentId } = action.payload;
+            console.log('Deleting comment from video:', videoId, commentId);
+            state.videos = state.videos.map(video => {
+                if (video.id === videoId) {
+                    return {
+                        ...video,
+                        videoComments: video.videoComments.filter(comment => comment.id !== commentId)
+                    };
+                }
+                return video;
+            });
+            console.log('Updated videos state after comment deletion:', state.videos);
+        },
+
+        // SET VIDEOS SUCCESS
+        setVideosSuccess(state, action) {
+            state.videos = action.payload;
+        },
+
+        // ADD MORE VIDEOS SUCCESS
+        addMoreVideosSuccess(state, action) {
+            state.videos = [...state.videos, ...action.payload];
+        },
+
          startLoadingExists(state) {
             state.isLoadingExists = true;
         },
@@ -434,6 +491,110 @@ export function proCheck(id) {
         } catch (error) {
             dispatch(slice.actions.hasError(error));
             dispatch(slice.actions.stopLoadingProCheck(0));
+        }
+    };
+}
+
+// ----------------------------------------------------------------------
+
+export function likeVideo(videoId, isLiked) {
+    return async () => {
+        try {
+            // Make API call to like/unlike the video
+            if (isLiked) {
+                // Like action - POST request
+                await axios.post(`/api/videos/${videoId}/like`);
+            } else {
+                // Unlike action - DELETE request
+                await axios.delete(`/api/videos/${videoId}/like`);
+            }
+            
+            // The API response should return the updated video data
+            // For now, we'll let the component handle the optimistic update
+            // and the API call will sync the state
+            
+        } catch (error) {
+            console.error('Error liking video:', error);
+            dispatch(slice.actions.hasError(error));
+            // Revert the optimistic update on error
+            throw error;
+        }
+    };
+}
+
+// ----------------------------------------------------------------------
+
+export function addVideoComment(videoId, commentText) {
+    return async () => {
+        try {
+            console.log('Adding comment to video:', videoId, commentText);
+            // Make API call to add comment
+            const response = await axios.post(`/api/videos/${videoId}/comments`, {
+                comment: commentText
+            });
+            
+            console.log('Comment API response:', response.data);
+            
+            // Update the state with the new comment
+            dispatch(slice.actions.addCommentSuccess({
+                videoId,
+                comment: response.data
+            }));
+            
+            return response.data;
+        } catch (error) {
+            console.error('Error adding comment:', error);
+            dispatch(slice.actions.hasError(error));
+            throw error;
+        }
+    };
+}
+
+// ----------------------------------------------------------------------
+
+export function deleteVideoComment(videoId, commentId) {
+    return async () => {
+        try {
+            console.log('Deleting comment from video:', videoId, commentId);
+            // Make API call to delete comment
+            const response = await axios.delete(`/api/videos/comment/${commentId}`);
+                        
+            // Update the state by removing the deleted comment
+            dispatch(slice.actions.deleteCommentSuccess({
+                videoId,
+                commentId
+            }));
+            
+            return response.data;
+        } catch (error) {
+            console.error('Error deleting comment:', error);
+            dispatch(slice.actions.hasError(error));
+            throw error;
+        }
+    };
+}
+
+// ----------------------------------------------------------------------
+
+export function fetchFeedVideos(page = 0, pageSize = 5) {
+    return async () => {
+        try {
+            const response = await axios.get(`/api/videos/feed?page=${page}&pageSize=${pageSize}`);
+            const videos = response.data;
+            
+            if (page === 0) {
+                // First page - replace all videos
+                dispatch(slice.actions.setVideosSuccess(videos));
+            } else {
+                // Subsequent pages - add to existing videos
+                dispatch(slice.actions.addMoreVideosSuccess(videos));
+            }
+            
+            return videos;
+        } catch (error) {
+            console.error('Error fetching feed videos:', error);
+            dispatch(slice.actions.hasError(error));
+            throw error;
         }
     };
 }

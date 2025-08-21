@@ -1,15 +1,22 @@
-import { Avatar, Box, Button, Card, CardContent, Stack, Switch, Typography, CircularProgress, IconButton } from "@mui/material";
-import { useState, useRef, useEffect } from "react";
+import { Avatar, Box, Button, Card, CardContent, Stack, Switch, Typography, CircularProgress, IconButton, Drawer } from "@mui/material";
+import { useState, useRef, useEffect, Fragment } from "react";
+import { useDispatch } from 'react-redux';
+import { likeVideo } from 'src/redux/slices/video';
+import useAuth from 'src/hooks/useAuth';
 import VideoPlayer from 'src/components/video-player';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import FavoriteIcon from '@mui/icons-material/Favorite';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import ShareIcon from '@mui/icons-material/Share';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import PauseIcon from '@mui/icons-material/Pause';
+import Login from 'src/pages/auth/Login';
 
 import AnalyticsIcon from '@mui/icons-material/Analytics';
 
 export default function FeedCard({ video, setSelectedVideo, onInstructorClick }) {
+    const dispatch = useDispatch();
+    const { isAuthenticated } = useAuth();
     const [analyticsEnabled, setAnalyticsEnabled] = useState(false);
     const [isVisible, setIsVisible] = useState(false);
     const [shouldLoad, setShouldLoad] = useState(false);
@@ -21,6 +28,12 @@ export default function FeedCard({ video, setSelectedVideo, onInstructorClick })
     const [buffering, setBuffering] = useState(false);
     const [bufferedPercent, setBufferedPercent] = useState(0);
     const [currentVideoUrl, setCurrentVideoUrl] = useState('');
+    const [isLiked, setIsLiked] = useState(video.likedByCurrentUser || false);
+    const [likesCount, setLikesCount] = useState(video.likesCount || 0);
+    const [isLiking, setIsLiking] = useState(false);
+    const [showDoubleClickHeart, setShowDoubleClickHeart] = useState(false);
+    const [doubleClickPosition, setDoubleClickPosition] = useState({ x: 0, y: 0 });
+    const [loginModalOpen, setLoginModalOpen] = useState(false);
 
     // Reset video states when analytics mode changes
     const handleAnalyticsToggle = () => {
@@ -84,6 +97,86 @@ export default function FeedCard({ video, setSelectedVideo, onInstructorClick })
             }
         };
     }, []);
+
+    // Update like state when video prop changes
+    useEffect(() => {
+      setIsLiked(video.likedByCurrentUser || false);
+      setLikesCount(video.likesCount || 0);
+    }, [video.likedByCurrentUser, video.likesCount]);
+
+    // Auto-close login modal when user becomes authenticated
+    useEffect(() => {
+      if (isAuthenticated && loginModalOpen) {
+        setLoginModalOpen(false);
+      }
+    }, [isAuthenticated, loginModalOpen]);
+
+    // Handle like button click
+    const handleLikeClick = async () => {
+      if (isLiking) return; // Prevent multiple clicks while processing
+      
+      // Check if user is authenticated
+      if (!isAuthenticated) {
+        setLoginModalOpen(true);
+        return;
+      }
+      
+      // Toggle like status
+      const newLikedStatus = !isLiked;
+      const previousLikedStatus = isLiked;
+      const previousLikesCount = likesCount;
+      
+      // Set loading state
+      setIsLiking(true);
+      
+      // Optimistically update local state for immediate UI feedback
+      setIsLiked(newLikedStatus);
+      if (newLikedStatus) {
+        setLikesCount(prev => prev + 1);
+      } else {
+        setLikesCount(prev => Math.max(0, prev - 1));
+      }
+      
+      try {
+        // Dispatch Redux action to update backend and global state
+        await dispatch(likeVideo(video.id, newLikedStatus));
+      } catch (error) {
+        // Revert optimistic update on error
+        console.error('Failed to like video:', error);
+        setIsLiked(previousLikedStatus);
+        setLikesCount(previousLikesCount);
+      } finally {
+        // Clear loading state
+        setIsLiking(false);
+      }
+    };
+
+    // Handle double-click to like
+    const handleDoubleClick = (event) => {
+      // Only allow double-click like when video is not already liked
+      if (!isLiked && !isLiking) {
+        // Check if user is authenticated
+        if (!isAuthenticated) {
+          setLoginModalOpen(true);
+          return;
+        }
+        
+        // Get click position relative to video
+        const rect = event.currentTarget.getBoundingClientRect();
+        const x = event.clientX - rect.left;
+        const y = event.clientY - rect.top;
+        
+        setDoubleClickPosition({ x, y });
+        setShowDoubleClickHeart(true);
+        
+        // Auto-hide heart after animation
+        setTimeout(() => setShowDoubleClickHeart(false), 1000);
+        
+        // Trigger like action
+        handleLikeClick();
+      }
+      // If video is already liked, do nothing (silent)
+    };
 
     // Handle video loading and autoplay for mobile
     useEffect(() => {
@@ -385,6 +478,7 @@ export default function FeedCard({ video, setSelectedVideo, onInstructorClick })
       };
 
     return (
+      <>
         <Card 
           ref={cardRef}
           key={video.id} 
@@ -570,8 +664,46 @@ export default function FeedCard({ video, setSelectedVideo, onInstructorClick })
                   onPlay={() => setIsPlaying(true)}
                   onPause={() => setIsPlaying(false)}
                   onClick={handleVideoClick}
+                  onDoubleClick={handleDoubleClick}
                 />
               )}
+
+              {/* Double-click heart animation overlay */}
+              {showDoubleClickHeart && (
+                <Box
+                  sx={{
+                    position: 'absolute',
+                    top: doubleClickPosition.y - 50,
+                    left: doubleClickPosition.x - 50,
+                    zIndex: 10,
+                    animation: 'heartBeat 1s ease-out forwards',
+                    '@keyframes heartBeat': {
+                      '0%': {
+                        transform: 'scale(0) rotate(0deg)',
+                        opacity: 0,
+                      },
+                      '50%': {
+                        transform: 'scale(1.2) rotate(0deg)',
+                        opacity: 1,
+                      },
+                      '100%': {
+                        transform: 'scale(1) rotate(0deg)',
+                        opacity: 0,
+                      },
+                    },
+                  }}
+                >
+                  <FavoriteIcon
+                    sx={{
+                      fontSize: '100px',
+                      color: 'error.main',
+                      filter: 'drop-shadow(0 0 10px rgba(244, 67, 54, 0.8))',
+                    }}
+                  />
+                </Box>
+              )}
+
+
 
               {/* Thumbnail overlay when video is paused and loaded */}
               {shouldLoad && !isLoading && !isPlaying && !hasError && (
@@ -751,22 +883,74 @@ export default function FeedCard({ video, setSelectedVideo, onInstructorClick })
                 }}
               >
                 <Button
-                  fullWidth
+                  disabled={isLiking}
+                  startIcon={isLiked ? <FavoriteIcon /> : <FavoriteBorderIcon />}
+                  onClick={handleLikeClick}
+                  sx={{
+                    color: isLiked ? 'error.main' : 'text.secondary',
+                    textTransform: 'none',
+                    fontSize: '0.875rem',
+                    minWidth: 'auto',
+                    px: 2,
+                    transition: 'all 0.2s ease-in-out',
+                    opacity: isLiking ? 0.6 : 1,
+                    '&:hover': {
+                      backgroundColor: 'rgba(244, 67, 54, 0.08)',
+                      transform: isLiking ? 'scale(1)' : 'scale(1.05)',
+                    },
+                    '&:disabled': {
+                      cursor: 'not-allowed',
+                    },
+                  }}
+                                  >
+                    <Typography
+                      key={likesCount}
+                      sx={{
+                        transition: 'all 0.2s ease-in-out',
+                        transform: 'scale(1)',
+                        '&:hover': {
+                          transform: 'scale(1.1)',
+                        }
+                      }}
+                    >
+                      {likesCount}
+                    </Typography>
+                  </Button>
+                <Button
                   startIcon={<ChatBubbleOutlineIcon />}
                   onClick={() => setSelectedVideo(video)}
                   sx={{
                     color: 'text.secondary',
                     textTransform: 'none',
                     fontSize: '0.875rem',
+                    minWidth: 'auto',
+                    px: 2,
                     '&:hover': {
                       backgroundColor: 'transparent',
                     },
                   }}
                 >
-                  Comments
+                  <Stack direction="row" spacing={0.5} alignItems="center">
+                    <Typography variant="body2">
+                      Comments
+                    </Typography>
+                    <Typography
+                      variant="caption"
+                      sx={{
+                        color: 'text.secondary',
+                        fontWeight: 600,
+                        transition: 'all 0.2s ease-in-out',
+                        transform: 'scale(1)',
+                        '&:hover': {
+                          transform: 'scale(1.1)',
+                        }
+                      }}
+                    >
+                      ({video.videoComments?.length || 0})
+                    </Typography>
+                  </Stack>
                 </Button>
                 <Button
-                  fullWidth
                   startIcon={<ShareIcon />}
                   onClick={() => {
                     if (navigator.share) {
@@ -784,6 +968,8 @@ export default function FeedCard({ video, setSelectedVideo, onInstructorClick })
                     color: 'text.secondary',
                     textTransform: 'none',
                     fontSize: '0.875rem',
+                    minWidth: 'auto',
+                    px: 2,
                     '&:hover': {
                       backgroundColor: 'transparent',
                     },
@@ -795,5 +981,27 @@ export default function FeedCard({ video, setSelectedVideo, onInstructorClick })
             </Box>
           </CardContent>
         </Card>
+
+            {/* Login Modal */}
+            <Drawer
+                anchor="bottom"
+                open={loginModalOpen}
+                onClose={() => setLoginModalOpen(false)}
+                PaperProps={{
+                    sx: {
+                        borderTopLeftRadius: 24,
+                        borderTopRightRadius: 24,
+                        height: '90vh',
+                        maxHeight: '90vh',
+                    },
+                }}
+            >
+                <Box sx={{ p: 2, display: 'flex', justifyContent: 'center' }}>
+                    <Box sx={{ width: 40, height: 6, borderRadius: 3, bgcolor: 'grey.300' }} />
+                </Box>
+                <Login fromModal={true} />
+            </Drawer>
+            
+      </>
     );
 }

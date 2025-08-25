@@ -1,0 +1,79 @@
+[
+  {
+    "id": "helmet",
+    "title": "Casco",
+    "description": "Casco de seguridad certificado",
+    "price": 15,
+    "pricePerDay": true,
+    "image": "/assets/rental/helmet.jpg",
+    "category": "Safety",
+    "popular": true,
+    "discount": 20
+  },
+  {
+    "id": "gloves",
+    "title": "Guantes",
+    "description": "Guantes impermeables con aislamiento",
+    "price": 12,
+    "pricePerDay": true,
+    "image": "/assets/rental/gloves.jpg",
+    "category": "Accessories",
+    "popular": true
+  },
+  {
+    "id": "protection",
+    "title": "Protección",
+    "description": "Protección de espalda y rodillas",
+    "price": 18,
+    "pricePerDay": true,
+    "image": "/assets/rental/protection.jpg",
+    "category": "Safety"
+  },
+  {
+    "id": "express-delivery",
+    "title": "Entrega Express",
+    "description": "Entrega en menos de 2 horas",
+    "price": 25,
+    "pricePerDay": false,
+    "image": "/assets/rental/express.jpg",
+    "category": "Service",
+    "popular": true
+  },
+  {
+    "id": "damage-insurance",
+    "title": "Seguro contra daños",
+    "description": "Cobertura completa por daños o pérdida",
+    "price": 8,
+    "pricePerDay": true,
+    "image": "/assets/rental/insurance.jpg",
+    "category": "Insurance",
+    "popular": true
+  },
+  {
+    "id": "goggles",
+    "title": "Antiparras",
+    "description": "Antiparras con lente intercambiable",
+    "price": 20,
+    "pricePerDay": true,
+    "image": "/assets/rental/goggles.jpg",
+    "category": "Accessories"
+  },
+  {
+    "id": "jacket",
+    "title": "Campera",
+    "description": "Campera impermeable con aislamiento",
+    "price": 35,
+    "pricePerDay": true,
+    "image": "/assets/rental/jacket.jpg",
+    "category": "Clothing"
+  },
+  {
+    "id": "pants",
+    "title": "Pantalón",
+    "description": "Pantalón impermeable con aislamiento",
+    "price": 30,
+    "pricePerDay": true,
+    "image": "/assets/rental/pants.jpg",
+    "category": "Clothing"
+  }
+] 

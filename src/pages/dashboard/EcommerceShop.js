@@ -331,7 +331,7 @@ export default function EcommerceShop({ isGuest = false, teacherType = "school" 
               ]}
               {...CarouselDots({})}
             >
-              {[{ title: 'Pases de esquí', key: 'passes', icon: 'mdi:ski' }, { title: 'Alquiler de equipos', key: 'rental', icon: 'mdi:ski-cross-country' }].map((item) => (
+              {[{ title: 'Traslados', key: 'traslados', icon: 'mdi:ski' }, { title: 'Alquiler de equipos', key: 'rental', icon: 'mdi:ski-cross-country' }].map((item) => (
                 <Box key={item.key} sx={{ px: 1 }}>
                   <Box sx={{
                     p: 2,
@@ -363,7 +363,7 @@ export default function EcommerceShop({ isGuest = false, teacherType = "school" 
               ]}
               {...CarouselDots({})}
             >
-              {[{ title: 'Clase privada', key: 'private', icon: 'mdi:account-tie' }, { title: 'Clase para niños', key: 'kids', icon: 'mdi:baby-face-outline' }, { title: 'Clases grupales', key: 'group', icon: 'mdi:account-group' }].map((item) => (
+              {[{ title: 'Vieo corrección', key: 'video', icon: 'mdi:account-tie' }, { title: 'Clase online', key: 'online', icon: 'mdi:baby-face-outline' }, { title: 'Clases grupales', key: 'group', icon: 'mdi:account-group' }].map((item) => (
                 <Box key={item.key} sx={{ px: 1 }}>
                   <Box sx={{
                     p: 2,

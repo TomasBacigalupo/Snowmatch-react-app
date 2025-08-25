@@ -1,0 +1,122 @@
+[
+  {
+    "id": "performance-ski",
+    "title": "Performance Ski",
+    "description": "Esquí de alto rendimiento para pistas preparadas",
+    "fromPricePerDay": 70,
+    "level": ["Intermediate", "Advanced"],
+    "type": "Ski",
+    "includes": ["Skis", "Boots", "Poles"],
+    "idealFor": "Esquiadores intermedios y avanzados que buscan velocidad y precisión",
+    "rating": 4.8,
+    "reviews": 124,
+    "images": ["/assets/rental/performance-ski.jpg"],
+    "sizes": ["150", "160", "170", "180"],
+    "bootSizes": {
+      "US": ["6", "7", "8", "9", "10", "11", "12"],
+      "EU": ["38", "39", "40", "41", "42", "43", "44", "45"],
+      "MP": ["24", "25", "26", "27", "28", "29", "30"]
+    },
+    "features": ["Ajuste profesional incluido", "Cambio sin costo", "Soporte en pista"]
+  },
+  {
+    "id": "premium-ski",
+    "title": "Premium All-Mountain",
+    "description": "Esquí versátil para todo tipo de terreno",
+    "fromPricePerDay": 90,
+    "level": ["Beginner", "Intermediate", "Advanced"],
+    "type": "Ski",
+    "includes": ["Skis", "Boots", "Poles"],
+    "idealFor": "Esquiadores que quieren explorar diferentes terrenos",
+    "rating": 4.9,
+    "reviews": 89,
+    "images": ["/assets/rental/premium-ski.jpg"],
+    "sizes": ["150", "160", "170", "180", "190"],
+    "bootSizes": {
+      "US": ["6", "7", "8", "9", "10", "11", "12"],
+      "EU": ["38", "39", "40", "41", "42", "43", "44", "45"],
+      "MP": ["24", "25", "26", "27", "28", "29", "30"]
+    },
+    "features": ["Ajuste profesional incluido", "Cambio sin costo", "Soporte en pista", "Garantía premium"]
+  },
+  {
+    "id": "beginner-ski",
+    "title": "Beginner Ski",
+    "description": "Esquí ideal para principiantes",
+    "fromPricePerDay": 50,
+    "level": ["Beginner"],
+    "type": "Ski",
+    "includes": ["Skis", "Boots", "Poles"],
+    "idealFor": "Primera vez esquiando o principiantes",
+    "rating": 4.7,
+    "reviews": 156,
+    "images": ["/assets/rental/beginner-ski.jpg"],
+    "sizes": ["140", "150", "160"],
+    "bootSizes": {
+      "US": ["6", "7", "8", "9", "10", "11", "12"],
+      "EU": ["38", "39", "40", "41", "42", "43", "44", "45"],
+      "MP": ["24", "25", "26", "27", "28", "29", "30"]
+    },
+    "features": ["Ajuste profesional incluido", "Cambio sin costo", "Soporte en pista"]
+  },
+  {
+    "id": "snowboard",
+    "title": "Snowboard Set",
+    "description": "Snowboard completo con botas",
+    "fromPricePerDay": 75,
+    "level": ["Beginner", "Intermediate", "Advanced"],
+    "type": "Snowboard",
+    "includes": ["Snowboard", "Boots", "Bindings"],
+    "idealFor": "Snowboarders de todos los niveles",
+    "rating": 4.6,
+    "reviews": 98,
+    "images": ["/assets/rental/snowboard.jpg"],
+    "sizes": ["150", "155", "160", "165"],
+    "bootSizes": {
+      "US": ["6", "7", "8", "9", "10", "11", "12"],
+      "EU": ["38", "39", "40", "41", "42", "43", "44", "45"],
+      "MP": ["24", "25", "26", "27", "28", "29", "30"]
+    },
+    "features": ["Ajuste profesional incluido", "Cambio sin costo", "Soporte en pista"]
+  },
+  {
+    "id": "touring-ski",
+    "title": "Touring Ski",
+    "description": "Esquí de travesía para aventuras fuera de pista",
+    "fromPricePerDay": 110,
+    "level": ["Advanced"],
+    "type": "Touring",
+    "includes": ["Skis", "Boots", "Poles", "Skins"],
+    "idealFor": "Esquiadores avanzados que buscan aventuras fuera de pista",
+    "rating": 4.9,
+    "reviews": 45,
+    "images": ["/assets/rental/touring-ski.jpg"],
+    "sizes": ["170", "180", "190"],
+    "bootSizes": {
+      "US": ["7", "8", "9", "10", "11"],
+      "EU": ["39", "40", "41", "42", "43", "44"],
+      "MP": ["25", "26", "27", "28", "29"]
+    },
+    "features": ["Ajuste profesional incluido", "Cambio sin costo", "Soporte en pista", "Incluye skins"]
+  },
+  {
+    "id": "kids-ski",
+    "title": "Kids Ski",
+    "description": "Equipo completo para niños",
+    "fromPricePerDay": 40,
+    "level": ["Beginner", "Intermediate"],
+    "type": "Ski",
+    "includes": ["Skis", "Boots", "Poles", "Helmet"],
+    "idealFor": "Niños de 4 a 12 años",
+    "rating": 4.8,
+    "reviews": 203,
+    "images": ["/assets/rental/kids-ski.jpg"],
+    "sizes": ["80", "90", "100", "110", "120", "130"],
+    "bootSizes": {
+      "US": ["1", "2", "3", "4", "5"],
+      "EU": ["20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30"],
+      "MP": ["12", "13", "14", "15", "16", "17", "18", "19", "20"]
+    },
+    "features": ["Ajuste profesional incluido", "Cambio sin costo", "Soporte en pista", "Casco incluido"]
+  }
+] 

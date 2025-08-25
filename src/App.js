@@ -15,6 +15,7 @@ import MotionLazyContainer from './components/animate/MotionLazyContainer';
 import DeviceRedirect from './components/DeviceRedirect';
 import CompleteProfileModal from './components/CompleteProfileModal';
 import useCompleteProfile from './hooks/useCompleteProfile';
+import { RentalCartProvider } from './contexts/RentalCartContext';
 
 // ----------------------------------------------------------------------
 
@@ -45,9 +46,11 @@ export default function App() {
         <ThemeLocalization>
           <RtlLayout>
             <NotistackProvider>
-              <MotionLazyContainer>
-                <AppContent />
-              </MotionLazyContainer>
+              <RentalCartProvider>
+                <MotionLazyContainer>
+                  <AppContent />
+                </MotionLazyContainer>
+              </RentalCartProvider>
             </NotistackProvider>
           </RtlLayout>
         </ThemeLocalization>

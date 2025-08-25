@@ -1,26 +1,27 @@
 import PropTypes from 'prop-types';
 // @mui
-import { Box, Grid, Typography, IconButton, Drawer, Card, CardMedia, CardContent, Stack, Chip, Button, Divider, Rating, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
+import { Box, Grid, Typography, IconButton, Drawer, Card, CardMedia, CardContent, Stack, Chip, Button, Divider, Rating, FormControl, InputLabel, Select, MenuItem, Container } from '@mui/material';
 import { ChevronRight, Close, ShoppingCart, Favorite, FavoriteBorder } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 // components
-import { SkeletonProductItem, SkeletonProductCategory } from '../../../../components/skeleton';
+import { SkeletonProductItem, SkeletonProductCategory } from '../../components/skeleton';
 //
-import ShopTeacherCard from './ShopTeacherCard';
+import ShopTeacherCard from '../../sections/@dashboard/e-commerce/shop/ShopTeacherCard';
 import { get, orderBy } from 'lodash';
-import ShopStandardProductCard from './ShopStandardProductCard';
-import useLocales from 'src/hooks/useLocales';
+import ShopStandardProductCard from '../../sections/@dashboard/e-commerce/shop/ShopStandardProductCard';
+import useLocales from '../../hooks/useLocales';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
-import { getProductsByBusinessId } from 'src/redux/slices/business';
-import ShopCategorizedProductCard from './ShopCategorizedProductCard';
-import { fCurrency } from 'src/utils/formatNumber';
-import { getFreeTeachers } from 'src/redux/slices/teachers';
-import ShopCategorizedProductAvatarCard from './ShopCategorizedProductAvatarCard';
-import SchoolProducts from './SchoolProducts';
-import InstructorDetailsDrawer from '../../feed/InstructorDetailsDrawer';
-import RentalProductCard from '../../../../components/rental/RentalProductCard';
-import { getRentalItems } from 'src/redux/slices/rental';
+import { getProductsByBusinessId } from '../../redux/slices/business';
+import ShopCategorizedProductCard from '../../sections/@dashboard/e-commerce/shop/ShopCategorizedProductCard';
+import { fCurrency } from '../../utils/formatNumber';
+import { getFreeTeachers } from '../../redux/slices/teachers';
+import ShopCategorizedProductAvatarCard from '../../sections/@dashboard/e-commerce/shop/ShopCategorizedProductAvatarCard';
+import SchoolProducts from '../../sections/@dashboard/e-commerce/shop/SchoolProducts';
+import InstructorDetailsDrawer from '../../sections/@dashboard/feed/InstructorDetailsDrawer';
+import RentalProductCard from '../../components/rental/RentalProductCard';
+import useSettings from '../../hooks/useSettings';
+import { getRentalItems } from '../../redux/slices/rental';
 // ----------------------------------------------------------------------
 
 ShopStandardProducts.propTypes = {
@@ -29,9 +30,10 @@ ShopStandardProducts.propTypes = {
 };
 
 export default function ShopStandardProducts({ loading }) {
-    const { translate, currentLang } = useLocales();
+    const { translate } = useLocales();
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const { themeStretch } = useSettings();
     const { products } = useSelector((state) => state.business);
     const { teachers, sortBy, filters, teachersWithEvents, category, isLoading } = useSelector((state) => { return state.teachers })
     const { items: rentalItems, isLoading: rentalLoading } = useSelector((state) => state.rental);
@@ -108,224 +110,41 @@ export default function ShopStandardProducts({ loading }) {
     };
 
     return (
-        <Box
-            sx={{
-                display: 'grid',
-                gap: 3,
-                gridTemplateColumns: {
-                    xs: 'repeat(1, 1fr)',
-                },
-                maxWidth: '100vw',
-                overflow: 'hidden',
-                width: '100%',
-            }}
-        >
-            {loading && products && <SkeletonProductCategory />}
-            {loading && products && <SkeletonProductCategory />}
-            {loading && products && <SkeletonProductCategory />}
-            {!loading && filters.resort === "Cerro Catedral" && <Grid container spacing={3}>
-                <Grid item xs={12} md={6} lg={4}>{!loading && filters.resort === "Cerro Catedral" &&
-                    <ShopCategorizedProductCard
-                        product={products.find(product => product.id === 143)}
-                        level='gold'
-                    />}
-                </Grid>
-                <Grid item xs={12} md={6} lg={4}>{!loading && filters.resort === "Cerro Catedral" && <ShopCategorizedProductAvatarCard
-                    product={products.find(product => product.id === 144)}
-                    level='silver'
-                    avatar='/assets/avatars/chona-con-adulto.png'
-                />}
-                </Grid>
-                <Grid item xs={12} md={6} lg={4}> {!loading && filters.resort === "Cerro Catedral" && <ShopCategorizedProductAvatarCard
-                    product={products.find(product => product.id === 145)}
-                    level='bronze'
-                    avatar='/assets/avatars/chona-con-niño.png'
-                />}
-                </Grid>
-                {filters.resort === "Cerro Catedral"  && <Grid item xs={12}>
-                    <Typography variant='h6'>
-                        Packs de SnowMatch
-                    </Typography>
-                </Grid>}
-            </Grid>}
-            {!loading && filters.resort === "Lago Hermoso" && <Grid container spacing={3}>
-                <Grid item xs={12} md={6} lg={4}>{!loading && filters.resort === "Lago Hermoso" &&
-                    <ShopCategorizedProductCard
-                        product={products.find(product => product.id === 67)}
-                        level='gold'
-                    />}
-                </Grid>
-                <Grid item xs={12} md={6} lg={4}>{!loading && filters.resort === "Lago Hermoso" && <ShopCategorizedProductAvatarCard
-                    product={products.find(product => product.id === 66)}
-                    level='silver'
-                    time={2}
-                    avatar='/assets/avatars/chona-con-adulto.png'
-                />}
-                </Grid>
-                <Grid item xs={12} md={6} lg={4}> {!loading && filters.resort === "Lago Hermoso" && <ShopCategorizedProductAvatarCard
-                    product={products.find(product => product.id === 61)}
-                    level='bronze'
-                    time={2}
-                    avatar='/assets/avatars/chona-con-niño.png'
-                />}
-                </Grid>
-                {filters.resort === "Cerro Catedral"  && <Grid item xs={12}>
-                    <Typography variant='h6'>
-                        Packs de SnowMatch
-                    </Typography>
-                </Grid>}
-            </Grid>}
-            {filters.resort === "Lago Hermoso" && (
-                <Grid container spacing={3}>
-                    <Grid item xs={12}>
-                        <Typography variant='h6'>
-                            SnowMatch packs Lago Hermoso
-                        </Typography>
-                    </Grid>
-                </Grid>
-            )}
-            {
-                (filters.resort === "Cerro Catedral" || filters.resort === "Lago Hermoso") && <SchoolProducts products={products} isLoading={isLoading} />
-            }
-            
-            {/* Equipment Rental Section for Cerro Catedral */}
-            {filters.resort === "Cerro Catedral" && (
-                <Box sx={{ overflow: 'hidden' }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                        <Typography variant='h6' sx={{ mr: 1 }}>
-                            Alquiler de Equipos
-                        </Typography>
-                        <IconButton 
-                            onClick={handleRentalClick}
-                            sx={{ 
-                                color: 'black',
-                                p: 0,
-                                '&:hover': { 
-                                    backgroundColor: 'transparent'
-                                }
-                            }}
-                        >
-                            <ChevronRight />
-                        </IconButton>
-                    </Box>
-                    <Box
-                        sx={{
-                            display: 'flex',
-                            gap: 2,
-                            overflowX: 'auto',
-                            overflowY: 'hidden',
-                            
-                            width: '100%',
-                            '&::-webkit-scrollbar': {
-                                display: 'none',
-                            },
-                            scrollbarWidth: 'none',
-                            msOverflowStyle: 'none',
-                        }}
-                    >
-                        {rentalLoading ? (
-                            [...Array(4)].map((_, index) => (
-                                <Box
-                                    key={index}
-                                    sx={{
-                                        minWidth: 220,
-                                        maxWidth: 220,
-                                        flexShrink: 0,
-                                    }}
-                                >
-                                    <SkeletonProductItem />
-                                </Box>
-                            ))
-                        ) : rentalItems && rentalItems.length > 0 ? (
-                            rentalItems.map((equipment) => (
-                                <Box
-                                    key={equipment.id}
-                                    sx={{
-                                        minWidth: 220,
-                                        maxWidth: 220,
-                                        flexShrink: 0,
-                                        cursor: 'pointer',
-                                        '& .MuiCard-root': {
-                                            height: 'auto',
-                                            minHeight: 'unset',
-                                        },
-                                        '& .MuiCardMedia-root': {
-                                            height: 100,
-                                        },
-                                        '& .MuiCardContent-root': {
-                                            p: 1.5,
-                                        },
-                                        '& .MuiTypography-h6': {
-                                            fontSize: '0.875rem',
-                                            mb: 0.5,
-                                            fontWeight: 600,
-                                        },
-                                        '& .MuiTypography-body2': {
-                                            fontSize: '0.75rem',
-                                            lineHeight: 1.3,
-                                        },
-                                    }}
-                                    onClick={() => handleEquipmentClick(equipment)}
-                                >
-                                    <RentalProductCard
-                                        product={equipment}
-                                        location="cerro-catedral"
-                                    />
-                                </Box>
-                            ))
-                        ) : (
-                            <Typography variant="body2" color="text.secondary">
-                                No hay equipos disponibles
-                            </Typography>
-                        )}
-                    </Box>
-                </Box>
-            )}
-            
-            {(filters.resort === "Cerro Catedral" || filters.resort === "Lago Hermoso") && (
-                <Grid container spacing={3}>
-                    <Grid item xs={12}>
-                        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                            <Typography variant='h6' sx={{ mr: 1 }}>
-                                O elegí tu pro ideal
-                            </Typography>
-                            <IconButton 
-                                onClick={() => {
-                                    const resortSlug = filters.resort === "Cerro Catedral" ? "cerro-catedral" : "bariloche";
-                                    const langPath = `/${currentLang.value}`;
-                                    navigate(`${langPath}/search/${resortSlug}/ski-pros`);
-                                }}
-                                sx={{ 
-                                    color: 'black',
-                                    p: 0,
-                                    '&:hover': { 
-                                        backgroundColor: 'transparent'
-                                    }
-                                }}
-                            >
-                                <ChevronRight />
-                            </IconButton>
-                        </Box>
-                    </Grid>
-                </Grid>
-            )}
+        <Container>
             <Box
                 sx={{
                     display: 'grid',
-                    gap: 2,
+                    gap: 3,
                     gridTemplateColumns: {
-                        xs: 'repeat(2, 1fr)',
-                        sm: 'repeat(2, 1fr)',
-                        md: 'repeat(3, 1fr)',
-                        lg: 'repeat(4, 1fr)',
+                        xs: 'repeat(1, 1fr)',
                     },
                     width: '100%',
                 }}
             >
-                {loading ? [...Array(5)].map((product, index) => <SkeletonProductItem key={index} />) : teachers.map((teacher, index) =>
-                    teacher ? <ShopTeacherCard key={index} teacher={teacher} onTeacherClick={handleTeacherClick} /> : <SkeletonProductItem key={index} />
-                )}
-            </Box>
+                
+                <Box
+                    sx={{
+                        display: 'grid',
+                        gap: 2,
+                        gridTemplateColumns: {
+                            xs: 'repeat(2, 1fr)',
+                            sm: 'repeat(2, 1fr)',
+                            md: 'repeat(3, 1fr)',
+                            lg: 'repeat(4, 1fr)',
+                        },
+                        width: '100%',
+                    }}
+                >
+                    {loading ? [...Array(5)].map((product, index) => <SkeletonProductItem key={index} />) : teachers.map((teacher, index) =>
+                        teacher ? (
+                            <Box key={index} sx={{ width: '100%' }}>
+                                <ShopTeacherCard teacher={teacher} onTeacherClick={handleTeacherClick} />
+                            </Box>
+                        ) : (
+                            <SkeletonProductItem key={index} />
+                        )
+                    )}
+                </Box>
 
             <InstructorDetailsDrawer
                 open={drawerOpen}
@@ -478,7 +297,8 @@ export default function ShopStandardProducts({ loading }) {
                     </Box>
                 )}
             </Drawer>
-
-        </Box>
+            </Box>
+        </Container>
     );
 }
+

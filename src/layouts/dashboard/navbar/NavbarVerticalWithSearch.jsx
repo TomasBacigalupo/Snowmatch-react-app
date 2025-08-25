@@ -143,6 +143,7 @@ export default function NavbarVerticalWithSearch({ isOpenSidebar, onCloseSidebar
               { title: 'review clients', path: PATH_DASHBOARD.admin.reviewClients },
               { title: 'review bookings', path: PATH_DASHBOARD.admin.bookings },
               { title: 'financial dashboard', path: PATH_DASHBOARD.admin.financial },
+              { title: 'rental management', path: PATH_DASHBOARD.admin.rental },
             ],
           }]})
     }

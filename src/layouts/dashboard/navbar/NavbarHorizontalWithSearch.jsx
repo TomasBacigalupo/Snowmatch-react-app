@@ -9,6 +9,8 @@ import { NavSectionHorizontal } from '../../../components/nav-section';
 //
 import navConfig from './NavConfig';
 import { PATH_DASHBOARD, PATH_GUEST } from 'src/routes/paths';
+// redux
+import { useSelector } from 'src/redux/store';
 
 
 // ----------------------------------------------------------------------
@@ -34,6 +36,10 @@ const RootStyle = styled(AppBar)(({ theme, isScrolled }) => ({
 
 function NavbarHorizontalWithSearch() {
   const [isScrolled, setIsScrolled] = useState(false);
+  
+  // Get resort from Redux business slice
+  const { filters } = useSelector((state) => state.teachers);
+  const resort = filters.resort || '';
 
   useEffect(() => {
     const handleScroll = () => {
@@ -53,8 +59,9 @@ function NavbarHorizontalWithSearch() {
             {
               items: [
                 { title: '📰 Noticias', path: "/noticias", },
+                { title: '⛷️ Clases', path: "/match/independant", },
                 { title: '🎥 Video Correcciones', path: PATH_DASHBOARD.general.videoCoachRate,   },
-                { title: '🎿 Rental', path: PATH_GUEST.calculate,  },
+                { title: '🎿 Rental', path: `/rental/${resort}`,  },
               ],
             }
           ]

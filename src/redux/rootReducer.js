@@ -19,6 +19,7 @@ import configReducer from './slices/config';
 import bookingReducer from './slices/bookings';
 import videoReducer from './slices/video';
 import video from './slices/video';
+import rentalReducer from './slices/rental';
 
 
 // ----------------------------------------------------------------------
@@ -54,6 +55,7 @@ const rootReducer = combineReducers({
   config: configReducer,
   bookings: bookingReducer,
   video: videoReducer,
+  rental: rentalReducer,
 });
 
 export { rootPersistConfig, rootReducer };

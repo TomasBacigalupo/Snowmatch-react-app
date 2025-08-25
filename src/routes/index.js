@@ -56,6 +56,34 @@ export default function Router() {
       <DeepLinkHandler />
       {useRoutes([
         {
+          path: '/:lng/search/:resort',
+          element: <PlainLayout />,
+          children: [
+            { element: <EcommerceShop isGuest={true} teacherType="independent" />, index: true }
+          ]
+        },
+        {
+          path: '/:lng/search/:resort/lessons',
+          element: <PlainLayout />,
+          children: [
+            { element: <EcommerceShopLessons isGuest={true} teacherType="independent" />, index: true }
+          ]
+        },
+        {
+          path: '/:lng/search/:resort/ski-pros',
+          element: <PlainLayout />,
+          children: [
+            { element: <EcommerceShopTeachers isGuest={true} teacherType="independent" />, index: true }
+          ]
+        },
+        {
+          path: '/:lng/search/:location/rental',
+          element: <PlainLayout />,
+          children: [
+            { element: <RentalLocation />, index: true }
+          ]
+        },
+        {
           path: 'auth',
           children: [
             {
@@ -107,9 +135,28 @@ export default function Router() {
         },
         {
           path: 'rental',
-          element: (<GuestLayout />),
+          element: (
+            <RoleBasedGuard accessibleRoles={['GUEST', 'STUDENT']}>
+              <MainLayout />
+            </RoleBasedGuard>
+          ),
           children: [
-            { path: 'calculate', element: <Rental isGuest={true} /> }
+            { element: <RentalLanding />, index: true }
+          ]
+        },
+        {
+          path: 'rental',
+          element: (
+            <RoleBasedGuard accessibleRoles={['GUEST', 'STUDENT']}>
+              <PlainLayout />
+            </RoleBasedGuard>
+          ),
+          children: [
+            { path: 'calculate', element: <Rental isGuest={true} /> },
+            { path: 'checkout', element: <RentalCheckout /> },
+            { path: ':location/:productSlug', element: <RentalProductDetail /> },
+            { path: ':location', element: <RentalLocation /> },
+            { element: <RentalLanding />, index: true }
           ]
         },
         {
@@ -422,6 +469,7 @@ export default function Router() {
                 { path: 'clients', element: <AdminReviewClients /> },
                 { path: 'bookings', element: <AdminReviewBookings /> },
                 { path: 'financial', element: <AdminFinancialDashboard /> },
+                { path: 'rental', element: <AdminRental /> },
                 { path: ':id/confirm', element: <AdminConfirm /> },
                 { path: ':id/events', element: <AdminUserEvents /> },
               ],
@@ -523,6 +571,8 @@ const GeneralBooking = Loadable(lazy(() => import('../pages/dashboard/GeneralBoo
 
 // ECOMMERCE
 const EcommerceShop = Loadable(lazy(() => import('../pages/dashboard/EcommerceShop')));
+const EcommerceShopLessons = Loadable(lazy(() => import('../pages/dashboard/EcommerceShopLessons')));
+const EcommerceShopTeachers = Loadable(lazy(() => import('../pages/dashboard/EcommerceShopTeachers')));
 const EcommerceShopClinics = Loadable(lazy(() => import('../pages/dashboard/EcommerceShopClinics')));
 const EcommerceProductDetails = Loadable(lazy(() => import('../pages/dashboard/EcommerceProductDetails')));
 const SchoolDetails = Loadable(lazy(() => import('../pages/dashboard/SchoolDetails')));
@@ -568,6 +618,7 @@ const AdminReview = Loadable(lazy(() => import('../pages/dashboard/AdminReview')
 const AdminReviewClients = Loadable(lazy(() => import('../pages/dashboard/AdminReviewClients')));
 const AdminReviewBookings = Loadable(lazy(() => import('../pages/dashboard/AdminReviewBookings')));
 const AdminFinancialDashboard = Loadable(lazy(() => import('../pages/dashboard/AdminFinancialDashboard')));
+const AdminRental = Loadable(lazy(() => import('../pages/dashboard/AdminRental')));
 const AdminConfirm = Loadable(lazy(() => import('../pages/dashboard/AdminConfirm')));
 const AdminUserEvents = Loadable(lazy(() => import('../pages/dashboard/AdminUserEvents')));
 
@@ -605,6 +656,10 @@ const PendingTeachers = Loadable(lazy(() => import('../pages/dashboard/PendingTe
 
 //RENTAL
 const Rental = Loadable(lazy(() => import('../pages/rental/UserRentalData')))
+const RentalLanding = Loadable(lazy(() => import('../pages/rental/RentalLanding')))
+const RentalLocation = Loadable(lazy(() => import('../pages/rental/RentalLocation')))
+const RentalProductDetail = Loadable(lazy(() => import('../pages/rental/RentalProductDetail')))
+const RentalCheckout = Loadable(lazy(() => import('../pages/rental/RentalCheckout')))
 
 const Feed = Loadable(lazy(() => import('../pages/dashboard/Feed')))
 

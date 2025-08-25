@@ -43,6 +43,9 @@ export const PATH_GUEST = {
   viewSchool: (id) => path(ROOTS_FIND_A_PRO, `/schools/${id}`),
   viewSchoolProducts: (id, productId) => path(ROOTS_FIND_A_PRO, `/school/${id}/products/${productId}`),
   rental: ROOTS_RENTAL,
+  rentalLocation: (location) => path(ROOTS_RENTAL, `/${location}`),
+  rentalProduct: (location, productSlug) => path(ROOTS_RENTAL, `/${location}/${productSlug}`),
+  rentalCheckout: path(ROOTS_RENTAL, `/checkout`),
   calculate: path(ROOTS_RENTAL, `/calculate`),
   chat:  path(ROOTS_FIND_A_PRO, ROOTS_CHAT),
   chatView: (name) => path(ROOTS_FIND_A_PRO, `/chat/${name}`),
@@ -158,6 +161,7 @@ export const PATH_DASHBOARD = {
     reviewClients: path(ROOTS_DASHBOARD, '/admin/clients'),
     bookings: path(ROOTS_DASHBOARD, '/admin/bookings'),
     financial: path(ROOTS_DASHBOARD, '/admin/financial'),
+    rental: path(ROOTS_DASHBOARD, '/admin/rental'),
     confirm: (id) => path(ROOTS_DASHBOARD, `/admin/${id}/confirm`),
     events: (id) => path(ROOTS_DASHBOARD, `/admin/${id}/events`)
   }

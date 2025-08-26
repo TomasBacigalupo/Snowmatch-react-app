@@ -948,5 +948,218 @@
   "MORNING_2HS": "Morning (2hs)",
   "AFTERNOON": "Afternoon",
   "AFTERNOON_2HS": "Afternoon (2hs)",
-  "ALL_DAY": "All Day"
+  "ALL_DAY": "All Day",
+  "enterprise": {
+    "hero": {
+      "title": "Integrate Snowmatch into your school and rental",
+      "subtitle": "Lessons, rental, payments, reviews, AI video analysis and SEO — all in one platform.",
+      "ctaPrimary": "Request demo",
+      "ctaSecondary": "See how it works",
+      "badge1": "24/7 Support",
+      "badge2": "Frictionless integration",
+      "badge3": "+Bookings with SEO and funnels",
+      "cardTitle": "Enterprise Platform",
+      "cardSubtitle": "Comprehensive management for ski centers",
+      "cardDescription": "From small schools to complete resorts. We adapt Snowmatch to your operation and internal processes."
+    },
+    "integrationModes": {
+      "title": "Integration modes",
+      "school": {
+        "title": "School Only",
+        "description": "Manage lessons, instructors and bookings with Snowmatch.",
+        "features": [
+          "Complete instructor and schedule management",
+          "Online bookings and integrated payments",
+          "Review system and internal ranking",
+          "iOS/Android app for instructors and students",
+          "SEO and funnels for more bookings"
+        ]
+      },
+      "rental": {
+        "title": "Rental Only",
+        "description": "Digitize your equipment catalog and optimize sales.",
+        "features": [
+          "Digital catalog with categories and sizes",
+          "Real-time stock and price control",
+          "Online check-in to reduce queues",
+          "Upselling and cross-sell during checkout",
+          "Integration with existing point of sale"
+        ]
+      },
+      "both": {
+        "title": "School + Rental",
+        "description": "Comprehensive platform to manage your entire operation.",
+        "features": [
+          "Everything from School + Everything from Rental",
+          "Integrated packages (Lesson + Rental)",
+          "Unified customer management",
+          "Consolidated analytics and reporting",
+          "24/7 support for entire operation"
+        ]
+      },
+      "layer": {
+        "title": "Snowmatch Layer",
+        "description": "Add Snowmatch on top of your current system without friction.",
+        "features": [
+          "API integration with existing systems",
+          "Online bookings and SEO without changing processes",
+          "Mobile app for customers",
+          "AI video analysis as differentiator",
+          "We maintain your current operation"
+        ]
+      },
+      "cta": "Talk to the team"
+    },
+    "modules": {
+      "title": "Main modules",
+      "classes": {
+        "title": "Lessons and instructors",
+        "description": "Schedule management, profiles, internal ranking, early failure detection."
+      },
+      "rental": {
+        "title": "Rental catalog",
+        "description": "Categories and sizes; stock and price control; upgrades; packages (Lesson + Rental)."
+      },
+      "payments": {
+        "title": "Payments",
+        "description": "Process payments with Snowmatch or connect with your point of sale."
+      },
+      "checkin": {
+        "title": "Online check-in",
+        "description": "Reduce queues and store times."
+      },
+      "reviews": {
+        "title": "Reviews",
+        "description": "Post-service; excellence culture."
+      },
+      "seo": {
+        "title": "SEO & Funnels",
+        "description": "Indexable pages, conversion optimizations and tracking."
+      },
+      "ai": {
+        "title": "AI video",
+        "description": "Upload from app; automatic AI feedback; corrections and improvement plan by instructors."
+      },
+      "support": {
+        "title": "24/7 Support",
+        "description": "Support throughout the season."
+      }
+    },
+    "howItWorks": {
+      "title": "How it works",
+      "step1": {
+        "title": "Connect Snowmatch",
+        "description": "We connect Snowmatch to your operation (or set it up as a layer)."
+      },
+      "step2": {
+        "title": "Enable online bookings",
+        "description": "We enable online bookings, payments, reviews and iOS/Android app."
+      },
+      "step3": {
+        "title": "Activate AI and SEO",
+        "description": "We activate SEO, funnels and AI video analysis."
+      },
+      "cta": "Schedule demo and process mapping"
+    },
+    "benefits": {
+      "title": "Business benefits",
+      "stats": {
+        "moreBookings": "More bookings with SEO",
+        "lessQueues": "Less time in queues",
+        "conversion": "Conversion rate",
+        "support": "Available support"
+      },
+      "list": [
+        "+Bookings with SEO positioning and conversion funnels",
+        "More trust with reviews → higher conversion rate",
+        "Upselling and cross-sell during checkout",
+        "Less queues with online check-in",
+        "Brand differentiation with AI technique"
+      ]
+    },
+    "aiVideo": {
+      "title": "AI technique - Your differentiator",
+      "subtitle": "AI technique analysis",
+      "description": "Students upload videos from the app (iOS/Android), receive automatic AI feedback, instructor corrections and a personalized improvement plan. Premium experience that differentiates your school.",
+      "features": [
+        "Video upload from mobile app",
+        "Automatic AI feedback",
+        "Instructor corrections",
+        "Personalized improvement plan"
+      ]
+    },
+    "testimonials": {
+      "title": "What our clients say",
+      "testimonial1": {
+        "quote": "Snowmatch helped us digitize the entire operation. Online bookings grew 40% and online check-in eliminated queues.",
+        "name": "María González",
+        "role": "Operations Director",
+        "center": "Cerro Catedral"
+      },
+      "testimonial2": {
+        "quote": "AI video analysis differentiates us from the competition. Students value personalized feedback very much.",
+        "name": "Carlos Rodríguez",
+        "role": "School Director",
+        "center": "Las Leñas"
+      },
+      "testimonial3": {
+        "quote": "We integrated Snowmatch over our system without problems. We maintained our processes and added the digital layer.",
+        "name": "Ana Martínez",
+        "role": "General Manager",
+        "center": "Cerro Bayo"
+      }
+    },
+    "faqs": {
+      "title": "Frequently asked questions",
+      "faq1": {
+        "question": "How does it integrate seamlessly with my current system?",
+        "answer": "Snowmatch connects via API with your existing system. We maintain your current operation and add the digital layer (online bookings, app, SEO, AI) without interrupting processes."
+      },
+      "faq2": {
+        "question": "Can I process payments or connect with my point of sale?",
+        "answer": "Yes, you can process payments directly with Snowmatch or connect with your current point of sale. We give you total flexibility in financial management."
+      },
+      "faq3": {
+        "question": "What support do you provide during the season?",
+        "answer": "24/7 support throughout the season. We have a dedicated team that knows your operation and is available to resolve any questions or issues."
+      },
+      "faq4": {
+        "question": "How do you work on SEO and funnels?",
+        "answer": "We create pages optimized for search engines, implement conversion funnels and advanced tracking. The goal is for more people to find you and book."
+      },
+      "faq5": {
+        "question": "Who owns the data?",
+        "answer": "You own all the data. Snowmatch is your technology partner, we don't compete with your business. The data is yours and you can export it whenever you want."
+      },
+      "faq6": {
+        "question": "Implementation times?",
+        "answer": "Depends on the integration mode. The Snowmatch layer can be working in 2-3 weeks. Complete integration takes 4-6 weeks. We accompany you throughout the process."
+      }
+    },
+    "finalCta": {
+      "title": "Schedule a demo — we adjust the modules to your internal processes",
+      "subtitle": "Snowmatch is your technology partner in the mountains.",
+      "contact": "Contact:",
+      "ctaPrimary": "Request demo",
+      "ctaSecondary": "Talk on WhatsApp"
+    },
+    "demoModal": {
+      "title": "Request Enterprise demo",
+      "name": "Full name *",
+      "email": "Email *",
+      "center": "Ski center *",
+      "country": "Country *",
+      "interest": "Interest *",
+      "message": "Message",
+      "messagePlaceholder": "Tell us about your current operation and what interests you most...",
+      "cancel": "Cancel",
+      "submit": "Send request",
+      "options": {
+        "school": "School Only",
+        "rental": "Rental Only",
+        "both": "School + Rental",
+        "layer": "Snowmatch Layer"
+      }
+    }
+  }
 }

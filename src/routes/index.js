@@ -36,6 +36,7 @@ import HeliSki from 'src/pages/search/HeliSki';
 import PrivacyPolicy from 'src/pages/PrivacyPolicy';
 import InstructorLanding from 'src/pages/InstructorLanding';
 import InstructorLandingEN from 'src/pages/InstructorLandingEN';
+import EnterpriseLanding from 'src/pages/EnterpriseLanding';
 // ----------------------------------------------------------------------
 
 const Loadable = (Component) => (props) => {
@@ -123,7 +124,8 @@ export default function Router() {
           element: <MainLayout />,
           children: [
             { path: 'legal/privacy', element: <PrivacyPolicy /> },
-            { path: 'instructor', element: <InstructorLanding /> }
+            { path: 'instructor', element: <InstructorLanding /> },
+            { path: 'enterprise', element: <EnterpriseLanding /> }
           ]
         },
         {
@@ -131,6 +133,7 @@ export default function Router() {
           element: <MainLayout />,
           children: [
             { path: 'instructor', element: <InstructorLandingEN /> },
+            { path: 'enterprise', element: <EnterpriseLanding /> },
           ]
         },
         {

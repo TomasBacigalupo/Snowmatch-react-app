@@ -68,6 +68,7 @@ export const PATH_PAGE = {
   page500: '/500',
   accessDenied: '/access-denied',
   components: '/components',
+  enterprise: '/enterprise',
 };
 
 export const PATH_DASHBOARD = {

@@ -2084,5 +2084,218 @@
     },
     "contactMessage": {
         "private": "Clase particular - {{name}} - {{id}}\nDias de clase:{{events}}\nNiños: {{children}}\nAdultos: {{adults}}\nComentário: *{{message}}*\n*Total: {{total}}*"
+    },
+    "enterprise": {
+        "hero": {
+            "title": "Integra Snowmatch a tu escuela y rental",
+            "subtitle": "Clases, rental, pagos, reseñas, IA de videoanálisis y SEO — todo en una sola plataforma.",
+            "ctaPrimary": "Solicitar demo",
+            "ctaSecondary": "Ver cómo funciona",
+            "badge1": "Soporte 24/7",
+            "badge2": "Integración sin fricciones",
+            "badge3": "+Reservas con SEO y funnels",
+            "cardTitle": "Plataforma Enterprise",
+            "cardSubtitle": "Gestión integral para centros de esquí",
+            "cardDescription": "Desde escuelas pequeñas hasta resorts completos. Adaptamos Snowmatch a tu operación y procesos internos."
+        },
+        "integrationModes": {
+            "title": "Modos de integración",
+            "school": {
+                "title": "Solo Escuela",
+                "description": "Gestioná clases, instructores y reservas con Snowmatch.",
+                "features": [
+                    "Gestión completa de instructores y agendas",
+                    "Reservas online y pagos integrados",
+                    "Sistema de reviews y ranking interno",
+                    "App iOS/Android para instructores y alumnos",
+                    "SEO y funnels para más reservas"
+                ]
+            },
+            "rental": {
+                "title": "Solo Rental",
+                "description": "Digitalizá tu catálogo de equipos y optimizá ventas.",
+                "features": [
+                    "Catálogo digital con categorías y talles",
+                    "Control de stock y precios en tiempo real",
+                    "Check-in online para reducir colas",
+                    "Upselling y cross-sell durante el checkout",
+                    "Integración con puntos de venta existentes"
+                ]
+            },
+            "both": {
+                "title": "Escuela + Rental",
+                "description": "Plataforma integral para gestionar toda tu operación.",
+                "features": [
+                    "Todo lo de Escuela + Todo lo de Rental",
+                    "Combos integrados (Clase + Rental)",
+                    "Gestión unificada de clientes",
+                    "Analytics y reporting consolidado",
+                    "Soporte 24/7 para toda la operación"
+                ]
+            },
+            "layer": {
+                "title": "Capa Snowmatch",
+                "description": "Sumá Snowmatch sobre tu sistema actual sin fricciones.",
+                "features": [
+                    "Integración API con sistemas existentes",
+                    "Reservas online y SEO sin cambiar procesos",
+                    "App móvil para clientes",
+                    "IA de videoanálisis como diferenciador",
+                    "Mantenemos tu operación actual"
+                ]
+            },
+            "cta": "Hablar con el equipo"
+        },
+        "modules": {
+            "title": "Módulos principales",
+            "classes": {
+                "title": "Clases e instructores",
+                "description": "Gestión de agendas, perfiles, ranking interno, detección temprana de fallas."
+            },
+            "rental": {
+                "title": "Catálogo de rental",
+                "description": "Categorías y talles; control de stock y precios; upgrades; combos (Clase + Rental)."
+            },
+            "payments": {
+                "title": "Pagos",
+                "description": "Procesar pagos con Snowmatch o conectar con tu punto/punto de venta."
+            },
+            "checkin": {
+                "title": "Check-in online",
+                "description": "Reduce colas y tiempos en tienda."
+            },
+            "reviews": {
+                "title": "Reviews",
+                "description": "Post-servicio; cultura de excelencia."
+            },
+            "seo": {
+                "title": "SEO & Funnels",
+                "description": "Páginas indexables, optimizaciones de conversión y tracking."
+            },
+            "ai": {
+                "title": "IA de video",
+                "description": "Subida desde app; feedback automático con IA; correcciones y plan de mejora por instructores."
+            },
+            "support": {
+                "title": "Soporte 24/7",
+                "description": "Acompañamiento toda la temporada."
+            }
+        },
+        "howItWorks": {
+            "title": "Cómo funciona",
+            "step1": {
+                "title": "Conectamos Snowmatch",
+                "description": "Conectamos Snowmatch a tu operación (o lo montamos como capa)."
+            },
+            "step2": {
+                "title": "Habilitamos reservas online",
+                "description": "Habilitamos reservas online, pagos, reviews y app iOS/Android."
+            },
+            "step3": {
+                "title": "Activamos IA y SEO",
+                "description": "Activamos SEO, funnels y videoanálisis con IA."
+            },
+            "cta": "Agendar demo y mapeo de procesos"
+        },
+        "benefits": {
+            "title": "Beneficios de negocio",
+            "stats": {
+                "moreBookings": "Más reservas con SEO",
+                "lessQueues": "Menos tiempo en colas",
+                "conversion": "Tasa de conversión",
+                "support": "Soporte disponible"
+            },
+            "list": [
+                "+Reservas con posicionamiento SEO y funnels de conversión",
+                "Más confianza con reviews → mayor tasa de conversión",
+                "Upselling y cross-sell durante el checkout",
+                "Menos filas con check-in online",
+                "Diferenciación de marca con IA de técnica"
+            ]
+        },
+        "aiVideo": {
+            "title": "IA de técnica - Tu diferenciador",
+            "subtitle": "Análisis de técnica con IA",
+            "description": "Los alumnos suben videos desde la app (iOS/Android), reciben feedback automático con IA, correcciones del instructor y un plan de mejora personalizado. Experiencia premium que diferencia tu escuela.",
+            "features": [
+                "Subida de videos desde app móvil",
+                "Feedback automático con IA",
+                "Correcciones del instructor",
+                "Plan de mejora personalizado"
+            ]
+        },
+        "testimonials": {
+            "title": "Lo que dicen nuestros clientes",
+            "testimonial1": {
+                "quote": "Snowmatch nos ayudó a digitalizar toda la operación. Las reservas online crecieron 40% y el check-in online eliminó las colas.",
+                "name": "María González",
+                "role": "Directora de Operaciones",
+                "center": "Cerro Catedral"
+            },
+            "testimonial2": {
+                "quote": "La IA de videoanálisis nos diferencia de la competencia. Los alumnos valoran mucho el feedback personalizado.",
+                "name": "Carlos Rodríguez",
+                "role": "Director de Escuela",
+                "center": "Las Leñas"
+            },
+            "testimonial3": {
+                "quote": "Integramos Snowmatch sobre nuestro sistema sin problemas. Mantuvimos nuestros procesos y agregamos la capa digital.",
+                "name": "Ana Martínez",
+                "role": "Gerente General",
+                "center": "Cerro Bayo"
+            }
+        },
+        "faqs": {
+            "title": "Preguntas frecuentes",
+            "faq1": {
+                "question": "¿Cómo se integra sin fricciones con mi sistema actual?",
+                "answer": "Snowmatch se conecta vía API con tu sistema existente. Mantenemos tu operación actual y agregamos la capa digital (reservas online, app, SEO, IA) sin interrumpir procesos."
+            },
+            "faq2": {
+                "question": "¿Puedo procesar pagos o conectar con mi punto de venta?",
+                "answer": "Sí, podés procesar pagos directamente con Snowmatch o conectar con tu punto de venta actual. Te damos flexibilidad total en la gestión financiera."
+            },
+            "faq3": {
+                "question": "¿Qué soporte brindan en temporada?",
+                "answer": "Soporte 24/7 durante toda la temporada. Tenemos un equipo dedicado que conoce tu operación y está disponible para resolver cualquier consulta o problema."
+            },
+            "faq4": {
+                "question": "¿Cómo trabajan el SEO y los funnels?",
+                "answer": "Creamos páginas optimizadas para motores de búsqueda, implementamos funnels de conversión y tracking avanzado. El objetivo es que más gente te encuentre y reserve."
+            },
+            "faq5": {
+                "question": "¿Quién es dueño de los datos?",
+                "answer": "Vos sos dueño de todos los datos. Snowmatch es tu socio tecnológico, no competimos con tu negocio. Los datos son tuyos y podés exportarlos cuando quieras."
+            },
+            "faq6": {
+                "question": "¿Tiempos de puesta en marcha?",
+                "answer": "Depende del modo de integración. La capa Snowmatch puede estar funcionando en 2-3 semanas. Integración completa toma 4-6 semanas. Te acompañamos en todo el proceso."
+            }
+        },
+        "finalCta": {
+            "title": "Agenda una demo — ajustamos los módulos a tus procesos internos",
+            "subtitle": "Snowmatch es tu socio tecnológico en montaña.",
+            "contact": "Contacto:",
+            "ctaPrimary": "Solicitar demo",
+            "ctaSecondary": "Hablar por WhatsApp"
+        },
+        "demoModal": {
+            "title": "Solicitar demo Enterprise",
+            "name": "Nombre completo *",
+            "email": "Email *",
+            "center": "Centro de esquí *",
+            "country": "País *",
+            "interest": "Interés *",
+            "message": "Mensaje",
+            "messagePlaceholder": "Contanos sobre tu operación actual y qué te interesa más...",
+            "cancel": "Cancelar",
+            "submit": "Enviar solicitud",
+            "options": {
+                "school": "Solo Escuela",
+                "rental": "Solo Rental",
+                "both": "Escuela + Rental",
+                "layer": "Capa Snowmatch"
+            }
+        }
     }
 }

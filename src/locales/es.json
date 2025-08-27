@@ -2087,7 +2087,7 @@
     },
     "enterprise": {
         "hero": {
-            "title": "Integra Snowmatch a tu escuela y rental",
+            "title": "Integra Snowmatch a tu negocio - Escuela o Rental",
             "subtitle": "Clases, rental, pagos, reseñas, IA de videoanálisis y SEO — todo en una sola plataforma.",
             "ctaPrimary": "Solicitar demo",
             "ctaSecondary": "Ver cómo funciona",
@@ -2228,21 +2228,21 @@
             "title": "Lo que dicen nuestros clientes",
             "testimonial1": {
                 "quote": "Snowmatch nos ayudó a digitalizar toda la operación. Las reservas online crecieron 40% y el check-in online eliminó las colas.",
-                "name": "María González",
-                "role": "Directora de Operaciones",
+                "name": "María Madero",
+                "role": "Directora Operaciones Travesía",
                 "center": "Cerro Catedral"
             },
             "testimonial2": {
                 "quote": "La IA de videoanálisis nos diferencia de la competencia. Los alumnos valoran mucho el feedback personalizado.",
-                "name": "Carlos Rodríguez",
+                "name": "Maricu Manzano",
                 "role": "Director de Escuela",
-                "center": "Las Leñas"
+                "center": "Cerro Catedral"
             },
             "testimonial3": {
                 "quote": "Integramos Snowmatch sobre nuestro sistema sin problemas. Mantuvimos nuestros procesos y agregamos la capa digital.",
-                "name": "Ana Martínez",
+                "name": "Karaki Salgado",
                 "role": "Gerente General",
-                "center": "Cerro Bayo"
+                "center": "Bumps"
             }
         },
         "faqs": {

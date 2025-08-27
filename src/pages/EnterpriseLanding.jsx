@@ -706,17 +706,154 @@ ${formData.message || 'Sin mensaje adicional'}
                     <Grid item xs={12} md={6}>
                       <Box
                         sx={{
-                          height: 300,
-                          bgcolor: 'background.neutral',
+                          height: 400,
                           borderRadius: 2,
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
+                          overflow: 'hidden',
+                          position: 'relative',
                         }}
                       >
-                        <Typography variant="h6" color="text.secondary">
-                          {mode.value === 'layer' ? 'Diagrama de integración' : 'Mockup de la plataforma'}
-                        </Typography>
+                        {mode.value === 'layer' ? (
+                          // Diagrama de integración
+                          <Box sx={{ height: '100%', position: 'relative' }}>
+                            <img
+                              src="/assets/enterprise/diagrama.png"
+                              alt="Diagrama de integración con tu sistema existente"
+                              style={{
+                                width: '100%',
+                                height: '100%',
+                                objectFit: 'cover',
+                                borderRadius: 8,
+                              }}
+                            />
+                            <Box
+                              sx={{
+                                position: 'absolute',
+                                bottom: 16,
+                                left: 16,
+                                right: 16,
+                                bgcolor: 'rgba(0, 0, 0, 0.8)',
+                                color: 'white',
+                                p: 2,
+                                borderRadius: 1,
+                              }}
+                            >
+                              <Typography variant="subtitle1" fontWeight="bold">
+                                🔗 Capa Snowmatch
+                              </Typography>
+                              <Typography variant="body2">
+                                Integración con tu sistema existente mediante API
+                              </Typography>
+                            </Box>
+                          </Box>
+                        ) : (
+                          // Mockup de la plataforma - Mostrar imagen según el modo
+                          <Box sx={{ height: '100%', position: 'relative' }}>
+                            {mode.value === 'rental' && (
+                              // Solo Rental - Mostrar imagen de alquiler
+                              <Box sx={{ height: '100%', position: 'relative' }}>
+                                <img
+                                  src="/assets/enterprise/rental.png"
+                                  alt="Plataforma de alquiler de equipos"
+                                  style={{
+                                    width: '100%',
+                                    height: '100%',
+                                    objectFit: 'cover',
+                                    borderRadius: 8,
+                                  }}
+                                />
+                                <Box
+                                  sx={{
+                                    position: 'absolute',
+                                    bottom: 16,
+                                    left: 16,
+                                    right: 16,
+                                    bgcolor: 'rgba(0, 0, 0, 0.8)',
+                                    color: 'white',
+                                    p: 2,
+                                    borderRadius: 1,
+                                  }}
+                                >
+                                  <Typography variant="subtitle1" fontWeight="bold">
+                                    🎿 Plataforma de Alquiler de Equipos
+                                  </Typography>
+                                  <Typography variant="body2">
+                                    Sistema completo para gestión de equipos de ski y snowboard con filtros avanzados
+                                  </Typography>
+                                </Box>
+                              </Box>
+                            )}
+                            
+                            {mode.value === 'school' && (
+                              // Solo Escuela - Mostrar imagen de clases
+                              <Box sx={{ height: '100%', position: 'relative' }}>
+                                <img
+                                  src="/assets/enterprise/school.png"
+                                  alt="Plataforma de reservas de clases"
+                                  style={{
+                                    width: '100%',
+                                    height: '100%',
+                                    objectFit: 'cover',
+                                    borderRadius: 8,
+                                  }}
+                                />
+                                <Box
+                                  sx={{
+                                    position: 'absolute',
+                                    bottom: 16,
+                                    left: 16,
+                                    right: 16,
+                                    bgcolor: 'rgba(0, 0, 0, 0.8)',
+                                    color: 'white',
+                                    p: 2,
+                                    borderRadius: 1,
+                                  }}
+                                >
+                                  <Typography variant="subtitle1" fontWeight="bold">
+                                    🏂 Sistema de Reservas de Clases
+                                  </Typography>
+                                  <Typography variant="body2">
+                                    Gestión completa de instructores, packs y reservas de clases
+                                  </Typography>
+                                </Box>
+                              </Box>
+                            )}
+                            
+                            {mode.value === 'both' && (
+                              // Escuela + Rental - Mostrar imagen combinada
+                              <Box sx={{ height: '100%', position: 'relative' }}>
+                                <img
+                                  src="/assets/enterprise/school+rental.png"
+                                  alt="Plataforma completa escuela + rental"
+                                  style={{
+                                    width: '100%',
+                                    height: '100%',
+                                    objectFit: 'cover',
+                                    borderRadius: 8,
+                                  }}
+                                />
+                                <Box
+                                  sx={{
+                                    position: 'absolute',
+                                    bottom: 16,
+                                    left: 16,
+                                    right: 16,
+                                    bgcolor: 'rgba(0, 0, 0, 0.8)',
+                                    color: 'white',
+                                    p: 2,
+                                    borderRadius: 1,
+                                  }}
+                                >
+                                  <Typography variant="subtitle1" fontWeight="bold">
+                                    🎿🏂 Plataforma Completa
+                                  </Typography>
+                                  <Typography variant="body2">
+                                    Sistema integrado de alquiler de equipos y reservas de clases
+                                  </Typography>
+                                </Box>
+                              </Box>
+                            )}
+                          </Box>
+                        )}
                       </Box>
                     </Grid>
                   </Grid>
@@ -875,59 +1012,6 @@ ${formData.message || 'Sin mensaje adicional'}
             </Grid>
           </Container>
         </Box>
-
-        {/* AI Video Analysis */}
-        <Container component="section" aria-labelledby="ai-video-heading" sx={{ py: { xs: 8, md: 10 } }}>
-          <m.div variants={varFade().inUp}>
-            <Typography 
-              id="ai-video-heading"
-              variant="h2" 
-              component="h2"
-              align="center" 
-              sx={{ mb: 6, fontWeight: 800 }}
-            >
-              {translate('enterprise.aiVideo.title')}
-            </Typography>
-          </m.div>
-          <m.div variants={varFade().inUp}>
-            <Card sx={{ p: 4 }}>
-              <Grid container spacing={4} alignItems="center">
-                <Grid item xs={12} md={6}>
-                  <Typography variant="h4" sx={{ mb: 2, fontWeight: 700 }}>
-                    {translate('enterprise.aiVideo.subtitle')}
-                  </Typography>
-                  <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
-                    {translate('enterprise.aiVideo.description')}
-                  </Typography>
-                  <Stack spacing={1} sx={{ mb: 3 }}>
-                    {translate('enterprise.aiVideo.features', { returnObjects: true }).map((feature, index) => (
-                      <Stack key={index} direction="row" spacing={1} alignItems="center">
-                        <CheckCircleIcon color="success" fontSize="small" />
-                        <Typography variant="body2">{feature}</Typography>
-                      </Stack>
-                    ))}
-                  </Stack>
-                </Grid>
-                <Grid item xs={12} md={6}>
-                  <Box
-                    sx={{
-                      height: 300,
-                      bgcolor: 'background.neutral',
-                      borderRadius: 2,
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                    }}
-                  >
-                    <Typography variant="h6" color="text.secondary">
-                      Demo de IA de videoanálisis
-                    </Typography>
-                  </Box>
-                </Grid>
-              </Grid>
-            </Card>
-          </m.div>
-        </Container>
 
         {/* Testimonials */}
         <Box component="section" aria-labelledby="testimonials-heading" sx={{ py: { xs: 8, md: 10 }, bgcolor: 'background.neutral' }}>

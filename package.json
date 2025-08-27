@@ -24,8 +24,13 @@
     "destination": "build",
     "include": [
       "/",
+      "/es",
       "/en",
       "/pt",
+      "/enterprise",
+      "/es/enterprise",
+      "/en/enterprise",
+      "/pt/enterprise",
       "/aspen-ski-camp",
       "/en/aspen-ski-camp",
       "/pt/aspen-ski-camp",

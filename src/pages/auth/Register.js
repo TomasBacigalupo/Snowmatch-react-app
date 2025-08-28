@@ -1,8 +1,9 @@
 import { capitalCase } from 'change-case';
 import { Link as RouterLink } from 'react-router-dom';
+import { useState } from 'react';
 // @mui
 import { styled } from '@mui/material/styles';
-import { Box, Card, Link, Container, Typography, Tooltip } from '@mui/material';
+import { Box, Card, Link, Container, Typography, Tooltip, useTheme, useMediaQuery } from '@mui/material';
 // hooks
 import useAuth from '../../hooks/useAuth';
 import useResponsive from '../../hooks/useResponsive';
@@ -13,8 +14,10 @@ import Page from '../../components/Page';
 import Logo from '../../components/Logo';
 import Image from '../../components/Image';
 // sections
-import { RegisterForm } from '../../sections/auth/register';
+import { RegisterStepperForm } from '../../sections/auth/register';
 import useLocales from 'src/hooks/useLocales';
+import { LoadingButton } from '@mui/lab';
+import { LinearProgress } from '@mui/material';
 
 // ----------------------------------------------------------------------
 
@@ -60,13 +63,202 @@ const ContentStyle = styled('div')(({ theme }) => ({
   padding: theme.spacing(12, 0),
 }));
 
+// Mobile Modal Style
+const MobileModalStyle = styled('div')(({ theme }) => ({
+  position: 'fixed',
+  top: 0,
+  left: 0,
+  right: 0,
+  bottom: 0,
+  backgroundColor: 'rgba(0, 0, 0, 0.8)',
+  zIndex: 1300,
+  display: 'flex',
+  alignItems: 'flex-end',
+  justifyContent: 'center',
+}));
+
+const MobileCardStyle = styled(Card)(({ theme }) => ({
+  width: '100%',
+  height: '100vh',
+  borderRadius: 0,
+  overflow: 'hidden',
+  position: 'relative',
+  backgroundColor: theme.palette.background.paper,
+  boxShadow: theme.shadows[24],
+}));
+
+const MobileHeaderStyle = styled('div')(({ theme }) => ({
+  padding: theme.spacing(2, 3),
+  paddingTop: `calc(${theme.spacing(2)} + env(safe-area-inset-top))`,
+  borderBottom: `1px solid ${theme.palette.divider}`,
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+  backgroundColor: theme.palette.background.paper,
+}));
+
+const MobileContentStyle = styled('div')(({ theme }) => ({
+  padding: theme.spacing(3),
+  overflow: 'auto',
+  height: 'calc(100vh - 120px - env(safe-area-inset-top) - 80px)', // Account for header, bottom navigation, and sticky footer
+  paddingBottom: theme.spacing(2),
+}));
+
+const MobileStickyFooterStyle = styled('div')(({ theme }) => ({
+  position: 'absolute',
+  bottom: 0,
+  left: 0,
+  right: 0,
+  padding: theme.spacing(2, 3),
+  paddingBottom: `calc(${theme.spacing(2)} + env(safe-area-inset-bottom))`,
+  backgroundColor: theme.palette.background.paper,
+  borderTop: `1px solid ${theme.palette.divider}`,
+  zIndex: 10,
+}));
+
 // ----------------------------------------------------------------------
 
 export default function Register() {
   const {translate} = useLocales()
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const smUp = useResponsive('up', 'sm');
   const mdUp = useResponsive('up', 'md');
+  
+  const [currentStep, setCurrentStep] = useState(0);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [stepperRef, setStepperRef] = useState(null);
 
+  const handleStepChange = (step) => {
+    setCurrentStep(step);
+  };
+
+  const handleNext = () => {
+    if (stepperRef && stepperRef.handleNext) {
+      stepperRef.handleNext();
+    }
+  };
+
+  const handleBack = () => {
+    if (stepperRef && stepperRef.handleBack) {
+      stepperRef.handleBack();
+    }
+  };
+
+  const getButtonText = () => {
+    if (currentStep === 7) return 'Completar Registro';
+    return 'Siguiente';
+  };
+
+  if (isMobile) {
+    return (
+      <Page title="Register">
+        <MobileModalStyle>
+          <MobileCardStyle>
+            <MobileHeaderStyle>
+              <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                {translate("auth.getStartedFree")}
+              </Typography>
+              <Link 
+                component={RouterLink} 
+                to={PATH_AUTH.login}
+                sx={{ 
+                  color: 'text.secondary',
+                  textDecoration: 'none',
+                  '&:hover': { color: 'primary.main' }
+                }}
+              >
+                <Typography variant="body2">
+                  {translate("auth.login")}
+                </Typography>
+              </Link>
+            </MobileHeaderStyle>
+            
+            <MobileContentStyle>
+              <Box sx={{ mb: 3 }}>
+                <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                  Completa tu perfil paso a paso para comenzar a enseñar
+                </Typography>
+              </Box>
+
+              <RegisterStepperForm 
+                onStepChange={handleStepChange}
+                isSubmitting={isSubmitting}
+                ref={setStepperRef}
+              />
+            </MobileContentStyle>
+
+            <MobileStickyFooterStyle>
+              {/* Progress Bar */}
+              <Box sx={{ mb: 2 }}>
+                <LinearProgress 
+                  variant="determinate" 
+                  value={((currentStep + 1) / 8) * 100} 
+                  sx={{ 
+                    height: 4, 
+                    borderRadius: 2,
+                    bgcolor: 'grey.200',
+                    '& .MuiLinearProgress-bar': {
+                      bgcolor: 'black',
+                      borderRadius: 2
+                    }
+                  }} 
+                />
+                <Typography variant="caption" sx={{ color: 'text.secondary', mt: 1, display: 'block' }}>
+                  Paso {currentStep + 1} de 8
+                </Typography>
+              </Box>
+              
+              <Box sx={{ display: 'flex', gap: 2 }}>
+                <LoadingButton
+                  variant="outlined"
+                  fullWidth
+                  onClick={handleBack}
+                  disabled={currentStep === 0}
+                  sx={{ 
+                    py: 1.5,
+                    borderColor: 'black',
+                    color: 'black',
+                    borderRadius: 2,
+                    '&:hover': { 
+                      borderColor: 'grey.700',
+                      bgcolor: 'grey.50'
+                    },
+                    '&:disabled': {
+                      borderColor: 'grey.300',
+                      color: 'grey.400'
+                    }
+                  }}
+                >
+                  Atrás
+                </LoadingButton>
+                <LoadingButton
+                  variant="contained"
+                  fullWidth
+                  onClick={handleNext}
+                  loading={isSubmitting}
+                  sx={{ 
+                    py: 1.5,
+                    bgcolor: 'black',
+                    color: 'white',
+                    borderRadius: 2,
+                    '&:hover': { 
+                      bgcolor: 'grey.800',
+                      color: 'white'
+                    }
+                  }}
+                >
+                  {getButtonText()}
+                </LoadingButton>
+              </Box>
+            </MobileStickyFooterStyle>
+          </MobileCardStyle>
+        </MobileModalStyle>
+      </Page>
+    );
+  }
+
+  // Desktop version (unchanged)
   return (
     <Page title="Register">
       <RootStyle>
@@ -108,20 +300,13 @@ export default function Register() {
                 <Typography variant="h4" gutterBottom>
                   {translate("auth.getStartedFree")}
                 </Typography>
-                {/* <Typography sx={{ color: 'text.secondary' }}>Free forever. No credit card needed.</Typography> */}
+                <Typography sx={{ color: 'text.secondary' }}>
+                  Completa tu perfil paso a paso para comenzar a enseñar
+                </Typography>
               </Box>
-              {/* <Tooltip title={capitalCase(method)}>
-                <>
-                  <Image
-                    disabledEffect
-                    src={`https://minimal-assets-api.vercel.app/assets/icons/auth/ic_${method}.png`}
-                    sx={{ width: 32, height: 32 }}
-                  />
-                </>
-              </Tooltip> */}
             </Box>
 
-            <RegisterForm />
+            <RegisterStepperForm />
 
             <Typography variant="body2" align="center" sx={{ color: 'text.secondary', mt: 3 }}>
               {translate("auth.registrationMessage")}&nbsp;

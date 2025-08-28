@@ -50,6 +50,123 @@
             "saveChanges": "salvar alterações"
         }
     },
+    "instructorLanding": {
+        "title": "Torne-se um instrutor independente | Snowmatch",
+        "description": "Junte-se à comunidade de instrutores independentes. Defina seus preços, disponibilidade e conecte com novos clientes.",
+        "ogDescription": "Defina preços e disponibilidade. Conecte com novos clientes do seu telefone.",
+        "hero": {
+            "title": "Trace seu próprio caminho",
+            "subtitle": "Junte-se como instrutor independente e conecte com novos clientes.",
+            "ctaPrimary": "Começar agora",
+            "ctaSecondary": "Ver benefícios",
+            "card": {
+                "label": "Conseguir novos clientes",
+                "title": "Aumente suas reservas",
+                "description": "Cresça sua base de clientes. Otimize seu perfil para melhorar seu posicionamento."
+            }
+        },
+        "benefits": {
+            "title": "A plataforma para instrutores",
+            "list": [
+                {
+                    "title": "Defina seus próprios preços",
+                    "description": "Defina o preço de acordo com o centro de esqui onde você trabalha."
+                },
+                {
+                    "title": "Receba novos clientes",
+                    "description": "Levamos demanda para completar semanas específicas ou toda a temporada."
+                },
+                {
+                    "title": "Entre em contato direto com seus clientes",
+                    "description": "Gerencie consultas e reservas do seu telefone com mensagens em tempo real."
+                },
+                {
+                    "title": "Melhore seus serviços",
+                    "description": "Melhore seus serviços com a plataforma. Aumente sua reputação e receba mais reservas."
+                },
+                {
+                    "title": "Complemente suas redes sociais",
+                    "description": "Complemente suas redes sociais com a plataforma. Aumente sua visibilidade e receba mais reservas."
+                },
+                {
+                    "title": "Destaque seu perfil",
+                    "description": "Aumente sua visibilidade e receba mais reservas."
+                }
+            ]
+        },
+        "howItWorks": {
+            "title": "Como funciona",
+            "steps": [
+                {
+                    "step": "01",
+                    "title": "Crie seu perfil",
+                    "description": "Mostre sua experiência, envie fotos e vídeos. Ajudamos você a otimizá-lo."
+                },
+                {
+                    "step": "02",
+                    "title": "Você tem controle",
+                    "description": "Escolha resort(s), disciplina(s), preços, regras de reserva e disponibilidade."
+                },
+                {
+                    "step": "03",
+                    "title": "Receba novos clientes",
+                    "description": "Levamos demanda para completar semanas específicas ou toda a temporada."
+                },
+                {
+                    "step": "04",
+                    "title": "Gerencie pelo app",
+                    "description": "Responda consultas e gerencie reservas de forma simples e ágil."
+                }
+            ]
+        },
+        "plans": {
+            "title": "Planos para crescer no seu ritmo",
+            "recommended": "Recomendado",
+            "choose": "Escolher",
+            "features": {
+                "unlimitedBookings": "Receba reservas ilimitadas",
+                "professionalProfile": "Perfil profissional",
+                "support247": "Suporte 24/7",
+                "mediumVisibility": "Visibilidade média",
+                "personalLink": "Link pessoal",
+                "securePayments": "Pagamentos seguros e proteção de cancelamento",
+                "commission10": "10% de comissão",
+                "highVisibility": "Alta visibilidade",
+                "blogNewsletter": "Posts do blog em nosso newsletter",
+                "emailRecommendations": "Recomendações por email para novos clientes",
+                "priorityQueue": "Prioridade na fila de instrutores",
+                "moreResorts": "Mais resorts e disciplinas",
+                "improvedRanking": "Ranking melhorado",
+                "socialMedia": "Aparição nas redes sociais"
+            },
+            "pricing": {
+                "lite": "Grátis",
+                "basic": "USD 50/ano",
+                "pro": "USD 100/ano"
+            }
+        },
+        "faqs": {
+            "title": "Perguntas frequentes",
+            "faq1": {
+                "question": "Quem pode se registrar como instrutor?",
+                "answer": "Instrutores certificados de esqui ou snowboard, com cobertura adequada e permissão para trabalhar em seu resort."
+            },
+            "faq2": {
+                "question": "Qual é o custo?",
+                "answer": "Você pode começar gratuitamente com o plano Lite ou Part-time. Planos pagos reduzem comissão e adicionam benefícios."
+            },
+            "faq3": {
+                "question": "Como gerencio cancelamentos?",
+                "answer": "Defina sua política. Se um cliente cancelar próximo à data, você recebe o pagamento de acordo com as condições escolhidas."
+            }
+        },
+        "cta": {
+            "title": "Pronto para começar?",
+            "description": "Crie seu perfil em minutos e comece a receber novos clientes nesta temporada.",
+            "primaryButton": "Criar meu perfil",
+            "secondaryButton": "Falar com a equipe"
+        }
+    },
     "landingPRO": {
         "title": "Aulas de {{discipline}} {{type}} em {{resort}} - Reserva Online | SnowMatch",
         "description": "Instructores certificados, aulas privadas e grupais en {{resort}}. ¡Reserva online y evita colas!",

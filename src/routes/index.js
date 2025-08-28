@@ -132,7 +132,31 @@ export default function Router() {
           path: 'en',
           element: <MainLayout />,
           children: [
-            { path: 'instructor', element: <InstructorLandingEN /> },
+            { path: 'instructor', element: <InstructorLanding /> },
+            { path: 'enterprise', element: <EnterpriseLanding /> },
+          ]
+        },
+        {
+          path: 'es',
+          element: <MainLayout />,
+          children: [
+            { path: 'instructor', element: <InstructorLanding /> },
+            { path: 'enterprise', element: <EnterpriseLanding /> },
+          ]
+        },
+        {
+          path: 'pt',
+          element: <MainLayout />,
+          children: [
+            { path: 'instructor', element: <InstructorLanding /> },
+            { path: 'enterprise', element: <EnterpriseLanding /> },
+          ]
+        },
+        {
+          path: 'fr',
+          element: <MainLayout />,
+          children: [
+            { path: 'instructor', element: <InstructorLanding /> },
             { path: 'enterprise', element: <EnterpriseLanding /> },
           ]
         },

@@ -2,5 +2,122 @@
   "demo": {
     "title": "France",
     "introduction": "Le Lorem Ipsum est simplement du faux texte employé dans la composition et la mise en page avant impression. Le Lorem Ipsum est le faux texte standard de l'imprimerie depuis les années 1500, quand un imprimeur anonyme assembla ensemble des morceaux de texte pour réaliser un livre spécimen de polices de texte. Il n'a pas fait que survivre cinq siècles, mais s'est aussi adapté à la bureautique informatique, sans que son contenu n'en soit modifié. Il a été popularisé dans les années 1960 grâce à la vente de feuilles Letraset contenant des passages du Lorem Ipsum, et, plus récemment, par son inclusion dans des applications de mise en page de texte, comme Aldus PageMaker."
-  }
+  },
+  "instructorLanding": {
+        "title": "Devenez instructeur indépendant | Snowmatch",
+        "description": "Rejoignez la communauté d'instructeurs indépendants. Définissez vos prix, disponibilité et connectez-vous avec de nouveaux clients.",
+        "ogDescription": "Définissez vos prix et disponibilité. Connectez-vous avec de nouveaux clients depuis votre téléphone.",
+        "hero": {
+            "title": "Tracez votre propre chemin",
+            "subtitle": "Rejoignez-nous comme instructeur indépendant et connectez-vous avec de nouveaux clients.",
+            "ctaPrimary": "Commencer maintenant",
+            "ctaSecondary": "Voir les avantages",
+            "card": {
+                "label": "Obtenez de nouveaux clients",
+                "title": "Augmentez vos réservations",
+                "description": "Agrandissez votre agenda de clients. Optimisez votre profil pour améliorer votre positionnement."
+            }
+        },
+        "benefits": {
+            "title": "La plateforme pour instructeurs",
+            "list": [
+                {
+                    "title": "Fixez vos propres prix",
+                    "description": "Mettez le prix selon le centre de ski où vous travaillez."
+                },
+                {
+                    "title": "Recevez de nouveaux clients",
+                    "description": "Nous vous apportons la demande pour compléter des semaines ponctuelles ou la saison complète."
+                },
+                {
+                    "title": "Contactez directement vos clients",
+                    "description": "Gérez les demandes et réservations depuis votre téléphone avec des messages en temps réel."
+                },
+                {
+                    "title": "Améliorez vos services",
+                    "description": "Améliorez vos services avec la plateforme. Augmentez votre réputation et recevez plus de réservations."
+                },
+                {
+                    "title": "Complétez vos réseaux sociaux",
+                    "description": "Complétez vos réseaux sociaux avec la plateforme. Augmentez votre visibilité et recevez plus de réservations."
+                },
+                {
+                    "title": "Mettez en valeur votre profil",
+                    "description": "Augmentez votre visibilité et recevez plus de réservations."
+                }
+            ]
+        },
+        "howItWorks": {
+            "title": "Comment ça marche",
+            "steps": [
+                {
+                    "step": "01",
+                    "title": "Créez votre profil",
+                    "description": "Montrez votre expérience, téléchargez photos et vidéos. Nous vous aidons à l'optimiser."
+                },
+                {
+                    "step": "02",
+                    "title": "Vous avez le contrôle",
+                    "description": "Choisissez resort(s), discipline(s), prix, règles de réservation et disponibilité."
+                },
+                {
+                    "step": "03",
+                    "title": "Recevez de nouveaux clients",
+                    "description": "Nous vous apportons la demande pour compléter des semaines ponctuelles ou la saison complète."
+                },
+                {
+                    "step": "04",
+                    "title": "Gérez depuis l'app",
+                    "description": "Répondez aux demandes et administrez les réservations de manière simple et agile."
+                }
+            ]
+        },
+        "plans": {
+            "title": "Plans pour grandir à votre rythme",
+            "recommended": "Recommandé",
+            "choose": "Choisir",
+            "features": {
+                "unlimitedBookings": "Recevez des réservations illimitées",
+                "professionalProfile": "Profil professionnel",
+                "support247": "Support 24/7",
+                "mediumVisibility": "Visibilité moyenne",
+                "personalLink": "Lien personnalisé",
+                "securePayments": "Paiements sécurisés et protection d'annulation",
+                "commission10": "10% de commission",
+                "highVisibility": "Visibilité élevée",
+                "blogNewsletter": "Articles de blog dans notre newsletter",
+                "emailRecommendations": "Recommandations par email aux nouveaux clients",
+                "priorityQueue": "Priorité dans la file d'attente des instructeurs",
+                "moreResorts": "Plus de resorts et disciplines",
+                "improvedRanking": "Classement amélioré",
+                "socialMedia": "Apparition sur les réseaux sociaux"
+            },
+            "pricing": {
+                "lite": "Gratuit",
+                "basic": "USD 50/an",
+                "pro": "USD 100/an"
+            }
+        },
+        "faqs": {
+            "title": "Questions fréquentes",
+            "faq1": {
+                "question": "Qui peut s'inscrire comme instructeur ?",
+                "answer": "Instructeurs certifiés de ski ou snowboard, avec couverture adéquate et autorisation pour travailler dans leur resort."
+            },
+            "faq2": {
+                "question": "Quel est le coût ?",
+                "answer": "Vous pouvez commencer gratuitement avec le plan Lite ou Part time. Les plans payants réduisent la commission et ajoutent des avantages."
+            },
+            "faq3": {
+                "question": "Comment gérer les annulations ?",
+                "answer": "Définissez votre politique. Si un client annule près de la date, vous recevez le paiement selon les conditions choisies."
+            }
+        },
+        "cta": {
+            "title": "Prêt à commencer ?",
+            "description": "Créez votre profil en minutes et commencez à recevoir de nouveaux clients cette saison.",
+            "primaryButton": "Créer mon profil",
+            "secondaryButton": "Parler avec l'équipe"
+        }
+    }
 }

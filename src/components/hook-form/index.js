@@ -10,4 +10,5 @@ export { default as RHFTextField } from './RHFTextField';
 export { default as RHFRadioGroup } from './RHFRadioGroup';
 export { default as RHFMultipleSelect } from './RHFMultipleSelect';
 export { default as RHFSlider} from './RHFSlider';
+export { default as RHFAutocomplete } from './RHFAutocomplete';
 

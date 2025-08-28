@@ -51,6 +51,123 @@
       }
     }
   },
+  "instructorLanding": {
+    "title": "Become an independent instructor | Snowmatch",
+    "description": "Join the community of independent instructors. Set your prices, availability and connect with new clients.",
+    "ogDescription": "Set prices and availability. Connect with new clients from your phone.",
+    "hero": {
+      "title": "Chart your own path",
+      "subtitle": "Join as an independent instructor and connect with new clients.",
+      "ctaPrimary": "Start now",
+      "ctaSecondary": "See benefits",
+      "card": {
+        "label": "Get new clients",
+        "title": "Increase your bookings",
+        "description": "Grow your client base. Optimize your profile to improve your positioning."
+      }
+    },
+    "benefits": {
+      "title": "The platform for instructors",
+      "list": [
+        {
+          "title": "Set your own prices",
+          "description": "Set the price according to the ski resort where you work."
+        },
+        {
+          "title": "Receive new clients",
+          "description": "We bring you demand to complete specific weeks or the entire season."
+        },
+        {
+          "title": "Contact directly with your clients",
+          "description": "Manage inquiries and bookings from your phone with real-time messages."
+        },
+        {
+          "title": "Improve your services",
+          "description": "Improve your services with the platform. Increase your reputation and receive more bookings."
+        },
+        {
+          "title": "Complement your social networks",
+          "description": "Complement your social networks with the platform. Increase your visibility and receive more bookings."
+        },
+        {
+          "title": "Highlight your profile",
+          "description": "Increase your visibility and receive more bookings."
+        }
+      ]
+    },
+    "howItWorks": {
+      "title": "How it works",
+      "steps": [
+        {
+          "step": "01",
+          "title": "Create your profile",
+          "description": "Show your experience, upload photos and videos. We help you optimize it."
+        },
+        {
+          "step": "02",
+          "title": "You have control",
+          "description": "Choose resort(s), discipline(s), prices, booking rules and availability."
+        },
+        {
+          "step": "03",
+          "title": "Receive new clients",
+          "description": "We bring you demand to complete specific weeks or the entire season."
+        },
+        {
+          "step": "04",
+          "title": "Manage from the app",
+          "description": "Answer inquiries and manage bookings in a simple and agile way."
+        }
+      ]
+    },
+    "plans": {
+      "title": "Plans to grow at your own pace",
+      "recommended": "Recommended",
+      "choose": "Choose",
+      "features": {
+        "unlimitedBookings": "Receive unlimited bookings",
+        "professionalProfile": "Professional profile",
+        "support247": "24/7 support",
+        "mediumVisibility": "Medium visibility",
+        "personalLink": "Personal link",
+        "securePayments": "Secure payments and cancellation protection",
+        "commission10": "10% commission",
+        "highVisibility": "High visibility",
+        "blogNewsletter": "Blog posts in our newsletter",
+        "emailRecommendations": "Email recommendations to new clients",
+        "priorityQueue": "Priority in instructor queue",
+        "moreResorts": "More resorts and disciplines",
+        "improvedRanking": "Improved ranking",
+        "socialMedia": "Social media appearance"
+      },
+      "pricing": {
+        "lite": "Free",
+        "basic": "USD 50/year",
+        "pro": "USD 100/year"
+      }
+    },
+    "faqs": {
+      "title": "Frequently asked questions",
+      "faq1": {
+        "question": "Who can register as an instructor?",
+        "answer": "Certified ski or snowboard instructors, with adequate coverage and permission to work at their resort."
+      },
+      "faq2": {
+        "question": "What does it cost?",
+        "answer": "You can start for free with the Lite or Part-time plan. Paid plans reduce commission and add benefits."
+      },
+      "faq3": {
+        "question": "How do I handle cancellations?",
+        "answer": "Define your policy. If a client cancels close to the date, you receive payment according to the chosen conditions."
+      }
+    },
+    "cta": {
+      "title": "Ready to start?",
+      "description": "Create your profile in minutes and start receiving new clients this season.",
+      "primaryButton": "Create my profile",
+      "secondaryButton": "Talk to the team"
+    }
+  },
   "landingPRO": {
     "title": "Lessons of {{discipline}} {{type}} in {{resort}} - Online Booking | SnowMatch",
     "description": "Certified instructors, private and group classes in {{resort}}. Book online and avoid queues!",

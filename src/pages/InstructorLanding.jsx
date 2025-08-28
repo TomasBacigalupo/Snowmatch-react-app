@@ -1,4 +1,7 @@
 import { Helmet } from 'react-helmet-async';
+import { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import {
   Box,
   Button,
@@ -14,117 +17,113 @@ import {
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-
-const benefits = [
-  {
-    title: 'Fijá tus propios precios',
-    description:
-      'Control total para maximizar tus ingresos según la demanda y tu experiencia.',
-  },
-  {
-    title: 'Elegí cuándo y dónde trabajar',
-    description:
-      'Definí tu disponibilidad por horas, días o semanas. Full day o medias jornadas.',
-  },
-  {
-    title: 'Contactá directo con tus clientes',
-    description:
-      'Gestioná consultas y reservas desde el celular con mensajes en tiempo real.',
-  },
-  {
-    title: 'Trabajá menos y ganá más',
-    description:
-      'Comisión competitiva. Te quedás con la mayor parte de lo que cobrás.',
-  },
-  {
-    title: 'Protección por cancelaciones',
-    description:
-      'Definí tu política de cancelación y cobrá si cancelan cerca de la clase.',
-  },
-];
-
-const steps = [
-  {
-    step: '01',
-    title: 'Creá tu perfil',
-    description:
-      'Mostrá tu experiencia, subí fotos y videos. Te ayudamos a optimizarlo.',
-  },
-  {
-    step: '02',
-    title: 'Vos tenés el control',
-    description:
-      'Elegí resort(es), disciplina(s), precios, reglas de reserva y disponibilidad.',
-  },
-  {
-    step: '03',
-    title: 'Recibí nuevos clientes',
-    description:
-      'Te acercamos demanda para completar semanas puntuales o la temporada completa.',
-  },
-  {
-    step: '04',
-    title: 'Gestioná desde la app',
-    description:
-      'Respondé consultas y administrá reservas de manera simple y ágil.',
-  },
-];
-
-const plans = [
-  {
-    name: 'Lite',
-    price: 'Gratis',
-    features: [
-      'Trabajá todo el año',
-      'Resorts y disciplinas ilimitadas',
-      '10% de comisión',
-    ],
-    highlight: false,
-  },
-  {
-    name: 'Basic',
-    price: 'USD 249/año',
-    features: [
-      'Gestión de agenda y precios',
-      'Perfil profesional',
-      'Pagos seguros y protección de cancelación',
-      '10% de comisión',
-    ],
-    highlight: false,
-  },
-  {
-    name: 'Pro',
-    price: 'USD 499/año',
-    features: [
-      'Menor comisión (7.2%)',
-      'Más resorts y disciplinas',
-      'Prioridad en búsquedas y socios',
-      'Ranking mejorado',
-    ],
-    highlight: true,
-  },
-];
+import CancelIcon from '@mui/icons-material/Cancel';
+import useLocales from '../hooks/useLocales';
 
 export default function InstructorLanding() {
+  const { translate } = useLocales();
+  const { i18n } = useTranslation();
+  const location = useLocation();
   const pageUrl = typeof window !== 'undefined' ? window.location.href : '';
   const origin = typeof window !== 'undefined' ? window.location.origin : '';
   const esUrl = `${origin}/instructor`;
   const enUrl = `${origin}/en/instructor`;
+  const ptUrl = `${origin}/pt/instructor`;
+  const frUrl = `${origin}/fr/instructor`;
+
+  // Language detection and setting
+  useEffect(() => {
+    // Extract language from pathname (e.g., /en/instructor -> 'en')
+    const pathSegments = location.pathname.split('/');
+    const languageFromPath = pathSegments[1]; // First segment after domain
+    
+    if (languageFromPath && ['en', 'es', 'pt', 'fr'].includes(languageFromPath)) {
+      // Set language based on URL path
+      i18n.changeLanguage(languageFromPath);
+      
+      // Also update localStorage for persistence
+      localStorage.setItem('i18nextLng', languageFromPath);
+      
+      console.log(`Language set to: ${languageFromPath} from URL path: ${location.pathname}`);
+    }
+  }, [location.pathname, i18n]);
+
+  // Get translated data
+  const benefits = translate('instructorLanding.benefits.list', { returnObjects: true });
+  const steps = translate('instructorLanding.howItWorks.steps', { returnObjects: true });
+
+  const allFeatures = [
+    translate('instructorLanding.plans.features.professionalProfile'),
+    translate('instructorLanding.plans.features.support247'),
+    translate('instructorLanding.plans.features.unlimitedBookings'),
+    translate('instructorLanding.plans.features.personalLink'),
+    translate('instructorLanding.plans.features.blogNewsletter'),
+    translate('instructorLanding.plans.features.emailRecommendations'),
+    translate('instructorLanding.plans.features.priorityQueue'),
+    translate('instructorLanding.plans.features.socialMedia'),
+  ];
+
+  const plans = [
+    {
+      name: 'Lite',
+      price: translate('instructorLanding.plans.pricing.lite'),
+      features: [
+        translate('instructorLanding.plans.features.unlimitedBookings'),
+        translate('instructorLanding.plans.features.professionalProfile'),
+        translate('instructorLanding.plans.features.support247'),
+      ],
+      highlight: false,
+    },
+    {
+      name: 'Basic',
+      price: translate('instructorLanding.plans.pricing.basic'),
+      features: [
+        translate('instructorLanding.plans.features.unlimitedBookings'),
+        translate('instructorLanding.plans.features.professionalProfile'),
+        translate('instructorLanding.plans.features.mediumVisibility'),
+        translate('instructorLanding.plans.features.personalLink'),
+        translate('instructorLanding.plans.features.professionalProfile'),
+        translate('instructorLanding.plans.features.securePayments'),
+        translate('instructorLanding.plans.features.commission10'),
+        translate('instructorLanding.plans.features.support247'),
+      ],
+      highlight: true,
+    },
+    {
+      name: 'Pro',
+      price: translate('instructorLanding.plans.pricing.pro'),
+      features: [
+        translate('instructorLanding.plans.features.unlimitedBookings'),
+        translate('instructorLanding.plans.features.professionalProfile'),
+        translate('instructorLanding.plans.features.highVisibility'),
+        translate('instructorLanding.plans.features.personalLink'),
+        translate('instructorLanding.plans.features.blogNewsletter'),
+        translate('instructorLanding.plans.features.emailRecommendations'),
+        translate('instructorLanding.plans.features.priorityQueue'),
+        translate('instructorLanding.plans.features.moreResorts'),
+        translate('instructorLanding.plans.features.improvedRanking'),
+        translate('instructorLanding.plans.features.socialMedia'),
+        translate('instructorLanding.plans.features.support247'),
+      ],
+      highlight: false,
+    },
+  ];
 
   return (
     <>
       <Helmet>
-        <title>Conviértete en instructor independiente | Snowmatch</title>
+        <title>{translate('instructorLanding.title')}</title>
         <meta
           name="description"
-          content="Unite a la comunidad de instructores independientes. Definí precios, disponibilidad y conectá con nuevos clientes."
+          content={translate('instructorLanding.description')}
         />
         <link rel="canonical" href={esUrl} />
         <link rel="alternate" hrefLang="es" href={esUrl} />
         <link rel="alternate" hrefLang="en" href={enUrl} />
+        <link rel="alternate" hrefLang="pt" href={ptUrl} />
         <link rel="alternate" hrefLang="x-default" href={enUrl} />
-        <meta property="og:title" content="Conviértete en instructor independiente | Snowmatch" />
-        <meta property="og:description" content="Definí precios y disponibilidad. Conectá con nuevos clientes desde tu celular." />
+        <meta property="og:title" content={translate('instructorLanding.title')} />
+        <meta property="og:description" content={translate('instructorLanding.ogDescription')} />
         <meta property="og:type" content="website" />
       </Helmet>
 
@@ -140,30 +139,20 @@ export default function InstructorLanding() {
           }}
         >
           <Container>
-            <Stack direction="row" justifyContent="flex-end" sx={{ mb: 2 }}>
-              <Stack direction="row" spacing={1}>
-                <Button size="small" color="inherit" href="/instructor" variant="contained">
-                  ES
-                </Button>
-                <Button size="small" color="inherit" href="/en/instructor" variant="text">
-                  EN
-                </Button>
-              </Stack>
-            </Stack>
             <Grid container spacing={4} alignItems="center">
               <Grid item xs={12} md={7}>
                 <Typography variant="h2" sx={{ fontWeight: 800, mb: 2 }}>
-                  Trazá tu propio camino
+                  {translate('instructorLanding.hero.title')}
                 </Typography>
                 <Typography variant="h5" sx={{ opacity: 0.9, mb: 4 }}>
-                  Unite como instructor independiente y conectá con nuevos clientes.
+                  {translate('instructorLanding.hero.subtitle')}
                 </Typography>
                 <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
                   <Button variant="contained" size="large" href="/auth/register">
-                    Empezar ahora
+                    {translate('instructorLanding.hero.ctaPrimary')}
                   </Button>
                   <Button variant="outlined" size="large" color="inherit" href="#benefits">
-                    Ver beneficios
+                    {translate('instructorLanding.hero.ctaSecondary')}
                   </Button>
                 </Stack>
               </Grid>
@@ -171,14 +160,13 @@ export default function InstructorLanding() {
                 <Card sx={{ bgcolor: 'grey.800', color: 'common.white' }}>
                   <CardContent>
                     <Typography variant="overline" sx={{ opacity: 0.72 }}>
-                      Estimador de ingresos
+                      {translate('instructorLanding.hero.card.label')}
                     </Typography>
                     <Typography variant="h4" sx={{ mt: 1, mb: 1 }}>
-                      Hasta USD 30.000 por temporada
+                      {translate('instructorLanding.hero.card.title')}
                     </Typography>
                     <Typography variant="body2" sx={{ opacity: 0.72 }}>
-                      Tus ingresos dependerán del resort, disponibilidad, experiencia y
-                      demanda. Optimiza tu perfil para mejorar tu posicionamiento.
+                      {translate('instructorLanding.hero.card.description')}
                     </Typography>
                   </CardContent>
                 </Card>
@@ -190,7 +178,7 @@ export default function InstructorLanding() {
         {/* Benefits */}
         <Container id="benefits" sx={{ py: { xs: 8, md: 10 } }}>
           <Typography variant="h3" align="center" sx={{ mb: 6, fontWeight: 800 }}>
-            La plataforma para instructores independientes
+            {translate('instructorLanding.benefits.title')}
           </Typography>
           <Grid container spacing={3}>
             {benefits.map((b) => (
@@ -215,7 +203,7 @@ export default function InstructorLanding() {
         <Box sx={{ py: { xs: 8, md: 10 }, bgcolor: 'background.neutral' }}>
           <Container>
             <Typography variant="h3" align="center" sx={{ mb: 6, fontWeight: 800 }}>
-              Cómo funciona
+              {translate('instructorLanding.howItWorks.title')}
             </Typography>
             <Grid container spacing={3}>
               {steps.map((s) => (
@@ -242,12 +230,31 @@ export default function InstructorLanding() {
         {/* Plans */}
         <Container sx={{ py: { xs: 8, md: 10 } }}>
           <Typography variant="h3" align="center" sx={{ mb: 6, fontWeight: 800 }}>
-            Planes para crecer a tu ritmo
+            {translate('instructorLanding.plans.title')}
           </Typography>
           <Grid container spacing={3}>
             {plans.map((p) => (
-              <Grid key={p.name} item xs={12} sm={6} md={3}>
-                <Card sx={{ height: '100%', borderWidth: p.highlight ? 2 : 1, borderStyle: 'solid', borderColor: p.highlight ? 'primary.main' : 'divider' }}>
+              <Grid key={p.name} item xs={12} sm={6} md={4}>
+                <Card sx={{ height: '100%', borderWidth: p.highlight ? 2 : 1, borderStyle: 'solid', borderColor: p.highlight ? 'primary.main' : 'divider', position: 'relative' }}>
+                  {p.highlight && (
+                    <Box
+                      sx={{
+                        position: 'absolute',
+                        top: 16,
+                        right: 16,
+                        bgcolor: 'primary.main',
+                        color: 'white',
+                        px: 2,
+                        py: 0.5,
+                        borderRadius: 1,
+                        fontSize: '0.75rem',
+                        fontWeight: 600,
+                        zIndex: 1,
+                      }}
+                    >
+                      {translate('instructorLanding.plans.recommended')}
+                    </Box>
+                  )}
                   <CardContent>
                     <Typography variant="overline" color={p.highlight ? 'primary.main' : 'text.secondary'}>
                       {p.name}
@@ -256,15 +263,29 @@ export default function InstructorLanding() {
                       {p.price}
                     </Typography>
                     <Stack spacing={1} sx={{ mb: 2 }}>
-                      {p.features.map((f) => (
-                        <Stack key={f} direction="row" spacing={1} alignItems="center">
-                          <CheckCircleIcon color="success" fontSize="small" />
-                          <Typography variant="body2">{f}</Typography>
-                        </Stack>
-                      ))}
+                      {allFeatures.map((feature) => {
+                        const hasFeature = p.features.includes(feature);
+                        return (
+                          <Stack key={feature} direction="row" spacing={1} alignItems="center">
+                            {hasFeature ? (
+                              <CheckCircleIcon color="success" fontSize="small" />
+                            ) : (
+                              <CancelIcon color="disabled" fontSize="small" />
+                            )}
+                            <Typography 
+                              variant="body2" 
+                              sx={{ 
+                                color: hasFeature ? 'text.primary' : 'text.disabled'
+                              }}
+                            >
+                              {feature}
+                            </Typography>
+                          </Stack>
+                        );
+                      })}
                     </Stack>
                     <Button fullWidth variant={p.highlight ? 'contained' : 'outlined'} href="/auth/register">
-                      Elegir
+                      {translate('instructorLanding.plans.choose')}
                     </Button>
                   </CardContent>
                 </Card>
@@ -277,37 +298,37 @@ export default function InstructorLanding() {
         <Box sx={{ py: { xs: 8, md: 10 }, bgcolor: 'background.neutral' }}>
           <Container>
             <Typography variant="h3" align="center" sx={{ mb: 4, fontWeight: 800 }}>
-              Preguntas frecuentes
+              {translate('instructorLanding.faqs.title')}
             </Typography>
             <Grid container spacing={3}>
               <Grid item xs={12} md={8} mx="auto">
                 <Accordion>
                   <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                    <Typography variant="subtitle1">¿Quién puede registrarse como instructor?</Typography>
+                    <Typography variant="subtitle1">{translate('instructorLanding.faqs.faq1.question')}</Typography>
                   </AccordionSummary>
                   <AccordionDetails>
                     <Typography variant="body2" color="text.secondary">
-                      Instructores certificados de ski o snowboard, con cobertura adecuada y permiso para trabajar en su resort.
+                      {translate('instructorLanding.faqs.faq1.answer')}
                     </Typography>
                   </AccordionDetails>
                 </Accordion>
                 <Accordion>
                   <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                    <Typography variant="subtitle1">¿Qué costo tiene?</Typography>
+                    <Typography variant="subtitle1">{translate('instructorLanding.faqs.faq2.question')}</Typography>
                   </AccordionSummary>
                   <AccordionDetails>
                     <Typography variant="body2" color="text.secondary">
-                      Podés comenzar gratis con el plan Lite o Part time. Los planes pagos reducen comisión y agregan beneficios.
+                      {translate('instructorLanding.faqs.faq2.answer')}
                     </Typography>
                   </AccordionDetails>
                 </Accordion>
                 <Accordion>
                   <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                    <Typography variant="subtitle1">¿Cómo manejo cancelaciones?</Typography>
+                    <Typography variant="subtitle1">{translate('instructorLanding.faqs.faq3.question')}</Typography>
                   </AccordionSummary>
                   <AccordionDetails>
                     <Typography variant="body2" color="text.secondary">
-                      Definí tu política. Si un cliente cancela cerca de la fecha, recibís el pago según las condiciones elegidas.
+                      {translate('instructorLanding.faqs.faq3.answer')}
                     </Typography>
                   </AccordionDetails>
                 </Accordion>
@@ -323,50 +344,33 @@ export default function InstructorLanding() {
               <Grid container spacing={3} alignItems="center">
                 <Grid item xs={12} md={8}>
                   <Typography variant="h4" sx={{ fontWeight: 800, mb: 1 }}>
-                    ¿Listo para empezar?
+                    {translate('instructorLanding.cta.title')}
                   </Typography>
                   <Typography variant="body1" color="text.secondary">
-                    Creá tu perfil en minutos y empezá a recibir nuevos clientes esta temporada.
+                    {translate('instructorLanding.cta.description')}
                   </Typography>
                 </Grid>
                 <Grid item xs={12} md={4}>
                   <Stack
-                    direction={{ xs: 'column', md: 'row' }}
                     spacing={2}
-                    justifyContent={{ xs: 'stretch', md: 'flex-end' }}
-                    alignItems={{ xs: 'stretch', md: 'center' }}
-                    sx={{ width: '100%', flexWrap: 'wrap' }}
+                    justifyContent="flex-end"
+                    alignItems="center"
+                    sx={{ width: '100%' }}
                   >
                     <Button
                       variant="contained"
-                      size="large"
                       href="/auth/register"
-                      disableElevation
-                      sx={{
-                        width: { xs: '100%', md: 'auto' },
-                        px: 3.5,
-                        py: 1.25,
-                        borderRadius: 2,
-                        fontWeight: 700,
-                      }}
+                      fullWidth
                     >
-                      Crear mi perfil
+                      {translate('instructorLanding.cta.primaryButton')}
                     </Button>
                     <Button
                       variant="outlined"
                       color="primary"
-                      size="large"
                       href="/contact-us"
-                      sx={{
-                        width: { xs: '100%', md: 'auto' },
-                        px: 3.5,
-                        py: 1.25,
-                        borderRadius: 2,
-                        fontWeight: 700,
-                        borderWidth: 2,
-                      }}
+                      fullWidth
                     >
-                      Hablar con el equipo
+                      {translate('instructorLanding.cta.secondaryButton')}
                     </Button>
                   </Stack>
                 </Grid>

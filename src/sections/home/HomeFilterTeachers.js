@@ -3,7 +3,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { MobileDateRangePicker } from '@mui/lab';
 import { Grid, Card, TextField, Typography, Box, Image } from '@mui/material';
 //
-import { FormProvider, RHFMultiCheckbox, RHFSelect } from 'src/components/hook-form';
+import { FormProvider, RHFMultiCheckbox, RHFAutocomplete } from 'src/components/hook-form';
 import { FILTER_CATEGORY_OPTIONS, FILTER_RESORT_OPTIONS } from '../@dashboard/e-commerce/shop/ShopFilterSidebar';
 import { useDispatch } from 'react-redux';
 import { filterTeachers } from 'src/redux/slices/teachers';
@@ -17,6 +17,20 @@ import React, { useEffect } from 'react';
 import dayjs from 'dayjs';
 import { searchTeachers } from 'src/services/facebook';
 import { PATH_DASHBOARD } from 'src/routes/paths';
+
+// Create a flat list of all resorts for autocomplete
+const getAllResorts = () => {
+    const allResorts = [];
+    FILTER_RESORT_OPTIONS.forEach((country) => {
+        country.resorts.forEach((resort) => {
+            allResorts.push({
+                name: resort,
+                category: country.category
+            });
+        });
+    });
+    return allResorts.sort((a, b) => a.name.localeCompare(b.name));
+};
 
 const getClassType = (type) => {
     switch(type) {
@@ -58,7 +72,7 @@ export default function HomeFilterTeachers({ resort, discipline, type, resortSlu
     ]
 
     const defaultValues = {
-        resort: resort || 'Cerro Catedral',
+        resort: resort ? { name: resort, category: 'Argentina' } : { name: 'Cerro Catedral', category: 'Argentina' },
         range: defaultRange,
         from: defaultRange[0],
         to: defaultRange[1],
@@ -83,18 +97,22 @@ export default function HomeFilterTeachers({ resort, discipline, type, resortSlu
     const values = watch();
 
     const onSubmit = () => {
+        const resortName = values.resort?.name || values.resort;
+        
         searchTeachers({
             ...values,
+            resort: resortName,
             from: values.range[0],
             to: values.range[1]
         })
         dispatch(filterTeachers({
             ...values,
+            resort: resortName,
             from: values.range[0],
             to: values.range[1]
         }))
 
-        if (values.resort === "Cerro Catedral") {
+        if (resortName === "Cerro Catedral") {
             if (isTeacher) {
                 navigate('/dashboard/e-commerce/independent?resort=Cerro Catedral')
             } else {
@@ -103,9 +121,9 @@ export default function HomeFilterTeachers({ resort, discipline, type, resortSlu
 
         } else {
             if (isTeacher) {
-                navigate(`/dashboard/e-commerce/shop/school?resort=${values.resort}`)
+                navigate(`/dashboard/e-commerce/shop/school?resort=${resortName}`)
             } else {
-                navigate(`/match/school?resort=${values.resort}`)
+                navigate(`/match/school?resort=${resortName}`)
             }
 
         }
@@ -113,7 +131,10 @@ export default function HomeFilterTeachers({ resort, discipline, type, resortSlu
     }
 
     useEffect(() => {
-        setValue('resort', resort)
+        if (resort) {
+            const resortOption = getAllResorts().find(r => r.name === resort);
+            setValue('resort', resortOption || { name: resort, category: 'Argentina' });
+        }
         setValue('category', discipline ? discipline : ["Ski", "SnowBoard"])
     }, [resort, discipline])
 
@@ -139,18 +160,25 @@ export default function HomeFilterTeachers({ resort, discipline, type, resortSlu
                 <Grid item xs={12} md={12}>
                     <Grid container spacing={2} alignItems='center'>
                         <Grid item xs={12}>
-                            <RHFSelect name="resort" label={translate("filter.resort")} placeholder="Resort">
-                                <option value="" />
-                                {FILTER_RESORT_OPTIONS.map((country) => (
-                                    <optgroup label={country.category}>
-                                        {country.resorts.sort().map(r => (
-                                            <option key={r} value={r}>
-                                                {r}
-                                            </option>
-                                        ))}
-                                    </optgroup>
-                                ))}
-                            </RHFSelect>
+                            <RHFAutocomplete
+                                name="resort"
+                                label={translate("filter.resort")}
+                                placeholder="Buscar resort..."
+                                options={getAllResorts()}
+                                getOptionLabel={(option) => option.name}
+                                groupBy={(option) => option.category}
+                                renderOption={(props, option) => (
+                                    <Box component="li" {...props}>
+                                        {option.name}
+                                    </Box>
+                                )}
+                                filterOptions={(options, { inputValue }) => {
+                                    const filtered = options.filter((option) =>
+                                        option.name.toLowerCase().includes(inputValue.toLowerCase())
+                                    );
+                                    return filtered;
+                                }}
+                            />
                         </Grid>
                         <Grid item xs={5}>
                             <RHFMultiCheckbox name="category" options={FILTER_CATEGORY_OPTIONS} sx={{ width: 1 }} />

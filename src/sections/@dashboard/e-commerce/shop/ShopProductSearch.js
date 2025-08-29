@@ -25,7 +25,7 @@ import Image from '../../../../components/Image';
 import Iconify from '../../../../components/Iconify';
 import InputStyle from '../../../../components/InputStyle';
 import SearchNotFound from '../../../../components/SearchNotFound';
-import { FormProvider, RHFMultiCheckbox, RHFSelect } from 'src/components/hook-form';
+import { FormProvider, RHFMultiCheckbox, RHFAutocomplete } from 'src/components/hook-form';
 import { FILTER_CATEGORY_OPTIONS, FILTER_RESORT_OPTIONS } from '../../../@dashboard/e-commerce/shop/ShopFilterSidebar';
 
 import useAuth from 'src/hooks/useAuth';
@@ -37,6 +37,19 @@ import { DesktopDateRangePicker, MobileDateRangePicker, StaticDateRangePicker } 
 import dayjs from 'dayjs';
 import { Language } from '@mui/icons-material';
 
+// Create a flat list of all resorts for autocomplete
+const getAllResorts = () => {
+    const allResorts = [];
+    FILTER_RESORT_OPTIONS.forEach((country) => {
+        country.resorts.forEach((resort) => {
+            allResorts.push({
+                name: resort,
+                category: country.category
+            });
+        });
+    });
+    return allResorts.sort((a, b) => a.name.localeCompare(b.name));
+};
 
 // ----------------------------------------------------------------------
 
@@ -87,25 +100,28 @@ export default function ShopProductSearch({ filters, teachers }) {
 
   const onSubmit = (data) => {
     console.log('pase', data)
+    
+    const resortName = values.resort?.name || values.resort;
 
     //react search
     searchTeachers({
       ...values,
+      resort: resortName,
       from: values.range[0],
       to: values.range[1]
     })
 
     dispatch(filterTeachers({
       ...values,
+      resort: resortName,
       from: values.range[0],
       to: values.range[1],
-      resort: values.resort,
       gender: [],
       language: [],
       discipline: [],
     }))
 
-    if (values.resort === "Cerro Catedral") {
+    if (resortName === "Cerro Catedral") {
       if (isTeacher) {
         navigate('/dashboard/e-commerce/independent?resort=Cerro Catedral')
       } else {
@@ -114,9 +130,9 @@ export default function ShopProductSearch({ filters, teachers }) {
 
     } else {
       // if (isTeacher) {
-      //   navigate(`/dashboard/e-commerce/shop/school?resort=${values.resort}`)
+      //   navigate(`/dashboard/e-commerce/shop/school?resort=${resortName}`)
       // } else {
-      //   navigate(`/match/school?resort=${values.resort}`)
+      //   navigate(`/match/school?resort=${resortName}`)
       // }
     }
     handleCloseDrawer()
@@ -136,7 +152,7 @@ export default function ShopProductSearch({ filters, teachers }) {
     filters.to,
   ]
   const defaultValues = {
-    resort: filters.resort,
+    resort: filters.resort ? { name: filters.resort, category: 'Argentina' } : null,
     range: defaultRange,
     from: defaultRange[0],
     to: defaultRange[1],
@@ -275,7 +291,7 @@ export default function ShopProductSearch({ filters, teachers }) {
                       borderRadius: 10
                     }}>
                       <Box display='flex' justifyContent='space-between' width='100%'>
-                        <Typography>{values.resort}</Typography>
+                        <Typography>{values.resort?.name || values.resort}</Typography>
                         <Typography sx={{ fontWeight: "bold" }}>
                           Cambiar Montaña
                         </Typography>
@@ -284,18 +300,25 @@ export default function ShopProductSearch({ filters, teachers }) {
                   }
                   <AccordionDetails>
                     <Typography variant='h3' mb={2}>¿A dónde vas?</Typography>
-                    <RHFSelect name="resort" label={translate("filter.resort")} placeholder="Resort">
-                      <option value="" />
-                      {FILTER_RESORT_OPTIONS.map((country) => (
-                        <optgroup key={country.category} label={country.category}>
-                          {country.resorts.sort().map((r) => (
-                            <option key={r} value={r}>
-                              {r}
-                            </option>
-                          ))}
-                        </optgroup>
-                      ))}
-                    </RHFSelect>
+                    <RHFAutocomplete
+                      name="resort"
+                      label={translate("filter.resort")}
+                      placeholder="Buscar resort..."
+                      options={getAllResorts()}
+                      getOptionLabel={(option) => option.name}
+                      groupBy={(option) => option.category}
+                      renderOption={(props, option) => (
+                        <Box component="li" {...props}>
+                          {option.name}
+                        </Box>
+                      )}
+                      filterOptions={(options, { inputValue }) => {
+                        const filtered = options.filter((option) =>
+                          option.name.toLowerCase().includes(inputValue.toLowerCase())
+                        );
+                        return filtered;
+                      }}
+                    />
                     <Box display="flex" gap={2} mt={2} overflow="auto" sx={{ scrollbarWidth: "none", "&::-webkit-scrollbar": { display: "none" } }}>
                       {[{title:"Catedral", 
                       image:"/assets/resorts/ilustrations/catedral.png", value:"Cerro Catedral"},
@@ -303,7 +326,7 @@ export default function ShopProductSearch({ filters, teachers }) {
                        {title:"Bayo", image:"/assets/resorts/ilustrations/bayo.png", value:"Cerro Bayo"}, {title:"La Hoya", image:"/assets/resorts/ilustrations/lahoya.PNG", value:"La Hoya"}].map((resort) => (
                         <Box
                           key={resort}
-                          onClick={() => setValue("resort", resort.value)}
+                          onClick={() => setValue("resort", { name: resort.value, category: 'Argentina' })}
                           sx={{
                             minWidth: 120,
                             height: 160,

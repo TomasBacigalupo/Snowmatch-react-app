@@ -154,7 +154,7 @@
       },
       "faq2": {
         "question": "What does it cost?",
-        "answer": "You can start for free with the Lite or Part-time plan. Paid plans reduce commission and add benefits."
+        "answer": "You can start for free with the Lite plan. Paid plans increase the amount of clients and add benefits."
       },
       "faq3": {
         "question": "How do I handle cancellations?",
@@ -624,7 +624,23 @@
     "continueWithApple": "Continue with Apple",
     "continueWithEmail": "Continue with Email"
   },
+  "welcomeStep": {
+    "title": "It's easy to get started on SnowMatch",
+    "step1": {
+      "title": "1 Tell us about yourself",
+      "description": "Share basic information like your experience, certifications and teaching specialties."
+    },
+    "step2": {
+      "title": "2 Stand out",
+      "description": "Add photos, videos and an attractive description of your teaching style."
+    },
+    "step3": {
+      "title": "3 Finish and publish",
+      "description": "Set your rates, verify the details and start receiving students."
+    }
+  },
   "registerForm": {
+    "title": "Instructor Registration",
     "name": "First name",
     "lastName": "Last name",
     "email": "Email address",

@@ -6,6 +6,7 @@ import { setRequestedRoute } from 'src/redux/slices/config';
 import { Navigate } from 'react-router';
 import { useSnackbar } from 'notistack';
 import AccessDenied from 'src/pages/AccessDenied';
+import { PATH_AUTH } from 'src/routes/paths';
 
 // ----------------------------------------------------------------------
 
@@ -21,7 +22,7 @@ const useCurrentRole = () => {
 };
 
 export default function RoleBasedGuard({ accessibleRoles, children }) {
-  const { isAuthenticated, isStudent, isTeacher, isAdmin } = useAuth()
+  const { isAuthenticated, isStudent, isTeacher, isAdmin, user } = useAuth()
   const currentRole = useCurrentRole();
   const dispatch = useDispatch()
   const { requestedRoute } = useSelector (state => state.config)
@@ -40,13 +41,24 @@ export default function RoleBasedGuard({ accessibleRoles, children }) {
     if (isStudent) {
       return <Navigate to={'/'} />
     }
+
     if (isTeacher) {
+      // Check if teacher has empty resorts and redirect to teacher details stepper
+      if (user && !user.resorts && (!user.resorts || user.resorts.length === 0)) {
+        return <Navigate to={PATH_AUTH.teacherDetails} />
+      }
       return <Navigate to={'/dashboard'} />
     }
     if (isAdmin) {
       return <Navigate to={'/dashboard/admin/bookings'} />
     }
     return <Navigate to={'/access-denied'} />
+  }
+
+  if (isTeacher) {
+    if (user && !user.resorts && (!user.resorts || user.resorts.length === 0)) {
+      return <Navigate to={PATH_AUTH.teacherDetails} />
+    }
   }
 
   return <>{children}</>;

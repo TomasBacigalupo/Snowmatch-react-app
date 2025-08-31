@@ -68,8 +68,8 @@ const handlers = {
   }),
   REGISTER: (state, action) => {
     const { user } = action.payload;
-
-    return {
+    
+    const newState = {
       ...state,
       isAuthenticated: true,
       user,
@@ -80,6 +80,15 @@ const handlers = {
       isStudent: user?.role === 'STUDENT',
       isAdmin: user?.role === 'ADMIN',
     };
+    
+    console.log('REGISTER reducer:', { 
+      user, 
+      emailVerified: user?.emailVerified, 
+      phoneVerified: user?.cellphoneVerified,
+      newState: { emailVerified: newState.emailVerified, phoneVerified: newState.phoneVerified }
+    });
+    
+    return newState;
   },
   VERIFY: (state, action) => {
     const { user } = action.payload;
@@ -270,6 +279,7 @@ function AuthProvider({ children }) {
       });
     }
     registerNotifications();
+    console.log('Register: User created', { user, emailVerified: user?.emailVerified, phoneVerified: user?.cellphoneVerified });
     dispatch({
       type: 'REGISTER',
       payload: {

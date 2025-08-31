@@ -16,6 +16,7 @@ export const PATH_AUTH = {
   root: ROOTS_AUTH,
   login: path(ROOTS_AUTH, '/login'),
   register: path(ROOTS_AUTH, '/register'),
+  teacherDetails: path(ROOTS_AUTH, '/teacher-details'),
   registerStudent: path(ROOTS_AUTH, '/guest-register'),
   loginUnprotected: path(ROOTS_AUTH, '/login-unprotected'),
   registerUnprotected: path(ROOTS_AUTH, '/register-unprotected'),

@@ -7,7 +7,7 @@ import { Box, Card, Stack, Link, Container, Typography, Button, IconButton } fro
 import EmailIcon from '@mui/icons-material/Email';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 // routes
-import { PATH_AUTH, PATH_GUEST } from '../../routes/paths';
+import { PATH_AUTH, PATH_GUEST, PATH_DASHBOARD } from '../../routes/paths';
 // hooks
 import useAuth from '../../hooks/useAuth';
 import useResponsive from '../../hooks/useResponsive';
@@ -94,6 +94,10 @@ export default function Login({fromModal = false}) {
     setShowRegisterForm(false);
   };
 
+  const handleSuccessfulRegistration = () => {
+    navigate(PATH_DASHBOARD.root);
+  };
+
   return (
     <Page title="Login">
       <RootStyle>
@@ -153,7 +157,7 @@ export default function Login({fromModal = false}) {
             
             {showRegisterForm ? (
               <>
-                <RegisterStudentForm />
+                <RegisterStudentForm onSuccess={handleSuccessfulRegistration} />
                 <Typography variant="body2" align="center" sx={{ color: 'text.secondary', mt: 3 }}>
                   {translate('auth.registrationMessage')}&nbsp;
                   <Link underline="always" color="text.primary" href="https://github.com/lpagn/snowmatchfiles/blob/main/Snow%20Match%20Terms%20of%20Service.pdf">

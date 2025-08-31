@@ -19,11 +19,13 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
 import useLocales from '../hooks/useLocales';
+import TeacherRegisterDrawer from '../components/TeacherRegisterDrawer';
 
 export default function InstructorLanding() {
   const { translate } = useLocales();
   const { i18n } = useTranslation();
   const location = useLocation();
+  const [registerDrawerOpen, setRegisterDrawerOpen] = useState(false);
   const pageUrl = typeof window !== 'undefined' ? window.location.href : '';
   const origin = typeof window !== 'undefined' ? window.location.origin : '';
   const esUrl = `${origin}/instructor`;
@@ -51,6 +53,14 @@ export default function InstructorLanding() {
   // Get translated data
   const benefits = translate('instructorLanding.benefits.list', { returnObjects: true });
   const steps = translate('instructorLanding.howItWorks.steps', { returnObjects: true });
+
+  const handleOpenRegisterDrawer = () => {
+    setRegisterDrawerOpen(true);
+  };
+
+  const handleCloseRegisterDrawer = () => {
+    setRegisterDrawerOpen(false);
+  };
 
   const allFeatures = [
     translate('instructorLanding.plans.features.professionalProfile'),
@@ -87,7 +97,7 @@ export default function InstructorLanding() {
         translate('instructorLanding.plans.features.commission10'),
         translate('instructorLanding.plans.features.support247'),
       ],
-      highlight: true,
+      highlight: false,
     },
     {
       name: 'Pro',
@@ -105,7 +115,7 @@ export default function InstructorLanding() {
         translate('instructorLanding.plans.features.socialMedia'),
         translate('instructorLanding.plans.features.support247'),
       ],
-      highlight: false,
+      highlight: true,
     },
   ];
 
@@ -148,7 +158,7 @@ export default function InstructorLanding() {
                   {translate('instructorLanding.hero.subtitle')}
                 </Typography>
                 <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
-                  <Button variant="contained" size="large" href="/auth/register">
+                  <Button variant="contained" size="large" onClick={handleOpenRegisterDrawer}>
                     {translate('instructorLanding.hero.ctaPrimary')}
                   </Button>
                   <Button variant="outlined" size="large" color="inherit" href="#benefits">
@@ -284,7 +294,7 @@ export default function InstructorLanding() {
                         );
                       })}
                     </Stack>
-                    <Button fullWidth variant={p.highlight ? 'contained' : 'outlined'} href="/auth/register">
+                    <Button fullWidth variant={p.highlight ? 'contained' : 'outlined'} onClick={handleOpenRegisterDrawer}>
                       {translate('instructorLanding.plans.choose')}
                     </Button>
                   </CardContent>
@@ -359,7 +369,7 @@ export default function InstructorLanding() {
                   >
                     <Button
                       variant="contained"
-                      href="/auth/register"
+                      onClick={handleOpenRegisterDrawer}
                       fullWidth
                     >
                       {translate('instructorLanding.cta.primaryButton')}
@@ -379,6 +389,12 @@ export default function InstructorLanding() {
           </Card>
         </Container>
       </Box>
+
+      {/* Teacher Register Drawer */}
+      <TeacherRegisterDrawer 
+        open={registerDrawerOpen} 
+        onClose={handleCloseRegisterDrawer} 
+      />
     </>
   );
 }

@@ -119,5 +119,16 @@
             "primaryButton": "Créer mon profil",
             "secondaryButton": "Parler avec l'équipe"
         }
+    },
+    "registerForm": {
+        "title": "Inscription d'Instructeur",
+        "name": "Prénom",
+        "lastName": "Nom de famille",
+        "email": "Adresse email",
+        "countryCode": "Code pays",
+        "password": "Mot de passe",
+        "phone": "Téléphone",
+        "certification": "Certification d'instructeur",
+        "register": "S'inscrire"
     }
 }

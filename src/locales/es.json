@@ -1535,7 +1535,23 @@
         "continueWithApple": "Continuar con Apple",
         "continueWithEmail": "Continuar con Email"
     },
+    "welcomeStep": {
+        "title": "Es fácil comenzar en SnowMatch",
+        "step1": {
+            "title": "1 Cuéntanos sobre ti",
+            "description": "Comparte información básica como tu experiencia, certificaciones y especialidades de enseñanza."
+        },
+        "step2": {
+            "title": "2 Destácate",
+            "description": "Agrega fotos, videos y una descripción atractiva de tu estilo de enseñanza."
+        },
+        "step3": {
+            "title": "3 Finaliza y publica",
+            "description": "Establece tus tarifas, verifica los detalles y comienza a recibir estudiantes."
+        }
+    },
     "registerForm": {
+        "title": "Registro de Instructor",
         "name": "Nombre",
         "nameRequired": "El nombre es obligatorio",
         "lastName": "Apellido",

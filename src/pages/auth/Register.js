@@ -1,6 +1,6 @@
 import { capitalCase } from 'change-case';
 import { Link as RouterLink } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 // @mui
 import { styled } from '@mui/material/styles';
 import { Box, Card, Link, Container, Typography, Tooltip, useTheme, useMediaQuery } from '@mui/material';
@@ -128,10 +128,18 @@ export default function Register() {
   const [currentStep, setCurrentStep] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [stepperRef, setStepperRef] = useState(null);
+  const [isEmailVerified, setIsEmailVerified] = useState(false);
 
   const handleStepChange = (step) => {
     setCurrentStep(step);
   };
+
+  // Update current step when stepper ref changes
+  useEffect(() => {
+    if (stepperRef && stepperRef.activeStep !== undefined) {
+      setCurrentStep(stepperRef.activeStep);
+    }
+  }, [stepperRef]);
 
   const handleNext = () => {
     if (stepperRef && stepperRef.handleNext) {
@@ -145,8 +153,19 @@ export default function Register() {
     }
   };
 
+  const handleEmailVerificationSuccess = () => {
+    setIsEmailVerified(true);
+  };
+
+  // Get email verification status from stepper
+  useEffect(() => {
+    if (stepperRef && stepperRef.isEmailVerified !== undefined) {
+      setIsEmailVerified(stepperRef.isEmailVerified);
+    }
+  }, [stepperRef]);
+
   const getButtonText = () => {
-    if (currentStep === 7) return 'Completar Registro';
+    if (currentStep === 8) return 'Completar Registro';
     return 'Siguiente';
   };
 
@@ -175,15 +194,11 @@ export default function Register() {
             </MobileHeaderStyle>
             
             <MobileContentStyle>
-              <Box sx={{ mb: 3 }}>
-                <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-                  Completa tu perfil paso a paso para comenzar a enseñar
-                </Typography>
-              </Box>
 
               <RegisterStepperForm 
                 onStepChange={handleStepChange}
                 isSubmitting={isSubmitting}
+                onEmailVerificationSuccess={handleEmailVerificationSuccess}
                 ref={setStepperRef}
               />
             </MobileContentStyle>
@@ -193,7 +208,7 @@ export default function Register() {
               <Box sx={{ mb: 2 }}>
                 <LinearProgress 
                   variant="determinate" 
-                  value={((currentStep + 1) / 8) * 100} 
+                  value={((currentStep + 1) / 10) * 100} 
                   sx={{ 
                     height: 4, 
                     borderRadius: 2,
@@ -205,7 +220,7 @@ export default function Register() {
                   }} 
                 />
                 <Typography variant="caption" sx={{ color: 'text.secondary', mt: 1, display: 'block' }}>
-                  Paso {currentStep + 1} de 8
+                  Paso {currentStep + 1} de 10
                 </Typography>
               </Box>
               
@@ -214,7 +229,7 @@ export default function Register() {
                   variant="outlined"
                   fullWidth
                   onClick={handleBack}
-                  disabled={currentStep === 0}
+                  disabled={currentStep === 0 || currentStep === 4}
                   sx={{ 
                     py: 1.5,
                     borderColor: 'black',
@@ -237,6 +252,7 @@ export default function Register() {
                   fullWidth
                   onClick={handleNext}
                   loading={isSubmitting}
+                  disabled={(currentStep === 2 || currentStep === 3) && !isEmailVerified}
                   sx={{ 
                     py: 1.5,
                     bgcolor: 'black',
@@ -245,6 +261,10 @@ export default function Register() {
                     '&:hover': { 
                       bgcolor: 'grey.800',
                       color: 'white'
+                    },
+                    '&:disabled': {
+                      bgcolor: 'grey.400',
+                      color: 'grey.600'
                     }
                   }}
                 >
@@ -295,18 +315,8 @@ export default function Register() {
 
         <Container>
           <ContentStyle>
-            <Box sx={{ mb: 5, display: 'flex', alignItems: 'center' }}>
-              <Box sx={{ flexGrow: 1 }}>
-                <Typography variant="h4" gutterBottom>
-                  {translate("auth.getStartedFree")}
-                </Typography>
-                <Typography sx={{ color: 'text.secondary' }}>
-                  Completa tu perfil paso a paso para comenzar a enseñar
-                </Typography>
-              </Box>
-            </Box>
 
-            <RegisterStepperForm />
+            <RegisterStepperForm onEmailVerificationSuccess={handleEmailVerificationSuccess} />
 
             <Typography variant="body2" align="center" sx={{ color: 'text.secondary', mt: 3 }}>
               {translate("auth.registrationMessage")}&nbsp;

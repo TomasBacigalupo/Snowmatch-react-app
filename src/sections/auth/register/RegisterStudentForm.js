@@ -20,7 +20,7 @@ import useLocales from 'src/hooks/useLocales';
 
 // ----------------------------------------------------------------------
 
-export default function RegisterStudentForm() {
+export default function RegisterStudentForm({ onSuccess }) {
     const { register } = useAuth();
     const {translate} = useLocales();
 
@@ -71,6 +71,11 @@ const RegisterSchema = Yup.object().shape({
                 data.certificate,
                 'STUDENT'
             );
+            
+            // Call onSuccess callback if provided
+            if (onSuccess) {
+                onSuccess();
+            }
         } catch (error) {
             if (error.messages && error.messages.entry) {
                 error.messages.entry.forEach(e => {

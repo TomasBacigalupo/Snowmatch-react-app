@@ -98,9 +98,17 @@ export default function Router() {
             {
               path: 'register',
               element: (
-                <GuestGuard>
+                <AuthGuard>
                   <Register />
-                </GuestGuard>
+                </AuthGuard>
+              ),
+            },
+            {
+              path: 'teacher-details',
+              element: (
+                <AuthGuard>
+                  <TeacherDetails />
+                </AuthGuard>
               ),
             },
             {
@@ -583,6 +591,7 @@ export default function Router() {
 // AUTHENTICATION
 const Login = Loadable(lazy(() => import('../pages/auth/Login')));
 const Register = Loadable(lazy(() => import('../pages/auth/Register')));
+const TeacherDetails = Loadable(lazy(() => import('../pages/auth/TeacherDetails')));
 const ResetPassword = Loadable(lazy(() => import('../pages/auth/ResetPassword')));
 const VerifyCode = Loadable(lazy(() => import('../pages/auth/VerifyCode')));
 const PageVerificationSucceed = Loadable(lazy(() => import('../pages/PageVerificationSucceed')))

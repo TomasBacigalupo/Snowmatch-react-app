@@ -20,7 +20,7 @@ import useLocales from 'src/hooks/useLocales';
 
 // ----------------------------------------------------------------------
 
-export default function RegisterForm() {
+export default function RegisterForm({ onSuccess }) {
   const { register } = useAuth();
   const {translate} = useLocales();
   const [showPassword, setShowPassword] = useState(false);
@@ -88,6 +88,11 @@ export default function RegisterForm() {
 
     try {
       await register(data.email, data.password, data.firstName, data.lastName, data.countryCode, data.cellphone, data.entity, data.certificate);
+      
+      // Call onSuccess callback if provided
+      if (onSuccess) {
+        onSuccess();
+      }
 
     } catch (error) {
       if (error.messages && error.messages.entry){

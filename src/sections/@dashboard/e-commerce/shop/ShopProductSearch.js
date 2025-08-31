@@ -590,23 +590,30 @@ export default function ShopProductSearch({ filters, teachers }) {
                     }
                     <AccordionDetails>
                       <Typography variant='h3' mb={2}>¿A dónde vas?</Typography>
-                      <RHFSelect name="resort" label={translate("filter.resort")} placeholder="Resort">
-                        <option value="" />
-                        {FILTER_RESORT_OPTIONS.map((country) => (
-                          <optgroup key={country.category} label={country.category}>
-                            {country.resorts.sort().map((r) => (
-                              <option key={r} value={r}>
-                                {r}
-                              </option>
-                            ))}
-                          </optgroup>
-                        ))}
-                      </RHFSelect>
+                      <RHFAutocomplete
+                        name="resort"
+                        label={translate("filter.resort")}
+                        placeholder="Buscar resort..."
+                        options={getAllResorts()}
+                        getOptionLabel={(option) => option.name}
+                        groupBy={(option) => option.category}
+                        renderOption={(props, option) => (
+                          <Box component="li" {...props}>
+                            {option.name}
+                          </Box>
+                        )}
+                        filterOptions={(options, { inputValue }) => {
+                          const filtered = options.filter((option) =>
+                            option.name.toLowerCase().includes(inputValue.toLowerCase())
+                          );
+                          return filtered;
+                        }}
+                      />
                       <Box display="flex" gap={2} mt={2} overflow="auto" sx={{ scrollbarWidth: "none", "&::-webkit-scrollbar": { display: "none" } }}>
                         {[{title:"Catedral", value:"Cerro Catedral"}, {title:"Chapelco", value:"Chapelco"}, {title:"Bayo", value:"Cerro Bayo"}, {title:"La Hoya", value:"La Hoya"}].map((resort) => (
                           <Box
                             key={resort}
-                            onClick={() => setValue("resort", resort.value)}
+                            onClick={() => setValue("resort", { name: resort.value, category: 'Argentina' })}
                             sx={{
                               minWidth: 120,
                               height: 160,

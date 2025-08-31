@@ -1512,6 +1512,32 @@
     "contactMessage": {
         "private": "Aula particular - {{name}} - {{id}}\nDias de aula:{{events}}\nCrianças: {{children}}\nAdultos: {{adults}}\nComentário: *{{message}}*\n*Total: {{total}}*"
     },
+    "welcomeStep": {
+        "title": "É fácil começar no SnowMatch",
+        "step1": {
+            "title": "1 Conte-nos sobre você",
+            "description": "Compartilhe informações básicas como sua experiência, certificações e especialidades de ensino."
+        },
+        "step2": {
+            "title": "2 Destaque-se",
+            "description": "Adicione fotos, vídeos e uma descrição atrativa do seu estilo de ensino."
+        },
+        "step3": {
+            "title": "3 Finalize e publique",
+            "description": "Defina suas tarifas, verifique os detalhes e comece a receber estudantes."
+        }
+    },
+    "registerForm": {
+        "title": "Registro de Instrutor",
+        "name": "Nome",
+        "lastName": "Sobrenome",
+        "email": "Email",
+        "countryCode": "Código do País",
+        "password": "Senha",
+        "phone": "Telefone",
+        "certification": "Certificação de Instrutor",
+        "register": "Registrar"
+    },
     "MORNING": "Manhã",
     "MORNING_2HS": "Manhã (2hs)",
     "AFTERNOON": "Tarde",

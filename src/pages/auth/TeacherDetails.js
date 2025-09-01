@@ -47,6 +47,7 @@ const MobileStickyFooterStyle = styled('div')(({ theme }) => ({
   bottom: 0,
   backgroundColor: 'white',
   padding: theme.spacing(2),
+  paddingBottom: `calc(${theme.spacing(2)} + env(safe-area-inset-bottom))`,
   borderTop: `1px solid ${theme.palette.divider}`,
   zIndex: 10,
 }));

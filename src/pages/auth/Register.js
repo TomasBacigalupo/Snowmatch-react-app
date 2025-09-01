@@ -14,10 +14,8 @@ import Page from '../../components/Page';
 import Logo from '../../components/Logo';
 import Image from '../../components/Image';
 // sections
-import { RegisterStepperForm } from '../../sections/auth/register';
+import { RegisterForm } from '../../sections/auth/register';
 import useLocales from 'src/hooks/useLocales';
-import { LoadingButton } from '@mui/lab';
-import { LinearProgress } from '@mui/material';
 
 // ----------------------------------------------------------------------
 
@@ -100,20 +98,8 @@ const MobileHeaderStyle = styled('div')(({ theme }) => ({
 const MobileContentStyle = styled('div')(({ theme }) => ({
   padding: theme.spacing(3),
   overflow: 'auto',
-  height: 'calc(100vh - 120px - env(safe-area-inset-top) - 80px)', // Account for header, bottom navigation, and sticky footer
+  height: 'calc(100vh - 120px - env(safe-area-inset-top))',
   paddingBottom: theme.spacing(2),
-}));
-
-const MobileStickyFooterStyle = styled('div')(({ theme }) => ({
-  position: 'absolute',
-  bottom: 0,
-  left: 0,
-  right: 0,
-  padding: theme.spacing(2, 3),
-  paddingBottom: `calc(${theme.spacing(2)} + env(safe-area-inset-bottom))`,
-  backgroundColor: theme.palette.background.paper,
-  borderTop: `1px solid ${theme.palette.divider}`,
-  zIndex: 10,
 }));
 
 // ----------------------------------------------------------------------
@@ -124,49 +110,10 @@ export default function Register() {
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const smUp = useResponsive('up', 'sm');
   const mdUp = useResponsive('up', 'md');
-  
-  const [currentStep, setCurrentStep] = useState(0);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [stepperRef, setStepperRef] = useState(null);
-  const [isEmailVerified, setIsEmailVerified] = useState(false);
 
-  const handleStepChange = (step) => {
-    setCurrentStep(step);
-  };
-
-  // Update current step when stepper ref changes
-  useEffect(() => {
-    if (stepperRef && stepperRef.activeStep !== undefined) {
-      setCurrentStep(stepperRef.activeStep);
-    }
-  }, [stepperRef]);
-
-  const handleNext = () => {
-    if (stepperRef && stepperRef.handleNext) {
-      stepperRef.handleNext();
-    }
-  };
-
-  const handleBack = () => {
-    if (stepperRef && stepperRef.handleBack) {
-      stepperRef.handleBack();
-    }
-  };
-
-  const handleEmailVerificationSuccess = () => {
-    setIsEmailVerified(true);
-  };
-
-  // Get email verification status from stepper
-  useEffect(() => {
-    if (stepperRef && stepperRef.isEmailVerified !== undefined) {
-      setIsEmailVerified(stepperRef.isEmailVerified);
-    }
-  }, [stepperRef]);
-
-  const getButtonText = () => {
-    if (currentStep === 8) return 'Completar Registro';
-    return 'Siguiente';
+  const handleRegistrationSuccess = () => {
+    // Handle successful registration
+    console.log('Registration successful');
   };
 
   if (isMobile) {
@@ -194,91 +141,15 @@ export default function Register() {
             </MobileHeaderStyle>
             
             <MobileContentStyle>
-
-              <RegisterStepperForm 
-                onStepChange={handleStepChange}
-                isSubmitting={isSubmitting}
-                onEmailVerificationSuccess={handleEmailVerificationSuccess}
-                ref={setStepperRef}
-              />
+              <RegisterForm onSuccess={handleRegistrationSuccess} />
             </MobileContentStyle>
-
-            <MobileStickyFooterStyle>
-              {/* Progress Bar */}
-              <Box sx={{ mb: 2 }}>
-                <LinearProgress 
-                  variant="determinate" 
-                  value={((currentStep + 1) / 10) * 100} 
-                  sx={{ 
-                    height: 4, 
-                    borderRadius: 2,
-                    bgcolor: 'grey.200',
-                    '& .MuiLinearProgress-bar': {
-                      bgcolor: 'black',
-                      borderRadius: 2
-                    }
-                  }} 
-                />
-                <Typography variant="caption" sx={{ color: 'text.secondary', mt: 1, display: 'block' }}>
-                  Paso {currentStep + 1} de 10
-                </Typography>
-              </Box>
-              
-              <Box sx={{ display: 'flex', gap: 2 }}>
-                <LoadingButton
-                  variant="outlined"
-                  fullWidth
-                  onClick={handleBack}
-                  disabled={currentStep === 0 || currentStep === 4}
-                  sx={{ 
-                    py: 1.5,
-                    borderColor: 'black',
-                    color: 'black',
-                    borderRadius: 2,
-                    '&:hover': { 
-                      borderColor: 'grey.700',
-                      bgcolor: 'grey.50'
-                    },
-                    '&:disabled': {
-                      borderColor: 'grey.300',
-                      color: 'grey.400'
-                    }
-                  }}
-                >
-                  Atrás
-                </LoadingButton>
-                <LoadingButton
-                  variant="contained"
-                  fullWidth
-                  onClick={handleNext}
-                  loading={isSubmitting}
-                  disabled={(currentStep === 2 || currentStep === 3) && !isEmailVerified}
-                  sx={{ 
-                    py: 1.5,
-                    bgcolor: 'black',
-                    color: 'white',
-                    borderRadius: 2,
-                    '&:hover': { 
-                      bgcolor: 'grey.800',
-                      color: 'white'
-                    },
-                    '&:disabled': {
-                      bgcolor: 'grey.400',
-                      color: 'grey.600'
-                    }
-                  }}
-                >
-                  {getButtonText()}
-                </LoadingButton>
-              </Box>
-            </MobileStickyFooterStyle>
           </MobileCardStyle>
         </MobileModalStyle>
       </Page>
     );
   }
 
-  // Desktop version (unchanged)
+  // Desktop version
   return (
     <Page title="Register">
       <RootStyle>
@@ -315,9 +186,7 @@ export default function Register() {
 
         <Container>
           <ContentStyle>
-
-            <RegisterStepperForm onEmailVerificationSuccess={handleEmailVerificationSuccess} />
-
+            <RegisterForm onSuccess={handleRegistrationSuccess} />
             <Typography variant="body2" align="center" sx={{ color: 'text.secondary', mt: 3 }}>
               {translate("auth.registrationMessage")}&nbsp;
               <Link underline="always" color="text.primary" href="https://github.com/lpagn/snowmatchfiles/blob/main/Snow%20Match%20Terms%20of%20Service.pdf">

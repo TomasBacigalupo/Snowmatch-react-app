@@ -54,12 +54,6 @@ export default function AuthGuard({ children }) {
   // If user is authenticated but not verified
   if (isAuthenticated && !emailVerified && !phoneVerified ) {
     console.log('AuthGuard: User authenticated but not verified', { pathname, emailVerified, phoneVerified });
-    
-    // Allow users to stay on registration page even if not verified
-    if (pathname === PATH_AUTH.register) {
-      console.log('AuthGuard: Allowing user to stay on registration page');
-      return <>{children}</>;
-    }
 
     if (pathname !== requestedLocation) {
       setRequestedLocation(pathname);
@@ -92,7 +86,7 @@ export default function AuthGuard({ children }) {
       
       if (hasIncompleteProfile && pathname !== PATH_AUTH.register) {
         console.log('AuthGuard: Teacher has incomplete profile, redirecting to registration');
-        return <Navigate to={PATH_AUTH.register} />;
+        // return <Navigate to={PATH_AUTH.register} />;
       }
     }
   }

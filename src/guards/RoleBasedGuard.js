@@ -56,7 +56,15 @@ export default function RoleBasedGuard({ accessibleRoles, children }) {
   }
 
   if (isTeacher) {
-    if (user && !user.resorts && (!user.resorts || user.resorts.length === 0)) {
+    // Check if teacher has all required information fields
+    const hasRequiredInfo = user && 
+      user.information && 
+      user.description && 
+      user.sports && user.sports.length > 0 &&
+      user.languages && user.languages.length > 0 &&
+      user.resorts && user.resorts.length > 0;
+    
+    if (!hasRequiredInfo) {
       return <Navigate to={PATH_AUTH.teacherDetails} />
     }
   }

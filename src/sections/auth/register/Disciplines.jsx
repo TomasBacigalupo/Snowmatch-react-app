@@ -21,25 +21,25 @@ import { useFormContext, Controller } from 'react-hook-form';
 
 // ----------------------------------------------------------------------
 
-const SPORTS_OPTIONS = [
+const getSportsOptions = (translate) => [
   {
     id: 'SKI',
-    title: 'Ski',
-    description: 'Soy profesor de ski',
+    title: translate('auth.disciplines.sports.ski.title'),
+    description: translate('auth.disciplines.sports.ski.description'),
     icon: 'mdi:ski',
     value: 'SKI'
   },
   {
     id: 'SNOWBOARD',
-    title: 'Snowboard',
-    description: 'Soy profesor de snowboard',
+    title: translate('auth.disciplines.sports.snowboard.title'),
+    description: translate('auth.disciplines.sports.snowboard.description'),
     icon: 'mdi:snowboard',
     value: 'SNOWBOARD'
   },
   {
     id: 'both',
-    title: 'Ambos',
-    description: 'Enseño tanto ski como snowboard',
+    title: translate('auth.disciplines.sports.both.title'),
+    description: translate('auth.disciplines.sports.both.description'),
     icon: 'mdi:ski-cross-country',
     value: 'BOTH'
   }
@@ -56,6 +56,7 @@ export default function Disciplines({ onNext, onBack, currentStep = 1, totalStep
   const { translate } = useLocales();
   const { control, watch, setValue } = useFormContext();
   const selectedSport = watch('sports');
+  const sportsOptions = getSportsOptions(translate);
 
   const handleSportSelect = (sportValue) => {
     if (sportValue === 'BOTH') {
@@ -89,7 +90,7 @@ export default function Disciplines({ onNext, onBack, currentStep = 1, totalStep
           color: 'text.primary'
         }}
       >
-        ¿Qué deporte enseñas?
+        {translate('auth.disciplines.title')}
       </Typography>
 
       <Typography 
@@ -100,12 +101,12 @@ export default function Disciplines({ onNext, onBack, currentStep = 1, totalStep
           textAlign: 'center'
         }}
       >
-        Selecciona tu disciplina deportiva principal
+        {translate('auth.disciplines.subtitle')}
       </Typography>
 
       {/* Sport Selection Cards */}
       <Stack spacing={2} sx={{ mb: 4 }}>
-        {SPORTS_OPTIONS.map((sport) => (
+        {sportsOptions.map((sport) => (
           <Controller
             key={sport.id}
             name="sports"

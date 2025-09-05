@@ -622,7 +622,30 @@
     "notATeacher": "Not a teacher?",
     "continueWithGoogle": "Continue with Google",
     "continueWithApple": "Continue with Apple",
-    "continueWithEmail": "Continue with Email"
+    "continueWithEmail": "Continue with Email",
+    "personalProfile": {
+      "title": "Add a profile photo",
+      "description": "A profile photo helps you stand out from other instructors. You can change it at any time.",
+      "addPhoto": "Add photo"
+    },
+    "disciplines": {
+      "title": "What sport do you teach?",
+      "subtitle": "Select your main sports discipline",
+      "sports": {
+        "ski": {
+          "title": "Ski",
+          "description": "I am a ski instructor"
+        },
+        "snowboard": {
+          "title": "Snowboard",
+          "description": "I am a snowboard instructor"
+        },
+        "both": {
+          "title": "Both",
+          "description": "I teach both ski and snowboard"
+        }
+      }
+    }
   },
   "welcomeStep": {
     "title": "It's easy to get started on SnowMatch",
@@ -1293,6 +1316,86 @@
         "both": "School + Rental",
         "layer": "Snowmatch Layer"
       }
+    }
+  },
+  "skierTypes": {
+    "title": "What type of skier are you?",
+    "subtitle": "Select the types of skiing you practice so students can find you better",
+    "favorites": {
+      "title": "How about these student favorites?",
+      "types": {
+        "FREERIDE": {
+          "label": "Free Ride",
+          "description": "Off-piste"
+        },
+        "FREESTYLE": {
+          "label": "Free Style",
+          "description": "Park and jumps"
+        },
+        "BACKCOUNTRY": {
+          "label": "Backcountry",
+          "description": "Wild mountain"
+        },
+        "PISTA": {
+          "label": "Piste",
+          "description": "Alpine skiing"
+        },
+        "CARVING": {
+          "label": "Carving",
+          "description": "Advanced technique"
+        },
+        "SKI_TOURING": {
+          "label": "Ski Touring",
+          "description": "Mountaineering"
+        },
+        "MOGULS": {
+          "label": "Moguls",
+          "description": "Bumps"
+        },
+        "SLALOM": {
+          "label": "Slalom",
+          "description": "Competition"
+        },
+        "POWDER": {
+          "label": "Powder",
+          "description": "Powder snow"
+        }
+      }
+    },
+    "specialties": {
+      "title": "Do you have any standout specialties?",
+      "types": {
+        "HELI_SKI": {
+          "label": "Heli Ski",
+          "description": "Helicopter"
+        },
+        "CAT_SKI": {
+          "label": "Cat Ski",
+          "description": "Snow cat"
+        },
+        "SPLITBOARD": {
+          "label": "Splitboard",
+          "description": "Split board"
+        },
+        "TELEMARK": {
+          "label": "Telemark",
+          "description": "Classic technique"
+        },
+        "NORDEGIC": {
+          "label": "Nordic",
+          "description": "Cross country"
+        },
+        "ADAPTIVE": {
+          "label": "Adaptive",
+          "description": "Adapted skiing"
+        }
+      }
+    },
+    "tips": {
+      "title": "Tips for selecting your ski types:",
+      "selectAll": "Select all that you practice: This helps students find you",
+      "includeSpecialty": "Include your main specialty: Students look for specific instructors",
+      "addLater": "You can add more later: You can always update your profile later"
     }
   }
 }

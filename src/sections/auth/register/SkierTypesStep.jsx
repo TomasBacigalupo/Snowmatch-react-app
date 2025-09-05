@@ -42,113 +42,64 @@ const SkierTypeCard = styled(Card)(({ theme, selected }) => ({
   padding: theme.spacing(2),
 }));
 
-const skierTypes = [
-  {
-    id: 'FREERIDE',
-    label: 'Free Ride',
-    description: 'Fuera de pista',
-    icon: 'mdi:ski-cross-country',
-    color: '#000000'
-  },
+const getSkierTypes = (translate) => [
   {
     id: 'FREESTYLE',
-    label: 'Free Style',
-    description: 'Park y saltos',
+    label: translate('skierTypes.favorites.types.FREESTYLE.label'),
+    description: translate('skierTypes.favorites.types.FREESTYLE.description'),
     icon: 'mdi:ski',
     color: '#000000'
   },
   {
-    id: 'BACKCOUNTRY',
-    label: 'Backcountry',
-    description: 'Montaña salvaje',
-    icon: 'mdi:terrain',
-    color: '#000000'
-  },
-  {
-    id: 'PISTA',
-    label: 'Pista',
-    description: 'Esquí alpino',
-    icon: 'mdi:ski-alpine',
-    color: '#000000'
-  },
-  {
-    id: 'CARVING',
-    label: 'Carving',
-    description: 'Técnica avanzada',
-    icon: 'mdi:ski-alpine',
-    color: '#000000'
-  },
-  {
-    id: 'SKI_TOURING',
-    label: 'Ski Touring',
-    description: 'Montañismo',
-    icon: 'mdi:hiking',
-    color: '#000000'
-  },
-  {
-    id: 'MOGULS',
-    label: 'Moguls',
-    description: 'Baches',
-    icon: 'mdi:terrain',
-    color: '#000000'
-  },
-  {
-    id: 'SLALOM',
-    label: 'Slalom',
-    description: 'Competición',
+    id: 'RACER',
+    label: translate('skierTypes.favorites.types.RACER.label'),
+    description: translate('skierTypes.favorites.types.RACER.description'),
     icon: 'mdi:flag-checkered',
-    color: '#000000'
-  },
-  {
-    id: 'POWDER',
-    label: 'Powder',
-    description: 'Nieve polvo',
-    icon: 'mdi:weather-snowy',
     color: '#000000'
   }
 ];
 
-const standoutTypes = [
+const getExtraServices = (translate) => [
   {
-    id: 'HELI_SKI',
-    label: 'Heli Ski',
-    description: 'Helicóptero',
-    icon: 'mdi:helicopter',
+    id: 'RENTAL_FITTING',
+    label: translate('skierTypes.extraServices.types.RENTAL_FITTING.label'),
+    description: translate('skierTypes.extraServices.types.RENTAL_FITTING.description'),
+    icon: 'mdi:ski-boot',
     color: '#000000'
   },
   {
-    id: 'CAT_SKI',
-    label: 'Cat Ski',
-    description: 'Gato de nieve',
+    id: 'RESTAURANT_RESERVATIONS',
+    label: translate('skierTypes.extraServices.types.RESTAURANT_RESERVATIONS.label'),
+    description: translate('skierTypes.extraServices.types.RESTAURANT_RESERVATIONS.description'),
+    icon: 'mdi:restaurant',
+    color: '#000000'
+  },
+  {
+    id: 'BABYSITTING',
+    label: translate('skierTypes.extraServices.types.BABYSITTING.label'),
+    description: translate('skierTypes.extraServices.types.BABYSITTING.description'),
+    icon: 'mdi:baby-face',
+    color: '#000000'
+  },
+  {
+    id: 'SKI_TUNNING',
+    label: translate('skierTypes.extraServices.types.SKI_TUNNING.label'),
+    description: translate('skierTypes.extraServices.types.SKI_TUNNING.description'),
+    icon: 'mdi:tools',
+    color: '#000000'
+  },
+  {
+    id: 'TRANSPORTATION',
+    label: translate('skierTypes.extraServices.types.TRANSPORTATION.label'),
+    description: translate('skierTypes.extraServices.types.TRANSPORTATION.description'),
     icon: 'mdi:car',
     color: '#000000'
   },
   {
-    id: 'SPLITBOARD',
-    label: 'Splitboard',
-    description: 'Tabla partida',
-    icon: 'mdi:ski',
-    color: '#000000'
-  },
-  {
-    id: 'TELEMARK',
-    label: 'Telemark',
-    description: 'Técnica clásica',
-    icon: 'mdi:ski-cross-country',
-    color: '#000000'
-  },
-  {
-    id: 'NORDEGIC',
-    label: 'Nórdico',
-    description: 'Cross country',
-    icon: 'mdi:ski-cross-country',
-    color: '#000000'
-  },
-  {
-    id: 'ADAPTIVE',
-    label: 'Adaptativo',
-    description: 'Esquí adaptado',
-    icon: 'mdi:accessibility',
+    id: 'GROCERY_SHOPPING',
+    label: translate('skierTypes.extraServices.types.GROCERY_SHOPPING.label'),
+    description: translate('skierTypes.extraServices.types.GROCERY_SHOPPING.description'),
+    icon: 'mdi:shopping',
     color: '#000000'
   }
 ];
@@ -163,6 +114,9 @@ export default function SkierTypesStep() {
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const { watch, setValue } = useFormContext();
   const selectedTypes = watch('skills') || [];
+  
+  const skierTypes = getSkierTypes(translate);
+  const extraServices = getExtraServices(translate);
 
   const handleTypeClick = (typeId) => {
     const currentTypes = selectedTypes;
@@ -240,7 +194,7 @@ export default function SkierTypesStep() {
             fontSize: { xs: '1.5rem', sm: '2rem' }
           }}
         >
-          ¿Qué tipo de esquiador eres?
+          {translate('skierTypes.title')}
         </Typography>
         <Typography 
           variant="body1" 
@@ -251,11 +205,11 @@ export default function SkierTypesStep() {
             mx: 'auto'
           }}
         >
-          Selecciona los tipos de esquí que practicas para que los estudiantes puedan encontrarte mejor
+          {translate('skierTypes.subtitle')}
         </Typography>
       </Box>
 
-      {/* Guest Favorites Section */}
+      {/* Skier Types Section */}
       <Box sx={{ mb: 4 }}>
         <Typography 
           variant="h6" 
@@ -265,14 +219,14 @@ export default function SkierTypesStep() {
             mb: 2
           }}
         >
-          ¿Qué tal estos favoritos de los estudiantes?
+          {translate('skierTypes.favorites.title')}
         </Typography>
         <Grid container spacing={2}>
           {skierTypes.map(renderTypeCard)}
         </Grid>
       </Box>
 
-      {/* Standout Types Section */}
+      {/* Extra Services Section */}
       <Box sx={{ mb: 4 }}>
         <Typography 
           variant="h6" 
@@ -282,10 +236,10 @@ export default function SkierTypesStep() {
             mb: 2
           }}
         >
-          ¿Tienes alguna especialidad destacada?
+          {translate('skierTypes.extraServices.title')}
         </Typography>
         <Grid container spacing={2}>
-          {standoutTypes.map(renderTypeCard)}
+          {extraServices.map(renderTypeCard)}
         </Grid>
       </Box>
 
@@ -310,12 +264,12 @@ export default function SkierTypesStep() {
             />
             <Box>
               <Typography variant="subtitle2" sx={{ fontWeight: 600, color: '#000000', mb: 1 }}>
-                Consejos para seleccionar tus tipos de esquí:
+                {translate('skierTypes.tips.title')}
               </Typography>
               <Typography variant="body2" color="text.secondary" sx={{ fontSize: '0.875rem', lineHeight: 1.5 }}>
-                • <strong>Selecciona todos los que practiques:</strong> Esto ayuda a los estudiantes a encontrarte<br/>
-                • <strong>Incluye tu especialidad principal:</strong> Los estudiantes buscan instructores específicos<br/>
-                • <strong>Puedes agregar más después:</strong> Siempre puedes actualizar tu perfil más tarde
+                • <strong>{translate('skierTypes.tips.selectAll')}</strong><br/>
+                • <strong>{translate('skierTypes.tips.includeSpecialty')}</strong><br/>
+                • <strong>{translate('skierTypes.tips.addLater')}</strong>
               </Typography>
             </Box>
           </Box>

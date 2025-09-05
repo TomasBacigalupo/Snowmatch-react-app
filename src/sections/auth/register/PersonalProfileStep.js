@@ -42,7 +42,7 @@ export default function PersonalProfileStep({ onAvatarDrop }) {
             lineHeight: 1.2
           }}
         >
-          Agrega una foto de tu perfil
+          {translate('auth.personalProfile.title')}
         </Typography>
         
         <Typography 
@@ -54,8 +54,7 @@ export default function PersonalProfileStep({ onAvatarDrop }) {
             lineHeight: 1.5
           }}
         >
-          Una foto de perfil ayuda a que te destaques del resto de los instructores. 
-          Puedes cambiarla en cualquier momento.
+          {translate('auth.personalProfile.description')}
         </Typography>
         
         <Box sx={{ 
@@ -111,7 +110,7 @@ export default function PersonalProfileStep({ onAvatarDrop }) {
               }
             }}
           >
-            Agregar foto
+            {translate('auth.personalProfile.addPhoto')}
             <input
               type="file"
               hidden

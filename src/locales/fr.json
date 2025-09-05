@@ -130,5 +130,110 @@
         "phone": "Téléphone",
         "certification": "Certification d'instructeur",
         "register": "S'inscrire"
+    },
+    "auth": {
+        "personalProfile": {
+            "title": "Ajoutez une photo de profil",
+            "description": "Une photo de profil vous aide à vous démarquer des autres instructeurs. Vous pouvez la changer à tout moment.",
+            "addPhoto": "Ajouter une photo"
+        },
+        "disciplines": {
+            "title": "Quel sport enseignez-vous ?",
+            "subtitle": "Sélectionnez votre discipline sportive principale",
+            "sports": {
+                "ski": {
+                    "title": "Ski",
+                    "description": "Je suis instructeur de ski"
+                },
+                "snowboard": {
+                    "title": "Snowboard",
+                    "description": "Je suis instructeur de snowboard"
+                },
+                "both": {
+                    "title": "Les deux",
+                    "description": "J'enseigne le ski et le snowboard"
+                }
+            }
+        }
+    },
+    "skierTypes": {
+        "title": "Quel type de skieur êtes-vous ?",
+        "subtitle": "Sélectionnez les types de ski que vous pratiquez pour que les étudiants puissent mieux vous trouver",
+        "favorites": {
+            "title": "Que diriez-vous de ces favoris des étudiants ?",
+            "types": {
+                "FREERIDE": {
+                    "label": "Free Ride",
+                    "description": "Hors-piste"
+                },
+                "FREESTYLE": {
+                    "label": "Free Style",
+                    "description": "Park et sauts"
+                },
+                "BACKCOUNTRY": {
+                    "label": "Backcountry",
+                    "description": "Montagne sauvage"
+                },
+                "PISTA": {
+                    "label": "Piste",
+                    "description": "Ski alpin"
+                },
+                "CARVING": {
+                    "label": "Carving",
+                    "description": "Technique avancée"
+                },
+                "SKI_TOURING": {
+                    "label": "Ski Touring",
+                    "description": "Alpinisme"
+                },
+                "MOGULS": {
+                    "label": "Moguls",
+                    "description": "Bosses"
+                },
+                "SLALOM": {
+                    "label": "Slalom",
+                    "description": "Compétition"
+                },
+                "POWDER": {
+                    "label": "Powder",
+                    "description": "Neige poudreuse"
+                }
+            }
+        },
+        "specialties": {
+            "title": "Avez-vous des spécialités remarquables ?",
+            "types": {
+                "HELI_SKI": {
+                    "label": "Heli Ski",
+                    "description": "Hélicoptère"
+                },
+                "CAT_SKI": {
+                    "label": "Cat Ski",
+                    "description": "Chat de neige"
+                },
+                "SPLITBOARD": {
+                    "label": "Splitboard",
+                    "description": "Planche fendue"
+                },
+                "TELEMARK": {
+                    "label": "Telemark",
+                    "description": "Technique classique"
+                },
+                "NORDEGIC": {
+                    "label": "Nordique",
+                    "description": "Ski de fond"
+                },
+                "ADAPTIVE": {
+                    "label": "Adaptatif",
+                    "description": "Ski adapté"
+                }
+            }
+        },
+        "tips": {
+            "title": "Conseils pour sélectionner vos types de ski :",
+            "selectAll": "Sélectionnez tous ceux que vous pratiquez : Cela aide les étudiants à vous trouver",
+            "includeSpecialty": "Incluez votre spécialité principale : Les étudiants cherchent des instructeurs spécifiques",
+            "addLater": "Vous pouvez en ajouter plus tard : Vous pouvez toujours mettre à jour votre profil plus tard"
+        }
     }
 }

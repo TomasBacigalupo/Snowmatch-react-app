@@ -1533,7 +1533,30 @@
         "emailSignIn": "Continuar con Email",
         "continueWithGoogle": "Continuar con Google",
         "continueWithApple": "Continuar con Apple",
-        "continueWithEmail": "Continuar con Email"
+        "continueWithEmail": "Continuar con Email",
+        "personalProfile": {
+            "title": "Agrega una foto de tu perfil",
+            "description": "Una foto de perfil ayuda a que te destaques del resto de los instructores. Puedes cambiarla en cualquier momento.",
+            "addPhoto": "Agregar foto"
+        },
+        "disciplines": {
+            "title": "¿Qué deporte enseñas?",
+            "subtitle": "Selecciona tu disciplina deportiva principal",
+            "sports": {
+                "ski": {
+                    "title": "Ski",
+                    "description": "Soy profesor de ski"
+                },
+                "snowboard": {
+                    "title": "Snowboard",
+                    "description": "Soy profesor de snowboard"
+                },
+                "both": {
+                    "title": "Ambos",
+                    "description": "Enseño tanto ski como snowboard"
+                }
+            }
+        }
     },
     "welcomeStep": {
         "title": "Es fácil comenzar en SnowMatch",
@@ -2429,6 +2452,70 @@
                 "both": "Escuela + Rental",
                 "layer": "Capa Snowmatch"
             }
+        }
+    },
+    "skierTypes": {
+        "title": "¿Qué tipo de esquiador eres?",
+        "subtitle": "Selecciona los tipos de esquí que practicas para que los estudiantes puedan encontrarte mejor",
+        "favorites": {
+            "title": "¿Qué tipo de esquiador eres?",
+            "types": {
+                "FREESTYLE": {
+                    "label": "Free Style",
+                    "description": "Park y saltos"
+                },
+                "PISTA": {
+                    "label": "Pista",
+                    "description": "Esquí alpino"
+                },
+                "RACER": {
+                    "label": "Racer",
+                    "description": "Competición"
+                },
+                "TECNICO": {
+                    "label": "Técnico",
+                    "description": "Técnica avanzada"
+                },
+                "FREERIDE": {
+                    "label": "Free Ride",
+                    "description": "Fuera de pista"
+                }
+            }
+        },
+        "extraServices": {
+            "title": "¿Qué servicios extra ofreces a tus clientes?",
+            "types": {
+                "RENTAL_FITTING": {
+                    "label": "Ajuste de equipos",
+                    "description": "Fitting de alquiler"
+                },
+                "RESTAURANT_RESERVATIONS": {
+                    "label": "Reservas de restaurantes",
+                    "description": "Reservas gastronómicas"
+                },
+                "BABYSITTING": {
+                    "label": "Cuidado de niños",
+                    "description": "Servicio de niñera"
+                },
+                "SKI_TUNNING": {
+                    "label": "Afilado de esquíes",
+                    "description": "Mantenimiento de equipos"
+                },
+                "TRANSPORTATION": {
+                    "label": "Transporte",
+                    "description": "Servicio de transporte"
+                },
+                "GROCERY_SHOPPING": {
+                    "label": "Compras",
+                    "description": "Servicio de compras"
+                }
+            }
+        },
+        "tips": {
+            "title": "Consejos para completar tu perfil:",
+            "selectAll": "Selecciona todos los tipos de esquí que practiques: Esto ayuda a los estudiantes a encontrarte",
+            "includeSpecialty": "Incluye los servicios extra que ofreces: Los clientes buscan instructores con servicios adicionales",
+            "addLater": "Puedes agregar más después: Siempre puedes actualizar tu perfil más tarde"
         }
     }
 }

@@ -671,7 +671,83 @@
     "password": "Password",
     "phone": "Phone",
     "certification": "Instructor certification",
-    "register": "Register"
+    "register": "Register",
+    "stepProgress": "Step {{current}} of {{total}} - {{completed}} of {{totalSteps}} steps saved",
+    "stepProgressSimple": "Step {{current}} of {{total}}",
+    "back": "Back",
+    "next": "Next",
+    "completeProfile": "Complete Profile",
+    "publish": "Publish",
+    "languages": {
+      "title": "What languages do you teach in?",
+      "subtitle": "Select the languages you can teach in so students can find you better",
+      "mainLanguages": "How about these main languages?",
+      "additionalLanguages": "Do you speak any other languages?",
+      "tips": {
+        "title": "Tips for selecting your languages:",
+        "selectAll": "Select all that you master: Students look for instructors who speak their language",
+        "includeNative": "Include your native language: It's important for students to know your main language",
+        "addLater": "You can add more later: You can always update your profile later"
+      }
+    },
+    "resorts": {
+      "title": "Resorts where you teach",
+      "subtitle": "Select up to 10 resorts where you teach classes. Students will be able to find you at these destinations.",
+      "tip": "Tip: Select the resorts where you have the most experience or where you plan to be regularly available.",
+      "searchLabel": "Search and select resorts",
+      "searchPlaceholder": "Type the resort name...",
+      "helperText": "Maximum 10 resorts. You can add or remove resorts later from your profile.",
+      "popularResorts": "Popular resorts: Cerro Catedral, Chapelco, Las Leñas, Portillo, Aspen, Vail, Whistler, Chamonix"
+    },
+    "description": {
+      "title": "Make your profile stand out",
+      "subtitle": "In this step, you'll add information about your experience and specialties, plus create an attractive title and description so clients can get to know you better.",
+      "tips": "Tips: Mention your experience, certifications, teaching style and specialties. Be authentic and maintain a friendly tone.",
+      "step": {
+        "title": "Create your description",
+        "subtitle": "Add an attractive title and describe your experience",
+        "profileTitle": "Your profile title",
+        "profileTitlePlaceholder": "E.g: Certified instructor with 5 years of experience",
+        "detailedDescription": "Detailed description",
+        "detailedDescriptionPlaceholder": "Describe your experience and certifications, your teaching style, your achievements or specialties, your story and what you're passionate about teaching, and maintain a friendly tone."
+      }
+    },
+    "pricing": {
+      "title": "Pricing",
+      "currency": "Currency",
+      "currencies": {
+        "USD": "US Dollar",
+        "EUR": "Euro",
+        "ARS": "Argentine Peso",
+        "CLP": "Chilean Peso",
+        "GBP": "British Pound",
+        "CHF": "Swiss Franc",
+        "CAD": "Canadian Dollar"
+      },
+      "options": {
+        "2hours": {
+          "title": "Price for 2 hours",
+          "tip": ""
+        },
+        "3hours": {
+          "title": "Half day price",
+          "tip": "3-hour sessions."
+        },
+        "6hours": {
+          "title": "Full day price",
+          "tip": "For complete 6-hour experiences."
+        }
+      }
+    },
+    "preview": {
+      "title": "Yay! Time to publish",
+      "subtitle": "Here's what we'll show to guests. Before publishing, make sure to review the details.",
+      "whatsNext": "What's next?",
+      "setupCalendar": {
+        "title": "Set up your calendar",
+        "description": "Choose which dates are available. Guests can start booking 24 hours after you publish."
+      }
+    }
   },
   "faqs": {
     "title": "Frequently Asked Questions",

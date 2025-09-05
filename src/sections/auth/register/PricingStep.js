@@ -4,6 +4,8 @@ import { useEffect } from 'react';
 import { Box, Typography, Stack, Grid, TextField, InputAdornment, Divider, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
 // framer motion
 import { m } from 'framer-motion';
+// hooks
+import useLocales from 'src/hooks/useLocales';
 // components
 import Iconify from '../../../components/Iconify';
 import { RHFTextField, RHFSelect } from '../../../components/hook-form';
@@ -16,6 +18,7 @@ PricingStep.propTypes = {
 };
 
 export default function PricingStep({ validateField }) {
+  const { translate } = useLocales();
   const { watch, setValue, getValues } = useFormContext();
   
   // Watch form values
@@ -25,33 +28,33 @@ export default function PricingStep({ validateField }) {
   const price6Hours = watch('price6Hours') || '';
 
   const currencies = [
-    { code: 'USD', symbol: '$', name: 'Dólar Estadounidense' },
-    { code: 'EUR', symbol: '€', name: 'Euro' },
-    { code: 'ARS', symbol: '$', name: 'Peso Argentino' },
-    { code: 'CLP', symbol: '$', name: 'Peso Chileno' },
-    { code: 'GBP', symbol: '£', name: 'Libra Esterlina' },
-    { code: 'CHF', symbol: 'CHF', name: 'Franco Suizo' },
-    { code: 'CAD', symbol: 'C$', name: 'Dólar Canadiense' }
+    { code: 'USD', symbol: '$', name: translate('registerForm.pricing.currencies.USD') },
+    { code: 'EUR', symbol: '€', name: translate('registerForm.pricing.currencies.EUR') },
+    { code: 'ARS', symbol: '$', name: translate('registerForm.pricing.currencies.ARS') },
+    { code: 'CLP', symbol: '$', name: translate('registerForm.pricing.currencies.CLP') },
+    { code: 'GBP', symbol: '£', name: translate('registerForm.pricing.currencies.GBP') },
+    { code: 'CHF', symbol: 'CHF', name: translate('registerForm.pricing.currencies.CHF') },
+    { code: 'CAD', symbol: 'C$', name: translate('registerForm.pricing.currencies.CAD') }
   ];
 
   const currentCurrency = currencies.find(c => c.code === currency);
 
   const pricingOptions = [
     {
-      title: "Precio por 2 horas",
-      tip: "",
+      title: translate('registerForm.pricing.options.2hours.title'),
+      tip: translate('registerForm.pricing.options.2hours.tip'),
       field: "price2Hours",
       value: price2Hours
     },
     {
-      title: "Precio por medio día",
-      tip: "Sesiones de 3 horas.",
+      title: translate('registerForm.pricing.options.3hours.title'),
+      tip: translate('registerForm.pricing.options.3hours.tip'),
       field: "price3Hours",
       value: price3Hours
     },
     {
-      title: "Precio por día completo",
-      tip: "Para experiencias completas de 6 horas.",
+      title: translate('registerForm.pricing.options.6hours.title'),
+      tip: translate('registerForm.pricing.options.6hours.tip'),
       field: "price6Hours",
       value: price6Hours
     }
@@ -81,15 +84,15 @@ export default function PricingStep({ validateField }) {
       <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
         <Iconify icon="eva:credit-card-fill" sx={{ fontSize: 24, color: 'text.primary', mr: 2 }} />
         <Typography variant="h6" sx={{ color: 'text.primary', fontWeight: 600 }}>
-          Precios
+          {translate('registerForm.pricing.title')}
         </Typography>
       </Box>
 
       <FormControl fullWidth sx={{ mb: 4 }}>
-        <InputLabel>Moneda</InputLabel>
+        <InputLabel>{translate('registerForm.pricing.currency')}</InputLabel>
         <Select
           value={currency}
-          label="Moneda"
+          label={translate('registerForm.pricing.currency')}
           onChange={handleCurrencyChange}
         >
           {currencies.map((curr) => (

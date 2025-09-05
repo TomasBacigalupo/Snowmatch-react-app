@@ -219,7 +219,7 @@ export default function LanguagesStep() {
             fontSize: { xs: '1.5rem', sm: '2rem' }
           }}
         >
-          ¿En qué idiomas das clases?
+{translate('registerForm.languages.title')}
         </Typography>
         <Typography
           variant="body1"
@@ -230,7 +230,7 @@ export default function LanguagesStep() {
             mx: 'auto'
           }}
         >
-          Selecciona los idiomas en los que puedes enseñar para que los estudiantes puedan encontrarte mejor
+{translate('registerForm.languages.subtitle')}
         </Typography>
       </Box>
 
@@ -244,7 +244,7 @@ export default function LanguagesStep() {
             mb: 2
           }}
         >
-          ¿Qué tal estos idiomas principales?
+{translate('registerForm.languages.mainLanguages')}
         </Typography>
         <Grid container spacing={2}>
           {mainLanguages.map(renderLanguageCard)}
@@ -261,7 +261,7 @@ export default function LanguagesStep() {
             mb: 2
           }}
         >
-          ¿Hablas algún otro idioma?
+{translate('registerForm.languages.additionalLanguages')}
         </Typography>
         <Grid container spacing={2}>
           {additionalLanguages.map(renderLanguageCard)}
@@ -287,12 +287,12 @@ export default function LanguagesStep() {
             />
             <Box>
               <Typography variant="subtitle2" sx={{ fontWeight: 600, color: '#000000', mb: 1 }}>
-                Consejos para seleccionar tus idiomas:
+{translate('registerForm.languages.tips.title')}
               </Typography>
               <Typography variant="body2" color="text.secondary" sx={{ fontSize: '0.875rem', lineHeight: 1.5 }}>
-                • <strong>Selecciona todos los que dominas:</strong> Los estudiantes buscan instructores que hablen su idioma<br />
-                • <strong>Incluye tu idioma nativo:</strong> Es importante que los estudiantes sepan tu idioma principal<br />
-                • <strong>Puedes agregar más después:</strong> Siempre puedes actualizar tu perfil más tarde
+                • <strong>{translate('registerForm.languages.tips.selectAll')}</strong><br />
+                • <strong>{translate('registerForm.languages.tips.includeNative')}</strong><br />
+                • <strong>{translate('registerForm.languages.tips.addLater')}</strong>
               </Typography>
             </Box>
           </Box>

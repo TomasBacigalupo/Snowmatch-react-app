@@ -1,8 +1,11 @@
 import { Box, Typography, Paper } from '@mui/material';
 import { m } from 'framer-motion';
 import Iconify from '../../../components/Iconify';
+import useLocales from 'src/hooks/useLocales';
 
 const DescriptionTipsStep = () => {
+  const { translate } = useLocales();
+  
   return (
     <m.div
       initial={{ opacity: 0, y: 20 }}
@@ -42,7 +45,7 @@ const DescriptionTipsStep = () => {
              lineHeight: 1.2
            }}
          >
-           Haz que tu perfil destaque
+{translate('registerForm.description.title')}
          </Typography>
        </Box>
 
@@ -62,7 +65,7 @@ const DescriptionTipsStep = () => {
              maxWidth: '100%'
            }}
          >
-          En este paso, agregarás información sobre tu experiencia y especialidades, además de crear un título y descripción atractivos para que los clientes puedan conocerte mejor.
+{translate('registerForm.description.subtitle')}
         </Typography>
       </m.div>
       
@@ -74,7 +77,7 @@ const DescriptionTipsStep = () => {
       >
         <Box sx={{ p: 2, bgcolor: 'grey.50', borderRadius: 2 }}>
           <Typography variant="body2" color="text.secondary" sx={{ lineHeight: 1.6 }}>
-            <strong>Consejos:</strong> Menciona tu experiencia, certificaciones, estilo de enseñanza y especialidades. Sé auténtico y mantén un tono amigable.
+<strong>{translate('registerForm.description.tips')}</strong>
           </Typography>
         </Box>
       </m.div>

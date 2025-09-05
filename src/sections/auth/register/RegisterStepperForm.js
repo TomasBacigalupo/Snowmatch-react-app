@@ -661,7 +661,12 @@ const RegisterStepperForm = forwardRef(({ onStepChange, onNext, onBack, isSubmit
         {!isMobile && (
           <Box sx={{ mb: 2 }}>
             <Typography variant="body2" color="text.secondary" align="center">
-              Paso {activeStep + 1} de {STEPS.length} - {completedSteps.size} de {STEPS.length - 1} pasos guardados
+              {translate('registerForm.stepProgress', {
+                current: activeStep + 1,
+                total: STEPS.length,
+                completed: completedSteps.size,
+                totalSteps: STEPS.length - 1
+              })}
             </Typography>
           </Box>
         )}

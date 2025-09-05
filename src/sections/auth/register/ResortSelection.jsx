@@ -43,25 +43,25 @@ export default function ResortSelection() {
       <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
         <Iconify icon="eva:map-fill" sx={{ fontSize: 24, color: 'text.primary', mr: 2 }} />
         <Typography variant="h6" sx={{ color: 'text.primary', fontWeight: 600 }}>
-          Resorts donde das clases
+          {translate('registerForm.resorts.title')}
         </Typography>
       </Box>
       
       <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-        Selecciona hasta 10 resorts donde impartes clases. Los estudiantes podrán encontrarte en estos destinos.
+        {translate('registerForm.resorts.subtitle')}
       </Typography>
 
       <Alert severity="info" sx={{ mb: 3 }}>
         <Typography variant="body2">
-          <strong>Consejo:</strong> Selecciona los resorts donde tienes más experiencia o donde planeas estar disponible regularmente.
+          <strong>{translate('registerForm.resorts.tip')}</strong>
         </Typography>
       </Alert>
       
       <Stack spacing={3}>
         <RHFAutocomplete
           name="resorts"
-          label="Buscar y seleccionar resorts"
-          placeholder="Escribe el nombre del resort..."
+          label={translate('registerForm.resorts.searchLabel')}
+          placeholder={translate('registerForm.resorts.searchPlaceholder')}
           options={getAllResorts()}
           getOptionLabel={(option) => option.name}
           groupBy={(option) => option.category}
@@ -98,12 +98,12 @@ export default function ResortSelection() {
             ))
           }
           isOptionEqualToValue={(option, value) => option.name === value.name}
-          helperText="Máximo 10 resorts. Puedes agregar o quitar resorts más tarde desde tu perfil."
+          helperText={translate('registerForm.resorts.helperText')}
         />
         
         <Box sx={{ p: 2, bgcolor: 'grey.50', borderRadius: 1, border: '1px solid', borderColor: 'grey.200' }}>
           <Typography variant="body2" color="text.secondary">
-            <strong>Resorts populares:</strong> Cerro Catedral, Chapelco, Las Leñas, Portillo, Aspen, Vail, Whistler, Chamonix
+            <strong>{translate('registerForm.resorts.popularResorts')}</strong>
           </Typography>
         </Box>
       </Stack>

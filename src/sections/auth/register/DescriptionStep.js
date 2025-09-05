@@ -3,12 +3,16 @@ import PropTypes from 'prop-types';
 import { Box, Typography } from '@mui/material';
 // framer motion
 import { m } from 'framer-motion';
+// hooks
+import useLocales from 'src/hooks/useLocales';
 // components
 import { RHFTextField } from '../../../components/hook-form';
 
 // ----------------------------------------------------------------------
 
 export default function DescriptionStep({ methods }) {
+  const { translate } = useLocales();
+  
   return (
     <m.div
       initial={{ opacity: 0, x: 50 }}
@@ -26,7 +30,7 @@ export default function DescriptionStep({ methods }) {
             fontSize: { xs: '1.5rem', sm: '2rem' }
           }}
         >
-          Crea tu descripción
+{translate('registerForm.description.step.title')}
         </Typography>
         <Typography 
           variant="body1" 
@@ -37,7 +41,7 @@ export default function DescriptionStep({ methods }) {
             mx: 'auto'
           }}
         >
-          Agrega un título atractivo y describe tu experiencia
+{translate('registerForm.description.step.subtitle')}
         </Typography>
       </Box>
 
@@ -45,8 +49,8 @@ export default function DescriptionStep({ methods }) {
       <Box sx={{ mb: 4 }}>
         <RHFTextField 
           name="information"
-          label="Título de tu perfil"
-          placeholder="Ej: Instructor certificado con 5 años de experiencia"
+          label={translate('registerForm.description.step.profileTitle')}
+          placeholder={translate('registerForm.description.step.profileTitlePlaceholder')}
           inputProps={{ 
             maxLength: 150,
             style: { 
@@ -93,8 +97,8 @@ export default function DescriptionStep({ methods }) {
       <Box sx={{ mb: 4 }}>
         <RHFTextField 
           name="description"
-          label="Descripción detallada"
-          placeholder="Describe tu experiencia y certificaciones, tu estilo de enseñanza, tus logros o especialidades, tu historia y lo que te apasiona de enseñar, y mantén un tono amigable."
+          label={translate('registerForm.description.step.detailedDescription')}
+          placeholder={translate('registerForm.description.step.detailedDescriptionPlaceholder')}
           multiline
           rows={6}
           inputProps={{ 

@@ -1587,7 +1587,83 @@
         "countryCode": "Codigo País",
         "phone": "Teléfono",
         "certification": "Certificación",
-        "register": "Registrarme"
+        "register": "Registrarme",
+        "stepProgress": "Paso {{current}} de {{total}} - {{completed}} de {{totalSteps}} pasos guardados",
+        "stepProgressSimple": "Paso {{current}} de {{total}}",
+        "back": "Atrás",
+        "next": "Siguiente",
+        "completeProfile": "Completar Perfil",
+        "publish": "Publicar",
+        "languages": {
+            "title": "¿En qué idiomas das clases?",
+            "subtitle": "Selecciona los idiomas en los que puedes enseñar para que los estudiantes puedan encontrarte mejor",
+            "mainLanguages": "¿Qué tal estos idiomas principales?",
+            "additionalLanguages": "¿Hablas algún otro idioma?",
+            "tips": {
+                "title": "Consejos para seleccionar tus idiomas:",
+                "selectAll": "Selecciona todos los que dominas: Los estudiantes buscan instructores que hablen su idioma",
+                "includeNative": "Incluye tu idioma nativo: Es importante que los estudiantes sepan tu idioma principal",
+                "addLater": "Puedes agregar más después: Siempre puedes actualizar tu perfil más tarde"
+            }
+        },
+        "resorts": {
+            "title": "Resorts donde das clases",
+            "subtitle": "Selecciona hasta 10 resorts donde impartes clases. Los estudiantes podrán encontrarte en estos destinos.",
+            "tip": "Consejo: Selecciona los resorts donde tienes más experiencia o donde planeas estar disponible regularmente.",
+            "searchLabel": "Buscar y seleccionar resorts",
+            "searchPlaceholder": "Escribe el nombre del resort...",
+            "helperText": "Máximo 10 resorts. Puedes agregar o quitar resorts más tarde desde tu perfil.",
+            "popularResorts": "Resorts populares: Cerro Catedral, Chapelco, Las Leñas, Portillo, Aspen, Vail, Whistler, Chamonix"
+        },
+        "description": {
+            "title": "Haz que tu perfil destaque",
+            "subtitle": "En este paso, agregarás información sobre tu experiencia y especialidades, además de crear un título y descripción atractivos para que los clientes puedan conocerte mejor.",
+            "tips": "Consejos: Menciona tu experiencia, certificaciones, estilo de enseñanza y especialidades. Sé auténtico y mantén un tono amigable.",
+            "step": {
+                "title": "Crea tu descripción",
+                "subtitle": "Agrega un título atractivo y describe tu experiencia",
+                "profileTitle": "Título de tu perfil",
+                "profileTitlePlaceholder": "Ej: Instructor certificado con 5 años de experiencia",
+                "detailedDescription": "Descripción detallada",
+                "detailedDescriptionPlaceholder": "Describe tu experiencia y certificaciones, tu estilo de enseñanza, tus logros o especialidades, tu historia y lo que te apasiona de enseñar, y mantén un tono amigable."
+            }
+        },
+        "pricing": {
+            "title": "Precios",
+            "currency": "Moneda",
+            "currencies": {
+                "USD": "Dólar Estadounidense",
+                "EUR": "Euro",
+                "ARS": "Peso Argentino",
+                "CLP": "Peso Chileno",
+                "GBP": "Libra Esterlina",
+                "CHF": "Franco Suizo",
+                "CAD": "Dólar Canadiense"
+            },
+            "options": {
+                "2hours": {
+                    "title": "Precio por 2 horas",
+                    "tip": ""
+                },
+                "3hours": {
+                    "title": "Precio por medio día",
+                    "tip": "Sesiones de 3 horas."
+                },
+                "6hours": {
+                    "title": "Precio por día completo",
+                    "tip": "Para experiencias completas de 6 horas."
+                }
+            }
+        },
+        "preview": {
+            "title": "¡Yay! Es hora de publicar",
+            "subtitle": "Aquí está lo que mostraremos a los huéspedes. Antes de publicar, asegúrate de revisar los detalles.",
+            "whatsNext": "¿Qué sigue?",
+            "setupCalendar": {
+                "title": "Configura tu calendario",
+                "description": "Elige qué fechas están disponibles. Los huéspedes pueden comenzar a reservar 24 horas después de que publiques."
+            }
+        }
     },
     "loginForm": {
         "name": "Nombre",

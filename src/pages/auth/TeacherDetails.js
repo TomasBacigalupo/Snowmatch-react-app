@@ -100,9 +100,9 @@ export default function TeacherDetails() {
   }, [stepperRef]);
 
   const getButtonText = () => {
-    if (currentStep === 6) return 'Completar Perfil';
-    if (currentStep === 9) return 'Publish';
-    return 'Siguiente';
+    if (currentStep === 6) return translate('registerForm.completeProfile');
+    if (currentStep === 9) return translate('registerForm.publish');
+    return translate('registerForm.next');
   };
 
   const handleRegistrationComplete = () => {
@@ -146,7 +146,10 @@ export default function TeacherDetails() {
                   }} 
                 />
                 <Typography variant="caption" sx={{ color: 'text.secondary', mt: 1, display: 'block' }}>
-                  Paso {currentStep + 1} de 10
+                  {translate('registerForm.stepProgressSimple', {
+                    current: currentStep + 1,
+                    total: 10
+                  })}
                 </Typography>
               </Box>
               
@@ -171,7 +174,7 @@ export default function TeacherDetails() {
                     }
                   }}
                 >
-                  Atrás
+                  {translate('registerForm.back')}
                 </LoadingButton>
                 <LoadingButton
                   variant="contained"

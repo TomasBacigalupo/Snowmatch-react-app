@@ -11,6 +11,8 @@ import navConfig from './NavConfig';
 import { PATH_DASHBOARD, PATH_GUEST } from 'src/routes/paths';
 // redux
 import { useSelector } from 'src/redux/store';
+// hooks
+import useLocales from 'src/hooks/useLocales';
 
 
 // ----------------------------------------------------------------------
@@ -40,6 +42,10 @@ function NavbarHorizontalWithSearch() {
   // Get resort from Redux business slice
   const { filters } = useSelector((state) => state.teachers);
   const resort = filters.resort || '';
+  
+  // Get current language and translations
+  const { currentLang, translate } = useLocales();
+  const currentLanguage = currentLang?.value || 'es';
 
   useEffect(() => {
     const handleScroll = () => {
@@ -58,10 +64,10 @@ function NavbarHorizontalWithSearch() {
           [
             {
               items: [
-                { title: '📰 Noticias', path: "/noticias", },
-                { title: '⛷️ Clases', path: "/match/independant", },
-                { title: '🎥 Video Correcciones', path: PATH_DASHBOARD.general.videoCoachRate,   },
-                { title: '🎿 Rental', path: `/rental/${resort}`,  },
+                { title: `📰 ${translate('menu.navbar.news')}`, path: "/noticias", },
+                { title: `⛷️ ${translate('menu.navbar.classes')}`, path: `/${currentLanguage}/search/${resort}`, },
+                { title: `🎥 ${translate('menu.navbar.videoCorrections')}`, path: PATH_DASHBOARD.general.videoCoachRate,   },
+                { title: `🎿 ${translate('menu.navbar.rental')}`, path: `/rental/${resort}`,  },
               ],
             }
           ]

@@ -35,7 +35,7 @@ export default function UserLessonsList({ horizontal = false }) {
     return (
       <Box sx={{ position: 'relative', bgcolor: 'background.paper' }}>
         <Typography variant="h5" sx={{ px: 2, pt: 2 }}>
-          Mis clases
+          {translate('lessons.myClasses')}
         </Typography>
         {!isLoading && bookings.length > 1 && (
           <Box sx={{ position: 'absolute', right: 16, top: 16, zIndex: 1, display: 'flex', gap: 1 }}>

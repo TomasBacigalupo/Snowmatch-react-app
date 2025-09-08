@@ -45,6 +45,7 @@ import { openCatedral } from 'src/services/facebook';
 import { Helmet } from 'react-helmet-async';
 import { LoadingButton } from '@mui/lab';
 import SchoolProducts from 'src/sections/@dashboard/e-commerce/shop/SchoolProducts';
+import { useNavigate } from 'react-router-dom';
 // ----------------------------------------------------------------------
 
 function useQuery() {
@@ -62,6 +63,7 @@ export default function EcommerceShop({ isGuest = false, teacherType = "school" 
   const { user } = useAuth();
   const isTeacher = user?.role === "TEACHER"
   const query = useQuery()
+  const navigate = useNavigate();
   const [openFilter, setOpenFilter] = useState(false);
   const [page, setPage] = useState(0);
   const theme = useTheme();
@@ -114,6 +116,8 @@ export default function EcommerceShop({ isGuest = false, teacherType = "school" 
     !values.resort;
 
   useEffect(() => {
+    setHasFetchedTeachers(false);
+    setAutoOpened(false); // Reset auto-opened state for new searches
     dispatch(getFreeTeachers(filters.from, filters.to, filters.resort, 0));
     //dispatch(getTeachersWithEvents(filters));
   }, [dispatch, filters]);
@@ -183,6 +187,7 @@ export default function EcommerceShop({ isGuest = false, teacherType = "school" 
   // No results contact modal
   const [noResultsOpen, setNoResultsOpen] = useState(false);
   const [autoOpened, setAutoOpened] = useState(false);
+  const [hasFetchedTeachers, setHasFetchedTeachers] = useState(false);
   const CONTACT_EMAIL = 'office@snowmatch.pro';
   const WHATSAPP_NUMBER = '5492944263223';
 
@@ -208,12 +213,24 @@ export default function EcommerceShop({ isGuest = false, teacherType = "school" 
   const openNoResultsModal = () => setNoResultsOpen(true);
   const closeNoResultsModal = () => setNoResultsOpen(false);
 
+  // Track when teachers are successfully fetched
   useEffect(() => {
-    if (!isLoading && filteredTeachers.length === 0 && !autoOpened) {
+    if (!isLoading && !hasFetchedTeachers) {
+      setHasFetchedTeachers(true);
+    }
+  }, [isLoading, hasFetchedTeachers]);
+
+  useEffect(() => {
+    // Only open dialog if:
+    // 1. Loading is complete
+    // 2. We have fetched teachers (API call completed)
+    // 3. No teachers were returned from the API
+    // 4. Dialog hasn't been auto-opened yet
+    if (!isLoading && hasFetchedTeachers && teachers.length === 0 && !autoOpened) {
       setNoResultsOpen(true);
       setAutoOpened(true);
     }
-  }, [isLoading, filteredTeachers.length, autoOpened]);
+  }, [isLoading, hasFetchedTeachers, teachers.length, autoOpened]);
 
   const buildMessage = () => {
     return `Hola Snowmatch, no encontré instructores disponibles.\n` +
@@ -233,6 +250,24 @@ export default function EcommerceShop({ isGuest = false, teacherType = "school" 
     const subject = 'Consulta - Clases sin disponibilidad';
     const body = buildMessage();
     window.location.href = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  };
+
+  const handleVideoUpload = () => {
+    navigate(PATH_DASHBOARD.videoUpload.root);
+  };
+
+  const handleWhatsAppInstructors = () => {
+    const currentResort = filters.resort || 'Cerro Catedral';
+    const message = `Hola Snowmatch 👋 
+
+Estoy buscando instructores disponibles en ${currentResort} pero no encuentro opciones en la app.
+
+¿Podrían ayudarme a encontrar instructores disponibles para mis fechas?
+
+Gracias!`;
+    
+    const url = `https://wa.me/5492944567890?text=${encodeURIComponent(message)}`;
+    window.open(url, '_blank');
   };
 
   return (
@@ -312,74 +347,60 @@ export default function EcommerceShop({ isGuest = false, teacherType = "school" 
         <ShopStandardProducts teachers={filteredTeachers} loading={isLoading} />
         {/* Open manual trigger if needed when empty */}
         {!isLoading && filteredTeachers.length === 0 && (
-          <Box sx={{ mt: 3 }}>
-            <Typography variant="h6" sx={{ mb: 2, textAlign: 'center' }}>
-              No encontramos instructores disponibles para tu búsqueda. Podés reservar otros servicios ahora:
+          <Box sx={{ mt: 3, textAlign: 'center' }}>
+            <Typography variant="h6" sx={{ mb: 3 }}>
+              No encontramos instructores disponibles para tu búsqueda.
             </Typography>
-
-            <Typography variant="subtitle1" sx={{ mb: 1 }}>Servicios</Typography>
-            <Slider
-              dots
-              arrows={false}
-              slidesToShow={2}
-              slidesToScroll={1}
-              autoplay
-              speed={600}
-              responsive={[
-                { breakpoint: 900, settings: { slidesToShow: 1 } },
-                { breakpoint: 600, settings: { slidesToShow: 1 } },
-              ]}
-              {...CarouselDots({})}
-            >
-              {[{ title: 'Traslados', key: 'traslados', icon: 'mdi:ski' }, { title: 'Alquiler de equipos', key: 'rental', icon: 'mdi:ski-cross-country' }].map((item) => (
-                <Box key={item.key} sx={{ px: 1 }}>
-                  <Box sx={{
-                    p: 2,
-                    borderRadius: 2,
-                    bgcolor: (theme) => alpha(theme.palette.grey[900], 0.02),
-                    border: (theme) => `1px solid ${alpha(theme.palette.grey[500], 0.16)}`,
-                  }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', mb: 1, gap: 1 }}>
-                      <Iconify icon={item.icon} width={22} height={22} />
-                      <Typography variant="subtitle1">{item.title}</Typography>
-                    </Box>
-                    <Button variant="contained" onClick={openNoResultsModal}>Consultar</Button>
-                  </Box>
-                </Box>
-              ))}
-            </Slider>
-
-            <Typography variant="subtitle1" sx={{ mt: 3, mb: 1 }}>Clases</Typography>
-            <Slider
-              dots
-              arrows={false}
-              slidesToShow={2}
-              slidesToScroll={1}
-              autoplay
-              speed={600}
-              responsive={[
-                { breakpoint: 900, settings: { slidesToShow: 1 } },
-                { breakpoint: 600, settings: { slidesToShow: 1 } },
-              ]}
-              {...CarouselDots({})}
-            >
-              {[{ title: 'Vieo corrección', key: 'video', icon: 'mdi:account-tie' }, { title: 'Clase online', key: 'online', icon: 'mdi:baby-face-outline' }, { title: 'Clases grupales', key: 'group', icon: 'mdi:account-group' }].map((item) => (
-                <Box key={item.key} sx={{ px: 1 }}>
-                  <Box sx={{
-                    p: 2,
-                    borderRadius: 2,
-                    bgcolor: (theme) => alpha(theme.palette.grey[900], 0.02),
-                    border: (theme) => `1px solid ${alpha(theme.palette.grey[500], 0.16)}`,
-                  }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', mb: 1, gap: 1 }}>
-                      <Iconify icon={item.icon} width={22} height={22} />
-                      <Typography variant="subtitle1">{item.title}</Typography>
-                    </Box>
-                    <Button variant="contained" onClick={openNoResultsModal}>Consultar</Button>
-                  </Box>
-                </Box>
-              ))}
-            </Slider>
+            
+            {user ? (
+              // User is logged in - show video upload CTA
+              <Box>
+                <Typography variant="body1" sx={{ mb: 3, color: 'text.secondary' }}>
+                  ¿Sos instructor? Subí un video y mostrá tus habilidades para que los estudiantes te encuentren.
+                </Typography>
+                <Button
+                  variant="contained"
+                  size="large"
+                  onClick={handleVideoUpload}
+                  startIcon={<Iconify icon="eva:video-fill" />}
+                  sx={{
+                    bgcolor: 'black',
+                    color: 'white',
+                    px: 4,
+                    py: 1.5,
+                    '&:hover': {
+                      bgcolor: 'grey.800',
+                    },
+                  }}
+                >
+                  Subir Video
+                </Button>
+              </Box>
+            ) : (
+              // User is not logged in - show WhatsApp CTA
+              <Box>
+                <Typography variant="body1" sx={{ mb: 3, color: 'text.secondary' }}>
+                  Contactanos por WhatsApp y te ayudamos a encontrar instructores disponibles.
+                </Typography>
+                <Button
+                  variant="contained"
+                  size="large"
+                  onClick={handleWhatsAppInstructors}
+                  startIcon={<Iconify icon="logos:whatsapp-icon" />}
+                  sx={{
+                    bgcolor: '#25D366',
+                    color: 'white',
+                    px: 4,
+                    py: 1.5,
+                    '&:hover': {
+                      bgcolor: '#128C7E',
+                    },
+                  }}
+                >
+                  Contactar por WhatsApp
+                </Button>
+              </Box>
+            )}
           </Box>
         )}
         {filteredTeachers.length > 0 && (

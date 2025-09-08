@@ -218,6 +218,12 @@
     "Independent PROs": "Independent PROs",
     "currentWeek": "Current week",
     "kanban": "Boards",
+    "navbar": {
+      "news": "News",
+      "classes": "Classes",
+      "videoCorrections": "Video Corrections",
+      "rental": "Rental"
+    },
     "products": "Lessons",
     "newProduct": "Create Lesson",
     "myProducts": "My lessons",
@@ -800,6 +806,7 @@
       "cancel": "Cancel",
       "startChallenge": "Start Challenge",
       "selectVideo": "Select Video",
+      "selectLocation": "Select Location",
       "objective": "El objetivo de este ejercicio es desafiar tu inclinacion al esquiar llevando tus esquies al maximo de angulacion posible. Te animas?",
       "howToPass": "Cómo paso el ejercicio?",
       "do": {
@@ -811,7 +818,16 @@
         "1": "When rolling onto your edges, keep your shins perfectly parallel.",
         "2": "Think about rolling your inside ski, your outside ski will follow.",
         "3": "Balance against the outside ski."
-      }
+      },
+      "aiCorrection": "Snow will correct your video",
+      "videoUploadedSuccess": "Video uploaded successfully!",
+      "snowAnalyzing": "Snow is analyzing your video. We'll notify you when the correction is finished.",
+      "detailedReview": "Want a more detailed review?",
+      "proChecksDescription": "You can request that a SnowMatch instructor review your video using ProChecks to get personalized feedback.",
+      "later": "Later",
+      "requestReview": "Request Review",
+      "compressing": "Compressing Video",
+      "compressingDescription": "We're optimizing your video for the best quality and faster upload. This may take a few moments."
     },
     "CARVING": {
       "title": "Carving Challenge",
@@ -1473,5 +1489,32 @@
       "includeSpecialty": "Include your main specialty: Students look for specific instructors",
       "addLater": "You can add more later: You can always update your profile later"
     }
+  },
+  "chat": {
+    "title": "Chat",
+    "conversations": "Conversations",
+    "newConversation": "New conversation",
+    "error": {
+      "title": "Error loading conversations",
+      "message": "You don't have any inquiries yet. Subscribe to Premium and increase your visibility."
+    },
+    "empty": {
+      "title": "You don't have any inquiries yet",
+      "message": "Subscribe to Premium and increase your visibility to receive more inquiries from students."
+    },
+    "premium": {
+      "subscribe": "Subscribe to Premium",
+      "message": "🚀 *Premium Inquiry - Snowmatch*\n\nHello Snowmatch, I'm interested in subscribing to Premium to increase my visibility and receive more inquiries.\n\n👤 *Information:*\n• User: {{userName}}\n• Email: {{userEmail}}\n• Role: {{userRole}}\n\n💬 *Reason:*\nI want to increase my visibility to receive more inquiries from students.\n\n📅 *Date:* {{date}}\n🌐 *Page:* Chat - No conversations"
+    }
+  },
+  "lessons": {
+    "myClasses": "My Classes",
+    "noBookings": "You don't have any scheduled classes",
+    "noBookings_teacher": "You don't have any scheduled classes"
+  },
+  "videoTrimmer": {
+    "selectBest30Seconds": "Select the best 30 seconds",
+    "duration": "Duration",
+    "seconds": "seconds"
   }
 }

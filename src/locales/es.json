@@ -528,6 +528,12 @@
         "calculate": "Calcular Talles",
         "currentWeek": "Semana actual",
         "kanban": "Tableros",
+        "navbar": {
+            "news": "Noticias",
+            "classes": "Clases",
+            "videoCorrections": "Video Correcciones",
+            "rental": "Rental"
+        },
         "products": "Grupales",
         "myProducts": "Mis Clases",
         "newProduct": "Nueva Clase",
@@ -1507,6 +1513,7 @@
         "upcoming": "Próximas",
         "past": "Pasadas",
         "pending": "Pendientes",
+        "myClasses": "Mis clases",
         "noBookings_teacher": "Tranquilo, estamos trabajndo para que estes lleno de clases.",
         "noBookings": "No hay clases reservadas"
     },
@@ -1813,6 +1820,7 @@
             "cancel": "Cancelar",
             "startChallenge": "Comenzar desafío",
             "selectVideo": "Seleccionar video",
+            "selectLocation": "Seleccionar ubicación",
             "objective": "El objetivo de este ejercicio es desafiar tu inclinacion al esquiar llevando tus esquies al maximo de angulacion posible. Te animas?",
             "howToPass": "Cómo paso el ejercicio?",
             "do": {
@@ -1825,7 +1833,15 @@
                 "2": "Think about rolling your inside ski, your outside ski will follow.",
                 "3": "Balance against the outside ski."
             },
-            "aiCorrection": "Snow corrigirá tu video"
+            "aiCorrection": "Snow corrigirá tu video",
+            "videoUploadedSuccess": "¡Video subido con éxito!",
+            "snowAnalyzing": "Snow está analizando tu video. Te notificaremos cuando termine la corrección.",
+            "detailedReview": "¿Querés una revisión más detallada?",
+            "proChecksDescription": "Podés solicitar que un profesor de SnowMatch revise tu video usando ProChecks para obtener feedback personalizado.",
+            "later": "Más tarde",
+            "requestReview": "Solicitar Revisión",
+            "compressing": "Comprimiendo Video",
+            "compressingDescription": "Estamos optimizando tu video para la mejor calidad y subida más rápida. Esto puede tomar unos momentos."
         },
         "CARVING": {
             "title": "Desafío de Carving",
@@ -2593,5 +2609,27 @@
             "includeSpecialty": "Incluye los servicios extra que ofreces: Los clientes buscan instructores con servicios adicionales",
             "addLater": "Puedes agregar más después: Siempre puedes actualizar tu perfil más tarde"
         }
+    },
+    "chat": {
+        "title": "Chat",
+        "conversations": "Conversaciones",
+        "newConversation": "Nueva conversación",
+        "error": {
+            "title": "Error al cargar conversaciones",
+            "message": "Todavía no tenés consultas. Suscribite a Premium y aumenta tu visibilidad."
+        },
+        "empty": {
+            "title": "Todavía no tenés consultas",
+            "message": "Suscribite a Premium y aumenta tu visibilidad para recibir más consultas de estudiantes."
+        },
+        "premium": {
+            "subscribe": "Suscribirse a Premium",
+            "message": "🚀 *Consulta Premium - Snowmatch*\n\nHola Snowmatch, me interesa suscribirme a Premium para aumentar mi visibilidad y recibir más consultas.\n\n👤 *Información:*\n• Usuario: {{userName}}\n• Email: {{userEmail}}\n• Rol: {{userRole}}\n\n💬 *Motivo:*\nQuiero aumentar mi visibilidad para recibir más consultas de estudiantes.\n\n📅 *Fecha:* {{date}}\n🌐 *Página:* Chat - Sin conversaciones"
+        }
+    },
+    "videoTrimmer": {
+        "selectBest30Seconds": "Selecciona los mejores 30 segundos",
+        "duration": "Duración",
+        "seconds": "segundos"
     }
 }

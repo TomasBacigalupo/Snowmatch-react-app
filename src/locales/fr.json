@@ -235,5 +235,39 @@
             "includeSpecialty": "Incluez votre spécialité principale : Les étudiants cherchent des instructeurs spécifiques",
             "addLater": "Vous pouvez en ajouter plus tard : Vous pouvez toujours mettre à jour votre profil plus tard"
         }
+    },
+    "videoTrimmer": {
+        "selectBest30Seconds": "Sélectionnez les meilleures 30 secondes",
+        "duration": "Durée",
+        "seconds": "secondes"
+    },
+    "course": {
+        "exercise": {
+            "cancel": "Annuler",
+            "startChallenge": "Commencer le défi",
+            "selectVideo": "Sélectionner la vidéo",
+            "selectLocation": "Sélectionner l'emplacement",
+            "objective": "L'objectif de cet exercice est de défier votre inclinaison en skiant en amenant vos skis au maximum d'angle possible. Êtes-vous prêt ?",
+            "howToPass": "Comment passer l'exercice ?",
+            "do": {
+                "1": "En vous penchant sur vos carres, gardez vos tibias parfaitement parallèles.",
+                "2": "Pensez à incliner d'abord le ski intérieur ; le ski extérieur suivra.",
+                "3": "Équilibrez-vous contre le ski extérieur."
+            },
+            "dont": {
+                "1": "N'inclinez pas seulement le ski extérieur ; travaillez avec les deux carres.",
+                "2": "Ne négligez pas le ski intérieur ; il est clé pour une bonne angulation.",
+                "3": "Ne perdez pas la pression sur le ski extérieur pendant le virage."
+            },
+            "aiCorrection": "Snow corrigera votre vidéo",
+            "videoUploadedSuccess": "Vidéo téléchargée avec succès !",
+            "snowAnalyzing": "Snow analyse votre vidéo. Nous vous notifierons quand la correction sera terminée.",
+            "detailedReview": "Voulez-vous une révision plus détaillée ?",
+            "proChecksDescription": "Vous pouvez demander qu'un instructeur SnowMatch révise votre vidéo en utilisant ProChecks pour obtenir des commentaires personnalisés.",
+            "later": "Plus tard",
+            "requestReview": "Demander une révision",
+            "compressing": "Compression de la vidéo",
+            "compressingDescription": "Nous optimisons votre vidéo pour la meilleure qualité et un téléchargement plus rapide. Cela peut prendre quelques instants."
+        }
     }
 }

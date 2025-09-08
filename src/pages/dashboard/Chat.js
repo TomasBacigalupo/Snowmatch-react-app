@@ -9,6 +9,7 @@ import { getConversations, getContacts } from '../../redux/slices/chat';
 import { PATH_DASHBOARD, PATH_GUEST } from '../../routes/paths';
 // hooks
 import useSettings from '../../hooks/useSettings';
+import useLocales from '../../hooks/useLocales';
 // components
 import Page from '../../components/Page';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
@@ -20,12 +21,13 @@ import useAuth from 'src/hooks/useAuth';
 
 export default function Chat() {
   const { themeStretch } = useSettings();
+  const { translate } = useLocales();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { conversationKey } = useParams();
   const {user} = useAuth();
   
-  const { conversations, activeConversationId } = useSelector((state) => state.chat);
+  const { conversations, activeConversationId, isLoading, error } = useSelector((state) => state.chat);
   const [showChatWindow, setShowChatWindow] = useState(false);
 
   useEffect(() => {
@@ -69,7 +71,7 @@ export default function Chat() {
 
   if (showChatWindow) {
     return (
-      <Page title="Chat">
+      <Page title={translate('chat.title')}>
          <Card sx={{ height: { xs: 'calc(100dvh - 104px)', md: 'calc(100dvh - 132px)' }, display: 'flex' }}>
             <ChatWindow />
           </Card>
@@ -78,16 +80,16 @@ export default function Chat() {
   }
 
   return (
-    <Page title="Chat">
-      <Container maxWidth={themeStretch ? false : 'xl'}>
+    <Page title={translate('chat.title')}>
+      <Container maxWidth={themeStretch ? false : 'xl'} sx={{ pt: 'env(safe-area-inset-top)' }}>
         <HeaderBreadcrumbs
-          heading="Chat"
-          links={[{ name: 'Dashboard', href: PATH_DASHBOARD.root }, { name: 'Chat' }]}
+          heading={translate('chat.title')}
+          links={[{ name: translate('menu.dashboard'), href: PATH_DASHBOARD.root }, { name: translate('chat.title') }]}
         />
         <Card sx={{ height: { xs: 'calc(100dvh - 104px)', md: 'calc(100dvh - 132px)' }, display: 'flex' }}>
           <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column' }}>
             <Box sx={{ p: 2, borderBottom: 1, borderColor: 'divider', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <Typography variant="h6">Conversaciones</Typography>
+              <Typography variant="h6">{translate('chat.conversations')}</Typography>
               <IconButton 
                 onClick={handleNewConversation}
                 sx={{ 
@@ -95,6 +97,7 @@ export default function Chat() {
                   color: 'primary.contrastText',
                   '&:hover': { bgcolor: 'primary.dark' }
                 }}
+                title={translate('chat.newConversation')}
               >
                 <Iconify icon="eva:edit-fill" width={20} height={20} />
               </IconButton>
@@ -105,6 +108,8 @@ export default function Chat() {
                 isOpenSidebar={true}
                 activeConversationId={activeConversationId}
                 onSelectConversation={handleSelectConversation}
+                isLoading={isLoading}
+                error={error}
               />
             </Box>
           </Box>

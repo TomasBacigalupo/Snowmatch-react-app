@@ -64,7 +64,7 @@ export default function HomeFilterTeachers({ resort, discipline, type, resortSlu
     const navigate = useNavigate()
     const { isTeacher, user } = useAuth()
 
-    const { translate } = useLocales()
+    const { translate, currentLang } = useLocales()
 
     const defaultRange = [
         new Date(),
@@ -98,6 +98,7 @@ export default function HomeFilterTeachers({ resort, discipline, type, resortSlu
 
     const onSubmit = () => {
         const resortName = values.resort?.name || values.resort;
+        const currentLanguage = currentLang?.value || 'es'; // Get current language, default to 'es'
         
         searchTeachers({
             ...values,
@@ -112,21 +113,15 @@ export default function HomeFilterTeachers({ resort, discipline, type, resortSlu
             to: values.range[1]
         }))
 
-        if (resortName === "Cerro Catedral") {
-            if (isTeacher) {
-                navigate('/dashboard/e-commerce/independent?resort=Cerro Catedral')
-            } else {
-                navigate(PATH_DASHBOARD.eCommerce.matchIndependant)
-            }
+        // Format resort name for URL (replace spaces with hyphens and handle special characters)
+        const formattedResortName = resortName.toLowerCase()
+            .replace(/\s+/g, '-')
+            .replace(/[^a-z0-9-]/g, '')
+            .replace(/-+/g, '-')
+            .replace(/^-|-$/g, '');
 
-        } else {
-            if (isTeacher) {
-                navigate(`/dashboard/e-commerce/shop/school?resort=${resortName}`)
-            } else {
-                navigate(`/match/school?resort=${resortName}`)
-            }
-
-        }
+        // Redirect to /:lng/search/:resort
+        navigate(`/${currentLanguage}/search/${formattedResortName}`);
 
     }
 

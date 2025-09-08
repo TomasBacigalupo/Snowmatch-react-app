@@ -637,14 +637,18 @@ export function changeProfilePicture(picture, callBack) {
     }
   }
 
-export function createVideo(video, course) {
+export function createVideo(video, course, latitude, longitude) {
     return async () => {
         try {
             console.log('video.type', video.type)
             console.log('course 1', course)
+            console.log('latitude', latitude)
+            console.log('longitude', longitude)
             dispatch(slice.actions.startLoading());
             const response = await axios.post('/api/videos',{
                 course: course,
+                latitude: latitude,
+                longitude: longitude
             });
             const presignedUrl = response.data.videoUrl;
 
@@ -687,17 +691,19 @@ export function videoExists(bucket, key) {
     };
 }
 
-export function createVideoMultipart(video, course) {
+export function createVideoMultipart(video, course, location = null) {
     return async (dispatch) => {
       try {
         console.log("video.type", video.type);
         console.log("course 1", course);
+        console.log("location", location);
   
         dispatch(slice.actions.startLoading());
   
         // 1️⃣ Solicitar URL pre-firmada
         const response = await axios.post("/api/videos", {
           course: course,
+          location: location,
         });
   
         const presignedUrl = response.data.videoUrl;

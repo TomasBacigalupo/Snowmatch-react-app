@@ -80,7 +80,7 @@ export default function ShopProductSearch({ filters, teachers }) {
 
   const { isAuthenticated } = useAuth()
 
-  const { translate } = useLocales()
+  const { translate, currentLang } = useLocales()
 
   const handleChangeSearch = async () => {
     setSearchResults(teachers)
@@ -102,6 +102,7 @@ export default function ShopProductSearch({ filters, teachers }) {
     console.log('pase', data)
     
     const resortName = values.resort?.name || values.resort;
+    const currentLanguage = currentLang.value;
 
     //react search
     searchTeachers({
@@ -121,20 +122,9 @@ export default function ShopProductSearch({ filters, teachers }) {
       discipline: [],
     }))
 
-    if (resortName === "Cerro Catedral") {
-      if (isTeacher) {
-        navigate('/dashboard/e-commerce/independent?resort=Cerro Catedral')
-      } else {
-        navigate(PATH_DASHBOARD.eCommerce.matchIndependant)
-      }
-
-    } else {
-      // if (isTeacher) {
-      //   navigate(`/dashboard/e-commerce/shop/school?resort=${resortName}`)
-      // } else {
-      //   navigate(`/match/school?resort=${resortName}`)
-      // }
-    }
+    // Redirect to /:lng/search/:resort
+    navigate(`/${currentLanguage}/search/${encodeURIComponent(resortName)}`);
+    
     handleCloseDrawer()
   }
 
@@ -581,7 +571,7 @@ export default function ShopProductSearch({ filters, teachers }) {
                         borderRadius: 10
                       }}>
                         <Box display='flex' justifyContent='space-between' width='100%'>
-                          <Typography>{values.resort}</Typography>
+                          <Typography>{values.resort?.name || values.resort}</Typography>
                           <Typography sx={{ fontWeight: "bold" }}>
                             Cambiar Montaña
                           </Typography>

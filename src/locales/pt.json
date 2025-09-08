@@ -488,6 +488,12 @@
         "Schools": "Escolas",
         "Independent": "Independentes",
         "School PROs": "PROs de Escolas",
+        "navbar": {
+            "news": "Notícias",
+            "classes": "Aulas",
+            "videoCorrections": "Correções de Vídeo",
+            "rental": "Aluguel"
+        },
         "Independent PROs": "PROs Independentes"
     },
     "calendar": {
@@ -1079,6 +1085,8 @@
         "exercise": {
             "cancel": "Cancelar",
             "startChallenge": "Iniciar Desafio",
+            "selectVideo": "Selecionar vídeo",
+            "selectLocation": "Selecionar localização",
             "objective": "O objetivo deste exercício é desafiar sua inclinação ao esquiar, levando seus esquis ao ângulo máximo possível. Você topa?",
             "howToPass": "Como passo no exercício?",
             "do": {
@@ -1090,7 +1098,16 @@
                 "1": "Não incline apenas o esqui externo; trabalhe com ambas as bordas.",
                 "2": "Não negligencie o esqui interno; ele é fundamental para a angulação correta.",
                 "3": "Não perca pressão no esqui externo durante a curva."
-            }
+            },
+            "aiCorrection": "Snow corrigirá seu vídeo",
+            "videoUploadedSuccess": "Vídeo enviado com sucesso!",
+            "snowAnalyzing": "Snow está analisando seu vídeo. Notificaremos você quando a correção terminar.",
+            "detailedReview": "Quer uma revisão mais detalhada?",
+            "proChecksDescription": "Você pode solicitar que um instrutor SnowMatch revise seu vídeo usando ProChecks para obter feedback personalizado.",
+            "later": "Mais tarde",
+            "requestReview": "Solicitar Revisão",
+            "compressing": "Comprimindo Vídeo",
+            "compressingDescription": "Estamos otimizando seu vídeo para a melhor qualidade e upload mais rápido. Isso pode levar alguns momentos."
         },
         "CARVING": {
             "title": "Desafio de Carving",

@@ -71,7 +71,7 @@ export default function Router() {
           ]
         },
         {
-          path: '/:lng/search/:resort/ski-pros',
+          path: '/:lng/search/:resort/pros',
           element: <PlainLayout />,
           children: [
             { element: <EcommerceShopTeachers isGuest={true} teacherType="independent" />, index: true }

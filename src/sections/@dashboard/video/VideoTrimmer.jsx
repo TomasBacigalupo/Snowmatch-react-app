@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Box, Slider, Typography, Stack, styled } from "@mui/material";
 import ReactPlayer from 'react-player';
+import useLocales from '../../../hooks/useLocales';
 
 // Estilos personalizados
 const ThumbnailContainer = styled(Box)(({ theme }) => ({
@@ -28,6 +29,7 @@ const SelectionWindow = styled(Box)(({ theme }) => ({
 }));
 
 export default function VideoTrimmer({ videoUrl, isLoading }) {
+  const { translate } = useLocales();
   const playerRef = useRef(null);
   const containerRef = useRef(null);
   const [playing, setPlaying] = useState(false);
@@ -185,7 +187,7 @@ export default function VideoTrimmer({ videoUrl, isLoading }) {
       
       {!isLoading && <Box sx={{ mt: 3 }}>
         <Typography variant="subtitle1" gutterBottom>
-          Selecciona los mejores 30 segundos
+          {translate('videoTrimmer.selectBest30Seconds')}
         </Typography>
         
         {/* Contenedor de la línea de tiempo */}
@@ -255,7 +257,7 @@ export default function VideoTrimmer({ videoUrl, isLoading }) {
             {formatTime(sliderValue[0])}
           </Typography>
           <Typography variant="body2" fontWeight="bold">
-            Duración: {Math.round(sliderValue[1] - sliderValue[0])} segundos
+            {translate('videoTrimmer.duration')}: {Math.round(sliderValue[1] - sliderValue[0])} {translate('videoTrimmer.seconds')}
           </Typography>
           <Typography variant="body2">
             {formatTime(sliderValue[1])}

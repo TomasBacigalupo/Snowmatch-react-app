@@ -50,7 +50,7 @@ const Loadable = (Component) => (props) => {
 };
 
 export default function Router() {
-  const isMobile = true;
+  const isMobile = false;
 
   return (
     <>
@@ -108,6 +108,14 @@ export default function Router() {
               element: (
                 <AuthGuard>
                   <TeacherDetails />
+                </AuthGuard>
+              ),
+            },
+            {
+              path: 'guest-details',
+              element: (
+                <AuthGuard>
+                  <GuestDetails />
                 </AuthGuard>
               ),
             },
@@ -592,6 +600,7 @@ export default function Router() {
 const Login = Loadable(lazy(() => import('../pages/auth/Login')));
 const Register = Loadable(lazy(() => import('../pages/auth/Register')));
 const TeacherDetails = Loadable(lazy(() => import('../pages/auth/TeacherDetails')));
+const GuestDetails = Loadable(lazy(() => import('../pages/auth/GuestDetails')));
 const ResetPassword = Loadable(lazy(() => import('../pages/auth/ResetPassword')));
 const VerifyCode = Loadable(lazy(() => import('../pages/auth/VerifyCode')));
 const PageVerificationSucceed = Loadable(lazy(() => import('../pages/PageVerificationSucceed')))

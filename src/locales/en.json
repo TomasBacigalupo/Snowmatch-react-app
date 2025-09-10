@@ -56,15 +56,19 @@
     "description": "Join the community of independent instructors. Set your prices, availability and connect with new clients.",
     "ogDescription": "Set prices and availability. Connect with new clients from your phone.",
     "hero": {
-      "title": "Chart your own path",
-      "subtitle": "Join as an independent instructor and connect with new clients.",
+      "title": "Get More Ski Guests with SnowMatch",
+      "subtitle": "Join hundreds of instructors getting more guests, managing bookings, and growing their income with SnowMatch.",
       "ctaPrimary": "Start now",
       "ctaSecondary": "See benefits",
       "card": {
-        "label": "Get new clients",
+        "label": "Get new guests",
         "title": "Increase your bookings",
         "description": "Grow your client base. Optimize your profile to improve your positioning."
       }
+    },
+    "problem": {
+      "title": "Tired of struggling to find new guests?",
+      "description": "Most instructors rely on word-of-mouth and resort referrals, missing out on countless potential guests. You spend valuable time managing schedules manually, chasing payments, and watching bookings slip away to other instructors who are easier to find online."
     },
     "benefits": {
       "title": "The platform for instructors",

@@ -69,5 +69,19 @@ export default function RoleBasedGuard({ accessibleRoles, children }) {
     }
   }
 
+  if (isStudent) {
+    // Check if student has all required information fields
+    const hasRequiredInfo = user && 
+      user.studentLevel && 
+      user.studentGoal && 
+      user.sports && user.sports.length > 0 &&
+      user.resorts && user.resorts.length > 0 &&
+      user.howToLearn;
+    
+    if (!hasRequiredInfo) {
+      return <Navigate to={PATH_AUTH.guestDetails} />
+    }
+  }
+
   return <>{children}</>;
 }

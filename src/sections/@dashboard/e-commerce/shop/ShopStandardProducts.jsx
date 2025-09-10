@@ -189,7 +189,7 @@ export default function ShopStandardProducts({ loading }) {
             }
             
             {/* Equipment Rental Section for Cerro Catedral */}
-            {filters.resort === "Cerro Catedral" && (
+            {filters.resort === "Cerro Catedral" && rentalItems && rentalItems.length > 0 && (
                 <Box sx={{ overflow: 'hidden' }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
                         <Typography variant='h6' sx={{ mr: 1 }}>
@@ -236,7 +236,7 @@ export default function ShopStandardProducts({ loading }) {
                                     <SkeletonProductItem />
                                 </Box>
                             ))
-                        ) : rentalItems && rentalItems.length > 0 ? (
+                        ) : (
                             rentalItems.map((equipment) => (
                                 <Box
                                     key={equipment.id}
@@ -273,10 +273,6 @@ export default function ShopStandardProducts({ loading }) {
                                     />
                                 </Box>
                             ))
-                        ) : (
-                            <Typography variant="body2" color="text.secondary">
-                                No hay equipos disponibles
-                            </Typography>
                         )}
                     </Box>
                 </Box>

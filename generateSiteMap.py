@@ -131,7 +131,10 @@ blog_urls = [
     "/en/vail-ski-camp",
     "/en/jackson-hole-ski-camp",
     "/instructor",
-    "/en/instructor"
+    "/en/instructor",
+    "/es/instructor",
+    "/pt/instructor",
+    "/fr/instructor",
 ]
 
 # Configuración del sitemap

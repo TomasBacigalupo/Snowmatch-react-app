@@ -185,11 +185,30 @@ export default function InstructorLanding() {
           </Container>
         </Box>
 
+
         {/* Benefits */}
         <Container id="benefits" sx={{ py: { xs: 8, md: 10 } }}>
-          <Typography variant="h3" align="center" sx={{ mb: 6, fontWeight: 800 }}>
-            {translate('instructorLanding.benefits.title')}
-          </Typography>
+        <Box sx={{ textAlign: 'center', maxWidth: '800px', mx: 'auto', mb: 6 }}>
+            <Typography 
+              variant="h3" 
+              sx={{ 
+                fontWeight: 800, 
+                mb: 4,
+                color: 'text.primary'
+              }}
+            >
+              {translate('instructorLanding.problem.title')}
+            </Typography>
+            <Typography 
+              variant="h6" 
+              sx={{ 
+                color: 'text.secondary',
+                lineHeight: 1.6
+              }}
+            >
+              {translate('instructorLanding.problem.description')}
+            </Typography>
+          </Box>
           <Grid container spacing={3}>
             {benefits.map((b) => (
               <Grid key={b.title} item xs={12} sm={6} md={4}>

@@ -80,6 +80,10 @@
                 "description": "Agrandá tu agenda de clientes. Optimiza tu perfil para mejorar tu posicionamiento."
             }
         },
+        "problem": {
+            "title": "¿Cansado de luchar para encontrar nuevos estudiantes?",
+            "description": "La mayoría de los instructores dependen del boca a boca y las referencias de los centros de esquí, perdiendo innumerables estudiantes potenciales. Pasás tiempo valioso gestionando horarios manualmente, persiguiendo pagos, y viendo cómo las reservas se escapan hacia otros instructores que son más fáciles de encontrar en línea."
+        },
         "benefits": {
             "title": "La plataforma para instructores",
             "list": [

@@ -3,15 +3,15 @@ import { useState, useCallback, forwardRef, useImperativeHandle, useEffect } fro
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { 
-  Stack, 
-  Alert, 
-  Typography, 
-  Box, 
-  Stepper, 
-  Step, 
-  StepLabel, 
-  Button, 
+import {
+  Stack,
+  Alert,
+  Typography,
+  Box,
+  Stepper,
+  Step,
+  StepLabel,
+  Button,
   StepConnector,
   useTheme,
   useMediaQuery
@@ -32,7 +32,6 @@ import StudentResortsStep from './StudentResortsStep';
 import StudentLearningStep from './StudentLearningStep';
 // utils
 import axios from '../../../utils/axios';
-import { FILTER_RESORT_OPTIONS } from '../../@dashboard/e-commerce/shop/ShopFilterSidebar';
 
 // ----------------------------------------------------------------------
 
@@ -105,30 +104,27 @@ const StudentStepperForm = forwardRef(({ onStepChange, onNext, onBack, isSubmitt
         return Yup.object().shape({
           studentGoal: Yup.string().required('Debes seleccionar un objetivo'),
         });
-        
+
       case 2: // Student Level
         return Yup.object().shape({
           studentLevel: Yup.string().required('Debes seleccionar tu nivel'),
         });
-        
+
       case 3: // Student Type
         return Yup.object().shape({
           sports: Yup.array().of(Yup.string()).min(1, 'Debes seleccionar al menos un tipo'),
         });
-        
+
       case 4: // Resorts
         return Yup.object().shape({
-          resorts: Yup.array().of(Yup.object().shape({
-            name: Yup.string().required(),
-            category: Yup.string().required()
-          })).min(1, 'Debes seleccionar al menos un resort'),
+          resorts: Yup.array().of(Yup.string()).min(1, 'Debes seleccionar al menos un resort'),
         });
-        
+
       case 5: // Learning Method
         return Yup.object().shape({
           howToLearn: Yup.string().required('Debes seleccionar cómo quieres aprender'),
         });
-        
+
       default:
         return Yup.object().shape({}); // No validation for other steps
     }
@@ -137,16 +133,16 @@ const StudentStepperForm = forwardRef(({ onStepChange, onNext, onBack, isSubmitt
   const defaultValues = {
     // Step 1
     studentGoal: '',
-    
+
     // Step 2
     studentLevel: '',
-    
+
     // Step 3
     sports: [],
-    
+
     // Step 4
     resorts: [],
-    
+
     // Step 5
     howToLearn: '',
   };
@@ -187,24 +183,24 @@ const StudentStepperForm = forwardRef(({ onStepChange, onNext, onBack, isSubmitt
 
   const saveStepData = async (currentData, step) => {
     if (!user) return;
-    
+
     // Prepare data based on current step - accumulate all data
     let stepData = {};
-    
+
     switch (step) {
       case 1: // Student Goal
         stepData = {
           studentGoal: currentData.studentGoal,
         };
         break;
-        
+
       case 2: // Student Level
         stepData = {
           studentLevel: currentData.studentLevel,
           studentGoal: currentData.studentGoal, // Include previous data
         };
         break;
-        
+
       case 3: // Student Type
         stepData = {
           sports: currentData.sports,
@@ -212,16 +208,16 @@ const StudentStepperForm = forwardRef(({ onStepChange, onNext, onBack, isSubmitt
           studentGoal: currentData.studentGoal, // Include previous data
         };
         break;
-        
+
       case 4: // Resorts
         stepData = {
-          resorts: currentData.resorts?.map(resort => resort.name) || [],
+          resorts: currentData.resorts,
           sports: currentData.sports,
           studentLevel: currentData.studentLevel,
           studentGoal: currentData.studentGoal, // Include previous data
         };
         break;
-        
+
       case 5: // Learning Method
         stepData = {
           howToLearn: currentData.howToLearn,
@@ -231,19 +227,19 @@ const StudentStepperForm = forwardRef(({ onStepChange, onNext, onBack, isSubmitt
           studentGoal: currentData.studentGoal, // Include all previous data
         };
         break;
-        
+
       default:
         return;
     }
-    
+
     // Update user data locally
     const updatedUser = { ...user, ...stepData };
-    
+
     // Update student data via API
     try {
       console.log('Saving student data:', stepData); // Debug log
       const response = await axios.put('/api/users/student-data', stepData);
-      
+
       if (response.data) {
         // Update local user state
         updateUser(updatedUser);
@@ -279,10 +275,10 @@ const StudentStepperForm = forwardRef(({ onStepChange, onNext, onBack, isSubmitt
       if (onNext) onNext();
       return;
     }
-    
+
     // Get current step data
     const currentData = methods.getValues();
-    
+
     // Validate current step using step-specific schema
     const stepSchema = getStepValidationSchema(activeStep);
     try {
@@ -299,33 +295,34 @@ const StudentStepperForm = forwardRef(({ onStepChange, onNext, onBack, isSubmitt
       }
       return; // Don't proceed if validation fails
     }
-    
+
     // Clear any previous errors for this step
     const stepFields = getStepFields(activeStep);
     stepFields.forEach(field => {
       clearErrors(field);
     });
-    
+
     // Save current step data
     setUserData(prev => ({ ...prev, ...currentData }));
-    
+    console.log('Current data:', currentData);
+
     // Always save to API on each step (except the last one which will be handled by onSubmit)
-    if (activeStep < STEPS.length - 1) {
-      setInternalIsSubmitting(true);
-      try {
-        await saveStepData(currentData, activeStep);
-        setCompletedSteps(prev => new Set([...prev, activeStep]));
-        setSaveSuccess(true);
-        // Hide success message after 2 seconds
-        setTimeout(() => setSaveSuccess(false), 2000);
-      } catch (error) {
-        console.error('Error saving step data:', error);
-        // Continue to next step even if save fails
-      } finally {
-        setInternalIsSubmitting(false);
-      }
+
+    setInternalIsSubmitting(true);
+    try {
+      await saveStepData(currentData, activeStep);
+      setCompletedSteps(prev => new Set([...prev, activeStep]));
+      setSaveSuccess(true);
+      // Hide success message after 2 seconds
+      setTimeout(() => setSaveSuccess(false), 2000);
+    } catch (error) {
+      console.error('Error saving step data:', error);
+      // Continue to next step even if save fails
+    } finally {
+      setInternalIsSubmitting(false);
     }
-    
+
+
     if (activeStep === STEPS.length - 1) {
       // Final step - complete registration
       setIsRegistrationComplete(true);
@@ -345,7 +342,7 @@ const StudentStepperForm = forwardRef(({ onStepChange, onNext, onBack, isSubmitt
     currentStepFields.forEach(field => {
       clearErrors(field);
     });
-    
+
     const prevStep = activeStep - 1;
     setActiveStep(prevStep);
     if (onStepChange) onStepChange(prevStep);
@@ -360,7 +357,7 @@ const StudentStepperForm = forwardRef(({ onStepChange, onNext, onBack, isSubmitt
       currentStepFields.forEach(field => {
         clearErrors(field);
       });
-      
+
       setActiveStep(stepIndex);
       if (onStepChange) onStepChange(stepIndex);
     }
@@ -369,30 +366,31 @@ const StudentStepperForm = forwardRef(({ onStepChange, onNext, onBack, isSubmitt
   const onSubmit = async (data) => {
     try {
       // Final step - save all data
-      if (user) {
-        // Prepare final data with correct format
-        const finalData = {
-          studentGoal: data.studentGoal,
-          studentLevel: data.studentLevel,
-          sports: data.sports,
-          resorts: data.resorts?.map(resort => resort.name) || [],
-          howToLearn: data.howToLearn,
-        };
+      console.log('Final data:', data);
 
-        console.log('Final student data:', finalData); // Debug log
+      // Prepare final data with correct format
+      const finalData = {
+        studentGoal: data.studentGoal,
+        studentLevel: data.studentLevel,
+        sports: data.sports,
+        resorts: data.resorts || [], // Already in enum format (CERRO_BAYO)
+        howToLearn: data.howToLearn,
+      };
 
-        const profileData = {
-          ...user,
-          ...finalData,
-        };
+      console.log('Final student data:', finalData); // Debug log
 
-        // Update student data
-        await axios.put('/api/users/student-data', finalData);
-        updateUser(profileData);
-        setIsRegistrationComplete(true);
-        if (onComplete) onComplete();
-      }
-      
+      const profileData = {
+        ...user,
+        ...finalData,
+      };
+
+      // Update student data
+      await axios.put('/api/users/student-data', finalData);
+      updateUser(profileData);
+      setIsRegistrationComplete(true);
+      if (onComplete) onComplete();
+
+
     } catch (error) {
       if (error.name === 'ValidationError') {
         // Handle validation errors
@@ -446,23 +444,32 @@ const StudentStepperForm = forwardRef(({ onStepChange, onNext, onBack, isSubmitt
   // Load existing user data when component mounts
   useEffect(() => {
     if (user) {
-      // Convert resort names to objects with name and category
+      // Convert resort names to objects with name and value
       const convertResortsToObjects = (resortNames) => {
         if (!resortNames || !Array.isArray(resortNames)) return [];
-        
-        const allResorts = [];
-        FILTER_RESORT_OPTIONS.forEach((country) => {
-          country.resorts.forEach((resort) => {
-            allResorts.push({
-              name: resort,
-              category: country.category
-            });
-          });
-        });
-        
+
         return resortNames.map(name => {
-          const found = allResorts.find(resort => resort.name === name);
-          return found || { name, category: 'Other' };
+          // If it's already an object with name and value, return as is
+          if (typeof name === 'object' && name.name && name.value) {
+            return name;
+          }
+
+          // If it's a string, convert to the expected format
+          if (typeof name === 'string') {
+            // Convert "CERRO_CATEDRAL" to "Cerro Catedral"
+            const formattedName = name
+              .toLowerCase()
+              .split('_')
+              .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+              .join(' ');
+
+            return {
+              name: formattedName,
+              value: name
+            };
+          }
+
+          return { name: name, value: name };
         });
       };
 
@@ -473,12 +480,12 @@ const StudentStepperForm = forwardRef(({ onStepChange, onNext, onBack, isSubmitt
         resorts: convertResortsToObjects(user.resorts),
         howToLearn: user.howToLearn || '',
       };
-      
+
       // Set form values
       Object.keys(existingData).forEach(key => {
         setValue(key, existingData[key]);
       });
-      
+
       // Determine completed steps based on existing data
       const completed = new Set();
       if (existingData.studentGoal) completed.add(1);
@@ -486,7 +493,7 @@ const StudentStepperForm = forwardRef(({ onStepChange, onNext, onBack, isSubmitt
       if (existingData.sports?.length > 0) completed.add(3);
       if (existingData.resorts?.length > 0) completed.add(4);
       if (existingData.howToLearn) completed.add(5);
-      
+
       setCompletedSteps(completed);
       setUserData(existingData);
     }
@@ -538,7 +545,7 @@ const StudentStepperForm = forwardRef(({ onStepChange, onNext, onBack, isSubmitt
 
         {/* Navigation Buttons - Desktop only */}
         {!isMobile && (
-          <Box sx={{ 
+          <Box sx={{
             position: 'fixed',
             bottom: 0,
             left: 0,
@@ -554,7 +561,7 @@ const StudentStepperForm = forwardRef(({ onStepChange, onNext, onBack, isSubmitt
             <Button
               disabled={activeStep === 0}
               onClick={handleBack}
-              sx={{ 
+              sx={{
                 textDecoration: 'underline',
                 color: 'text.primary',
                 '&:hover': {
@@ -565,13 +572,13 @@ const StudentStepperForm = forwardRef(({ onStepChange, onNext, onBack, isSubmitt
             >
               Atrás
             </Button>
-            
+
             <LoadingButton
               variant="contained"
               onClick={handleNext}
               loading={isSubmitting}
               disabled={isSubmitting}
-              sx={{ 
+              sx={{
                 backgroundColor: '#666666',
                 color: 'white',
                 borderRadius: '8px',

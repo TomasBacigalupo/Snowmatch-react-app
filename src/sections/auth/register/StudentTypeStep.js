@@ -10,44 +10,20 @@ StudentTypeStep.propTypes = {
 
 const TYPE_OPTIONS = [
   {
-    value: 'ON_PISTE',
-    label: 'Pista',
-    description: 'Me gusta esquiar en pistas marcadas y preparadas',
-    icon: 'eva:map-fill',
+    value: 'SKI',
+    label: 'Esquí',
+    description: 'Aprendo a esquiar en pistas y montaña',
+    icon: 'eva:activity-fill',
     emoji: '🎿',
     color: '#2196f3'
   },
   {
-    value: 'FREESTYLE',
-    label: 'Freestyle',
-    description: 'Park, saltos, trucos y acrobacias',
+    value: 'SNOWBOARD',
+    label: 'Snowboard',
+    description: 'Aprendo a hacer snowboard',
     icon: 'eva:flash-fill',
-    emoji: '🤸',
+    emoji: '🏂',
     color: '#9c27b0'
-  },
-  {
-    value: 'FREERIDE',
-    label: 'Freeride',
-    description: 'Nieve polvo y fuera de pista',
-    icon: 'eva:cloud-fill',
-    emoji: '❄️',
-    color: '#00bcd4'
-  },
-  {
-    value: 'BACKCOUNTRY',
-    label: 'Backcountry',
-    description: 'Travesías, touring y montañismo',
-    icon: 'eva:compass-fill',
-    emoji: '🏔️',
-    color: '#795548'
-  },
-  {
-    value: 'ALL_MOUNTAIN',
-    label: 'All-mountain',
-    description: 'Un poco de todo, versatilidad total',
-    icon: 'eva:star-fill',
-    emoji: '🌟',
-    color: '#ff9800'
   }
 ];
 
@@ -73,12 +49,12 @@ export default function StudentTypeStep({ validateField }) {
       <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
         <Iconify icon="eva:activity-fill" sx={{ fontSize: 24, color: 'primary.main', mr: 2 }} />
         <Typography variant="h6" sx={{ color: 'primary.main', fontWeight: 600 }}>
-          ¿Qué tipo de esquiador eres?
+          ¿Qué deporte quieres practicar?
         </Typography>
       </Box>
       
       <Typography variant="body2" color="text.secondary" sx={{ mb: 4 }}>
-        Puedes seleccionar múltiples opciones. Esto nos ayuda a conectarte con instructores especializados
+        Puedes seleccionar ambos deportes si quieres aprender esquí y snowboard
       </Typography>
 
       {selectedTypes.length > 0 && (
@@ -174,8 +150,7 @@ export default function StudentTypeStep({ validateField }) {
         border: '1px solid #e0e0e0'
       }}>
         <Typography variant="body2" color="text.secondary" sx={{ fontStyle: 'italic' }}>
-          💡 <strong>Tip:</strong> No te preocupes si no estás seguro. Puedes cambiar estas preferencias 
-          más tarde en tu perfil. Selecciona lo que más te interesa ahora.
+          💡 <strong>Tip:</strong> Si no estás seguro, puedes seleccionar ambos deportes y decidir más tarde cuál prefieres.
         </Typography>
       </Box>
     </m.div>

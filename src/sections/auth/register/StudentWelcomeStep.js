@@ -1,8 +1,11 @@
 import { Box, Typography, Stack } from '@mui/material';
 import { m } from 'framer-motion';
 import Iconify from '../../../components/Iconify';
+import useLocales from '../../../hooks/useLocales';
 
 export default function StudentWelcomeStep() {
+  const { translate } = useLocales();
+
   return (
     <m.div
       initial={{ opacity: 0, y: 20 }}
@@ -15,7 +18,7 @@ export default function StudentWelcomeStep() {
             icon="eva:person-fill" 
             sx={{ 
               fontSize: 80, 
-              color: 'primary.main',
+              color: '#000000',
               mb: 2
             }} 
           />
@@ -26,13 +29,10 @@ export default function StudentWelcomeStep() {
           sx={{ 
             fontWeight: 700, 
             mb: 2,
-            background: 'linear-gradient(45deg, #1976d2, #42a5f5)',
-            backgroundClip: 'text',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent'
+            color: '#000000'
           }}
         >
-          ¡Bienvenido a Snowmatch!
+          {translate('studentStepper.welcome.title')}
         </Typography>
         
         <Typography 
@@ -40,7 +40,7 @@ export default function StudentWelcomeStep() {
           color="text.secondary" 
           sx={{ mb: 4, maxWidth: 600, mx: 'auto' }}
         >
-          Vamos a configurar tu perfil de estudiante para que puedas encontrar los mejores instructores y mejorar tu técnica de esquí.
+          {translate('studentStepper.welcome.subtitle')}
         </Typography>
 
         <Stack spacing={2} sx={{ maxWidth: 500, mx: 'auto', mt: 4 }}>
@@ -52,9 +52,9 @@ export default function StudentWelcomeStep() {
             backgroundColor: '#f8f9fa',
             border: '1px solid #e0e0e0'
           }}>
-            <Iconify icon="eva:target-fill" sx={{ fontSize: 24, color: 'primary.main', mr: 2 }} />
+            <Iconify icon="eva:target-fill" sx={{ fontSize: 24, color: '#000000', mr: 2 }} />
             <Typography variant="body1">
-              <strong>Define tu objetivo:</strong> ¿Qué quieres lograr con el esquí?
+              <strong>{translate('studentStepper.welcome.features.objective.title')}</strong> {translate('studentStepper.welcome.features.objective.description')}
             </Typography>
           </Box>
           
@@ -66,9 +66,9 @@ export default function StudentWelcomeStep() {
             backgroundColor: '#f8f9fa',
             border: '1px solid #e0e0e0'
           }}>
-            <Iconify icon="eva:trending-up-fill" sx={{ fontSize: 24, color: 'primary.main', mr: 2 }} />
+            <Iconify icon="eva:trending-up-fill" sx={{ fontSize: 24, color: '#000000', mr: 2 }} />
             <Typography variant="body1">
-              <strong>Tu nivel actual:</strong> Para recomendarte el instructor perfecto
+              <strong>{translate('studentStepper.welcome.features.level.title')}</strong> {translate('studentStepper.welcome.features.level.description')}
             </Typography>
           </Box>
           
@@ -80,9 +80,9 @@ export default function StudentWelcomeStep() {
             backgroundColor: '#f8f9fa',
             border: '1px solid #e0e0e0'
           }}>
-            <Iconify icon="eva:map-fill" sx={{ fontSize: 24, color: 'primary.main', mr: 2 }} />
+            <Iconify icon="eva:map-fill" sx={{ fontSize: 24, color: '#000000', mr: 2 }} />
             <Typography variant="body1">
-              <strong>Dónde esquías:</strong> Para conectarte con instructores locales
+              <strong>{translate('studentStepper.welcome.features.location.title')}</strong> {translate('studentStepper.welcome.features.location.description')}
             </Typography>
           </Box>
         </Stack>
@@ -92,7 +92,7 @@ export default function StudentWelcomeStep() {
           color="text.secondary" 
           sx={{ mt: 4, fontStyle: 'italic' }}
         >
-          Solo te tomará unos minutos y te ayudará a tener una experiencia personalizada
+          {translate('studentStepper.welcome.footer')}
         </Typography>
       </Box>
     </m.div>

@@ -3,6 +3,7 @@ import { Box, Typography, Grid, Card, CardContent, CardActionArea } from '@mui/m
 import { m } from 'framer-motion';
 import { useFormContext } from 'react-hook-form';
 import Iconify from '../../../components/Iconify';
+import useLocales from '../../../hooks/useLocales';
 
 StudentLearningStep.propTypes = {
   validateField: PropTypes.func.isRequired,
@@ -11,32 +12,24 @@ StudentLearningStep.propTypes = {
 const LEARNING_OPTIONS = [
   {
     value: 'IN_PERSON_WITH_TEACHER',
-    label: 'Con profesor presencial',
-    description: 'Clases presenciales con instructores certificados',
     icon: 'eva:person-fill',
     emoji: '👨‍🏫',
     color: '#2196f3'
   },
   {
     value: 'VIDEO_FEEDBACK',
-    label: 'Subiendo videos y recibiendo feedback',
-    description: 'Sube tus videos y recibe análisis profesional',
     icon: 'eva:video-fill',
     emoji: '🎥',
     color: '#9c27b0'
   },
   {
     value: 'AI_ACADEMY',
-    label: 'Con IA y challenges de la Snowmatch Academy',
-    description: 'Aprende con inteligencia artificial y desafíos personalizados',
     icon: 'eva:bulb-fill',
     emoji: '🤖',
     color: '#00bcd4'
   },
   {
     value: 'MIXED_APPROACH',
-    label: 'Enfoque mixto',
-    description: 'Combinar diferentes métodos según la ocasión',
     icon: 'eva:layers-fill',
     emoji: '🔄',
     color: '#ff9800'
@@ -45,6 +38,7 @@ const LEARNING_OPTIONS = [
 
 export default function StudentLearningStep({ validateField }) {
   const { setValue, watch } = useFormContext();
+  const { translate } = useLocales();
   const selectedMethod = watch('howToLearn');
 
   const handleMethodSelect = (method) => {
@@ -59,14 +53,14 @@ export default function StudentLearningStep({ validateField }) {
       transition={{ duration: 0.6, ease: "easeOut" }}
     >
       <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
-        <Iconify icon="eva:book-open-fill" sx={{ fontSize: 24, color: 'primary.main', mr: 2 }} />
-        <Typography variant="h6" sx={{ color: 'primary.main', fontWeight: 600 }}>
-          ¿Cómo quieres aprender?
+        <Iconify icon="eva:book-open-fill" sx={{ fontSize: 24, color: 'black', mr: 2 }} />
+        <Typography variant="h6" sx={{ color: 'black', fontWeight: 600 }}>
+          {translate('studentLearningStep.title')}
         </Typography>
       </Box>
       
       <Typography variant="body2" color="text.secondary" sx={{ mb: 4 }}>
-        Selecciona tu método de aprendizaje preferido. Puedes cambiar esto más tarde según tus necesidades
+        {translate('studentLearningStep.subtitle')}
       </Typography>
       
       <Grid container spacing={2}>
@@ -111,7 +105,7 @@ export default function StudentLearningStep({ validateField }) {
                       color: selectedMethod === method.value ? method.color : 'text.primary'
                     }}
                   >
-                    {method.label}
+                    {translate(`studentLearningStep.methods.${method.value}.label`)}
                   </Typography>
                   
                   <Typography 
@@ -119,7 +113,7 @@ export default function StudentLearningStep({ validateField }) {
                     color="text.secondary"
                     sx={{ flexGrow: 1 }}
                   >
-                    {method.description}
+                    {translate(`studentLearningStep.methods.${method.value}.description`)}
                   </Typography>
                 </CardContent>
               </CardActionArea>
@@ -136,9 +130,7 @@ export default function StudentLearningStep({ validateField }) {
         border: '1px solid #c8e6c9'
       }}>
         <Typography variant="body2" color="text.secondary" sx={{ fontStyle: 'italic' }}>
-          🎉 <strong>¡Excelente!</strong> Has completado la configuración de tu perfil. 
-          Ahora podrás encontrar instructores perfectos para tu nivel y objetivos, 
-          y acceder a contenido personalizado para mejorar tu técnica.
+          🎉 <strong>{translate('studentLearningStep.successMessage')}</strong>
         </Typography>
       </Box>
     </m.div>

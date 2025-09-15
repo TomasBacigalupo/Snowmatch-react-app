@@ -269,5 +269,134 @@
             "compressing": "Compression de la vidéo",
             "compressingDescription": "Nous optimisons votre vidéo pour la meilleure qualité et un téléchargement plus rapide. Cela peut prendre quelques instants."
         }
+    },
+    "studentStepper": {
+        "welcome": {
+            "title": "Bienvenue à Snowmatch !",
+            "subtitle": "Configurons votre profil d'étudiant pour que vous puissiez trouver les meilleurs instructeurs et améliorer votre technique de ski.",
+            "features": {
+                "objective": {
+                    "title": "Définissez votre objectif :",
+                    "description": "Que voulez-vous accomplir avec le ski ?"
+                },
+                "level": {
+                    "title": "Votre niveau actuel :",
+                    "description": "Pour vous recommander l'instructeur parfait"
+                },
+                "location": {
+                    "title": "Où vous skiez :",
+                    "description": "Pour vous connecter avec des instructeurs locaux"
+                }
+            },
+            "footer": "Cela ne prendra que quelques minutes et vous aidera à avoir une expérience personnalisée"
+        },
+        "goalStep": {
+            "title": "Quel est votre objectif principal ?",
+            "subtitle": "Sélectionnez ce qui vous motive le plus pour personnaliser votre expérience Snowmatch",
+            "options": {
+                "FIND_INSTRUCTORS": {
+                    "label": "Trouver des instructeurs",
+                    "description": "Je cherche un instructeur professionnel pour améliorer ma technique"
+                },
+                "TRACK_SKIING": {
+                    "label": "Suivre mon ski",
+                    "description": "Je veux enregistrer mes statistiques et progrès avec GPS"
+                },
+                "IMPROVE_TECHNIQUE": {
+                    "label": "Améliorer ma technique avec des vidéos",
+                    "description": "Télécharger des vidéos et recevoir des commentaires d'instructeurs"
+                },
+                "GET_FEEDBACK": {
+                    "label": "Recevoir des commentaires d'instructeurs",
+                    "description": "Obtenir une analyse professionnelle de ma technique"
+                },
+                "PLAN_TRIP": {
+                    "label": "Planifier mon prochain voyage de ski",
+                    "description": "Organiser ma prochaine aventure dans la neige"
+                }
+            }
+        },
+        "levelStep": {
+            "title": "Quel est votre niveau actuel ?",
+            "subtitle": "Cela nous aidera à vous recommander des instructeurs et du contenu adapté à votre niveau",
+            "levels": {
+                "BEGINNER": {
+                    "label": "Débutant",
+                    "description": "J'apprends à tourner sur les pistes faciles"
+                },
+                "INTERMEDIATE": {
+                    "label": "Intermédiaire",
+                    "description": "Je descends les pistes rouges, mais ma technique a besoin d'amélioration"
+                },
+                "ADVANCED": {
+                    "label": "Avancé",
+                    "description": "Je maîtrise tous types de pistes"
+                },
+                "EXPERT": {
+                    "label": "Expert",
+                    "description": "Je recherche la performance et les défis techniques"
+                }
+            },
+      "tip": {
+        "title": "💡 Conseil :",
+        "description": "Il vaut mieux être honnête sur votre niveau. Cela nous permet de vous recommander des instructeurs qui vous aideront vraiment à progresser en toute sécurité."
+      }
     }
+  },
+  "studentTypeStep": {
+    "title": "Quel sport voulez-vous pratiquer ?",
+    "subtitle": "Vous pouvez sélectionner les deux sports si vous voulez apprendre le ski et le snowboard",
+    "selected": "Sélectionnés :",
+    "sports": {
+      "SKI": {
+        "label": "Ski",
+        "description": "J'apprends à skier sur les pistes et en montagne"
+      },
+      "SNOWBOARD": {
+        "label": "Snowboard",
+        "description": "J'apprends à faire du snowboard"
+      }
+    },
+    "tip": {
+      "title": "💡 Conseil :",
+      "description": "Si vous n'êtes pas sûr, vous pouvez sélectionner les deux sports et décider plus tard lequel vous préférez."
+    }
+  },
+  "studentResortsStep": {
+    "title": "Où skiez-vous habituellement ?",
+    "subtitle": "Sélectionnez les stations où vous skiez régulièrement. Cela nous aide à vous connecter avec des instructeurs locaux",
+    "tip": {
+      "title": "Conseil :",
+      "description": "Vous pouvez sélectionner plusieurs stations. Cela nous aide à vous recommander des instructeurs dans vos destinations préférées."
+    },
+    "loading": "Chargement des stations...",
+    "error": "Erreur lors du chargement des stations. Veuillez réessayer.",
+    "searchLabel": "Rechercher des stations",
+    "searchPlaceholder": "Tapez pour rechercher des stations...",
+    "helperText": "Vous pouvez sélectionner plusieurs stations",
+    "popularResorts": "Stations populaires : Cerro Catedral, Chapelco, Valle Nevado, Aspen, Vail, Whistler, Chamonix"
+  },
+  "studentLearningStep": {
+    "title": "Comment voulez-vous apprendre ?",
+    "subtitle": "Sélectionnez votre méthode d'apprentissage préférée. Vous pouvez changer cela plus tard selon vos besoins",
+    "methods": {
+      "IN_PERSON_WITH_TEACHER": {
+        "label": "Avec instructeur en personne",
+        "description": "Cours en personne avec des instructeurs certifiés"
+      },
+      "VIDEO_FEEDBACK": {
+        "label": "En téléchargeant des vidéos et en recevant des commentaires",
+        "description": "Téléchargez vos vidéos et recevez une analyse professionnelle"
+      },
+      "AI_ACADEMY": {
+        "label": "Avec IA et défis de la Snowmatch Academy",
+        "description": "Apprenez avec l'intelligence artificielle et des défis personnalisés"
+      },
+      "MIXED_APPROACH": {
+        "label": "Approche mixte",
+        "description": "Combinez différentes méthodes selon l'occasion"
+      }
+    },
+    "successMessage": "Excellent ! Vous avez terminé la configuration de votre profil. Maintenant vous pouvez trouver des instructeurs parfaits pour votre niveau et vos objectifs, et accéder à du contenu personnalisé pour améliorer votre technique."
+  }
 }

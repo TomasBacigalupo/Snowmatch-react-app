@@ -3,6 +3,7 @@ import { Box, Typography, Grid, Card, CardContent, CardActionArea, Chip } from '
 import { m } from 'framer-motion';
 import { useFormContext } from 'react-hook-form';
 import Iconify from '../../../components/Iconify';
+import useLocales from '../../../hooks/useLocales';
 
 StudentTypeStep.propTypes = {
   validateField: PropTypes.func.isRequired,
@@ -11,16 +12,12 @@ StudentTypeStep.propTypes = {
 const TYPE_OPTIONS = [
   {
     value: 'SKI',
-    label: 'Esquí',
-    description: 'Aprendo a esquiar en pistas y montaña',
     icon: 'eva:activity-fill',
     emoji: '🎿',
     color: '#2196f3'
   },
   {
     value: 'SNOWBOARD',
-    label: 'Snowboard',
-    description: 'Aprendo a hacer snowboard',
     icon: 'eva:flash-fill',
     emoji: '🏂',
     color: '#9c27b0'
@@ -29,6 +26,7 @@ const TYPE_OPTIONS = [
 
 export default function StudentTypeStep({ validateField }) {
   const { setValue, watch } = useFormContext();
+  const { translate } = useLocales();
   const selectedTypes = watch('sports') || [];
 
   const handleTypeToggle = (type) => {
@@ -47,30 +45,29 @@ export default function StudentTypeStep({ validateField }) {
       transition={{ duration: 0.6, ease: "easeOut" }}
     >
       <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
-        <Iconify icon="eva:activity-fill" sx={{ fontSize: 24, color: 'primary.main', mr: 2 }} />
-        <Typography variant="h6" sx={{ color: 'primary.main', fontWeight: 600 }}>
-          ¿Qué deporte quieres practicar?
+        <Iconify icon="eva:activity-fill" sx={{ fontSize: 24, color: 'black', mr: 2 }} />
+        <Typography variant="h6" sx={{ color: 'black', fontWeight: 600 }}>
+          {translate('studentTypeStep.title')}
         </Typography>
       </Box>
       
       <Typography variant="body2" color="text.secondary" sx={{ mb: 4 }}>
-        Puedes seleccionar ambos deportes si quieres aprender esquí y snowboard
+        {translate('studentTypeStep.subtitle')}
       </Typography>
 
       {selectedTypes.length > 0 && (
         <Box sx={{ mb: 3 }}>
           <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
-            Seleccionados:
+            {translate('studentTypeStep.selected')}
           </Typography>
           <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
             {selectedTypes.map((type) => {
-              const typeOption = TYPE_OPTIONS.find(opt => opt.value === type);
               return (
                 <Chip
                   key={type}
-                  label={typeOption?.label}
+                  label={translate(`studentTypeStep.sports.${type}.label`)}
                   onDelete={() => handleTypeToggle(type)}
-                  color="primary"
+                  sx={{ color: 'black' }}
                   variant="outlined"
                   size="small"
                 />
@@ -124,7 +121,7 @@ export default function StudentTypeStep({ validateField }) {
                         color: isSelected ? type.color : 'text.primary'
                       }}
                     >
-                      {type.label}
+                      {translate(`studentTypeStep.sports.${type.value}.label`)}
                     </Typography>
                     
                     <Typography 
@@ -132,7 +129,7 @@ export default function StudentTypeStep({ validateField }) {
                       color="text.secondary"
                       sx={{ flexGrow: 1 }}
                     >
-                      {type.description}
+                      {translate(`studentTypeStep.sports.${type.value}.description`)}
                     </Typography>
                   </CardContent>
                 </CardActionArea>
@@ -150,7 +147,7 @@ export default function StudentTypeStep({ validateField }) {
         border: '1px solid #e0e0e0'
       }}>
         <Typography variant="body2" color="text.secondary" sx={{ fontStyle: 'italic' }}>
-          💡 <strong>Tip:</strong> Si no estás seguro, puedes seleccionar ambos deportes y decidir más tarde cuál prefieres.
+          {translate('studentTypeStep.tip.title')} <strong>{translate('studentTypeStep.tip.description')}</strong>
         </Typography>
       </Box>
     </m.div>

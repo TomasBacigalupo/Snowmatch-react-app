@@ -6,6 +6,7 @@ import { useFormContext } from 'react-hook-form';
 import { Autocomplete, TextField } from '@mui/material';
 import Iconify from '../../../components/Iconify';
 import axios from '../../../utils/axios';
+import useLocales from '../../../hooks/useLocales';
 
 StudentResortsStep.propTypes = {
   validateField: PropTypes.func.isRequired,
@@ -16,6 +17,7 @@ export default function StudentResortsStep({ validateField }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const { setValue, watch } = useFormContext();
+  const { translate } = useLocales();
   const selectedResorts = watch('resorts') || [];
 
   useEffect(() => {
@@ -31,7 +33,7 @@ export default function StudentResortsStep({ validateField }) {
         setResorts(response.data);
       } catch (err) {
         console.error('Error fetching resorts:', err);
-        setError('Error al cargar los resorts. Por favor intenta de nuevo.');
+        setError(translate('studentResortsStep.error'));
       } finally {
         setLoading(false);
       }
@@ -71,19 +73,19 @@ export default function StudentResortsStep({ validateField }) {
       transition={{ duration: 0.6, ease: "easeOut" }}
     >
       <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
-        <Iconify icon="eva:map-fill" sx={{ fontSize: 24, color: 'primary.main', mr: 2 }} />
-        <Typography variant="h6" sx={{ color: 'primary.main', fontWeight: 600 }}>
-          ¿Dónde sueles esquiar?
+        <Iconify icon="eva:map-fill" sx={{ fontSize: 24, color: 'black', mr: 2 }} />
+        <Typography variant="h6" sx={{ color: 'black', fontWeight: 600 }}>
+          {translate('studentResortsStep.title')}
         </Typography>
       </Box>
       
       <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-        Selecciona los resorts donde esquías habitualmente. Esto nos ayuda a conectarte con instructores locales
+        {translate('studentResortsStep.subtitle')}
       </Typography>
 
       <Alert severity="info" sx={{ mb: 3 }}>
         <Typography variant="body2">
-          <strong>Tip:</strong> Puedes seleccionar múltiples resorts. Esto nos ayuda a recomendarte instructores en tus destinos favoritos.
+          <strong>{translate('studentResortsStep.tip.title')}</strong> {translate('studentResortsStep.tip.description')}
         </Typography>
       </Alert>
       
@@ -92,7 +94,7 @@ export default function StudentResortsStep({ validateField }) {
           <Box sx={{ display: 'flex', justifyContent: 'center', py: 3 }}>
             <CircularProgress size={24} />
             <Typography variant="body2" sx={{ ml: 2, color: 'text.secondary' }}>
-              Cargando resorts...
+              {translate('studentResortsStep.loading')}
             </Typography>
           </Box>
         ) : error ? (
@@ -147,9 +149,9 @@ export default function StudentResortsStep({ validateField }) {
             renderInput={(params) => (
               <TextField
                 {...params}
-                label="Buscar resorts"
-                placeholder="Escribe para buscar resorts..."
-                helperText="Puedes seleccionar múltiples resorts"
+                label={translate('studentResortsStep.searchLabel')}
+                placeholder={translate('studentResortsStep.searchPlaceholder')}
+                helperText={translate('studentResortsStep.helperText')}
                 fullWidth
               />
             )}
@@ -160,7 +162,7 @@ export default function StudentResortsStep({ validateField }) {
         
         <Box sx={{ p: 2, bgcolor: 'grey.50', borderRadius: 1, border: '1px solid', borderColor: 'grey.200' }}>
           <Typography variant="body2" color="text.secondary">
-            <strong>Resorts populares:</strong> Cerro Catedral, Chapelco, Valle Nevado, Aspen, Vail, Whistler, Chamonix
+            {translate('studentResortsStep.popularResorts')}
           </Typography>
         </Box>
       </Stack>

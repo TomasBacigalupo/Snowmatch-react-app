@@ -3,6 +3,7 @@ import { Box, Typography, Grid, Card, CardContent, CardActionArea } from '@mui/m
 import { m } from 'framer-motion';
 import { useFormContext } from 'react-hook-form';
 import Iconify from '../../../components/Iconify';
+import useLocales from '../../../hooks/useLocales';
 
 StudentLevelStep.propTypes = {
   validateField: PropTypes.func.isRequired,
@@ -11,32 +12,24 @@ StudentLevelStep.propTypes = {
 const LEVEL_OPTIONS = [
   {
     value: 'BEGINNER',
-    label: 'Principiante',
-    description: 'Estoy aprendiendo a girar en pistas fáciles',
     icon: 'eva:trending-up-fill',
     emoji: '🟢',
     color: '#4caf50'
   },
   {
     value: 'INTERMEDIATE',
-    label: 'Intermedio',
-    description: 'Ya bajo rojas, pero me falta técnica',
     icon: 'eva:trending-up-fill',
     emoji: '🟡',
     color: '#ff9800'
   },
   {
     value: 'ADVANCED',
-    label: 'Avanzado',
-    description: 'Controlo en todo tipo de pistas',
     icon: 'eva:trending-up-fill',
     emoji: '🟠',
     color: '#ff5722'
   },
   {
     value: 'EXPERT',
-    label: 'Experto',
-    description: 'Busco rendimiento y retos técnicos',
     icon: 'eva:trending-up-fill',
     emoji: '🔴',
     color: '#f44336'
@@ -45,6 +38,7 @@ const LEVEL_OPTIONS = [
 
 export default function StudentLevelStep({ validateField }) {
   const { setValue, watch } = useFormContext();
+  const { translate } = useLocales();
   const selectedLevel = watch('studentLevel');
 
   const handleLevelSelect = (level) => {
@@ -59,14 +53,14 @@ export default function StudentLevelStep({ validateField }) {
       transition={{ duration: 0.6, ease: "easeOut" }}
     >
       <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
-        <Iconify icon="eva:trending-up-fill" sx={{ fontSize: 24, color: 'primary.main', mr: 2 }} />
-        <Typography variant="h6" sx={{ color: 'primary.main', fontWeight: 600 }}>
-          ¿Cuál es tu nivel actual?
+        <Iconify icon="eva:trending-up-fill" sx={{ fontSize: 24, color: 'black', mr: 2 }} />
+        <Typography variant="h6" sx={{ color: 'black', fontWeight: 600 }}>
+          {translate('studentStepper.levelStep.title')}
         </Typography>
       </Box>
       
       <Typography variant="body2" color="text.secondary" sx={{ mb: 4 }}>
-        Esto nos ayudará a recomendarte instructores y contenido adecuado para tu nivel
+        {translate('studentStepper.levelStep.subtitle')}
       </Typography>
       
       <Grid container spacing={2}>
@@ -111,7 +105,7 @@ export default function StudentLevelStep({ validateField }) {
                       color: selectedLevel === level.value ? level.color : 'text.primary'
                     }}
                   >
-                    {level.label}
+                    {translate(`studentStepper.levelStep.levels.${level.value}.label`)}
                   </Typography>
                   
                   <Typography 
@@ -119,7 +113,7 @@ export default function StudentLevelStep({ validateField }) {
                     color="text.secondary"
                     sx={{ flexGrow: 1 }}
                   >
-                    {level.description}
+                    {translate(`studentStepper.levelStep.levels.${level.value}.description`)}
                   </Typography>
                 </CardContent>
               </CardActionArea>
@@ -136,8 +130,7 @@ export default function StudentLevelStep({ validateField }) {
         border: '1px solid #e0e0e0'
       }}>
         <Typography variant="body2" color="text.secondary" sx={{ fontStyle: 'italic' }}>
-          💡 <strong>Tip:</strong> Es mejor ser honesto con tu nivel. Esto nos permite recomendarte 
-          instructores que realmente te ayuden a mejorar y progresar de manera segura.
+          {translate('studentStepper.levelStep.tip.title')} {translate('studentStepper.levelStep.tip.description')}
         </Typography>
       </Box>
     </m.div>

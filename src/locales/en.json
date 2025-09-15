@@ -1634,6 +1634,112 @@
     "duration": "Duration",
     "seconds": "seconds"
   },
+  "studentStepper": {
+    "welcome": {
+      "title": "Welcome to Snowmatch!",
+      "subtitle": "Let's set up your student profile so you can find the best instructors and improve your skiing technique.",
+      "features": {
+        "objective": {
+          "title": "Define your goal:",
+          "description": "What do you want to achieve with skiing?"
+        },
+        "level": {
+          "title": "Your current level:",
+          "description": "To recommend the perfect instructor for you"
+        },
+        "location": {
+          "title": "Where you ski:",
+          "description": "To connect you with local instructors"
+        }
+      },
+      "footer": "It will only take a few minutes and will help you have a personalized experience"
+    },
+    "goalStep": {
+      "title": "What is your main goal?",
+      "subtitle": "Select what motivates you most to personalize your Snowmatch experience",
+      "options": {
+        "FIND_INSTRUCTORS": {
+          "label": "Find instructors",
+          "description": "I'm looking for a professional instructor to improve my technique"
+        },
+        "TRACK_SKIING": {
+          "label": "Track my skiing",
+          "description": "I want to record my statistics and progress with GPS"
+        },
+        "IMPROVE_TECHNIQUE": {
+          "label": "Improve my technique with videos",
+          "description": "Upload videos and receive feedback from instructors"
+        },
+        "GET_FEEDBACK": {
+          "label": "Get feedback from instructors",
+          "description": "Get professional analysis of my technique"
+        },
+        "PLAN_TRIP": {
+          "label": "Plan my next ski trip",
+          "description": "Organize my next snow adventure"
+        }
+      }
+    },
+    "levelStep": {
+      "title": "What's your current level?",
+      "subtitle": "This will help us recommend instructors and content suitable for your level",
+      "levels": {
+        "BEGINNER": {
+          "label": "Beginner",
+          "description": "I'm learning to turn on easy slopes"
+        },
+        "INTERMEDIATE": {
+          "label": "Intermediate",
+          "description": "I can ski red runs, but I need to improve my technique"
+        },
+        "ADVANCED": {
+          "label": "Advanced",
+          "description": "I can handle all types of slopes"
+        },
+        "EXPERT": {
+          "label": "Expert",
+          "description": "I'm looking for performance and technical challenges"
+        }
+      },
+      "tip": {
+        "title": "💡 Tip:",
+        "description": "It's better to be honest about your level. This allows us to recommend instructors who will really help you improve and progress safely."
+      }
+    }
+  },
+  "studentTypeStep": {
+    "title": "What sport do you want to practice?",
+    "subtitle": "You can select both sports if you want to learn skiing and snowboarding",
+    "selected": "Selected:",
+    "sports": {
+      "SKI": {
+        "label": "Skiing",
+        "description": "I learn to ski on slopes and mountains"
+      },
+      "SNOWBOARD": {
+        "label": "Snowboard",
+        "description": "I learn to snowboard"
+      }
+    },
+    "tip": {
+      "title": "💡 Tip:",
+      "description": "If you're not sure, you can select both sports and decide later which one you prefer."
+    }
+  },
+  "studentResortsStep": {
+    "title": "Where do you usually ski?",
+    "subtitle": "Select the resorts where you ski regularly. This helps us connect you with local instructors",
+    "tip": {
+      "title": "Tip:",
+      "description": "You can select multiple resorts. This helps us recommend instructors in your favorite destinations."
+    },
+    "loading": "Loading resorts...",
+    "error": "Error loading resorts. Please try again.",
+    "searchLabel": "Search resorts",
+    "searchPlaceholder": "Type to search resorts...",
+    "helperText": "You can select multiple resorts",
+    "popularResorts": "Popular resorts: Cerro Catedral, Chapelco, Valle Nevado, Aspen, Vail, Whistler, Chamonix"
+  },
   "footer": {
     "description": "Elevate your snow experience with SnowMatch.",
     "sections": {
@@ -1664,5 +1770,28 @@
       "location": "San Martín de los Andes, Patagonia Argentina"
     },
     "copyright": "All rights reserved."
+  },
+  "studentLearningStep": {
+    "title": "How do you want to learn?",
+    "subtitle": "Select your preferred learning method. You can change this later according to your needs",
+    "methods": {
+      "IN_PERSON_WITH_TEACHER": {
+        "label": "With in-person instructor",
+        "description": "In-person classes with certified instructors"
+      },
+      "VIDEO_FEEDBACK": {
+        "label": "Uploading videos and receiving feedback",
+        "description": "Upload your videos and receive professional analysis"
+      },
+      "AI_ACADEMY": {
+        "label": "With AI and Snowmatch Academy challenges",
+        "description": "Learn with artificial intelligence and personalized challenges"
+      },
+      "MIXED_APPROACH": {
+        "label": "Mixed approach",
+        "description": "Combine different methods according to the occasion"
+      }
+    },
+    "successMessage": "Excellent! You have completed your profile setup. Now you can find perfect instructors for your level and goals, and access personalized content to improve your technique."
   }
 }

@@ -1,4 +1,117 @@
 {
+  "agency": {
+    "hero": {
+      "title": "Offer ski lessons and equipment with Snowmatch",
+      "subtitle": "The simplest way for your agency to sell snow experiences with 24/7 support",
+      "ctaPrimary": "Get Quote",
+      "ctaSecondary": "View Benefits",
+      "badge1": "24/7 Support",
+      "badge2": "Verified Instructors",
+      "badge3": "No Commitment"
+    },
+    "quote": {
+      "title": "Get Your Quote",
+      "subtitle": "Complete the details and receive a personalized quote",
+      "steps": {
+        "step1": {
+          "label": "Lesson Type",
+          "description": "Choose the type of experience you want to offer"
+        },
+        "step2": {
+          "label": "Group Details",
+          "description": "Tell us about your client group"
+        },
+        "step3": {
+          "label": "Dates and Equipment",
+          "description": "Define dates and whether equipment is included"
+        },
+        "step4": {
+          "label": "Contact Information",
+          "description": "Complete your details to receive the quote"
+        }
+      },
+      "lessonTypes": {
+        "group": {
+          "title": "Group Lessons",
+          "description": "Ideal for small and medium groups. Better price per person."
+        },
+        "private": {
+          "title": "Private Lessons",
+          "description": "Personalized attention. Perfect for beginners or technical improvement."
+        }
+      },
+      "form": {
+        "peopleCount": "Number of people",
+        "peopleCountHelper": "Maximum 20 people per group",
+        "startDate": "Start date",
+        "endDate": "End date",
+        "includesEquipment": "Includes equipment?",
+        "equipmentYes": "Yes, include equipment (skis, boots, poles)",
+        "equipmentNo": "No, lessons only",
+        "agencyName": "Agency name",
+        "contactName": "Contact name",
+        "email": "Email",
+        "phone": "Phone",
+        "message": "Additional message (optional)",
+        "messagePlaceholder": "Tell us more details about your group or special needs...",
+        "continue": "Continue",
+        "back": "Back",
+        "sendWhatsApp": "Send via WhatsApp"
+      }
+    },
+    "benefits": {
+      "title": "Why choose Snowmatch for your agency?",
+      "support24": {
+        "title": "24/7 Support",
+        "description": "Our team is available 24 hours a day to resolve any queries from your clients"
+      },
+      "verified": {
+        "title": "Verified Instructors and Equipment",
+        "description": "We work only with certified instructors and first-class equipment"
+      },
+      "help": {
+        "title": "Quote and Booking Assistance",
+        "description": "We help you with all the logistics so you can focus on selling"
+      }
+    },
+    "howItWorks": {
+      "title": "How it works",
+      "step1": {
+        "title": "Get Quote",
+        "description": "Complete our form with your group details and dates"
+      },
+      "step2": {
+        "title": "Share with Your Client",
+        "description": "Receive the personalized quote and share it with your clients"
+      },
+      "step3": {
+        "title": "Snowmatch Coordinates",
+        "description": "We take care of coordinating instructors, equipment and providing support during the experience"
+      }
+    },
+    "testimonials": {
+      "title": "What our partner agencies say",
+      "testimonial1": {
+        "quote": "Snowmatch allowed us to offer quality ski experiences to our clients without worrying about logistics. The support is exceptional.",
+        "name": "Maria Gonzalez",
+        "role": "Sales Director",
+        "agency": "Travel & Adventure"
+      },
+      "testimonial2": {
+        "quote": "Trust in verified instructors and equipment gives us peace of mind to recommend Snowmatch to our most demanding clients.",
+        "name": "Carlos Rodriguez",
+        "role": "Commercial Manager",
+        "agency": "Patagonia Tours"
+      }
+    },
+    "finalCta": {
+      "title": "Start selling experiences with Snowmatch",
+      "subtitle": "Join the agencies that already trust us to offer the best ski experiences",
+      "ctaPrimary": "Get Quote",
+      "ctaSecondary": "Contact via WhatsApp",
+      "contact": "Direct contact:"
+    }
+  },
   "demo": {
     "title": "English",
     "introduction": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
@@ -1520,5 +1633,36 @@
     "selectBest30Seconds": "Select the best 30 seconds",
     "duration": "Duration",
     "seconds": "seconds"
+  },
+  "footer": {
+    "description": "Elevate your snow experience with SnowMatch.",
+    "sections": {
+      "snowmatch": "SnowMatch",
+      "instructors": "Instructors",
+      "legal": "Legal",
+      "contact": "Contact"
+    },
+    "links": {
+      "catedral": "Catedral",
+      "snowMatchX": "SnowMatchX",
+      "intermediate": "Intermediate",
+      "beginners": "Beginners",
+      "heliski": "Heliski",
+      "clinic": "Clinic",
+      "family": "Family",
+      "children": "Children",
+      "freeRide": "Free Ride",
+      "groupCatedral": "Group lesson Catedral",
+      "raceClinic": "Race Clinic",
+      "faqs": "FAQs",
+      "blog": "Blog",
+      "viewAllInstructors": "View all instructors",
+      "terms": "Terms and conditions",
+      "privacy": "Privacy policy",
+      "whatsapp": "WhatsApp",
+      "email": "office@snowmatch.pro",
+      "location": "San Martín de los Andes, Patagonia Argentina"
+    },
+    "copyright": "All rights reserved."
   }
 }

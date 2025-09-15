@@ -1,4 +1,117 @@
 {
+    "agency": {
+        "hero": {
+            "title": "Ofereça aulas e equipamentos de esqui com Snowmatch",
+            "subtitle": "A forma mais simples para sua agência vender experiências na neve com suporte 24/7",
+            "ctaPrimary": "Solicitar Orçamento",
+            "ctaSecondary": "Ver Benefícios",
+            "badge1": "Suporte 24/7",
+            "badge2": "Instrutores Verificados",
+            "badge3": "Sem Compromisso"
+        },
+        "quote": {
+            "title": "Solicite seu Orçamento",
+            "subtitle": "Complete os dados e receba um orçamento personalizado",
+            "steps": {
+                "step1": {
+                    "label": "Tipo de Aulas",
+                    "description": "Escolha o tipo de experiência que deseja oferecer"
+                },
+                "step2": {
+                    "label": "Detalhes do Grupo",
+                    "description": "Conte-nos sobre seu grupo de clientes"
+                },
+                "step3": {
+                    "label": "Datas e Equipamentos",
+                    "description": "Defina as datas e se inclui equipamentos"
+                },
+                "step4": {
+                    "label": "Informações de Contato",
+                    "description": "Complete seus dados para receber o orçamento"
+                }
+            },
+            "lessonTypes": {
+                "group": {
+                    "title": "Aulas em Grupo",
+                    "description": "Ideal para grupos pequenos e médios. Melhor preço por pessoa."
+                },
+                "private": {
+                    "title": "Aulas Particulares",
+                    "description": "Atenção personalizada. Perfeito para iniciantes ou melhoria técnica."
+                }
+            },
+            "form": {
+                "peopleCount": "Número de pessoas",
+                "peopleCountHelper": "Máximo 20 pessoas por grupo",
+                "startDate": "Data de início",
+                "endDate": "Data de fim",
+                "includesEquipment": "Inclui equipamentos?",
+                "equipmentYes": "Sim, incluir equipamentos (esquis, botas, bastões)",
+                "equipmentNo": "Não, apenas as aulas",
+                "agencyName": "Nome da agência",
+                "contactName": "Nome do contato",
+                "email": "Email",
+                "phone": "Telefone",
+                "message": "Mensagem adicional (opcional)",
+                "messagePlaceholder": "Conte-nos mais detalhes sobre seu grupo ou necessidades especiais...",
+                "continue": "Continuar",
+                "back": "Voltar",
+                "sendWhatsApp": "Enviar via WhatsApp"
+            }
+        },
+        "benefits": {
+            "title": "Por que escolher Snowmatch para sua agência?",
+            "support24": {
+                "title": "Suporte 24/7",
+                "description": "Nossa equipe está disponível 24 horas por dia para resolver qualquer consulta de seus clientes"
+            },
+            "verified": {
+                "title": "Instrutores e Equipamentos Verificados",
+                "description": "Trabalhamos apenas com instrutores certificados e equipamentos de primeira qualidade"
+            },
+            "help": {
+                "title": "Ajuda em Orçamentos e Reservas",
+                "description": "Te ajudamos com toda a logística para que você possa focar em vender"
+            }
+        },
+        "howItWorks": {
+            "title": "Como Funciona",
+            "step1": {
+                "title": "Solicite Orçamento",
+                "description": "Complete nosso formulário com os detalhes do seu grupo e datas"
+            },
+            "step2": {
+                "title": "Compartilhe com seu Cliente",
+                "description": "Receba o orçamento personalizado e compartilhe com seus clientes"
+            },
+            "step3": {
+                "title": "Snowmatch Coordena",
+                "description": "Cuidamos da coordenação de instrutores, equipamentos e fornecemos suporte durante a experiência"
+            }
+        },
+        "testimonials": {
+            "title": "O que dizem nossas agências parceiras",
+            "testimonial1": {
+                "quote": "O Snowmatch nos permitiu oferecer experiências de esqui de qualidade para nossos clientes sem nos preocuparmos com a logística. O suporte é excepcional.",
+                "name": "Maria Gonzalez",
+                "role": "Diretora de Vendas",
+                "agency": "Travel & Adventure"
+            },
+            "testimonial2": {
+                "quote": "A confiança nos instrutores e equipamentos verificados nos dá tranquilidade para recomendar o Snowmatch aos nossos clientes mais exigentes.",
+                "name": "Carlos Rodriguez",
+                "role": "Gerente Comercial",
+                "agency": "Patagonia Tours"
+            }
+        },
+        "finalCta": {
+            "title": "Comece a vender experiências com Snowmatch",
+            "subtitle": "Junte-se às agências que já confiam em nós para oferecer as melhores experiências de esqui",
+            "ctaPrimary": "Solicitar Orçamento",
+            "ctaSecondary": "Contatar via WhatsApp",
+            "contact": "Contato direto:"
+        }
+    },
     "demo": {
         "title": "",
         "introduction": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
@@ -1555,9 +1668,40 @@
         "certification": "Certificação de Instrutor",
         "register": "Registrar"
     },
-    "MORNING": "Manhã",
-    "MORNING_2HS": "Manhã (2hs)",
-    "AFTERNOON": "Tarde",
-    "AFTERNOON_2HS": "Tarde (2hs)",
-    "ALL_DAY": "Todo o dia"
+  "MORNING": "Manhã",
+  "MORNING_2HS": "Manhã (2hs)",
+  "AFTERNOON": "Tarde",
+  "AFTERNOON_2HS": "Tarde (2hs)",
+  "ALL_DAY": "Todo o dia",
+  "footer": {
+    "description": "Eleve sua experiência na neve com SnowMatch.",
+    "sections": {
+      "snowmatch": "SnowMatch",
+      "instructors": "Instrutores",
+      "legal": "Legal",
+      "contact": "Contato"
+    },
+    "links": {
+      "catedral": "Catedral",
+      "snowMatchX": "SnowMatchX",
+      "intermediate": "Intermediários",
+      "beginners": "Iniciantes",
+      "heliski": "Heliski",
+      "clinic": "Clinic",
+      "family": "Family",
+      "children": "Children",
+      "freeRide": "Free Ride",
+      "groupCatedral": "Aula em grupo Catedral",
+      "raceClinic": "Clínica de Corrida",
+      "faqs": "FAQs",
+      "blog": "Blog",
+      "viewAllInstructors": "Ver todos os instrutores",
+      "terms": "Termos e condições",
+      "privacy": "Política de privacidade",
+      "whatsapp": "WhatsApp",
+      "email": "office@snowmatch.pro",
+      "location": "San Martín de los Andes, Patagonia Argentina"
+    },
+    "copyright": "Todos os direitos reservados."
+  }
 }

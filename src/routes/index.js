@@ -37,6 +37,7 @@ import PrivacyPolicy from 'src/pages/PrivacyPolicy';
 import InstructorLanding from 'src/pages/InstructorLanding';
 import InstructorLandingEN from 'src/pages/InstructorLandingEN';
 import EnterpriseLanding from 'src/pages/EnterpriseLanding';
+import TravelAgencyLanding from 'src/pages/TravelAgencyLanding';
 // ----------------------------------------------------------------------
 
 const Loadable = (Component) => (props) => {
@@ -150,6 +151,7 @@ export default function Router() {
           children: [
             { path: 'instructor', element: <InstructorLanding /> },
             { path: 'enterprise', element: <EnterpriseLanding /> },
+            { path: 'travel-agency', element: <TravelAgencyLanding /> },
           ]
         },
         {
@@ -158,6 +160,7 @@ export default function Router() {
           children: [
             { path: 'instructor', element: <InstructorLanding /> },
             { path: 'enterprise', element: <EnterpriseLanding /> },
+            { path: 'agencias', element: <TravelAgencyLanding /> },
           ]
         },
         {
@@ -166,6 +169,7 @@ export default function Router() {
           children: [
             { path: 'instructor', element: <InstructorLanding /> },
             { path: 'enterprise', element: <EnterpriseLanding /> },
+            { path: 'agencias', element: <TravelAgencyLanding /> },
           ]
         },
         {
@@ -174,6 +178,7 @@ export default function Router() {
           children: [
             { path: 'instructor', element: <InstructorLanding /> },
             { path: 'enterprise', element: <EnterpriseLanding /> },
+            { path: 'agencias', element: <TravelAgencyLanding /> },
           ]
         },
         {

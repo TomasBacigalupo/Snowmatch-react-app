@@ -1,4 +1,117 @@
 {
+    "agency": {
+        "hero": {
+            "title": "Ofrecé clases y equipos de esquí con Snowmatch",
+            "subtitle": "La forma más simple para que tu agencia venda experiencias de nieve con soporte 24/7",
+            "ctaPrimary": "Cotizar ahora",
+            "ctaSecondary": "Ver beneficios",
+            "badge1": "Soporte 24/7",
+            "badge2": "Instructores verificados",
+            "badge3": "Sin compromiso"
+        },
+        "quote": {
+            "title": "Cotizá tu experiencia",
+            "subtitle": "Completá los datos y recibí una cotización personalizada",
+            "steps": {
+                "step1": {
+                    "label": "Tipo de clases",
+                    "description": "Elegí el tipo de experiencia que querés ofrecer"
+                },
+                "step2": {
+                    "label": "Detalles del grupo",
+                    "description": "Contanos sobre tu grupo de clientes"
+                },
+                "step3": {
+                    "label": "Fechas y equipos",
+                    "description": "Definí las fechas y si incluye equipos"
+                },
+                "step4": {
+                    "label": "Información de contacto",
+                    "description": "Completá tus datos para recibir la cotización"
+                }
+            },
+            "lessonTypes": {
+                "group": {
+                    "title": "Clases Grupales",
+                    "description": "Ideal para grupos pequeños y medianos. Mejor precio por persona."
+                },
+                "private": {
+                    "title": "Clases Particulares",
+                    "description": "Atención personalizada. Perfecto para principiantes o mejora técnica."
+                }
+            },
+            "form": {
+                "peopleCount": "Cantidad de personas",
+                "peopleCountHelper": "Máximo 20 personas por grupo",
+                "startDate": "Fecha de inicio",
+                "endDate": "Fecha de fin",
+                "includesEquipment": "¿Incluye equipos?",
+                "equipmentYes": "Sí, incluir equipos (esquís, botas, bastones)",
+                "equipmentNo": "No, solo las clases",
+                "agencyName": "Nombre de la agencia",
+                "contactName": "Nombre del contacto",
+                "email": "Email",
+                "phone": "Teléfono",
+                "message": "Mensaje adicional (opcional)",
+                "messagePlaceholder": "Contanos más detalles sobre tu grupo o necesidades especiales...",
+                "continue": "Continuar",
+                "back": "Atrás",
+                "sendWhatsApp": "Enviar por WhatsApp"
+            }
+        },
+        "benefits": {
+            "title": "¿Por qué elegir Snowmatch para tu agencia?",
+            "support24": {
+                "title": "Soporte 24/7",
+                "description": "Nuestro equipo está disponible las 24 horas para resolver cualquier consulta de tus clientes"
+            },
+            "verified": {
+                "title": "Instructores y equipos verificados",
+                "description": "Trabajamos solo con instructores certificados y equipos de primera calidad"
+            },
+            "help": {
+                "title": "Ayuda en cotización y reservas",
+                "description": "Te ayudamos con toda la logística para que puedas enfocarte en vender"
+            }
+        },
+        "howItWorks": {
+            "title": "Cómo funciona",
+            "step1": {
+                "title": "Cotizá",
+                "description": "Completá nuestro formulario con los detalles de tu grupo y fechas"
+            },
+            "step2": {
+                "title": "Compartí con tu cliente",
+                "description": "Recibí la cotización personalizada y compartila con tus clientes"
+            },
+            "step3": {
+                "title": "Snowmatch coordina",
+                "description": "Nos encargamos de coordinar instructores, equipos y dar soporte durante la experiencia"
+            }
+        },
+        "testimonials": {
+            "title": "Lo que dicen nuestras agencias partners",
+            "testimonial1": {
+                "quote": "Snowmatch nos permitió ofrecer experiencias de esquí de calidad a nuestros clientes sin preocuparnos por la logística. El soporte es excepcional.",
+                "name": "María González",
+                "role": "Directora de Ventas",
+                "agency": "Travel & Adventure"
+            },
+            "testimonial2": {
+                "quote": "La confianza en los instructores y equipos verificados nos da tranquilidad para recomendar Snowmatch a nuestros clientes más exigentes.",
+                "name": "Carlos Rodríguez",
+                "role": "Gerente Comercial",
+                "agency": "Patagonia Tours"
+            }
+        },
+        "finalCta": {
+            "title": "Empezá a vender experiencias con Snowmatch",
+            "subtitle": "Unite a las agencias que ya confían en nosotros para ofrecer las mejores experiencias de esquí",
+            "ctaPrimary": "Cotizar ahora",
+            "ctaSecondary": "Contactar por WhatsApp",
+            "contact": "Contacto directo:"
+        }
+    },
     "kanban": {
         "today": "Hoy",
         "tomorrow": "Mañana",
@@ -2631,9 +2744,40 @@
             "message": "🚀 *Consulta Premium - Snowmatch*\n\nHola Snowmatch, me interesa suscribirme a Premium para aumentar mi visibilidad y recibir más consultas.\n\n👤 *Información:*\n• Usuario: {{userName}}\n• Email: {{userEmail}}\n• Rol: {{userRole}}\n\n💬 *Motivo:*\nQuiero aumentar mi visibilidad para recibir más consultas de estudiantes.\n\n📅 *Fecha:* {{date}}\n🌐 *Página:* Chat - Sin conversaciones"
         }
     },
-    "videoTrimmer": {
-        "selectBest30Seconds": "Selecciona los mejores 30 segundos",
-        "duration": "Duración",
-        "seconds": "segundos"
-    }
+  "videoTrimmer": {
+    "selectBest30Seconds": "Selecciona los mejores 30 segundos",
+    "duration": "Duración",
+    "seconds": "segundos"
+  },
+  "footer": {
+    "description": "Elevá tu experiencia en la nieve con SnowMatch.",
+    "sections": {
+      "snowmatch": "SnowMatch",
+      "instructors": "Profesores",
+      "legal": "Legal",
+      "contact": "Contacto"
+    },
+    "links": {
+      "catedral": "Catedral",
+      "snowMatchX": "SnowMatchX",
+      "intermediate": "Intermedios",
+      "beginners": "Principiantes",
+      "heliski": "Heliski",
+      "clinic": "Clinic",
+      "family": "Family",
+      "children": "Children",
+      "freeRide": "Free Ride",
+      "groupCatedral": "Clase grupal Catedral",
+      "raceClinic": "Clinica de Carrera",
+      "faqs": "FAQs",
+      "blog": "Blog",
+      "viewAllInstructors": "Ver todos los profesores",
+      "terms": "Términos y condiciones",
+      "privacy": "Política de privacidad",
+      "whatsapp": "Whats App",
+      "email": "office@snowmatch.pro",
+      "location": "San Martín de los Andes, Patagonia Argentina"
+    },
+    "copyright": "Todos los derechos reservados."
+  }
 }

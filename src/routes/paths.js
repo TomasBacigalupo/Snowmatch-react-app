@@ -71,6 +71,15 @@ export const PATH_PAGE = {
   accessDenied: '/access-denied',
   components: '/components',
   enterprise: '/enterprise',
+  travelAgency: '/agencias',
+};
+
+// Rutas con prefijo de idioma para agencias de viajes
+export const PATH_TRAVEL_AGENCY = {
+  es: '/es/agencias',
+  en: '/en/travel-agency',
+  pt: '/pt/agencias',
+  fr: '/fr/agencias',
 };
 
 export const PATH_DASHBOARD = {

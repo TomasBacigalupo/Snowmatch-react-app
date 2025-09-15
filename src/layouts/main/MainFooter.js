@@ -12,6 +12,7 @@ import {
 import { PATH_DASHBOARD, PATH_GUEST, PATH_PAGE } from '../../routes/paths';
 import Logo from '../../components/Logo';
 import SocialsButton from '../../components/SocialsButton';
+import useLocales from '../../hooks/useLocales';
 
 const RootStyle = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -22,52 +23,55 @@ const RootStyle = styled('div')(({ theme }) => ({
   justifyContent: 'flex-end'
 }));
 
-const LINKS = [
+const getLinks = (translate) => [
   {
-    headline: 'SnowMatch',
+    headline: translate('footer.sections.snowmatch'),
     children: [
-      { name: 'Catedral', href: PATH_GUEST.independent },
-      { name: 'SnowMatchX', href: PATH_GUEST.snowMatchX },
-      { name: 'Intermedios', href: PATH_GUEST.intermedios },
-      { name: 'Principiantes', href: PATH_GUEST.principiantes },
-      { name: 'Heliski', href: '/heliski' },
-      { name: 'Clinic', href: PATH_GUEST.clinic },
-      { name: 'Family', href: PATH_GUEST.family },
-      { name: 'Children', href: PATH_GUEST.children },
-      { name: 'Free Ride', href: PATH_GUEST.freeRide },
-      { name: 'Clase grupal Catedral', href: PATH_GUEST.grupales },
-      { name: 'Clinica de Carrera', href: PATH_GUEST.palos },
-      { name: 'FAQs', href: PATH_PAGE.faqs },
-      { name: 'Blog', href: "/noticias" },
+      { name: translate('footer.links.catedral'), href: PATH_GUEST.independent },
+      { name: translate('footer.links.snowMatchX'), href: PATH_GUEST.snowMatchX },
+      { name: translate('footer.links.intermediate'), href: PATH_GUEST.intermedios },
+      { name: translate('footer.links.beginners'), href: PATH_GUEST.principiantes },
+      { name: translate('footer.links.heliski'), href: '/heliski' },
+      { name: translate('footer.links.clinic'), href: PATH_GUEST.clinic },
+      { name: translate('footer.links.family'), href: PATH_GUEST.family },
+      { name: translate('footer.links.children'), href: PATH_GUEST.children },
+      { name: translate('footer.links.freeRide'), href: PATH_GUEST.freeRide },
+      { name: translate('footer.links.groupCatedral'), href: PATH_GUEST.grupales },
+      { name: translate('footer.links.raceClinic'), href: PATH_GUEST.palos },
+      { name: translate('footer.links.faqs'), href: PATH_PAGE.faqs },
+      { name: translate('footer.links.blog'), href: "/noticias" },
     ],
   },
   {
-    headline: 'Profesores',
+    headline: translate('footer.sections.instructors'),
     children: [
       { name: 'Profe de SM Tomas', href: PATH_GUEST.viewTeacher(14) },
       { name: 'Profe de SM Popi', href: PATH_GUEST.viewTeacher(592) },
       { name: 'Profe de SM Agos', href: PATH_GUEST.viewTeacher(897) },
-      { name: 'Ver todos los profesores', href: '/match/independent?resort=Cerro%20Catedral' },
+      { name: translate('footer.links.viewAllInstructors'), href: '/match/independent?resort=Cerro%20Catedral' },
     ],
   },
   {
-    headline: 'Legal',
+    headline: translate('footer.sections.legal'),
     children: [
-      { name: 'Términos y condiciones', href: '/legal/terms' },
-      { name: 'Política de privacidad', href: '/legal/privacy' },
+      { name: translate('footer.links.terms'), href: '/legal/terms' },
+      { name: translate('footer.links.privacy'), href: '/legal/privacy' },
     ],
   },
   {
-    headline: 'Contacto',
+    headline: translate('footer.sections.contact'),
     children: [
-      { name: 'Whats App', href: 'https://wa.me/5492944263223' },
-      { name: 'office@snowmatch.pro', href: 'mailto:office@snowmatch.pro' },
-      { name: 'San Martín de los Andes, Patagonia Argentina', href: 'https://goo.gl/maps/...'} // reemplazá con link real
+      { name: translate('footer.links.whatsapp'), href: 'https://wa.me/5492944263223' },
+      { name: translate('footer.links.email'), href: 'mailto:office@snowmatch.pro' },
+      { name: translate('footer.links.location'), href: 'https://goo.gl/maps/...'} // reemplazá con link real
     ],
   },
 ];
 
 export default function MainFooter() {
+  const { translate } = useLocales();
+  const LINKS = getLinks(translate);
+  
   return (
     <RootStyle role="contentinfo">
       <Divider />
@@ -89,7 +93,7 @@ export default function MainFooter() {
             }}>
               <Logo sx={{ mb: 2 }} />
               <Typography variant="body2" sx={{ maxWidth: 300 }}>
-                Elevá tu experiencia en la nieve con SnowMatch.
+                {translate('footer.description')}
               </Typography>
               <Stack
                 direction="row"
@@ -146,7 +150,7 @@ export default function MainFooter() {
             color: 'text.secondary',
           }}
         >
-          © {new Date().getFullYear()}. Todos los derechos reservados.
+          © {new Date().getFullYear()}. {translate('footer.copyright')}
         </Typography>
       </Container>
     </RootStyle>

@@ -75,7 +75,7 @@ export default function RoleBasedGuard({ accessibleRoles, children }) {
       user.studentLevel && 
       user.studentGoal && 
       user.sports && user.sports.length > 0 &&
-      user.resorts && user.resorts.length > 0 &&
+      user.resortsEnum && user.resortsEnum.length > 0 &&
       user.howToLearn;
     
     if (!hasRequiredInfo) {

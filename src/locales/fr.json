@@ -398,5 +398,8 @@
       }
     },
     "successMessage": "Excellent ! Vous avez terminé la configuration de votre profil. Maintenant vous pouvez trouver des instructeurs parfaits pour votre niveau et vos objectifs, et accéder à du contenu personnalisé pour améliorer votre technique."
+  },
+  "guestDetails": {
+    "title": "Configurer le Profil"
   }
 }

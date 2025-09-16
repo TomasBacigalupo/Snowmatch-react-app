@@ -1832,5 +1832,8 @@
       }
     },
     "successMessage": "Excelente! Você completou a configuração do seu perfil. Agora você pode encontrar instrutores perfeitos para seu nível e objetivos, e acessar conteúdo personalizado para melhorar sua técnica."
+  },
+  "guestDetails": {
+    "title": "Configurar Perfil"
   }
 }

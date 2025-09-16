@@ -64,47 +64,6 @@ export default function AuthGuard({ children }) {
     }
   }  
 
-  // If user is authenticated and verified, check if profile is complete
-  if (isAuthenticated && emailVerified && phoneVerified) {
-    // Check if user is a teacher and has incomplete profile
-    if (user?.role === 'TEACHER') {
-      // Check if teacher has all required profile data
-      const hasIncompleteProfile = !user.shortDescription || 
-                                  !user.longDescription || 
-                                  !user.currency || 
-                                  !user.price1Hour || 
-                                  !user.price2Hours || 
-                                  !user.price3Hours || 
-                                  !user.price6Hours ||
-                                  !user.disciplines ||
-                                  !user.speaks ||
-                                  !user.sports ||
-                                  !user.resorts ||
-                                  !user.gender ||
-                                  !user.country ||
-                                  !user.photoURL;
-      
-      if (hasIncompleteProfile && pathname !== PATH_AUTH.register) {
-        console.log('AuthGuard: Teacher has incomplete profile, redirecting to registration');
-        // return <Navigate to={PATH_AUTH.register} />;
-      }
-    }
-
-    // Check if user is a student and has incomplete profile
-    if (user?.role === 'STUDENT') {
-      // Check if student has all required profile data
-      const hasIncompleteProfile = !user.studentLevel || 
-                                  !user.studentGoal || 
-                                  !user.sports || user.sports.length === 0 ||
-                                  !user.resorts || user.resorts.length === 0 ||
-                                  !user.howToLearn;
-      
-      if (hasIncompleteProfile && pathname !== PATH_AUTH.guestDetails) {
-        console.log('AuthGuard: Student has incomplete profile, redirecting to guest details');
-        return <Navigate to={PATH_AUTH.guestDetails} />;
-      }
-    }
-  }
 
   // If user is authenticated and verified, or on registration page, allow access
   if (requestedLocation && pathname !== requestedLocation ) {

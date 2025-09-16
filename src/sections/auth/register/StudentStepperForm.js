@@ -212,6 +212,7 @@ const StudentStepperForm = forwardRef(({ onStepChange, onNext, onBack, isSubmitt
       case 4: // Resorts
         stepData = {
           resorts: currentData.resorts,
+          resortsEnum: currentData.resorts || [],
           sports: currentData.sports,
           studentLevel: currentData.studentLevel,
           studentGoal: currentData.studentGoal, // Include previous data
@@ -221,7 +222,8 @@ const StudentStepperForm = forwardRef(({ onStepChange, onNext, onBack, isSubmitt
       case 5: // Learning Method
         stepData = {
           howToLearn: currentData.howToLearn,
-          resorts: currentData.resorts?.map(resort => resort.name) || [],
+          resorts: currentData.resorts || [],
+          resortsEnum: currentData.resorts || [],
           sports: currentData.sports,
           studentLevel: currentData.studentLevel,
           studentGoal: currentData.studentGoal, // Include all previous data

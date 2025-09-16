@@ -107,7 +107,7 @@ export default function GuestDetails() {
         <MobileModalStyle>
           <MobileCardStyle>
             <MobileHeader 
-              title="Configurar Perfil"
+              title={translate('guestDetails.title')}
               onBack={handleMobileBack}
             />
             <MobileContentStyle>

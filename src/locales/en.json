@@ -1793,5 +1793,8 @@
       }
     },
     "successMessage": "Excellent! You have completed your profile setup. Now you can find perfect instructors for your level and goals, and access personalized content to improve your technique."
+  },
+  "guestDetails": {
+    "title": "Configure Profile"
   }
 }

@@ -2908,5 +2908,8 @@
       }
     },
     "successMessage": "¡Excelente! Has completado la configuración de tu perfil. Ahora podrás encontrar instructores perfectos para tu nivel y objetivos, y acceder a contenido personalizado para mejorar tu técnica."
+  },
+  "guestDetails": {
+    "title": "Configurar Perfil"
   }
 }

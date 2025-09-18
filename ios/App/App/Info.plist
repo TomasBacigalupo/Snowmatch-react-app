@@ -53,11 +53,18 @@
 		<string>SnowMatch necesita acceso a tu biblioteca de fotos para seleccionar los videos que
 			subas.</string>
 		<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-		<string>SnowMatch quiere saber tu ubicación para poder mostrarte el mapa de pistas del
-			centro de esquí en el que estás esquiando.</string>
+		<string>SnowMatch necesita acceso a tu ubicación para registrar tu actividad de esquí incluso cuando la app está en segundo plano o el teléfono está bloqueado.</string>
 		<key>NSLocationWhenInUseUsageDescription</key>
 		<string>SnowMatch quiere saber tu ubicación para poder mostrarte el mapa de pistas del
 			centro de esquí en el que estás esquiando.</string>
+		<key>NSMotionUsageDescription</key>
+		<string>SnowMatch necesita acceso a los datos de movimiento para detectar automáticamente cuando estás esquiando cuesta abajo o subiendo en telesilla.</string>
+
+		<!-- Background modes for location tracking -->
+		<key>UIBackgroundModes</key>
+		<array>
+			<string>location</string>
+		</array>
 
 		<!-- Configuración de compras dentro de la app (IAP) -->
 		<key>NSUserDefaults</key>

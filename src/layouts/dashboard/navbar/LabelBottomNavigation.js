@@ -37,7 +37,7 @@ export default function LabelBottomNavigation() {
 
   const bottomNavigation = [
     { lablelKey: 'bottomNavigation.home', icon: <Iconify icon="hugeicons:home-09" width="26px" height="26px" />, path: '/match/feed' },
-    { lablelKey: 'bottomNavigation.maps', icon: <Iconify icon="hugeicons:maps" width="26px" height="26px" />, path: '/maps/chapelco' },
+    { lablelKey: 'bottomNavigation.tracking', icon: <Iconify icon="hugeicons:location-01" width="26px" height="26px" />, path: '/ski-tracking' },
     { lablelKey: 'bottomNavigation.upload', icon: <Iconify icon="hugeicons:ai-video" width="26px" height="26px" />, drawer: true, path: PATH_GUEST.root + '/lessons' },
     { lablelKey: 'bottomNavigation.lessons', icon: <Iconify icon="hugeicons:ski" width="26px" height="26px" />, path: '/match/independent?resort=Cerro%20Catedral' },
     { lablelKey: 'bottomNavigation.profile', icon: <Iconify icon="hugeicons:user-circle-02"  width="26px" height="26px" />, path: PATH_GUEST.videoCoach },
@@ -46,6 +46,9 @@ export default function LabelBottomNavigation() {
   // Mapping between paths and BottomNavigation values
   const getPathValue = (path) => {
 
+    if (path?.includes("ski-tracking")) {
+      return 1
+    }
     if (path?.includes("map")) {
       return 1
     }

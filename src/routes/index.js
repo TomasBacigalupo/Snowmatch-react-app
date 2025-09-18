@@ -27,6 +27,7 @@ import CourseLevels from 'src/pages/dashboard/CourseLevels';
 import BackButtonLayout from 'src/layouts/BackButtonLayout';
 import Training from 'src/pages/dashboard/Training';
 import Maps from 'src/pages/dashboard/Maps';
+import SkiTracking from 'src/pages/dashboard/SkiTracking';
 import SearchPage from 'src/pages/search/resort/discipline';
 import BlogEmbed from '../pages/BlogEmbed';
 import SnowMatchLanding from 'src/pages/search/resort/discipline/videos';
@@ -233,6 +234,13 @@ export default function Router() {
           element: (<GuestLayout />),
           children: [
             { path: ':id', element: <Maps /> }
+          ]
+        },
+        {
+          path: 'ski-tracking',
+          element: (<GuestLayout />),
+          children: [
+            { element: <SkiTracking />, index: true }
           ]
         },
         {

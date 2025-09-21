@@ -104,7 +104,7 @@ export default function DashboardHeader({ onOpenSidebar, isCollapse = false, ver
           
           {isAuthenticated && (
             <IconButtonAnimate onClick={handleChatClick} sx={{ color: 'text.primary' }}>
-              <Iconify icon="eva:message-circle-fill" />
+              <Iconify icon="hugeicons:bubble-chat" />
             </IconButtonAnimate>
           )}
           

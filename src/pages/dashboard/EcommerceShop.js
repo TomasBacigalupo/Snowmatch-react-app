@@ -118,7 +118,7 @@ export default function EcommerceShop({ isGuest = false, teacherType = "school" 
   useEffect(() => {
     setHasFetchedTeachers(false);
     setAutoOpened(false); // Reset auto-opened state for new searches
-    dispatch(getFreeTeachers(filters.from, filters.to, filters.resort, 0));
+    dispatch(getFreeTeachers(filters.from, filters.to, filters.resort, filters.category, 0));
     //dispatch(getTeachersWithEvents(filters));
   }, [dispatch, filters]);
 
@@ -257,7 +257,7 @@ export default function EcommerceShop({ isGuest = false, teacherType = "school" 
   };
 
   const handleWhatsAppInstructors = () => {
-    const currentResort = filters.resort || 'Cerro Catedral';
+    const currentResort = filters.resort || 'CERRO_CATEDRAL';
     const message = `Hola Snowmatch 👋 
 
 Estoy buscando instructores disponibles en ${currentResort} pero no encuentro opciones en la app.

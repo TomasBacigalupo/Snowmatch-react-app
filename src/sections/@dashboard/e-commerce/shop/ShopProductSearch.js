@@ -154,7 +154,9 @@ export default function ShopProductSearch({ filters, teachers }) {
       ...values,
       resort: resortName,
       from: values.range[0],
-      to: values.range[1]
+      to: values.range[1],
+      discipline: values.category,
+      language: values.language,
     })
 
     dispatch(filterTeachers({
@@ -163,8 +165,8 @@ export default function ShopProductSearch({ filters, teachers }) {
       from: values.range[0],
       to: values.range[1],
       gender: [],
-      language: [],
-      discipline: [],
+      language: values.language,
+      discipline: values.category,
     }))
 
     // Redirect to /:lng/search/:resort
@@ -482,13 +484,13 @@ export default function ShopProductSearch({ filters, teachers }) {
                       <Typography>
                         Disciplina
                       </Typography>
-                      {filters.discipline?.length === 0 &&
+                      {filters.category?.length === 0 &&
                         <Typography sx={{ fontWeight: "bold" }}>
                           Seleccionar
                         </Typography>}
-                      {values.discipline?.length != 0 &&
+                      {values.category?.length != 0 &&
                         <Typography sx={{ fontWeight: "bold" }}>
-                          {filters?.discipline.length > 0 ? filters?.discipline[0] : 'Ski'}
+                          {filters?.category.length > 0 ? filters?.category[0] : 'Ski'}
                         </Typography>}
                     </Box>
                   </AccordionSummary>}

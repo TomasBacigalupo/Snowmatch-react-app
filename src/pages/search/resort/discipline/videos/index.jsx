@@ -977,7 +977,7 @@ export default function SnowMatchLanding() {
 
     useEffect(() => {
         dispatch(getProductsByBusinessId(13));
-        dispatch(getFreeTeachers(filters.from, filters.to, "Cerro Catedral", 0, 20));
+        dispatch(getFreeTeachers(filters.from, filters.to, "CERRO_CATEDRAL", filters.category, 0, 20));
     }, [dispatch, filters]);
 
     const handleOpenReservationModal = () => setIsReservationModalOpen(true);

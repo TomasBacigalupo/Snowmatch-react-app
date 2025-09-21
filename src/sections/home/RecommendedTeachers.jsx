@@ -2,6 +2,7 @@ import { Box, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import useLocales from 'src/hooks/useLocales';
 import ShopTeacherCard from '../@dashboard/e-commerce/shop/ShopTeacherCard';
+import { resortTransformation } from 'src/utils/resortTransformation';
 
 // ----------------------------------------------------------------------
 
@@ -47,7 +48,7 @@ export default function RecommendedTeachers({ teachers, disciplineSlug, type, re
                     {translate(`landingPRO.topTeachers`, {
                         discipline: disciplineSlug ? translate(`landingPRO.${disciplineSlug}`) : translate(`landingPRO.esqui-y-snowboard`),
                         type: type ? translate(`landingPRO.${type}Plural`) : "",
-                        resort: resort,
+                        resort: resortTransformation(resort),
                     })}
                 </Typography>
                 <Typography
@@ -60,7 +61,7 @@ export default function RecommendedTeachers({ teachers, disciplineSlug, type, re
                     {translate(`landingPRO.guestAgree`, {
                         discipline: disciplineSlug ? translate(`landingPRO.${disciplineSlug}`) : translate(`landingPRO.esqui-y-snowboard`),
                         type: type ? translate(`landingPRO.${type}Plural`) : "",
-                        resort: resort,
+                        resort: resortTransformation(resort),
                     })}
                 </Typography>
                 <ScrollContainer>

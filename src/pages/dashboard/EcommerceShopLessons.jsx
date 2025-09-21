@@ -49,13 +49,13 @@ export default function ShopStandardProducts({ loading }) {
     }, [filters.resort]);
 
     useEffect(() => {
-        dispatch(getFreeTeachers(filters.from, filters.to, filters.resort, 0));
+        dispatch(getFreeTeachers(filters.from, filters.to, filters.resort, filters.category, 0));
         //dispatch(getTeachersWithEvents(filters));
     }, [dispatch, filters]);
 
     // Fetch rental items when resort changes
     useEffect(() => {
-        if (filters.resort === "Cerro Catedral") {
+        if (filters.resort == 'CERRO_CATEDRAL') {
             dispatch(getRentalItems({ 
                 resortId: 'CERRO_CATEDRAL',
                 status: 'ACTIVE',
@@ -154,7 +154,7 @@ export default function ShopStandardProducts({ loading }) {
                         avatar='/assets/avatars/chona-con-niño.png'
                     />}
                     </Grid>
-                    {filters.resort === "Cerro Catedral" && <Grid item xs={12}>
+                    {filters.resort === 'CERRO_CATEDRAL' && <Grid item xs={12}>
                         <Typography variant='h6'>
                             Packs de SnowMatch
                         </Typography>
@@ -209,7 +209,7 @@ export default function ShopStandardProducts({ loading }) {
                                 </Typography>
                                 <IconButton
                                     onClick={() => {
-                                        const resortSlug = filters.resort === "Cerro Catedral" ? "cerro-catedral" : "bariloche";
+                                        const resortSlug = filters.resort === 'CERRO_CATEDRAL' ? "cerro-catedral" : "bariloche";
                                         const langPath = `/${currentLang.value}`;
                                         navigate(`${langPath}/search/${resortSlug}/ski-pros`);
                                     }}

@@ -122,7 +122,7 @@ export default function AdminFinancialDashboard() {
   const handleClearFilters = () => {
     setFilters({
       month: new Date().getMonth() + 1, // Current month
-      resort: 'Cerro Catedral',
+      resort: 'CERRO_CATEDRAL',
       instructor: '',
       bookingStatus: 'all',
       payoutStatus: 'all',

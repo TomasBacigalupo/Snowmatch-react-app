@@ -36,7 +36,7 @@ import { ContourLayer } from 'deck.gl';
 
 export const FILTER_GENDER_OPTIONS = ['Male', 'Female'];
 
-export const FILTER_CATEGORY_OPTIONS = ['SnowBoard', 'Ski'];
+export const FILTER_CATEGORY_OPTIONS = ['SNOWBOARD', 'SKI'];
 
 export const FILTER_DISCIPLINE_OPTIONS = ['Freestyle', 'Alpine', 'Back Country'];
 

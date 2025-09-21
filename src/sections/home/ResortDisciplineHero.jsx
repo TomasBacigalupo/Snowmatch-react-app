@@ -228,7 +228,7 @@ export default function ResortDisciplineHero() {
     const { teachers, filters } = useSelector((state) => { return state.teachers })
     const dispatch = useDispatch()
     useEffect(() => {
-        dispatch(getFreeTeachers(filters.from, filters.to, resort, 0, 6));
+        dispatch(getFreeTeachers(filters.from, filters.to, resort, filters.category, 0, 6));
     }, [dispatch, filters, resort, discipline]);
 
     useEffect(() => {

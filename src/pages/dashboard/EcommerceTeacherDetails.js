@@ -36,6 +36,7 @@ import TimeDetails from 'src/sections/@dashboard/e-commerce/teacher-details/Time
 import { Helmet } from 'react-helmet-async';
 import { trackViewTeacher } from 'src/services/tagmanager';
 import RecommendedTeachers from 'src/sections/home/RecommendedTeachers';
+import { resortTransformation } from 'src/utils/resortTransformation';
 // ----------------------------------------------------------------------
 
 const PRODUCT_DESCRIPTION = [
@@ -109,7 +110,7 @@ export default function EcommerceTeacherDetails({ isGuest = false }) {
   }, [dispatch, id, slug]);
 
   useEffect(() => {
-    const resort = teacher?.resorts?.lenght > 0 ? teacher?.resorts[0] : "Cerro Catedral";
+    const resort = teacher?.resorts?.length > 0 ? teacher?.resorts[0] : 'CERRO_CATEDRAL';
     if (teacher) {
       dispatch(getFreeTeachers(filters.from, filters.to, resort, 0, 6));
     }
@@ -137,7 +138,7 @@ export default function EcommerceTeacherDetails({ isGuest = false }) {
             {
               discipline: teacher?.discipline ? `${translate(`landingPRO.${teacher?.discipline[0]}`)}` : 'Ski',
               name: `${teacher?.name} ${teacher?.lastname}`,
-              resort: teacher?.resorts?.length > 0 ? teacher.resorts[0] : 'Bariloche'
+              resort: teacher?.resorts?.length > 0 ? resortTransformation(teacher.resorts[0]) : 'Bariloche'
             })}
         </title>
         <meta name="description" content={teacher?.information} />
@@ -169,7 +170,7 @@ export default function EcommerceTeacherDetails({ isGuest = false }) {
             "address": {
               "@type": "PostalAddress",
               "addressLocality": (() => {
-                const resort = teacher?.resort?.[0]?.toLowerCase();
+                const resort = teacher?.resorts?.[0]?.toLowerCase();
                 if (resort === 'chapelco' || resort === 'las pendientes') {
                   return "San Martín de los Andes";
                 } else if (resort === 'cerro castor') {
@@ -181,7 +182,7 @@ export default function EcommerceTeacherDetails({ isGuest = false }) {
                 }
               })(),
               "addressRegion": (() => {
-                const resort = teacher?.resort?.[0]?.toLowerCase();
+                const resort = teacher?.resorts?.[0]?.toLowerCase();
                 if (resort === 'cerro castor') {
                   return "Tierra del Fuego";
                 } else if (resort === 'chapelco' || resort === 'las pendientes') {
@@ -224,7 +225,7 @@ export default function EcommerceTeacherDetails({ isGuest = false }) {
                 "address": {
                   "@type": "PostalAddress",
                   "addressLocality": (() => {
-                    const resort = teacher?.resort?.[0]?.toLowerCase();
+                    const resort = teacher?.resorts?.[0]?.toLowerCase();
                     if (resort === 'chapelco' || resort === 'las pendientes') {
                       return "San Martín de los Andes";
                     } else if (resort === 'cerro castor') {
@@ -236,7 +237,7 @@ export default function EcommerceTeacherDetails({ isGuest = false }) {
                     }
                   })(),
                   "addressRegion": (() => {
-                    const resort = teacher?.resort?.[0]?.toLowerCase();
+                    const resort = teacher?.resorts?.[0]?.toLowerCase();
                     if (resort === 'cerro castor') {
                       return "Tierra del Fuego";
                     } else if (resort === 'chapelco' || resort === 'las pendientes') {
@@ -313,7 +314,7 @@ export default function EcommerceTeacherDetails({ isGuest = false }) {
             {
               discipline: teacher?.discipline ? `${translate(`landingPRO.${teacher?.discipline[0]}`)}` : 'Ski',
               name: `${teacher?.name} ${teacher?.lastname}`,
-              resort: teacher?.resorts?.length > 0 ? teacher.resorts[0] : 'Bariloche'
+              resort: teacher?.resorts?.length > 0 ? resortTransformation(teacher.resorts[0]) : 'Bariloche'
             })}
           links={[
             // !isGuest? { name: translate("breadcrumb.dashboard', href: PATH_DASHBOARD.root} : {name: 'Home', href: '/'},
@@ -431,8 +432,8 @@ export default function EcommerceTeacherDetails({ isGuest = false }) {
                     <Box mb={3}>
                       <RecommendedTeachers
                         teachers={[]}
-                        resort={teacher?.resorts?.lenght > 0 ? teacher.resorts[0] : 'Cerro Catedral'}
-                        disciplineSlug={teacher?.discipline?.lenght > 0 ? teacher.discipline[0] : "esqui-y-snowboard"}
+                        resort={teacher?.resorts?.length > 0 ? teacher.resorts[0] : 'Cerro Catedral'}
+                        disciplineSlug={teacher?.discipline?.length > 0 ? teacher.discipline[0] : "esqui-y-snowboard"}
                       />
                     </Box>
                     <MobileSelectDays teacher={teacher} isOpen={isOpen} closeFather={() => setIsOpen(false)} />
@@ -444,8 +445,8 @@ export default function EcommerceTeacherDetails({ isGuest = false }) {
               <Box mb={3} ml={-4.5}>
                 <RecommendedTeachers
                   teachers={teachers}
-                  resort={teacher?.resorts?.lenght > 0 ? teacher.resorts[0] : 'Cerro Catedral'}
-                  disciplineSlug={teacher?.discipline?.lenght > 0 ? teacher.discipline[0] : "esqui-y-snowboard"}
+                  resort={teacher?.resorts?.length > 0 ? teacher.resorts[0] : 'Cerro Catedral'}
+                  disciplineSlug={teacher?.discipline?.length > 0 ? teacher.discipline[0] : "esqui-y-snowboard"}
                 />
               </Box>
             </Hidden>

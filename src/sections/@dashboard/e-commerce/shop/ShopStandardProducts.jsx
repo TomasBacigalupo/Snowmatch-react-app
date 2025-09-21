@@ -49,7 +49,7 @@ export default function ShopStandardProducts({ loading }) {
     }, [filters.resort]);
 
     useEffect(() => {
-        dispatch(getFreeTeachers(filters.from, filters.to, filters.resort, 0));
+        dispatch(getFreeTeachers(filters.from, filters.to, filters.resort, filters.category, 0));
         //dispatch(getTeachersWithEvents(filters));
     }, [dispatch, filters]);
 

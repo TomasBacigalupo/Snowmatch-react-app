@@ -51,13 +51,13 @@ export default function ShopStandardProducts({ loading }) {
     }, [filters.resort]);
 
     useEffect(() => {
-        dispatch(getFreeTeachers(filters.from, filters.to, filters.resort, 0));
+        dispatch(getFreeTeachers(filters.from, filters.to, filters.resort, filters.category, 0));
         //dispatch(getTeachersWithEvents(filters));
     }, [dispatch, filters]);
 
     // Fetch rental items when resort changes
     useEffect(() => {
-        if (filters.resort === "Cerro Catedral") {
+        if (filters.resort == 'CERRO_CATEDRAL') {
             dispatch(getRentalItems({ 
                 resortId: 'CERRO_CATEDRAL',
                 status: 'ACTIVE',

@@ -35,7 +35,7 @@ const initialState = {
     language: [],
     from: new Date(),
     to: new Date(new Date().getTime() + (10 * 24 * 60 * 60 * 1000)),
-    resort: 'Cerro Catedral',
+    resort: 'CERRO_CATEDRAL',
     level: 5
   },
   checkout: {
@@ -490,12 +490,11 @@ export function getTeachers() {
   };
 }
 
-export function getFreeTeachers(startDate, endDate, resort, page, size = 20) {
+export function getFreeTeachers(startDate, endDate, resort, sports, page, size = 20) {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`/api/users/filter_teachers?
-        level=2&startDate=${startDate.toISOString().split(".")[0]}&endDate=${endDate.toISOString().split(".")[0]}&resort=${resort}&page=${page}&size=${size}`);
+      const response = await axios.get(`/api/users/filter_teachers?sports=${sports}&level=2&startDate=${startDate.toISOString().split(".")[0]}&endDate=${endDate.toISOString().split(".")[0]}&resort=${resort}&page=${page}&size=${size}`);
       const teachers = response.data.map(t => ({
         ...t,
         stars: t.stars ? t.stars : 0

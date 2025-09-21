@@ -8,8 +8,8 @@ import mapboxgl from 'mapbox-gl';
 import { Box, Typography, CircularProgress } from '@mui/material';
 import { MAPBOX_API } from '../../config';
 
-// Set Mapbox access token
-mapboxgl.accessToken = MAPBOX_API;
+// Set Mapbox access token - fallback to hardcoded token if config is not available
+mapboxgl.accessToken = MAPBOX_API || 'pk.eyJ1IjoiYmFjaWdhbHVwb3RvbWFzIiwiYSI6ImNtODFwZmEwbTE5dW8ya3FicjM2eTU1c3YifQ.q9iT0kD12yBODVDEc1XqNQ';
 
 // Component to fit map bounds to track
 const FitBounds = ({ map, bounds }) => {
@@ -27,12 +27,13 @@ const FitBounds = ({ map, bounds }) => {
 };
 
 export const MapboxTrack = ({
-  samples,
+  samples = [],
   segments = [],
   height = 400,
   showSegmentColors = true,
   fitBounds = true,
   className,
+  useTestData = false,
 }) => {
   const mapContainer = useRef(null);
   const map = useRef(null);
@@ -44,15 +45,95 @@ export const MapboxTrack = ({
     west: 0,
   });
 
+  // Generate test data if requested
+  const getTestData = () => {
+    if (!useTestData) return { samples, segments };
+    
+    // Generate a test track around Chapelco ski resort
+    const centerLat = -40.198216494081464;
+    const centerLng = -71.32010252317177;
+    const testSamples = [];
+    const testSegments = [
+      {
+        id: 'segment-1',
+        kind: 'DOWNHILL',
+        startedAt: Date.now() - 300000,
+        endedAt: Date.now() - 150000,
+        distanceM: 2000,
+        maxSpeedMs: 15,
+        ascentM: 0,
+        descentM: 300,
+      },
+      {
+        id: 'segment-2', 
+        kind: 'UPHILL',
+        startedAt: Date.now() - 150000,
+        endedAt: Date.now() - 60000,
+        distanceM: 1500,
+        maxSpeedMs: 5,
+        ascentM: 250,
+        descentM: 0,
+      },
+      {
+        id: 'segment-3',
+        kind: 'DOWNHILL',
+        startedAt: Date.now() - 60000,
+        endedAt: Date.now(),
+        distanceM: 1800,
+        maxSpeedMs: 18,
+        ascentM: 0,
+        descentM: 280,
+      }
+    ];
+
+    // Generate GPS samples along the track
+    for (let i = 0; i < 100; i++) {
+      const t = i / 99;
+      let lat, lng;
+      
+      if (t < 0.33) {
+        // First downhill segment
+        const segmentT = t / 0.33;
+        lat = centerLat + (segmentT * 0.01);
+        lng = centerLng + (segmentT * 0.01);
+      } else if (t < 0.66) {
+        // Uphill segment
+        const segmentT = (t - 0.33) / 0.33;
+        lat = centerLat + 0.01 + (segmentT * -0.008);
+        lng = centerLng + 0.01 + (segmentT * 0.005);
+      } else {
+        // Final downhill segment
+        const segmentT = (t - 0.66) / 0.34;
+        lat = centerLat + 0.002 + (segmentT * 0.008);
+        lng = centerLng + 0.015 + (segmentT * -0.01);
+      }
+      
+      testSamples.push({
+        id: `test-sample-${i}`,
+        lat: lat + (Math.random() - 0.5) * 0.0001, // Add some GPS noise
+        lng: lng + (Math.random() - 0.5) * 0.0001,
+        altM: 1000 + Math.random() * 500,
+        speedMs: Math.random() * 20,
+        accuracyM: 5 + Math.random() * 10,
+        ts: Date.now() - (100 - i) * 3000,
+        segmentId: t < 0.33 ? 'segment-1' : t < 0.66 ? 'segment-2' : 'segment-3',
+      });
+    }
+
+    return { samples: testSamples, segments: testSegments };
+  };
+
   // Calculate bounds from samples
   useEffect(() => {
-    if (samples.length === 0) {
+    const { samples: effectiveSamples } = getTestData();
+    
+    if (effectiveSamples.length === 0) {
       setIsLoading(false);
       return;
     }
 
-    const lats = samples.map(s => s.lat);
-    const lngs = samples.map(s => s.lng);
+    const lats = effectiveSamples.map(s => s.lat);
+    const lngs = effectiveSamples.map(s => s.lng);
 
     const newBounds = {
       north: Math.max(...lats),
@@ -63,16 +144,18 @@ export const MapboxTrack = ({
 
     setBounds(newBounds);
     setIsLoading(false);
-  }, [samples]);
+  }, [samples, useTestData]);
 
   // Initialize map
   useEffect(() => {
     if (!mapContainer.current || map.current) return;
 
+    const { samples: effectiveSamples } = getTestData();
+
     map.current = new mapboxgl.Map({
       container: mapContainer.current,
       style: 'mapbox://styles/mapbox/outdoors-v11',
-      center: samples.length > 0 ? [samples[0].lng, samples[0].lat] : [0, 0],
+      center: effectiveSamples.length > 0 ? [effectiveSamples[0].lng, effectiveSamples[0].lat] : [-71.32010252317177, -40.198216494081464],
       zoom: 13,
       pitch: 45,
       bearing: -20,
@@ -88,11 +171,13 @@ export const MapboxTrack = ({
         map.current = null;
       }
     };
-  }, []);
+  }, [useTestData]);
 
   // Update track when samples change
   useEffect(() => {
-    if (!map.current || !map.current.isStyleLoaded() || samples.length === 0) {
+    const { samples: effectiveSamples, segments: effectiveSegments } = getTestData();
+    
+    if (!map.current || !map.current.isStyleLoaded() || effectiveSamples.length === 0) {
       return;
     }
 
@@ -104,9 +189,9 @@ export const MapboxTrack = ({
 
     // Group samples by segment for colored polylines
     const getSegmentPolylines = () => {
-      if (!showSegmentColors || segments.length === 0) {
+      if (!showSegmentColors || effectiveSegments.length === 0) {
         return [{
-          samples: samples,
+          samples: effectiveSamples,
           color: '#1976d2',
           segment: null,
         }];
@@ -116,11 +201,11 @@ export const MapboxTrack = ({
       let currentSegmentId = null;
       let currentSamples = [];
 
-      samples.forEach(sample => {
+      effectiveSamples.forEach(sample => {
         if (sample.segmentId !== currentSegmentId) {
           // Save previous segment
           if (currentSamples.length > 0) {
-            const segment = segments.find(s => s.id === currentSegmentId);
+            const segment = effectiveSegments.find(s => s.id === currentSegmentId);
             polylines.push({
               samples: currentSamples,
               color: getSegmentColor(segment?.kind),
@@ -138,7 +223,7 @@ export const MapboxTrack = ({
 
       // Add final segment
       if (currentSamples.length > 0) {
-        const segment = segments.find(s => s.id === currentSegmentId);
+        const segment = effectiveSegments.find(s => s.id === currentSegmentId);
         polylines.push({
           samples: currentSamples,
           color: getSegmentColor(segment?.kind),
@@ -209,7 +294,7 @@ export const MapboxTrack = ({
       );
       map.current.fitBounds(boundsObj, { padding: 50 });
     }
-  }, [samples, segments, showSegmentColors, fitBounds, bounds]);
+  }, [samples, segments, showSegmentColors, fitBounds, bounds, useTestData]);
 
   if (isLoading) {
     return (
@@ -228,7 +313,9 @@ export const MapboxTrack = ({
     );
   }
 
-  if (samples.length === 0) {
+  const { samples: effectiveSamples } = getTestData();
+  
+  if (effectiveSamples.length === 0) {
     return (
       <Box
         display="flex"

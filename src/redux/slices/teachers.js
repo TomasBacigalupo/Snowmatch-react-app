@@ -494,7 +494,7 @@ export function getFreeTeachers(startDate, endDate, resort, page, size = 20) {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`/api/users/free_teachers?
+      const response = await axios.get(`/api/users/filter_teachers?
         level=2&startDate=${startDate.toISOString().split(".")[0]}&endDate=${endDate.toISOString().split(".")[0]}&resort=${resort}&page=${page}&size=${size}`);
       const teachers = response.data.map(t => ({
         ...t,
@@ -512,7 +512,7 @@ export function loadMoreFreeTeachers(startDate, endDate, resort, page, size = 20
   return async () => {
     dispatch(slice.actions.startLoadingLoadMore());
     try {
-      const response = await axios.get(`/api/users/free_teachers?
+      const response = await axios.get(`/api/users/filter_teachers?
         level=2&startDate=${startDate.toISOString().split(".")[0]}&endDate=${endDate.toISOString().split(".")[0]}&resort=${resort}&page=${page}&size=${size}`);
       const teachers = response.data.map(t => ({
         ...t,

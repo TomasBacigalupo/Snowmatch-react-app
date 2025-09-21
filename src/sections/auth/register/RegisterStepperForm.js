@@ -155,10 +155,7 @@ const RegisterStepperForm = forwardRef(({ onStepChange, onNext, onBack, isSubmit
         
       case 5: // Resorts
         return Yup.object().shape({
-          resorts: Yup.array().of(Yup.object().shape({
-            name: Yup.string().required(),
-            category: Yup.string().required()
-          })).min(1, 'Debes seleccionar al menos un resort').max(10, 'Máximo 10 resorts'),
+          resorts: Yup.array().of(Yup.string()).min(1, 'Debes seleccionar al menos un resort').max(100, 'Máximo 100 resorts'),
         });
         
       case 7: // Description
@@ -295,7 +292,8 @@ const RegisterStepperForm = forwardRef(({ onStepChange, onNext, onBack, isSubmit
         
       case 5: // Resorts
         stepData = {
-          resorts: currentData.resorts?.map(resort => resort.name) || [],
+          resorts: currentData.resorts,
+          resortsEnum: currentData.resorts,
         };
         break;
         

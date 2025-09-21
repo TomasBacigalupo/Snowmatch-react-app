@@ -49,6 +49,10 @@ const initialState = {
   activeConversationId: null,
   participants: [],
   recipients: [],
+  typingUsers: {}, // Track typing indicators per conversation
+  onlineUsers: {}, // Track online status per user
+  unreadCounts: {}, // Track unread messages per conversation
+  webSocketConnected: false, // WebSocket connection status
 };
 
 const slice = createSlice({
@@ -169,6 +173,83 @@ const slice = createSlice({
       const recipients = action.payload;
       state.recipients = recipients;
     },
+
+    // TYPING INDICATORS
+    setTypingIndicator(state, action) {
+      const { conversationKey, userId, userName, isTyping } = action.payload;
+      
+      if (!state.typingUsers[conversationKey]) {
+        state.typingUsers[conversationKey] = {};
+      }
+      
+      if (isTyping) {
+        state.typingUsers[conversationKey][userId] = {
+          userId,
+          userName,
+          timestamp: new Date().toISOString(),
+        };
+      } else {
+        delete state.typingUsers[conversationKey][userId];
+      }
+    },
+
+    // USER ONLINE/OFFLINE STATUS
+    setUserOnline(state, action) {
+      const { userId, userName, timestamp } = action.payload;
+      state.onlineUsers[userId] = {
+        userId,
+        userName,
+        isOnline: true,
+        lastSeen: timestamp || new Date().toISOString(),
+      };
+    },
+
+    setUserOffline(state, action) {
+      const { userId, timestamp } = action.payload;
+      if (state.onlineUsers[userId]) {
+        state.onlineUsers[userId] = {
+          ...state.onlineUsers[userId],
+          isOnline: false,
+          lastSeen: timestamp || new Date().toISOString(),
+        };
+      }
+    },
+
+    // UNREAD MESSAGES
+    incrementUnreadCount(state, action) {
+      const { conversationKey } = action.payload;
+      if (!state.unreadCounts[conversationKey]) {
+        state.unreadCounts[conversationKey] = 0;
+      }
+      state.unreadCounts[conversationKey] += 1;
+    },
+
+    resetUnreadCount(state, action) {
+      const { conversationKey } = action.payload;
+      state.unreadCounts[conversationKey] = 0;
+    },
+
+    // MESSAGE READ RECEIPTS
+    markMessagesAsRead(state, action) {
+      const { conversationKey, userId } = action.payload;
+      const conversation = state.conversations.byId[conversationKey];
+      
+      if (conversation && conversation.messages) {
+        conversation.messages.forEach(message => {
+          if (message.senderId !== userId && !message.readBy) {
+            message.readBy = message.readBy || [];
+            if (!message.readBy.includes(userId)) {
+              message.readBy.push(userId);
+            }
+          }
+        });
+      }
+    },
+
+    // WEBSOCKET CONNECTION STATUS
+    setWebSocketStatus(state, action) {
+      state.webSocketConnected = action.payload;
+    },
   },
 });
 
@@ -176,7 +257,18 @@ const slice = createSlice({
 export default slice.reducer;
 
 // Actions
-export const { addRecipients, onSendMessage, resetActiveConversation } = slice.actions;
+export const { 
+  addRecipients, 
+  onSendMessage, 
+  resetActiveConversation,
+  setTypingIndicator,
+  setUserOnline,
+  setUserOffline,
+  incrementUnreadCount,
+  resetUnreadCount,
+  markMessagesAsRead,
+  setWebSocketStatus
+} = slice.actions;
 
 // ----------------------------------------------------------------------
 

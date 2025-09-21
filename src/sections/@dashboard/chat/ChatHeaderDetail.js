@@ -5,6 +5,8 @@ import { styled } from '@mui/material/styles';
 import { Box, Link, Avatar, Typography, AvatarGroup, IconButton } from '@mui/material';
 // router
 import { useNavigate } from 'react-router-dom';
+// redux
+import { useSelector } from '../../../redux/store';
 // utils
 import { fToNow } from '../../../utils/formatTime';
 // hooks
@@ -67,8 +69,13 @@ OneAvatar.propTypes = {
 
 function OneAvatar({ participants }) {
   const participant = [...participants][0];
+  const { onlineUsers } = useSelector((state) => state.chat);
+  
+  // Check if user is online from WebSocket data
+  const isOnline = onlineUsers[participant?.id]?.isOnline || false;
+  const status = isOnline ? 'online' : (participant?.status || 'offline');
 
-  if (participant === undefined || !participant.status) {
+  if (participant === undefined) {
     return null;
   }
 
@@ -76,13 +83,18 @@ function OneAvatar({ participants }) {
     <Box sx={{ display: 'flex', alignItems: 'center' }}>
       <Box sx={{ position: 'relative' }}>
         <Avatar src={participant.avatar} alt={participant.name} />
-        <BadgeStatus status={participant.status} sx={{ position: 'absolute', right: 2, bottom: 2 }} />
+        <BadgeStatus status={status} sx={{ position: 'absolute', right: 2, bottom: 2 }} />
       </Box>
       <Box sx={{ ml: 2 }}>
         <Typography variant="subtitle2">{participant.name}</Typography>
 
         <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-          {participant.status !== 'offline' ? capitalCase(participant.status) : fToNow(participant.lastActivity || '')}
+          {isOnline 
+            ? 'Online' 
+            : participant.status !== 'offline' 
+              ? capitalCase(participant.status) 
+              : fToNow(participant.lastActivity || '')
+          }
         </Typography>
       </Box>
     </Box>

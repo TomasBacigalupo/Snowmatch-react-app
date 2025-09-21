@@ -1,38 +1,72 @@
 import PropTypes from 'prop-types';
-// @mui
-import { Box, Typography, Stack, Chip, Alert } from '@mui/material';
-// framer motion
+import { useState, useEffect } from 'react';
+import { Box, Typography, Stack, Chip, Alert, CircularProgress } from '@mui/material';
 import { m } from 'framer-motion';
-// hooks
-import useLocales from 'src/hooks/useLocales';
-// components
+import { useFormContext } from 'react-hook-form';
+import { Autocomplete, TextField } from '@mui/material';
 import Iconify from '../../../components/Iconify';
-import { RHFAutocomplete } from '../../../components/hook-form';
-// mock
-import { FILTER_RESORT_OPTIONS } from '../../@dashboard/e-commerce/shop/ShopFilterSidebar';
+import axios from '../../../utils/axios';
+import useLocales from '../../../hooks/useLocales';
 
 // ----------------------------------------------------------------------
 
 ResortSelection.propTypes = {
-  // Add any props if needed in the future
+  validateField: PropTypes.func.isRequired,
 };
 
-// Create a flat list of all resorts for autocomplete
-const getAllResorts = () => {
-  const allResorts = [];
-  FILTER_RESORT_OPTIONS.forEach((country) => {
-    country.resorts.forEach((resort) => {
-      allResorts.push({
-        name: resort,
-        category: country.category
-      });
-    });
-  });
-  return allResorts.sort((a, b) => a.name.localeCompare(b.name));
-};
-
-export default function ResortSelection() {
+export default function ResortSelection({ validateField }) {
+  const [resorts, setResorts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const { setValue, watch } = useFormContext();
   const { translate } = useLocales();
+  const selectedResorts = watch('resorts') || [];
+
+  useEffect(() => {
+    const fetchResorts = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const response = await axios.get('/api/enums/resorts');
+        console.log('API response data:', response.data);
+        console.log('First resort example:', response.data[0]);
+        console.log('Type of first resort:', typeof response.data[0]);
+        console.log('Keys of first resort:', Object.keys(response.data[0] || {}));
+        setResorts(response.data);
+      } catch (err) {
+        console.error('Error fetching resorts:', err);
+        setError(translate('registerForm.resorts.error') || 'Error al cargar resorts');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchResorts();
+  }, [translate]);
+
+  // Transform API data to match the expected format
+  const getAllResorts = () => {
+    if (!resorts || resorts.length === 0) {
+      return [];
+    }
+    
+    return resorts.map(resort => {
+      // Get the value from the resort object (could be resort.value or just resort)
+      const resortValue = resort.value || resort;
+      
+      // Convert "CERRO_CATEDRAL" to "Cerro Catedral"
+      const name = resortValue
+        .toLowerCase()
+        .split('_')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ');
+      
+      return {
+        name: name,
+        value: resortValue
+      };
+    }).sort((a, b) => a.name.localeCompare(b.name));
+  };
 
   return (
     <m.div
@@ -58,48 +92,76 @@ export default function ResortSelection() {
       </Alert>
       
       <Stack spacing={3}>
-        <RHFAutocomplete
-          name="resorts"
-          label={translate('registerForm.resorts.searchLabel')}
-          placeholder={translate('registerForm.resorts.searchPlaceholder')}
-          options={getAllResorts()}
-          getOptionLabel={(option) => option.name}
-          groupBy={(option) => option.category}
-          multiple
-          limitTags={3}
-          filterSelectedOptions
-          renderOption={(props, option) => (
-            <Box component="li" {...props}>
-              {option.name}
-            </Box>
-          )}
-          filterOptions={(options, { inputValue }) => {
-            const filtered = options.filter((option) =>
-              option.name.toLowerCase().includes(inputValue.toLowerCase())
-            );
-            return filtered;
-          }}
-          renderTags={(value, getTagProps) =>
-            value.map((option, index) => (
-              <Chip
-                key={option.name}
-                label={option.name}
-                {...getTagProps({ index })}
-                sx={{ 
-                  color: 'text.primary',
-                  borderColor: 'text.primary',
-                  '&:hover': {
-                    backgroundColor: 'grey.100'
-                  }
-                }}
-                variant="outlined"
-                size="small"
+        {loading ? (
+          <Box sx={{ display: 'flex', justifyContent: 'center', py: 3 }}>
+            <CircularProgress size={24} />
+            <Typography variant="body2" sx={{ ml: 2, color: 'text.secondary' }}>
+              {translate('registerForm.resorts.loading') || 'Cargando resorts...'}
+            </Typography>
+          </Box>
+        ) : error ? (
+          <Alert severity="error" sx={{ mb: 2 }}>
+            {error}
+          </Alert>
+        ) : (
+          <Autocomplete
+            value={selectedResorts.map(enumValue => 
+              getAllResorts().find(option => option.value === enumValue)
+            ).filter(Boolean)}
+            onChange={(event, newValue) => {
+              const enumValues = newValue.map(option => option.value);
+              setValue('resorts', enumValues);
+              console.log('Enum values:', enumValues);
+              validateField('resorts', enumValues);
+            }}
+            options={getAllResorts()}
+            getOptionLabel={(option) => option?.name || ''}
+            multiple
+            limitTags={3}
+            filterSelectedOptions
+            renderOption={(props, option) => (
+              <Box component="li" {...props}>
+                {option?.name || ''}
+              </Box>
+            )}
+            filterOptions={(options, { inputValue }) => {
+              const filtered = options.filter((option) =>
+                option?.name?.toLowerCase().includes(inputValue.toLowerCase())
+              );
+              return filtered;
+            }}
+            renderTags={(value, getTagProps) =>
+              value.map((option, index) => (
+                <Chip
+                  key={option?.value || index}
+                  label={option?.name || ''}
+                  {...getTagProps({ index })}
+                  sx={{ 
+                    color: 'text.primary',
+                    borderColor: 'text.primary',
+                    '&:hover': {
+                      backgroundColor: 'grey.100'
+                    }
+                  }}
+                  variant="outlined"
+                  size="small"
+                />
+              ))
+            }
+            isOptionEqualToValue={(option, value) => option?.value === value?.value}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label={translate('registerForm.resorts.searchLabel')}
+                placeholder={translate('registerForm.resorts.searchPlaceholder')}
+                helperText={translate('registerForm.resorts.helperText')}
+                fullWidth
               />
-            ))
-          }
-          isOptionEqualToValue={(option, value) => option.name === value.name}
-          helperText={translate('registerForm.resorts.helperText')}
-        />
+            )}
+            freeSolo={false}
+            disableCloseOnSelect={true}
+          />
+        )}
         
         <Box sx={{ p: 2, bgcolor: 'grey.50', borderRadius: 1, border: '1px solid', borderColor: 'grey.200' }}>
           <Typography variant="body2" color="text.secondary">

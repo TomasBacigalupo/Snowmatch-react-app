@@ -6,4 +6,8 @@ DB_USER=your_database_user
 DB_PASSWORD=your_database_password
 
 # AWS Configuration
-AWS_REGION=us-east-1 
+AWS_REGION=us-east-1
+
+# Pusher WebSocket Configuration
+REACT_APP_PUSHER_KEY=your_pusher_app_key
+REACT_APP_PUSHER_CLUSTER=us2 

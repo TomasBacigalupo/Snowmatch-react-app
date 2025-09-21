@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 // @mui
 import { styled } from '@mui/material/styles';
 import { Stack, Input, Divider, IconButton, InputAdornment } from '@mui/material';
@@ -9,6 +9,8 @@ import uuidv4 from '../../../utils/uuidv4';
 import Iconify from '../../../components/Iconify';
 import EmojiPicker from '../../../components/EmojiPicker';
 import useAuth from 'src/hooks/useAuth';
+// services
+import webSocketService from '../../../services/websocketService';
 
 // ----------------------------------------------------------------------
 
@@ -25,13 +27,15 @@ const RootStyle = styled('div')(({ theme }) => ({
 ChatMessageInput.propTypes = {
   disabled: PropTypes.bool,
   conversationId: PropTypes.string,
+  conversationKey: PropTypes.string,
   onSend: PropTypes.func,
 };
 
-export default function ChatMessageInput({ disabled, conversationId, onSend }) {
+export default function ChatMessageInput({ disabled, conversationId, conversationKey, onSend }) {
   const fileInputRef = useRef(null);
   const [message, setMessage] = useState('');
   const { user } = useAuth();
+  const typingTimerRef = useRef(null);
 
   const handleAttach = () => {
     fileInputRef.current?.click();
@@ -43,10 +47,58 @@ export default function ChatMessageInput({ disabled, conversationId, onSend }) {
     }
   };
 
+  const handleInputChange = (event) => {
+    const newMessage = event.target.value;
+    setMessage(newMessage);
+    
+    // Handle typing indicators
+    if (conversationKey && newMessage.length > 0) {
+      webSocketService.sendTypingIndicator(conversationKey, true);
+      
+      // Clear existing timer
+      if (typingTimerRef.current) {
+        clearTimeout(typingTimerRef.current);
+      }
+      
+      // Set timer to stop typing after 1 second of inactivity
+      typingTimerRef.current = setTimeout(() => {
+        webSocketService.sendTypingIndicator(conversationKey, false);
+      }, 1000);
+    }
+  };
+
+  const handleBlur = () => {
+    // Stop typing when input loses focus
+    if (conversationKey) {
+      webSocketService.sendTypingIndicator(conversationKey, false);
+      if (typingTimerRef.current) {
+        clearTimeout(typingTimerRef.current);
+      }
+    }
+  };
+
+  // Cleanup typing timer on unmount
+  useEffect(() => {
+    return () => {
+      if (typingTimerRef.current) {
+        clearTimeout(typingTimerRef.current);
+      }
+    };
+  }, []);
+
   const handleSend = () => {
     if (!message) {
       return '';
     }
+    
+    // Stop typing indicator when sending message
+    if (conversationKey) {
+      webSocketService.sendTypingIndicator(conversationKey, false);
+      if (typingTimerRef.current) {
+        clearTimeout(typingTimerRef.current);
+      }
+    }
+    
     if (onSend && conversationId) {
       onSend({
         conversationId,
@@ -69,7 +121,8 @@ export default function ChatMessageInput({ disabled, conversationId, onSend }) {
         value={message}
         disableUnderline
         onKeyUp={handleKeyUp}
-        onChange={(event) => setMessage(event.target.value)}
+        onChange={handleInputChange}
+        onBlur={handleBlur}
         placeholder="Type a message"
         sx={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
         startAdornment={

@@ -4,14 +4,16 @@ import { useEffect, useState, useRef, useLayoutEffect } from 'react';
 import Scrollbar from '../../../components/Scrollbar';
 import LightboxModal from '../../../components/LightboxModal';
 import ChatMessageItem from './ChatMessageItem';
+import TypingIndicator from './TypingIndicator';
 
 // ----------------------------------------------------------------------
 
 ChatMessageList.propTypes = {
   conversation: PropTypes.object.isRequired,
+  conversationKey: PropTypes.string,
 };
 
-export default function ChatMessageList({ conversation }) {
+export default function ChatMessageList({ conversation, conversationKey }) {
   const scrollRef = useRef(null);
   const simpleBarRef = useRef(null);
   const bottomRef = useRef(null);
@@ -80,6 +82,10 @@ export default function ChatMessageList({ conversation }) {
             onOpenLightbox={handleOpenLightbox}
           />
         ))}
+        
+        {/* Typing Indicator */}
+        <TypingIndicator conversationKey={conversationKey} />
+        
         <div ref={bottomRef} style={{ height: '1px' }} />
       </Scrollbar>
 

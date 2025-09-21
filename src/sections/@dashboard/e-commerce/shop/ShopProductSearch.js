@@ -13,7 +13,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 import {
   Accordion,
-  AccordionSummary, Link, AccordionDetails, Typography, Card, Autocomplete, InputAdornment, Popper, Paper, TextField, Drawer, Button, Box, Grid, Modal
+  AccordionSummary, Link, AccordionDetails, Typography, Card, Autocomplete, InputAdornment, Popper, Paper, TextField, Drawer, Button, Box, Grid, Modal, CircularProgress
 } from '@mui/material';
 // hooks
 import useIsMountedRef from '../../../../hooks/useIsMountedRef';
@@ -36,8 +36,10 @@ import { filterTeachers } from 'src/redux/slices/teachers';
 import { DesktopDateRangePicker, MobileDateRangePicker, StaticDateRangePicker } from '@mui/lab';
 import dayjs from 'dayjs';
 import { Language } from '@mui/icons-material';
+import axios from 'src/utils/axios';
+import { resortTransformation, transformResortsForUI } from 'src/utils/resortTransformation';
 
-// Create a flat list of all resorts for autocomplete
+// This function will be replaced with API call
 const getAllResorts = () => {
     const allResorts = [];
     FILTER_RESORT_OPTIONS.forEach((country) => {
@@ -69,6 +71,9 @@ export default function ShopProductSearch({ filters, teachers }) {
   const isMountedRef = useIsMountedRef();
 
   const [searchQuery, setSearchQuery] = useState('');
+  const [resorts, setResorts] = useState([]);
+  const [resortsLoading, setResortsLoading] = useState(true);
+  const [resortsError, setResortsError] = useState(null);
 
   const [searchResults, setSearchResults] = useState([]);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -81,6 +86,46 @@ export default function ShopProductSearch({ filters, teachers }) {
   const { isAuthenticated } = useAuth()
 
   const { translate, currentLang } = useLocales()
+
+  // Fetch resorts from API
+  useEffect(() => {
+    const fetchResorts = async () => {
+      try {
+        setResortsLoading(true);
+        setResortsError(null);
+        const response = await axios.get('/api/enums/resorts');
+        console.log('API response data:', response.data);
+        console.log('First resort example:', response.data[0]);
+        console.log('Type of first resort:', typeof response.data[0]);
+        console.log('Keys of first resort:', Object.keys(response.data[0] || {}));
+        setResorts(response.data);
+      } catch (err) {
+        console.error('Error fetching resorts:', err);
+        setResortsError('Error loading resorts');
+        // Fallback to static data if API fails
+        setResorts(getAllResorts());
+      } finally {
+        setResortsLoading(false);
+      }
+    };
+
+    fetchResorts();
+  }, []);
+
+  // Transform API data to match the expected format
+  const getAllResortsFromAPI = () => {
+    if (resorts.length === 0) {
+      return getAllResorts(); // Fallback to static data
+    }
+    
+    try {
+      return transformResortsForUI(resorts);
+    } catch (error) {
+      console.error('Error transforming resorts data:', error);
+      console.log('Resorts data that caused error:', resorts);
+      return getAllResorts(); // Fallback to static data
+    }
+  };
 
   const handleChangeSearch = async () => {
     setSearchResults(teachers)
@@ -101,7 +146,7 @@ export default function ShopProductSearch({ filters, teachers }) {
   const onSubmit = (data) => {
     console.log('pase', data)
     
-    const resortName = values.resort?.name || values.resort;
+    const resortName = values.resort.value;
     const currentLanguage = currentLang.value;
 
     //react search
@@ -233,7 +278,7 @@ export default function ShopProductSearch({ filters, teachers }) {
 
         {/* Centered Text */}
         <Box component="li" display="flex" flexDirection="column" alignItems="center">
-          <Typography fontWeight="bold">{filters.resort}</Typography>
+          <Typography fontWeight="bold">{resortTransformation(filters.resort)}</Typography>
           <Typography variant="body2" color="text.secondary">
             {`${formatDate(filters.from)} - ${formatDate(filters.to)}`}
           </Typography>
@@ -294,8 +339,10 @@ export default function ShopProductSearch({ filters, teachers }) {
                       name="resort"
                       label={translate("filter.resort")}
                       placeholder="Buscar resort..."
-                      options={getAllResorts()}
+                      options={getAllResortsFromAPI()}
+                      loading={resortsLoading}
                       getOptionLabel={(option) => option.name}
+                      getOptionValue={(option) => option.value}
                       groupBy={(option) => option.category}
                       renderOption={(props, option) => (
                         <Box component="li" {...props}>
@@ -311,12 +358,12 @@ export default function ShopProductSearch({ filters, teachers }) {
                     />
                     <Box display="flex" gap={2} mt={2} overflow="auto" sx={{ scrollbarWidth: "none", "&::-webkit-scrollbar": { display: "none" } }}>
                       {[{title:"Catedral", 
-                      image:"/assets/resorts/ilustrations/catedral.png", value:"Cerro Catedral"},
-                       {title:"Chapelco", image:"/assets/resorts/ilustrations/chapelco.png", value:"Chapelco"}, 
-                       {title:"Bayo", image:"/assets/resorts/ilustrations/bayo.png", value:"Cerro Bayo"}, {title:"La Hoya", image:"/assets/resorts/ilustrations/lahoya.PNG", value:"La Hoya"}].map((resort) => (
+                      image:"/assets/resorts/ilustrations/catedral.png", value:"CERRO_CATEDRAL"},
+                       {title:"Chapelco", image:"/assets/resorts/ilustrations/chapelco.png", value:"CHAPELCO"}, 
+                       {title:"Bayo", image:"/assets/resorts/ilustrations/bayo.png", value:"CERRO_BAYO"}, {title:"La Hoya", image:"/assets/resorts/ilustrations/lahoya.PNG", value:"LA_HOYA"}].map((resort) => (
                         <Box
                           key={resort}
-                          onClick={() => setValue("resort", { name: resort.value, category: 'Argentina' })}
+                          onClick={() => setValue("resort", resort.value)}
                           sx={{
                             minWidth: 120,
                             height: 160,
@@ -584,8 +631,10 @@ export default function ShopProductSearch({ filters, teachers }) {
                         name="resort"
                         label={translate("filter.resort")}
                         placeholder="Buscar resort..."
-                        options={getAllResorts()}
+                        options={getAllResortsFromAPI()}
+                        loading={resortsLoading}
                         getOptionLabel={(option) => option.name}
+                        getOptionValue={(option) => option.value}
                         groupBy={(option) => option.category}
                         renderOption={(props, option) => (
                           <Box component="li" {...props}>
@@ -600,10 +649,10 @@ export default function ShopProductSearch({ filters, teachers }) {
                         }}
                       />
                       <Box display="flex" gap={2} mt={2} overflow="auto" sx={{ scrollbarWidth: "none", "&::-webkit-scrollbar": { display: "none" } }}>
-                        {[{title:"Catedral", value:"Cerro Catedral"}, {title:"Chapelco", value:"Chapelco"}, {title:"Bayo", value:"Cerro Bayo"}, {title:"La Hoya", value:"La Hoya"}].map((resort) => (
+                        {[{title:"Catedral", value:"CERRO_CATEDRAL"}, {title:"Chapelco", value:"CHAPELCO"}, {title:"Bayo", value:"CERRO_BAYO"}, {title:"La Hoya", value:"LA_HOYA"}].map((resort) => (
                           <Box
                             key={resort}
-                            onClick={() => setValue("resort", { name: resort.value, category: 'Argentina' })}
+                            onClick={() => setValue("resort", resort.value)}
                             sx={{
                               minWidth: 120,
                               height: 160,

@@ -504,6 +504,7 @@ export const RecordScreen = () => {
                   height={300}
                   showSegmentColors={true}
                   fitBounds={true}
+                  useTestData={true}
                 />
               </CardContent>
             </Card>

@@ -525,6 +525,7 @@ export const ActivityDetailScreen = ({
             fitBounds={true}
             bounds={calculateBounds(samples)}
             className="activity-map"
+            useTestData={true}
           />
         ) : (
           <Paper elevation={1} sx={{ height: 400, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>

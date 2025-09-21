@@ -1,11 +1,11 @@
 import * as Yup from 'yup';
 import { useSnackbar } from 'notistack';
-import { useCallback } from 'react';
+import { useCallback, useState, useEffect } from 'react';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { Box, Grid, Card, Stack, Typography, Tooltip } from '@mui/material';
+import { Box, Grid, Card, Stack, Typography, Tooltip, Chip, Alert, CircularProgress } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 // redux
 import { useDispatch, useSelector } from '../../../../redux/store';
@@ -17,7 +17,7 @@ import { fData } from '../../../../utils/formatNumber';
 // _mock
 import { countries } from '../../../../_mock';
 // components
-import { FormProvider, RHFSwitch, RHFSelect, RHFTextField, RHFUploadAvatar, RHFMultipleSelect } from '../../../../components/hook-form';
+import { FormProvider, RHFSwitch, RHFSelect, RHFTextField, RHFUploadAvatar, RHFMultipleSelect, RHFAutocomplete } from '../../../../components/hook-form';
 import axios from '../../../../utils/axios';
 import { useMediaQuery } from 'react-responsive';
 import useLocales from 'src/hooks/useLocales';
@@ -33,7 +33,53 @@ export default function AccountGeneral() {
   const { teachers } = useSelector((state) => { return state });
   const isMobile = useMediaQuery({ query: `(max-width: 760px)` });
   const imageSize = isMobile ? 10 : 39;
-  const { translate } = useLocales()
+  const { translate } = useLocales();
+
+  // Resort selection state
+  const [resorts, setResorts] = useState([]);
+  const [resortsLoading, setResortsLoading] = useState(true);
+  const [resortsError, setResortsError] = useState(null);
+
+  // Fetch resorts from API
+  useEffect(() => {
+    const fetchResorts = async () => {
+      try {
+        setResortsLoading(true);
+        setResortsError(null);
+        const response = await axios.get('/api/enums/resorts');
+        setResorts(response.data);
+      } catch (err) {
+        console.error('Error fetching resorts:', err);
+        setResortsError(translate('general.form.resortsError') || 'Error loading resorts');
+      } finally {
+        setResortsLoading(false);
+      }
+    };
+
+    fetchResorts();
+  }, [translate]);
+
+  // Transform API data to match the expected format
+  const getAllResorts = () => {
+    const allResorts = [];
+    resorts.forEach((resort) => {
+      // Handle both enum structure and direct resort objects
+      if (typeof resort === 'string') {
+        allResorts.push({
+          name: resort,
+          value: resort,
+          category: 'Resorts'
+        });
+      } else if (resort.name) {
+        allResorts.push({
+          name: resort.name,
+          value: resort.value || resort.name,
+          category: resort.category || 'Resorts'
+        });
+      }
+    });
+    return allResorts.sort((a, b) => a.name.localeCompare(b.name));
+  };
 
   const UpdateUserSchema = Yup.object().shape({
     name: Yup.string().required('Name is required'),
@@ -50,7 +96,7 @@ export default function AccountGeneral() {
     skills: Yup.array().of(Yup.string()),
     disciplines: Yup.array().of(Yup.string()),
     sports: Yup.array().of(Yup.string()),
-    resorts: Yup.array().of(Yup.string()),
+    resorts: Yup.array().of(Yup.mixed()),
     school: Yup.string(),
   });
 
@@ -69,7 +115,7 @@ export default function AccountGeneral() {
     skills: user?.skills || [],
     disciplines: user?.disciplines || [],
     sports: user?.sports || [],
-    resorts: user?.resorts || [],
+    resorts: [],
     school: user?.school || '',
   };
 
@@ -85,6 +131,16 @@ export default function AccountGeneral() {
     setError
   } = methods;
 
+  // Set resort values once both user data and resort options are available
+  useEffect(() => {
+    if (user?.resorts && resorts.length > 0) {
+      const userResortObjects = user.resorts.map(enumValue => 
+        getAllResorts().find(option => option.value === enumValue)
+      ).filter(Boolean);
+      setValue('resorts', userResortObjects);
+    }
+  }, [user?.resorts, resorts, setValue]);
+
   const toBase64 = file => new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.readAsDataURL(file);
@@ -93,10 +149,15 @@ export default function AccountGeneral() {
   });
 
   const onSubmit = async (data) => {
+    // Transform resort objects back to enum values
+    const transformedData = {
+      ...data,
+      resorts: data.resorts ? data.resorts.map(resort => resort.value || resort.name || resort) : []
+    };
 
     const value = {
       ...user,
-      ...data
+      ...transformedData
     }
 
     var endpoint = "";
@@ -232,7 +293,61 @@ export default function AccountGeneral() {
             </Stack>
 
             <Stack sx={{ mt: 3 }}>
-              <RHFMultipleSelect name="resorts" label={translate("general.form.resorts")} freeSolo={true} grouped={true} list={ski_resorts} />
+              {resortsLoading ? (
+                <Box sx={{ display: 'flex', alignItems: 'center', py: 2 }}>
+                  <CircularProgress size={20} />
+                  <Typography variant="body2" sx={{ ml: 2, color: 'text.secondary' }}>
+                    {translate('general.form.loadingResorts') || 'Loading resorts...'}
+                  </Typography>
+                </Box>
+              ) : resortsError ? (
+                <Alert severity="error" sx={{ mb: 2 }}>
+                  {resortsError}
+                </Alert>
+              ) : (
+                <RHFAutocomplete
+                  name="resorts"
+                  label={translate("general.form.resorts")}
+                  placeholder={translate('general.form.resortsPlaceholder') || 'Search and select resorts...'}
+                  options={getAllResorts()}
+                  getOptionLabel={(option) => option?.name || ''}
+                  groupBy={(option) => option?.category}
+                  multiple
+                  limitTags={3}
+                  filterSelectedOptions
+                  renderOption={(props, option) => (
+                    <Box component="li" {...props}>
+                      {option?.name || ''}
+                    </Box>
+                  )}
+                  filterOptions={(options, { inputValue }) => {
+                    const filtered = options.filter((option) =>
+                      option?.name?.toLowerCase().includes(inputValue.toLowerCase())
+                    );
+                    return filtered;
+                  }}
+                  renderTags={(value, getTagProps) =>
+                    value.map((option, index) => (
+                      <Chip
+                        key={option?.name || index}
+                        label={option?.name || ''}
+                        {...getTagProps({ index })}
+                        sx={{ 
+                          color: 'text.primary',
+                          borderColor: 'text.primary',
+                          '&:hover': {
+                            backgroundColor: 'grey.100'
+                          }
+                        }}
+                        variant="outlined"
+                        size="small"
+                      />
+                    ))
+                  }
+                  isOptionEqualToValue={(option, value) => option?.value === value?.value}
+                  helperText={translate('general.form.resortsHelperText') || 'Select the resorts where you offer your services'}
+                />
+              )}
             </Stack>
 
             <Stack sx={{ mt: 3 }}>

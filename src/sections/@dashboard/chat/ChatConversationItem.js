@@ -2,7 +2,9 @@ import PropTypes from 'prop-types';
 import { formatDistanceToNowStrict } from 'date-fns';
 // @mui
 import { styled } from '@mui/material/styles';
-import { Box, Avatar, ListItemText, ListItemAvatar, ListItemButton } from '@mui/material';
+import { Box, Avatar, ListItemText, ListItemAvatar, ListItemButton, Chip } from '@mui/material';
+// redux
+import { useSelector } from '../../../redux/store';
 //
 import BadgeStatus from '../../../components/BadgeStatus';
 
@@ -63,12 +65,15 @@ ChatConversationItem.propTypes = {
 };
 
 export default function ChatConversationItem({ isSelected, conversation, isOpenSidebar, onSelectConversation }) {
+  const { unreadCounts } = useSelector((state) => state.chat);
   const details = getDetails(conversation, '8864c717-587d-472a-929a-8e5f298024da-0');
 
   const displayLastActivity = conversation.messages.length > 0 ? conversation.messages[conversation.messages.length - 1].createdAt : conversation.createdAt;
 
   const isGroup = details.otherParticipants.length > 1;
-  const isUnread = conversation.unreadCount > 0;
+  // Use Redux unread count or fallback to conversation unreadCount
+  const unreadCount = unreadCounts[conversation.conversationKey] || conversation.unreadCount || 0;
+  const isUnread = unreadCount > 0;
   const isOnlineGroup = isGroup && details.otherParticipants.map((item) => item.status).includes('online');
 
   return (
@@ -149,12 +154,22 @@ export default function ChatConversationItem({ isSelected, conversation, isOpenS
                 color: 'text.disabled',
               }}
             >
-              {console.log('displayLastActivity', displayLastActivity)}
               {formatDistanceToNowStrict(parseDateWithoutTimezone(displayLastActivity), {
                 addSuffix: false,
               })}
             </Box>
-            {isUnread && <BadgeStatus status="unread" size="small" />}
+            {isUnread && (
+              <Chip
+                label={unreadCount > 99 ? '99+' : unreadCount}
+                size="small"
+                color="primary"
+                sx={{
+                  height: 20,
+                  fontSize: '0.75rem',
+                  fontWeight: 600,
+                }}
+              />
+            )}
           </Box>
         </>
       )}

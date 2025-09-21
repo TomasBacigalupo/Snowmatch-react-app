@@ -12,7 +12,10 @@ import {
   markConversationAsRead,
   resetActiveConversation,
   sendMessage,
+  resetUnreadCount,
 } from '../../../redux/slices/chat';
+// services
+import webSocketService from '../../../services/websocketService';
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
 //
@@ -56,6 +59,12 @@ export default function ChatWindow() {
       dispatch(getParticipants(conversationKey));
       try {
         await dispatch(getConversation(conversationKey));
+        
+        // Subscribe to WebSocket for real-time updates
+        webSocketService.subscribeToConversation(conversationKey);
+        
+        // Reset unread count when opening conversation
+        dispatch(resetUnreadCount({ conversationKey }));
       } catch (error) {
         console.error(error);
         navigate(PATH_DASHBOARD.chat.new);
@@ -65,6 +74,7 @@ export default function ChatWindow() {
       getDetails();
     } else if (activeConversationId) {
       dispatch(resetActiveConversation());
+      webSocketService.unsubscribeFromConversation();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [conversationKey]);
@@ -118,12 +128,13 @@ export default function ChatWindow() {
 
       <Box sx={{ flexGrow: 1, display: 'flex', overflow: 'hidden' }}>
         <Stack sx={{ flexGrow: 1 }}>
-          <ChatMessageList conversation={conversation} />
+          <ChatMessageList conversation={conversation} conversationKey={conversationKey} />
 
           <Divider />
 
           <ChatMessageInput
             conversationId={activeConversationId}
+            conversationKey={conversationKey}
             onSend={handleSendMessage}
             disabled={pathname === PATH_DASHBOARD.chat.new}
           />

@@ -194,7 +194,7 @@ export default function ShopProductSearch({ filters, teachers }) {
     from: defaultRange[0],
     to: defaultRange[1],
     // gender: [],
-    category: ["Ski"],
+    category: ["SKI"],
     // language: [],
     // discipline: []
   };

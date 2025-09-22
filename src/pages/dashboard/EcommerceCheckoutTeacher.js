@@ -291,7 +291,7 @@ export default function EcommerceCheckoutTeacher() {
 
     const url = `https://api.whatsapp.com/send?phone=${phoneNumber}&text=${encodeURIComponent(_message)}`;
 
-    window.open(url, '_blank');
+    // window.open(url, '_blank');
   }
 
   if (loadingPayment) {

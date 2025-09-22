@@ -32,7 +32,7 @@ export default function Chat() {
 
   useEffect(() => {
     dispatch(getConversations());
-    dispatch(getContacts());
+    // dispatch(getContacts());
   }, [dispatch]);
 
   useEffect(() => {

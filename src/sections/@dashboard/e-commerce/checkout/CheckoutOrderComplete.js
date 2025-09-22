@@ -16,6 +16,7 @@ import {
 // redux
 import { useDispatch, useSelector } from '../../../../redux/store';
 import { resetCart } from '../../../../redux/slices/teachers';
+import { getConversationKey } from '../../../../redux/slices/chat';
 // routes
 import { PATH_DASHBOARD, PATH_GUEST } from '../../../../routes/paths';
 // components
@@ -46,6 +47,7 @@ export default function CheckoutOrderComplete({ ...other }) {
 
   const { paymentId, booking } = useSelector(state => state.bookings);
   const { filters } = useSelector(state => state.teachers);
+  const { user } = useSelector(state => state.user);
 
   // Determinar si es Catedral o otro resort
   const isCatedral = booking?.resort === 'Cerro Catedral' || filters?.resort === 'Cerro Catedral';
@@ -53,6 +55,31 @@ export default function CheckoutOrderComplete({ ...other }) {
   const handleResetStep = () => {
     dispatch(resetCart());
     navigate(PATH_GUEST.protips);
+  };
+
+  const handleMessage = async () => {
+    try {
+      if (!booking?.teacher?.id || !user?.id) {
+        console.error('Missing teacher or user ID');
+        return;
+      }
+
+      // Get conversation key from API
+      const conversationKey = await dispatch(getConversationKey(user.id, booking.teacher.id));
+      
+      if (conversationKey) {
+        // Navigate to chat
+        navigate(`/match/chat/${conversationKey}`);
+      } else {
+        console.error('Failed to get conversation key');
+        // Fallback to home page
+        navigate('/');
+      }
+    } catch (error) {
+      console.error('Error getting conversation key:', error);
+      // Fallback to home page
+      navigate('/');
+    }
   };
 
   return (
@@ -121,10 +148,11 @@ export default function CheckoutOrderComplete({ ...other }) {
 
           <Button
             variant="contained"
-            onClick={() => navigate('/')}
+            onClick={handleMessage}
             size="large"
+            startIcon={<Iconify icon={'eva:message-circle-fill'} />}
           >
-            {translate('completeOrder.videoCorrection')}
+            {translate('completeOrder.message')}
           </Button>
         </Stack>
       </Box>

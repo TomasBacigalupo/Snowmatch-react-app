@@ -16,7 +16,7 @@ import {
 // redux
 import { useDispatch, useSelector } from '../../../../redux/store';
 import { resetCart } from '../../../../redux/slices/teachers';
-import { getConversationKey } from '../../../../redux/slices/chat';
+import { getConversationId } from '../../../../redux/slices/chat';
 // routes
 import { PATH_DASHBOARD, PATH_GUEST } from '../../../../routes/paths';
 // components
@@ -25,6 +25,7 @@ import { DialogAnimate } from '../../../../components/animate';
 // assets
 import { OrderCompleteIllustration } from '../../../../assets';
 import useLocales from 'src/hooks/useLocales';
+import useAuth from 'src/hooks/useAuth';
 
 // ----------------------------------------------------------------------
 
@@ -44,10 +45,10 @@ export default function CheckoutOrderComplete({ ...other }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { translate } = useLocales();
+  const { user } = useAuth();
 
   const { paymentId, booking } = useSelector(state => state.bookings);
   const { filters } = useSelector(state => state.teachers);
-  const { user } = useSelector(state => state.user);
 
   // Determinar si es Catedral o otro resort
   const isCatedral = booking?.resort === 'Cerro Catedral' || filters?.resort === 'Cerro Catedral';
@@ -65,18 +66,18 @@ export default function CheckoutOrderComplete({ ...other }) {
       }
 
       // Get conversation key from API
-      const conversationKey = await dispatch(getConversationKey(user.id, booking.teacher.id));
+      const conversationId = await dispatch(getConversationId(user.id, booking.teacher.id));
       
-      if (conversationKey) {
+      if (conversationId) {
         // Navigate to chat
-        navigate(`/match/chat/${conversationKey}`);
+        navigate(`/match/chat/${conversationId}`);
       } else {
-        console.error('Failed to get conversation key');
+        console.error('Failed to get conversation ID');
         // Fallback to home page
         navigate('/');
       }
     } catch (error) {
-      console.error('Error getting conversation key:', error);
+      console.error('Error getting conversation ID:', error);
       // Fallback to home page
       navigate('/');
     }

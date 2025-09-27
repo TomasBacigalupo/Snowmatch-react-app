@@ -94,7 +94,7 @@ export default function ChatMessageItem({ message, conversation, onOpenLightbox 
 
           <ContentStyle
             sx={{
-              ...(isMe && { color: 'grey.800', bgcolor: 'primary.lighter' }),
+              ...(isMe && { color: 'grey.800', bgcolor: 'black' }),
               ...(isImage && { p: 0 }),
             }}
           >
@@ -106,7 +106,7 @@ export default function ChatMessageItem({ message, conversation, onOpenLightbox 
                 sx={{ borderRadius: 1, cursor: 'pointer', '&:hover': { opacity: 0.8 } }}
               />
             ) : (
-              <Typography variant="body2">{message.body}</Typography>
+              <Typography variant="body2" color={isMe ? 'white' : 'black'}>{message.body}</Typography>
             )}
           </ContentStyle>
         </div>

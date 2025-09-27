@@ -22,6 +22,8 @@ ChatConversationList.propTypes = {
   onSelectConversation: PropTypes.func,
   isLoading: PropTypes.bool,
   error: PropTypes.string,
+  userRole: PropTypes.string,
+  PremiumBanner: PropTypes.elementType,
   sx: PropTypes.object,
 };
 
@@ -32,6 +34,8 @@ export default function ChatConversationList({
   onSelectConversation,
   isLoading = false,
   error = null,
+  userRole,
+  PremiumBanner,
   sx, 
   ...other 
 }) {
@@ -63,13 +67,13 @@ export default function ChatConversationList({
     // Comportamiento original para compatibilidad
     const conversation = conversations.byId[conversationId]; 
     if(user.role === 'STUDENT'){
-      navigate(PATH_GUEST.chatView(conversation.conversationKey));
+      navigate(PATH_GUEST.chatView(conversation.conversationId));
     }else{
-      navigate(PATH_DASHBOARD.chat.view(conversation.conversationKey));
+      navigate(PATH_DASHBOARD.chat.view(conversation.conversationId));
     }
   };
 
-  const loading = isLoading || !conversations.allIds.length;
+  const loading = isLoading;
   const hasConversations = conversations.allIds.length > 0;
   const isEmpty = !loading && !hasConversations && !error;
 
@@ -103,6 +107,16 @@ export default function ChatConversationList({
 
   // Show empty state
   if (isEmpty) {
+    // Show custom banner for teachers
+    if (userRole === 'TEACHER' && PremiumBanner) {
+      return (
+        <Box sx={{ p: 3, display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '400px' }}>
+          <PremiumBanner />
+        </Box>
+      );
+    }
+
+    // Show default empty state for other users
     return (
       <Box sx={{ p: 3, textAlign: 'center' }}>
         <Iconify icon="eva:message-circle-outline" width={48} height={48} sx={{ color: 'text.disabled', mb: 2 }} />

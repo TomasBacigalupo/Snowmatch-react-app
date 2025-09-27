@@ -72,7 +72,7 @@ export default function ChatConversationItem({ isSelected, conversation, isOpenS
 
   const isGroup = details.otherParticipants.length > 1;
   // Use Redux unread count or fallback to conversation unreadCount
-  const unreadCount = unreadCounts[conversation.conversationKey] || conversation.unreadCount || 0;
+  const unreadCount = unreadCounts[conversation.conversationId] || conversation.unreadCount || 0;
   const isUnread = unreadCount > 0;
   const isOnlineGroup = isGroup && details.otherParticipants.map((item) => item.status).includes('online');
 

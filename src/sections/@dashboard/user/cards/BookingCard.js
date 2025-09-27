@@ -22,7 +22,7 @@ import { calculateTotalHours, getComissionByLevel, getPayByHoursLevel, getPayByL
 import InvoiceUpload from 'src/components/InvoiceUpload';
 import { calculateTotalEventHours } from 'src/utils/calculateHours';
 import { getHourlyRateByLevel } from 'src/utils/calculateTeacherPay';
-import { getConversationKey } from 'src/redux/slices/chat';
+import { getConversationId } from 'src/redux/slices/chat';
 
 BookingCard.propTypes = {
     booking: PropTypes.object,
@@ -165,16 +165,14 @@ export default function BookingCard({ booking, showInfo = true }) {
             const user1Id = isStudent ? user.id : booking.teacher.id;
             const user2Id = isStudent ? booking.teacher.id : user.id;
             
-            const conversationKey = await dispatch(getConversationKey(user1Id, user2Id));
-            console.log(conversationKey, "conversationKey");
-            if (conversationKey) {
+            const conversationId  = await dispatch(getConversationId(user1Id, user2Id));
+            if (conversationId) {
                 // Navigate to appropriate chat route based on user role
                 if (isStudent) {
-                    
-                    navigate(`/match/chat/${conversationKey}`);
+                    navigate(`/match/chat/${conversationId}`);
                 } else {
                     debugger
-                    navigate(`/dashboard/chat/${conversationKey}`);
+                    navigate(`/dashboard/chat/${conversationId}`);
                 }
             } else {
                 // Fallback to WhatsApp if conversation key is not available

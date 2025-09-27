@@ -47,37 +47,42 @@ export default function ChatWindow() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { pathname } = useLocation();
-  const { conversationKey } = useParams();
+  const { conversationId } = useParams();
   const { contacts, recipients, participants, activeConversationId } = useSelector((state) => state.chat);
   const conversation = useSelector((state) => conversationSelector(state));
 
-  const mode = conversationKey ? 'DETAIL' : 'COMPOSE';
+  const mode = conversationId ? 'DETAIL' : 'COMPOSE';
   const displayParticipants = participants.filter((item) => item.id !== '8864c717-587d-472a-929a-8e5f298024da-0');
 
   useEffect(() => {
     const getDetails = async () => {
-      dispatch(getParticipants(conversationKey));
+      dispatch(getParticipants(conversationId));
       try {
-        await dispatch(getConversation(conversationKey));
+        await dispatch(getConversation(conversationId));
         
         // Subscribe to WebSocket for real-time updates
-        webSocketService.subscribeToConversation(conversationKey);
+        // Ensure we're subscribed to the correct conversation channel
+        if (conversationId && webSocketService.isConnected()) {
+          webSocketService.subscribeToConversation(conversationId);
+          console.log(`📡 ChatWindow: Subscribed to conversation channel: conversation-${conversationId}`);
+        }
         
         // Reset unread count when opening conversation
-        dispatch(resetUnreadCount({ conversationKey }));
+        dispatch(resetUnreadCount({ conversationId }));
       } catch (error) {
         console.error(error);
         navigate(PATH_DASHBOARD.chat.new);
       }
     };
-    if (conversationKey) {
+    
+    if (conversationId) {
       getDetails();
     } else if (activeConversationId) {
       dispatch(resetActiveConversation());
       webSocketService.unsubscribeFromConversation();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [conversationKey]);
+  }, [conversationId]);
 
   useEffect(() => {
     if (activeConversationId) {
@@ -95,7 +100,7 @@ export default function ChatWindow() {
       // First, optimistically add the message to the UI
       // Ensure the message object has the correct structure for the reducer
       const messageData = {
-        conversationId: conversationKey,
+        conversationId: conversationId,
         messageId: value.messageId,
         message: value.message,
         contentType: value.contentType,
@@ -106,7 +111,7 @@ export default function ChatWindow() {
       dispatch(onSendMessage(messageData));
       
       // Then send it to the API
-      await dispatch(sendMessage(conversationKey, value));
+      await dispatch(sendMessage(conversationId, value));
     } catch (error) {
       console.error(error);
     }
@@ -128,13 +133,12 @@ export default function ChatWindow() {
 
       <Box sx={{ flexGrow: 1, display: 'flex', overflow: 'hidden' }}>
         <Stack sx={{ flexGrow: 1 }}>
-          <ChatMessageList conversation={conversation} conversationKey={conversationKey} />
+          <ChatMessageList conversation={conversation} conversationKey={conversationId} />
 
           <Divider />
 
           <ChatMessageInput
-            conversationId={activeConversationId}
-            conversationKey={conversationKey}
+            conversationId={conversationId}
             onSend={handleSendMessage}
             disabled={pathname === PATH_DASHBOARD.chat.new}
           />

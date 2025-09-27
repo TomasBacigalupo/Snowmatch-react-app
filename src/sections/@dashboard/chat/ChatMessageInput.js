@@ -27,11 +27,10 @@ const RootStyle = styled('div')(({ theme }) => ({
 ChatMessageInput.propTypes = {
   disabled: PropTypes.bool,
   conversationId: PropTypes.string,
-  conversationKey: PropTypes.string,
   onSend: PropTypes.func,
 };
 
-export default function ChatMessageInput({ disabled, conversationId, conversationKey, onSend }) {
+export default function ChatMessageInput({ disabled, conversationId, onSend }) {
   const fileInputRef = useRef(null);
   const [message, setMessage] = useState('');
   const { user } = useAuth();
@@ -52,8 +51,8 @@ export default function ChatMessageInput({ disabled, conversationId, conversatio
     setMessage(newMessage);
     
     // Handle typing indicators
-    if (conversationKey && newMessage.length > 0) {
-      webSocketService.sendTypingIndicator(conversationKey, true);
+    if (conversationId && newMessage.length > 0) {
+      webSocketService.sendTypingIndicator(conversationId, true);
       
       // Clear existing timer
       if (typingTimerRef.current) {
@@ -62,15 +61,15 @@ export default function ChatMessageInput({ disabled, conversationId, conversatio
       
       // Set timer to stop typing after 1 second of inactivity
       typingTimerRef.current = setTimeout(() => {
-        webSocketService.sendTypingIndicator(conversationKey, false);
+        webSocketService.sendTypingIndicator(conversationId, false);
       }, 1000);
     }
   };
 
   const handleBlur = () => {
     // Stop typing when input loses focus
-    if (conversationKey) {
-      webSocketService.sendTypingIndicator(conversationKey, false);
+    if (conversationId) {
+      webSocketService.sendTypingIndicator(conversationId, false);
       if (typingTimerRef.current) {
         clearTimeout(typingTimerRef.current);
       }
@@ -87,13 +86,14 @@ export default function ChatMessageInput({ disabled, conversationId, conversatio
   }, []);
 
   const handleSend = () => {
+    console.log('conversationId', conversationId);
     if (!message) {
       return '';
     }
     
     // Stop typing indicator when sending message
-    if (conversationKey) {
-      webSocketService.sendTypingIndicator(conversationKey, false);
+    if (conversationId) {
+      webSocketService.sendTypingIndicator(conversationId, false);
       if (typingTimerRef.current) {
         clearTimeout(typingTimerRef.current);
       }

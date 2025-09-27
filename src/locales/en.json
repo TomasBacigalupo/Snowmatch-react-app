@@ -1621,10 +1621,15 @@
       "title": "You don't have any inquiries yet",
       "message": "Subscribe to Premium and increase your visibility to receive more inquiries from students."
     },
-    "premium": {
-      "subscribe": "Subscribe to Premium",
-      "message": "🚀 *Premium Inquiry - Snowmatch*\n\nHello Snowmatch, I'm interested in subscribing to Premium to increase my visibility and receive more inquiries.\n\n👤 *Information:*\n• User: {{userName}}\n• Email: {{userEmail}}\n• Role: {{userRole}}\n\n💬 *Reason:*\nI want to increase my visibility to receive more inquiries from students.\n\n📅 *Date:* {{date}}\n🌐 *Page:* Chat - No conversations"
-    }
+        "premium": {
+            "subscribe": "Subscribe to Premium",
+            "message": "🚀 *Premium Inquiry - Snowmatch*\n\nHello Snowmatch, I'm interested in subscribing to Premium to increase my visibility and receive more inquiries.\n\n👤 *Information:*\n• User: {{userName}}\n• Email: {{userEmail}}\n• Role: {{userRole}}\n\n💬 *Reason:*\nI want to increase my visibility to receive more inquiries from students.\n\n📅 *Date:* {{date}}\n🌐 *Page:* Chat - No conversations"
+        },
+        "noConversationsTeacher": {
+            "title": "You don't have any conversations or bookings",
+            "subtitle": "Subscribe to Premium and increase your visibility",
+            "button": "Subscribe to Premium"
+        }
   },
   "lessons": {
     "myClasses": "My Classes",

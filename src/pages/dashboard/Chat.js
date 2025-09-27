@@ -15,6 +15,7 @@ import Page from '../../components/Page';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
 import { ChatSidebar, ChatWindow, ChatConversationList } from '../../sections/@dashboard/chat';
 import Iconify from '../../components/Iconify';
+import PremiumSubscriptionBanner from '../../components/PremiumSubscriptionBanner';
 import useAuth from 'src/hooks/useAuth';
 
 // ----------------------------------------------------------------------
@@ -24,7 +25,7 @@ export default function Chat() {
   const { translate } = useLocales();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { conversationKey } = useParams();
+  const { conversationId } = useParams();
   const {user} = useAuth();
   
   const { conversations, activeConversationId, isLoading, error } = useSelector((state) => state.chat);
@@ -37,12 +38,12 @@ export default function Chat() {
 
   useEffect(() => {
     // Si hay un conversationKey en la URL, mostrar el chat window
-    if (conversationKey) {
+    if (conversationId) {
       setShowChatWindow(true);
     } else {
       setShowChatWindow(false);
     }
-  }, [conversationKey]);
+  }, [conversationId]);
 
   const handleBackToList = () => {
     if(user.role === 'STUDENT'){
@@ -58,9 +59,9 @@ export default function Chat() {
     const conversation = conversations.byId[conversationId];
     if (conversation) {
       if(user.role === 'STUDENT'){
-        navigate(PATH_GUEST.chatView(conversation.conversationKey));
+        navigate(PATH_GUEST.chatView(conversation.conversationId));
       }else{
-        navigate(PATH_DASHBOARD.chat.view(conversation.conversationKey));
+        navigate(PATH_DASHBOARD.chat.view(conversation.conversationId));
       }
     }
   };
@@ -90,19 +91,9 @@ export default function Chat() {
           <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column' }}>
             <Box sx={{ p: 2, borderBottom: 1, borderColor: 'divider', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <Typography variant="h6">{translate('chat.conversations')}</Typography>
-              <IconButton 
-                onClick={handleNewConversation}
-                sx={{ 
-                  bgcolor: 'primary.main', 
-                  color: 'primary.contrastText',
-                  '&:hover': { bgcolor: 'primary.dark' }
-                }}
-                title={translate('chat.newConversation')}
-              >
-                <Iconify icon="eva:edit-fill" width={20} height={20} />
-              </IconButton>
             </Box>
             <Box sx={{ flexGrow: 1, overflow: 'auto' }}>
+
               <ChatConversationList
                 conversations={conversations}
                 isOpenSidebar={true}
@@ -110,6 +101,8 @@ export default function Chat() {
                 onSelectConversation={handleSelectConversation}
                 isLoading={isLoading}
                 error={error}
+                userRole={user?.role}
+                PremiumBanner={PremiumSubscriptionBanner}
               />
             </Box>
           </Box>

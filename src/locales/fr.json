@@ -401,5 +401,27 @@
   },
   "guestDetails": {
     "title": "Configurer le Profil"
+  },
+  "chat": {
+    "title": "Chat",
+    "conversations": "Conversations",
+    "newConversation": "Nouvelle conversation",
+    "error": {
+      "title": "Erreur lors du chargement des conversations",
+      "message": "Vous n'avez pas encore de demandes. Abonnez-vous à Premium et augmentez votre visibilité."
+    },
+    "empty": {
+      "title": "Vous n'avez pas encore de demandes",
+      "message": "Abonnez-vous à Premium et augmentez votre visibilité pour recevoir plus de demandes d'étudiants."
+    },
+    "premium": {
+      "subscribe": "S'abonner à Premium",
+      "message": "🚀 *Demande Premium - Snowmatch*\n\nBonjour Snowmatch, je suis intéressé par l'abonnement Premium pour augmenter ma visibilité et recevoir plus de demandes.\n\n👤 *Informations :*\n• Utilisateur : {{userName}}\n• Email : {{userEmail}}\n• Rôle : {{userRole}}\n\n💬 *Raison :*\nJe veux augmenter ma visibilité pour recevoir plus de demandes d'étudiants.\n\n📅 *Date :* {{date}}\n🌐 *Page :* Chat - Aucune conversation"
+    },
+    "noConversationsTeacher": {
+      "title": "Vous n'avez aucune conversation ni réservation",
+      "subtitle": "Abonnez-vous à Premium et augmentez votre visibilité",
+      "button": "S'abonner à Premium"
+    }
   }
 }

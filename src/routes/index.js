@@ -296,7 +296,7 @@ export default function Router() {
             { path: 'independent', element: <EcommerceShop isGuest={true} teacherType="independent" /> },
             { path: 'school', element: <EcommerceShop isGuest={true} teacherType="school" /> },
             { path: 'chat', element: <Chat /> },
-            { path: 'chat/:conversationKey', element: <Chat /> },
+            { path: 'chat/:conversationId', element: <Chat /> },
           ]
         },
         {
@@ -435,7 +435,7 @@ export default function Router() {
             { path: 'booking', element: <GeneralBooking /> },
             { path: 'products', element: <Products /> },
             { path: 'chat', element: <Chat /> },
-            { path: 'chat/:conversationKey', element: <Chat /> },
+            { path: 'chat/:conversationId', element: <Chat /> },
             {
               path: 'e-commerce',
               children: [

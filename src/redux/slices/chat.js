@@ -76,14 +76,29 @@ const slice = createSlice({
 
       state.contacts.byId = objFromArray(contacts);
       state.contacts.allIds = Object.keys(state.contacts.byId);
+      state.isLoading = false;
     },
 
     // GET CONVERSATIONS
     getConversationsSuccess(state, action) {
       const conversations = action.payload;
+      console.log('getConversationsSuccess - conversations:', conversations);
+      
+      // Handle both 'id' and 'conversationId' fields for API consistency
+      const conversationsWithConsistentId = conversations.map(conv => ({
+        ...conv,
+        conversationId: conv.conversationId || conv.id
+      }));
+      
+      console.log('getConversationsSuccess - objFromArray result:', objFromArray(conversationsWithConsistentId, 'conversationId'));
 
-      state.conversations.byId = objFromArray(conversations);
+      state.conversations.byId = objFromArray(conversationsWithConsistentId, 'conversationId');
       state.conversations.allIds = Object.keys(state.conversations.byId);
+      state.isLoading = false;
+      console.log('getConversationsSuccess - final state:', {
+        byId: state.conversations.byId,
+        allIds: state.conversations.allIds
+      });
     },
 
     // GET CONVERSATION
@@ -100,14 +115,21 @@ const slice = createSlice({
           });
         }
         
-        state.conversations.byId[conversation.id] = conversation;
-        state.activeConversationId = conversation.id;
-        if (!state.conversations.allIds.includes(conversation.id)) {
-          state.conversations.allIds.push(conversation.id);
+        // Handle both 'id' and 'conversationId' fields for API consistency
+        const conversationWithConsistentId = {
+          ...conversation,
+          conversationId: conversation.conversationId || conversation.id
+        };
+        
+        state.conversations.byId[conversationWithConsistentId.conversationId] = conversationWithConsistentId;
+        state.activeConversationId = conversationWithConsistentId.conversationId;
+        if (!state.conversations.allIds.includes(conversationWithConsistentId.conversationId)) {
+          state.conversations.allIds.push(conversationWithConsistentId.conversationId);
         }
       } else {
         state.activeConversationId = null;
       }
+      state.isLoading = false;
     },
 
     // ON SEND MESSAGE
@@ -156,12 +178,14 @@ const slice = createSlice({
       if (conversation) {
         conversation.unreadCount = 0;
       }
+      state.isLoading = false;
     },
 
     // GET PARTICIPANTS
     getParticipantsSuccess(state, action) {
       const participants = action.payload;
       state.participants = participants;
+      state.isLoading = false;
     },
 
     // RESET ACTIVE CONVERSATION
@@ -176,20 +200,20 @@ const slice = createSlice({
 
     // TYPING INDICATORS
     setTypingIndicator(state, action) {
-      const { conversationKey, userId, userName, isTyping } = action.payload;
+      const { conversationId, userId, userName, isTyping } = action.payload;
       
-      if (!state.typingUsers[conversationKey]) {
-        state.typingUsers[conversationKey] = {};
+      if (!state.typingUsers[conversationId]) {
+        state.typingUsers[conversationId] = {};
       }
       
       if (isTyping) {
-        state.typingUsers[conversationKey][userId] = {
+        state.typingUsers[conversationId][userId] = {
           userId,
           userName,
           timestamp: new Date().toISOString(),
         };
       } else {
-        delete state.typingUsers[conversationKey][userId];
+        delete state.typingUsers[conversationId][userId];
       }
     },
 
@@ -217,22 +241,22 @@ const slice = createSlice({
 
     // UNREAD MESSAGES
     incrementUnreadCount(state, action) {
-      const { conversationKey } = action.payload;
-      if (!state.unreadCounts[conversationKey]) {
-        state.unreadCounts[conversationKey] = 0;
+      const { conversationId } = action.payload;
+      if (!state.unreadCounts[conversationId]) {
+        state.unreadCounts[conversationId] = 0;
       }
-      state.unreadCounts[conversationKey] += 1;
+      state.unreadCounts[conversationId] += 1;
     },
 
     resetUnreadCount(state, action) {
-      const { conversationKey } = action.payload;
-      state.unreadCounts[conversationKey] = 0;
+      const { conversationId } = action.payload;
+      state.unreadCounts[conversationId] = 0;
     },
 
     // MESSAGE READ RECEIPTS
     markMessagesAsRead(state, action) {
-      const { conversationKey, userId } = action.payload;
-      const conversation = state.conversations.byId[conversationKey];
+      const { conversationId, userId } = action.payload;
+      const conversation = state.conversations.byId[conversationId];
       
       if (conversation && conversation.messages) {
         conversation.messages.forEach(message => {
@@ -273,7 +297,7 @@ export const {
 // ----------------------------------------------------------------------
 
 export function getContacts() {
-  return async () => {
+  return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.get('/api/chat/contacts');
@@ -287,12 +311,15 @@ export function getContacts() {
 // ----------------------------------------------------------------------
 
 export function getConversations() {
-  return async () => {
+  return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.get('/api/chat/conversations');
+      console.log('API Response:', response.data);
+      console.log('Conversations:', response.data.conversations);
       dispatch(slice.actions.getConversationsSuccess(response.data.conversations));
     } catch (error) {
+      console.error('Error fetching conversations:', error);
       dispatch(slice.actions.hasError(error));
     }
   };
@@ -300,12 +327,12 @@ export function getConversations() {
 
 // ----------------------------------------------------------------------
 
-export function getConversation(conversationKey) {
-  return async () => {
+export function getConversation(conversationId) {
+  return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.get('/api/chat/conversation', {
-        params: { conversationKey },
+        params: { conversationId },
       });
       dispatch(slice.actions.getConversationSuccess(response.data.conversation));
     } catch (error) {
@@ -317,7 +344,7 @@ export function getConversation(conversationKey) {
 // ----------------------------------------------------------------------
 
 export function markConversationAsRead(conversationId) {
-  return async () => {
+  return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
       await axios.get('/api/chat/conversation/mark-as-seen', {
@@ -332,12 +359,12 @@ export function markConversationAsRead(conversationId) {
 
 // ----------------------------------------------------------------------
 
-export function getParticipants(conversationKey) {
-  return async () => {
+export function getParticipants(conversationId) {
+  return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.get('/api/chat/participants', {
-        params: { conversationKey },
+        params: { conversationId },
       });
       dispatch(slice.actions.getParticipantsSuccess(response.data.participants));
     } catch (error) {
@@ -346,13 +373,13 @@ export function getParticipants(conversationKey) {
   };
 }
 
-export function sendMessage(conversationKey, message) {
-  return async () => {
+export function sendMessage(conversationId, message) {
+  return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
       // Send message to API
       const response = await axios.post('/api/chat/message', {
-        conversationKey,
+        conversationId,
         message: message.message,
         contentType: message.contentType || 'text',
         attachments: message.attachments || [],
@@ -361,7 +388,7 @@ export function sendMessage(conversationKey, message) {
       // If API call is successful, update the local state
       if (response.data.success) {
         const messageData = {
-          conversationId: conversationKey,
+          conversationId: conversationId,
           messageId: response.data.messageId || message.messageId,
           message: message.body,
           contentType: message.contentType || 'text',
@@ -381,11 +408,11 @@ export function sendMessage(conversationKey, message) {
 
 // ----------------------------------------------------------------------
 
-export function getConversationKey(user1Id, user2Id) {
-  return async () => {
+export function getConversationId(user1Id, user2Id) {
+  return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.post('/api/chat/conversation-key', {
+      const response = await axios.post('/api/chat/conversation', {
         user1Id,
         user2Id,
       });
@@ -393,11 +420,11 @@ export function getConversationKey(user1Id, user2Id) {
       console.log(response.data);
       
       
-      return response?.data?.conversationKey;
+      return response?.data?.conversationId;
      
     } catch (error) {
       dispatch(slice.actions.hasError(error));
-      console.error('Error getting conversation key:', error);
+      console.error('Error getting conversation ID:', error);
       return null;
     }
   };

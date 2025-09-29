@@ -1,5 +1,6 @@
 import { Box, Container, Typography, Button, Link } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import useLocales from 'src/hooks/useLocales';
 
 const IphoneFrame = styled(Box)(({ theme }) => ({
     position: 'relative',
@@ -52,6 +53,7 @@ const StoreButton = styled('img')({
 });
 
 const DownloadAppSection = ({ resort }) => {
+    const { translate } = useLocales();
     return (
         <Box
             component="section"
@@ -87,7 +89,7 @@ const DownloadAppSection = ({ resort }) => {
                                 WebkitTextFillColor: 'transparent',
                             }}
                         >
-                            Tu camino para aprender a esquiar en {resort} empieza con SnowMatch
+                            {translate('landingPRO.yourPathStarts', { resort })}
                         </Typography>
                         <Typography
                             component="p"
@@ -99,7 +101,7 @@ const DownloadAppSection = ({ resort }) => {
                                 lineHeight: 1.6,
                             }}
                         >
-                            Conecta con instructores certificados en {resort}, reserva tus clases de esquí online y mejora tu técnica con Snow, nuestro asistente de inteligencia artificial.
+                            {translate('landingPRO.yourPathDerctiption', { resort })}
                         </Typography>
                         <Box sx={{ 
                             display: 'flex', 
@@ -135,7 +137,7 @@ const DownloadAppSection = ({ resort }) => {
                                     }} 
                                 />
                                 <Typography variant="caption" sx={{ display: 'block', color: 'text.secondary' }}>
-                                    Escanea para descargar
+                                    {translate('landingPRO.downloadApp')}
                                 </Typography>
                             </Box>
                         </Box>

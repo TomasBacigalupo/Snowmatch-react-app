@@ -2,6 +2,7 @@ import { Box, Container, Typography, Grid, Card, Avatar, Rating } from '@mui/mat
 import { styled } from '@mui/material/styles';
 import { m } from 'framer-motion';
 import { MotionViewport, varFade } from '../../components/animate';
+import useLocales from 'src/hooks/useLocales';
 
 const TestimonialCard = styled(Card)(({ theme }) => ({
   padding: theme.spacing(3),
@@ -15,37 +16,38 @@ const TestimonialCard = styled(Card)(({ theme }) => ({
   },
 }));
 
-const testimonials = [
-  {
-    id: 1,
-    name: 'Camila Mingrone',
-    avatar: '/assets/avatars/avatar_1.png',
-    rating: 5,
-    resort: 'Cerro Catedral',
-    discipline: 'Ski',
-    text: 'Excelente experiencia con mi instructor. Aprendí más en una clase que en todo el invierno anterior. Muy profesional y paciente.',
-  },
-  {
-    id: 2,
-    name: 'Mariana Estrada Catalan',
-    avatar: '/assets/avatars/avatar_2.png',
-    rating: 5,
-    resort: 'Chapelco',
-    discipline: 'Snowboard',
-    text: 'La mejor decisión que tomé fue reservar mis clases con SnowMatch. El instructor se adaptó perfectamente a mi nivel y me ayudó a mejorar mi técnica.',
-  },
-  {
-    id: 3,
-    name: 'Guido Nicolas Pescio',
-    avatar: '/assets/avatars/avatar_3.png',
-    rating: 5,
-    resort: 'La Hoya',
-    discipline: 'Ski',
-    text: 'Increíble experiencia. Mi instructor fue muy profesional y me ayudó a superar mis miedos. Definitivamente volveré a tomar clases.',
-  },
-];
-
 export default function StudentTestimonials() {
+  const { translate } = useLocales();
+
+  const testimonials = [
+    {
+      id: 1,
+      name: translate('studentTestimonials.testimonials.testimonial1.name'),
+      avatar: '/assets/avatars/avatar_1.png',
+      rating: 5,
+      resort: translate('studentTestimonials.testimonials.testimonial1.resort'),
+      discipline: translate('studentTestimonials.testimonials.testimonial1.discipline'),
+      text: translate('studentTestimonials.testimonials.testimonial1.text'),
+    },
+    {
+      id: 2,
+      name: translate('studentTestimonials.testimonials.testimonial2.name'),
+      avatar: '/assets/avatars/avatar_2.png',
+      rating: 5,
+      resort: translate('studentTestimonials.testimonials.testimonial2.resort'),
+      discipline: translate('studentTestimonials.testimonials.testimonial2.discipline'),
+      text: translate('studentTestimonials.testimonials.testimonial2.text'),
+    },
+    {
+      id: 3,
+      name: translate('studentTestimonials.testimonials.testimonial3.name'),
+      avatar: '/assets/avatars/avatar_3.png',
+      rating: 5,
+      resort: translate('studentTestimonials.testimonials.testimonial3.resort'),
+      discipline: translate('studentTestimonials.testimonials.testimonial3.discipline'),
+      text: translate('studentTestimonials.testimonials.testimonial3.text'),
+    },
+  ];
   return (
     <Box
       component="section"
@@ -64,7 +66,7 @@ export default function StudentTestimonials() {
             align="center"
             sx={{ mb: 6, fontSize: { xs: '2rem', md: '2.5rem' } }}
           >
-            Lo que dicen nuestros estudiantes
+            {translate('studentTestimonials.title')}
           </Typography>
 
           <Typography
@@ -73,7 +75,7 @@ export default function StudentTestimonials() {
             align="center"
             sx={{ mb: 8, color: 'text.secondary' }}
           >
-            Descubre las experiencias de quienes ya aprendieron con nuestros instructores certificados
+            {translate('studentTestimonials.subtitle')}
           </Typography>
 
           <Grid container spacing={4}>

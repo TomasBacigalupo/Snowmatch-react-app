@@ -146,7 +146,7 @@ export default function ShopProductSearch({ filters, teachers }) {
   const onSubmit = (data) => {
     console.log('pase', data)
     
-    const resortName = values.resort.value;
+    const resortName = values.resort?.value || values.resort?.name || values.resort;
     const currentLanguage = currentLang.value;
 
     //react search
@@ -360,12 +360,13 @@ export default function ShopProductSearch({ filters, teachers }) {
                     />
                     <Box display="flex" gap={2} mt={2} overflow="auto" sx={{ scrollbarWidth: "none", "&::-webkit-scrollbar": { display: "none" } }}>
                       {[{title:"Catedral", 
-                      image:"/assets/resorts/ilustrations/catedral.png", value:"CERRO_CATEDRAL"},
-                       {title:"Chapelco", image:"/assets/resorts/ilustrations/chapelco.png", value:"CHAPELCO"}, 
-                       {title:"Bayo", image:"/assets/resorts/ilustrations/bayo.png", value:"CERRO_BAYO"}, {title:"La Hoya", image:"/assets/resorts/ilustrations/lahoya.PNG", value:"LA_HOYA"}].map((resort) => (
+                      image:"/assets/resorts/ilustrations/catedral.png", value:"CERRO_CATEDRAL", name:"Cerro Catedral", category:"Argentina"},
+                       {title:"Chapelco", image:"/assets/resorts/ilustrations/chapelco.png", value:"CHAPELCO", name:"Chapelco", category:"Argentina"}, 
+                       {title:"Bayo", image:"/assets/resorts/ilustrations/bayo.png", value:"CERRO_BAYO", name:"Cerro Bayo", category:"Argentina"}, 
+                       {title:"La Hoya", image:"/assets/resorts/ilustrations/lahoya.PNG", value:"LA_HOYA", name:"La Hoya", category:"Argentina"}].map((resort) => (
                         <Box
-                          key={resort}
-                          onClick={() => setValue("resort", resort.value)}
+                          key={resort.value}
+                          onClick={() => setValue("resort", { name: resort.name, value: resort.value, category: resort.category })}
                           sx={{
                             minWidth: 120,
                             height: 160,
@@ -651,10 +652,13 @@ export default function ShopProductSearch({ filters, teachers }) {
                         }}
                       />
                       <Box display="flex" gap={2} mt={2} overflow="auto" sx={{ scrollbarWidth: "none", "&::-webkit-scrollbar": { display: "none" } }}>
-                        {[{title:"Catedral", value:"CERRO_CATEDRAL"}, {title:"Chapelco", value:"CHAPELCO"}, {title:"Bayo", value:"CERRO_BAYO"}, {title:"La Hoya", value:"LA_HOYA"}].map((resort) => (
+                        {[{title:"Catedral", image:"/assets/resorts/ilustrations/catedral.png", value:"CERRO_CATEDRAL", name:"Cerro Catedral", category:"Argentina"}, 
+                          {title:"Chapelco", image:"/assets/resorts/ilustrations/chapelco.png", value:"CHAPELCO", name:"Chapelco", category:"Argentina"}, 
+                          {title:"Bayo", image:"/assets/resorts/ilustrations/bayo.png", value:"CERRO_BAYO", name:"Cerro Bayo", category:"Argentina"}, 
+                          {title:"La Hoya", image:"/assets/resorts/ilustrations/lahoya.PNG", value:"LA_HOYA", name:"La Hoya", category:"Argentina"}].map((resort) => (
                           <Box
-                            key={resort}
-                            onClick={() => setValue("resort", resort.value)}
+                            key={resort.value}
+                            onClick={() => setValue("resort", { name: resort.name, value: resort.value, category: resort.category })}
                             sx={{
                               minWidth: 120,
                               height: 160,

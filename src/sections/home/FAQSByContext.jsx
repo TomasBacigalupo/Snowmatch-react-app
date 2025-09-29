@@ -14,6 +14,7 @@ import {
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import useLocales from 'src/hooks/useLocales';
 import Iconify from 'src/components/Iconify';
+import { formatSlug } from 'src/utils/slugHelper';
 
 const FAQ_SECTIONS = [
     {
@@ -42,13 +43,13 @@ export default function FaqsByContext() {
 
     const title = type
         ? translate('faqs.title.type', {
-            resort: resort ? translate(`landingPRO.${resort}`) : "",
+            resort: resort ? formatSlug(resort) : "",
             discipline: discipline,
             type: type ? translate(`landingPRO.${type}`) : ""
         })
         : discipline
-            ? translate('faqs.title.discipline', { resort: resort ? translate(`landingPRO.${resort}`) : "", discipline })
-            : translate('faqs.title.resort', { resort: resort ? translate(`landingPRO.${resort}`) : "" });
+            ? translate('faqs.title.discipline', { resort: resort ? formatSlug(resort) : "", discipline })
+            : translate('faqs.title.resort', { resort: resort ? formatSlug(resort) : "" });
 
     const faqs = [
         {
@@ -92,7 +93,7 @@ export default function FaqsByContext() {
                     }}
                 >
                     {translate("landingPRO.faqs.title", {
-                        resort: resort ? translate(`landingPRO.${resort}`) : "",
+                        resort: resort ? formatSlug(resort) : "",
                         discipline: discipline ? translate(`landingPRO.${discipline}`) : translate(`landingPRO.ski&snowboard`),
                         type: type ? translate(`landingPRO.${type}`) : ""
                     })}
@@ -127,7 +128,7 @@ export default function FaqsByContext() {
                             >
                                 <Typography variant="subtitle1">{translate(`landingPRO.faqs.${index + 1}.q`,
                                     {
-                                        resort: resort ? translate(`landingPRO.${resort}`) : "",
+                                        resort: resort ? formatSlug(resort) : "",
                                         discipline: discipline ? translate(`landingPRO.${discipline}`) : translate(`landingPRO.ski&snowboard`),
                                         type: type ? translate(`landingPRO.${type}`) : ""
                                     }
@@ -137,7 +138,7 @@ export default function FaqsByContext() {
                                 <Typography variant="body2" sx={{ color: 'text.secondary' }}>
                                     {translate(`landingPRO.faqs.${index + 1}.a`,
                                         {
-                                            resort: resort ? translate(`landingPRO.${resort}`) : "",
+                                            resort: resort ? formatSlug(resort) : "",
                                             discipline: discipline ? translate(`landingPRO.${discipline}`) : translate(`landingPRO.ski&snowboard`),
                                             type: type ? translate(`landingPRO.${type}`) : ""
                                         }

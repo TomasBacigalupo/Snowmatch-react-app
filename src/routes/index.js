@@ -52,7 +52,7 @@ const Loadable = (Component) => (props) => {
 };
 
 export default function Router() {
-  const isMobile = true;
+  const isMobile = false;
 
   return (
     <>
@@ -142,44 +142,8 @@ export default function Router() {
           element: <MainLayout />,
           children: [
             { path: 'legal/privacy', element: <PrivacyPolicy /> },
-            { path: 'instructor', element: <InstructorLanding /> },
-            { path: 'enterprise', element: <EnterpriseLanding /> }
-          ]
-        },
-        {
-          path: 'en',
-          element: <MainLayout />,
-          children: [
-            { path: 'instructor', element: <InstructorLanding /> },
-            { path: 'enterprise', element: <EnterpriseLanding /> },
-            { path: 'travel-agency', element: <TravelAgencyLanding /> },
-          ]
-        },
-        {
-          path: 'es',
-          element: <MainLayout />,
-          children: [
-            { path: 'instructor', element: <InstructorLanding /> },
-            { path: 'enterprise', element: <EnterpriseLanding /> },
-            { path: 'agencias', element: <TravelAgencyLanding /> },
-          ]
-        },
-        {
-          path: 'pt',
-          element: <MainLayout />,
-          children: [
-            { path: 'instructor', element: <InstructorLanding /> },
-            { path: 'enterprise', element: <EnterpriseLanding /> },
-            { path: 'agencias', element: <TravelAgencyLanding /> },
-          ]
-        },
-        {
-          path: 'fr',
-          element: <MainLayout />,
-          children: [
-            { path: 'instructor', element: <InstructorLanding /> },
-            { path: 'enterprise', element: <EnterpriseLanding /> },
-            { path: 'agencias', element: <TravelAgencyLanding /> },
+            { path: 'instructor', element: <Navigate to="/en/instructor" replace /> },
+            { path: 'enterprise', element: <Navigate to="en/enterprise" replace /> }
           ]
         },
         {
@@ -390,14 +354,6 @@ export default function Router() {
           ]
         },
         {
-          path: 'shops',
-          children: [
-            { path: 'trown', element: <RedirectToShop url={"https://www.trown.com.ar"} /> },
-            { path: 'salpa', element: <RedirectToShop url={"https://www.salpa.com.ar"} /> },
-            { path: 'dignos', element: <RedirectToShop url={"https://dignosofficial.com"} /> },
-          ]
-        },
-        {
           element: (<MainLayout />),
           children: [
             {
@@ -558,23 +514,31 @@ export default function Router() {
             { path: '*', element: <Navigate to="/404" replace /> },
           ],
         },
+        
         {
-          path: '/pt',
+          path: '/:lng',
           element: <MainLayout />,
           children: [
             {
-              element: isMobile ? <Navigate to="/match/videoCoach/upload" replace /> : <Navigate to="/pt/bariloche" replace />,
+              element: isMobile ? <Navigate to="/match/videoCoach/upload" replace /> : <SearchPage />,
               index: true
             },
-            { path: 'escola-de-esqui-e-snowboard', element: <SnowMatchLanding /> },
-            { path: 'heliski', element: <HeliSki /> },
+            { path: 'all-teachers', element: <AllTeachers /> },
             { path: 'escuela-de-esqui-y-snowboard', element: <SnowMatchLanding /> },
-            { path: ':resort/:discipline/:type', element: <SearchPage /> },
-            { path: ':resort/:discipline', element: <SearchPage /> },
-            { path: ':resort', element: <SearchPage /> },
+            { path: 'tips-esqui-snowboard/:tip', element: <SnowMatchLanding /> },
+            { path: 'heliski', element: <HeliSki /> },
+            { path: 'aspen-ski-camp', element: <AspenSkiCamp /> },
+            { path: 'vail-ski-camp', element: <VailSkiCamp /> },
+            { path: 'jackson-hole-ski-camp', element: <JacksonHoleSkiCamp /> },
             { path: 'about-us', element: <About /> },
             { path: 'contact-us', element: <Contact /> },
             { path: 'faqs', element: <Faqs /> },
+            { path: 'instructor', element: <InstructorLanding /> },
+            { path: 'enterprise', element: <EnterpriseLanding /> },
+            { path: 'agencias', element: <TravelAgencyLanding /> },
+            { path: ':resort/:discipline/:type', element: <SearchPage /> },
+            { path: ':resort/:discipline', element: <SearchPage /> },
+            { path: ':resort', element: <SearchPage /> },
           ],
         },
         {

@@ -1,9 +1,246 @@
 {
-  "demo": {
-    "title": "France",
-    "introduction": "Le Lorem Ipsum est simplement du faux texte employé dans la composition et la mise en page avant impression. Le Lorem Ipsum est le faux texte standard de l'imprimerie depuis les années 1500, quand un imprimeur anonyme assembla ensemble des morceaux de texte pour réaliser un livre spécimen de polices de texte. Il n'a pas fait que survivre cinq siècles, mais s'est aussi adapté à la bureautique informatique, sans que son contenu n'en soit modifié. Il a été popularisé dans les années 1960 grâce à la vente de feuilles Letraset contenant des passages du Lorem Ipsum, et, plus récemment, par son inclusion dans des applications de mise en page de texte, comme Aldus PageMaker."
-  },
-  "instructorLanding": {
+    "skiProLanding": {
+        "title": "Êtes-vous instructeur ?",
+        "subtitle1": "Rejoignez notre communauté d'instructeurs indépendants hautement qualifiés. Inscrivez-vous gratuitement dès aujourd'hui !",
+        "subtitle2": "Notre équipe de la communauté d'instructeurs vous accompagnera à chaque étape.",
+        "ctaButton": "En savoir plus",
+        "feature1": "Choisissez **quand** et **où** vous travaillez",
+        "feature2": "Communauté de plus de 1 000 instructeurs",
+        "feature3": "Outil d'**analyse vidéo IA**"
+    },
+    "demo": {
+        "title": "France",
+        "introduction": "Le Lorem Ipsum est simplement du faux texte employé dans la composition et la mise en page avant impression. Le Lorem Ipsum est le faux texte standard de l'imprimerie depuis les années 1500, quand un imprimeur anonyme assembla ensemble des morceaux de texte pour réaliser un livre spécimen de polices de texte. Il n'a pas fait que survivre cinq siècles, mais s'est aussi adapté à la bureautique informatique, sans que son contenu n'en soit modifié. Il a été popularisé dans les années 1960 grâce à la vente de feuilles Letraset contenant des passages du Lorem Ipsum, et, plus récemment, par son inclusion dans des applications de mise en page de texte, comme Aldus PageMaker."
+    },
+    "landingPRO": {
+        "whistler-blackcomb": "Whistler Blackcomb",
+        "courchevel": "Courchevel",
+        "zermatt": "Zermatt",
+        "aspen-snowmass": "Aspen Snowmass",
+        "val-disere": "Val d’Isère",
+        "st-anton-am-arlberg": "St. Anton am Arlberg",
+        "verbier": "Verbier",
+        "jackson-hole": "Jackson Hole",
+        "chamonix-mont-blanc": "Chamonix Mont-Blanc",
+        "banff-sunshine": "Banff Sunshine",
+        "vail": "Vail",
+        "park-city": "Park City",
+        "telluride": "Telluride",
+        "portillo": "Portillo",
+        "niseko-united": "Niseko United",
+        "gstaad": "Gstaad",
+        "beaver-creek": "Beaver Creek",
+        "st-moritz": "St. Moritz",
+        "big-sky-resort": "Big Sky Resort",
+        "cortina-d-ampezzo": "Cortina d'Ampezzo",
+        "deer-valley-resort": "Deer Valley Resort",
+        "kitzbuhel": "Kitzbühel",
+        "lech-zurs": "Lech Zürs",
+        "heavenly-mountain-resort": "Heavenly Mountain Resort",
+        "courmayeur": "Courmayeur",
+        "les-trois-vallees": "Les Trois Vallées",
+        "engelberg": "Engelberg",
+        "laax": "Laax",
+        "val-thorens": "Val Thorens",
+        "bukovel": "Bukovel",
+        "dizin": "Dizin",
+        "amirsoy": "Amirsoy",
+        "tiffindell": "Tiffindell",
+        "las-lenas": "Las Leñas",
+        "valle-nevado": "Valle Nevado",
+        "cerro-catedral": "Cerro Catedral",
+        "portes-du-soleil": "Portes du Soleil",
+        "la-plagne": "La Plagne",
+        "meribel": "Méribel",
+        "les-menuires": "Les Menuires",
+        "saas-fee": "Saas-Fee",
+        "andermatt": "Andermatt",
+        "grindelwald": "Grindelwald",
+        "solden": "Sölden",
+        "mayrhofen": "Mayrhofen",
+        "hochgurgl": "Hochgurgl",
+        "kitzsteinhorn": "Kitzsteinhorn",
+        "zauchensee": "Zauchensee",
+        "schladming": "Schladming",
+        "saalbach-hinterglemm": "Saalbach-Hinterglemm",
+        "alpe-d-huez": "Alpe d'Huez",
+        "les-arcs": "Les Arcs",
+        "tignes": "Tignes",
+        "livigno": "Livigno",
+        "bormio": "Bormio",
+        "madonna-di-campiglio": "Madonna di Campiglio",
+        "cervinia": "Cervinia",
+        "sestriere": "Sestriere",
+        "la-thuile": "La Thuile",
+        "courchevel-1850": "Courchevel 1850",
+        "megeve": "Megève",
+        "avoriaz": "Avoriaz",
+        "morzine": "Morzine",
+        "avoriaz-portes-du-soleil": "Avoriaz (Portes du Soleil)",
+        "laax-falera": "Laax Falera",
+        "sun-peaks-resort": "Sun Peaks Resort",
+        "big-white": "Big White",
+        "revelstoke-mountain-resort": "Revelstoke Mountain Resort",
+        "fernie-alpine-resort": "Fernie Alpine Resort",
+        "kicking-horse-resort": "Kicking Horse Resort",
+        "lake-louise": "Lake Louise",
+        "banff": "Banff",
+        "blue-mountain": "Blue Mountain",
+        "mont-tremblant": "Mont Tremblant",
+        "mont-sainte-anne": "Mont Sainte-Anne",
+        "mont-orignal": "Mont-Orignal",
+        "le-massif": "Le Massif",
+        "camp-fortune": "Camp Fortune",
+        "mount-washington-bc": "Mount Washington (BC)",
+        "apex-mountain-resort": "Apex Mountain Resort",
+        "mt-buller": "Mt Buller",
+        "perisher": "Perisher",
+        "thredbo": "Thredbo",
+        "falls-creek": "Falls Creek",
+        "mount-hotham": "Mount Hotham",
+        "mt-bachelor": "Mt Bachelor",
+        "steamboat-springs": "Steamboat Springs",
+        "snowbird": "Snowbird",
+        "alta-utah": "Alta (Utah)",
+        "squaw-valley-alpine-meadows": "Squaw Valley Alpine Meadows",
+        "mammoth-mountain": "Mammoth Mountain",
+        "heavenly": "Heavenly",
+        "northstar-california": "Northstar California",
+        "copper-mountain": "Copper Mountain",
+        "breckenridge": "Breckenridge",
+        "keystone-resort": "Keystone Resort",
+        "sun-valley": "Sun Valley",
+        "crystal-mountain-wa": "Crystal Mountain (WA)",
+        "whiteface-mountain": "Whiteface Mountain",
+        "killington": "Killington",
+        "sugarloaf": "Sugarloaf",
+        "sunday-river": "Sunday River",
+        "saddleback-me": "Saddleback (ME)",
+        "jay-peak": "Jay Peak",
+        "okemo": "Okemo",
+        "stowe-mountain-resort": "Stowe Mountain Resort",
+        "baqueira-beret": "Baqueira-Beret",
+        "formigal": "Formigal",
+        "sierra-nevada-spain": "Sierra Nevada (Espagne)",
+        "aramon-cerler": "Aramón Cerler",
+        "la-molina": "La Molina",
+        "boi-taull": "Boí Taüll",
+        "masella": "Masella",
+        "sierra-de-bejar-la-covatilla": "Sierra de Béjar (La Covatilla)",
+        "bansko": "Bansko",
+        "borovets": "Borovets",
+        "pamporovo": "Pamporovo",
+        "kopaonik": "Kopaonik",
+        "jasna-chopok": "Jasná (Chopok)",
+        "rogla": "Rogla",
+        "maribor-pohorje": "Maribor Pohorje",
+        "kranjska-gora": "Kranjska Gora",
+        "vogel-slovenia": "Vogel (Slovénie)",
+        "zakopane-poland": "Zakopane (Pologne)",
+        "krynica-zdroj-poland": "Krynica-Zdrój (Pologne)",
+        "poiana-brasov-romania": "Poiana Braşov (Roumanie)",
+        "baqueira": "Baqueira",
+        "krvavec-slovenia": "Krvavec (Slovénie)",
+        "shymbulak": "Shymbulak",
+        "alyeska-alaska": "Alyeska (Alaska)",
+        "mount-ruapehu-whakapapa": "Mount Ruapehu (Whakapapa)",
+        "coronet-peak": "Coronet Peak",
+        "cardrona": "Cardrona",
+        "treble-cone": "Treble Cone",
+        "remarkables-nz": "Remarkables (NZ)",
+        "tholon-fictional-placeholder": "Tholon (fictif)",
+        "gudauri-georgia": "Gudauri (Géorgie)",
+        "bakuriani-georgia": "Bakuriani (Géorgie)",
+        "hachimantai-japan": "Hachimantai (Japon)",
+        "hakuba-valley": "Hakuba Valley",
+        "furano": "Furano",
+        "tomamu": "Tomamu",
+        "zao-onsen": "Zao Onsen",
+        "shiga-kogen": "Shiga Kogen",
+        "rusutsu": "Rusutsu",
+        "kiroro": "Kiroro",
+        "myoko-kogen": "Myoko Kogen",
+        "nozawa-onsen": "Nozawa Onsen",
+        "kurodake": "Kurodake",
+        "vail-mountain-co": "Vail Mountain (CO)",
+        "powder-mountain-ut": "Powder Mountain (UT)",
+        "mt-bachelor-or": "Mt. Bachelor (OR)",
+        "snowshoe-mountain-wv": "Snowshoe Mountain (WV)",
+        "canaan-valley-wv": "Canaan Valley (WV)",
+        "crystal-mountain-mi": "Crystal Mountain (MI)",
+        "okemo-mountain-resort-vt": "Okemo Mountain Resort (VT)",
+        "loon-mountain-nh": "Loon Mountain (NH)",
+        "bretton-woods-nh": "Bretton Woods (NH)",
+        "hidden-valley-pa": "Hidden Valley (PA)",
+        "blue-mountain-on": "Blue Mountain (ON)",
+        "grouse-mountain-bc": "Grouse Mountain (BC)",
+        "cypress-mountain-bc": "Cypress Mountain (BC)",
+        "mount-seymour-bc": "Mount Seymour (BC)",
+        "sun-valley-id": "Sun Valley (ID)",
+        "mount-buller-au": "Mount Buller (AU)",
+        "hotham-au": "Hotham (AU)",
+        "falls-creek-au": "Falls Creek (AU)",
+        "cardrona-nz": "Cardrona (NZ)",
+        "treble-cone-nz": "Treble Cone (NZ)",
+        "perisher-au": "Perisher (AU)",
+        "les-deux-alpes": "Les Deux Alpes",
+        "alpe-cermis": "Alpe Cermis",
+        "sestriere-vialattea": "Sestriere-Vialattea",
+        "dolomiti-superski": "Dolomiti Superski",
+        "val-gardena": "Val Gardena",
+        "madonna-di-campiglio-it": "Madonna di Campiglio (IT)",
+        "cortina-d-ampezzo-it": "Cortina D'Ampezzo (IT)",
+        "canmore-ab": "Canmore (AB)",
+        "castle-mountain-ab": "Castle Mountain (AB)",
+        "marmot-basin-ab": "Marmot Basin (AB)",
+        "nakiska-ab": "Nakiska (AB)",
+        "big-sky-mt": "Big Sky (MT)",
+        "bridger-bowl-mt": "Bridger Bowl (MT)",
+        "red-lodge-mountain-mt": "Red Lodge Mountain (MT)",
+        "schweitzer-id": "Schweitzer (ID)",
+        "bogus-basin-id": "Bogus Basin (ID)",
+        "mount-hood-meadows-or": "Mount Hood Meadows (OR)",
+        "timberline-lodge-or": "Timberline Lodge (OR)",
+        "mount-bachelor-or": "Mount Bachelor (OR)",
+        "mt-hutt-nz": "Mt. Hutt (NZ)",
+        "skiportillo-chile": "SkiPortillo (Chili)",
+        "valle-nevado-chile": "Valle Nevado (Chili)",
+        "la-parva-chile": "La Parva (Chili)",
+        "nevados-de-chillan-chile": "Nevados de Chillán (Chili)",
+        "termas-de-chillan": "Termas de Chillán",
+        "portillo-chile": "Portillo (Chili)",
+        "cerro-chapelco-argentina": "Cerro Chapelco (Argentine)",
+        "cerro-castor-argentina": "Cerro Castor (Argentine)",
+        "las-lenas-argentina": "Las Leñas (Argentine)",
+        "title": "Cours de {{discipline}} {{type}} à {{resort}} - Réservation en ligne | SnowMatch",
+        "description": "Moniteurs certifiés, cours particuliers et collectifs à {{resort}}. Réservez en ligne et évitez les files d’attente !",
+        "keywords": "cours de {{discipline}} {{type}} à {{resort}}, moniteurs certifiés, cours particuliers, cours collectifs, réservation en ligne",
+        "heroTitle0": "Êtes-vous moniteur ?",
+        "heroTitle1": "Faites passer votre métier",
+        "heroTitle2": "au niveau supérieur avec",
+        "desc1": "Gérez tous vos clients sur une plateforme centralisée.",
+        "desc2": "Trouvez de nouveaux clients.",
+        "desc3": "Gérez vos revenus.",
+        "getStarted": "Commencer",
+        "useCases": "Comment SnowMatch vous aide-t-il ?",
+        "clientData": "Données clients",
+        "clientDataDesc": "Accédez de manière sécurisée aux données importantes de vos clients.",
+        "calendarOrg": "Organisation du calendrier",
+        "calendarOrgDesc": "Définissez vos disponibilités et gérez vos cours.",
+        "match": "Match PRO",
+        "matchDesc": "Développez votre réseau de clients, soyez engagé quand vous êtes disponible.",
+        "independent": "Pros indépendants",
+        "school": "Pros écoles",
+        "getStartedToday": "Commencez dès aujourd’hui avec SnowMatch !",
+        "find": "Cours de {{discipline}} {{type}} à {{resort}} – trouvez celui qui vous convient",
+        "findSubtitle": "Instructeurs {{type}} experts en {{discipline}} – disponibles à {{resort}}",
+        "start_date": "Date de début",
+        "end_date": "Date de fin",
+        "search": "Rechercher",
+        "slogan": "Évitez les files d’attente et profitez de la montagne",
+        "principiantes": "Débutants"
+    },
+    "instructorLanding": {
         "title": "Devenez instructeur indépendant | Snowmatch",
         "description": "Rejoignez la communauté d'instructeurs indépendants. Définissez vos prix, disponibilité et connectez-vous avec de nouveaux clients.",
         "ogDescription": "Définissez vos prix et disponibilité. Connectez-vous avec de nouveaux clients depuis votre téléphone.",
@@ -337,91 +574,133 @@
                     "description": "Je recherche la performance et les défis techniques"
                 }
             },
-      "tip": {
-        "title": "💡 Conseil :",
-        "description": "Il vaut mieux être honnête sur votre niveau. Cela nous permet de vous recommander des instructeurs qui vous aideront vraiment à progresser en toute sécurité."
-      }
+            "tip": {
+                "title": "💡 Conseil :",
+                "description": "Il vaut mieux être honnête sur votre niveau. Cela nous permet de vous recommander des instructeurs qui vous aideront vraiment à progresser en toute sécurité."
+            }
+        }
+    },
+    "studentTypeStep": {
+        "title": "Quel sport voulez-vous pratiquer ?",
+        "subtitle": "Vous pouvez sélectionner les deux sports si vous voulez apprendre le ski et le snowboard",
+        "selected": "Sélectionnés :",
+        "sports": {
+            "SKI": {
+                "label": "Ski",
+                "description": "J'apprends à skier sur les pistes et en montagne"
+            },
+            "SNOWBOARD": {
+                "label": "Snowboard",
+                "description": "J'apprends à faire du snowboard"
+            }
+        },
+        "tip": {
+            "title": "💡 Conseil :",
+            "description": "Si vous n'êtes pas sûr, vous pouvez sélectionner les deux sports et décider plus tard lequel vous préférez."
+        }
+    },
+    "studentResortsStep": {
+        "title": "Où skiez-vous habituellement ?",
+        "subtitle": "Sélectionnez les stations où vous skiez régulièrement. Cela nous aide à vous connecter avec des instructeurs locaux",
+        "tip": {
+            "title": "Conseil :",
+            "description": "Vous pouvez sélectionner plusieurs stations. Cela nous aide à vous recommander des instructeurs dans vos destinations préférées."
+        },
+        "loading": "Chargement des stations...",
+        "error": "Erreur lors du chargement des stations. Veuillez réessayer.",
+        "searchLabel": "Rechercher des stations",
+        "searchPlaceholder": "Tapez pour rechercher des stations...",
+        "helperText": "Vous pouvez sélectionner plusieurs stations",
+        "popularResorts": "Stations populaires : Cerro Catedral, Chapelco, Valle Nevado, Aspen, Vail, Whistler, Chamonix"
+    },
+    "studentLearningStep": {
+        "title": "Comment voulez-vous apprendre ?",
+        "subtitle": "Sélectionnez votre méthode d'apprentissage préférée. Vous pouvez changer cela plus tard selon vos besoins",
+        "methods": {
+            "IN_PERSON_WITH_TEACHER": {
+                "label": "Avec instructeur en personne",
+                "description": "Cours en personne avec des instructeurs certifiés"
+            },
+            "VIDEO_FEEDBACK": {
+                "label": "En téléchargeant des vidéos et en recevant des commentaires",
+                "description": "Téléchargez vos vidéos et recevez une analyse professionnelle"
+            },
+            "AI_ACADEMY": {
+                "label": "Avec IA et défis de la Snowmatch Academy",
+                "description": "Apprenez avec l'intelligence artificielle et des défis personnalisés"
+            },
+            "MIXED_APPROACH": {
+                "label": "Approche mixte",
+                "description": "Combinez différentes méthodes selon l'occasion"
+            }
+        },
+        "successMessage": "Excellent ! Vous avez terminé la configuration de votre profil. Maintenant vous pouvez trouver des instructeurs parfaits pour votre niveau et vos objectifs, et accéder à du contenu personnalisé pour améliorer votre technique."
+    },
+    "guestDetails": {
+        "title": "Configurer le Profil"
+    },
+    "chat": {
+        "title": "Chat",
+        "conversations": "Conversations",
+        "newConversation": "Nouvelle conversation",
+        "error": {
+            "title": "Erreur lors du chargement des conversations",
+            "message": "Vous n'avez pas encore de demandes. Abonnez-vous à Premium et augmentez votre visibilité."
+        },
+        "empty": {
+            "title": "Vous n'avez pas encore de demandes",
+            "message": "Abonnez-vous à Premium et augmentez votre visibilité pour recevoir plus de demandes d'étudiants."
+        },
+        "premium": {
+            "subscribe": "S'abonner à Premium",
+            "message": "🚀 *Demande Premium - Snowmatch*\n\nBonjour Snowmatch, je suis intéressé par l'abonnement Premium pour augmenter ma visibilité et recevoir plus de demandes.\n\n👤 *Informations :*\n• Utilisateur : {{userName}}\n• Email : {{userEmail}}\n• Rôle : {{userRole}}\n\n💬 *Raison :*\nJe veux augmenter ma visibilité pour recevoir plus de demandes d'étudiants.\n\n📅 *Date :* {{date}}\n🌐 *Page :* Chat - Aucune conversation"
+        },
+        "noConversationsTeacher": {
+            "title": "Vous n'avez aucune conversation ni réservation",
+            "subtitle": "Abonnez-vous à Premium et augmentez votre visibilité",
+            "button": "S'abonner à Premium"
+        }
+    },
+    "studentTestimonials": {
+        "title": "Ce que disent nos étudiants",
+        "subtitle": "Découvrez les expériences de ceux qui ont déjà appris avec nos instructeurs certifiés",
+        "testimonials": {
+            "testimonial1": {
+                "name": "Camila Mingrone",
+                "resort": "Cerro Catedral",
+                "discipline": "Ski",
+                "text": "Excellente expérience avec mon instructeur. J'ai appris plus en une leçon que tout l'hiver précédent. Très professionnel et patient."
+            },
+            "testimonial2": {
+                "name": "Mariana Estrada Catalan",
+                "resort": "Chapelco",
+                "discipline": "Snowboard",
+                "text": "La meilleure décision que j'ai prise était de réserver mes cours avec SnowMatch. L'instructeur s'est parfaitement adapté à mon niveau et m'a aidé à améliorer ma technique."
+            },
+            "testimonial3": {
+                "name": "Guido Nicolas Pescio",
+                "resort": "La Hoya",
+                "discipline": "Ski",
+                "text": "Expérience incroyable. Mon instructeur était très professionnel et m'a aidé à surmonter mes peurs. Je reprendrai définitivement des cours."
+            }
+        }
+    },
+    "filter": {
+        "gender": "Genre",
+        "resort": "Station",
+        "category": "Catégorie",
+        "discipline": "Discipline",
+        "freeStyle": "FreeStyle",
+        "alpine": "Alpin",
+        "backCountry": "Randonnée",
+        "languages": "Langues",
+        "range": "Dates",
+        "rating": "Note",
+        "filters": "Filtres",
+        "clearAll": "Effacer tout",
+        "checkIn": "ARRIVÉE",
+        "checkOut": "DÉPART",
+        "when": "Quand?",
+        "instructorDescription": "• Instructeurs certifiés · {{classType}} · Réservation en ligne en 1 minute"
     }
-  },
-  "studentTypeStep": {
-    "title": "Quel sport voulez-vous pratiquer ?",
-    "subtitle": "Vous pouvez sélectionner les deux sports si vous voulez apprendre le ski et le snowboard",
-    "selected": "Sélectionnés :",
-    "sports": {
-      "SKI": {
-        "label": "Ski",
-        "description": "J'apprends à skier sur les pistes et en montagne"
-      },
-      "SNOWBOARD": {
-        "label": "Snowboard",
-        "description": "J'apprends à faire du snowboard"
-      }
-    },
-    "tip": {
-      "title": "💡 Conseil :",
-      "description": "Si vous n'êtes pas sûr, vous pouvez sélectionner les deux sports et décider plus tard lequel vous préférez."
-    }
-  },
-  "studentResortsStep": {
-    "title": "Où skiez-vous habituellement ?",
-    "subtitle": "Sélectionnez les stations où vous skiez régulièrement. Cela nous aide à vous connecter avec des instructeurs locaux",
-    "tip": {
-      "title": "Conseil :",
-      "description": "Vous pouvez sélectionner plusieurs stations. Cela nous aide à vous recommander des instructeurs dans vos destinations préférées."
-    },
-    "loading": "Chargement des stations...",
-    "error": "Erreur lors du chargement des stations. Veuillez réessayer.",
-    "searchLabel": "Rechercher des stations",
-    "searchPlaceholder": "Tapez pour rechercher des stations...",
-    "helperText": "Vous pouvez sélectionner plusieurs stations",
-    "popularResorts": "Stations populaires : Cerro Catedral, Chapelco, Valle Nevado, Aspen, Vail, Whistler, Chamonix"
-  },
-  "studentLearningStep": {
-    "title": "Comment voulez-vous apprendre ?",
-    "subtitle": "Sélectionnez votre méthode d'apprentissage préférée. Vous pouvez changer cela plus tard selon vos besoins",
-    "methods": {
-      "IN_PERSON_WITH_TEACHER": {
-        "label": "Avec instructeur en personne",
-        "description": "Cours en personne avec des instructeurs certifiés"
-      },
-      "VIDEO_FEEDBACK": {
-        "label": "En téléchargeant des vidéos et en recevant des commentaires",
-        "description": "Téléchargez vos vidéos et recevez une analyse professionnelle"
-      },
-      "AI_ACADEMY": {
-        "label": "Avec IA et défis de la Snowmatch Academy",
-        "description": "Apprenez avec l'intelligence artificielle et des défis personnalisés"
-      },
-      "MIXED_APPROACH": {
-        "label": "Approche mixte",
-        "description": "Combinez différentes méthodes selon l'occasion"
-      }
-    },
-    "successMessage": "Excellent ! Vous avez terminé la configuration de votre profil. Maintenant vous pouvez trouver des instructeurs parfaits pour votre niveau et vos objectifs, et accéder à du contenu personnalisé pour améliorer votre technique."
-  },
-  "guestDetails": {
-    "title": "Configurer le Profil"
-  },
-  "chat": {
-    "title": "Chat",
-    "conversations": "Conversations",
-    "newConversation": "Nouvelle conversation",
-    "error": {
-      "title": "Erreur lors du chargement des conversations",
-      "message": "Vous n'avez pas encore de demandes. Abonnez-vous à Premium et augmentez votre visibilité."
-    },
-    "empty": {
-      "title": "Vous n'avez pas encore de demandes",
-      "message": "Abonnez-vous à Premium et augmentez votre visibilité pour recevoir plus de demandes d'étudiants."
-    },
-    "premium": {
-      "subscribe": "S'abonner à Premium",
-      "message": "🚀 *Demande Premium - Snowmatch*\n\nBonjour Snowmatch, je suis intéressé par l'abonnement Premium pour augmenter ma visibilité et recevoir plus de demandes.\n\n👤 *Informations :*\n• Utilisateur : {{userName}}\n• Email : {{userEmail}}\n• Rôle : {{userRole}}\n\n💬 *Raison :*\nJe veux augmenter ma visibilité pour recevoir plus de demandes d'étudiants.\n\n📅 *Date :* {{date}}\n🌐 *Page :* Chat - Aucune conversation"
-    },
-    "noConversationsTeacher": {
-      "title": "Vous n'avez aucune conversation ni réservation",
-      "subtitle": "Abonnez-vous à Premium et augmentez votre visibilité",
-      "button": "S'abonner à Premium"
-    }
-  }
 }

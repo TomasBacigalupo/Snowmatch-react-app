@@ -24,6 +24,7 @@ import { getFreeTeachers } from 'src/redux/slices/teachers';
 import ShopTeacherCard from '../@dashboard/e-commerce/shop/ShopTeacherCard';
 import { es } from 'date-fns/locale';
 import RecommendedTeachers from './RecommendedTeachers';
+import { formatSlug } from 'src/utils/slugHelper';
 
 
 // ----------------------------------------------------------------------
@@ -333,12 +334,12 @@ export default function ResortDisciplineHero() {
                 </CardContainer>
             </RootStyle>
 
-            <TopTeachersSection>
+            {teachers && teachers.length > 0 && <TopTeachersSection>
                 <Box sx={{ mb: 4 }}>
                     <Typography variant='h3' sx={{ mb: 1 }}>{translate(`landingPRO.topTeachers`, {
                         discipline: disciplineSlug ? translate(`landingPRO.${disciplineSlug}`) : translate(`landingPRO.esqui-y-snowboard`),
                         type: type ? translate(`landingPRO.${type}Plural`) : "",
-                        resort: resort ? translate(`landingPRO.${resortSlug || 'bariloche'}`) : "",
+                        resort: resort ? formatSlug(resortSlug) : "",
                     })}</Typography>
                     <Typography
                         variant='body1'
@@ -361,7 +362,7 @@ export default function ResortDisciplineHero() {
                         ))}
                     </ScrollContainer>
                 </Box>
-            </TopTeachersSection>
+            </TopTeachersSection>}
         </MotionContainer>
     );
 }

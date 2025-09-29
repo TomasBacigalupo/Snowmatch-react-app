@@ -1,4 +1,13 @@
 {
+  "skiProLanding": {
+    "title": "Are you an instructor?",
+    "subtitle1": "Join our community of highly qualified, independent instructors. Sign up for free today!",
+    "subtitle2": "Our Instructor Community Team will support you every step of the way.",
+    "ctaButton": "Learn more",
+    "feature1": "Choose **when** and **where** you work",
+    "feature2": "1,000+ Strong instructor community",
+    "feature3": "**AI video analysis** tool"
+  },
   "agency": {
     "hero": {
       "title": "Offer ski lessons and equipment with Snowmatch",
@@ -286,6 +295,11 @@
     }
   },
   "landingPRO": {
+    "yourPathStarts": "Your journey to learn to ski in {{resort}} starts with SnowMatch",
+    "yourPathDerctiption": "Connect with certified instructors in {{resort}}, book your ski lessons online and improve your technique with Snow, our artificial intelligence assistant.",
+    "downloadApp": "Scan to download",
+    "find": "{{discipline}} {{type}} lessons in {{resort}} – find the perfect one for you",
+    "findSubtitle": "Expert {{type}} instructors in {{discipline}} – available in {{resort}}",
     "title": "Lessons of {{discipline}} {{type}} in {{resort}} - Online Booking | SnowMatch",
     "description": "Certified instructors, private and group classes in {{resort}}. Book online and avoid queues!",
     "keywords": "lessons of {{discipline}} {{type}} in {{resort}}, certified instructors, private classes, group classes, online booking",
@@ -306,7 +320,6 @@
     "independent": "Independent PROs",
     "school": "School PROs",
     "getStartedToday": "Get started with SnowMatch!",
-    "find": "Match with the PRO you need...",
     "start_date": "Start date",
     "end_date": "End date",
     "search": "Search",
@@ -465,7 +478,11 @@
     "range": "Range",
     "rating": "Rating",
     "filters": "Filters",
-    "clearAll": "Clear All"
+    "clearAll": "Clear All",
+    "checkIn": "CHECK-IN",
+    "checkOut": "CHECK-OUT",
+    "when": "When?",
+    "instructorDescription": "• Certified instructors · {{classType}} · Book online in 1 minute"
   },
   "accountPopover": {
     "Profile": "My Profile",
@@ -1621,15 +1638,15 @@
       "title": "You don't have any inquiries yet",
       "message": "Subscribe to Premium and increase your visibility to receive more inquiries from students."
     },
-        "premium": {
-            "subscribe": "Subscribe to Premium",
-            "message": "🚀 *Premium Inquiry - Snowmatch*\n\nHello Snowmatch, I'm interested in subscribing to Premium to increase my visibility and receive more inquiries.\n\n👤 *Information:*\n• User: {{userName}}\n• Email: {{userEmail}}\n• Role: {{userRole}}\n\n💬 *Reason:*\nI want to increase my visibility to receive more inquiries from students.\n\n📅 *Date:* {{date}}\n🌐 *Page:* Chat - No conversations"
-        },
-        "noConversationsTeacher": {
-            "title": "You don't have any conversations or bookings",
-            "subtitle": "Subscribe to Premium and increase your visibility",
-            "button": "Subscribe to Premium"
-        }
+    "premium": {
+      "subscribe": "Subscribe to Premium",
+      "message": "🚀 *Premium Inquiry - Snowmatch*\n\nHello Snowmatch, I'm interested in subscribing to Premium to increase my visibility and receive more inquiries.\n\n👤 *Information:*\n• User: {{userName}}\n• Email: {{userEmail}}\n• Role: {{userRole}}\n\n💬 *Reason:*\nI want to increase my visibility to receive more inquiries from students.\n\n📅 *Date:* {{date}}\n🌐 *Page:* Chat - No conversations"
+    },
+    "noConversationsTeacher": {
+      "title": "You don't have any conversations or bookings",
+      "subtitle": "Subscribe to Premium and increase your visibility",
+      "button": "Subscribe to Premium"
+    }
   },
   "lessons": {
     "myClasses": "My Classes",
@@ -1803,5 +1820,29 @@
   },
   "guestDetails": {
     "title": "Configure Profile"
+  },
+  "studentTestimonials": {
+    "title": "What our students say",
+    "subtitle": "Discover the experiences of those who have already learned with our certified instructors",
+    "testimonials": {
+      "testimonial1": {
+        "name": "Camila Mingrone",
+        "resort": "Cerro Catedral",
+        "discipline": "Ski",
+        "text": "Excellent experience with my instructor. I learned more in one class than in the entire previous winter. Very professional and patient."
+      },
+      "testimonial2": {
+        "name": "Mariana Estrada Catalan",
+        "resort": "Chapelco",
+        "discipline": "Snowboard",
+        "text": "The best decision I made was to book my classes with SnowMatch. The instructor adapted perfectly to my level and helped me improve my technique."
+      },
+      "testimonial3": {
+        "name": "Guido Nicolas Pescio",
+        "resort": "La Hoya",
+        "discipline": "Ski",
+        "text": "Incredible experience. My instructor was very professional and helped me overcome my fears. I will definitely take classes again."
+      }
+    }
   }
 }

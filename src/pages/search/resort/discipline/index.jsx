@@ -10,6 +10,7 @@ import { useParams } from 'react-router';
 import useLocales from 'src/hooks/useLocales';
 import LoadingScreen from 'src/components/LoadingScreen';
 import { Hidden } from '@mui/material';
+import { formatSlug } from 'src/utils/slugHelper';
 
 // Lazy loaded components
 const HomeStatsHero = lazy(() => import('src/sections/home/HomeStatsHero'));
@@ -19,6 +20,7 @@ const FaqsByContext = lazy(() => import('src/sections/home/FAQSByContext'));
 const DownloadAppSection = lazy(() => import('src/sections/home/DounloawdAppSection'));
 const ResortsAndLessonsSection = lazy(() => import('src/sections/home/ResortsAndLessonsSection'));
 const StudentTestimonials = lazy(() => import('src/sections/home/StudentTestimonials'));
+const SkiProLandingBanner = lazy(() => import('src/sections/home/SkiProLandingBanner'));
 
 // ----------------------------------------------------------------------
 
@@ -119,10 +121,14 @@ export default function SearchPage() {
   useEffect(() => {
     if (window.location.pathname.includes('/pt')) {
       onChangeLang('pt');
+    } else if (window.location.pathname.includes('/en')) {
+      onChangeLang('en');
+    } else if (window.location.pathname.includes('/fr')) {
+      onChangeLang('fr');
     } else {
       onChangeLang('es');
     }
-  }, []);
+  }, [window]);
 
   useEffect(() => {
     const resort = RESORT_OPTIONS.find(r => r.slugs.includes(resortSlug))
@@ -263,7 +269,7 @@ export default function SearchPage() {
   }
 
   return (
-    <Page title={`Clases de ${discipline ? translate(`landingPRO.${discipline}`) : 'ski y snowboard'} en ${translate(`landingPRO.${resortSlug}`)} - SnowMatch`}>
+    <Page title={`${translate('landingPRO.title', { discipline: discipline ? translate(`landingPRO.${discipline}`) : 'ski y snowboard', type: type ? translate(`landingPRO.${type}`) : '', resort: translate(`landingPRO.${resortSlug}`) })}}- SnowMatch`}>
       <Helmet>
         <title>{translate('landingPRO.title', { discipline: discipline ? translate(`landingPRO.${discipline}`) : 'ski y snowboard', type: type ? translate(`landingPRO.${type}`) : '', resort: translate(`landingPRO.${resortSlug}`) })}</title>
         <meta name="keywords" content={translate('landingPRO.keywords', { discipline: discipline ? translate(`landingPRO.${discipline}`) : 'ski y snowboard', type: type ? translate(`landingPRO.${type}`) : '', resort: translate(`landingPRO.${resortSlug}`) })} />
@@ -271,7 +277,7 @@ export default function SearchPage() {
         {/* Open Graph / Facebook */}
         <meta property="og:type" content="website" />
         <meta name="apple-itunes-app" content="app-id=6741247513" />
-        <meta property="og:title" content={`Clases de ${discipline ? translate(`landingPRO.${discipline}`) : 'ski y snowboard'} en ${resort} - Reserva Online | SnowMatch`} />
+        <meta property="og:title" content={`${translate('landingPRO.title', { discipline: discipline ? translate(`landingPRO.${discipline}`) : 'ski y snowboard', type: type ? translate(`landingPRO.${type}`) : '', resort: translate(`landingPRO.${resortSlug}`) })}} - SnowMatch`} />
         <meta property="og:description" content={translate('landingPRO.description', { discipline: discipline ? translate(`landingPRO.${discipline}`) : 'ski y snowboard', type: type ? translate(`landingPRO.${type}`) : '', resort: translate(`landingPRO.${resortSlug}`) })} />
         <meta property="og:image" content="https://snowmatchimages.s3.amazonaws.com/profile/ClaseNiñoss.jpeg" />
         <meta property="og:url" content={`https://snowmatch.pro/${currentLang.value === 'es' ? '' : currentLang.value + '/'}${resortSlug}${discipline ? `/${discipline}` : ''}${type ? '/' + type : ''}`} />
@@ -280,8 +286,8 @@ export default function SearchPage() {
 
         {/* Twitter */}
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content={`Clases de ${discipline ? translate(`landingPRO.${discipline}`) : 'ski y snowboard'} en ${resort} - Reserva Online | SnowMatch`} />
-        <meta name="twitter:description" content={`Reserva clases de ${discipline ? translate(`landingPRO.${discipline}`) : 'ski y snowboard'} en ${resort}. Instructores certificados, clases privadas y grupales. ¡Reserva online y evita colas!`} />
+        <meta name="twitter:title" content={`${translate('landingPRO.title', { discipline: discipline ? translate(`landingPRO.${discipline}`) : 'ski y snowboard', type: type ? translate(`landingPRO.${type}`) : '', resort: translate(`landingPRO.${resortSlug}`) })}} - SnowMatch`} />
+        <meta name="twitter:description" content={`${translate('landingPRO.title', { discipline: discipline ? translate(`landingPRO.${discipline}`) : 'ski y snowboard', type: type ? translate(`landingPRO.${type}`) : '', resort: translate(`landingPRO.${resortSlug}`) })}}`} />
         <meta name="twitter:image" content="https://snowmatchimages.s3.amazonaws.com/profile/ClaseNiñoss.jpeg" />
 
         {/* Canonical URL */}
@@ -473,11 +479,16 @@ export default function SearchPage() {
             <HomeStatsHero />
           </Suspense>
           <Suspense fallback={<LoadingScreen />}>
-            <DownloadAppSection resort={resort} />
+            <DownloadAppSection resort={formatSlug(resortSlug)} />
           </Suspense>
           <Suspense fallback={<LoadingScreen />}>
             <StudentTestimonials />
           </Suspense>
+          
+          <Suspense fallback={<LoadingScreen />}>
+            <SkiProLandingBanner />
+          </Suspense>
+          
           <Suspense fallback={<LoadingScreen />}>
             <FaqsByContext discipline={discipline} type={type} />
           </Suspense>

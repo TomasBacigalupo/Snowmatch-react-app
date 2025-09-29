@@ -20,7 +20,16 @@ import { PATH_DASHBOARD } from 'src/routes/paths';
 import { formatSlug } from 'src/utils/slugHelper';
 
 // Create a flat list of all resorts for autocomplete
-const getAllResorts = () => {
+const getAllResorts = (apiResortOptions = null) => {
+    // If API resort options are provided, use them
+    if (apiResortOptions && apiResortOptions.length > 0) {
+        return apiResortOptions.map((resort) => ({
+            name: resort.name || resort.id,
+            category: resort.category || 'Argentina'
+        })).sort((a, b) => a.name.localeCompare(b.name));
+    }
+    
+    // Fallback to hardcoded options
     const allResorts = [];
     FILTER_RESORT_OPTIONS.forEach((country) => {
         country.resorts.forEach((resort) => {
@@ -52,7 +61,7 @@ const getClassType = (type) => {
     }
 }
 
-export default function HomeFilterTeachers({ resort, discipline, type, resortSlug, disciplineSlug }) {
+export default function HomeFilterTeachers({ resort, discipline, type, resortSlug, disciplineSlug, resortOptions, resortOptionsLoading, resortOptionsError }) {
 
     // const advancedMatching = { em: 'some@email.com' }; // optional, more info: https://developers.facebook.com/docs/facebook-pixel/advanced/advanced-matching
     const options = {
@@ -128,25 +137,24 @@ export default function HomeFilterTeachers({ resort, discipline, type, resortSlu
 
     useEffect(() => {
         if (resort) {
-            const resortOption = getAllResorts().find(r => r.name === resort);
+            const resortOption = getAllResorts(resortOptions).find(r => r.name === resort);
             setValue('resort', resortOption || { name: resort, category: 'Argentina' });
         }
         setValue('category', discipline ? discipline : ["Ski", "SnowBoard"])
-    }, [resort, discipline])
+    }, [resort, discipline, resortOptions])
 
     return (
         <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-            <Grid container spacing={2}>
+            <Grid container spacing={1}>
                 <Grid item xs={12} md={12} justifyContent='center'>
                     <Typography
-                        variant="h3"
+                        variant="h4"
                         component='h1'
                         sx={{
                             color: '#000000',
                             fontSize: { xs: '1.5rem', md: '2rem' },
-                            fontWeight: 600,
+                            fontWeight: 700,
                             lineHeight: 1.2,
-                            mb: 1
                         }}
                     >
                         {translate("landingPRO.find", {
@@ -166,7 +174,7 @@ export default function HomeFilterTeachers({ resort, discipline, type, resortSlu
                             fontSize: { xs: '1rem', md: '1.25rem' },
                             fontWeight: 400,
                             lineHeight: 1.4,
-                            mb: 3
+                            mb: 1
                         }}
                     >
                         {translate("landingPRO.findSubtitle", {
@@ -177,13 +185,13 @@ export default function HomeFilterTeachers({ resort, discipline, type, resortSlu
                     </Typography>
                 </Grid>
                 <Grid item xs={12} md={12}>
-                    <Grid container spacing={2} alignItems='center'>
+                    <Grid container spacing={1} alignItems='center'>
                         <Grid item xs={12}>
                             <RHFAutocomplete
                                 name="resort"
                                 label={translate("filter.resort")}
                                 placeholder="Buscar resort..."
-                                options={getAllResorts()}
+                                options={getAllResorts(resortOptions)}
                                 getOptionLabel={(option) => option.name}
                                 groupBy={(option) => option.category}
                                 renderOption={(props, option) => (
@@ -296,7 +304,7 @@ export default function HomeFilterTeachers({ resort, discipline, type, resortSlu
                             />
                         </Grid>
                         <Grid item xs={12}>
-                            <HoverButton fullWidth type="submit" variant="contained" size="large" startIcon={<Iconify icon={'eva:flash-fill'} width={20} height={20} />}>
+                            <HoverButton fullWidth type="submit" variant="contained" size="large" >
                                 {translate("landingPRO.search")}
                             </HoverButton>
                         </Grid>

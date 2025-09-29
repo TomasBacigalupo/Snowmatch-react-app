@@ -13,5 +13,12 @@ export function formatSlug(slug) {
       .map(word => word.charAt(0).toUpperCase() + word.slice(1)) // capitalizar
       .join(" ");
   }
+
+export function fromSlugToResortEnum(slug) {
+  if (!slug) return "";
+  
+  // Convert to uppercase and replace hyphens with underscores
+  return slug.toUpperCase().replace(/-/g, "_");
+}
   
   

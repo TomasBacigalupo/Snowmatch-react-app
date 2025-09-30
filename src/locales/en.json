@@ -1846,5 +1846,82 @@
         "text": "Incredible experience. My instructor was very professional and helped me overcome my fears. I will definitely take classes again."
       }
     }
+  },
+  "videoCoachLanding": {
+    "title": "VideoCoach: Corrections by IA and Pros",
+    "subtitle": "Upload your video and receive feedback in minutes.",
+    "cta": "Go to VideoCoach"
+  }
+  ,
+  "videoCoachPage": {
+    "seo": {
+      "title": "SnowMatch VideoCoach | Upload your video and get feedback in minutes",
+      "description": "Upload your skiing or snowboarding video and get feedback from Snow (our AI). Subscribe to Premium and get corrections from certified instructors in under 1 hour at any ski center.",
+      "keywords": "VideoCoach, ski video analysis, snowboard analysis, snow AI, ski feedback, certified instructors"
+    },
+    "hero": {
+      "title": "SnowMatch VideoCoach",
+      "subtitle": "Upload your video. Get feedback from our AI Snow. Subscribe to Premium and get corrections from certified instructors in under an hour.",
+      "ctaUpload": "Upload my video",
+      "ctaInstructor": "Are you an Instructor? Correct students",
+      "chips": {
+        "aiFeedback": "AI Feedback",
+        "proUnder1h": "Pro in < 1h",
+        "anyResort": "At any ski center"
+      }
+    },
+    "examples": {
+      "tag": "Real example",
+      "carving": "Carving • Intermediate-Advanced",
+      "bumps": "Bumps • Intermediate",
+      "braking": "Braking • Beginner"
+    },
+    "howItWorks": {
+      "title": "How it works",
+      "steps": [
+        {
+          "title": "1. Upload your video",
+          "description": "Choose a 20–40s clip where your full body is visible while you move."
+        },
+        {
+          "title": "2. Snow (AI) gives you feedback",
+          "description": "Receive automatic analysis with key points and recommendations."
+        },
+        {
+          "title": "3. Premium: Human feedback",
+          "description": "Certified instructors correct you in under an hour, wherever you are."
+        }
+      ],
+      "cta": "Upload my first video"
+    },
+    "success": {
+      "title": "Success stories",
+      "items": [
+        { "name": "Camila — Catedral", "text": "I improved more in a week than all last winter." },
+        { "name": "Guido — La Hoya", "text": "Snow's key points organized my technique." },
+        { "name": "Mariana — Chapelco", "text": "ProCheck in under an hour was a game changer." }
+      ]
+    },
+    "feed": {
+      "title": "User videos",
+      "viewMore": "See more videos",
+      "likes": "Likes",
+      "comments": "Comments",
+      "aiScore": "Snow",
+      "loading": "Loading..."
+    },
+    "finalCta": {
+      "title": "Ready to improve your technique",
+      "subtitle": "Upload your video now and receive feedback in minutes",
+      "ctaUpload": "Upload my video",
+      "ctaInstructor": "I'm an Instructor: I want to correct"
+    },
+    "jsonld": {
+      "name": "How SnowMatch VideoCoach works",
+      "description": "Upload your video and receive AI automatic feedback and Premium corrections from certified instructors.",
+      "step1": "Upload your video",
+      "step2": "Receive AI feedback (Snow)",
+      "step3": "Premium: Correction from an instructor"
+    }
   }
 }

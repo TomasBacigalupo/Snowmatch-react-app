@@ -2068,4 +2068,76 @@
         "subtitle": "Envie seu vídeo e receba feedback em minutos.",
         "cta": "Acessar o VideoCoach"
     }
+    ,
+    "videoCoachPage": {
+        "seo": {
+            "title": "SnowMatch VideoCoach | Envie seu vídeo e receba feedback em minutos",
+            "description": "Envie seu vídeo esquiando ou de snowboard e receba feedback da Snow (nossa IA). Assine o Premium e receba correções de instrutores certificados em menos de 1 hora em qualquer centro de esqui.",
+            "keywords": "VideoCoach, análise de vídeo de esqui, análise de snowboard, IA neve, feedback de esqui, instrutores certificados"
+        },
+        "hero": {
+            "title": "SnowMatch VideoCoach",
+            "subtitle": "Envie seu vídeo. Receba feedback da nossa IA Snow. Assine o Premium e receba correções de instrutores certificados em menos de uma hora.",
+            "ctaUpload": "Enviar meu vídeo",
+            "ctaInstructor": "É instrutor? Corrigir alunos",
+            "chips": {
+                "aiFeedback": "Feedback IA",
+                "proUnder1h": "Pro em < 1h",
+                "anyResort": "Em qualquer centro de esqui"
+            }
+        },
+        "examples": {
+            "tag": "Exemplo real",
+            "carving": "Carving • Intermediário-Avançado",
+            "bumps": "Bumps • Intermediário",
+            "braking": "Frenagem • Iniciante"
+        },
+        "howItWorks": {
+            "title": "Como funciona",
+            "steps": [
+                {
+                    "title": "1. Envie seu vídeo",
+                    "description": "Escolha um clipe de 20–40s onde seu corpo completo esteja visível enquanto você se move."
+                },
+                {
+                    "title": "2. Snow (IA) dá o feedback",
+                    "description": "Receba análise automática com pontos-chave e recomendações."
+                },
+                {
+                    "title": "3. Premium: Feedback humano",
+                    "description": "Instrutores certificados corrigem você em menos de uma hora, onde quer que esteja."
+                }
+            ],
+            "cta": "Enviar meu primeiro vídeo"
+        },
+        "success": {
+            "title": "Casos de sucesso",
+            "items": [
+                { "name": "Camila — Catedral", "text": "Melhorei mais em uma semana do que em todo o inverno passado." },
+                { "name": "Guido — La Hoya", "text": "Os pontos-chave da Snow organizaram minha técnica." },
+                { "name": "Mariana — Chapelco", "text": "O ProCheck em menos de uma hora foi incrível." }
+            ]
+        },
+        "feed": {
+            "title": "Vídeos dos usuários",
+            "viewMore": "Ver mais vídeos",
+            "likes": "Curtidas",
+            "comments": "Comentários",
+            "aiScore": "Snow",
+            "loading": "Carregando..."
+        },
+        "finalCta": {
+            "title": "Pronto para melhorar sua técnica",
+            "subtitle": "Envie seu vídeo agora e receba feedback em minutos",
+            "ctaUpload": "Enviar meu vídeo",
+            "ctaInstructor": "Sou instrutor: Quero corrigir"
+        },
+        "jsonld": {
+            "name": "Como funciona o SnowMatch VideoCoach",
+            "description": "Envie seu vídeo e receba feedback automático da IA e correções Premium de instrutores certificados.",
+            "step1": "Envie seu vídeo",
+            "step2": "Receba feedback da IA (Snow)",
+            "step3": "Premium: Correção de um instrutor"
+        }
+    }
 }

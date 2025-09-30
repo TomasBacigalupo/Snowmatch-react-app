@@ -4,11 +4,13 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { Box, Button, Container, Grid, Typography, Card, CardActionArea, CardMedia, CardContent, Chip, Stack, CircularProgress } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchFeedVideos } from 'src/redux/slices/video';
+import useLocales from 'src/hooks/useLocales';
 
 export default function VideoCoachLanding() {
     const navigate = useNavigate();
     const { lng } = useParams();
     const dispatch = useDispatch();
+    const { translate } = useLocales();
     
     const [loading, setLoading] = useState(false);
     
@@ -21,39 +23,35 @@ export default function VideoCoachLanding() {
     const instructorUrl = `/${lang}/instructor`;
 
     const seo = {
-        title: 'SnowMatch VideoCoach | Subí tu video y recibí feedback en minutos',
-        description: 'Subí tu video esquiando o haciendo snowboard y recibí feedback de Snow (nuestra IA). Suscribite a Premium y obtené correcciones de instructores certificados en menos de 1 hora en cualquier centro de ski.',
+        title: translate('videoCoachPage.seo.title'),
+        description: translate('videoCoachPage.seo.description'),
         url: `https://snowmatch.com/${lang}/video-coach`,
-        keywords: 'VideoCoach, análisis de video ski, análisis snowboard, IA nieve, feedback ski, instructores certificados, SnowMatch',
+        keywords: translate('videoCoachPage.seo.keywords'),
         canonical: `https://snowmatch.com/${lang}/video-coach`
     };
 
     const examples = [
         {
-            title: 'Carving • Intermedio-Avanzado',
+            title: translate('videoCoachPage.examples.carving'),
             url: 'https://snowmatchvideos.s3.us-east-1.amazonaws.com/tips/vcortadas.mov',
             thumb: '/assets/icons/pc.jpg',
-            tag: 'Ejemplo real'
+            tag: translate('videoCoachPage.examples.tag')
         },
         {
-            title: 'Bumps • Intermedio',
+            title: translate('videoCoachPage.examples.bumps'),
             url: 'https://snowmatchvideos.s3.us-east-1.amazonaws.com/tips/Jaime2.mov',
             thumb: '/assets/icons/pc.jpg',
-            tag: 'Ejemplo real'
+            tag: translate('videoCoachPage.examples.tag')
         },
         {
-            title: 'Frenada • Principiante',
+            title: translate('videoCoachPage.examples.braking'),
             url: 'https://snowmatchvideos.s3.us-east-1.amazonaws.com/tips/frenada.mp4',
             thumb: '/assets/icons/pc.jpg',
-            tag: 'Ejemplo real'
+            tag: translate('videoCoachPage.examples.tag')
         },
     ];
 
-    const success = [
-        { name: 'Camila — Catedral', text: '"Mejoré más en una semana que en todo el invierno pasado."' },
-        { name: 'Guido — La Hoya', text: '"Los puntos clave de Snow me ordenaron la técnica."' },
-        { name: 'Mariana — Chapelco', text: '"El ProCheck en menos de una hora fue un golazo."' },
-    ];
+    const success = translate('videoCoachPage.success.items', { returnObjects: true });
 
     // Fetch videos on component mount
     useEffect(() => {
@@ -72,30 +70,20 @@ export default function VideoCoachLanding() {
     }, [dispatch]);
 
     const JSONLD = () => {
+        const steps = translate('videoCoachPage.howItWorks.steps', { returnObjects: true }) || [];
         const json = {
             '@context': 'https://schema.org',
             '@type': 'HowTo',
-            name: 'Cómo funciona SnowMatch VideoCoach',
-            description: 'Subí tu video y recibí feedback automático de IA y correcciones Premium de instructores certificados.',
+            name: translate('videoCoachPage.jsonld.name'),
+            description: translate('videoCoachPage.jsonld.description'),
             step: [
-                {
-                    '@type': 'HowToStep',
-                    name: 'Subí tu video',
-                    url: seo.url,
-                    text: 'Grabá 5–30s donde se vea tu cuerpo completo y subilo a SnowMatch.'
-                },
-                {
-                    '@type': 'HowToStep',
-                    name: 'Recibí feedback de IA (Snow)',
-                    text: 'Obtené análisis automático: puntos fuertes, oportunidades y recomendaciones.'
-                },
-                {
-                    '@type': 'HowToStep',
-                    name: 'Premium: Corrección de un instructor',
-                    text: 'Suscribite para recibir feedback humano en < 1 hora en cualquier centro de ski.'
-                }
+                steps[0] ? { '@type': 'HowToStep', name: steps[0].title, url: seo.url, text: steps[0].description } : null,
+                steps[1] ? { '@type': 'HowToStep', name: steps[1].title, text: steps[1].description } : null,
+                steps[2] ? { '@type': 'HowToStep', name: steps[2].title, text: steps[2].description } : null
             ]
         };
+        // Remove nulls if any
+        json.step = json.step.filter(Boolean);
         return (
             <script type="application/ld+json">
                 {JSON.stringify(json)}
@@ -122,23 +110,23 @@ export default function VideoCoachLanding() {
                     <Grid container spacing={6} alignItems="center">
                         <Grid item xs={12} md={6}>
                             <Typography component="h1" variant="h2" sx={{ mb: 2, fontWeight: 800 }}>
-                                SnowMatch VideoCoach
+                                {translate('videoCoachPage.hero.title')}
                             </Typography>
                             <Typography variant="h5" sx={{ color: 'text.secondary', mb: 3 }}>
-                                Subí tu video. Recibí feedback de nuestra IA Snow. Suscribite a Premium y obtené correcciones de instructores certificados en menos de una hora.
+                                {translate('videoCoachPage.hero.subtitle')}
                             </Typography>
                             <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
                                 <Button variant="contained" color="primary" onClick={() => navigate(uploadUrl)}>
-                                    Subir mi video
+                                    {translate('videoCoachPage.hero.ctaUpload')}
                                 </Button>
                                 <Button variant="outlined" color="inherit" onClick={() => navigate(instructorUrl)}>
-                                    ¿Sos Instructor? Corrección de alumnos
+                                    {translate('videoCoachPage.hero.ctaInstructor')}
                                 </Button>
                             </Stack>
                             <Stack direction="row" spacing={1} sx={{ mt: 3 }}>
-                                <Chip label="Feedback IA" />
-                                <Chip label="Pro en < 1h" />
-                                <Chip label="En cualquier centro de ski" />
+                                <Chip label={translate('videoCoachPage.hero.chips.aiFeedback')} />
+                                <Chip label={translate('videoCoachPage.hero.chips.proUnder1h')} />
+                                <Chip label={translate('videoCoachPage.hero.chips.anyResort')} />
                             </Stack>
                         </Grid>
                         <Grid item xs={12} md={6}>
@@ -196,21 +184,16 @@ export default function VideoCoachLanding() {
 
             <Box sx={{ background: '#f7f7f8' }}>
                 <Container sx={{ py: { xs: 6, md: 10 } }}>
-                    <Typography variant="h3" sx={{ fontWeight: 800, mb: 4 }}>Cómo funciona</Typography>
+                    <Typography variant="h3" sx={{ fontWeight: 800, mb: 4 }}>{translate('videoCoachPage.howItWorks.title')}</Typography>
                     <Grid container spacing={3}>
-                        {[{
-                            icon: '📹',
-                            t: '1. Subí tu video',
-                            d: 'Elegí un clip de 20–40s donde se vea tu cuerpo completo mientras te movés.'
-                        }, {
-                            icon: <img src="/assets/avatars/snow-ai.png" alt="Snow AI" style={{ width: 64, height: 64, borderRadius: '50%' }} />,
-                            t: '2. Snow (IA) te da feedback',
-                            d: 'Recibí análisis automático con puntos clave y recomendaciones.'
-                        }, {
-                            icon: '👨‍🏫',
-                            t: '3. Premium: Feedback humano',
-                            d: 'Instructores certificados te corrigen en menos de una hora, estés donde estés.'
-                        }].map((s, idx) => (
+                        {(
+                            (translate('videoCoachPage.howItWorks.steps', { returnObjects: true }) || [])
+                                .map((step, index) => ({
+                                    icon: index === 0 ? '📹' : index === 1 ? <img src="/assets/avatars/snow-ai.png" alt="Snow AI" style={{ width: 64, height: 64, borderRadius: '50%' }} /> : '👨‍🏫',
+                                    t: step.title,
+                                    d: step.description
+                                }))
+                        ).map((s, idx) => (
                             <Grid key={idx} item xs={12} md={4}>
                                 <Card sx={{ p: 3, borderRadius: 3, height: '100%', textAlign: 'center' }}>
                                     <Box sx={{ mb: 2, display: 'flex', justifyContent: 'center' }}>
@@ -234,7 +217,7 @@ export default function VideoCoachLanding() {
                             onClick={() => navigate(uploadUrl)}
                             sx={{ px: 4, py: 1.5 }}
                         >
-                            Subir mi primer video
+                            {translate('videoCoachPage.howItWorks.cta')}
                         </Button>
                     </Box>
                 </Container>
@@ -242,7 +225,7 @@ export default function VideoCoachLanding() {
 
             <Box sx={{ background: '#fff' }}>
                 <Container sx={{ py: { xs: 6, md: 10 } }}>
-                    <Typography variant="h3" sx={{ fontWeight: 800, mb: 4 }}>Casos de éxito</Typography>
+                    <Typography variant="h3" sx={{ fontWeight: 800, mb: 4 }}>{translate('videoCoachPage.success.title')}</Typography>
                     <Grid container spacing={3}>
                         {success.map((s, i) => (
                             <Grid key={i} item xs={12} md={4}>
@@ -259,14 +242,14 @@ export default function VideoCoachLanding() {
             <Box sx={{ background: '#f7f7f8' }}>
                 <Container sx={{ py: { xs: 6, md: 10 } }}>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>
-                        <Typography variant="h3" sx={{ fontWeight: 800 }}>Videos de usuarios</Typography>
+                        <Typography variant="h3" sx={{ fontWeight: 800 }}>{translate('videoCoachPage.feed.title')}</Typography>
                         <Button 
                             variant="outlined" 
                             color="primary" 
                             onClick={() => navigate('/match/feed')}
                             sx={{ textTransform: 'none' }}
                         >
-                            Ver más videos
+                            {translate('videoCoachPage.feed.viewMore')}
                         </Button>
                     </Box>
                     {loading ? (
@@ -316,7 +299,7 @@ export default function VideoCoachLanding() {
                                                         backgroundSize: 'cover'
                                                     }} />
                                                     <Typography sx={{ fontSize: '0.9rem', fontWeight: 600 }}>
-                                                        Snow: {video.videoComments.find(c => c.aiComment).score}
+                                                        {translate('videoCoachPage.feed.aiScore')}: {video.videoComments.find(c => c.aiComment).score}
                                                     </Typography>
                                                 </Box>
                                             )}
@@ -364,11 +347,11 @@ export default function VideoCoachLanding() {
 
             <Box sx={{ background: '#0a0a0a', color: '#fff' }}>
                 <Container sx={{ py: { xs: 6, md: 10 }, textAlign: 'center' }}>
-                    <Typography variant="h3" sx={{ fontWeight: 800, mb: 2 }}>Listo para mejorar tu técnica</Typography>
-                    <Typography variant="h6" sx={{ opacity: 0.85, mb: 3 }}>Subí tu video ahora y recibí feedback en minutos</Typography>
+                    <Typography variant="h3" sx={{ fontWeight: 800, mb: 2 }}>{translate('videoCoachPage.finalCta.title')}</Typography>
+                    <Typography variant="h6" sx={{ opacity: 0.85, mb: 3 }}>{translate('videoCoachPage.finalCta.subtitle')}</Typography>
                     <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} justifyContent="center">
-                        <Button size="large" variant="contained" color="primary" onClick={() => navigate(uploadUrl)}>Subir mi video</Button>
-                        <Button size="large" variant="outlined" color="inherit" onClick={() => navigate(instructorUrl)}>Soy Instructor: Quiero corregir</Button>
+                        <Button size="large" variant="contained" color="primary" onClick={() => navigate(uploadUrl)}>{translate('videoCoachPage.finalCta.ctaUpload')}</Button>
+                        <Button size="large" variant="outlined" color="inherit" onClick={() => navigate(instructorUrl)}>{translate('videoCoachPage.finalCta.ctaInstructor')}</Button>
                     </Stack>
                 </Container>
             </Box>

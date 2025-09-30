@@ -708,4 +708,76 @@
       "subtitle": "Téléchargez votre vidéo et recevez des commentaires en quelques minutes.",
       "cta": "Accéder à VideoCoach"
     }
+    ,
+    "videoCoachPage": {
+      "seo": {
+        "title": "SnowMatch VideoCoach | Téléchargez votre vidéo et recevez des retours en minutes",
+        "description": "Téléchargez votre vidéo de ski ou de snowboard et recevez des retours de Snow (notre IA). Abonnez-vous à Premium et obtenez des corrections d'instructeurs certifiés en moins d'une heure dans n'importe quelle station.",
+        "keywords": "VideoCoach, analyse vidéo ski, analyse snowboard, IA neige, retour ski, instructeurs certifiés"
+      },
+      "hero": {
+        "title": "SnowMatch VideoCoach",
+        "subtitle": "Téléchargez votre vidéo. Recevez des retours de notre IA Snow. Abonnez-vous à Premium et obtenez des corrections d'instructeurs certifiés en moins d'une heure.",
+        "ctaUpload": "Télécharger ma vidéo",
+        "ctaInstructor": "Êtes-vous instructeur ? Corriger des élèves",
+        "chips": {
+          "aiFeedback": "Retour IA",
+          "proUnder1h": "Pro en < 1h",
+          "anyResort": "Dans n'importe quelle station"
+        }
+      },
+      "examples": {
+        "tag": "Exemple réel",
+        "carving": "Carving • Intermédiaire-Avancé",
+        "bumps": "Bumps • Intermédiaire",
+        "braking": "Freinage • Débutant"
+      },
+      "howItWorks": {
+        "title": "Comment ça marche",
+        "steps": [
+          {
+            "title": "1. Téléchargez votre vidéo",
+            "description": "Choisissez un clip de 20–40s où votre corps entier est visible pendant le mouvement."
+          },
+          {
+            "title": "2. Snow (IA) vous donne un retour",
+            "description": "Recevez une analyse automatique avec points clés et recommandations."
+          },
+          {
+            "title": "3. Premium : Retour humain",
+            "description": "Des instructeurs certifiés vous corrigent en moins d'une heure, où que vous soyez."
+          }
+        ],
+        "cta": "Télécharger ma première vidéo"
+      },
+      "success": {
+        "title": "Cas de réussite",
+        "items": [
+          { "name": "Camila — Catedral", "text": "J'ai plus progressé en une semaine que tout l'hiver dernier." },
+          { "name": "Guido — La Hoya", "text": "Les points clés de Snow ont structuré ma technique." },
+          { "name": "Mariana — Chapelco", "text": "Le ProCheck en moins d'une heure a été excellent." }
+        ]
+      },
+      "feed": {
+        "title": "Vidéos des utilisateurs",
+        "viewMore": "Voir plus de vidéos",
+        "likes": "J'aime",
+        "comments": "Commentaires",
+        "aiScore": "Snow",
+        "loading": "Chargement..."
+      },
+      "finalCta": {
+        "title": "Prêt à améliorer votre technique",
+        "subtitle": "Téléchargez votre vidéo maintenant et recevez des retours en minutes",
+        "ctaUpload": "Télécharger ma vidéo",
+        "ctaInstructor": "Je suis instructeur : Je veux corriger"
+      },
+      "jsonld": {
+        "name": "Comment fonctionne SnowMatch VideoCoach",
+        "description": "Téléchargez votre vidéo et recevez un retour automatique de l'IA et des corrections Premium d'instructeurs certifiés.",
+        "step1": "Téléchargez votre vidéo",
+        "step2": "Recevez un retour de l'IA (Snow)",
+        "step3": "Premium : Correction d'un instructeur"
+      }
+    }
 }

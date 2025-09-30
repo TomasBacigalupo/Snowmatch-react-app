@@ -702,5 +702,10 @@
         "checkOut": "DÉPART",
         "when": "Quand?",
         "instructorDescription": "• Instructeurs certifiés · {{classType}} · Réservation en ligne en 1 minute"
+    },
+    "videoCoachLanding": {
+      "title": "VideoCoach : corrections par IA et pros",
+      "subtitle": "Téléchargez votre vidéo et recevez des commentaires en quelques minutes.",
+      "cta": "Accéder à VideoCoach"
     }
 }

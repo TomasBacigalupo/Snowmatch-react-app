@@ -2062,5 +2062,10 @@
                 "text": "Experiência incrível. Meu instrutor foi muito profissional e me ajudou a superar meus medos. Definitivamente voltarei a fazer aulas."
             }
         }
+    },
+    "videoCoachLanding": {
+        "title": "VideoCoach: correções com IA e profissionais",
+        "subtitle": "Envie seu vídeo e receba feedback em minutos.",
+        "cta": "Acessar o VideoCoach"
     }
 }

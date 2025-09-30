@@ -23,23 +23,38 @@ import { formatSlug } from 'src/utils/slugHelper';
 const getAllResorts = (apiResortOptions = null) => {
     // If API resort options are provided, use them
     if (apiResortOptions && apiResortOptions.length > 0) {
-        return apiResortOptions.map((resort) => ({
-            name: resort.name || resort.id,
-            category: resort.category || 'Argentina'
-        })).sort((a, b) => a.name.localeCompare(b.name));
+        return apiResortOptions
+            .filter((resort) => resort && (resort.name || resort.id)) // Filter out null/undefined resorts and those without name/id
+            .map((resort) => ({
+                name: resort.name || resort.id,
+                category: resort.category || 'Argentina'
+            }))
+            .sort((a, b) => {
+                // Ensure both names exist before comparing
+                const nameA = a.name || '';
+                const nameB = b.name || '';
+                return nameA.localeCompare(nameB);
+            });
     }
     
     // Fallback to hardcoded options
     const allResorts = [];
     FILTER_RESORT_OPTIONS.forEach((country) => {
         country.resorts.forEach((resort) => {
-            allResorts.push({
-                name: resort,
-                category: country.category
-            });
+            if (resort) { // Only add if resort is not null/undefined
+                allResorts.push({
+                    name: resort,
+                    category: country.category || 'Argentina'
+                });
+            }
         });
     });
-    return allResorts.sort((a, b) => a.name.localeCompare(b.name));
+    return allResorts.sort((a, b) => {
+        // Ensure both names exist before comparing
+        const nameA = a.name || '';
+        const nameB = b.name || '';
+        return nameA.localeCompare(nameB);
+    });
 };
 
 const getClassType = (type) => {

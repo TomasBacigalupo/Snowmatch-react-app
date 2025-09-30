@@ -26,6 +26,7 @@ import { es } from 'date-fns/locale';
 import RecommendedTeachers from './RecommendedTeachers';
 import { formatSlug, fromSlugToResortEnum } from 'src/utils/slugHelper';
 import axios from 'src/utils/axios';
+import TopTeachersSection from '../../components/TopTeachersSection';
 
 
 // ----------------------------------------------------------------------
@@ -132,35 +133,6 @@ const ContentCard = styled(Box)(({ theme }) => ({
     },
 }));
 
-const TopTeachersSection = styled(Box)(({ theme }) => ({
-    width: '100%',
-    maxWidth: '1200px',
-    margin: '0 auto',
-    marginTop: theme.spacing(15),
-    [theme.breakpoints.up('md')]: {
-        width: '90%',
-    },
-}));
-
-const ScrollContainer = styled(Box)(({ theme }) => ({
-    display: 'flex',
-    overflowX: 'auto',
-    gap: theme.spacing(2),
-    padding: theme.spacing(1),
-    scrollbarWidth: 'none',  // Firefox
-    msOverflowStyle: 'none', // IE and Edge
-    '&::-webkit-scrollbar': {
-        display: 'none',  // Chrome, Safari and Opera
-    },
-}));
-
-const TeacherCard = styled(Box)(({ theme }) => ({
-    flex: '0 0 auto',
-    width: '280px',
-    [theme.breakpoints.down('sm')]: {
-        width: '240px',
-    },
-}));
 
 // ----------------------------------------------------------------------
 
@@ -348,35 +320,20 @@ export default function ResortDisciplineHero() {
                 </CardContainer>
             </RootStyle>
 
-            {teachers && teachers.length > 0 && <TopTeachersSection>
-                <Box sx={{ mb: 4 }}>
-                    <Typography variant='h3' sx={{ mb: 1 }}>{translate(`landingPRO.topTeachers`, {
-                        discipline: disciplineSlug ? translate(`landingPRO.${disciplineSlug}`) : translate(`landingPRO.esqui-y-snowboard`),
-                        type: type ? translate(`landingPRO.${type}Plural`) : "",
-                        resort: resort ? formatSlug(resortSlug) : "",
-                    })}</Typography>
-                    <Typography
-                        variant='body1'
-                        sx={{
-                            mb: 3,
-                            color: 'text.secondary',
-                        }}
-                    >
-                        {translate(`landingPRO.guestAgree`, {
-                            discipline: disciplineSlug ? translate(`landingPRO.${disciplineSlug}`) : translate(`landingPRO.esqui-y-snowboard`),
-                            type: type ? translate(`landingPRO.${type}Plural`) : "",
-                            resort: resort ? translate(`landingPRO.${resortSlug}`) : "",
-                        })}
-                    </Typography>
-                    <ScrollContainer>
-                        {teachers.map((teacher) => (
-                            <TeacherCard key={teacher.id}>
-                                <ShopTeacherCard teacher={teacher} fullBlack={true} />
-                            </TeacherCard>
-                        ))}
-                    </ScrollContainer>
-                </Box>
-            </TopTeachersSection>}
+            <TopTeachersSection
+                teachers={teachers}
+                title={translate(`landingPRO.topTeachers`, {
+                    discipline: disciplineSlug ? disciplineSlug : translate(`landingPRO.ski&snowboard`),
+                    type: type ? translate(`landingPRO.${type}Plural`) : "",
+                    resort: resort ? formatSlug(resortSlug) : "",
+                })}
+                subtitle={translate(`landingPRO.guestAgree`, {
+                    discipline: disciplineSlug ? disciplineSlug : translate(`landingPRO.ski&snowboard`),
+                    type: type ? translate(`landingPRO.${type}Plural`) : "",
+                    resort: resort ? formatSlug(resortSlug) : "",
+                })}
+                fullBlack={true}
+            />
         </MotionContainer>
     );
 }

@@ -21,6 +21,7 @@ const DownloadAppSection = lazy(() => import('src/sections/home/DounloawdAppSect
 const ResortsAndLessonsSection = lazy(() => import('src/sections/home/ResortsAndLessonsSection'));
 const StudentTestimonials = lazy(() => import('src/sections/home/StudentTestimonials'));
 const SkiProLandingBanner = lazy(() => import('src/sections/home/SkiProLandingBanner'));
+const VideoCoachLandingBanner = lazy(() => import('src/sections/home/VideoCoachLandingBanner'));
 
 // ----------------------------------------------------------------------
 
@@ -487,6 +488,10 @@ export default function SearchPage() {
           
           <Suspense fallback={<LoadingScreen />}>
             <SkiProLandingBanner />
+          </Suspense>
+          
+          <Suspense fallback={<LoadingScreen />}>
+            <VideoCoachLandingBanner />
           </Suspense>
           
           <Suspense fallback={<LoadingScreen />}>

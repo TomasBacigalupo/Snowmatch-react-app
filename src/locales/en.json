@@ -295,6 +295,8 @@
     }
   },
   "landingPRO": {
+    "guestAgree": "The SnowMatch clients agree: these instructors are highly qualified for {{discipline}} {{type}} in {{resort}}",
+    "topTeachers": "The best instructors for {{discipline}} {{type}} in {{resort}}",
     "yourPathStarts": "Your journey to learn to ski in {{resort}} starts with SnowMatch",
     "yourPathDerctiption": "Connect with certified instructors in {{resort}}, book your ski lessons online and improve your technique with Snow, our artificial intelligence assistant.",
     "downloadApp": "Scan to download",

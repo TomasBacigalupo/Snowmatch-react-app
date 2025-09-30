@@ -531,11 +531,14 @@ export default function Router() {
             { path: 'vail-ski-camp', element: <VailSkiCamp /> },
             { path: 'jackson-hole-ski-camp', element: <JacksonHoleSkiCamp /> },
             { path: 'about-us', element: <About /> },
+            { path: 'video-coach', element: <VideoCoach /> },
+            { path: ':lng/video-coach', element: <VideoCoach /> },
             { path: 'contact-us', element: <Contact /> },
             { path: 'faqs', element: <Faqs /> },
             { path: 'instructor', element: <InstructorLanding /> },
             { path: 'enterprise', element: <EnterpriseLanding /> },
             { path: 'agencias', element: <TravelAgencyLanding /> },
+            { path: 'resort/:resort', element: <Resort /> },
             { path: ':resort/:discipline/:type', element: <SearchPage /> },
             { path: ':resort/:discipline', element: <SearchPage /> },
             { path: ':resort', element: <SearchPage /> },
@@ -559,10 +562,13 @@ export default function Router() {
             { path: 'aspen-ski-camp', element: <AspenSkiCamp /> },
             { path: 'vail-ski-camp', element: <VailSkiCamp /> },
             { path: 'jackson-hole-ski-camp', element: <JacksonHoleSkiCamp /> },
+            { path: 'resort/:resort', element: <Resort /> },
             { path: ':resort/:discipline/:type', element: <SearchPage /> },
             { path: ':resort/:discipline', element: <SearchPage /> },
             { path: ':resort', element: <SearchPage /> },
             { path: 'about-us', element: <About /> },
+            { path: 'video-coach', element: <VideoCoach /> },
+            { path: ':lng/video-coach', element: <VideoCoach /> },
             { path: 'contact-us', element: <Contact /> },
             { path: 'faqs', element: <Faqs /> },
           ],
@@ -671,6 +677,10 @@ const AllTeachers = Loadable(lazy(() => import('../pages/AllTeachers')));
 const AspenSkiCamp = Loadable(lazy(() => import('../pages/AspenSkiCamp')));
 const VailSkiCamp = Loadable(lazy(() => import('../pages/VailSkiCamp')));
 const JacksonHoleSkiCamp = Loadable(lazy(() => import('../pages/JacksonHoleSkiCamp')));
+const Resort = Loadable(lazy(() => import('../pages/search/resort/Resort')));
+
+// VideoCoach Landing
+const VideoCoach = Loadable(lazy(() => import('../pages/search/videoCoach/VideoCoach')));
 
 //School
 const Products = Loadable(lazy(() => import('../pages/dashboard/Products')))

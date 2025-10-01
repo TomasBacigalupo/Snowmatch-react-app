@@ -1,4 +1,17 @@
 {
+    "homeHero": {
+        "headlinePart1": "Leve seu esqui ao",
+        "headlinePart2": "próximo nível.",
+        "description": "Melhore sua técnica de esqui, conecte-se com instrutores na sua estação de esqui, ou envie seus vídeos e receba feedback de treinadores certificados.",
+        "happyCustomers": "Mais de 160 clientes satisfeitos",
+        "findInstructors": "Encontrar Instrutores",
+        "getVideoFeedback": "Obter Análise de Vídeo",
+        "availableOn": "DISPONÍVEL EM",
+        "downloadOnThe": "Baixe na",
+        "appStore": "App Store",
+        "getItOn": "DISPONÍVEL NO",
+        "googlePlay": "Google Play"
+    },
     "agency": {
         "hero": {
             "title": "Ofereça aulas e equipamentos de esqui com Snowmatch",
@@ -2037,7 +2050,12 @@
         "successMessage": "Excelente! Você completou a configuração do seu perfil. Agora você pode encontrar instrutores perfeitos para seu nível e objetivos, e acessar conteúdo personalizado para melhorar sua técnica."
     },
     "guestDetails": {
-        "title": "Configurar Perfil"
+        "title": "Configurar Perfil",
+        "step": "Passo",
+        "of": "de",
+        "back": "Voltar",
+        "next": "Próximo",
+        "completeProfile": "Completar Perfil"
     },
     "studentTestimonials": {
         "title": "O que nossos estudantes dizem",
@@ -2139,5 +2157,17 @@
             "step2": "Receba feedback da IA (Snow)",
             "step3": "Premium: Correção de um instrutor"
         }
+    },
+    "resortsAndLessons": {
+        "title": "Resorts e Aulas",
+        "subtitle": "Descubra os melhores resorts de esqui da Argentina e reserve suas aulas com instrutores certificados",
+        "all": "Todos",
+        "lessonTypes": "Tipos de Aulas",
+        "categories": "Categorias",
+        "skiLessons": "Aulas de Esqui",
+        "snowboardLessons": "Aulas de Snowboard",
+        "groupLessons": "Aulas em Grupo",
+        "privateLessons": "Aulas Particulares",
+        "childrenLessons": "Aulas para Crianças"
     }
 }

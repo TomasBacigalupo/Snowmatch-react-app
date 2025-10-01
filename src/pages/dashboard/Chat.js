@@ -85,7 +85,6 @@ export default function Chat() {
       <Container maxWidth={themeStretch ? false : 'xl'} sx={{ pt: 'env(safe-area-inset-top)' }}>
         <HeaderBreadcrumbs
           heading={translate('chat.title')}
-          links={[{ name: translate('menu.dashboard'), href: PATH_DASHBOARD.root }, { name: translate('chat.title') }]}
         />
         <Card sx={{ height: { xs: 'calc(100dvh - 104px)', md: 'calc(100dvh - 132px)' }, display: 'flex' }}>
           <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column' }}>

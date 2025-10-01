@@ -7,13 +7,18 @@ import {
   HomeHero,
   HomeMinimal,
   HomeAdvertisement,
+  HomePricingPlans,
 } from '../sections/home';
+import HomeWhySnowmatch from 'src/sections/home/HomeWhySnowmatch';
 import useAuth from 'src/hooks/useAuth';
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import HomeStats from 'src/sections/home/HomeStats';
 import HomePartners from 'src/sections/home/HomePartners';
 import HomeStatsHero from 'src/sections/home/HomeStatsHero';
+import HomeCoaches from 'src/sections/home/HomeCoaches';
 import { Helmet } from 'react-helmet-async';
+import useLocales from 'src/hooks/useLocales';
+import { useLocation } from 'react-router-dom';
 
 // ----------------------------------------------------------------------
 
@@ -29,9 +34,29 @@ const ContentStyle = styled('div')(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
+function useQuery() {
+  const { search } = useLocation();
+  return useMemo(() => new URLSearchParams(search), [search]);
+}
+
+// ----------------------------------------------------------------------
+
 export default function HomePage() {
 
   const { user } = useAuth()
+  const { onChangeLang } = useLocales();
+  const query = useQuery();
+
+  useEffect(() => {
+    const lng = query.get('lng');
+    if (lng) {
+      // Validar que el idioma sea uno de los soportados: es, en, pt
+      const validLanguages = ['es', 'en', 'pt'];
+      if (validLanguages.includes(lng.toLowerCase())) {
+        onChangeLang(lng.toLowerCase());
+      }
+    }
+  }, [query, onChangeLang]);
 
   useEffect(() => {
     if (user) {
@@ -134,7 +159,8 @@ export default function HomePage() {
         <HomeHero />
         <ContentStyle>
           <HomeStatsHero />
-          <HomePartners />
+          <HomeWhySnowmatch />
+          <HomeCoaches />
           <HomeMinimal />
           <HomeAdvertisement />
           {/* <HomeMinimal />
@@ -152,6 +178,7 @@ export default function HomePage() {
           <HomeLookingFor />
 
           <HomeAdvertisement /> */}
+          <HomePricingPlans />
 
         </ContentStyle>
 

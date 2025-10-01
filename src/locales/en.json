@@ -1,4 +1,17 @@
 {
+  "homeHero": {
+    "headlinePart1": "Take your skiing to the",
+    "headlinePart2": "next level.",
+    "description": "Improve your skiing, connect with instructors at your ski resort, or upload your runs and get feedback from certified coaches.",
+    "happyCustomers": "160+ Happy customers",
+    "findInstructors": "Find Instructors",
+    "getVideoFeedback": "Get Video Feedback",
+    "availableOn": "AVAILABLE ON",
+    "downloadOnThe": "Download on the",
+    "appStore": "App Store",
+    "getItOn": "GET IT ON",
+    "googlePlay": "Google Play"
+  },
   "skiProLanding": {
     "title": "Are you an instructor?",
     "subtitle1": "Join our community of highly qualified, independent instructors. Sign up for free today!",
@@ -1821,7 +1834,12 @@
     "successMessage": "Excellent! You have completed your profile setup. Now you can find perfect instructors for your level and goals, and access personalized content to improve your technique."
   },
   "guestDetails": {
-    "title": "Configure Profile"
+    "title": "Configure Profile",
+    "step": "Step",
+    "of": "of",
+    "back": "Back",
+    "next": "Next",
+    "completeProfile": "Complete Profile"
   },
   "studentTestimonials": {
     "title": "What our students say",
@@ -1923,5 +1941,17 @@
       "step2": "Receive AI feedback (Snow)",
       "step3": "Premium: Correction from an instructor"
     }
+  },
+  "resortsAndLessons": {
+    "title": "Resorts and Lessons",
+    "subtitle": "Discover the best ski resorts in Argentina and book your lessons with certified instructors",
+    "all": "All",
+    "lessonTypes": "Lesson Types",
+    "categories": "Categories",
+    "skiLessons": "Ski Lessons",
+    "snowboardLessons": "Snowboard Lessons",
+    "groupLessons": "Group Lessons",
+    "privateLessons": "Private Lessons",
+    "childrenLessons": "Children's Lessons"
   }
 }

@@ -106,12 +106,12 @@ const slice = createSlice({
       const conversation = action.payload;
 
       if (conversation) {
-        // Sort messages by createdAt timestamp (oldest to newest)
+        // Sort messages by id
         if (conversation.messages && conversation.messages.length > 0) {
           conversation.messages.sort((a, b) => {
-            const dateA = parseDate(a.createdAt);
-            const dateB = parseDate(b.createdAt);
-            return dateA - dateB;
+            const idA = parseDate(a.id);
+            const idB = parseDate(b.id);
+            return idA - idB;
           });
         }
         

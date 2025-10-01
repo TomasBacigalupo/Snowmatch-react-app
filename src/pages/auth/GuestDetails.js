@@ -25,11 +25,15 @@ const MobileModalStyle = styled('div')(({ theme }) => ({
   backgroundColor: 'white',
   zIndex: 1000,
   overflow: 'hidden',
+  height: '100vh',
+  height: '-webkit-fill-available', // iOS Safari fix
 }));
 
 const MobileCardStyle = styled('div')(({ theme }) => ({
   paddingTop: `calc(env(safe-area-inset-top) + ${theme.spacing(2)})`,
-  height: '100vh',
+  minHeight: '100vh',
+  minHeight: '-webkit-fill-available', // iOS Safari fix
+  height: '100%',
   display: 'flex',
   flexDirection: 'column',
   overflow: 'hidden',
@@ -40,16 +44,22 @@ const MobileContentStyle = styled('div')(({ theme }) => ({
   overflow: 'auto',
   padding: theme.spacing(2),
   paddingTop: 0,
+  paddingBottom: theme.spacing(20), // Extra padding to ensure content doesn't hide behind footer
+  WebkitOverflowScrolling: 'touch', // Smooth scrolling on iOS
 }));
 
 const MobileStickyFooterStyle = styled('div')(({ theme }) => ({
   position: 'sticky',
   bottom: 0,
+  left: 0,
+  right: 0,
   backgroundColor: 'white',
   padding: theme.spacing(2),
-  paddingBottom: `calc(${theme.spacing(2)} + env(safe-area-inset-bottom))`,
+  paddingBottom: `calc(${theme.spacing(2)} + env(safe-area-inset-bottom, 16px))`,
   borderTop: `1px solid ${theme.palette.divider}`,
   zIndex: 10,
+  boxShadow: '0 -2px 10px rgba(0, 0, 0, 0.1)', // Shadow to make it more visible
+  flexShrink: 0, // Prevent footer from shrinking
 }));
 
 // ----------------------------------------------------------------------
@@ -88,8 +98,8 @@ export default function GuestDetails() {
   };
 
   const getButtonText = () => {
-    if (currentStep === 5) return 'Completar Perfil';
-    return 'Siguiente';
+    if (currentStep === 5) return translate('guestDetails.completeProfile');
+    return translate('guestDetails.next');
   };
 
   const handleRegistrationComplete = () => {
@@ -136,7 +146,7 @@ export default function GuestDetails() {
                   }} 
                 />
                 <Typography variant="caption" sx={{ color: 'text.secondary', mt: 1, display: 'block' }}>
-                  Paso {currentStep + 1} de 6
+                  {translate('guestDetails.step')} {currentStep + 1} {translate('guestDetails.of')} 6
                 </Typography>
               </Box>
               
@@ -161,7 +171,7 @@ export default function GuestDetails() {
                     }
                   }}
                 >
-                  Atrás
+                  {translate('guestDetails.back')}
                 </LoadingButton>
                 <LoadingButton
                   variant="contained"

@@ -1,4 +1,17 @@
 {
+    "homeHero": {
+        "headlinePart1": "Llevá tu esquí al",
+        "headlinePart2": "siguiente nivel.",
+        "description": "Mejorá tu técnica de esquí, conectá con instructores en tu centro de esquí, o subí tus videos y recibí feedback de entrenadores certificados.",
+        "happyCustomers": "Más de 160 clientes felices",
+        "findInstructors": "Buscar Instructores",
+        "getVideoFeedback": "Obtener Análisis de Video",
+        "availableOn": "DISPONIBLE EN",
+        "downloadOnThe": "Descargá en",
+        "appStore": "App Store",
+        "getItOn": "DISPONIBLE EN",
+        "googlePlay": "Google Play"
+    },
     "skiProLanding": {
         "title": "¿Sos instructor?",
         "subtitle1": "Unite a nuestra comunidad de instructores independientes altamente calificados. ¡Registrate gratis hoy!",
@@ -2169,6 +2182,8 @@
     },
     "resortsAndLessons": {
         "title": "Resorts y Clases",
+        "subtitle": "Descubre los mejores centros de esquí de Argentina y reserva tus clases con instructores certificados",
+        "all": "Todos",
         "lessonTypes": "Tipos de Clases",
         "categories": "Categorías",
         "skiLessons": "Clases de Esquí",
@@ -2804,7 +2819,12 @@
         "successMessage": "¡Excelente! Has completado la configuración de tu perfil. Ahora podrás encontrar instructores perfectos para tu nivel y objetivos, y acceder a contenido personalizado para mejorar tu técnica."
     },
     "guestDetails": {
-        "title": "Configurar Perfil"
+        "title": "Configurar Perfil",
+        "step": "Paso",
+        "of": "de",
+        "back": "Atrás",
+        "next": "Siguiente",
+        "completeProfile": "Completar Perfil"
     },
     "studentTestimonials": {
         "title": "Lo que dicen nuestros estudiantes",

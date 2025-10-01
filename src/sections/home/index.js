@@ -11,3 +11,5 @@ export { default as HomeFilterTeachers } from './HomeFilterTeachers';
 export { default as HomeHeroBariloche} from './HomeHeroBariloche';
 export { default as HomeFilterTeachersBariloche } from './HomeFilterTeachersBariloche';
 export { default as FaqsByContext } from './FAQSByContext';
+export { default as HomeCoaches } from './HomeCoaches';
+export { default as HomeWhySnowmatch } from './HomeWhySnowmatch';

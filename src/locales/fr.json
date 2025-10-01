@@ -1,4 +1,17 @@
 {
+    "homeHero": {
+        "headlinePart1": "Améliorez votre ski au",
+        "headlinePart2": "niveau supérieur.",
+        "description": "Améliorez votre technique de ski, connectez-vous avec des moniteurs dans votre station de ski, ou téléchargez vos runs et recevez des retours de coaches certifiés.",
+        "happyCustomers": "Plus de 160 clients satisfaits",
+        "findInstructors": "Trouver des Moniteurs",
+        "getVideoFeedback": "Obtenir une Analyse Vidéo",
+        "availableOn": "DISPONIBLE SUR",
+        "downloadOnThe": "Télécharger sur",
+        "appStore": "App Store",
+        "getItOn": "DISPONIBLE SUR",
+        "googlePlay": "Google Play"
+    },
     "skiProLanding": {
         "title": "Êtes-vous instructeur ?",
         "subtitle1": "Rejoignez notre communauté d'instructeurs indépendants hautement qualifiés. Inscrivez-vous gratuitement dès aujourd'hui !",
@@ -637,7 +650,12 @@
         "successMessage": "Excellent ! Vous avez terminé la configuration de votre profil. Maintenant vous pouvez trouver des instructeurs parfaits pour votre niveau et vos objectifs, et accéder à du contenu personnalisé pour améliorer votre technique."
     },
     "guestDetails": {
-        "title": "Configurer le Profil"
+        "title": "Configurer le Profil",
+        "step": "Étape",
+        "of": "sur",
+        "back": "Retour",
+        "next": "Suivant",
+        "completeProfile": "Compléter le Profil"
     },
     "chat": {
         "title": "Chat",
@@ -779,5 +797,17 @@
         "step2": "Recevez un retour de l'IA (Snow)",
         "step3": "Premium : Correction d'un instructeur"
       }
+    },
+    "resortsAndLessons": {
+        "title": "Stations et Cours",
+        "subtitle": "Découvrez les meilleures stations de ski d'Argentine et réservez vos cours avec des moniteurs certifiés",
+        "all": "Tous",
+        "lessonTypes": "Types de Cours",
+        "categories": "Catégories",
+        "skiLessons": "Cours de Ski",
+        "snowboardLessons": "Cours de Snowboard",
+        "groupLessons": "Cours en Groupe",
+        "privateLessons": "Cours Particuliers",
+        "childrenLessons": "Cours pour Enfants"
     }
 }

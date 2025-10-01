@@ -240,7 +240,7 @@ const ResortsAndLessonsSection = () => {
 
   // Definir los filtros disponibles
   const filters = [
-    { key: 'all', label: 'Todos' },
+    { key: 'all', label: t('resortsAndLessons.all') },
     { key: 'ski', label: t('resortsAndLessons.skiLessons') },
     { key: 'snowboard', label: t('resortsAndLessons.snowboardLessons') },
     { key: 'group', label: t('resortsAndLessons.groupLessons') },
@@ -277,7 +277,7 @@ const ResortsAndLessonsSection = () => {
             align="center"
             sx={{ mb: 6, color: 'text.secondary' }}
           >
-            Descubre los mejores centros de esquí de Argentina y reserva tus clases con instructores certificados
+            {t('resortsAndLessons.subtitle')}
           </Typography>
 
           {/* Filtros */}

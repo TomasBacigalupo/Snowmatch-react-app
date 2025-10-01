@@ -144,7 +144,7 @@ export default function RegisterForm({ onSuccess }) {
           }}
         />
         <Typography variant="subtitle1">{translate('registerForm.certification')}</Typography>
-        <RHFRadioGroup name='entity' options={["AADIDESS", "PSIA", "ENISSCHAG"]}/>
+        <RHFRadioGroup name='entity' options={["AADIDESS", "PSIA", "ISIA", "OTHER"]}/>
         <RHFUploadSingleFile name="certificate" accept="image/*" maxSize={16000000} onDrop={handleDrop}/>
         <LoadingButton fullWidth size="large" type="submit" variant="contained" loading={isSubmitting} sx={{':hover':{color:'#3399FF'}}}>
           {translate('registerForm.register')}

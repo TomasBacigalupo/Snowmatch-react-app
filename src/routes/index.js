@@ -259,6 +259,21 @@ export default function Router() {
             { path: '*', element: <EcommerceShop isGuest={true} teacherType="school" /> },
             { path: 'independent', element: <EcommerceShop isGuest={true} teacherType="independent" /> },
             { path: 'school', element: <EcommerceShop isGuest={true} teacherType="school" /> },
+          ]
+        },
+        {
+          path: 'match',
+          element: (
+            <RoleBasedGuard accessibleRoles={['GUEST', 'STUDENT']}>
+              <GuestLayout />
+            </RoleBasedGuard>
+
+          ),
+          children: [
+            { element: <Navigate to={'/match/school/:resort'} replace />, index: true },
+            { path: '*', element: <EcommerceShop isGuest={true} teacherType="school" /> },
+            { path: 'independent', element: <EcommerceShop isGuest={true} teacherType="independent" /> },
+            { path: 'school', element: <EcommerceShop isGuest={true} teacherType="school" /> },
             { path: 'chat', element: <Chat /> },
             { path: 'chat/:conversationId', element: <Chat /> },
           ]
@@ -520,7 +535,7 @@ export default function Router() {
           element: <MainLayout />,
           children: [
             {
-              element: isMobile ? <Navigate to="/match/videoCoach/upload" replace /> : <SearchPage />,
+              element: isMobile ? <Navigate to="/match/videoCoach/upload" replace /> : <HomePage />,
               index: true
             },
             { path: 'all-teachers', element: <AllTeachers /> },
@@ -549,7 +564,7 @@ export default function Router() {
           element: <MainLayout />,
           children: [
             {
-              element: isMobile ? <Navigate to="/match/videoCoach/upload" replace /> : <SearchPage />,
+              element: isMobile ? <Navigate to="/match/videoCoach/upload" replace /> : <Navigate to="/en" replace />,
               index: true
             },
             { path: 'all-teachers', element: <AllTeachers /> },

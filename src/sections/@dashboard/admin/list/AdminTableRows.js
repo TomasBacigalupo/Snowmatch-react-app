@@ -18,9 +18,10 @@ AdminTableRow.propTypes = {
   onDeleteRow: PropTypes.func,
   onWapp: PropTypes.func,
   onEvents: PropTypes.func,
+  onClick: PropTypes.func,
 };
 
-export default function AdminTableRow({ row, selected, onEditRow, onSelectRow, onConfirmRow, onDeclineRow, onWapp, onEvents }) {
+export default function AdminTableRow({ row, selected, onEditRow, onSelectRow, onConfirmRow, onDeclineRow, onWapp, onEvents, onClick }) {
   const theme = useTheme();
 
   const { name, lastname, imageLink, role, level, authorized, state, id } = row;
@@ -36,7 +37,7 @@ export default function AdminTableRow({ row, selected, onEditRow, onSelectRow, o
   };
 
   return (
-    <TableRow hover selected={selected}>
+    <TableRow hover selected={selected} onClick={onClick} sx={{ cursor: 'pointer' }}>
       <TableCell padding="checkbox">
         <Checkbox checked={selected} onClick={onSelectRow} />
       </TableCell>

@@ -37,6 +37,7 @@ import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
 import { TableEmptyRows, TableHeadCustom, TableNoData, TableSelectedActions } from '../../components/table';
 // sections
 import { AdminTableToolbar, AdminTableRow } from '../../sections/@dashboard/admin/list';
+import TeacherDetailsDrawer from 'src/sections/@dashboard/admin/list/TeacherDetailsDrawer';
 //cosas de fede
 import { useDispatch, useSelector } from '../../redux/store';
 import { getTeachers, openModal, closeModal } from '../../redux/slices/admin'
@@ -163,6 +164,17 @@ export default function AdminReview() {
   const { teachers, isOpenModal, selectedEmail } = useSelector((state) => { return state.admin });
 
   const [reqPage, setReqPage] = useState(0);
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [selectedTeacher, setSelectedTeacher] = useState(null);
+
+  const handleRowClick = (row) => {
+    setSelectedTeacher(row);
+    setDrawerOpen(true);
+  };
+
+  const handleCloseDrawer = () => {
+    setDrawerOpen(false);
+  };
 
   const onChangePage2 = async (event, newPage) => {
     dispatch(getTeachers(newPage + 1, filterRole))
@@ -277,6 +289,7 @@ export default function AdminReview() {
                         onDeclineRow={() => handleDeclineOpenModal(row.email)}
                         onWapp={() => { handleContactWapp(row.countryCode, row.cellphone, row.name) }}
                         onEvents={() => { navigate(PATH_DASHBOARD.admin.events(row.id)) }}
+                        onClick={() => handleRowClick(row)}
                       />))}
 
                     <TableEmptyRows height={denseHeight} emptyRows={0} />
@@ -298,6 +311,7 @@ export default function AdminReview() {
                   onDeclineRow={() => handleDeclineOpenModal(row.email)}
                   onWapp={()=>{handleContactWapp(row.countryCode, row.cellphone, row.name)}}
                   onEvents={() => { navigate(PATH_DASHBOARD.admin.events(row.id)) }}
+                  onClick={() => handleRowClick(row)}
                 />))}
 
             </Hidden>
@@ -322,6 +336,7 @@ export default function AdminReview() {
             />
           </Box>
         </Card>
+        <TeacherDetailsDrawer open={drawerOpen} onClose={handleCloseDrawer} teacher={selectedTeacher} />
         <DialogAnimate open={isOpenModal} onClose={handleDeclineCloseModal}>
           <DialogTitle>{'Seguro que queres Eliminar la reserva?'}</DialogTitle>
           <DeclineForm

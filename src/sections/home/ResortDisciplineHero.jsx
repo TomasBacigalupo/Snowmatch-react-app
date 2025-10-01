@@ -166,7 +166,7 @@ export default function ResortDisciplineHero() {
     const { translate } = useLocales()
     const { resort: resortSlug, discipline: disciplineSlug, type: typeSlug } = useParams();
     const [discipline, setDiscipline] = useState(disciplineSlug)
-    const [resort, setResort] = useState(resortSlug || 'Cerro Catedral')
+    const [resort, setResort] = useState(resortSlug || 'aspen')
     const [type, setType] = useState(typeSlug)
     
     // State for resort options from API
@@ -206,24 +206,14 @@ export default function ResortDisciplineHero() {
     }, [dispatch, filters, resort, discipline]);
 
     useEffect(() => {
-        // Only process resort slug if we have resort options loaded
-        if (resortOptions.length > 0) {
-            const resort = resortOptions.find(r => r.slugs && r.slugs.includes(resortSlug))
-            if (resort) {
-                setResort(resort.id)
-            } else {
-                setResort('Cerro Catedral')
-            }
-        }
-        
+        setResort(fromSlugToResortEnum(resortSlug))
+    
         const type = TYPE_OPTIONS.find(t => t.slugs.includes(typeSlug))
         if (type) {
             setType(type.id)
         }
-        if (SKI_OPTIONS.includes(disciplineSlug)) {
-            setDiscipline('Ski')
-        } else if (SNOW_OPTIONS.includes(disciplineSlug)) {
-            setDiscipline('SnowBoard')
+        if (disciplineSlug && disciplineSlug?.toUpperCase()) {
+            setDiscipline(disciplineSlug?.toUpperCase())
         } else {
             setDiscipline(['Ski', 'SnowBoard'])
         }
@@ -233,26 +223,6 @@ export default function ResortDisciplineHero() {
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
-
-    const SKI_RESORTS = [
-        "Aconcagua",
-        "Batea Mahuida",
-        "Calafate Mountain Park",
-        "Caviahue",
-        "Cerro Bayo",
-        "Cerro Castor",
-        "Cerro Catedral",
-        "Chapelco",
-        "La Hoya",
-        "Las Leñas",
-        "Las Pendientes",
-        "Los Penitentes",
-        "Los Puquios",
-        "Monte Bianco",
-        "Patagonia Heliski",
-        "Perito Moreno",
-        "Vallecitos"
-    ]
 
     const defaultValues = {
         resort: "Catedral",

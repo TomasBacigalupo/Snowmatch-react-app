@@ -12,6 +12,41 @@
         "getItOn": "DISPONÍVEL NO",
         "googlePlay": "Google Play"
     },
+    "homeCoaches": {
+        "title": "Conheça seus treinadores",
+        "subtitle": "Conheça as pessoas por trás do Snowmatch.",
+        "coaches": {
+            "tomasBacigalupo": {
+                "name": "Tomas Bacigalupo",
+                "role": "FUNDADOR",
+                "subtitle": "Esquiador Alpino",
+                "bio": "Tomas é o fundador do Snowmatch, esquiador alpino. Participou dos Jogos Olímpicos da Juventude e é responsável pelo desenvolvimento e treinamento do Snow, seu instrutor IA."
+            },
+            "tomasSoleno": {
+                "name": "Tomas Soleño",
+                "role": "TREINADOR PRINCIPAL",
+                "subtitle": "Instrutor Nível 5 · Guia de Pesca Patagônia",
+                "bio": "Guia de pesca na Patagônia e instrutor de esqui no Japão, Argentina e Estados Unidos. É responsável pelas correções."
+            },
+            "manuelTorres": {
+                "name": "Manuel Torres",
+                "role": "EQUIPE SOFTWARE IA ESQUI",
+                "subtitle": "Esquiador Alpino Campeão FIS ARG",
+                "bio": "Esquiador alpino, campeão argentino FIS. Faz parte da equipe de desenvolvimento do software de esqui com IA, contribuindo com sua experiência em competições."
+            },
+            "ignacioCapiet": {
+                "name": "Ignacio Capiet",
+                "role": "OPERAÇÕES E SUCESSO DO CLIENTE",
+                "subtitle": "PSIA N3",
+                "bio": "Instrutor PSIA Nível 3 e oficial de operações e sucesso do cliente. Garante a excelência no serviço e a satisfação de nossos usuários."
+            }
+        }
+    },
+    "landing": {
+        "advertisement": {
+            "subtitle": "Junte-se à nossa comunidade de esquiadores e snowboarders. Aprenda com os melhores instrutores certificados da Argentina."
+        }
+    },
     "agency": {
         "hero": {
             "title": "Ofereça aulas e equipamentos de esqui com Snowmatch",
@@ -133,6 +168,24 @@
         "clientList": "Agenda de clientes"
     },
     "home": {
+        "videoStats": {
+            "title": "Melhore com SnowMatch",
+            "1": {
+                "total": "160",
+                "title": "Correções de Vídeo",
+                "description": "Esquiadores melhorando sua técnica através de correções de vídeo"
+            },
+            "2": {
+                "total": "300",
+                "title": "Instrutores",
+                "description": "Instrutores certificados prontos para ajudá-lo a melhorar"
+            },
+            "3": {
+                "total": "6000",
+                "title": "Montanhas",
+                "description": "Funciona em todo o mundo"
+            }
+        },
         "stats": {
             "title": "Simples e seguro",
             "1": {
@@ -1700,6 +1753,7 @@
     "auth": {
         "haveAccount": "Já tem uma conta?",
         "login": "Entrar",
+        "register": "Registrar",
         "getStartedFree": "Comece totalmente grátis.",
         "registrationMessage": "Ao se registrar, eu concordo com os",
         "terms": "Termos de Serviço",
@@ -2169,5 +2223,62 @@
         "groupLessons": "Aulas em Grupo",
         "privateLessons": "Aulas Particulares",
         "childrenLessons": "Aulas para Crianças"
+    },
+    "homeWhySnowmatch": {
+        "overline": "Por que Snowmatch",
+        "title": "Desenhado para melhorar seu esqui",
+        "subtitle": "Tudo que você precisa para aprender, aperfeiçoar sua técnica e viver uma experiência segura e divertida na montanha.",
+        "features": {
+            "1": {
+                "title": "Planos de aulas personalizados para esqui",
+                "description": "Criamos seu plano de aulas e prática baseado no seu nível, objetivos e calendário de viagem. Sessões variadas e divertidas para progredir nas pistas."
+            },
+            "2": {
+                "title": "Instrutores certificados e verificados",
+                "description": "Conecte-se com instrutores qualificados no seu centro de esqui. Escolha por idioma, especialidade e experiência para ter a aula ideal."
+            },
+            "3": {
+                "title": "Acompanhamento integral em técnica e segurança",
+                "description": "Receba conselhos sobre postura, controle de velocidade, escolha de equipamento e normas da montanha para desfrutar com confiança."
+            },
+            "4": {
+                "title": "Treinamento de força e mobilidade para esquiadores",
+                "description": "Acesse rotinas complementares para evitar lesões e ter melhor desempenho na neve: estabilidade, core e trabalho de pernas."
+            }
+        }
+    },
+    "pricingPlans": {
+        "title": "Planos de Análise de Vídeo",
+        "subtitle": "Escolha o plano perfeito para seu progresso",
+        "description": "Melhore sua técnica de esqui com análise profissional de vídeo. De vídeos individuais a pacotes em massa, temos o plano ideal para você.",
+        "plans": {
+            "singleVideo": {
+                "name": "Vídeo Individual",
+                "price": 10,
+                "period": "por vídeo",
+                "description": "Pague por análise de vídeo",
+                "whatsappMessage": "Olá! Estou interessado em analisar um vídeo individual por $10. Você poderia me ajudar com o pagamento?"
+            },
+            "tenVideos": {
+                "name": "Pacote 10 Vídeos",
+                "price": 50,
+                "period": "10 vídeos",
+                "description": "Melhor valor para esquiadores regulares",
+                "whatsappMessage": "Olá! Estou interessado no Pacote 10 Vídeos por $50. Você poderia me ajudar com o pagamento?"
+            },
+            "hundredVideos": {
+                "name": "Pacote 100 Vídeos",
+                "price": 100,
+                "period": "100 vídeos",
+                "description": "Para atletas sérios e treinadores",
+                "whatsappMessage": "Olá! Estou interessado no Pacote 100 Vídeos por $100. Você poderia me ajudar com o pagamento?"
+            }
+        },
+        "popular": "Mais Popular",
+        "subscribe": "Começar",
+        "contactTitle": "Tem dúvidas?",
+        "contactSubtitle": "Entre em contato conosco via WhatsApp e ajudaremos você a escolher o plano perfeito para suas necessidades.",
+        "contactButton": "Contatar via WhatsApp",
+        "contactMessage": "Olá! Gostaria de obter mais informações sobre os planos de análise de vídeo do SnowMatch."
     }
 }

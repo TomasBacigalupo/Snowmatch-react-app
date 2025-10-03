@@ -12,6 +12,41 @@
         "getItOn": "DISPONIBLE SUR",
         "googlePlay": "Google Play"
     },
+    "homeCoaches": {
+        "title": "Rencontrez vos entraîneurs",
+        "subtitle": "Rencontrez les personnes derrière Snowmatch.",
+        "coaches": {
+            "tomasBacigalupo": {
+                "name": "Tomas Bacigalupo",
+                "role": "FONDATEUR",
+                "subtitle": "Skieur Alpin",
+                "bio": "Tomas est le fondateur de Snowmatch, skieur alpin. Il a participé aux Jeux Olympiques de la Jeunesse et est responsable du développement et de l'entraînement de Snow, votre instructeur IA."
+            },
+            "tomasSoleno": {
+                "name": "Tomas Soleño",
+                "role": "ENTRAÎNEUR PRINCIPAL",
+                "subtitle": "Instructeur Niveau 5 · Guide de Pêche Patagonie",
+                "bio": "Guide de pêche en Patagonie et instructeur de ski au Japon, en Argentine et aux États-Unis. Il est responsable des corrections."
+            },
+            "manuelTorres": {
+                "name": "Manuel Torres",
+                "role": "ÉQUIPE LOGICIEL IA SKI",
+                "subtitle": "Skieur Alpin Champion FIS ARG",
+                "bio": "Skieur alpin, champion argentin FIS. Il fait partie de l'équipe de développement du logiciel de ski avec IA, apportant son expérience en compétition."
+            },
+            "ignacioCapiet": {
+                "name": "Ignacio Capiet",
+                "role": "OPÉRATIONS ET RÉUSSITE CLIENT",
+                "subtitle": "PSIA N3",
+                "bio": "Instructeur PSIA Niveau 3 et responsable des opérations et de la réussite client. Assure l'excellence du service et la satisfaction de nos utilisateurs."
+            }
+        }
+    },
+    "landing": {
+        "advertisement": {
+            "subtitle": "Rejoignez notre communauté de skieurs et snowboarders. Apprenez avec les meilleurs instructeurs certifiés d'Argentine."
+        }
+    },
     "skiProLanding": {
         "title": "Êtes-vous instructeur ?",
         "subtitle1": "Rejoignez notre communauté d'instructeurs indépendants hautement qualifiés. Inscrivez-vous gratuitement dès aujourd'hui !",
@@ -382,6 +417,7 @@
         "register": "S'inscrire"
     },
     "auth": {
+        "register": "S'inscrire",
         "personalProfile": {
             "title": "Ajoutez une photo de profil",
             "description": "Une photo de profil vous aide à vous démarquer des autres instructeurs. Vous pouvez la changer à tout moment.",
@@ -809,5 +845,100 @@
         "groupLessons": "Cours en Groupe",
         "privateLessons": "Cours Particuliers",
         "childrenLessons": "Cours pour Enfants"
+    },
+    "homeWhySnowmatch": {
+        "overline": "Pourquoi Snowmatch",
+        "title": "Conçu pour améliorer votre ski",
+        "subtitle": "Tout ce dont vous avez besoin pour apprendre, perfectionner votre technique et vivre une expérience sûre et amusante en montagne.",
+        "features": {
+            "1": {
+                "title": "Plans de cours personnalisés pour le ski",
+                "description": "Nous créons votre plan de cours et de pratique basé sur votre niveau, objectifs et calendrier de voyage. Sessions variées et divertissantes pour progresser sur les pistes."
+            },
+            "2": {
+                "title": "Instructeurs certifiés et vérifiés",
+                "description": "Connectez-vous avec des instructeurs qualifiés dans votre station de ski. Choisissez par langue, spécialité et expérience pour avoir le cours idéal."
+            },
+            "3": {
+                "title": "Accompagnement complet en technique et sécurité",
+                "description": "Recevez des conseils sur la posture, le contrôle de vitesse, le choix d'équipement et les règles de montagne pour profiter en toute confiance."
+            },
+            "4": {
+                "title": "Entraînement de force et mobilité pour skieurs",
+                "description": "Accédez à des routines complémentaires pour éviter les blessures et mieux performer sur la neige : stabilité, core et travail des jambes."
+            }
+        }
+    },
+    "pricingPlans": {
+        "title": "Plans d'Analyse Vidéo",
+        "subtitle": "Choisissez le plan parfait pour votre progression",
+        "description": "Améliorez votre technique de ski avec une analyse professionnelle de vidéo. Des vidéos individuelles aux paquets en vrac, nous avons le plan idéal pour vous.",
+        "plans": {
+            "singleVideo": {
+                "name": "Vidéo Individuelle",
+                "price": 10,
+                "period": "par vidéo",
+                "description": "Payez par analyse de vidéo",
+                "whatsappMessage": "Bonjour ! Je suis intéressé par l'analyse d'une vidéo individuelle pour 10$. Pourriez-vous m'aider avec le paiement ?"
+            },
+            "tenVideos": {
+                "name": "Pack 10 Vidéos",
+                "price": 50,
+                "period": "10 vidéos",
+                "description": "Meilleure valeur pour les skieurs réguliers",
+                "whatsappMessage": "Bonjour ! Je suis intéressé par le Pack 10 Vidéos pour 50$. Pourriez-vous m'aider avec le paiement ?"
+            },
+            "hundredVideos": {
+                "name": "Pack 100 Vidéos",
+                "price": 100,
+                "period": "100 vidéos",
+                "description": "Pour athlètes sérieux et entraîneurs",
+                "whatsappMessage": "Bonjour ! Je suis intéressé par le Pack 100 Vidéos pour 100$. Pourriez-vous m'aider avec le paiement ?"
+            }
+        },
+        "popular": "Le Plus Populaire",
+        "subscribe": "Commencer",
+        "contactTitle": "Avez-vous des questions ?",
+        "contactSubtitle": "Contactez-nous par WhatsApp et nous vous aiderons à choisir le plan parfait pour vos besoins.",
+        "contactButton": "Contacter par WhatsApp",
+        "contactMessage": "Bonjour ! J'aimerais obtenir plus d'informations sur les plans d'analyse vidéo de SnowMatch."
+    },
+    "home": {
+        "videoStats": {
+            "title": "Améliorez avec SnowMatch",
+            "1": {
+                "total": "160",
+                "title": "Corrections Vidéo",
+                "description": "Skieurs améliorant leur technique grâce aux corrections vidéo"
+            },
+            "2": {
+                "total": "300",
+                "title": "Instructeurs",
+                "description": "Instructeurs certifiés prêts à vous aider à progresser"
+            },
+            "3": {
+                "total": "6000",
+                "title": "Montagnes",
+                "description": "Fonctionne dans le monde entier"
+            }
+        },
+        "stats": {
+            "title": "Simple et sécurisé",
+            "1": {
+                "total": "180",
+                "title": "Instructeurs",
+                "description": "Instructeurs certifiés"
+            },
+            "2": {
+                "total": "1000",
+                "title": "Cours",
+                "description": "Clients et instructeurs satisfaits"
+            },
+            "3": {
+                "total": "10",
+                "title": "Montagnes",
+                "description": "Instructeurs dans les centres de ski"
+            }
+        }
     }
 }

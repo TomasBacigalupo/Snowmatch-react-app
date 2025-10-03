@@ -2,13 +2,12 @@ import PropTypes from 'prop-types';
 import { m } from 'framer-motion';
 // @mui
 import { useTheme, styled } from '@mui/material/styles';
-import { Box, Grid, Card, Link, Stack, Button, Divider, Container, Typography } from '@mui/material';
-// _mock_
-import { _homePlans } from '../../_mock';
+import { Box, Grid, Card, Stack, Button, Container, Typography, Chip } from '@mui/material';
 // components
-import Image from '../../components/Image';
 import Iconify from '../../components/Iconify';
 import { varFade, MotionViewport } from '../../components/animate';
+// hooks
+import useLocales from '../../hooks/useLocales';
 
 // ----------------------------------------------------------------------
 
@@ -24,8 +23,44 @@ const RootStyle = styled('div')(({ theme }) => ({
 
 export default function HomePricingPlans() {
   const theme = useTheme();
-
   const isLight = theme.palette.mode === 'light';
+  const { translate: t } = useLocales();
+
+  const handleWhatsAppClick = (message) => {
+    const phoneNumber = '+5492944703443';
+    const encodedMessage = encodeURIComponent(message);
+    const whatsappUrl = `https://wa.me/${phoneNumber.replace('+', '')}?text=${encodedMessage}`;
+    window.open(whatsappUrl, '_blank');
+  };
+
+  // Get plans from translations
+  const plans = [
+    {
+      name: t('pricingPlans.plans.singleVideo.name'),
+      price: t('pricingPlans.plans.singleVideo.price'),
+      period: t('pricingPlans.plans.singleVideo.period'),
+      description: t('pricingPlans.plans.singleVideo.description'),
+      popular: false,
+      whatsappMessage: t('pricingPlans.plans.singleVideo.whatsappMessage'),
+    },
+    {
+      name: t('pricingPlans.plans.tenVideos.name'),
+      price: t('pricingPlans.plans.tenVideos.price'),
+      period: t('pricingPlans.plans.tenVideos.period'),
+      description: t('pricingPlans.plans.tenVideos.description'),
+      popular: true,
+      whatsappMessage: t('pricingPlans.plans.tenVideos.whatsappMessage'),
+    },
+    {
+      name: t('pricingPlans.plans.hundredVideos.name'),
+      price: t('pricingPlans.plans.hundredVideos.price'),
+      period: t('pricingPlans.plans.hundredVideos.period'),
+      description: t('pricingPlans.plans.hundredVideos.description'),
+      popular: false,
+      whatsappMessage: t('pricingPlans.plans.hundredVideos.whatsappMessage'),
+    },
+  ];
+
 
   return (
     <RootStyle>
@@ -33,30 +68,32 @@ export default function HomePricingPlans() {
         <Box sx={{ mb: 10, textAlign: 'center' }}>
           <m.div variants={varFade().inUp}>
             <Typography component="div" variant="overline" sx={{ mb: 2, color: 'text.disabled' }}>
-              pricing plans
+              {t('pricingPlans.title')}
             </Typography>
           </m.div>
           <m.div variants={varFade().inDown}>
             <Typography variant="h2" sx={{ mb: 3 }}>
-              The right plan for your business
+              {t('pricingPlans.subtitle')}
             </Typography>
           </m.div>
           <m.div variants={varFade().inDown}>
             <Typography
               sx={{
                 color: isLight ? 'text.secondary' : 'text.primary',
+                maxWidth: 600,
+                mx: 'auto',
               }}
             >
-              Choose the perfect plan for your needs. Always flexible to grow
+              {t('pricingPlans.description')}
             </Typography>
           </m.div>
         </Box>
 
-        <Grid container spacing={5}>
-          {_homePlans.map((plan) => (
-            <Grid key={plan.license} item xs={12} md={4}>
-              <m.div variants={plan.license === 'Standard Plus' ? varFade().inDown : varFade().inUp}>
-                <PlanCard plan={plan} />
+        <Grid container spacing={4} justifyContent="center">
+          {plans.map((plan, index) => (
+            <Grid key={plan.name} item xs={12} sm={6} lg={4}>
+              <m.div variants={varFade().inUp}>
+                <PlanCard plan={plan} onWhatsAppClick={handleWhatsAppClick} />
               </m.div>
             </Grid>
           ))}
@@ -65,12 +102,12 @@ export default function HomePricingPlans() {
         <m.div variants={varFade().in}>
           <Box sx={{ p: 5, mt: 10, textAlign: 'center' }}>
             <m.div variants={varFade().inDown}>
-              <Typography variant="h3">Still have questions?</Typography>
+              <Typography variant="h3">{t('pricingPlans.contactTitle')}</Typography>
             </m.div>
 
             <m.div variants={varFade().inDown}>
               <Typography sx={{ mt: 3, mb: 5, color: 'text.secondary' }}>
-                Please describe your case to receive the most accurate advice.
+                {t('pricingPlans.contactSubtitle')}
               </Typography>
             </m.div>
 
@@ -78,9 +115,16 @@ export default function HomePricingPlans() {
               <Button
                 size="large"
                 variant="contained"
-                href="mailto:support@minimals.cc?subject=[Feedback] from Customer"
+                onClick={() => handleWhatsAppClick(t('pricingPlans.contactMessage'))}
+                startIcon={<Iconify icon="logos:whatsapp-icon" />}
+                sx={{
+                  backgroundColor: '#25D366',
+                  '&:hover': {
+                    backgroundColor: '#128C7E',
+                  },
+                }}
               >
-                Contact us
+                {t('pricingPlans.contactButton')}
               </Button>
             </m.div>
           </Box>
@@ -94,112 +138,86 @@ export default function HomePricingPlans() {
 
 PlanCard.propTypes = {
   plan: PropTypes.shape({
-    license: PropTypes.string,
-    commons: PropTypes.arrayOf(PropTypes.string),
-    icons: PropTypes.arrayOf(PropTypes.string),
-    options: PropTypes.arrayOf(PropTypes.string),
+    name: PropTypes.string,
+    price: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    period: PropTypes.string,
+    description: PropTypes.string,
+    popular: PropTypes.bool,
+    whatsappMessage: PropTypes.string,
   }),
+  onWhatsAppClick: PropTypes.func,
 };
 
-function PlanCard({ plan }) {
-  const { license, commons, options, icons } = plan;
-
-  const standard = license === 'Standard';
-  const plus = license === 'Standard Plus';
+function PlanCard({ plan, onWhatsAppClick }) {
+  const { name, price, period, description, popular, whatsappMessage } = plan;
+  const { translate: t } = useLocales();
+  
 
   return (
     <Card
       sx={{
-        p: 5,
-        boxShadow: 0,
-        ...(plus && {
-          boxShadow: (theme) => theme.customShadows.z24,
-        }),
+        p: 4,
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        position: 'relative',
+        boxShadow: popular ? (theme) => theme.customShadows.z24 : 0,
+        border: popular ? 2 : 1,
+        borderColor: popular ? 'primary.main' : 'divider',
+        '&:hover': {
+          boxShadow: (theme) => theme.customShadows.z20,
+        },
       }}
     >
-      <Stack spacing={5}>
-        <div>
-          <Typography variant="overline" component="div" sx={{ mb: 2, color: 'text.disabled' }}>
-            LICENSE
+      {popular && (
+        <Chip
+          label={t('pricingPlans.popular')}
+          color="primary"
+          size="small"
+          sx={{
+            position: 'absolute',
+            top: 16,
+            right: 16,
+            fontWeight: 600,
+          }}
+        />
+      )}
+
+      <Stack spacing={3} sx={{ flexGrow: 1 }}>
+        <Box>
+          <Typography variant="h4" sx={{ mb: 1 }}>
+            {name}
           </Typography>
-          <Typography variant="h4">{license}</Typography>
-        </div>
+          <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+            {description}
+          </Typography>
+          <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 0.5 }}>
+            <Typography variant="h3" component="span">
+              {typeof price === 'number' ? `$${price}` : price}
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              /{period}
+            </Typography>
+          </Box>
+        </Box>
 
-        {standard ? (
-          <Image alt="package" src={icons[2]} sx={{ width: 40, height: 40 }} />
-        ) : (
-          <Stack direction="row" spacing={1}>
-            {icons.map((icon) => (
-              <Image key={icon} alt="package" src={icon} sx={{ width: 40, height: 40 }} />
-            ))}
-          </Stack>
-        )}
 
-        <Stack spacing={2.5}>
-          {commons.map((option) => (
-            <Stack key={option} spacing={1.5} direction="row" alignItems="center">
-              <Iconify icon={'eva:checkmark-fill'} sx={{ color: 'primary.main', width: 20, height: 20 }} />
-              <Typography variant="body2">{option}</Typography>
-            </Stack>
-          ))}
-
-          <Divider sx={{ borderStyle: 'dashed' }} />
-
-          {options.map((option, optionIndex) => {
-            const disabledLine =
-              (standard && optionIndex === 1) ||
-              (standard && optionIndex === 2) ||
-              (standard && optionIndex === 3) ||
-              (plus && optionIndex === 3);
-
-            return (
-              <Stack
-                spacing={1.5}
-                direction="row"
-                alignItems="center"
-                sx={{
-                  ...(disabledLine && { color: 'text.disabled' }),
-                }}
-                key={option}
-              >
-                <Iconify
-                  icon={'eva:checkmark-fill'}
-                  sx={{
-                    width: 20,
-                    height: 20,
-                    color: 'primary.main',
-                    ...(disabledLine && { color: 'text.disabled' }),
-                  }}
-                />
-                <Typography variant="body2">{option}</Typography>
-              </Stack>
-            );
-          })}
-        </Stack>
-
-        <Stack direction="row" justifyContent="flex-end">
-          <Link
-            color="text.secondary"
-            underline="always"
-            target="_blank"
-            rel="noopener"
-            href="https://material-ui.com/store/license/#i-standard-license"
-            sx={{ typography: 'body2', display: 'flex', alignItems: 'center' }}
+        <Box sx={{ mt: 'auto', pt: 2 }}>
+          <Button
+            size="large"
+            fullWidth
+            variant="contained"
+            onClick={() => onWhatsAppClick(whatsappMessage)}
+            sx={{
+              backgroundColor: 'primary.main',
+              '&:hover': {
+                backgroundColor: 'primary.dark',
+              },
+            }}
           >
-            Learn more <Iconify icon={'eva:chevron-right-fill'} width={20} height={20} />
-          </Link>
-        </Stack>
-
-        <Button
-          size="large"
-          fullWidth
-          variant={plus ? 'contained' : 'outlined'}
-          target="_blank"
-          rel="noopener"
-          href="https://material-ui.com/store/items/minimal-dashboard/"
-        >
-          Choose Plan
-        </Button>
+            {t('pricingPlans.subscribe')}
+          </Button>
+        </Box>
       </Stack>
     </Card>
   );

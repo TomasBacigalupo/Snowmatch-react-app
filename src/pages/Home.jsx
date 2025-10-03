@@ -18,7 +18,8 @@ import HomeStatsHero from 'src/sections/home/HomeStatsHero';
 import HomeCoaches from 'src/sections/home/HomeCoaches';
 import { Helmet } from 'react-helmet-async';
 import useLocales from 'src/hooks/useLocales';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
+import HomeStatsVideoHero from 'src/sections/home/HomeStatsVideoHero';
 
 // ----------------------------------------------------------------------
 
@@ -46,17 +47,33 @@ export default function HomePage() {
   const { user } = useAuth()
   const { onChangeLang } = useLocales();
   const query = useQuery();
+  const { lng: lang } = useParams();
 
   useEffect(() => {
-    const lng = query.get('lng');
-    if (lng) {
+    // Extraer idioma de la ruta (ej: /en, /es, /pt)
+    if (lang) {
       // Validar que el idioma sea uno de los soportados: es, en, pt
       const validLanguages = ['es', 'en', 'pt'];
-      if (validLanguages.includes(lng.toLowerCase())) {
-        onChangeLang(lng.toLowerCase());
+      if (validLanguages.includes(lang.toLowerCase())) {
+        onChangeLang(lang.toLowerCase());
+      }
+    } else {
+      // Fallback a query params si no hay lang en la ruta
+      const lng = query.get('lng');
+      const langQuery = query.get('lang');
+      
+      // Priorizar 'lang' sobre 'lng' si ambos están presentes
+      const languageParam = langQuery || lng;
+      
+      if (languageParam) {
+        // Validar que el idioma sea uno de los soportados: es, en, pt
+        const validLanguages = ['es', 'en', 'pt'];
+        if (validLanguages.includes(languageParam.toLowerCase())) {
+          onChangeLang(languageParam.toLowerCase());
+        }
       }
     }
-  }, [query, onChangeLang]);
+  }, [lang, query, ]);
 
   useEffect(() => {
     if (user) {
@@ -158,10 +175,10 @@ export default function HomePage() {
       <RootStyle>
         <HomeHero />
         <ContentStyle>
-          <HomeStatsHero />
-          <HomeWhySnowmatch />
+          <HomeStatsVideoHero />
           <HomeCoaches />
-          <HomeMinimal />
+          <HomeWhySnowmatch />
+          <HomePricingPlans  />
           <HomeAdvertisement />
           {/* <HomeMinimal />
 
@@ -178,7 +195,6 @@ export default function HomePage() {
           <HomeLookingFor />
 
           <HomeAdvertisement /> */}
-          <HomePricingPlans />
 
         </ContentStyle>
 

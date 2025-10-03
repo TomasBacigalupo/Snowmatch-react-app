@@ -3,6 +3,7 @@ import { styled } from '@mui/material/styles';
 import { Box, Card, CardContent, Container, Grid, Stack, Typography, Avatar, IconButton, Link, Tooltip, Chip } from '@mui/material';
 import Iconify from '../../components/Iconify';
 import { MotionViewport, varFade } from '../../components/animate';
+import useLocales from '../../hooks/useLocales';
 
 const RootStyle = styled('section')(({ theme }) => ({
   paddingTop: theme.spacing(15),
@@ -113,26 +114,44 @@ function CoachCardContent({ photo, name, role, roleColor, subtitle, instagramHan
 }
 
 export default function HomeCoaches() {
+  const { translate } = useLocales();
+  
   const coaches = [
     {
       photo: '/assets/avatars/avatar_1.png',
-      name: 'Tomas Bacigalupo',
-      role: 'FOUNDER',
+      name: translate('homeCoaches.coaches.tomasBacigalupo.name'),
+      role: translate('homeCoaches.coaches.tomasBacigalupo.role'),
       roleColor: undefined, // Usará el color primario del tema
-      subtitle: 'Alpine Skier',
+      subtitle: translate('homeCoaches.coaches.tomasBacigalupo.subtitle'),
       instagramHandle: 'snow.match',
-      bio:
-        'Tomas es el fundador de Snowmatch, corredor de esquí alpino. Participó en los Juegos Olímpicos de la Juventud y está a cargo del desarrollo y el entrenamiento de Snow, tu instructor IA.',
+      bio: translate('homeCoaches.coaches.tomasBacigalupo.bio'),
     },
     {
       photo: '/assets/avatars/avatar_2.png',
-      name: 'Tomas Soleño',
-      role: 'LEAD COACH',
+      name: translate('homeCoaches.coaches.tomasSoleno.name'),
+      role: translate('homeCoaches.coaches.tomasSoleno.role'),
       roleColor: undefined, // Usará el color primario del tema
-      subtitle: 'Instructor Nivel 5 · Guía de pesca Patagonia',
+      subtitle: translate('homeCoaches.coaches.tomasSoleno.subtitle'),
       instagramHandle: undefined,
-      bio:
-        'Guía de pesca en la Patagonia y profesor de esquí en Japón, Argentina y Estados Unidos. Está a cargo de las correcciones.',
+      bio: translate('homeCoaches.coaches.tomasSoleno.bio'),
+    },
+    {
+      photo: '/assets/avatars/avatar_3.png',
+      name: translate('homeCoaches.coaches.manuelTorres.name'),
+      role: translate('homeCoaches.coaches.manuelTorres.role'),
+      roleColor: undefined, // Usará el color primario del tema
+      subtitle: translate('homeCoaches.coaches.manuelTorres.subtitle'),
+      instagramHandle: undefined,
+      bio: translate('homeCoaches.coaches.manuelTorres.bio'),
+    },
+    {
+      photo: '/assets/avatars/avatar_4.png',
+      name: translate('homeCoaches.coaches.ignacioCapiet.name'),
+      role: translate('homeCoaches.coaches.ignacioCapiet.role'),
+      roleColor: undefined, // Usará el color primario del tema
+      subtitle: translate('homeCoaches.coaches.ignacioCapiet.subtitle'),
+      instagramHandle: undefined,
+      bio: translate('homeCoaches.coaches.ignacioCapiet.bio'),
     },
   ];
 
@@ -146,7 +165,7 @@ export default function HomeCoaches() {
             fontSize: { xs: '2.5rem', md: '3.5rem' },
             mb: 2
           }}>
-            Meet your coaches
+            {translate('homeCoaches.title')}
           </Typography>
           <Typography variant="h6" sx={{ 
             color: 'text.secondary',
@@ -154,7 +173,7 @@ export default function HomeCoaches() {
             mx: 'auto',
             fontWeight: 400
           }}>
-            Conocé a las personas detrás de Snowmatch.
+            {translate('homeCoaches.subtitle')}
           </Typography>
         </Box>
 

@@ -360,48 +360,20 @@ export default function HomeHero() {
                 sx={{ mb: 3 }}
               >
                 <Button
-                  variant="contained"
+                  variant="outlined"
                   size="large"
                   onClick={handleFindInstructors}
-                  sx={{
-                    px: 4,
-                    py: 1.5,
-                    fontSize: '1rem',
-                    fontWeight: 600,
-                    borderRadius: 2,
-                    background: theme.palette.primary.main,
-                    color: 'white',
-                    '&:hover': {
-                      background: theme.palette.primary.dark,
-                      transform: 'translateY(-2px)',
-                      boxShadow: '0 8px 16px rgba(0,0,0,0.1)',
-                    },
-                    transition: 'all 0.3s ease',
-                  }}
+                  
                   startIcon={<Iconify icon="eva:search-fill" />}
                 >
                   {translate('homeHero.findInstructors')}
                 </Button>
 
                 <Button
-                  variant="outlined"
+                  variant="contained"
                   size="large"
                   onClick={handleVideoFeedback}
-                  sx={{
-                    px: 4,
-                    py: 1.5,
-                    fontSize: '1rem',
-                    fontWeight: 600,
-                    borderRadius: 2,
-                    borderColor: theme.palette.primary.main,
-                    color: theme.palette.primary.main,
-                    '&:hover': {
-                      borderColor: theme.palette.primary.dark,
-                      background: 'rgba(0,0,0,0.04)',
-                      transform: 'translateY(-2px)',
-                    },
-                    transition: 'all 0.3s ease',
-                  }}
+                  
                   startIcon={<Iconify icon="eva:video-fill" />}
                 >
                   {translate('homeHero.getVideoFeedback')}

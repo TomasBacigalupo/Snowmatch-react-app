@@ -3,10 +3,11 @@ import { styled } from '@mui/material/styles';
 import { Box, Container, Grid, Stack, Typography, Card } from '@mui/material';
 import { MotionViewport, varFade } from '../../components/animate';
 import { useEffect, useMemo, useState } from 'react';
+import useLocales from '../../hooks/useLocales';
 
 const RootStyle = styled('section')(({ theme }) => ({
-  paddingTop: theme.spacing(12),
-  paddingBottom: theme.spacing(12),
+  paddingTop: theme.spacing(6),
+  paddingBottom: theme.spacing(6),
   backgroundColor: theme.palette.background.default,
 }));
 
@@ -29,7 +30,7 @@ const NumberBadge = styled('div', { shouldForwardProp: (prop) => prop !== 'activ
 const FeatureCard = styled(Card)(({ theme }) => ({
   boxShadow: 'none',
   background: 'transparent',
-  padding: theme.spacing(2, 0),
+  padding: theme.spacing(1, 0),
 }));
 
 function Feature({ index, title, description, active, onClick }) {
@@ -37,13 +38,13 @@ function Feature({ index, title, description, active, onClick }) {
     <FeatureCard component={m.div} variants={varFade().inUp}>
       <Stack direction="row" spacing={2} alignItems="flex-start" onClick={onClick} sx={{ cursor: 'pointer' }}>
         <NumberBadge active={active}>{index}</NumberBadge>
-        <Stack spacing={1} sx={{ flex: 1 }}>
+        <Stack spacing={0.5} sx={{ flex: 1 }}>
           <Box>
-            <Typography variant="h5" sx={{ fontWeight: 900, color: active ? 'text.primary' : 'text.primary' }}>
+            <Typography variant="h6" sx={{ fontWeight: 900, color: active ? 'text.primary' : 'text.primary' }}>
               {title}
             </Typography>
             {active && (
-              <Box sx={{ width: 64, height: 3, bgcolor: 'primary.main', mt: 1, borderRadius: 2 }} />
+              <Box sx={{ width: 64, height: 3, bgcolor: 'primary.main', mt: 0.5, borderRadius: 2 }} />
             )}
           </Box>
           <Typography variant="body1" sx={{ color: 'text.secondary' }}>
@@ -56,32 +57,30 @@ function Feature({ index, title, description, active, onClick }) {
 }
 
 export default function HomeWhySnowmatch() {
+  const { translate } = useLocales();
+
   const features = useMemo(() => [
     {
-      title: 'Planes de clases personalizados para esquiar',
-      description:
-        'Creamos tu plan de clases y práctica en base a tu nivel, objetivos y calendario de viaje. Sesiones variadas y entretenidas para progresar en la pista.',
+      title: translate('homeWhySnowmatch.features.1.title'),
+      description: translate('homeWhySnowmatch.features.1.description'),
       image: '/assets/courses/class.jpg',
     },
     {
-      title: 'Profesores certificados y verificados',
-      description:
-        'Conectate con instructores habilitados en tu centro de ski. Elegí por idioma, especialidad y experiencia para tener la clase ideal.',
+      title: translate('homeWhySnowmatch.features.2.title'),
+      description: translate('homeWhySnowmatch.features.2.description'),
       image: '/assets/avatars/pros-esquiando2.png',
     },
     {
-      title: 'Acompañamiento integral en técnica y seguridad',
-      description:
-        'Recibí consejos sobre postura, control de velocidad, elección de equipo y normas de montaña para disfrutar con confianza.',
+      title: translate('homeWhySnowmatch.features.3.title'),
+      description: translate('homeWhySnowmatch.features.3.description'),
       image: '/assets/rental/beginner-ski.jpg',
     },
     {
-      title: 'Entrenamiento de fuerza y movilidad para esquiadores',
-      description:
-        'Accedé a rutinas complementarias para evitar lesiones y rendir mejor en la nieve: estabilidad, core y trabajo de piernas.',
+      title: translate('homeWhySnowmatch.features.4.title'),
+      description: translate('homeWhySnowmatch.features.4.description'),
       image: '/assets/courses/groom.jpeg',
     },
-  ], []);
+  ], [translate]);
 
   const [activeIndex, setActiveIndex] = useState(0);
 
@@ -98,7 +97,7 @@ export default function HomeWhySnowmatch() {
   return (
     <RootStyle>
       <Container component={MotionViewport}>
-        <Grid container spacing={6} alignItems="center">
+        <Grid container spacing={4} alignItems="center">
           <Grid item xs={12} md={6}>
             <Box
               component={m.img}
@@ -111,22 +110,22 @@ export default function HomeWhySnowmatch() {
                 borderRadius: 3,
                 boxShadow: '0 20px 40px rgba(0,0,0,0.15)',
                 objectFit: 'cover',
-                height: { xs: 260, md: 420 },
+                height: { xs: 240, md: 320 },
               }}
             />
           </Grid>
 
           <Grid item xs={12} md={6}>
-            <Stack spacing={3}>
+            <Stack spacing={2}>
               <Box component={m.div} variants={varFade().inDown}>
                 <Typography variant="overline" sx={{ color: 'primary.main', fontWeight: 800 }}>
-                  Por qué Snowmatch
+                  {translate('homeWhySnowmatch.overline')}
                 </Typography>
-                <Typography variant="h2" sx={{ fontWeight: 900, mt: 1 }}>
-                  Diseñado para mejorar tu ski
+                <Typography variant="h3" sx={{ fontWeight: 900, mt: 0.5 }}>
+                  {translate('homeWhySnowmatch.title')}
                 </Typography>
-                <Typography variant="h6" sx={{ color: 'text.secondary', maxWidth: 760, mt: 1 }}>
-                  Todo lo que necesitás para aprender, perfeccionar tu técnica y vivir una experiencia segura y divertida en la montaña.
+                <Typography variant="body1" sx={{ color: 'text.secondary', maxWidth: 760, mt: 0.5 }}>
+                  {translate('homeWhySnowmatch.subtitle')}
                 </Typography>
               </Box>
 

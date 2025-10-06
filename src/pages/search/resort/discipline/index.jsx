@@ -1,6 +1,7 @@
 // @mui
 import { styled } from '@mui/material/styles';
 // components
+import Image from 'src/components/Image';
 // sections
 import useAuth from 'src/hooks/useAuth';
 import { useEffect, useState, Suspense, lazy } from 'react';
@@ -9,8 +10,10 @@ import Page from 'src/components/Page';
 import { useParams } from 'react-router';
 import useLocales from 'src/hooks/useLocales';
 import LoadingScreen from 'src/components/LoadingScreen';
+import StructuredData from 'src/components/StructuredData';
 import { Hidden } from '@mui/material';
 import { formatSlug } from 'src/utils/slugHelper';
+import { getResortLogoImage, getResortLogoAltText, getResponsiveResortLogoImage } from 'src/utils/resortImageMapping';
 
 // Lazy loaded components
 const HomeStatsHero = lazy(() => import('src/sections/home/HomeStatsHero'));
@@ -454,6 +457,31 @@ export default function SearchPage() {
   `}
         </script>
       </Helmet>
+      
+      {/* Additional Structured Data for Images and SEO */}
+      <StructuredData 
+        type="WebPage" 
+        resortSlug={resortSlug}
+        discipline={discipline}
+        lessonType={type}
+      />
+      <StructuredData 
+        type="Service" 
+        resortSlug={resortSlug}
+        discipline={discipline}
+        lessonType={type}
+      />
+      <StructuredData 
+        type="ImageObject" 
+        data={{
+          imageUrl: getResortLogoImage(resortSlug),
+          width: 1200,
+          height: 675
+        }}
+        resortSlug={resortSlug}
+        discipline={discipline}
+      />
+      
       <RootStyle>
         <Suspense fallback={<LoadingScreen />}>
           <ResortDisciplineHero
@@ -462,16 +490,25 @@ export default function SearchPage() {
             initialType={type}
           >
             <Hidden smUp>
-              <img
-                src='/logo/snowmatch.webp'
-                style={{
-                  height: '200px',
-                  width: '100%',
-                  objectFit: 'contain',
-                  aspectRatio: '16/9'
-                }}
-                alt='SnowMatch'
-              />
+              {(() => {
+                const logoImageConfig = getResponsiveResortLogoImage(resortSlug);
+                return (
+                  <Image
+                    src={logoImageConfig.src}
+                    srcSet={logoImageConfig.srcSet}
+                    sizes={logoImageConfig.sizes}
+                    alt={getResortLogoAltText(resortSlug, discipline)}
+                    ratio="16/9"
+                    disabledEffect
+                    priority
+                    sx={{
+                      height: '200px',
+                      width: '100%',
+                      objectFit: 'contain',
+                    }}
+                  />
+                );
+              })()}
             </Hidden>
           </ResortDisciplineHero>
         </Suspense>

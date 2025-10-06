@@ -104,10 +104,23 @@ export const transformResortsForUI = (resortsData) => {
 
 /**
  * Transforms a single resort value to display format for showing in UI
- * @param {string} resortValue - The resort value to transform
+ * @param {string} resortValue - The resort value to transform (can be multiple resorts separated by '-')
  * @returns {string} - The display name
  */
 export const resortTransformation = (resortValue) => {
+  if (!resortValue || typeof resortValue !== 'string') {
+    return '';
+  }
+  
+  // If multiple resorts are separated by '-', transform each one and join with ' - '
+  if (resortValue.includes('-')) {
+    return resortValue
+      .split('-')
+      .map(resort => getResortDisplayName(resort.trim()))
+      .filter(name => name) // Remove empty names
+      .join(' - ');
+  }
+  
   return getResortDisplayName(resortValue);
 };
 

@@ -13,6 +13,7 @@ import { PATH_DASHBOARD, PATH_GUEST, PATH_PAGE } from '../../routes/paths';
 import Logo from '../../components/Logo';
 import SocialsButton from '../../components/SocialsButton';
 import useLocales from '../../hooks/useLocales';
+import resortTransformation from 'src/utils/resortTransformation';
 
 const RootStyle = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -27,17 +28,16 @@ const getLinks = (translate) => [
   {
     headline: translate('footer.sections.snowmatch'),
     children: [
-      { name: translate('footer.links.catedral'), href: PATH_GUEST.independent },
-      { name: translate('footer.links.snowMatchX'), href: PATH_GUEST.snowMatchX },
-      { name: translate('footer.links.intermediate'), href: PATH_GUEST.intermedios },
-      { name: translate('footer.links.beginners'), href: PATH_GUEST.principiantes },
-      { name: translate('footer.links.heliski'), href: '/heliski' },
-      { name: translate('footer.links.clinic'), href: PATH_GUEST.clinic },
-      { name: translate('footer.links.family'), href: PATH_GUEST.family },
-      { name: translate('footer.links.children'), href: PATH_GUEST.children },
-      { name: translate('footer.links.freeRide'), href: PATH_GUEST.freeRide },
-      { name: translate('footer.links.groupCatedral'), href: PATH_GUEST.grupales },
-      { name: translate('footer.links.raceClinic'), href: PATH_GUEST.palos },
+      { name: 'Aspen', href: '/aspen' },
+      { name: 'Vail', href: '/vail' },
+      { name: 'Buttermilk', href: '/buttermilk' },
+      { name: 'Snowmass', href: '/snowmass' },
+      { name: 'Highlands', href: '/highlands' },
+      { name: 'Zermatt', href: '/zermatt' },
+      { name: 'Grandvalira', href: '/grandvalira' },
+      { name: 'Soldeu', href: '/soldeu' },
+      { name: 'Tarter', href: '/tarter' },
+      { name: 'Canillo', href: '/canillo' },
       { name: translate('footer.links.faqs'), href: PATH_PAGE.faqs },
       { name: translate('footer.links.blog'), href: "/noticias" },
     ],
@@ -45,10 +45,10 @@ const getLinks = (translate) => [
   {
     headline: translate('footer.sections.instructors'),
     children: [
-      { name: 'Profe de SM Tomas', href: PATH_GUEST.viewTeacher(14) },
-      { name: 'Profe de SM Popi', href: PATH_GUEST.viewTeacher(592) },
-      { name: 'Profe de SM Agos', href: PATH_GUEST.viewTeacher(897) },
-      { name: translate('footer.links.viewAllInstructors'), href: '/match/independent?resort=Cerro%20Catedral' },
+      { name: 'Benito Bacigalupo', href: '/profile/12' },
+      { name: 'Gaston Keenan', href: '/profile/16' },
+      { name: 'Patricio Gherlone', href: '/profile/138' },
+      { name: translate('footer.links.viewAllInstructors'), href: '/all-teachers' },
     ],
   },
   {
@@ -62,8 +62,7 @@ const getLinks = (translate) => [
     headline: translate('footer.sections.contact'),
     children: [
       { name: translate('footer.links.whatsapp'), href: 'https://wa.me/5492944263223' },
-      { name: translate('footer.links.email'), href: 'mailto:office@snowmatch.pro' },
-      { name: translate('footer.links.location'), href: 'https://goo.gl/maps/...'} // reemplazá con link real
+      { name: translate('footer.links.email'), href: 'mailto:office@snowmatch.pro' }
     ],
   },
 ];
@@ -120,18 +119,24 @@ export default function MainFooter() {
                     {section.headline}
                   </Typography>
                   <Stack spacing={1}>
-                    {section.children.map((link) => (
-                      <Link
-                        key={link.name}
-                        to={link.href}
-                        component={RouterLink}
-                        color="inherit"
-                        variant="body2"
-                        underline="hover"
-                      >
-                        {link.name}
-                      </Link>
-                    ))}
+                    {section.children.map((link) => {
+                      const isExternalLink = link.href.startsWith('http') || link.href.startsWith('mailto:');
+                      return (
+                        <Link
+                          key={link.name}
+                          href={link.href}
+                          component={isExternalLink ? 'a' : RouterLink}
+                          to={!isExternalLink ? link.href : undefined}
+                          color="inherit"
+                          variant="body2"
+                          underline="hover"
+                          rel={isExternalLink ? "nofollow" : undefined}
+                          target={isExternalLink && link.href.startsWith('http') ? "_blank" : undefined}
+                        >
+                          {link.name}
+                        </Link>
+                      );
+                    })}
                   </Stack>
                 </Grid>
               ))}

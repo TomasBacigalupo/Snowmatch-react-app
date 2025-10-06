@@ -596,6 +596,7 @@
       "description": "Check the calendar to see the available days and hours of the instructor"
     }
   },
+  "teacherImageAlt": "Profile photo of instructor {{name}} - Certified ski and snowboard instructor on SnowMatch",
   "schoolDetails": {
     "title": "PRO school details",
     "calendar": "Calendar",
@@ -2014,20 +2015,20 @@
     "subtitle": "Everything you need to learn, perfect your technique and live a safe and fun experience on the mountain.",
     "features": {
       "1": {
-        "title": "Personalized ski lesson plans",
-        "description": "We create your lesson and practice plan based on your level, goals and travel calendar. Varied and entertaining sessions to progress on the slopes."
+        "title": "A ski instructor in your phone",
+        "description": "Snowmatch combines technology with the wisdom of the professional skiing community, so you can learn, improve and enjoy the process, wherever you are."
       },
       "2": {
-        "title": "Certified and verified instructors",
-        "description": "Connect with qualified instructors at your ski center. Choose by language, specialty and experience to have the ideal class."
+        "title": "Find instructors that adapt to you",
+        "description": "Filter by language, level or skiing style, and connect with the ideal instructor for your goals. In minutes, you can find who will help you take your skiing to the next level."
       },
       "3": {
-        "title": "Comprehensive technique and safety support",
+        "title": "Comprehensive support in technique and safety",
         "description": "Receive advice on posture, speed control, equipment selection and mountain rules to enjoy with confidence."
       },
       "4": {
-        "title": "Strength and mobility training for skiers",
-        "description": "Access complementary routines to avoid injuries and perform better on snow: stability, core and leg work."
+        "title": "Never stop learning",
+        "description": "Every run is an opportunity to improve. Upload your videos and receive personalized feedback from experts who will guide you step by step."
       }
     }
   },
@@ -2062,7 +2063,102 @@
     "subscribe": "Get Started",
     "contactTitle": "Have questions?",
     "contactSubtitle": "Contact us via WhatsApp and we'll help you choose the perfect plan for your needs.",
-    "contactButton": "Contact via WhatsApp",
-    "contactMessage": "Hi! I'd like to get more information about SnowMatch video analysis plans."
+  "contactButton": "Contact via WhatsApp",
+  "contactMessage": "Hi! I'd like to get more information about SnowMatch video analysis plans."
+},
+"videoOnboarding": {
+  "stepper": {
+    "tips": "Video Tips",
+    "upload": "Upload Video",
+    "location": "Location",
+    "review": "Choose Analysis",
+    "payment": "Payment"
+  },
+  "page": {
+    "title": "ProCheck - Video Analysis | Snowmatch"
+  },
+  "tips": {
+    "title": "Key Things to Remember",
+    "subtitle": "If you are shooting video for feedback, here are the essentials:",
+    "remember": "Remember: Your video will be analyzed by professional instructors who will give you detailed feedback on your skiing or snowboarding technique.",
+    "ready": "Ready to record your best video? Let's go to the next step!",
+    "tip1": {
+      "title": "Keep the skier centered",
+      "description": "Keep the skier in the center of the frame - if the skier is making big turns then you need to move your hand or arms to keep that frame centered. Watching someone zig zag in and out of the video isn't very helpful."
+    },
+    "tip2": {
+      "title": "Keep the zoom constant",
+      "description": "The skier should take up 40-60% of the video. Don't panic zoom out when they get closer. Remember, we need to see the skis on the snow to know what is going on with their skiing."
+    },
+    "tip3": {
+      "title": "Keep it level",
+      "description": "Most camera apps have a level indicator. Turn it on!"
+    }
+  },
+  "upload": {
+    "title": "Upload your Video",
+    "subtitle": "Select a video of your skiing or snowboarding technique for professional analysis",
+    "selectVideo": "Select Video",
+    "selecting": "Loading...",
+    "changeVideo": "Change Video",
+    "videoSelected": "Video Selected",
+    "selectFromGallery": "Select a video from your gallery or record a new one",
+    "trimSection": "Select the 30 seconds you want to analyze:",
+    "startTime": "Start:",
+    "endTime": "End:",
+    "processing": "Processing video...",
+    "noVideoSelected": "No video was selected",
+    "galleryError": "Error accessing gallery. Check permissions.",
+    "selectionError": "Error selecting video:",
+    "trimError": "Error trimming video:",
+    "mobileTrimError": "Error trimming video on mobile. Try with a shorter video.",
+    "browserTrimError": "Error processing video trimming. Use mobile version for automatic trimming."
+  },
+  "location": {
+    "title": "Where did you record the video?",
+    "subtitle": "Select the resort where you recorded your video for more accurate analysis",
+    "selectResort": "Select Resort",
+    "searchResort": "Search for your resort...",
+    "loadingResorts": "Loading resorts...",
+    "helperText": "This helps us better understand the conditions where you recorded the video",
+    "resortSelected": "Resort selected:",
+    "perfect": "Perfect, this will help us better understand the conditions of your video",
+    "notFound": "No resorts found",
+    "loading": "Loading...",
+    "loadError": "Error loading resorts",
+    "helpText": "Can't find your resort? Select the closest or similar one"
+  },
+  "review": {
+    "title": "Choose your Analysis",
+    "subtitle": "Select how you want to analyze your video",
+    "aiAnalysis": {
+      "name": "AI Analysis",
+      "description": "Automatic and instant analysis",
+      "time": "5 minutes"
+    },
+    "certifiedInstructor": {
+      "name": "Certified Instructor",
+      "description": "Personalized analysis by instructor",
+      "time": "24 hours"
+    },
+    "selected": "Selected",
+    "select": "Select"
+  },
+  "navigation": {
+    "back": "Back",
+    "next": "Next",
+    "complete": "Complete",
+    "processing": "Processing..."
+  },
+  "validation": {
+    "videoRequired": "You must select a video",
+    "resortRequired": "You must select a resort",
+    "reviewTypeRequired": "You must select an analysis type"
+  },
+  "completion": {
+    "title": "Video Sent!",
+    "message": "Your video has been sent for professional analysis. You will receive your ProCheck with detailed comments within the next 24 hours.",
+    "goToDashboard": "Go to Dashboard"
   }
+}
 }

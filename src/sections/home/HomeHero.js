@@ -360,23 +360,29 @@ export default function HomeHero() {
                 sx={{ mb: 3 }}
               >
                 <Button
-                  variant="outlined"
-                  size="large"
-                  onClick={handleFindInstructors}
-                  
-                  startIcon={<Iconify icon="eva:search-fill" />}
-                >
-                  {translate('homeHero.findInstructors')}
-                </Button>
-
-                <Button
                   variant="contained"
                   size="large"
                   onClick={handleVideoFeedback}
-                  
-                  startIcon={<Iconify icon="eva:video-fill" />}
+                  sx={{
+                    background: 'linear-gradient(135deg, #1890FF 0%, #74CAFF 50%, #1890FF 100%)',
+                    color: '#fff',
+                    fontWeight: 700,
+                    px: 4,
+                    py: 1.5,
+                    borderRadius: 3,
+                    boxShadow: '0 8px 32px rgba(24, 144, 255, 0.3)',
+                    transition: 'all 0.3s ease',
+                    '&:hover': {
+                      background: 'linear-gradient(135deg, #0C53B7 0%, #1890FF 50%, #0C53B7 100%)',
+                      boxShadow: '0 12px 40px rgba(24, 144, 255, 0.4)',
+                      transform: 'translateY(-2px)',
+                    },
+                    '&:active': {
+                      transform: 'translateY(0px)',
+                    },
+                  }}
                 >
-                  {translate('homeHero.getVideoFeedback')}
+                  {translate('homeHero.joinUs')}
                 </Button>
               </Stack>
             </m.div>

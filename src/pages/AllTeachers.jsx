@@ -1,9 +1,52 @@
-import React from 'react';
-import { Box, Container, Typography, Grid, Card, CardContent, Link } from '@mui/material';
+import React, { useState, useEffect } from 'react';
+import { Box, Container, Typography, Grid, Card, CardContent, Link, CircularProgress, Alert } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
+import axios from '../utils/axios';
 
 const AllTeachers = () => {
     const theme = useTheme();
+    const [resorts, setResorts] = useState([]);
+    const [resortsLoading, setResortsLoading] = useState(true);
+    const [resortsError, setResortsError] = useState(null);
+
+    useEffect(() => {
+        const fetchResorts = async () => {
+            try {
+                setResortsLoading(true);
+                setResortsError(null);
+                const response = await axios.get('/api/enums/resorts/to-index');
+                
+                // Transform API data to match the expected format
+                const transformedResorts = response.data.map(resort => {
+                    const resortValue = resort.value || resort;
+                    
+                    // Convert "CERRO_CATEDRAL" to "Cerro Catedral"
+                    const name = resortValue
+                        .toLowerCase()
+                        .split('_')
+                        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                        .join(' ');
+                    
+                    // Convert to slug format
+                    const slug = resortValue.toLowerCase().replace(/_/g, '-');
+                    
+                    return {
+                        name: name,
+                        slug: slug
+                    };
+                });
+                
+                setResorts(transformedResorts);
+            } catch (err) {
+                console.error('Error fetching resorts:', err);
+                setResortsError('Error al cargar los resorts');
+            } finally {
+                setResortsLoading(false);
+            }
+        };
+
+        fetchResorts();
+    }, []);
 
     const teachers = [
         { id: 'kari-1027', name: 'Kari', slug: 'kari-1027' },
@@ -328,28 +371,12 @@ const AllTeachers = () => {
         { id: 'luciano-1043', name: 'Luciano', slug: 'luciano-1043' }
     ];
 
-    const resorts = [
-        { name: 'Portillo', slug: 'portillo' },
-        { name: 'Bariloche', slug: 'bariloche' },
-        { name: 'Lago Hermoso', slug: 'lago-hermoso' },
-        { name: 'Cerro Bayo', slug: 'cerro-bayo' },
-        { name: 'Cerro Catedral', slug: 'cerro-catedral' },
-        { name: 'Perito Moreno', slug: 'perito-moreno' },
-        { name: 'Las Leñas', slug: 'las-leñas' },
-        { name: 'Chapelco', slug: 'chapelco' },
-        { name: 'Cerro Catedral', slug: 'cerro-catedral' },
-        { name: 'Cerro Bayo', slug: 'cerro-bayo' },
-        { name: 'Lago Hermoso', slug: 'lago-hermoso' },
-        { name: 'Bariloche', slug: 'bariloche' },
-        { name: 'Portillo', slug: 'portillo' },
-        { name: 'Perito Moreno', slug: 'perito-moreno' },
-        
-    ];
 
     const languages = [
-        { code: 'es', name: 'Español', prefix: '' },
+        { code: 'es', name: 'Español', prefix: '/es' },
         { code: 'pt', name: 'Português', prefix: '/pt' },
         { code: 'en', name: 'English', prefix: '/en' },
+        { code: 'fr', name: 'French', prefix: '/fr' },
     ];
 
     return (
@@ -376,7 +403,7 @@ const AllTeachers = () => {
                                             {languages.map((lang) => (
                                                 <Box key={lang.code} sx={{ mb: 1 }}>
                                                     <Link
-                                                        href={`${lang.prefix}/reservar-clase-ski/${teacher.slug}`}
+                                                        href={`${lang.prefix}/profile/${teacher.slug}`}
                                                         color="primary"
                                                         underline="hover"
                                                         sx={{ display: 'block' }}
@@ -398,33 +425,46 @@ const AllTeachers = () => {
                     <Typography variant="h4" component="h2" gutterBottom sx={{ mb: 3 }}>
                         Resorts de Ski
                     </Typography>
-                    <Grid container spacing={3}>
-                        {resorts.map((resort) => (
-                            <Grid item xs={12} md={6} lg={4} key={resort.slug}>
-                                <Card>
-                                    <CardContent>
-                                        <Typography variant="h6" gutterBottom>
-                                            {resort.name}
-                                        </Typography>
-                                        <Box sx={{ mt: 2 }}>
-                                            {languages.map((lang) => (
-                                                <Box key={lang.code} sx={{ mb: 1 }}>
-                                                    <Link
-                                                        href={`${lang.prefix}/${resort.slug}`}
-                                                        color="primary"
-                                                        underline="hover"
-                                                        sx={{ display: 'block' }}
-                                                    >
-                                                        {lang.name}: {resort.name}
-                                                    </Link>
-                                                </Box>
-                                            ))}
-                                        </Box>
-                                    </CardContent>
-                                </Card>
-                            </Grid>
-                        ))}
-                    </Grid>
+                    {resortsLoading ? (
+                        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', py: 4 }}>
+                            <CircularProgress size={24} sx={{ mr: 2 }} />
+                            <Typography variant="body1" color="text.secondary">
+                                Cargando resorts...
+                            </Typography>
+                        </Box>
+                    ) : resortsError ? (
+                        <Alert severity="error" sx={{ mb: 3 }}>
+                            {resortsError}
+                        </Alert>
+                    ) : (
+                        <Grid container spacing={3}>
+                            {resorts.map((resort) => (
+                                <Grid item xs={12} md={6} lg={4} key={resort.slug}>
+                                    <Card>
+                                        <CardContent>
+                                            <Typography variant="h6" gutterBottom>
+                                                {resort.name}
+                                            </Typography>
+                                            <Box sx={{ mt: 2 }}>
+                                                {languages.map((lang) => (
+                                                    <Box key={lang.code} sx={{ mb: 1 }}>
+                                                        <Link
+                                                            href={`${lang.prefix}/${resort.slug}`}
+                                                            color="primary"
+                                                            underline="hover"
+                                                            sx={{ display: 'block' }}
+                                                        >
+                                                            {lang.name}: {resort.name}
+                                                        </Link>
+                                                    </Box>
+                                                ))}
+                                            </Box>
+                                        </CardContent>
+                                    </Card>
+                                </Grid>
+                            ))}
+                        </Grid>
+                    )}
                 </Box>
 
                 {/* SEO Links Section - Hidden but accessible to crawlers */}

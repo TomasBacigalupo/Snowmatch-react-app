@@ -20,6 +20,7 @@ import { Helmet } from 'react-helmet-async';
 import useLocales from 'src/hooks/useLocales';
 import { useLocation, useParams } from 'react-router-dom';
 import HomeStatsVideoHero from 'src/sections/home/HomeStatsVideoHero';
+import HomeResorts from 'src/sections/home/HomeResorts';
 
 // ----------------------------------------------------------------------
 
@@ -83,6 +84,26 @@ export default function HomePage() {
     }
   }, [user])
 
+  const localeFromLang = (lang) => {
+    if(lang == 'es'){
+      return "es_ES"
+    }
+
+    if(lang == 'en'){
+      return "en_US"
+    }
+
+    if(lang == 'pt'){
+      return "pt_BR"
+    }
+
+    if(lang == 'fr'){
+      return 'fr_FR'
+    }
+
+    return "en_US"
+  }
+
   return (
     <Page title="Match a PRO">
       <Helmet>
@@ -93,7 +114,7 @@ export default function HomePage() {
         <meta property="og:image" content="https://snowmatchimages.s3.amazonaws.com/profile/ClaseNiñoss.jpeg" />
         <meta property="og:url" content="https://snowmatch.pro" />
         <meta property="og:site_name" content="SnowMatch" />
-        <meta property="og:locale" content="es_ES" />
+        <meta property="og:locale" content={localeFromLang(lang)} />
         <script type="application/ld+json">
           {`
           {

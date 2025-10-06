@@ -226,21 +226,23 @@ for blog_url in blog_urls:
     ET.SubElement(url, "changefreq").text = "weekly"
     ET.SubElement(url, "priority").text = "0.7"
 
-# Generar URLs en portugués para blog
+# Generar URLs en portugués para blog (solo si no tienen prefijo de idioma)
 for blog_url in blog_urls:
-    url = ET.SubElement(urlset, "url")
-    ET.SubElement(url, "loc").text = f"{base_url}/pt{blog_url}"
-    ET.SubElement(url, "lastmod").text = today
-    ET.SubElement(url, "changefreq").text = "weekly"
-    ET.SubElement(url, "priority").text = "0.7"
+    if not blog_url.startswith('/pt/') and not blog_url.startswith('/en/') and not blog_url.startswith('/fr/'):
+        url = ET.SubElement(urlset, "url")
+        ET.SubElement(url, "loc").text = f"{base_url}/pt{blog_url}"
+        ET.SubElement(url, "lastmod").text = today
+        ET.SubElement(url, "changefreq").text = "weekly"
+        ET.SubElement(url, "priority").text = "0.7"
 
-# Generar URLs en ingles para blog
+# Generar URLs en ingles para blog (solo si no tienen prefijo de idioma)
 for blog_url in blog_urls:
-    url = ET.SubElement(urlset, "url")
-    ET.SubElement(url, "loc").text = f"{base_url}/en{blog_url}"
-    ET.SubElement(url, "lastmod").text = today
-    ET.SubElement(url, "changefreq").text = "weekly"
-    ET.SubElement(url, "priority").text = "0.7"
+    if not blog_url.startswith('/pt/') and not blog_url.startswith('/en/') and not blog_url.startswith('/fr/'):
+        url = ET.SubElement(urlset, "url")
+        ET.SubElement(url, "loc").text = f"{base_url}/en{blog_url}"
+        ET.SubElement(url, "lastmod").text = today
+        ET.SubElement(url, "changefreq").text = "weekly"
+        ET.SubElement(url, "priority").text = "0.7"
 
 # Convertir a string XML con formato legible
 xml_str = minidom.parseString(ET.tostring(urlset)).toprettyxml(indent="  ")

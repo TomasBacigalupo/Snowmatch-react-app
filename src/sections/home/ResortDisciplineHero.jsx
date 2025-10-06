@@ -25,6 +25,14 @@ import ShopTeacherCard from '../@dashboard/e-commerce/shop/ShopTeacherCard';
 import { es } from 'date-fns/locale';
 import RecommendedTeachers from './RecommendedTeachers';
 import { formatSlug, fromSlugToResortEnum } from 'src/utils/slugHelper';
+import { 
+  getResortHeroImage, 
+  getResortLogoImage, 
+  getResortImageAltText, 
+  getResortLogoAltText,
+  getResponsiveResortHeroImage,
+  getResponsiveResortLogoImage
+} from 'src/utils/resortImageMapping';
 import axios from 'src/utils/axios';
 import TopTeachersSection from '../../components/TopTeachersSection';
 
@@ -259,21 +267,48 @@ export default function ResortDisciplineHero() {
 
                 <CardContainer>
                     <Hidden smDown>
-
                         <ImageCard>
-                            <Box
-                                component="img"
-                                src="/assets/bariloche.webp"
-                                sx={{
-                                    width: '100%',
-                                    height: '100%',
-                                    objectFit: 'cover',
-                                }}
-                            />
+                            {(() => {
+                                const heroImageConfig = getResponsiveResortHeroImage(resortSlug);
+                                return (
+                                    <Image
+                                        src={heroImageConfig.src}
+                                        srcSet={heroImageConfig.srcSet}
+                                        sizes={heroImageConfig.sizes}
+                                        alt={getResortImageAltText(resortSlug, discipline, type)}
+                                        ratio="16/9"
+                                        disabledEffect
+                                        priority
+                                        sx={{
+                                            width: '100%',
+                                            height: '100%',
+                                            objectFit: 'cover',
+                                        }}
+                                    />
+                                );
+                            })()}
                         </ImageCard>
                     </Hidden>
                     <Hidden smUp>
-                        <img src='/logo/snowmatch.webp' sx={{ height: '200px', width: '100%' }} alt='SnowMatch' />
+                        {(() => {
+                            const logoImageConfig = getResponsiveResortLogoImage(resortSlug);
+                            return (
+                                <Image
+                                    src={logoImageConfig.src}
+                                    srcSet={logoImageConfig.srcSet}
+                                    sizes={logoImageConfig.sizes}
+                                    alt={getResortLogoAltText(resortSlug, discipline)}
+                                    ratio="16/9"
+                                    disabledEffect
+                                    priority
+                                    sx={{
+                                        height: '200px',
+                                        width: '100%',
+                                        objectFit: 'contain',
+                                    }}
+                                />
+                            );
+                        })()}
                     </Hidden>
                     <FilterWrapper>
                         <HomeFilterTeachers 

@@ -8,6 +8,7 @@ import { Box } from '@mui/material';
 import Image from '../../../../components/Image';
 import LightboxModal from '../../../../components/LightboxModal';
 import ShareButton from 'src/components/ShareButton';
+import useLocales from 'src/hooks/useLocales';
 
 // ----------------------------------------------------------------------
 
@@ -35,6 +36,7 @@ TeacherDetailsCarousel.propTypes = {
 
 export default function TeacherDetailsCarousel({ teacher }) {
   const [openLightbox, setOpenLightbox] = useState(false);
+  const { translate } = useLocales();
 
   const [selectedImage, setSelectedImage] = useState(0);
 
@@ -103,7 +105,7 @@ export default function TeacherDetailsCarousel({ teacher }) {
           <Image
             onError={() => setSource('/assets/notFound.jpeg')}
             key={source}
-            alt={`${teacher.name} enseñando esquí en bariloche`}
+            alt={translate('teacherImageAlt', { name: teacher.name })}
             src={source}
             ratio="1/1"
             onClick={() => handleOpenLightbox(source)}

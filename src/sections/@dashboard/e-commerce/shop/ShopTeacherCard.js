@@ -3,7 +3,7 @@ import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // @mui
 import { Box, Card, Link, Typography, Stack, Tooltip, Rating, useTheme, useMediaQuery } from '@mui/material';
 // routes
-import { PATH_DASHBOARD, PATH_GUEST } from '../../../../routes/paths';
+import { PATH_DASHBOARD, PATH_GUEST, PATH_PAGE } from '../../../../routes/paths';
 // components
 import Label from '../../../../components/Label';
 import Image from '../../../../components/Image';
@@ -13,6 +13,7 @@ import { useSelector } from 'src/redux/store';
 import EventAvailableIcon from '@mui/icons-material/EventAvailable';
 import { borderRadius } from '@mui/system';
 import Iconify from '../../../../components/Iconify';
+import useLocales from 'src/hooks/useLocales';
 // ----------------------------------------------------------------------
 
 ShopTeacherCard.propTypes = {
@@ -29,10 +30,9 @@ export default function ShopTeacherCard({ teacher, fullBlack = false, disabled =
   const [src, setSrc] = useState(imageLink)
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const { currentLang } = useLocales();
 
-  const { isTeacher } = useAuth()
-  const linkTo = isTeacher ? PATH_DASHBOARD.eCommerce.viewTeacher(id) : PATH_GUEST.viewTeacher(id);
-
+  
   const getResortToShow = () => {
     if (resorts && resorts?.length > 1) {
       if (resorts?.find(r => r === filters.resort)) {
@@ -42,9 +42,12 @@ export default function ShopTeacherCard({ teacher, fullBlack = false, disabled =
     return resorts[0]
   }
 
+  const linkTo = `/${currentLang?.value}/profile/${id}?resort=${getResortToShow()}`;
+
+
   const handleClick = () => {
       if (!disabled) {
-          navigate(linkTo);
+          window.open(linkTo, '_blank');
       }
   };
 
@@ -52,7 +55,6 @@ export default function ShopTeacherCard({ teacher, fullBlack = false, disabled =
     <Box onClick={handleClick} sx={{ opacity: disabled ? 0.5 : 1, cursor: disabled ? 'default' : 'pointer' }}>
       <Box sx={{ position: 'relative' }}>
         <Image alt={name} src={src} ratio="1/1" onError={() => setSrc('/assets/notFound.jpeg')} sx={{ borderRadius: '16px' }} />
-
         {resorts && (
           <Label
             variant="filled"

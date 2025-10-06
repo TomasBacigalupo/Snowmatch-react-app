@@ -59,10 +59,10 @@ export default function HomeAdvertisement() {
               src="https://image.snowmatch.pro/profile/23-ef7b4fa1-8880-4915-9f0d-76b428e989c9"
               disabledEffect
               sx={{ 
-                maxWidth: { xs: 280, sm: 320, md: 380, lg: 420 },
+                maxWidth: { xs: '100%', sm: 320, md: 380, lg: 420 },
                 width: '100%',
                 height: 'auto',
-                borderRadius: 2,
+                borderRadius: {xs:0, sm:2},
                 boxShadow: (theme) => theme.customShadows.z20,
               }}
             />

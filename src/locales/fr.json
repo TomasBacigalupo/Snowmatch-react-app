@@ -757,6 +757,7 @@
         "when": "Quand?",
         "instructorDescription": "• Instructeurs certifiés · {{classType}} · Réservation en ligne en 1 minute"
     },
+    "teacherImageAlt": "Photo de profil de l'instructeur {{name}} - Instructeur certifié de ski et snowboard sur SnowMatch",
     "videoCoachLanding": {
       "title": "VideoCoach : corrections par IA et pros",
       "subtitle": "Téléchargez votre vidéo et recevez des commentaires en quelques minutes.",
@@ -852,20 +853,20 @@
         "subtitle": "Tout ce dont vous avez besoin pour apprendre, perfectionner votre technique et vivre une expérience sûre et amusante en montagne.",
         "features": {
             "1": {
-                "title": "Plans de cours personnalisés pour le ski",
-                "description": "Nous créons votre plan de cours et de pratique basé sur votre niveau, objectifs et calendrier de voyage. Sessions variées et divertissantes pour progresser sur les pistes."
+                "title": "Un moniteur de ski dans votre téléphone",
+                "description": "Snowmatch combine la technologie avec la sagesse de la communauté de skieurs professionnels, pour que vous puissiez apprendre, améliorer et profiter du processus, où que vous soyez."
             },
             "2": {
-                "title": "Instructeurs certifiés et vérifiés",
-                "description": "Connectez-vous avec des instructeurs qualifiés dans votre station de ski. Choisissez par langue, spécialité et expérience pour avoir le cours idéal."
+                "title": "Trouvez des instructeurs qui s'adaptent à vous",
+                "description": "Filtrez par langue, niveau ou style de ski, et connectez-vous avec l'instructeur idéal pour vos objectifs. En quelques minutes, vous pouvez trouver qui vous aidera à faire passer votre ski au niveau supérieur."
             },
             "3": {
                 "title": "Accompagnement complet en technique et sécurité",
                 "description": "Recevez des conseils sur la posture, le contrôle de vitesse, le choix d'équipement et les règles de montagne pour profiter en toute confiance."
             },
             "4": {
-                "title": "Entraînement de force et mobilité pour skieurs",
-                "description": "Accédez à des routines complémentaires pour éviter les blessures et mieux performer sur la neige : stabilité, core et travail des jambes."
+                "title": "N'arrêtez jamais d'apprendre",
+                "description": "Chaque descente est une opportunité d'amélioration. Téléchargez vos vidéos et recevez des commentaires personnalisés d'experts qui vous guideront étape par étape."
             }
         }
     },
@@ -939,6 +940,101 @@
                 "title": "Montagnes",
                 "description": "Instructeurs dans les centres de ski"
             }
+        }
+    },
+    "videoOnboarding": {
+        "stepper": {
+            "tips": "Conseils Vidéo",
+            "upload": "Télécharger Vidéo",
+            "location": "Emplacement",
+            "review": "Choisir Analyse",
+            "payment": "Paiement"
+        },
+        "page": {
+            "title": "ProCheck - Analyse Vidéo | Snowmatch"
+        },
+        "tips": {
+            "title": "Points Clés à Retenir",
+            "subtitle": "Si vous filmez une vidéo pour obtenir des retours, voici les essentiels :",
+            "remember": "Rappelez-vous : Votre vidéo sera analysée par des instructeurs professionnels qui vous donneront des retours détaillés sur votre technique de ski ou snowboard.",
+            "ready": "Prêt à enregistrer votre meilleure vidéo ? Passons à l'étape suivante !",
+            "tip1": {
+                "title": "Gardez le skieur centré",
+                "description": "Gardez le skieur au centre du cadre - si le skieur fait de grands virages, vous devez bouger votre main ou vos bras pour maintenir ce cadre centré. Regarder quelqu'un zigzaguer dans et hors de la vidéo n'est pas très utile."
+            },
+            "tip2": {
+                "title": "Gardez le zoom constant",
+                "description": "Le skieur devrait occuper 40-60% de la vidéo. Ne faites pas de zoom de panique quand ils se rapprochent. Rappelez-vous, nous devons voir les skis sur la neige pour savoir ce qui se passe avec leur ski."
+            },
+            "tip3": {
+                "title": "Gardez-le de niveau",
+                "description": "La plupart des applications caméra ont un indicateur de niveau. Activez-le !"
+            }
+        },
+        "upload": {
+            "title": "Téléchargez votre Vidéo",
+            "subtitle": "Sélectionnez une vidéo de votre technique de ski ou snowboard pour une analyse professionnelle",
+            "selectVideo": "Sélectionner Vidéo",
+            "selecting": "Chargement...",
+            "changeVideo": "Changer Vidéo",
+            "videoSelected": "Vidéo Sélectionnée",
+            "selectFromGallery": "Sélectionnez une vidéo de votre galerie ou enregistrez-en une nouvelle",
+            "trimSection": "Sélectionnez les 30 secondes que vous voulez analyser :",
+            "startTime": "Début :",
+            "endTime": "Fin :",
+            "processing": "Traitement de la vidéo...",
+            "noVideoSelected": "Aucune vidéo n'a été sélectionnée",
+            "galleryError": "Erreur d'accès à la galerie. Vérifiez les permissions.",
+            "selectionError": "Erreur lors de la sélection de la vidéo :",
+            "trimError": "Erreur lors du découpage de la vidéo :",
+            "mobileTrimError": "Erreur lors du découpage de la vidéo sur mobile. Essayez avec une vidéo plus courte.",
+            "browserTrimError": "Erreur lors du traitement du découpage de la vidéo. Utilisez la version mobile pour le découpage automatique."
+        },
+        "location": {
+            "title": "Où avez-vous enregistré la vidéo ?",
+            "subtitle": "Sélectionnez la station où vous avez enregistré votre vidéo pour une analyse plus précise",
+            "selectResort": "Sélectionner Station",
+            "searchResort": "Recherchez votre station...",
+            "loadingResorts": "Chargement des stations...",
+            "helperText": "Cela nous aide à mieux comprendre les conditions où vous avez enregistré la vidéo",
+            "resortSelected": "Station sélectionnée :",
+            "perfect": "Parfait, cela nous aidera à mieux comprendre les conditions de votre vidéo",
+            "notFound": "Aucune station trouvée",
+            "loading": "Chargement...",
+            "loadError": "Erreur lors du chargement des stations",
+            "helpText": "Vous ne trouvez pas votre station ? Sélectionnez la plus proche ou similaire"
+        },
+        "review": {
+            "title": "Choisissez votre Analyse",
+            "subtitle": "Sélectionnez comment vous voulez analyser votre vidéo",
+            "aiAnalysis": {
+                "name": "Analyse IA",
+                "description": "Analyse automatique et instantanée",
+                "time": "5 minutes"
+            },
+            "certifiedInstructor": {
+                "name": "Instructeur Certifié",
+                "description": "Analyse personnalisée par instructeur",
+                "time": "24 heures"
+            },
+            "selected": "Sélectionné",
+            "select": "Sélectionner"
+        },
+        "navigation": {
+            "back": "Retour",
+            "next": "Suivant",
+            "complete": "Terminer",
+            "processing": "Traitement..."
+        },
+        "validation": {
+            "videoRequired": "Vous devez sélectionner une vidéo",
+            "resortRequired": "Vous devez sélectionner une station",
+            "reviewTypeRequired": "Vous devez sélectionner un type d'analyse"
+        },
+        "completion": {
+            "title": "Vidéo Envoyée !",
+            "message": "Votre vidéo a été envoyée pour analyse professionnelle. Vous recevrez votre ProCheck avec des commentaires détaillés dans les 24 prochaines heures.",
+            "goToDashboard": "Aller au Tableau de Bord"
         }
     }
 }

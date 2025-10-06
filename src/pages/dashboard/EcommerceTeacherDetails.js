@@ -1,5 +1,5 @@
 import { sentenceCase } from 'change-case';
-import { useParams } from 'react-router-dom';
+import { useParams, useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 // @mui
 import { alpha, styled } from '@mui/material/styles';
@@ -91,12 +91,18 @@ export default function EcommerceTeacherDetails({ isGuest = false }) {
   const dispatch = useDispatch();
   const [value, setValue] = useState('0');
   const { id = '', slug = '' } = useParams();
+  const location = useLocation();
   const { checkout } = useSelector((state) => state.product);
-  const { translate } = useLocales()
+  const { translate, currentLang } = useLocales()
   const { teacher, isLoading, teachers, filters } = useSelector((state) => state.teachers);
   const { rates } = useSelector((state) => state.rates);
   const { user } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
+
+  // Get resort from URL query parameter
+  const urlParams = new URLSearchParams(location.search);
+  const resortFromQuery = urlParams.get('resort');
+  const resort = resortFromQuery || (teacher?.resorts?.length > 0 ? teacher.resorts.join('-') : 'CERRO_CATEDRAL');
 
 
   useEffect(() => {
@@ -110,11 +116,10 @@ export default function EcommerceTeacherDetails({ isGuest = false }) {
   }, [dispatch, id, slug]);
 
   useEffect(() => {
-    const resort = teacher?.resorts?.length > 0 ? teacher?.resorts[0] : 'CERRO_CATEDRAL';
     if (teacher) {
       dispatch(getFreeTeachers(filters.from, filters.to, resort, 0, 6));
     }
-  }, [dispatch, teacher]);
+  }, [dispatch, teacher, resort]);
 
   const handleAddCart = (teacher) => {
     dispatch(addCart(teacher));
@@ -138,7 +143,7 @@ export default function EcommerceTeacherDetails({ isGuest = false }) {
             {
               discipline: teacher?.discipline ? `${translate(`landingPRO.${teacher?.discipline[0]}`)}` : 'Ski',
               name: `${teacher?.name} ${teacher?.lastname}`,
-              resort: teacher?.resorts?.length > 0 ? resortTransformation(teacher.resorts[0]) : 'Bariloche'
+              resort: resortTransformation(resort)
             })}
         </title>
         <meta name="description" content={teacher?.information} />
@@ -170,24 +175,24 @@ export default function EcommerceTeacherDetails({ isGuest = false }) {
             "address": {
               "@type": "PostalAddress",
               "addressLocality": (() => {
-                const resort = teacher?.resorts?.[0]?.toLowerCase();
-                if (resort === 'chapelco' || resort === 'las pendientes') {
+                const resortLower = resort?.toLowerCase();
+                if (resortLower === 'chapelco' || resortLower === 'las pendientes') {
                   return "San Martín de los Andes";
-                } else if (resort === 'cerro castor') {
+                } else if (resortLower === 'cerro castor') {
                   return "Ushuaia";
-                } else if (resort === 'bayo') {
+                } else if (resortLower === 'bayo') {
                   return "Villa La Angostura";
                 } else {
                   return "San Carlos de Bariloche";
                 }
               })(),
               "addressRegion": (() => {
-                const resort = teacher?.resorts?.[0]?.toLowerCase();
-                if (resort === 'cerro castor') {
+                const resortLower = resort?.toLowerCase();
+                if (resortLower === 'cerro castor') {
                   return "Tierra del Fuego";
-                } else if (resort === 'chapelco' || resort === 'las pendientes') {
+                } else if (resortLower === 'chapelco' || resortLower === 'las pendientes') {
                   return "Neuquén";
-                } else if (resort === 'bayo') {
+                } else if (resortLower === 'bayo') {
                   return "Neuquén";
                 } else {
                   return "Río Negro";
@@ -195,7 +200,7 @@ export default function EcommerceTeacherDetails({ isGuest = false }) {
               })(),
               "addressCountry": "AR"
             },
-            "url": `https://snowmatch.pro/match/teacher/${id}`,
+            "url": `https://snowmatch.pro/${currentLang?.value}/profile/${id}`,
             "sameAs": teacher?.socialMedia || [],
             "aggregateRating": {
               "@type": "AggregateRating",
@@ -221,28 +226,19 @@ export default function EcommerceTeacherDetails({ isGuest = false }) {
               "itemReviewed": {
                 "@type": "SportsActivityLocation",
                 "name": `${teacher?.name} ${teacher?.lastname} - Instructor de Esquí`,
-                "url": `https://snowmatch.pro/match/teacher/${id}`,
+                "url": `https://snowmatch.pro/${currentLang?.value}/profile/${id}`,
                 "address": {
                   "@type": "PostalAddress",
                   "addressLocality": (() => {
-                    const resort = teacher?.resorts?.[0]?.toLowerCase();
-                    if (resort === 'chapelco' || resort === 'las pendientes') {
-                      return "San Martín de los Andes";
-                    } else if (resort === 'cerro castor') {
-                      return "Ushuaia";
-                    } else if (resort === 'bayo') {
-                      return "Villa La Angostura";
-                    } else {
-                      return "San Carlos de Bariloche";
-                    }
+                    return resort?.toLowerCase();
                   })(),
                   "addressRegion": (() => {
-                    const resort = teacher?.resorts?.[0]?.toLowerCase();
-                    if (resort === 'cerro castor') {
+                    const resortLower = resort?.toLowerCase();
+                    if (resortLower === 'cerro castor') {
                       return "Tierra del Fuego";
-                    } else if (resort === 'chapelco' || resort === 'las pendientes') {
+                    } else if (resortLower === 'chapelco' || resortLower === 'las pendientes') {
                       return "Neuquén";
-                    } else if (resort === 'bayo') {
+                    } else if (resortLower === 'bayo') {
                       return "Neuquén";
                     } else {
                       return "Río Negro";
@@ -308,13 +304,13 @@ export default function EcommerceTeacherDetails({ isGuest = false }) {
           })}
         </script> 
       </Helmet>
-      <Container maxWidth={themeStretch ? false : 'lg'} p={0} sx={{ paddingBottom: 'calc(env(safe-area-inset-bottom) + 60px)' }}>
+      <Container maxWidth={themeStretch ? false : 'lg'} p={0} sx={{ paddingBottom: 'calc(env(safe-area-inset-bottom) + 60px)', marginTop: 10 }}>
         <HeaderBreadcrumbs
           heading={translate('teacherDetails.h1',
             {
               discipline: teacher?.discipline ? `${translate(`landingPRO.${teacher?.discipline[0]}`)}` : 'Ski',
               name: `${teacher?.name} ${teacher?.lastname}`,
-              resort: teacher?.resorts?.length > 0 ? resortTransformation(teacher.resorts[0]) : 'Bariloche'
+              resort: resortTransformation(resort)
             })}
           links={[
             // !isGuest? { name: translate("breadcrumb.dashboard', href: PATH_DASHBOARD.root} : {name: 'Home', href: '/'},
@@ -357,7 +353,7 @@ export default function EcommerceTeacherDetails({ isGuest = false }) {
                 </Grid>
               </Hidden>
               <Grid item xs={12} md={6} lg={5}>
-                <Box sx={{ position: 'sticky', top: 44 }}>
+                <Box sx={{ position: 'sticky', top: 70 }}>
                   <Hidden smDown>
                     <Box mb={3} sx={{}}>
                       <Typography component='p' variant='h4' gutterBottom>{teacher.name}</Typography>
@@ -432,8 +428,8 @@ export default function EcommerceTeacherDetails({ isGuest = false }) {
                     <Box mb={3}>
                       <RecommendedTeachers
                         teachers={[]}
-                        resort={teacher?.resorts?.length > 0 ? teacher.resorts[0] : 'Cerro Catedral'}
-                        disciplineSlug={teacher?.discipline?.length > 0 ? teacher.discipline[0] : "esqui-y-snowboard"}
+                        resort={resort}
+                        disciplineSlug={teacher?.discipline?.length > 0 ? teacher.discipline[0] : "ski&snowboard"}
                       />
                     </Box>
                     <MobileSelectDays teacher={teacher} isOpen={isOpen} closeFather={() => setIsOpen(false)} />
@@ -445,8 +441,8 @@ export default function EcommerceTeacherDetails({ isGuest = false }) {
               <Box mb={3} ml={-4.5}>
                 <RecommendedTeachers
                   teachers={teachers}
-                  resort={teacher?.resorts?.length > 0 ? teacher.resorts[0] : 'Cerro Catedral'}
-                  disciplineSlug={teacher?.discipline?.length > 0 ? teacher.discipline[0] : "esqui-y-snowboard"}
+                  resort={resort}
+                  disciplineSlug={teacher?.discipline?.length > 0 ? teacher.discipline[0] : "snowboard"}
                 />
               </Box>
             </Hidden>

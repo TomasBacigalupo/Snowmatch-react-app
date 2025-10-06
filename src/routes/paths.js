@@ -58,6 +58,8 @@ export const PATH_GUEST = {
 };
 
 export const PATH_PAGE = {
+  viewTeacher: (lng, id) => `/${lng}/profile/${id}`,
+  viewResort: (lng, resort) => path(`${lng}/${resort}`),
   comingSoon: '/coming-soon',
   maintenance: '/maintenance',
   emailVerification: '/wait-verification',
@@ -142,7 +144,7 @@ export const PATH_DASHBOARD = {
     newProduct: path(ROOTS_DASHBOARD, '/e-commerce/product/new'),
     PrivateProductFull: path(ROOTS_DASHBOARD, '/e-commerce/private-full'),
     PrivateProductHalf: path(ROOTS_DASHBOARD, '/e-commerce/private-half'),
-    viewTeacher: (id) => path(ROOTS_DASHBOARD, `/e-commerce/teacher/${id}`),
+    viewTeacher: (lng, id) => path(`${lng}/profile/${id}`),
     viewProduct: (id) => path(ROOTS_DASHBOARD, `/e-commerce/product/${id}`),
     viewProducts: path(ROOTS_DASHBOARD, `/e-commerce/product/`),
     editProduct: (id) => path(ROOTS_DASHBOARD, `/e-commerce/product/${id}/edit`),

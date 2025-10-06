@@ -10,9 +10,12 @@ Image.propTypes = {
   effect: PropTypes.string,
   ratio: PropTypes.oneOf(['4/3', '3/4', '6/4', '4/6', '16/9', '9/16', '21/9', '9/21', '1/1']),
   sx: PropTypes.object,
+  srcSet: PropTypes.string,
+  sizes: PropTypes.string,
+  priority: PropTypes.bool,
 };
 
-export default function Image({ ratio, disabledEffect = false, effect = undefined, sx, ...other }) {
+export default function Image({ ratio, disabledEffect = false, effect = undefined, sx, srcSet, sizes, priority = false, ...other }) {
   if (ratio) {
     return (
       <Box
@@ -41,6 +44,9 @@ export default function Image({ ratio, disabledEffect = false, effect = undefine
           wrapperClassName="wrapper"
           effect={disabledEffect ? undefined : effect}
           placeholderSrc="/assets/spinner.gif"
+          srcSet={srcSet}
+          sizes={sizes}
+          loading={priority ? 'eager' : 'lazy'}
           sx={{ 
             width: sx?.width || 1, 
             height: sx?.height || 1, 
@@ -73,6 +79,9 @@ export default function Image({ ratio, disabledEffect = false, effect = undefine
         wrapperClassName="wrapper"
         effect={disabledEffect ? undefined : effect}
         placeholderSrc="/assets/spinner.gif"
+        srcSet={srcSet}
+        sizes={sizes}
+        loading={priority ? 'eager' : 'lazy'}
         sx={{ 
           width: sx?.width || 1, 
           height: sx?.height || 1, 

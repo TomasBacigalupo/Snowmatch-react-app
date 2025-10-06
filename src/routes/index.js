@@ -39,6 +39,7 @@ import InstructorLanding from 'src/pages/InstructorLanding';
 import InstructorLandingEN from 'src/pages/InstructorLandingEN';
 import EnterpriseLanding from 'src/pages/EnterpriseLanding';
 import TravelAgencyLanding from 'src/pages/TravelAgencyLanding';
+import VideoOnboardingPage from 'src/pages/video-onboarding/VideoOnboardingPage';
 // ----------------------------------------------------------------------
 
 const Loadable = (Component) => (props) => {
@@ -142,7 +143,7 @@ export default function Router() {
           element: <MainLayout />,
           children: [
             { path: 'legal/privacy', element: <PrivacyPolicy /> },
-            { path: 'instructor', element: <Navigate to="/en/instructor" replace /> },
+            { path: 'instructor', element: <InstructorLanding /> },
             { path: 'enterprise', element: <Navigate to="en/enterprise" replace /> }
           ]
         },
@@ -534,10 +535,12 @@ export default function Router() {
           path: '/:lng',
           element: <MainLayout />,
           children: [
+            { path: 'video-onboarding', element: <VideoOnboardingPage /> },
             {
               element: isMobile ? <Navigate to="/match/videoCoach/upload" replace /> : <HomePage />,
               index: true
             },
+            { path: 'profile/:slug', element: <EcommerceTeacherDetails isGuest={true} /> },
             { path: 'all-teachers', element: <AllTeachers /> },
             { path: 'escuela-de-esqui-y-snowboard', element: <SnowMatchLanding /> },
             { path: 'tips-esqui-snowboard/:tip', element: <SnowMatchLanding /> },
@@ -553,7 +556,6 @@ export default function Router() {
             { path: 'instructor', element: <InstructorLanding /> },
             { path: 'enterprise', element: <EnterpriseLanding /> },
             { path: 'agencias', element: <TravelAgencyLanding /> },
-            { path: 'resort/:resort', element: <Resort /> },
             { path: ':resort/:discipline/:type', element: <SearchPage /> },
             { path: ':resort/:discipline', element: <SearchPage /> },
             { path: ':resort', element: <SearchPage /> },
@@ -577,7 +579,6 @@ export default function Router() {
             { path: 'aspen-ski-camp', element: <AspenSkiCamp /> },
             { path: 'vail-ski-camp', element: <VailSkiCamp /> },
             { path: 'jackson-hole-ski-camp', element: <JacksonHoleSkiCamp /> },
-            { path: 'resort/:resort', element: <Resort /> },
             { path: ':resort/:discipline/:type', element: <SearchPage /> },
             { path: ':resort/:discipline', element: <SearchPage /> },
             { path: ':resort', element: <SearchPage /> },

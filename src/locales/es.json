@@ -829,6 +829,7 @@
             "description": "Mira la disponibilidad del instructor en el calendario."
         }
     },
+    "teacherImageAlt": "Foto de perfil del instructor {{name}} - Instructor certificado de esquí y snowboard en SnowMatch",
     "schoolDetails": {
         "title": "Detalles PRO school",
         "calendar": "Calendario",
@@ -2987,20 +2988,20 @@
         "subtitle": "Todo lo que necesitás para aprender, perfeccionar tu técnica y vivir una experiencia segura y divertida en la montaña.",
         "features": {
             "1": {
-                "title": "Planes de clases personalizados para esquiar",
-                "description": "Creamos tu plan de clases y práctica en base a tu nivel, objetivos y calendario de viaje. Sesiones variadas y entretenidas para progresar en la pista."
+                "title": "Un profesor de esquí en tu teléfono",
+                "description": "Snowmatch combina tecnología con la sabiduría de la comunidad de esquiadores profesionales, para que aprendas, mejores y disfrutes del proceso, estés donde estés."
             },
             "2": {
-                "title": "Profesores certificados y verificados",
-                "description": "Conectate con instructores habilitados en tu centro de ski. Elegí por idioma, especialidad y experiencia para tener la clase ideal."
+                "title": "Encontrá instructores que se adapten a vos",
+                "description": "Filtrá por idioma, nivel o estilo de esquí, y conectá con el instructor ideal para tus objetivos. En minutos, podés encontrar a quien te va a ayudar a llevar tu esquí al siguiente nivel."
             },
             "3": {
                 "title": "Acompañamiento integral en técnica y seguridad",
                 "description": "Recibí consejos sobre postura, control de velocidad, elección de equipo y normas de montaña para disfrutar con confianza."
             },
             "4": {
-                "title": "Entrenamiento de fuerza y movilidad para esquiadores",
-                "description": "Accedé a rutinas complementarias para evitar lesiones y rendir mejor en la nieve: estabilidad, core y trabajo de piernas."
+                "title": "No pares de aprender",
+                "description": "Cada bajada es una oportunidad para mejorar. Subí tus videos y recibí feedback personalizado de expertos que te guiarán paso a paso."
             }
         }
     },
@@ -3037,5 +3038,106 @@
         "contactSubtitle": "Contáctanos por WhatsApp y te ayudaremos a elegir el plan perfecto para tus necesidades.",
         "contactButton": "Contactar por WhatsApp",
         "contactMessage": "¡Hola! Me gustaría obtener más información sobre los planes de análisis de video de SnowMatch."
+    },
+    "videoOnboarding": {
+        "stepper": {
+            "tips": "Tips del Video",
+            "upload": "Subir Video",
+            "location": "Ubicación",
+            "review": "Elegir Análisis",
+            "payment": "Pago"
+        },
+        "page": {
+            "title": "ProCheck - Análisis de Video | Snowmatch"
+        },
+        "tips": {
+            "title": "Cosas Clave a Recordar",
+            "subtitle": "Si estás grabando video para feedback, aquí están los esenciales:",
+            "remember": "Recuerda: Tu video será analizado por instructores profesionales que te darán feedback detallado sobre tu técnica de esquí o snowboard.",
+            "ready": "¿Listo para grabar tu mejor video? ¡Vamos al siguiente paso!",
+            "tip1": {
+                "title": "Mantén al esquiador centrado",
+                "description": "Mantén al esquiador en el centro del encuadre - si el esquiador está haciendo giros grandes entonces necesitas mover tu mano o brazos para mantener ese encuadre centrado. Ver a alguien zigzagueando dentro y fuera del video no es muy útil."
+            },
+            "tip2": {
+                "title": "Mantén el zoom constante",
+                "description": "El esquiador debe ocupar 40-60% del video. No hagas zoom de pánico cuando se acerque. Recuerda, necesitamos ver los esquís en la nieve para saber qué está pasando con su esquí."
+            },
+            "tip3": {
+                "title": "Manténlo nivelado",
+                "description": "La mayoría de las aplicaciones de cámara tienen un indicador de nivel. ¡Actívalo!"
+            }
+        },
+        "upload": {
+            "title": "Subir tu Video",
+            "subtitle": "Selecciona un video de tu técnica de esquí o snowboard para análisis profesional",
+            "selectVideo": "Seleccionar Video",
+            "selecting": "Cargando...",
+            "changeVideo": "Cambiar Video",
+            "videoSelected": "Video Seleccionado",
+            "selectFromGallery": "Selecciona un video de tu galería o graba uno nuevo",
+            "trimSection": "Selecciona los 30 segundos que quieres analizar:",
+            "startTime": "Inicio:",
+            "endTime": "Fin:",
+            "processing": "Procesando video...",
+            "noVideoSelected": "No se seleccionó ningún video",
+            "galleryError": "Error al acceder a la galería. Verifica los permisos.",
+            "selectionError": "Error al seleccionar el video:",
+            "trimError": "Error al recortar el video:",
+            "mobileTrimError": "Error al recortar el video en móvil. Intenta con un video más corto.",
+            "browserTrimError": "Error al procesar el recorte del video. Usa la versión móvil para recorte automático."
+        },
+        "location": {
+            "title": "¿Dónde grabaste el video?",
+            "subtitle": "Selecciona el resort donde grabaste tu video para un análisis más preciso",
+            "selectResort": "Seleccionar Resort",
+            "searchResort": "Busca tu resort...",
+            "loadingResorts": "Cargando resorts...",
+            "helperText": "Esto nos ayuda a entender mejor las condiciones donde grabaste el video",
+            "resortSelected": "Resort seleccionado:",
+            "perfect": "Perfecto, esto nos ayudará a entender mejor las condiciones de tu video",
+            "notFound": "No se encontraron resorts",
+            "loading": "Cargando...",
+            "loadError": "Error al cargar los resorts",
+            "helpText": "¿No encuentras tu resort? Selecciona el más cercano o similar"
+        },
+        "review": {
+            "title": "Elige tu Análisis",
+            "subtitle": "Selecciona cómo quieres analizar tu video",
+            "aiAnalysis": {
+                "name": "Análisis con IA",
+                "description": "Análisis automático e instantáneo",
+                "time": "5 minutos"
+            },
+            "certifiedInstructor": {
+                "name": "Instructor Certificado",
+                "description": "Análisis personalizado por instructor",
+                "time": "24 horas"
+            },
+            "selected": "Seleccionado",
+            "select": "Seleccionar"
+        },
+        "navigation": {
+            "back": "Atrás",
+            "next": "Siguiente",
+            "complete": "Completar",
+            "processing": "Procesando..."
+        },
+        "validation": {
+            "videoRequired": "Debes seleccionar un video",
+            "resortRequired": "Debes seleccionar un resort",
+            "reviewTypeRequired": "Debes seleccionar un tipo de análisis"
+        },
+        "completion": {
+            "title": "¡Video Enviado!",
+            "message": "Tu video ha sido enviado para análisis profesional. Recibirás tu ProCheck con comentarios detallados en las próximas 24 horas.",
+            "goToDashboard": "Ir al Dashboard"
+        }
+    },
+    "resorts": {
+        "CERRO_CATEDRAL": {
+            "description": "muy bueno para esquiar",
+            "country": "Argentina"
+        }
     }
 }

@@ -273,16 +273,15 @@ export default function SearchPage() {
   }
 
   return (
-    <Page title={`${translate('landingPRO.title', { discipline: discipline ? translate(`landingPRO.${discipline}`) : 'ski y snowboard', type: type ? translate(`landingPRO.${type}`) : '', resort: translate(`landingPRO.${resortSlug}`) })}}- SnowMatch`}>
+    <Page title={`${translate('landingPRO.title', { discipline: discipline ? translate(`landingPRO.${discipline}`) : translate(`landingPRO.ski&snowboard`), type: type ? translate(`landingPRO.${type}`) : '', resort:  formatSlug(resortSlug)})} - SnowMatch`}>
       <Helmet>
-        <title>{translate('landingPRO.title', { discipline: discipline ? translate(`landingPRO.${discipline}`) : 'ski y snowboard', type: type ? translate(`landingPRO.${type}`) : '', resort: translate(`landingPRO.${resortSlug}`) })}</title>
-        <meta name="keywords" content={translate('landingPRO.keywords', { discipline: discipline ? translate(`landingPRO.${discipline}`) : 'ski y snowboard', type: type ? translate(`landingPRO.${type}`) : '', resort: translate(`landingPRO.${resortSlug}`) })} />
-
+        <title>{translate('landingPRO.title', { discipline: discipline ? translate(`landingPRO.${discipline}`) : translate(`landingPRO.ski&snowboard`), type: type ? translate(`landingPRO.${type}`) : '', resort: formatSlug(resortSlug) })}</title>
+        <meta name="keywords" content={translate('landingPRO.keywords', { discipline: discipline ? translate(`landingPRO.${discipline}`) : translate(`landingPRO.ski&snowboard`), type: type ? translate(`landingPRO.${type}`) : '', resort: formatSlug(resortSlug) })} />
         {/* Open Graph / Facebook */}
         <meta property="og:type" content="website" />
         <meta name="apple-itunes-app" content="app-id=6741247513" />
-        <meta property="og:title" content={`${translate('landingPRO.title', { discipline: discipline ? translate(`landingPRO.${discipline}`) : 'ski y snowboard', type: type ? translate(`landingPRO.${type}`) : '', resort: translate(`landingPRO.${resortSlug}`) })}} - SnowMatch`} />
-        <meta property="og:description" content={translate('landingPRO.description', { discipline: discipline ? translate(`landingPRO.${discipline}`) : 'ski y snowboard', type: type ? translate(`landingPRO.${type}`) : '', resort: translate(`landingPRO.${resortSlug}`) })} />
+        <meta property="og:title" content={`${translate('landingPRO.title', { discipline: discipline ? translate(`landingPRO.${discipline}`) : translate(`landingPRO.ski&snowboard`), type: type ? translate(`landingPRO.${type}`) : '', resort: formatSlug(resortSlug) })} - SnowMatch`} />
+        <meta property="og:description" content={translate('landingPRO.description', { discipline: discipline ? translate(`landingPRO.${discipline}`) : translate(`landingPRO.ski&snowboard`), type: type ? translate(`landingPRO.${type}`) : '', resort: formatSlug(resortSlug) })} />
         <meta property="og:image" content="https://snowmatchimages.s3.amazonaws.com/profile/ClaseNiñoss.jpeg" />
         <meta property="og:url" content={`https://snowmatch.pro/${currentLang.value === 'es' ? '' : currentLang.value + '/'}${resortSlug}${discipline ? `/${discipline}` : ''}${type ? '/' + type : ''}`} />
         <meta property="og:site_name" content="SnowMatch" />
@@ -290,22 +289,22 @@ export default function SearchPage() {
 
         {/* Twitter */}
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content={`${translate('landingPRO.title', { discipline: discipline ? translate(`landingPRO.${discipline}`) : 'ski y snowboard', type: type ? translate(`landingPRO.${type}`) : '', resort: translate(`landingPRO.${resortSlug}`) })}} - SnowMatch`} />
-        <meta name="twitter:description" content={`${translate('landingPRO.title', { discipline: discipline ? translate(`landingPRO.${discipline}`) : 'ski y snowboard', type: type ? translate(`landingPRO.${type}`) : '', resort: translate(`landingPRO.${resortSlug}`) })}}`} />
+        <meta name="twitter:title" content={`${translate('landingPRO.title', { discipline: discipline ? translate(`landingPRO.${discipline}`) : translate(`landingPRO.ski&snowboard`), type: type ? translate(`landingPRO.${type}`) : '', resort: formatSlug(resortSlug) })} - SnowMatch`} />
+        <meta name="twitter:description" content={`${translate('landingPRO.title', { discipline: discipline ? translate(`landingPRO.${discipline}`) : translate(`landingPRO.ski&snowboard`), type: type ? translate(`landingPRO.${type}`) : '', resort: formatSlug(resortSlug) })}}`} />
         <meta name="twitter:image" content="https://snowmatchimages.s3.amazonaws.com/profile/ClaseNiñoss.jpeg" />
 
         {/* Canonical URL */}
         <link
           rel="canonical"
-          href={`https://snowmatch.pro/${currentLang.value === 'es' ? '' : currentLang.value + '/'}${getCanonicalSlug(resortSlug)}${discipline ? '/' + discipline : ''}${type ? '/' + type : ''}`}
+          href={`https://snowmatch.pro/${currentLang.value}/${getCanonicalSlug(resortSlug)}${discipline ? '/' + discipline : ''}${type ? '/' + type : ''}`}
         />
         {/* Schema.org markup */}
         <script type="application/ld+json">
           {JSON.stringify({
             "@context": "https://schema.org",
             "@type": "SportsActivityLocation",
-            "name": `SnowMatch - ${getClassType(type)} ${discipline ? 'de ' + translate(`landingPRO.${discipline}`) : 'de ski y snowboard'} en ${translate(`landingPRO.${resortSlug}`)}`,
-            "description": `${getClassType(type)} ${discipline ? 'de ' + translate(`landingPRO.${discipline}`) : 'de ski y snowboard'} en ${translate(`landingPRO.${resortSlug}`)} para todos los niveles`,
+            "name": `SnowMatch - ${getClassType(type)} ${discipline ? 'de ' + translate(`landingPRO.${discipline}`) : 'de ski y snowboard'} en ${formatSlug(resortSlug)}`,
+            "description": `${getClassType(type)} ${discipline ? 'de ' + translate(`landingPRO.${discipline}`) : 'de ski y snowboard'} en ${formatSlug(resortSlug)} para todos los niveles`,
             "url": `https://snowmatch.pro/${resortSlug}${discipline ? '/' + discipline : ''}${type ? '/' + type : ''}`,
             "address": {
               "@type": "PostalAddress",
@@ -323,8 +322,8 @@ export default function SearchPage() {
               "availability": "https://schema.org/InStock",
               "itemOffered": {
                 "@type": "Service",
-                "name": `${getClassType(type)} ${discipline ? 'de ' + translate(`landingPRO.${discipline}`) : 'de ski y snowboard'} en ${translate(`landingPRO.${resortSlug}`)}`,
-                "description": `${getClassType(type)} ${discipline ? 'de ' + translate(`landingPRO.${discipline}`) : 'de ski y snowboard'} en ${translate(`landingPRO.${resortSlug}`)}`,
+                "name": `${getClassType(type)} ${discipline ? 'de ' + translate(`landingPRO.${discipline}`) : 'de ski y snowboard'} en ${formatSlug(resortSlug)}`,
+                "description": `${getClassType(type)} ${discipline ? 'de ' + translate(`landingPRO.${discipline}`) : 'de ski y snowboard'} en ${formatSlug(resortSlug)}`,
                 "serviceType": "Clases de esquí",
                 "provider": {
                   "@type": "Organization",
@@ -347,14 +346,14 @@ export default function SearchPage() {
                 {
                   "@type": "Question",
                   "name": translate(`landingPRO.faqs.1.q`, {
-                    resort: resort ? translate(`landingPRO.${resort}`) : "",
+                    resort: resort ? formatSlug(resort) : "",
                     discipline: discipline ? translate(`landingPRO.${discipline}`) : translate(`landingPRO.ski&snowboard`),
                     type: type ? translate(`landingPRO.${type}`) : ""
                   }),
                   "acceptedAnswer": {
                     "@type": "Answer",
                     "text": translate(`landingPRO.faqs.1.a`, {
-                      resort: resort ? translate(`landingPRO.${resort}`) : "",
+                      resort: resort ? formatSlug(resort) : "",
                       discipline: discipline ? translate(`landingPRO.${discipline}`) : translate(`landingPRO.ski&snowboard`),
                       type: type ? translate(`landingPRO.${type}`) : ""
                     })
@@ -363,14 +362,14 @@ export default function SearchPage() {
                 {
                   "@type": "Question",
                   "name": translate(`landingPRO.faqs.2.q`, {
-                    resort: resort ? translate(`landingPRO.${resort}`) : "",
+                    resort: resort ? formatSlug(resort) : "",
                     discipline: discipline ? translate(`landingPRO.${discipline}`) : translate(`landingPRO.ski&snowboard`),
                     type: type ? translate(`landingPRO.${type}`) : ""
                   }),
                   "acceptedAnswer": {
                     "@type": "Answer",
                     "text": translate(`landingPRO.faqs.2.a`, {
-                      resort: resort ? translate(`landingPRO.${resort}`) : "",
+                      resort: resort ? formatSlug(resort) : "",
                       discipline: discipline ? translate(`landingPRO.${discipline}`) : translate(`landingPRO.ski&snowboard`),
                       type: type ? translate(`landingPRO.${type}`) : ""
                     })
@@ -379,14 +378,14 @@ export default function SearchPage() {
                 {
                   "@type": "Question",
                   "name": translate(`landingPRO.faqs.3.q`, {
-                    resort: resort ? translate(`landingPRO.${resort}`) : "",
+                    resort: resort ? formatSlug(resort) : "",
                     discipline: discipline ? translate(`landingPRO.${discipline}`) : translate(`landingPRO.ski&snowboard`),
                     type: type ? translate(`landingPRO.${type}`) : ""
                   }),
                   "acceptedAnswer": {
                     "@type": "Answer",
                     "text": translate(`landingPRO.faqs.3.a`, {
-                      resort: resort ? translate(`landingPRO.${resort}`) : "",
+                      resort: resort ? formatSlug(resort) : "",
                       discipline: discipline ? translate(`landingPRO.${discipline}`) : translate(`landingPRO.ski&snowboard`),
                       type: type ? translate(`landingPRO.${type}`) : ""
                     })
@@ -395,14 +394,14 @@ export default function SearchPage() {
                 {
                   "@type": "Question",
                   "name": translate(`landingPRO.faqs.4.q`, {
-                    resort: resort ? translate(`landingPRO.${resort}`) : "",
+                    resort: resort ? formatSlug(resort) : "",
                     discipline: discipline ? translate(`landingPRO.${discipline}`) : translate(`landingPRO.ski&snowboard`),
                     type: type ? translate(`landingPRO.${type}`) : ""
                   }),
                   "acceptedAnswer": {
                     "@type": "Answer",
                     "text": translate(`landingPRO.faqs.4.a`, {
-                      resort: resort ? translate(`landingPRO.${resort}`) : "",
+                      resort: resort ? formatSlug(resort) : "",
                       discipline: discipline ? translate(`landingPRO.${discipline}`) : translate(`landingPRO.ski&snowboard`),
                       type: type ? translate(`landingPRO.${type}`) : ""
                     })
@@ -411,14 +410,14 @@ export default function SearchPage() {
                 {
                   "@type": "Question",
                   "name": translate(`landingPRO.faqs.5.q`, {
-                    resort: resort ? translate(`landingPRO.${resort}`) : "",
+                    resort: resort ? formatSlug(resort) : "",
                     discipline: discipline ? translate(`landingPRO.${discipline}`) : translate(`landingPRO.ski&snowboard`),
                     type: type ? translate(`landingPRO.${type}`) : ""
                   }),
                   "acceptedAnswer": {
                     "@type": "Answer",
                     "text": translate(`landingPRO.faqs.5.a`, {
-                      resort: resort ? translate(`landingPRO.${resort}`) : "",
+                      resort: resort ? formatSlug(resort) : "",
                       discipline: discipline ? translate(`landingPRO.${discipline}`) : translate(`landingPRO.ski&snowboard`),
                       type: type ? translate(`landingPRO.${type}`) : ""
                     })
@@ -427,14 +426,14 @@ export default function SearchPage() {
                 {
                   "@type": "Question",
                   "name": translate(`landingPRO.faqs.6.q`, {
-                    resort: resort ? translate(`landingPRO.${resort}`) : "",
+                    resort: resort ? formatSlug(resort) : "",
                     discipline: discipline ? translate(`landingPRO.${discipline}`) : translate(`landingPRO.ski&snowboard`),
                     type: type ? translate(`landingPRO.${type}`) : ""
                   }),
                   "acceptedAnswer": {
                     "@type": "Answer",
                     "text": translate(`landingPRO.faqs.6.a`, {
-                      resort: resort ? translate(`landingPRO.${resort}`) : "",
+                      resort: resort ? formatSlug(resort) : "",
                       discipline: discipline ? translate(`landingPRO.${discipline}`) : translate(`landingPRO.ski&snowboard`),
                       type: type ? translate(`landingPRO.${type}`) : ""
                     })

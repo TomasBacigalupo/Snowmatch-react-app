@@ -30,6 +30,18 @@
       "--disable-accelerated-2d-canvas",
       "--disable-gpu"
     ],
+    "include": [
+        "/",
+        "/es",
+        "/en",
+        "/pt",
+        "/fr",
+        "/en/all-teachers",
+        "/es/all-teachers",
+        "/pt/all-teachers",
+        "/fr/all-teachers",
+        "/all-teachers"
+    ],
     "puppeteerExecutablePath": "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
     "minifyHtml": {
       "collapseWhitespace": false,

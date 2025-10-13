@@ -135,6 +135,11 @@ blog_urls = [
     "/es/instructor",
     "/pt/instructor",
     "/fr/instructor",
+    "/video-coach",
+    "/es/video-coach",
+    "/en/video-coach",
+    "/pt/video-coach",
+    "/fr/video-coach",
 ]
 
 # Configuración del sitemap
@@ -145,10 +150,18 @@ today = datetime.now().strftime("%Y-%m-%d")
 urlset = ET.Element(
     "urlset", xmlns="http://www.sitemaps.org/schemas/sitemap/0.9")
 
-# Generar URLs para /resorts
+# Generar URLs para /es/resorts (español por defecto)
 for resort in resorts:
     url = ET.SubElement(urlset, "url")
-    ET.SubElement(url, "loc").text = f"{base_url}/{resort}"
+    ET.SubElement(url, "loc").text = f"{base_url}/es/{resort}"
+    ET.SubElement(url, "lastmod").text = today
+    ET.SubElement(url, "changefreq").text = "weekly"
+    ET.SubElement(url, "priority").text = "0.8"
+
+# Generar URLs en inglés para /en/resorts
+for resort in resorts:
+    url = ET.SubElement(urlset, "url")
+    ET.SubElement(url, "loc").text = f"{base_url}/en/{resort}"
     ET.SubElement(url, "lastmod").text = today
     ET.SubElement(url, "changefreq").text = "weekly"
     ET.SubElement(url, "priority").text = "0.8"
@@ -161,11 +174,28 @@ for resort in resorts:
     ET.SubElement(url, "changefreq").text = "weekly"
     ET.SubElement(url, "priority").text = "0.8"
 
-# Generar URLs para /resorts/disciplines
+# Generar URLs en francés para /fr/resorts
+for resort in resorts:
+    url = ET.SubElement(urlset, "url")
+    ET.SubElement(url, "loc").text = f"{base_url}/fr/{resort}"
+    ET.SubElement(url, "lastmod").text = today
+    ET.SubElement(url, "changefreq").text = "weekly"
+    ET.SubElement(url, "priority").text = "0.8"
+
+# Generar URLs para /es/resorts/disciplines (español por defecto)
 for resort in resorts:
     for discipline in disciplines:
         url = ET.SubElement(urlset, "url")
-        ET.SubElement(url, "loc").text = f"{base_url}/{resort}/{discipline}"
+        ET.SubElement(url, "loc").text = f"{base_url}/es/{resort}/{discipline}"
+        ET.SubElement(url, "lastmod").text = today
+        ET.SubElement(url, "changefreq").text = "weekly"
+        ET.SubElement(url, "priority").text = "0.7"
+
+# Generar URLs en inglés para /en/resorts/disciplines
+for resort in resorts:
+    for discipline in disciplines:
+        url = ET.SubElement(urlset, "url")
+        ET.SubElement(url, "loc").text = f"{base_url}/en/{resort}/{discipline}"
         ET.SubElement(url, "lastmod").text = today
         ET.SubElement(url, "changefreq").text = "weekly"
         ET.SubElement(url, "priority").text = "0.7"
@@ -179,13 +209,33 @@ for resort in resorts:
         ET.SubElement(url, "changefreq").text = "weekly"
         ET.SubElement(url, "priority").text = "0.7"
 
-# Generar URLs para /resorts/disciplines/types
+# Generar URLs en francés para /fr/resorts/disciplines
+for resort in resorts:
+    for discipline in disciplines:
+        url = ET.SubElement(urlset, "url")
+        ET.SubElement(url, "loc").text = f"{base_url}/fr/{resort}/{discipline}"
+        ET.SubElement(url, "lastmod").text = today
+        ET.SubElement(url, "changefreq").text = "weekly"
+        ET.SubElement(url, "priority").text = "0.7"
+
+# Generar URLs para /es/resorts/disciplines/types (español por defecto)
 for resort in resorts:
     for discipline in disciplines:
         for type_ in types:
             url = ET.SubElement(urlset, "url")
             ET.SubElement(
-                url, "loc").text = f"{base_url}/{resort}/{discipline}/{type_}"
+                url, "loc").text = f"{base_url}/es/{resort}/{discipline}/{type_}"
+            ET.SubElement(url, "lastmod").text = today
+            ET.SubElement(url, "changefreq").text = "weekly"
+            ET.SubElement(url, "priority").text = "0.6"
+
+# Generar URLs en inglés para /en/resorts/disciplines/types
+for resort in resorts:
+    for discipline in disciplines:
+        for type_ in types:
+            url = ET.SubElement(urlset, "url")
+            ET.SubElement(
+                url, "loc").text = f"{base_url}/en/{resort}/{discipline}/{type_}"
             ET.SubElement(url, "lastmod").text = today
             ET.SubElement(url, "changefreq").text = "weekly"
             ET.SubElement(url, "priority").text = "0.6"
@@ -201,10 +251,29 @@ for resort in resorts:
             ET.SubElement(url, "changefreq").text = "weekly"
             ET.SubElement(url, "priority").text = "0.6"
 
-# Generar URLs para /match/teacher/{id}
+# Generar URLs en francés para /fr/resorts/disciplines/types
+for resort in resorts:
+    for discipline in disciplines:
+        for type_ in types:
+            url = ET.SubElement(urlset, "url")
+            ET.SubElement(
+                url, "loc").text = f"{base_url}/fr/{resort}/{discipline}/{type_}"
+            ET.SubElement(url, "lastmod").text = today
+            ET.SubElement(url, "changefreq").text = "weekly"
+            ET.SubElement(url, "priority").text = "0.6"
+
+# Generar URLs para /es/match/teacher/{id} (español por defecto)
 for teacher_url in teacher_urls:
     url = ET.SubElement(urlset, "url")
-    ET.SubElement(url, "loc").text = f"{base_url}{teacher_url}"
+    ET.SubElement(url, "loc").text = f"{base_url}/es{teacher_url}"
+    ET.SubElement(url, "lastmod").text = today
+    ET.SubElement(url, "changefreq").text = "weekly"
+    ET.SubElement(url, "priority").text = "0.5"
+
+# Generar URLs en inglés para /en/match/teacher/{id}
+for teacher_url in teacher_urls:
+    url = ET.SubElement(urlset, "url")
+    ET.SubElement(url, "loc").text = f"{base_url}/en{teacher_url}"
     ET.SubElement(url, "lastmod").text = today
     ET.SubElement(url, "changefreq").text = "weekly"
     ET.SubElement(url, "priority").text = "0.5"
@@ -217,14 +286,32 @@ for teacher_url in teacher_urls:
     ET.SubElement(url, "changefreq").text = "weekly"
     ET.SubElement(url, "priority").text = "0.5"
 
-
-# Generar URLs para blog
-for blog_url in blog_urls:
+# Generar URLs en francés para /fr/match/teacher/{id}
+for teacher_url in teacher_urls:
     url = ET.SubElement(urlset, "url")
-    ET.SubElement(url, "loc").text = f"{base_url}{blog_url}"
+    ET.SubElement(url, "loc").text = f"{base_url}/fr{teacher_url}"
     ET.SubElement(url, "lastmod").text = today
     ET.SubElement(url, "changefreq").text = "weekly"
-    ET.SubElement(url, "priority").text = "0.7"
+    ET.SubElement(url, "priority").text = "0.5"
+
+
+# Generar URLs para blog (español por defecto)
+for blog_url in blog_urls:
+    if not blog_url.startswith('/pt/') and not blog_url.startswith('/en/') and not blog_url.startswith('/fr/'):
+        url = ET.SubElement(urlset, "url")
+        ET.SubElement(url, "loc").text = f"{base_url}/es{blog_url}"
+        ET.SubElement(url, "lastmod").text = today
+        ET.SubElement(url, "changefreq").text = "weekly"
+        ET.SubElement(url, "priority").text = "0.7"
+
+# Generar URLs en inglés para blog (solo si no tienen prefijo de idioma)
+for blog_url in blog_urls:
+    if not blog_url.startswith('/pt/') and not blog_url.startswith('/en/') and not blog_url.startswith('/fr/'):
+        url = ET.SubElement(urlset, "url")
+        ET.SubElement(url, "loc").text = f"{base_url}/en{blog_url}"
+        ET.SubElement(url, "lastmod").text = today
+        ET.SubElement(url, "changefreq").text = "weekly"
+        ET.SubElement(url, "priority").text = "0.7"
 
 # Generar URLs en portugués para blog (solo si no tienen prefijo de idioma)
 for blog_url in blog_urls:
@@ -235,11 +322,11 @@ for blog_url in blog_urls:
         ET.SubElement(url, "changefreq").text = "weekly"
         ET.SubElement(url, "priority").text = "0.7"
 
-# Generar URLs en ingles para blog (solo si no tienen prefijo de idioma)
+# Generar URLs en francés para blog (solo si no tienen prefijo de idioma)
 for blog_url in blog_urls:
     if not blog_url.startswith('/pt/') and not blog_url.startswith('/en/') and not blog_url.startswith('/fr/'):
         url = ET.SubElement(urlset, "url")
-        ET.SubElement(url, "loc").text = f"{base_url}/en{blog_url}"
+        ET.SubElement(url, "loc").text = f"{base_url}/fr{blog_url}"
         ET.SubElement(url, "lastmod").text = today
         ET.SubElement(url, "changefreq").text = "weekly"
         ET.SubElement(url, "priority").text = "0.7"

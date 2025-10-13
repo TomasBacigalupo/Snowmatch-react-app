@@ -46,7 +46,7 @@ function useQuery() {
 export default function HomePage() {
 
   const { user } = useAuth()
-  const { onChangeLang } = useLocales();
+  const { onChangeLang, translate } = useLocales();
   const query = useQuery();
   const { lng: lang } = useParams();
 
@@ -105,13 +105,15 @@ export default function HomePage() {
   }
 
   return (
-    <Page title="Match a PRO">
+    <Page title={translate('homeSeo.title')}>
       <Helmet>
-        <title>Clases de ski y Experiencias</title>
-        <meta name="description" content="Clases de ski en Cerro Catedral" />
-        <meta property="og:title" content="Clases de ski en el Cerro Catedral para todos los niveles" />
-        <meta property="og:description" content="Reservá tu clase en Bariloche en menos de un minuto con SnowMatch. Más de 100 instructores habilitados. Clases de ski y snowboard evitando colas y demoras. ¡Cupos limitados!" />
+        <title>{translate('homeSeo.title')}</title>
+        <meta name="description" content={translate('homeSeo.description')} />
+        <meta name="keywords" content={translate('homeSeo.keywords')} />
+        <meta property="og:title" content={translate('homeSeo.ogTitle')} />
+        <meta property="og:description" content={translate('homeSeo.ogDescription')} />
         <meta property="og:image" content="https://snowmatchimages.s3.amazonaws.com/profile/ClaseNiñoss.jpeg" />
+        <meta property="og:image:alt" content={translate('homeSeo.ogImageAlt')} />
         <meta property="og:url" content="https://snowmatch.pro" />
         <meta property="og:site_name" content="SnowMatch" />
         <meta property="og:locale" content={localeFromLang(lang)} />

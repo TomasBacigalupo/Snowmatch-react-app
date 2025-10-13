@@ -2,12 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { Box, Container, Typography, Grid, Card, CardContent, Link, CircularProgress, Alert } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import axios from '../utils/axios';
+import useLocales from 'src/hooks/useLocales';
 
 const AllTeachers = () => {
     const theme = useTheme();
     const [resorts, setResorts] = useState([]);
     const [resortsLoading, setResortsLoading] = useState(true);
     const [resortsError, setResortsError] = useState(null);
+    const { currentLang } = useLocales();
 
     useEffect(() => {
         const fetchResorts = async () => {
@@ -15,27 +17,27 @@ const AllTeachers = () => {
                 setResortsLoading(true);
                 setResortsError(null);
                 const response = await axios.get('/api/enums/resorts/to-index');
-                
+
                 // Transform API data to match the expected format
                 const transformedResorts = response.data.map(resort => {
                     const resortValue = resort.value || resort;
-                    
+
                     // Convert "CERRO_CATEDRAL" to "Cerro Catedral"
                     const name = resortValue
                         .toLowerCase()
                         .split('_')
                         .map(word => word.charAt(0).toUpperCase() + word.slice(1))
                         .join(' ');
-                    
+
                     // Convert to slug format
                     const slug = resortValue.toLowerCase().replace(/_/g, '-');
-                    
+
                     return {
                         name: name,
                         slug: slug
                     };
                 });
-                
+
                 setResorts(transformedResorts);
             } catch (err) {
                 console.error('Error fetching resorts:', err);
@@ -49,7 +51,6 @@ const AllTeachers = () => {
     }, []);
 
     const teachers = [
-        { id: 'kari-1027', name: 'Kari', slug: 'kari-1027' },
         { id: 'juan-manuel-7', name: 'Juan Manuel', slug: 'juan-manuel-7' },
         { id: 'snowmatch-8', name: 'Snowmatch', slug: 'snowmatch-8' },
         { id: 'benito-9', name: 'Benito', slug: 'benito-9' },
@@ -371,21 +372,13 @@ const AllTeachers = () => {
         { id: 'luciano-1043', name: 'Luciano', slug: 'luciano-1043' }
     ];
 
-
-    const languages = [
-        { code: 'es', name: 'Español', prefix: '/es' },
-        { code: 'pt', name: 'Português', prefix: '/pt' },
-        { code: 'en', name: 'English', prefix: '/en' },
-        { code: 'fr', name: 'French', prefix: '/fr' },
-    ];
-
     return (
         <>
             <Container maxWidth="lg" sx={{ py: 4 }}>
                 <Typography variant="h3" component="h1" gutterBottom align="center">
                     Todos los Profesores y Resorts
                 </Typography>
-                
+
                 {/* Teachers Section */}
                 <Box sx={{ mb: 6 }}>
                     <Typography variant="h4" component="h2" gutterBottom sx={{ mb: 3 }}>
@@ -400,18 +393,56 @@ const AllTeachers = () => {
                                             {teacher.name}
                                         </Typography>
                                         <Box sx={{ mt: 2 }}>
-                                            {languages.map((lang) => (
-                                                <Box key={lang.code} sx={{ mb: 1 }}>
-                                                    <Link
-                                                        href={`${lang.prefix}/profile/${teacher.slug}`}
-                                                        color="primary"
-                                                        underline="hover"
-                                                        sx={{ display: 'block' }}
-                                                    >
-                                                        {lang.name}: Reservar clase con {teacher.name}
-                                                    </Link>
-                                                </Box>
-                                            ))}
+                                            <Box sx={{ mb: 1 }}>
+                                                <Link
+                                                    href={`/${currentLang.value}/profile/${teacher.slug}`}
+                                                    color="primary"
+                                                    underline="hover"
+                                                    sx={{ display: 'block' }}
+                                                >
+                                                    {teacher.name}
+                                                </Link>
+                                            </Box>
+                                            <Box sx={{ mb: 1 }}>
+                                                <Link
+                                                    href={`/en/profile/${teacher.slug}`}
+                                                    color="primary"
+                                                    underline="hover"
+                                                    sx={{ display: 'block' }}
+                                                >
+                                                    {teacher.name}
+                                                </Link>
+                                            </Box>
+                                            <Box sx={{ mb: 1 }}>
+                                                <Link
+                                                    href={`/es/profile/${teacher.slug}`}
+                                                    color="primary"
+                                                    underline="hover"
+                                                    sx={{ display: 'block' }}
+                                                >
+                                                    {teacher.name}
+                                                </Link>
+                                            </Box>
+                                            <Box sx={{ mb: 1 }}>
+                                                <Link
+                                                    href={`/pt/profile/${teacher.slug}`}
+                                                    color="primary"
+                                                    underline="hover"
+                                                    sx={{ display: 'block' }}
+                                                >
+                                                    {teacher.name}
+                                                </Link>
+                                            </Box>
+                                            <Box sx={{ mb: 1 }}>
+                                                <Link
+                                                    href={`/fr/profile/${teacher.slug}`}
+                                                    color="primary"
+                                                    underline="hover"
+                                                    sx={{ display: 'block' }}
+                                                >
+                                                    {teacher.name}
+                                                </Link>
+                                            </Box>
                                         </Box>
                                     </CardContent>
                                 </Card>
@@ -446,18 +477,16 @@ const AllTeachers = () => {
                                                 {resort.name}
                                             </Typography>
                                             <Box sx={{ mt: 2 }}>
-                                                {languages.map((lang) => (
-                                                    <Box key={lang.code} sx={{ mb: 1 }}>
-                                                        <Link
-                                                            href={`${lang.prefix}/${resort.slug}`}
-                                                            color="primary"
-                                                            underline="hover"
-                                                            sx={{ display: 'block' }}
-                                                        >
-                                                            {lang.name}: {resort.name}
-                                                        </Link>
-                                                    </Box>
-                                                ))}
+                                                <Box sx={{ mb: 1 }}>
+                                                    <Link
+                                                        href={`/${currentLang.value}/${resort.slug}`}
+                                                        color="primary"
+                                                        underline="hover"
+                                                        sx={{ display: 'block' }}
+                                                    >
+                                                        {resort.name}
+                                                    </Link>
+                                                </Box>
                                             </Box>
                                         </CardContent>
                                     </Card>
@@ -465,47 +494,6 @@ const AllTeachers = () => {
                             ))}
                         </Grid>
                     )}
-                </Box>
-
-                {/* SEO Links Section - Hidden but accessible to crawlers */}
-                <Box sx={{ mt: 6, opacity: 0.7 }}>
-                    <Typography variant="h5" gutterBottom>
-                        Enlaces para SEO
-                    </Typography>
-                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2 }}>
-                        {/* Teacher booking links */}
-                        <Link href="/reservar-clase-ski/kari-1027" color="inherit" sx={{ fontSize: '0.875rem' }}>
-                            Reservar clase con Kari
-                        </Link>
-                        
-                        {/* Resort links in Spanish */}
-                        <Link href="/portillo" color="inherit" sx={{ fontSize: '0.875rem' }}>
-                            Portillo
-                        </Link>
-                        <Link href="/bariloche" color="inherit" sx={{ fontSize: '0.875rem' }}>
-                            Bariloche
-                        </Link>
-                        <Link href="/lago-hermoso" color="inherit" sx={{ fontSize: '0.875rem' }}>
-                            Lago Hermoso
-                        </Link>
-                        <Link href="/cerro-bayo" color="inherit" sx={{ fontSize: '0.875rem' }}>
-                            Cerro Bayo
-                        </Link>
-
-                        {/* Resort links in Portuguese */}
-                        <Link href="/pt/portillo" color="inherit" sx={{ fontSize: '0.875rem' }}>
-                            Portillo(PT)
-                        </Link>
-                        <Link href="/pt/bariloche" color="inherit" sx={{ fontSize: '0.875rem' }}>
-                            Bariloche(PT)
-                        </Link>
-                        <Link href="/pt/lago-hermoso" color="inherit" sx={{ fontSize: '0.875rem' }}>
-                            Lago Hermoso(PT)
-                        </Link>
-                        <Link href="/pt/cerro-bayo" color="inherit" sx={{ fontSize: '0.875rem' }}>
-                            Cerro Bayo(PT)
-                        </Link>
-                    </Box>
                 </Box>
             </Container>
         </>

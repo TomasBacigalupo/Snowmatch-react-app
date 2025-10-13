@@ -6,6 +6,14 @@
         "happyCustomers": "Plus de 160 clients satisfaits",
         "findInstructors": "Trouver des Moniteurs",
         "getVideoFeedback": "Obtenir une Analyse Vidéo",
+        "cta": "Obtenir une Analyse Vidéo",
+        "ctaVariants": {
+            "variant1": "Obtenir une Analyse Vidéo",
+            "variant2": "Commencez à Améliorer",
+            "variant3": "Analyser Mon Ski",
+            "variant4": "Recevoir des Conseils d'Expert",
+            "variant5": "Améliorer Ma Technique"
+        },
         "availableOn": "DISPONIBLE SUR",
         "downloadOnThe": "Télécharger sur",
         "appStore": "App Store",
@@ -41,6 +49,14 @@
                 "bio": "Instructeur PSIA Niveau 3 et responsable des opérations et de la réussite client. Assure l'excellence du service et la satisfaction de nos utilisateurs."
             }
         }
+    },
+    "homeSeo": {
+        "title": "SnowMatch - Votre Coach de Ski Numérique | Skiez Mieux et Amusez-vous Plus",
+        "description": "Améliorez votre technique de ski avec analyse vidéo IA et instructeurs certifiés. Téléchargez vos vidéos, recevez des retours personnalisés et connectez-vous avec des coaches professionnels partout dans le monde.",
+        "keywords": "coach de ski numérique, analyse vidéo ski, améliorer technique de ski, cours de ski en ligne, coaching ski avec IA, instructeurs certifiés de ski, retour ski, coaching snowboard, amélioration technique de ski",
+        "ogTitle": "SnowMatch - Votre Coach de Ski Numérique",
+        "ogDescription": "Téléchargez vos vidéos de ski et recevez des retours avec IA d'instructeurs certifiés. Améliorez votre technique de n'importe où dans le monde.",
+        "ogImageAlt": "SnowMatch plateforme de coach de ski numérique - Analyse vidéo IA et coaching professionnel"
     },
     "landing": {
         "advertisement": {
@@ -942,6 +958,11 @@
             }
         }
     },
+    "metaKeywords": {
+        "skiLessons": "cours de ski, leçons de ski, classes de ski",
+        "snowboardLessons": "cours de snowboard, leçons de snowboard, classes de snowboard",
+        "combined": "cours de ski, leçons de ski, classes de ski, cours de snowboard, leçons de snowboard, classes de snowboard"
+    },
     "videoOnboarding": {
         "stepper": {
             "tips": "Conseils Vidéo",
@@ -1036,5 +1057,40 @@
             "message": "Votre vidéo a été envoyée pour analyse professionnelle. Vous recevrez votre ProCheck avec des commentaires détaillés dans les 24 prochaines heures.",
             "goToDashboard": "Aller au Tableau de Bord"
         }
+    },
+    "footer": {
+        "description": "Élevez votre expérience de neige avec SnowMatch.",
+        "sections": {
+            "snowmatch": "SnowMatch",
+            "instructors": "Instructeurs",
+            "videoCoach": "Video Coach",
+            "legal": "Légal",
+            "contact": "Contact"
+        },
+        "links": {
+            "catedral": "Catedral",
+            "snowMatchX": "SnowMatchX",
+            "intermediate": "Intermédiaire",
+            "beginners": "Débutants",
+            "heliski": "Heliski",
+            "clinic": "Clinic",
+            "family": "Family",
+            "children": "Children",
+            "freeRide": "Free Ride",
+            "groupCatedral": "Cours de groupe Catedral",
+            "raceClinic": "Clinique de course",
+            "faqs": "FAQs",
+            "blog": "Blog",
+            "viewAllInstructors": "Voir tous les instructeurs",
+            "becomeAnInstructor": "Devenir instructeur",
+            "video": "Video",
+            "onboarding": "Onboarding",
+            "terms": "Termes et conditions",
+            "privacy": "Politique de confidentialité",
+            "whatsapp": "WhatsApp",
+            "email": "office@snowmatch.pro",
+            "location": "San Martín de los Andes, Patagonie Argentine"
+        },
+        "copyright": "Tous droits réservés."
     }
 }

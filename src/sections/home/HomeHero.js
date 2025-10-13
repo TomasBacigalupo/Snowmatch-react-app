@@ -13,12 +13,15 @@ import { MotionContainer, varFade } from '../../components/animate';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import LoginIcon from '@mui/icons-material/Login';
 import useLocales from 'src/hooks/useLocales';
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { FormProvider, RHFSelect } from 'src/components/hook-form';
 import HomeLearnToSki from './HomeLearnToSki';
 import HoverButton from 'src/components/HoverButton';
+// A/B Testing
+import { getHomeHeroCTAVariant, trackHomeHeroCTAClick } from '../../utils/abTesting';
+import '../../utils/testABTesting'; // Load test functions for development
 
 // ----------------------------------------------------------------------
 
@@ -238,8 +241,9 @@ function SkiTracks() {
 // ----------------------------------------------------------------------
 
 export default function HomeHero() {
-  const { translate } = useLocales();
+  const { translate, currentLang } = useLocales();
   const [value, setValue] = useState(0);
+  const [ctaVariant, setCtaVariant] = useState('variant1');
   const theme = useTheme();
   const navigate = useNavigate();
 
@@ -252,8 +256,18 @@ export default function HomeHero() {
   };
 
   const handleVideoFeedback = () => {
-    navigate(PATH_GUEST.videoCoach);
+    // Track A/B test conversion
+    trackHomeHeroCTAClick(ctaVariant);
+    
+    // Navigate to video onboarding page
+    navigate(`/${currentLang.value}/video-onboarding`);
   };
+
+  // Initialize A/B test variant on component mount
+  useEffect(() => {
+    const variant = getHomeHeroCTAVariant();
+    setCtaVariant(variant);
+  }, []);
 
   const defaultValues = {
     resort: "Catedral",
@@ -382,7 +396,7 @@ export default function HomeHero() {
                     },
                   }}
                 >
-                  {translate('homeHero.joinUs')}
+                  {translate(`homeHero.ctaVariants.${ctaVariant}`)}
                 </Button>
               </Stack>
             </m.div>

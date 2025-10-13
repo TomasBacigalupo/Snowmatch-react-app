@@ -142,8 +142,12 @@ const VideoOnboarding = forwardRef(({ onStepChange, onNext, onBack, isSubmitting
     setError,
     clearErrors,
     handleSubmit,
+    watch,
     formState: { errors, isSubmitting: formIsSubmitting },
   } = methods;
+
+  // Watch form values to trigger re-render when they change
+  const watchedValues = watch();
 
   const isSubmitting = externalIsSubmitting !== undefined ? externalIsSubmitting : internalIsSubmitting || formIsSubmitting;
 
@@ -161,6 +165,24 @@ const VideoOnboarding = forwardRef(({ onStepChange, onNext, onBack, isSubmitting
         return [];
     }
   };
+
+  // Check if current step is ready to proceed
+  const isStepReady = useCallback(() => {
+    const currentData = methods.getValues();
+    
+    switch (activeStep) {
+      case 0: // Tips step - always ready
+        return true;
+      case 1: // Video upload - check if video file exists
+        return !!currentData.videoFile;
+      case 2: // Location - check if resort is selected
+        return !!currentData.resort;
+      case 3: // Review - check if review type is selected
+        return !!currentData.reviewType;
+      default:
+        return false;
+    }
+  }, [activeStep, methods, watchedValues]);
 
   const saveStepData = async (currentData, step) => {
     if (!user) return;
@@ -472,11 +494,12 @@ const VideoOnboarding = forwardRef(({ onStepChange, onNext, onBack, isSubmitting
               loading={isSubmitting}
               disabled={isSubmitting}
               sx={{
-                backgroundColor: '#666666',
+                backgroundColor: isStepReady() ? '#000000' : '#555555',
                 color: 'white',
                 borderRadius: '8px',
                 '&:hover': {
-                  backgroundColor: '#555555'
+                  backgroundColor: isStepReady() ? '#000000' : '#555555',
+                  opacity: isStepReady() ? 0.9 : 1
                 }
               }}
             >

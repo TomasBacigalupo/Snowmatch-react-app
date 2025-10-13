@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useState, useRef, useCallback, forwardRef, useImperativeHandle } from 'react';
+import { useState, useRef, useCallback, forwardRef, useImperativeHandle, useEffect } from 'react';
 import { 
   Box, 
   Typography, 
@@ -51,11 +51,19 @@ const VideoUploadStep = forwardRef(({ validateField }, ref) => {
   const [error, setError] = useState(null);
 
   const videoRef = useRef(null);
+  const isUploadingRef = useRef(false);
+  const fileSelectionTimeoutRef = useRef(null);
 
   const handleFileSelect = useCallback(async () => {
     try {
       setError(null);
       setIsUploading(true);
+      isUploadingRef.current = true;
+
+      // Clear any existing timeout
+      if (fileSelectionTimeoutRef.current) {
+        clearTimeout(fileSelectionTimeoutRef.current);
+      }
 
       // Check if we're in a mobile environment (Capacitor)
       const isMobile = window.Capacitor && window.Capacitor.isNativePlatform();
@@ -63,37 +71,43 @@ const VideoUploadStep = forwardRef(({ validateField }, ref) => {
       if (isMobile) {
         // Mobile environment - use Capacitor plugins
         try {
+          console.log('Requesting camera permissions...');
           await Camera.requestPermissions();
+          
+          console.log('Opening video picker...');
           const videos = await VideoPicker.pick();
           const file = videos.files[0];
-          const videoUrl = file.webPath;
+          console.log('Mobile video selected:', file);
 
           if (!file) {
             setError(translate('videoOnboarding.upload.noVideoSelected'));
+            setIsUploading(false);
+            isUploadingRef.current = false;
             return;
           }
 
+          const videoUrl = file.webPath;
+          console.log('Mobile video URL:', videoUrl);
+          
+          // Set video immediately
           setVideoPreviewUrl(videoUrl);
           setSelectedFile(file);
-
-          // Get video duration for mobile
-          const video = document.createElement('video');
-          video.src = videoUrl;
-          video.addEventListener('loadedmetadata', () => {
-            const duration = video.duration;
-            setVideoDuration(duration);
-            setTrimEnd(Math.min(30, duration)); // Set trim end to max 30 seconds or video duration
-          });
-
-          // Set form values
           setValue('videoFile', file);
-          setValue('videoDuration', video.duration);
           
-          await validateField('videoFile', file);
+          // Set default values first (will be updated when metadata loads)
+          setVideoDuration(60);
+          setTrimEnd(30);
+          setValue('videoDuration', 60);
+          
+          console.log('Mobile video loaded successfully');
+          setIsUploading(false);
+          isUploadingRef.current = false;
 
         } catch (mobileError) {
           console.error('Mobile video picker error:', mobileError);
           setError(translate('videoOnboarding.upload.galleryError'));
+          setIsUploading(false);
+          isUploadingRef.current = false;
           return;
         }
       } else {
@@ -102,32 +116,74 @@ const VideoUploadStep = forwardRef(({ validateField }, ref) => {
         input.type = 'file';
         input.accept = 'video/*';
         
+        const resetLoading = () => {
+          if (fileSelectionTimeoutRef.current) {
+            clearTimeout(fileSelectionTimeoutRef.current);
+          }
+          setIsUploading(false);
+          isUploadingRef.current = false;
+        };
+        
         input.onchange = async (event) => {
+          if (fileSelectionTimeoutRef.current) {
+            clearTimeout(fileSelectionTimeoutRef.current);
+          }
+          
           const selectedFile = event.target.files[0];
-          if (selectedFile) {
-            const videoUrl = URL.createObjectURL(selectedFile);
-            
-            // Get video duration
-            const video = document.createElement('video');
-            video.src = videoUrl;
-            video.addEventListener('loadedmetadata', () => {
-              const duration = video.duration;
-              setVideoDuration(duration);
-              setTrimEnd(Math.min(30, duration)); // Set trim end to max 30 seconds or video duration
-            });
+          console.log('File selected:', selectedFile);
+          
+          if (!selectedFile) {
+            resetLoading();
+            return;
+          }
 
-            // Set form values
-            setValue('videoFile', selectedFile);
-            setValue('videoDuration', video.duration);
-            await validateField('videoFile', selectedFile);
+          try {
+            console.log('Processing video file...');
             
+            // Clean up previous URL if exists
+            if (videoPreviewUrl) {
+              URL.revokeObjectURL(videoPreviewUrl);
+            }
+
+            const videoUrl = URL.createObjectURL(selectedFile);
+            console.log('Video URL created:', videoUrl);
+            
+            // Set preview immediately so user sees something
             setVideoPreviewUrl(videoUrl);
             setSelectedFile(selectedFile);
-            setIsUploading(false);
-          } else {
-            setIsUploading(false);
+            setValue('videoFile', selectedFile);
+            
+            // Set default values first (will be updated when metadata loads)
+            setVideoDuration(60);
+            setTrimEnd(30);
+            setValue('videoDuration', 60);
+            
+            console.log('Video loaded successfully');
+            resetLoading();
+          } catch (error) {
+            console.error('Error processing video:', error);
+            setError(translate('videoOnboarding.upload.selectionError'));
+            resetLoading();
           }
         };
+
+        // Handle cancel case
+        input.oncancel = () => {
+          resetLoading();
+        };
+        
+        // Set a timeout to detect if the user closed the dialog without selecting
+        // This handles cases where oncancel is not supported
+        window.addEventListener('focus', () => {
+          fileSelectionTimeoutRef.current = setTimeout(() => {
+            // Check if we're still in uploading state
+            // If onchange was called, resetLoading() would have been called and isUploadingRef would be false
+            if (isUploadingRef.current) {
+              console.log('File selection cancelled or timed out');
+              resetLoading();
+            }
+          }, 500);
+        }, { once: true });
         
         input.click();
       }
@@ -135,13 +191,16 @@ const VideoUploadStep = forwardRef(({ validateField }, ref) => {
     } catch (error) {
       console.error('Error selecting video:', error);
       setError(translate('videoOnboarding.upload.selectionError') + ' ' + error.message);
+      setIsUploading(false);
+      isUploadingRef.current = false;
     } finally {
-      // Only set isUploading to false for mobile, browser handles it in onchange
+      // Set isUploading to false for mobile
       if (window.Capacitor && window.Capacitor.isNativePlatform()) {
         setIsUploading(false);
+        isUploadingRef.current = false;
       }
     }
-  }, [setValue, validateField]);
+  }, [setValue, translate, videoPreviewUrl]);
 
   const handleTrimVideo = useCallback(async () => {
     if (!videoPreviewUrl || !selectedFile) return;
@@ -169,8 +228,6 @@ const VideoUploadStep = forwardRef(({ validateField }, ref) => {
             video.addEventListener('loadedmetadata', () => {
               setVideoDuration(video.duration);
             });
-
-            await validateField('videoFile', trimmedVideo);
           }
         } catch (mobileTrimError) {
           console.error('Mobile video trimming error:', mobileTrimError);
@@ -204,8 +261,6 @@ const VideoUploadStep = forwardRef(({ validateField }, ref) => {
             const trimmedDuration = trimEnd - trimStart;
             setVideoDuration(trimmedDuration);
             
-            validateField('videoFile', selectedFile);
-            
             // Show success message
             console.log(`Video trimmed from ${trimStart}s to ${trimEnd}s (${trimmedDuration}s total)`);
           });
@@ -223,7 +278,7 @@ const VideoUploadStep = forwardRef(({ validateField }, ref) => {
     } finally {
       setIsTrimming(false);
     }
-  }, [videoPreviewUrl, selectedFile, trimStart, trimEnd, setValue, validateField]);
+  }, [videoPreviewUrl, selectedFile, trimStart, trimEnd, setValue, translate]);
 
   const handleSliderChange = useCallback((event, newValue, activeThumb) => {
     if (!Array.isArray(newValue)) return;
@@ -259,6 +314,46 @@ const VideoUploadStep = forwardRef(({ validateField }, ref) => {
 
   const needsTrimming = videoDuration > 30;
 
+  // Listen for video metadata loaded event
+  useEffect(() => {
+    const videoElement = videoRef.current;
+    if (videoElement && videoPreviewUrl) {
+      const handleLoadedMetadata = () => {
+        const duration = videoElement.duration;
+        console.log('Video metadata loaded from DOM element, duration:', duration);
+        if (duration && duration > 0) {
+          setVideoDuration(duration);
+          setTrimEnd(Math.min(30, duration));
+          setValue('videoDuration', duration);
+        }
+      };
+
+      videoElement.addEventListener('loadedmetadata', handleLoadedMetadata);
+      
+      // Try to get duration if already loaded
+      if (videoElement.duration && videoElement.duration > 0) {
+        handleLoadedMetadata();
+      }
+
+      return () => {
+        videoElement.removeEventListener('loadedmetadata', handleLoadedMetadata);
+      };
+    }
+  }, [videoPreviewUrl, setValue]);
+
+  // Cleanup video preview URL on unmount to prevent memory leaks
+  useEffect(() => {
+    return () => {
+      if (videoPreviewUrl && videoPreviewUrl.startsWith('blob:')) {
+        URL.revokeObjectURL(videoPreviewUrl);
+      }
+      // Clear any pending timeouts
+      if (fileSelectionTimeoutRef.current) {
+        clearTimeout(fileSelectionTimeoutRef.current);
+      }
+    };
+  }, [videoPreviewUrl]);
+
   // Expose trim method to parent component
   useImperativeHandle(ref, () => ({
     trimVideo: handleTrimVideo,
@@ -276,7 +371,7 @@ const VideoUploadStep = forwardRef(({ validateField }, ref) => {
               {translate('videoOnboarding.upload.title')}
             </Typography>
             <Typography variant="body1" color="text.secondary" sx={{ maxWidth: 600, mx: 'auto' }}>
-              {translate('videoOnboarding.upload.subtitle')}
+              {translate('videoOnboarding.upload.subtitle')} 
             </Typography>
           </Box>
         </m.div>
@@ -410,7 +505,7 @@ const VideoUploadStep = forwardRef(({ validateField }, ref) => {
 });
 
 VideoUploadStep.propTypes = {
-  validateField: PropTypes.func.isRequired,
+  validateField: PropTypes.func, // Optional - validation will happen on form submission
 };
 
 VideoUploadStep.displayName = 'VideoUploadStep';

@@ -519,6 +519,7 @@ export default function Router() {
           path: '*',
           element: <LogoOnlyLayout />,
           children: [
+            { path: 'counts', element: <Counts /> },
             { path: 'coming-soon', element: <ComingSoon /> },
             { path: 'maintenance', element: <Maintenance /> },
             { path: 'pricing', element: <Pricing /> },
@@ -694,6 +695,7 @@ const AspenSkiCamp = Loadable(lazy(() => import('../pages/AspenSkiCamp')));
 const VailSkiCamp = Loadable(lazy(() => import('../pages/VailSkiCamp')));
 const JacksonHoleSkiCamp = Loadable(lazy(() => import('../pages/JacksonHoleSkiCamp')));
 const Resort = Loadable(lazy(() => import('../pages/search/resort/Resort')));
+const Counts = Loadable(lazy(() => import('../pages/Counts')));
 
 // VideoCoach Landing
 const VideoCoach = Loadable(lazy(() => import('../pages/search/videoCoach/VideoCoach')));

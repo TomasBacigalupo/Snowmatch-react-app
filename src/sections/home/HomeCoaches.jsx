@@ -118,7 +118,7 @@ export default function HomeCoaches() {
   
   const coaches = [
     {
-      photo: '/assets/avatars/avatar_1.png',
+      photo: '/assets/coaches/tomas-bacigalupo.webp',
       name: translate('homeCoaches.coaches.tomasBacigalupo.name'),
       role: translate('homeCoaches.coaches.tomasBacigalupo.role'),
       roleColor: undefined, // Usará el color primario del tema
@@ -127,7 +127,7 @@ export default function HomeCoaches() {
       bio: translate('homeCoaches.coaches.tomasBacigalupo.bio'),
     },
     {
-      photo: '/assets/avatars/avatar_2.png',
+      photo: '/assets/coaches/tomas.webp',
       name: translate('homeCoaches.coaches.tomasSoleno.name'),
       role: translate('homeCoaches.coaches.tomasSoleno.role'),
       roleColor: undefined, // Usará el color primario del tema
@@ -136,7 +136,7 @@ export default function HomeCoaches() {
       bio: translate('homeCoaches.coaches.tomasSoleno.bio'),
     },
     {
-      photo: '/assets/avatars/avatar_3.png',
+      photo: '/assets/coaches/manu.webp',
       name: translate('homeCoaches.coaches.manuelTorres.name'),
       role: translate('homeCoaches.coaches.manuelTorres.role'),
       roleColor: undefined, // Usará el color primario del tema
@@ -145,7 +145,7 @@ export default function HomeCoaches() {
       bio: translate('homeCoaches.coaches.manuelTorres.bio'),
     },
     {
-      photo: '/assets/avatars/avatar_4.png',
+      photo: '/assets/coaches/nacho.webp',
       name: translate('homeCoaches.coaches.ignacioCapiet.name'),
       role: translate('homeCoaches.coaches.ignacioCapiet.role'),
       roleColor: undefined, // Usará el color primario del tema

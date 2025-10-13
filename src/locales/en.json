@@ -6,6 +6,14 @@
     "happyCustomers": "160+ Happy customers",
     "findInstructors": "Find Instructors",
     "getVideoFeedback": "Get Video Feedback",
+    "cta": "Get Video Feedback",
+    "ctaVariants": {
+      "variant1": "Get Video Feedback",
+      "variant2": "Start Improving Now",
+      "variant3": "Analyze My Skiing",
+      "variant4": "Get Expert Feedback",
+      "variant5": "Improve My Technique"
+    },
     "availableOn": "AVAILABLE ON",
     "downloadOnThe": "Download on the",
     "appStore": "App Store",
@@ -41,6 +49,14 @@
         "bio": "PSIA Level 3 instructor and operations and customer success officer. Ensures excellence in service and satisfaction of our users."
       }
     }
+  },
+  "homeSeo": {
+    "title": "SnowMatch - Your Digital Ski Coach | Ski Better, Have More Fun",
+    "description": "Improve your skiing with AI video analysis and certified instructors. Upload your runs, get personalized feedback, and connect with professional coaches worldwide.",
+    "keywords": "digital ski coach, ski video analysis, improve skiing technique, ski lessons online, AI ski coaching, certified ski instructors, ski feedback, snowboard coaching, ski technique improvement",
+    "ogTitle": "SnowMatch - Your Digital Ski Coach",
+    "ogDescription": "Upload your skiing videos and get AI-powered feedback from certified instructors. Improve your technique from anywhere in the world.",
+    "ogImageAlt": "SnowMatch digital ski coach platform - AI video analysis and professional coaching"
   },
   "landing": {
     "advertisement": {
@@ -1839,6 +1855,7 @@
     "sections": {
       "snowmatch": "SnowMatch",
       "instructors": "Instructors",
+      "videoCoach": "Video Coach",
       "legal": "Legal",
       "contact": "Contact"
     },
@@ -1857,6 +1874,9 @@
       "faqs": "FAQs",
       "blog": "Blog",
       "viewAllInstructors": "View all instructors",
+      "becomeAnInstructor": "Become an instructor",
+      "video": "Video",
+      "onboarding": "Onboarding",
       "terms": "Terms and conditions",
       "privacy": "Privacy policy",
       "whatsapp": "WhatsApp",
@@ -2066,14 +2086,19 @@
   "contactButton": "Contact via WhatsApp",
   "contactMessage": "Hi! I'd like to get more information about SnowMatch video analysis plans."
 },
-"videoOnboarding": {
-  "stepper": {
-    "tips": "Video Tips",
-    "upload": "Upload Video",
-    "location": "Location",
-    "review": "Choose Analysis",
-    "payment": "Payment"
+  "metaKeywords": {
+    "skiLessons": "ski lessons, skiing lessons, ski classes, skiing classes",
+    "snowboardLessons": "snowboard lessons, snowboarding lessons, snowboard classes, snowboarding classes",
+    "combined": "ski lessons, skiing lessons, ski classes, skiing classes, snowboard lessons, snowboarding lessons, snowboard classes, snowboarding classes"
   },
+  "videoOnboarding": {
+    "stepper": {
+      "tips": "Video Tips",
+      "upload": "Upload Video",
+      "location": "Location",
+      "review": "Choose Analysis",
+      "payment": "Payment"
+    },
   "page": {
     "title": "ProCheck - Video Analysis | Snowmatch"
   },

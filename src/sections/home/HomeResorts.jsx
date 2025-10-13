@@ -4,6 +4,7 @@ import { Link as RouterLink } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 import { ChevronLeft, ChevronRight, LocationOn, Star } from '@mui/icons-material';
 import axiosInstance from 'src/utils/axios';
+import useLocales from 'src/hooks/useLocales';
 
 // ----------------------------------------------------------------------
 
@@ -175,6 +176,7 @@ const SkeletonCard = styled(Card)(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 export default function HomeResorts() {
+  const { currentLang } = useLocales();
   const [resorts, setResorts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -307,7 +309,7 @@ export default function HomeResorts() {
                 <ResortCard 
                   key={resort.id || resort.slug} 
                   component={RouterLink} 
-                  to={`/resort/${resort.slug || resort.id}`}
+                  to={`/${currentLang.value}/resort/${resort.slug || resort.id}`}
                   sx={{ textDecoration: 'none' }}
                 >
                   <ImageContainer>

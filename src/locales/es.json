@@ -6,6 +6,14 @@
         "happyCustomers": "Más de 160 clientes felices",
         "findInstructors": "Buscar Instructores",
         "getVideoFeedback": "Obtener Análisis de Video",
+        "cta": "Obtener Análisis de Video",
+        "ctaVariants": {
+            "variant1": "Obtener Análisis de Video",
+            "variant2": "Empezá a Mejorar Ahora",
+            "variant3": "Analizar Mi Esquí",
+            "variant4": "Recibir Feedback Experto",
+            "variant5": "Mejorar Mi Técnica"
+        },
         "availableOn": "DISPONIBLE EN",
         "downloadOnThe": "Descargá en",
         "appStore": "App Store",
@@ -41,6 +49,14 @@
                 "bio": "Instructor PSIA Nivel 3 y oficial de operaciones y éxito del cliente. Asegura la excelencia en el servicio y la satisfacción de nuestros usuarios."
             }
         }
+    },
+    "homeSeo": {
+        "title": "SnowMatch - Tu Entrenador Digital de Esquí | Esquiá Mejor y Divertite Más",
+        "description": "Mejorá tu técnica de esquí con análisis de video IA e instructores certificados. Subí tus videos, recibí feedback personalizado y conectá con coaches profesionales en todo el mundo.",
+        "keywords": "entrenador digital de esquí, análisis de video de esquí, mejorar técnica de esquí, clases de esquí online, coaching de esquí con IA, instructores certificados de esquí, feedback de esquí, coaching de snowboard, mejora de técnica de esquí",
+        "ogTitle": "SnowMatch - Tu Entrenador Digital de Esquí",
+        "ogDescription": "Subí tus videos de esquí y recibí feedback con IA de instructores certificados. Mejorá tu técnica desde cualquier lugar del mundo.",
+        "ogImageAlt": "SnowMatch plataforma de entrenador digital de esquí - Análisis de video IA y coaching profesional"
     },
     "landing": {
         "advertisement": {
@@ -2718,6 +2734,7 @@
         "sections": {
             "snowmatch": "SnowMatch",
             "instructors": "Profesores",
+            "videoCoach": "Video Coach",
             "legal": "Legal",
             "contact": "Contacto"
         },
@@ -2736,6 +2753,9 @@
             "faqs": "FAQs",
             "blog": "Blog",
             "viewAllInstructors": "Ver todos los profesores",
+            "becomeAnInstructor": "Ser instructor",
+            "video": "Video",
+            "onboarding": "Onboarding",
             "terms": "Términos y condiciones",
             "privacy": "Política de privacidad",
             "whatsapp": "Whats App",
@@ -3038,6 +3058,11 @@
         "contactSubtitle": "Contáctanos por WhatsApp y te ayudaremos a elegir el plan perfecto para tus necesidades.",
         "contactButton": "Contactar por WhatsApp",
         "contactMessage": "¡Hola! Me gustaría obtener más información sobre los planes de análisis de video de SnowMatch."
+    },
+    "metaKeywords": {
+        "skiLessons": "clases de esquí, clases de ski, clases de esqui",
+        "snowboardLessons": "clases de snowboard, clases de snow board",
+        "combined": "clases de esquí, clases de ski, clases de esqui, clases de snowboard, clases de snow board"
     },
     "videoOnboarding": {
         "stepper": {

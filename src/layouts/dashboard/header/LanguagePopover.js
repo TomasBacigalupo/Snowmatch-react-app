@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 // @mui
 import { Avatar, MenuItem, Stack } from '@mui/material';
 // hooks
@@ -13,6 +14,8 @@ import Iconify from 'src/components/Iconify';
 
 export default function LanguagePopover() {
   const { allLang, currentLang, onChangeLang } = useLocales();
+  const location = useLocation();
+  const navigate = useNavigate();
 
   const [open, setOpen] = useState(null);
 
@@ -32,9 +35,23 @@ export default function LanguagePopover() {
         return 'emojione:flag-for-united-states'
       case 'pt':
         return 'emojione:flag-for-brazil'
+      case 'fr':
+        return 'emojione:flag-for-france'
     }
     return ''
   }
+
+  const handleLanguageChange = (languageValue) => {
+    // Check if we're on the root path
+    if (location.pathname === '/' || location.pathname === `/${currentLang.value}`) {
+      // Redirect to language-specific URL for SEO crawling
+      navigate(`/${languageValue}`);
+    } else {
+      // For other paths, just change the language without navigation
+      onChangeLang(languageValue);
+    }
+    handleClose();
+  };
 
   return (
     <>
@@ -66,10 +83,7 @@ export default function LanguagePopover() {
             <MenuItem
               key={option.value}
               selected={option.value === currentLang.value}
-              onClick={() => {
-                onChangeLang(option.value);
-                handleClose();
-              }}
+              onClick={() => handleLanguageChange(option.value)}
             >
               <Iconify icon={getIcon(option.value)} sx={{mr:1}}/>
               {option.label}

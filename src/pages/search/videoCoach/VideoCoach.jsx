@@ -19,7 +19,7 @@ export default function VideoCoachLanding() {
 
     const lang = lng || 'es';
 
-    const uploadUrl = '/match/videoCoach/upload';
+    const uploadUrl = `/${lang}/video-onboarding`;
     const instructorUrl = `/${lang}/instructor`;
 
     const seo = {

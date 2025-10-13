@@ -63,17 +63,17 @@ export default function HomeWhySnowmatch() {
     {
       title: translate('homeWhySnowmatch.features.1.title'),
       description: translate('homeWhySnowmatch.features.1.description'),
-      image: '/assets/courses/class.jpg',
+      image: '/assets/how-to/screens.webp',
     },
     {
       title: translate('homeWhySnowmatch.features.2.title'),
       description: translate('homeWhySnowmatch.features.2.description'),
-      image: '/assets/avatars/pros-esquiando2.png',
+      image: '/assets/how-to/filtros.webp',
     },
     {
       title: translate('homeWhySnowmatch.features.3.title'),
       description: translate('homeWhySnowmatch.features.3.description'),
-      image: '/assets/rental/beginner-ski.jpg',
+      image: '/assets/how-to/improve.webp',
     },
     {
       title: translate('homeWhySnowmatch.features.4.title'),
@@ -102,14 +102,15 @@ export default function HomeWhySnowmatch() {
             <Box
               component={m.img}
               key={active.image}
-              variants={varFade().in}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.5 }}
               src={active.image}
               alt={active.title}
               sx={{
                 width: '100%',
-                borderRadius: 3,
-                boxShadow: '0 20px 40px rgba(0,0,0,0.15)',
-                objectFit: 'cover',
+                objectFit: 'contain',
                 height: { xs: 240, md: 320 },
               }}
             />

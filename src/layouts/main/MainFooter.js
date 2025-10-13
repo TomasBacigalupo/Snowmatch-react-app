@@ -24,38 +24,46 @@ const RootStyle = styled('div')(({ theme }) => ({
   justifyContent: 'flex-end'
 }));
 
-const getLinks = (translate) => [
+const getLinks = (translate, currentLang) => [
   {
     headline: translate('footer.sections.snowmatch'),
     children: [
-      { name: 'Aspen', href: '/aspen' },
-      { name: 'Vail', href: '/vail' },
-      { name: 'Buttermilk', href: '/buttermilk' },
-      { name: 'Snowmass', href: '/snowmass' },
-      { name: 'Highlands', href: '/highlands' },
-      { name: 'Zermatt', href: '/zermatt' },
-      { name: 'Grandvalira', href: '/grandvalira' },
-      { name: 'Soldeu', href: '/soldeu' },
-      { name: 'Tarter', href: '/tarter' },
-      { name: 'Canillo', href: '/canillo' },
-      { name: translate('footer.links.faqs'), href: PATH_PAGE.faqs },
-      { name: translate('footer.links.blog'), href: "/noticias" },
+      { name: 'Aspen', href: `/${currentLang.value}/aspen` },
+      { name: 'Vail', href: `/${currentLang.value}/vail` },
+      { name: 'Buttermilk', href: `/${currentLang.value}/buttermilk` },
+      { name: 'Snowmass', href: `/${currentLang.value}/snowmass` },
+      { name: 'Highlands', href: `/${currentLang.value}/highlands` },
+      { name: 'Zermatt', href: `/${currentLang.value}/zermatt` },
+      { name: 'Grandvalira', href: `/${currentLang.value}/grandvalira` },
+      { name: 'Soldeu', href: `/${currentLang.value}/soldeu` },
+      { name: 'Tarter', href: `/${currentLang.value}/tarter` },
+      { name: 'Canillo', href: `/${currentLang.value}/canillo` },
+      { name: translate('footer.links.faqs'), href: `/${currentLang.value}${PATH_PAGE.faqs}` },
+      { name: translate('footer.links.blog'), href: `/${currentLang.value}/noticias` },
     ],
   },
   {
     headline: translate('footer.sections.instructors'),
     children: [
-      { name: 'Benito Bacigalupo', href: '/profile/12' },
-      { name: 'Gaston Keenan', href: '/profile/16' },
-      { name: 'Patricio Gherlone', href: '/profile/138' },
-      { name: translate('footer.links.viewAllInstructors'), href: '/all-teachers' },
+      { name: 'Benito Bacigalupo', href: `/${currentLang.value}/profile/12` },
+      { name: 'Gaston Keenan', href: `/${currentLang.value}/profile/16` },
+      { name: 'Patricio Gherlone', href: `/${currentLang.value}/profile/138` },
+      { name: translate('footer.links.viewAllInstructors'), href: `/${currentLang.value}/all-teachers` },
+      { name: translate('footer.links.becomeAnInstructor'), href: `/${currentLang.value}/instructor` },
+    ],
+  },
+  {
+    headline: translate('footer.sections.videoCoach'),
+    children: [
+      { name: translate('footer.links.video'), href: `/${currentLang.value}/video-coach` },
+      { name: translate('footer.links.onboarding'), href: `/${currentLang.value}/video-onboarding` },
     ],
   },
   {
     headline: translate('footer.sections.legal'),
     children: [
-      { name: translate('footer.links.terms'), href: '/legal/terms' },
-      { name: translate('footer.links.privacy'), href: '/legal/privacy' },
+      { name: translate('footer.links.terms'), href: `/${currentLang.value}/legal/terms` },
+      { name: translate('footer.links.privacy'), href: `/${currentLang.value}/legal/privacy` },
     ],
   },
   {
@@ -68,8 +76,8 @@ const getLinks = (translate) => [
 ];
 
 export default function MainFooter() {
-  const { translate } = useLocales();
-  const LINKS = getLinks(translate);
+  const { translate, currentLang } = useLocales();
+  const LINKS = getLinks(translate, currentLang);
   
   return (
     <RootStyle role="contentinfo">
@@ -143,6 +151,37 @@ export default function MainFooter() {
             </Grid>
           </Grid>
         </Grid>
+
+        {/* Hidden links for react-snap to discover all language versions */}
+        <Box sx={{ 
+          fontSize: '1px',
+          lineHeight: '1px',
+          color: 'transparent',
+          height: '1px',
+          overflow: 'hidden',
+          position: 'absolute',
+          left: '-1px',
+          top: '-1px'
+        }}>
+          {['es', 'en', 'pt', 'fr'].map((lang) => (
+            <Box key={lang}>
+              {['aspen', 'vail', 'buttermilk', 'snowmass', 'highlands', 'zermatt', 'grandvalira', 'soldeu', 'tarter', 'canillo', 'cerro-catedral', 'cerro-chapelco', 'cerro-bayo', 'cerro-perito-moreno'].map((resort) => (
+                <Link
+                  key={`${lang}-${resort}`}
+                  component={RouterLink}
+                  to={`/${lang}/${resort}`}
+                  sx={{ 
+                    fontSize: '1px',
+                    color: 'transparent',
+                    textDecoration: 'none'
+                  }}
+                >
+                  {resort} {lang}
+                </Link>
+              ))}
+            </Box>
+          ))}
+        </Box>
 
         {/* Footer Bottom */}
         <Typography

@@ -4,6 +4,7 @@ import { styled } from '@mui/material/styles';
 import { useTranslation } from 'react-i18next';
 import { ChevronRight } from '@mui/icons-material';
 import { useState } from 'react';
+import useLocales from 'src/hooks/useLocales';
 
 const ScrollContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -229,6 +230,7 @@ const resorts = [
 
 const ResortsAndLessonsSection = () => {
   const { t } = useTranslation();
+  const { currentLang } = useLocales();
   const [selectedFilter, setSelectedFilter] = useState('all');
 
   const scrollToRight = () => {
@@ -296,7 +298,7 @@ const ResortsAndLessonsSection = () => {
           <Box sx={{ position: 'relative' }}>
             <ScrollContainer id="resorts-scroll-container">
               {filteredResorts.map((resort) => (
-                <ResortCard key={resort.id} component={RouterLink} to={`/${resort.slug}`}>
+                <ResortCard key={resort.id} component={RouterLink} to={`/${currentLang.value}/${resort.slug}`}>
                   <ImageContainer>
                     <img
                       src={resort.image}
@@ -345,7 +347,7 @@ const ResortsAndLessonsSection = () => {
                             return resort.lessonTypes.map((lesson) => (
                               <StyledLink
                                 key={lesson.type}
-                                to={`/${resort.slug}/${lesson.type}`}
+                                to={`/${currentLang.value}/${resort.slug}/${lesson.type}`}
                                 aria-label={`${t(`resortsAndLessons.${lesson.label}`)} en ${resort.name}`}
                               >
                                 {t(`resortsAndLessons.${lesson.label}`)}
@@ -356,7 +358,7 @@ const ResortsAndLessonsSection = () => {
                             return resort.categories.map((category) => (
                               <StyledLink
                                 key={`${selectedFilter}-${category.type}`}
-                                to={`/${resort.slug}/${selectedFilter}/${category.type}`}
+                                to={`/${currentLang.value}/${resort.slug}/${selectedFilter}/${category.type}`}
                                 aria-label={`${t(`resortsAndLessons.${category.label}`)} ${selectedFilter} en ${resort.name}`}
                               >
                                 {t(`resortsAndLessons.${category.label}`)} {selectedFilter}
@@ -367,7 +369,7 @@ const ResortsAndLessonsSection = () => {
                             return resort.lessonTypes.map((lesson) => (
                               <StyledLink
                                 key={`${lesson.type}-${selectedFilter}`}
-                                to={`/${resort.slug}/${lesson.type}/${selectedFilter}`}
+                                to={`/${currentLang.value}/${resort.slug}/${lesson.type}/${selectedFilter}`}
                                 aria-label={`${t(`resortsAndLessons.${lesson.label}`)} ${t(`resortsAndLessons.${selectedFilter}Lessons`)} en ${resort.name}`}
                               >
                                 {t(`resortsAndLessons.${lesson.label}`)} - {t(`resortsAndLessons.${selectedFilter}Lessons`)}

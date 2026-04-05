@@ -58,6 +58,78 @@
         "ogDescription": "Téléchargez vos vidéos de ski et recevez des retours avec IA d'instructeurs certifiés. Améliorez votre technique de n'importe où dans le monde.",
         "ogImageAlt": "SnowMatch plateforme de coach de ski numérique - Analyse vidéo IA et coaching professionnel"
     },
+    "languageHome": {
+        "seo": {
+            "title": "SnowMatch — Réservez des cours de ski et snowboard en ligne | Moniteurs certifiés",
+            "description": "Trouvez et réservez des cours privés ou collectifs de ski et snowboard dans les meilleures stations. Comparez les moniteurs certifiés, les disponibilités et confirmez en quelques minutes.",
+            "keywords": "cours de ski, cours de snowboard, moniteur de ski, école de ski en ligne, cours privé de ski, cours collectif, moniteur certifié, SnowMatch",
+            "ogTitle": "SnowMatch — Cours de ski et snowboard à votre station",
+            "ogDescription": "Recherchez des cours par station, niveau et date. Moniteurs vérifiés en Argentine, Chili, États-Unis, Canada et Europe.",
+            "ogImageAlt": "Cours de ski — réservez ski et snowboard sur SnowMatch"
+        },
+        "hero": {
+            "headline": "Votre prochain cours commence ici",
+            "subheadline": "Recherchez des cours de ski et snowboard par station, comparez les moniteurs certifiés et réservez en toute confiance.",
+            "cta": "Rechercher des cours",
+            "secondaryCta": "Coaching vidéo et retour IA"
+        },
+        "features": {
+            "title": "Pourquoi réserver avec SnowMatch",
+            "card1Title": "Moniteurs vérifiés",
+            "card1Body": "Profils, avis et certifications pour savoir avec qui vous skiez avant de réserver.",
+            "card2Title": "Grandes stations",
+            "card2Body": "Des Andes aux Rocheuses et aux Alpes — trouvez des cours là où vous voyagez.",
+            "card3Title": "Réservation simple",
+            "card3Body": "Choisissez dates, type de cours et moniteur dans un parcours pensé pour skieurs et familles."
+        },
+        "resorts": {
+            "title": "Destinations populaires",
+            "subtitle": "Accédez directement à la recherche de cours pour ces stations.",
+            "cerroCatedral": "Cerro Catedral",
+            "chapelco": "Chapelco",
+            "lasLenas": "Las Leñas",
+            "valleNevado": "Valle Nevado"
+        },
+        "how": {
+            "title": "Comment ça marche",
+            "step1Title": "Choisissez votre station",
+            "step1Body": "Ouvrez la recherche de cours et sélectionnez la montagne où vous skiez ou faites du snowboard.",
+            "step2Title": "Comparez les options",
+            "step2Body": "Filtrez par cours privés ou collectifs, discipline et niveau selon vos objectifs.",
+            "step3Title": "Réservez et c'est parti",
+            "step3Body": "Finalisez la réservation et recevez la confirmation pour le jour du cours."
+        },
+        "faq": {
+            "sectionTitle": "Questions fréquentes",
+            "q1": "Qu'est-ce que SnowMatch ?",
+            "a1": "SnowMatch est une plateforme pour découvrir et réserver des cours de ski et snowboard avec des moniteurs certifiés dans des stations partenaires.",
+            "q2": "Puis-je réserver des cours privés et collectifs ?",
+            "a2": "Oui. La disponibilité dépend de la station et du moniteur ; la recherche affiche ce qui est proposé pour vos dates.",
+            "q3": "Les moniteurs sont-ils certifiés ?",
+            "a3": "Nous mettons en avant des professionnels certifiés et des profils transparents pour choisir selon votre niveau et style.",
+            "q4": "Quelles stations sont couvertes ?",
+            "a4": "Vous pouvez parcourir des cours dans de nombreuses destinations en Argentine, Chili, États-Unis, Canada et Europe, avec d'autres ajouts au fil du temps.",
+            "q5": "Proposez-vous un retour vidéo ?",
+            "a5": "Oui. Vous pouvez aussi explorer le coaching vidéo assisté par IA sur notre expérience dédiée à l'analyse technique."
+        },
+        "bottom": {
+            "title": "Prêt pour la neige ?",
+            "subtitle": "Recherchez des cours pour votre séjour et réservez un moniteur avant l'ouverture des remontées.",
+            "contact": "Nous contacter"
+        },
+        "images": {
+            "heroPrimary": "Pistes enneigées dans une station de ski",
+            "heroSecondary": "Skieur profitant d'un cours sur neige fraîche",
+            "feature1": "Moniteurs certifiés sur la montagne",
+            "feature2": "Stations de ski dans les Andes et au-delà",
+            "feature3": "Réservation simple de cours de ski et snowboard",
+            "howSide": "Famille prête pour une journée de ski",
+            "resortCerroCatedral": "Domaine skiable Cerro Catedral",
+            "resortChapelco": "Vue sur Chapelco",
+            "resortLasLenas": "Terrain de ski à Las Leñas",
+            "resortValleNevado": "Ski alpin à Valle Nevado"
+        }
+    },
     "landing": {
         "advertisement": {
             "subtitle": "Rejoignez notre communauté de skieurs et snowboarders. Apprenez avec les meilleurs instructeurs certifiés d'Argentine."

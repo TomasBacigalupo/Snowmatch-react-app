@@ -58,6 +58,10 @@ export const PATH_GUEST = {
 };
 
 export const PATH_PAGE = {
+  /** Localized marketing home (SEO lesson landing). */
+  marketingHome: (lng) => `/${lng}`,
+  /** Previous default home (search / hero landing). */
+  appHome: (lng) => `/${lng}/ai`,
   viewTeacher: (lng, id) => `/${lng}/profile/${id}`,
   viewResort: (lng, resort) => path(`${lng}/${resort}`),
   comingSoon: '/coming-soon',
@@ -176,6 +180,7 @@ export const PATH_DASHBOARD = {
     bookings: path(ROOTS_DASHBOARD, '/admin/bookings'),
     financial: path(ROOTS_DASHBOARD, '/admin/financial'),
     rental: path(ROOTS_DASHBOARD, '/admin/rental'),
+    broadcastLesson: path(ROOTS_DASHBOARD, '/admin/broadcast'),
     confirm: (id) => path(ROOTS_DASHBOARD, `/admin/${id}/confirm`),
     events: (id) => path(ROOTS_DASHBOARD, `/admin/${id}/events`)
   }

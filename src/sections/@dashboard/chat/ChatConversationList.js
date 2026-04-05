@@ -55,6 +55,10 @@ export default function ChatConversationList({
     window.open(url, '_blank');
   };
 
+  const handleEmptyCta = () => {
+    navigate(PATH_DASHBOARD.root);
+  };
+
   const handleSelectConversation = (conversationId) => {
     console.log('conversationId', conversationId);
     
@@ -123,12 +127,9 @@ export default function ChatConversationList({
         <Typography variant="h6" gutterBottom>
           {translate('chat.empty.title')}
         </Typography>
-        <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-          {translate('chat.empty.message')}
-        </Typography>
         <Button 
           variant="contained" 
-          onClick={handlePremiumSubscription}
+          onClick={handleEmptyCta}
           sx={{ 
             bgcolor: 'black', 
             color: 'white',
@@ -137,7 +138,7 @@ export default function ChatConversationList({
             }
           }}
         >
-          {translate('chat.premium.subscribe')}
+          {translate('chat.empty.cta')}
         </Button>
       </Box>
     );

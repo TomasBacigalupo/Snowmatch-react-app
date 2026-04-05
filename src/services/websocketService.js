@@ -11,6 +11,42 @@ import {
   setWebSocketStatus 
 } from '../redux/slices/chat';
 
+// Helper function to normalize timestamps to UTC
+const normalizeTimestamp = (timestamp) => {
+  if (!timestamp) return new Date().toISOString();
+  
+  // If it's a number, check if it's a valid Unix timestamp
+  if (typeof timestamp === 'number') {
+    // Unix timestamps are typically 10 or 13 digits (seconds or milliseconds)
+    // Small numbers like "8" are likely message IDs, not timestamps
+    if (timestamp > 1000000000) {
+      // Convert to milliseconds if needed
+      const ms = timestamp > 10000000000 ? timestamp : timestamp * 1000;
+      return new Date(ms).toISOString();
+    }
+    // If it's a small number, it's not a valid timestamp
+    return new Date().toISOString();
+  }
+  
+  // If it's a string without timezone, append Z to treat as UTC
+  if (typeof timestamp === 'string') {
+    // Check if it looks like an ISO datetime
+    if (timestamp.includes('T')) {
+      // Add Z if no timezone specified
+      if (!timestamp.includes('Z') && !/[+-]\d{2}:?\d{2}$/.test(timestamp)) {
+        return timestamp + 'Z';
+      }
+      return timestamp;
+    }
+    
+    // If it doesn't look like a datetime, use current time
+    return new Date().toISOString();
+  }
+  
+  // Fallback to current time
+  return new Date().toISOString();
+};
+
 // Pusher Configuration
 const PUSHER_CONFIG = {
   key: process.env.REACT_APP_PUSHER_KEY || 'your-pusher-app-key',
@@ -131,11 +167,26 @@ class WebSocketService {
   // Handle new message received via WebSocket
   handleNewMessage(messageData) {
     console.log('📨 New message received:', messageData);
+    console.log('📨 Timestamp from WebSocket:', messageData.timestamp);
+    console.log('📨 CreatedAt from WebSocket:', messageData.createdAt);
+    console.log('📨 Message senderId:', messageData.senderId, 'Type:', typeof messageData.senderId);
+    console.log('📨 Current user ID:', this.currentUser?.id, 'Type:', typeof this.currentUser?.id);
 
     // Don't show our own messages (they're already in UI)
-    if (messageData.senderId === this.currentUser?.id) {
+    // Convert both to strings for comparison to handle type mismatches
+    const messageSenderId = String(messageData.senderId);
+    const currentUserId = String(this.currentUser?.id || '');
+    
+    if (messageSenderId === currentUserId && currentUserId !== '') {
+      console.log('📨 Ignoring own message from WebSocket');
       return;
     }
+
+    console.log('📨 Processing message from another user');
+
+    // Normalize the timestamp
+    const normalizedTimestamp = normalizeTimestamp(messageData.timestamp || messageData.createdAt);
+    console.log('📨 Normalized timestamp:', normalizedTimestamp);
 
     // Add message to Redux store
     const messagePayload = {
@@ -144,10 +195,11 @@ class WebSocketService {
       message: messageData.message,
       contentType: messageData.contentType || 'text',
       attachments: messageData.attachments || [],
-      createdAt: messageData.timestamp || messageData.createdAt,
+      createdAt: normalizedTimestamp,
       senderId: messageData.senderId,
     };
 
+    console.log('📨 Message payload to Redux:', messagePayload);
     dispatch(onSendMessage(messagePayload));
 
     // Increment unread count

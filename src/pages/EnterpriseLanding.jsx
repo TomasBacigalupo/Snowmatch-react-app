@@ -502,6 +502,18 @@ export default function EnterpriseLanding() {
     return () => clearTimeout(timer);
   }, []);
 
+  const handleHeroWhatsApp = () => {
+    const message = `🚀 *Consulta Enterprise - Snowmatch*
+
+Hola Snowmatch, me interesa conocer más sobre la plataforma Enterprise.
+
+📅 *Fecha:* ${new Date().toLocaleDateString('es-ES')}
+🌐 *Página:* ${typeof window !== 'undefined' ? window.location.href : 'Enterprise Landing'}`;
+    
+    const url = `https://wa.me/5492944703443?text=${encodeURIComponent(message)}`;
+    window.open(url, '_blank');
+  };
+
   const handleWhatsApp = () => {
     const message = `🚀 *Consulta Enterprise - Snowmatch*
 
@@ -837,7 +849,7 @@ ${formData.message || 'Sin mensaje adicional'}
                   <Button 
                     variant="contained" 
                     size="large" 
-                    onClick={() => setDemoModalOpen(true)}
+                    onClick={handleHeroWhatsApp}
                     aria-label={translate('enterprise.hero.ctaPrimary')}
                     sx={{ 
                       px: 6, 

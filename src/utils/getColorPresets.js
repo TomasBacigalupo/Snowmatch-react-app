@@ -79,14 +79,17 @@ export const orangePreset = colorPresets[4];
 export const redPreset = colorPresets[5];
 export const designerPreset = colorPresets[6];
 
+const PRESET_BY_KEY = {
+  purple: purplePreset,
+  cyan: cyanPreset,
+  blue: bluePreset,
+  orange: orangePreset,
+  red: redPreset,
+  default: defaultPreset,
+  designer: designerPreset,
+};
+
 export default function getColorPresets(presetsKey) {
-  return {
-    purple: purplePreset,
-    cyan: cyanPreset,
-    blue: bluePreset,
-    orange: orangePreset,
-    red: redPreset,
-    default: defaultPreset,
-    designer: designerPreset,
-  }[presetsKey];
+  // Match defaultSettings.themeColorPresets ('designer'), not colorPresets[0] (palette primary = green).
+  return PRESET_BY_KEY[presetsKey] ?? designerPreset;
 }

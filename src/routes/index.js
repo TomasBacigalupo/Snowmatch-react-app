@@ -496,6 +496,7 @@ export default function Router() {
                 { path: 'review', element: <AdminReview /> },
                 { path: 'clients', element: <AdminReviewClients /> },
                 { path: 'bookings', element: <AdminReviewBookings /> },
+                { path: 'broadcast', element: <AdminBroadcastLesson /> },
                 { path: 'financial', element: <AdminFinancialDashboard /> },
                 { path: 'rental', element: <AdminRental /> },
                 { path: ':id/confirm', element: <AdminConfirm /> },
@@ -537,11 +538,18 @@ export default function Router() {
           element: <MainLayout />,
           children: [
             { path: 'video-onboarding', element: <VideoOnboardingPage /> },
+            { element: <LanguageHome />, index: true },
             {
+              path: 'ai',
               element: isMobile ? <Navigate to="/match/videoCoach/upload" replace /> : <HomePage />,
-              index: true
             },
             { path: 'profile/:slug', element: <EcommerceTeacherDetails isGuest={true} /> },
+            {
+              path: 'profile/:slug/hire', element:
+                <AuthGuard>
+                  <EcommerceCheckoutTeacher />
+                </AuthGuard>
+            },
             { path: 'all-teachers', element: <AllTeachers /> },
             { path: 'escuela-de-esqui-y-snowboard', element: <SnowMatchLanding /> },
             { path: 'tips-esqui-snowboard/:tip', element: <SnowMatchLanding /> },
@@ -566,6 +574,7 @@ export default function Router() {
           path: '/',
           element: <MainLayout />,
           children: [
+            { path: 'language', element: <Navigate to="/en" replace /> },
             {
               element: isMobile ? <Navigate to="/match/videoCoach/upload" replace /> : <Navigate to="/en" replace />,
               index: true
@@ -662,6 +671,7 @@ const LessonDetails = Loadable(lazy(() => import('src/pages/dashboard/LessonDeta
 const AdminReview = Loadable(lazy(() => import('../pages/dashboard/AdminReview')));
 const AdminReviewClients = Loadable(lazy(() => import('../pages/dashboard/AdminReviewClients')));
 const AdminReviewBookings = Loadable(lazy(() => import('../pages/dashboard/AdminReviewBookings')));
+const AdminBroadcastLesson = Loadable(lazy(() => import('../pages/dashboard/AdminBroadcastLesson')));
 const AdminFinancialDashboard = Loadable(lazy(() => import('../pages/dashboard/AdminFinancialDashboard')));
 const AdminRental = Loadable(lazy(() => import('../pages/dashboard/AdminRental')));
 const AdminConfirm = Loadable(lazy(() => import('../pages/dashboard/AdminConfirm')));
@@ -675,6 +685,7 @@ const Calendar = Loadable(lazy(() => import('../pages/dashboard/Calendar')));
 const Kanban = Loadable(lazy(() => import('../pages/dashboard/Kanban')));
 
 // MAIN
+const LanguageHome = Loadable(lazy(() => import('../pages/LanguageHome')));
 const HomePage = Loadable(lazy(() => import('../pages/Home')));
 const HomePageBariloche = Loadable(lazy(() => import('../pages/HomeBariloche')));
 const HomePageLagoHermoso = Loadable(lazy(() => import('../pages/HomeLagoHermoso')));

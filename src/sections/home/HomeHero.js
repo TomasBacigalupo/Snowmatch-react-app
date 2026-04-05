@@ -259,8 +259,11 @@ export default function HomeHero() {
     // Track A/B test conversion
     trackHomeHeroCTAClick(ctaVariant);
     
-    // Navigate to video onboarding page
-    navigate(`/${currentLang.value}/video-onboarding`);
+    // Open WhatsApp conversation
+    const phoneNumber = '5492944703443';
+    const message = 'I want to analyze my skiing';
+    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+    window.open(whatsappUrl, '_blank');
   };
 
   // Initialize A/B test variant on component mount
@@ -402,13 +405,13 @@ export default function HomeHero() {
             </m.div>
 
             {/* Available For Section */}
-            <m.div variants={varFade().in}>
+            {/* <m.div variants={varFade().in}>
               <Stack spacing={2} alignItems="center">
                 <Typography variant="overline" sx={{ color: '#475569', fontSize: '0.75rem', fontWeight: 600 }}>
                   {translate('homeHero.availableOn')}
                 </Typography>
                 <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} alignItems="center">
-                  {/* App Store Badge */}
+                  
                   <Box
                     component="a"
                     href="#"
@@ -441,7 +444,7 @@ export default function HomeHero() {
                     </Stack>
                   </Box>
 
-                  {/* Google Play Badge */}
+                  
                   <Box
                     component="a"
                     href="#"
@@ -475,7 +478,7 @@ export default function HomeHero() {
                   </Box>
                 </Stack>
               </Stack>
-            </m.div>
+            </m.div> */}
           </ContentStyle>
         </Container>
       </RootStyle>

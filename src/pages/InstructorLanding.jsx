@@ -158,7 +158,16 @@ export default function InstructorLanding() {
                   {translate('instructorLanding.hero.subtitle')}
                 </Typography>
                 <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
-                  <Button variant="contained" size="large" onClick={handleOpenRegisterDrawer}>
+                  <Button 
+                    variant="contained" 
+                    size="large" 
+                    onClick={() => {
+                      const phoneNumber = '5492944703443';
+                      const message = 'I want to register as an instructor';
+                      const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+                      window.open(whatsappUrl, '_blank');
+                    }}
+                  >
                     {translate('instructorLanding.hero.ctaPrimary')}
                   </Button>
                   <Button variant="outlined" size="large" color="inherit" href="#benefits">

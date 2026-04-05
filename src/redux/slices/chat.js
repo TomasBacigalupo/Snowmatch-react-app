@@ -13,7 +13,7 @@ function objFromArray(array, key = 'id') {
   }, {});
 }
 
-// Helper function to parse dates consistently - ignoring timezone
+// Helper function to parse dates as UTC
 function parseDate(dateString) {
   if (!dateString) return new Date(0);
   
@@ -22,16 +22,14 @@ function parseDate(dateString) {
   
   // If it's a string, try to parse it
   if (typeof dateString === 'string') {
-    // If it's just a date (YYYY-MM-DD), add time
+    // If it's just a date (YYYY-MM-DD), add time and treat as UTC
     if (/^\d{4}-\d{2}-\d{2}$/.test(dateString)) {
-      return new Date(dateString + 'T00:00:00');
+      return new Date(dateString + 'T00:00:00Z');
     }
     
-    // For ISO strings, parse as local time to avoid timezone issues
-    if (dateString.includes('T') || dateString.includes('Z')) {
-      // Remove timezone info and parse as local time
-      const localDateString = dateString.replace(/[+-]\d{2}:?\d{2}$/, '').replace('Z', '');
-      return new Date(localDateString);
+    // If it has T but no timezone, append Z to treat as UTC
+    if (dateString.includes('T') && !dateString.includes('Z') && !/[+-]\d{2}:?\d{2}$/.test(dateString)) {
+      return new Date(dateString + 'Z');
     }
     
     // For other date strings, parse normally
@@ -106,12 +104,12 @@ const slice = createSlice({
       const conversation = action.payload;
 
       if (conversation) {
-        // Sort messages by id
+        // Sort messages by createdAt timestamp
         if (conversation.messages && conversation.messages.length > 0) {
           conversation.messages.sort((a, b) => {
-            const idA = parseDate(a.id);
-            const idB = parseDate(b.id);
-            return idA - idB;
+            const dateA = parseDate(a.createdAt);
+            const dateB = parseDate(b.createdAt);
+            return dateA - dateB;
           });
         }
         
@@ -385,19 +383,12 @@ export function sendMessage(conversationId, message) {
         attachments: message.attachments || [],
       });
 
-      // If API call is successful, update the local state
-      if (response.data.success) {
-        const messageData = {
-          conversationId: conversationId,
-          messageId: response.data.messageId || message.messageId,
-          message: message.body,
-          contentType: message.contentType || 'text',
-          attachments: message.attachments || [],
-          createdAt: response.data.createdAt || new Date().toISOString().replace(/[+-]\d{2}:?\d{2}$/, ''),
-          senderId: response.data.senderId || '8864c717-587d-472a-929a-8e5f298024da-0', // Default sender ID
-        };
-
-        dispatch(slice.actions.onSendMessage(messageData));
+      // No need to dispatch onSendMessage here because it's already added optimistically in ChatWindow
+      // The optimistic update in ChatWindow ensures instant UI feedback
+      // If the API call fails, the message will still show (could add error handling later)
+      
+      if (!response.data.success) {
+        console.error('Failed to send message:', response.data);
       }
     } catch (error) {
       dispatch(slice.actions.hasError(error));

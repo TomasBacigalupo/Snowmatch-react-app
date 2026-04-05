@@ -405,6 +405,19 @@ ${quoteData.message || 'Sin mensaje adicional'}
     setQuoteModalOpen(false);
   };
 
+  const handleHeroWhatsApp = () => {
+    const message = `🏔️ *Consulta para Agencia de Viajes - Snowmatch*
+
+Hola, me interesa conocer más sobre los servicios de Snowmatch para agencias de viajes.
+
+📅 *Fecha de solicitud:* ${new Date().toLocaleDateString('es-ES')}
+🌐 *Página:* ${typeof window !== 'undefined' ? window.location.href : 'Agencias Landing'}`;
+    
+    const encodedMessage = encodeURIComponent(message);
+    const whatsappUrl = `https://wa.me/5492944703443?text=${encodedMessage}`;
+    window.open(whatsappUrl, '_blank');
+  };
+
   const handleOpenQuoteModal = () => {
     setQuoteModalOpen(true);
     setActiveStep(0);
@@ -760,7 +773,7 @@ ${quoteData.message || 'Sin mensaje adicional'}
                   <Button 
                     variant="contained" 
                     size="large" 
-                    onClick={handleOpenQuoteModal}
+                    onClick={handleHeroWhatsApp}
                     aria-label={translate('agency.hero.ctaPrimary')}
                     sx={{ 
                       px: 6, 

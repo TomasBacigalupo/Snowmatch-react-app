@@ -58,6 +58,78 @@
     "ogDescription": "Upload your skiing videos and get AI-powered feedback from certified instructors. Improve your technique from anywhere in the world.",
     "ogImageAlt": "SnowMatch digital ski coach platform - AI video analysis and professional coaching"
   },
+  "languageHome": {
+    "seo": {
+      "title": "SnowMatch — Book ski & snowboard lessons online | Certified instructors",
+      "description": "Find and book private and group ski and snowboard lessons at top resorts. Compare certified instructors, check availability, and secure your lesson in minutes.",
+      "keywords": "ski lessons, snowboard lessons, book ski instructor, ski school online, private ski lesson, group ski lesson, certified ski instructor, SnowMatch",
+      "ogTitle": "SnowMatch — Ski & snowboard lessons at your resort",
+      "ogDescription": "Search lessons by resort, level, and date. Verified instructors across Argentina, Chile, the USA, Canada, and Europe.",
+      "ogImageAlt": "Skier taking a lesson — book ski and snowboard lessons on SnowMatch"
+    },
+    "hero": {
+      "headline": "Your next lesson starts here",
+      "subheadline": "Search ski and snowboard lessons by resort, compare certified instructors, and book with confidence.",
+      "cta": "Search for lessons",
+      "secondaryCta": "Video coaching & AI feedback"
+    },
+    "features": {
+      "title": "Why book with SnowMatch",
+      "card1Title": "Verified instructors",
+      "card1Body": "Profiles, reviews, and certifications so you know who you are skiing with before you book.",
+      "card2Title": "Major resorts",
+      "card2Body": "From the Andes to the Rockies and the Alps — find lessons where you are traveling.",
+      "card3Title": "Simple booking",
+      "card3Body": "Pick your dates, lesson type, and instructor in a guided flow designed for skiers and families."
+    },
+    "resorts": {
+      "title": "Popular destinations",
+      "subtitle": "Jump straight to lesson search for these resorts.",
+      "cerroCatedral": "Cerro Catedral",
+      "chapelco": "Chapelco",
+      "lasLenas": "Las Leñas",
+      "valleNevado": "Valle Nevado"
+    },
+    "how": {
+      "title": "How it works",
+      "step1Title": "Choose your resort",
+      "step1Body": "Open lesson search and select the mountain where you will ski or ride.",
+      "step2Title": "Compare options",
+      "step2Body": "Filter by private or group lessons, discipline, and level to match your goals.",
+      "step3Title": "Book and go",
+      "step3Body": "Complete your booking and receive confirmation details for your lesson day."
+    },
+    "faq": {
+      "sectionTitle": "Frequently asked questions",
+      "q1": "What is SnowMatch?",
+      "a1": "SnowMatch is a platform to discover and book ski and snowboard lessons with certified instructors at partner resorts worldwide.",
+      "q2": "Can I book private and group lessons?",
+      "a2": "Yes. Availability depends on the resort and instructor; lesson search shows what is offered for your dates.",
+      "q3": "Are instructors certified?",
+      "a3": "We highlight certified professionals and transparent profiles so you can choose an instructor that fits your level and style.",
+      "q4": "Which resorts are supported?",
+      "a4": "You can browse lessons across many destinations in Argentina, Chile, the United States, Canada, and Europe, with more added over time.",
+      "q5": "Do you offer video feedback?",
+      "a5": "Yes. You can also explore AI-assisted video coaching on our dedicated experience for technique analysis."
+    },
+    "bottom": {
+      "title": "Ready to hit the snow?",
+      "subtitle": "Search lessons for your trip and lock in an instructor before lifts open.",
+      "contact": "Contact us"
+    },
+    "images": {
+      "heroPrimary": "Snowy mountain slopes at a ski resort",
+      "heroSecondary": "Skier enjoying a lesson on fresh snow",
+      "feature1": "Certified instructors teaching on the mountain",
+      "feature2": "Ski resorts in the Andes and beyond",
+      "feature3": "Easy booking for ski and snowboard lessons",
+      "howSide": "Family ready for a ski day",
+      "resortCerroCatedral": "Cerro Catedral ski area",
+      "resortChapelco": "Chapelco mountain views",
+      "resortLasLenas": "Las Leñas ski terrain",
+      "resortValleNevado": "Valle Nevado high alpine skiing"
+    }
+  },
   "landing": {
     "advertisement": {
       "subtitle": "Join our community of skiers and snowboarders. Learn with the best certified instructors from Argentina."

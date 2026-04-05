@@ -58,6 +58,78 @@
         "ogDescription": "Subí tus videos de esquí y recibí feedback con IA de instructores certificados. Mejorá tu técnica desde cualquier lugar del mundo.",
         "ogImageAlt": "SnowMatch plataforma de entrenador digital de esquí - Análisis de video IA y coaching profesional"
     },
+    "languageHome": {
+        "seo": {
+            "title": "SnowMatch — Reservá clases de esquí y snowboard online | Instructores certificados",
+            "description": "Encontrá y reservá clases privadas y grupales de esquí y snowboard en los mejores centros. Compará instructores certificados, disponibilidad y confirmá tu clase en minutos.",
+            "keywords": "clases de esquí, clases de snowboard, instructor de esquí, escuela de esquí online, clase privada de esquí, clase grupal, instructor certificado, SnowMatch",
+            "ogTitle": "SnowMatch — Clases de esquí y snowboard en tu centro",
+            "ogDescription": "Buscá clases por centro, nivel y fecha. Instructores verificados en Argentina, Chile, EE. UU., Canadá y Europa.",
+            "ogImageAlt": "Clase de esquí — reservá clases de esquí y snowboard en SnowMatch"
+        },
+        "hero": {
+            "headline": "Tu próxima clase empieza acá",
+            "subheadline": "Buscá clases de esquí y snowboard por centro, compará instructores certificados y reservá con confianza.",
+            "cta": "Buscar clases",
+            "secondaryCta": "Video coaching y feedback con IA"
+        },
+        "features": {
+            "title": "Por qué reservar con SnowMatch",
+            "card1Title": "Instructores verificados",
+            "card1Body": "Perfiles, reseñas y certificaciones para saber con quién esquiás antes de reservar.",
+            "card2Title": "Grandes centros",
+            "card2Body": "Desde los Andes hasta las Rocosas y los Alpes — encontrá clases donde viajás.",
+            "card3Title": "Reserva simple",
+            "card3Body": "Elegí fechas, tipo de clase e instructor en un flujo pensado para esquiadores y familias."
+        },
+        "resorts": {
+            "title": "Destinos populares",
+            "subtitle": "Entrá directo a la búsqueda de clases en estos centros.",
+            "cerroCatedral": "Cerro Catedral",
+            "chapelco": "Chapelco",
+            "lasLenas": "Las Leñas",
+            "valleNevado": "Valle Nevado"
+        },
+        "how": {
+            "title": "Cómo funciona",
+            "step1Title": "Elegí tu centro",
+            "step1Body": "Abrí la búsqueda de clases y seleccioná la montaña donde vas a esquiar o hacer snowboard.",
+            "step2Title": "Compará opciones",
+            "step2Body": "Filtrá por clases privadas o grupales, disciplina y nivel según tus objetivos.",
+            "step3Title": "Reservá y listo",
+            "step3Body": "Completá la reserva y recibí la confirmación para el día de tu clase."
+        },
+        "faq": {
+            "sectionTitle": "Preguntas frecuentes",
+            "q1": "¿Qué es SnowMatch?",
+            "a1": "SnowMatch es una plataforma para descubrir y reservar clases de esquí y snowboard con instructores certificados en centros asociados.",
+            "q2": "¿Puedo reservar clases privadas y grupales?",
+            "a2": "Sí. La disponibilidad depende del centro y del instructor; la búsqueda muestra lo disponible para tus fechas.",
+            "q3": "¿Los instructores están certificados?",
+            "a3": "Destacamos profesionales certificados y perfiles transparentes para que elijas según tu nivel y estilo.",
+            "q4": "¿Qué centros están disponibles?",
+            "a4": "Podés navegar clases en muchos destinos en Argentina, Chile, Estados Unidos, Canadá y Europa, con más incorporaciones en el tiempo.",
+            "q5": "¿Ofrecen feedback en video?",
+            "a5": "Sí. También podés explorar coaching en video asistido por IA en nuestra experiencia dedicada al análisis de técnica."
+        },
+        "bottom": {
+            "title": "¿Listo para la nieve?",
+            "subtitle": "Buscá clases para tu viaje y asegurá instructor antes de que abran los medios.",
+            "contact": "Contactanos"
+        },
+        "images": {
+            "heroPrimary": "Pistas de nieve en un centro de esquí",
+            "heroSecondary": "Esquiador disfrutando una clase en nieve fresca",
+            "feature1": "Instructores certificados enseñando en la montaña",
+            "feature2": "Centros de esquí en los Andes y más allá",
+            "feature3": "Reserva simple de clases de esquí y snowboard",
+            "howSide": "Familia lista para un día de esquí",
+            "resortCerroCatedral": "Cerro Catedral",
+            "resortChapelco": "Vistas de Chapelco",
+            "resortLasLenas": "Terreno de esquí en Las Leñas",
+            "resortValleNevado": "Esquí alpino en Valle Nevado"
+        }
+    },
     "landing": {
         "advertisement": {
             "subtitle": "Únete a nuestra comunidad de esquiadores y snowboarders. Aprende con los mejores instructores certificados de Argentina."

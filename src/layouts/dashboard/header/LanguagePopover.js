@@ -42,12 +42,14 @@ export default function LanguagePopover() {
   }
 
   const handleLanguageChange = (languageValue) => {
-    // Check if we're on the root path
-    if (location.pathname === '/' || location.pathname === `/${currentLang.value}`) {
-      // Redirect to language-specific URL for SEO crawling
+    const path = location.pathname;
+    const prefix = `/${currentLang.value}`;
+
+    if (path === '/' || path === prefix) {
       navigate(`/${languageValue}`);
+    } else if (path === `${prefix}/ai` || path.startsWith(`${prefix}/ai/`)) {
+      navigate(`/${languageValue}${path.slice(prefix.length)}`);
     } else {
-      // For other paths, just change the language without navigation
       onChangeLang(languageValue);
     }
     handleClose();

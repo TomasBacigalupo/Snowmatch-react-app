@@ -29,7 +29,7 @@ function AppContent() {
       <ChartStyle />
       {/* <Settings /> */}
       <ScrollToTop />
-  <LegalDisclaimerModal />
+      <LegalDisclaimerModal />
       <Router />
       
       <CompleteProfileModal

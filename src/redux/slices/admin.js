@@ -200,7 +200,13 @@ const slice = createSlice({
     getAllPayoutsSuccess(state, action) {
       state.isLoading = false;
       state.payouts = action.payload;
-    }
+    },
+
+    broadcastLessonSuccess(state, action) {
+      state.isLoading = false;
+      state.error = null;
+      state.successMessage = action.payload;
+    },
   }
 });
 
@@ -224,14 +230,35 @@ export function getTeachers(page, role, name, level) {
   };
 }
 
-export function getTeachersAdmin(name, page, filters, resort) {
+export function getTeachersAdmin(name, page, filters, resort, size = 20) {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.post(`/api/users/teachers/available?page=${page}&size=${20}&resort=${resort}&name=${name}`, filters);
+      const body = Array.isArray(filters) ? filters : [];
+      const q = new URLSearchParams({
+        page: String(page),
+        size: String(size),
+        resort: resort ?? '',
+        name: name ?? '',
+      });
+      const response = await axios.post(`/api/users/teachers/available?${q.toString()}`, body);
       dispatch(slice.actions.getTeachersSuccess(response.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+/** POST /api/admin/events/broadcast — Uber-style offer to multiple instructors. */
+export function broadcastLesson(body) {
+  return async () => {
+    try {
+      const response = await axios.post('/api/admin/events/broadcast', body);
+      dispatch(slice.actions.broadcastLessonSuccess(response.data));
+      return response.data;
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+      throw error;
     }
   };
 }

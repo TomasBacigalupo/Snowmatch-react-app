@@ -7,17 +7,20 @@ import { Avatar, Box, Typography } from '@mui/material';
 import Image from '../../../components/Image';
 import useAuth from 'src/hooks/useAuth';
 
-// Helper function to parse dates without timezone conversion
-const parseDateWithoutTimezone = (dateString) => {
+// Helper function to parse dates as UTC
+const parseUTCDate = (dateString) => {
   if (!dateString) return new Date(0);
   
   // If it's already a Date object, return it
   if (dateString instanceof Date) return dateString;
   
-  // If it's a string, remove timezone info and parse as local time
+  // If it's a string, treat timestamps without timezone as UTC
   if (typeof dateString === 'string') {
-    const localDateString = dateString.replace(/[+-]\d{2}:?\d{2}$/, '').replace('Z', '');
-    return new Date(localDateString);
+    // If it has T but no timezone, append Z to treat as UTC
+    if (dateString.includes('T') && !dateString.includes('Z') && !/[+-]\d{2}:?\d{2}$/.test(dateString)) {
+      return new Date(dateString + 'Z');
+    }
+    return new Date(dateString);
   }
   
   return new Date(0);
@@ -87,7 +90,7 @@ export default function ChatMessageItem({ message, conversation, onOpenLightbox 
             }}
           >
             {!isMe && `${firstName},`}&nbsp;
-            {formatDistanceToNowStrict(parseDateWithoutTimezone(message.createdAt), {
+            {formatDistanceToNowStrict(parseUTCDate(message.createdAt), {
               addSuffix: true,
             })}
           </InfoStyle>

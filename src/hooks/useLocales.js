@@ -1,3 +1,4 @@
+import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 // '@mui
 import { enUS, deDE, frFR, esES, ptBR, ptPT } from '@mui/material/locale';
@@ -43,9 +44,9 @@ export default function useLocales() {
   const langStorage = localStorage.getItem('i18nextLng');
   const currentLang = LANGS.find((_lang) => _lang.value === langStorage) || LANGS[1];
 
-  const handleChangeLanguage = (newlang) => {
+  const handleChangeLanguage = useCallback((newlang) => {
     i18n.changeLanguage(newlang);
-  };
+  }, [i18n]);
 
   return {
     onChangeLang: handleChangeLanguage,

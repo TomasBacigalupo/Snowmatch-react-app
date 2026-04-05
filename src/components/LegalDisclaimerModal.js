@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import {
   Dialog,
   DialogTitle,
@@ -15,10 +16,19 @@ import {
 const STORAGE_KEY = 'legalDisclaimerAccepted';
 
 export default function LegalDisclaimerModal() {
+  const location = useLocation();
   const [open, setOpen] = useState(false);
   const [neverShow, setNeverShow] = useState(false);
 
+  // Don't show on index route
+  const isIndexRoute = location.pathname === '/';
+
   useEffect(() => {
+    // Don't show modal if we're on the index route
+    if (isIndexRoute) {
+      return;
+    }
+
     try {
       const accepted = localStorage.getItem(`${STORAGE_KEY}_never`);
       if (!accepted) {
@@ -28,7 +38,7 @@ export default function LegalDisclaimerModal() {
       // If localStorage is not available, still show the modal
       setOpen(true);
     }
-  }, []);
+  }, [isIndexRoute]);
 
   const handleAccept = () => {
     try {
@@ -43,6 +53,11 @@ export default function LegalDisclaimerModal() {
     }
     setOpen(false);
   };
+
+  // Don't render if on index route
+  if (isIndexRoute) {
+    return null;
+  }
 
   return (
     <Dialog
@@ -65,7 +80,7 @@ export default function LegalDisclaimerModal() {
           </Typography>
 
           <Typography variant="body1" paragraph>
-            Outside of Cerro Catedral, Snowmatch acts solely as a digital platform facilitating connections between users and instructors. In such cases, Snowmatch does not employ, supervise, or assume responsibility for the conduct, qualifications, or services provided by the instructors. All legal and professional responsibilities, including but not limited to safety, instruction quality, and compliance with local laws, rest entirely with the individual instructors and users who engage through the platform.
+            Outside of Cerro Catedral, Snowmatch acts solely as a digital platform facilitating connections between users and instructors. In such cases, Snowmatch does not employ, supervise, or assume responsibility for the conduct, qualifications, or services provided by the instructors. The platform does not employ instructors directly, nor does it authorize or oversee independent instruction. All lessons arranged through Snowmatch are conducted under the supervision and operational control of the respective ski school or resort with which each instructor is associated.
           </Typography>
 
           <Typography variant="body1" paragraph>

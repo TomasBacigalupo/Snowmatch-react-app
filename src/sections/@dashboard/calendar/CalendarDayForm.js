@@ -92,6 +92,8 @@ export default function CalendarDayForm({ event, range, onCancel, clients, membe
 
   const [block, setBlock] = useState('block')
   const [timeSelected, setTimeSelected] = useState(null)
+  const [customStartTime, setCustomStartTime] = useState(dayjs().hour(9).minute(0))
+  const [customEndTime, setCustomEndTime] = useState(dayjs().hour(17).minute(0))
 
   const handleChange = (
     event,
@@ -168,6 +170,14 @@ export default function CalendarDayForm({ event, range, onCancel, clients, membe
     } else if (timeSelected === 'AFTERNOON_2HS') {
       start.setHours(14, 0, 0, 0); // Set start time to 2:00 PM
       end.setHours(16, 0, 0, 0); // Set end time to 4:00 PM
+    } else if (timeSelected === 'CUSTOM') {
+      // Use custom times if available - only set hours and minutes, keep the date
+      if (customStartTime) {
+        start.setHours(customStartTime.hour(), customStartTime.minute(), 0, 0);
+      }
+      if (customEndTime) {
+        end.setHours(customEndTime.hour(), customEndTime.minute(), 0, 0);
+      }
     } else { // Assume 'AFTERNOON'
       start.setHours(13, 0, 0, 0); // Set start time to 1:00 PM
       end.setHours(17, 0, 0, 0); // Set end time to 5:00 PM
@@ -536,6 +546,52 @@ export default function CalendarDayForm({ event, range, onCancel, clients, membe
               }
 
             </Paper>
+            <Paper
+              onClick={() => {
+                setTimeSelected('CUSTOM')
+              }}
+              sx={{
+                p: 3,
+                width: 1,
+                my: 2,
+                border: (theme) => `solid 1px ${timeSelected === 'CUSTOM' ? theme.palette.primary.main : theme.palette.grey[500_32]}`,
+
+              }}
+            >
+              {/* picture or icon */}
+              <Typography color={timeSelected === 'CUSTOM' ? 'primary' : ''} variant="h6">Personalizado</Typography>
+              {timeSelected === 'CUSTOM' && <Typography color={timeSelected === 'CUSTOM' ? 'primary' : ''} variant="subtitle2">Selecciona tu horario de inicio y fin</Typography>
+              }
+              {timeSelected === 'CUSTOM' && <Box sx={{ mt: 2 }}>
+                <TextField
+                  type="time"
+                  label="Hora de inicio"
+                  value={customStartTime.format('HH:mm')}
+                  onChange={(e) => {
+                    const [hours, minutes] = e.target.value.split(':');
+                    setCustomStartTime(dayjs().hour(parseInt(hours)).minute(parseInt(minutes)));
+                  }}
+                  fullWidth
+                  sx={{ mb: 2 }}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                />
+                <TextField
+                  type="time"
+                  label="Hora de fin"
+                  value={customEndTime.format('HH:mm')}
+                  onChange={(e) => {
+                    const [hours, minutes] = e.target.value.split(':');
+                    setCustomEndTime(dayjs().hour(parseInt(hours)).minute(parseInt(minutes)));
+                  }}
+                  fullWidth
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                />
+              </Box>}
+            </Paper>
           </Grid>
         </>}
 
@@ -669,6 +725,77 @@ export default function CalendarDayForm({ event, range, onCancel, clients, membe
                 )}
               />}
 
+            </Paper>
+            <Paper
+              onClick={() => {
+                setTimeSelected('CUSTOM')
+              }}
+              sx={{
+                p: 3,
+                width: 1,
+                my: 2,
+                border: (theme) => `solid 1px ${timeSelected === 'CUSTOM' ? theme.palette.primary.main : theme.palette.grey[500_32]}`,
+
+              }}
+            >
+              {/* picture or icon */}
+              <Typography color={timeSelected === 'CUSTOM' ? 'primary' : ''} variant="h6">Personalizado</Typography>
+              {timeSelected === 'CUSTOM' && <Typography color={timeSelected === 'CUSTOM' ? 'primary' : ''} variant="subtitle2">Selecciona tu horario de inicio y fin</Typography>
+              }
+              {timeSelected === 'CUSTOM' && <Box sx={{ mt: 2 }}>
+                <TextField
+                  type="time"
+                  label="Hora de inicio"
+                  value={customStartTime.format('HH:mm')}
+                  onChange={(e) => {
+                    const [hours, minutes] = e.target.value.split(':');
+                    setCustomStartTime(dayjs().hour(parseInt(hours)).minute(parseInt(minutes)));
+                  }}
+                  fullWidth
+                  sx={{ mb: 2 }}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                />
+                <TextField
+                  type="time"
+                  label="Hora de fin"
+                  value={customEndTime.format('HH:mm')}
+                  onChange={(e) => {
+                    const [hours, minutes] = e.target.value.split(':');
+                    setCustomEndTime(dayjs().hour(parseInt(hours)).minute(parseInt(minutes)));
+                  }}
+                  fullWidth
+                  sx={{ mb: 2 }}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                />
+              </Box>}
+              {timeSelected === 'CUSTOM' && clients?.length > 0 && <Autocomplete
+                disabled={disabled}
+                multiple
+                disableCloseOnSelect
+                name="clientId" label={translate('calendar.form.client')}
+                value={selectedClients}
+                options={[...clients].sort((a, b) => a?.name?.localeCompare(b?.name))}
+                getOptionLabel={(c) => `${c?.name} ${c?.lastname}`}
+                onChange={(event, value) => {
+                  setSelectedClients([...value])
+                }}
+                renderOption={(props, client) => (
+                  <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                    <Avatar sx={{ marginRight: '10px' }}>{`${client?.name[0]}${client?.lastname[0]}`}</Avatar>
+                    {`${client.name} ${client.lastname}`}
+                  </Box>
+                )}
+
+                renderInput={(params) => (
+                  <RHFTextField {...params}
+                    disabled={disabled}
+                    name="clientid" label="Client" sx={{ my: 2 }} />
+                )}
+              />}
             </Paper>
           </Grid>
         </>}
@@ -876,6 +1003,101 @@ export default function CalendarDayForm({ event, range, onCancel, clients, membe
                   )}
                 /></>}
 
+            </Paper>
+            <Paper
+              onClick={() => {
+                setTimeSelected('CUSTOM')
+              }}
+              sx={{
+                p: 3,
+                width: 1,
+                my: 2,
+                border: (theme) => `solid 1px ${timeSelected === 'CUSTOM' ? theme.palette.primary.main : theme.palette.grey[500_32]}`,
+
+              }}
+            >
+              {/* picture or icon */}
+              <Typography color={timeSelected === 'CUSTOM' ? 'primary' : ''} variant="h6">Personalizado</Typography>
+              {timeSelected === 'CUSTOM' && <Typography color={timeSelected === 'CUSTOM' ? 'primary' : ''} variant="subtitle2">Selecciona tu horario de inicio y fin</Typography>
+              }
+              {timeSelected === 'CUSTOM' && <Box sx={{ mt: 2 }}>
+                <TextField
+                  type="time"
+                  label="Hora de inicio"
+                  value={customStartTime.format('HH:mm')}
+                  onChange={(e) => {
+                    const [hours, minutes] = e.target.value.split(':');
+                    setCustomStartTime(dayjs().hour(parseInt(hours)).minute(parseInt(minutes)));
+                  }}
+                  fullWidth
+                  sx={{ mb: 2 }}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                />
+                <TextField
+                  type="time"
+                  label="Hora de fin"
+                  value={customEndTime.format('HH:mm')}
+                  onChange={(e) => {
+                    const [hours, minutes] = e.target.value.split(':');
+                    setCustomEndTime(dayjs().hour(parseInt(hours)).minute(parseInt(minutes)));
+                  }}
+                  fullWidth
+                  sx={{ mb: 2 }}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                />
+              </Box>}
+              {timeSelected === 'CUSTOM' && clients?.length > 0 && <><Autocomplete
+                disabled={disabled}
+                multiple
+                disableCloseOnSelect
+                name="clientId" label={translate('calendar.form.client')}
+                value={selectedClients}
+                options={[...clients].sort((a, b) => a?.name?.localeCompare(b?.name))}
+                getOptionLabel={(c) => `${c?.name} ${c?.lastname}`}
+                onChange={(event, value) => {
+                  setSelectedClients([...value])
+                }}
+                renderOption={(props, clients) => (
+                  <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                    <Avatar sx={{ marginRight: '10px' }}>{`${clients?.name[0]}${clients?.lastname[0]}`}</Avatar>
+                    {`${clients.name} ${clients.lastname}`}
+                  </Box>
+                )}
+
+                renderInput={(params) => (
+                  <RHFTextField {...params}
+                    disabled={disabled}
+                    name="clientsid" label="Clients" sx={{ my: 2 }} />
+                )}
+              />
+                <Autocomplete
+                  disabled={disabled}
+                  multiple
+                  disableCloseOnSelect
+                  name="membersId" label={translate('calendar.form.member')}
+                  value={selectedMembers}
+                  options={[...members].sort((a, b) => a?.name?.localeCompare(b?.name))}
+                  getOptionLabel={(c) => `${c?.name} ${c?.lastname}`}
+                  onChange={(event, value) => {
+                    setSelectedMembers([...value])
+                  }}
+                  renderOption={(props, member) => (
+                    <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                      <Avatar sx={{ marginRight: '10px' }}>{`${member?.name[0]}${member?.lastname[0]}`}</Avatar>
+                      {`${member.name} ${member.lastname}`}
+                    </Box>
+                  )}
+
+                  renderInput={(params) => (
+                    <RHFTextField {...params}
+                      disabled={disabled}
+                      name="memberid" label="Members" sx={{ my: 2 }} />
+                  )}
+                /></>}
             </Paper>
           </Grid>
         </>}

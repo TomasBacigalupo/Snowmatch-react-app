@@ -1,0 +1,13 @@
+{
+  "applinks": {
+    "apps": [],
+    "details": [
+      {
+        "appID": "APPLE_TEAM_ID.pro.snowmatch",
+        "paths": [
+          "/match/teacher/*"
+        ]
+      }
+    ]
+  }
+}

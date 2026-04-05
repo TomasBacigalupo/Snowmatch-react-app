@@ -114,7 +114,7 @@ export default function HomePage() {
         <meta property="og:description" content={translate('homeSeo.ogDescription')} />
         <meta property="og:image" content="https://snowmatchimages.s3.amazonaws.com/profile/ClaseNiñoss.jpeg" />
         <meta property="og:image:alt" content={translate('homeSeo.ogImageAlt')} />
-        <meta property="og:url" content="https://snowmatch.pro" />
+        <meta property="og:url" content={`https://snowmatch.pro/${lang || 'en'}/ai`} />
         <meta property="og:site_name" content="SnowMatch" />
         <meta property="og:locale" content={localeFromLang(lang)} />
         <script type="application/ld+json">

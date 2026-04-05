@@ -21,6 +21,8 @@ export default function TeacherDetailsDrawer({ open, onClose, teacher }) {
   const [isEditing, setIsEditing] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
+  const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState('');
   const formatLabel = (val) => {
     if (!val) return '';
     try {
@@ -63,6 +65,8 @@ export default function TeacherDetailsDrawer({ open, onClose, teacher }) {
         resorts: (teacher.resortsEnum || teacher.resorts || [])?.map((r) => r?.value || r?.name || r) || [],
         resortsEnum: (teacher.resortsEnum || teacher.resorts || [])?.map((r) => r?.value || r?.name || r) || []
       });
+      setImageFile(null);
+      setImagePreview('');
       setError('');
       setSaving(false);
     }
@@ -92,10 +96,85 @@ export default function TeacherDetailsDrawer({ open, onClose, teacher }) {
     setForm((prev) => ({ ...prev, [field]: e.target.value }));
   };
 
-  const handleSave = async () => {
+  const handleImageChange = (event) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setImageFile(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleRemoveImage = () => {
+    setImageFile(null);
+    setImagePreview('');
+  };
+
+  const handleSave = async (e) => {
+    // Prevenir cualquier comportamiento predeterminado del navegador
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    
     setSaving(true);
     setError('');
     try {
+      let imageUrl = teacher?.imageLink;
+
+      // Si hay una nueva imagen, subirla primero al bucket
+      if (imageFile) {
+        try {
+          // Step 1: Obtener presigned URL
+          const userId = teacher?.userId ?? teacher?.id;
+          console.log('Getting presigned URL for userId:', userId);
+          
+          const presignedResponse = await axios.get(`/api/admin/profile-image/presigned-url/${userId}`);
+          console.log('Presigned response:', presignedResponse);
+          const presignedUrl = presignedResponse.data.presignedUrl;
+          
+          console.log('Presigned URL type:', typeof presignedUrl);
+          console.log('Presigned URL:', presignedUrl);
+
+          // Verificar que presignedUrl sea un string válido
+          if (typeof presignedUrl !== 'string' || !presignedUrl.startsWith('http')) {
+            throw new Error('Invalid presigned URL received from server');
+          }
+
+          // Step 2: Subir imagen a S3 usando presigned URL
+          const uploadResponse = await fetch(presignedUrl, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': imageFile.type,
+            },
+            body: imageFile,
+          });
+          console.log('Upload response:', uploadResponse);
+
+          console.log('Upload response url:', uploadResponse.url);
+          console.log('Upload response ok:', uploadResponse.ok);
+
+          if (!uploadResponse.ok) {
+            const errorText = await uploadResponse.text();
+            console.error('S3 upload error:', errorText);
+            throw new Error(`Failed to upload image to S3: ${uploadResponse.status} - ${errorText}`);
+          }
+
+          // Step 3: Obtener la URL final (sin query params)
+          imageUrl = uploadResponse.url.split('?')[0];
+          console.log('Final image URL:', imageUrl);
+        } catch (uploadError) {
+          console.error('Error uploading image:', uploadError);
+          setError(`No se pudo subir la imagen: ${uploadError.message}`);
+          setSaving(false);
+          return;
+        }
+      }
+
+      // Step 4: Actualizar los datos del instructor
       const payload = {
         userId: teacher?.userId ?? teacher?.id,
         name: form.name?.trim?.() ?? form.name,
@@ -108,13 +187,17 @@ export default function TeacherDetailsDrawer({ open, onClose, teacher }) {
         sports: form.sports || [],
         languages: form.languages || [],
         resorts: (form.resorts || []).map((r) => (typeof r === 'string' ? r : (r?.value || r?.name))).filter(Boolean),
-        resortsEnum: (form.resortsEnum || []).map((r) => (typeof r === 'string' ? r : (r?.value || r?.name))).filter(Boolean)
+        resortsEnum: (form.resortsEnum || []).map((r) => (typeof r === 'string' ? r : (r?.value || r?.name))).filter(Boolean),
+        imageS3: imageUrl,
+        imageKey: imageUrl.split('/').pop(),
       };
+
       await dispatch(editTeacher(payload));
       await dispatch(getTeachers(1));
       setIsEditing(false);
       onClose();
     } catch (e) {
+      console.error('Error saving teacher:', e);
       setError('No se pudo guardar los cambios');
     } finally {
       setSaving(false);
@@ -142,8 +225,12 @@ export default function TeacherDetailsDrawer({ open, onClose, teacher }) {
         onClick: onClose,
         sx: { backgroundColor: 'rgba(0, 0, 0, 0.5)' },
       }}
+      onClick={(e) => e.stopPropagation()}
     >
-      <Box sx={{ p: 3, height: '100%', overflow: 'auto' }}>
+      <Box 
+        sx={{ p: 3, height: '100%', overflow: 'auto' }}
+        onClick={(e) => e.stopPropagation()}
+      >
         <Stack direction="row" alignItems="center" justifyContent="space-between">
           <Stack direction="row" spacing={2} alignItems="center">
             <Avatar src={teacher?.imageLink} alt={teacher?.name} sx={{ width: 48, height: 48 }} />
@@ -247,112 +334,160 @@ export default function TeacherDetailsDrawer({ open, onClose, teacher }) {
         )}
 
         {isEditing && (
-          <Stack spacing={2}>
-            <Typography variant="subtitle2">Editar datos del instructor</Typography>
-            {error && (
-              <Typography variant="body2" color="error">{error}</Typography>
-            )}
-            <TextField
-              label="Nombre"
-              value={form.name}
-              onChange={handleChange('name')}
-              fullWidth
-            />
-            <TextField
-              label="Apellido"
-              value={form.lastname}
-              onChange={handleChange('lastname')}
-              fullWidth
-            />
-            <TextField
-              label="Email"
-              value={form.email}
-              onChange={handleChange('email')}
-              fullWidth
-            />
-            <TextField
-              label="Teléfono"
-              value={form.cellphone}
-              onChange={handleChange('cellphone')}
-              fullWidth
-            />
-            <TextField
-              label="Código País"
-              value={form.countryCode}
-              onChange={handleChange('countryCode')}
-              fullWidth
-            />
-            <TextField
-              label="Rol"
-              value={form.role}
-              onChange={handleChange('role')}
-              fullWidth
-            />
-            <TextField
-              label="Nivel"
-              value={form.level}
-              onChange={handleChange('level')}
-              fullWidth
-            />
-            <Autocomplete
-              multiple
-              options={sportsOptions}
-              value={form.sports}
-              onChange={(_, newValue) => setForm((prev) => ({ ...prev, sports: newValue }))}
-              renderTags={(value, getTagProps) => value.map((option, index) => (
-                <Chip variant="filled" size="small" label={option} {...getTagProps({ index })} />
-              ))}
-              renderInput={(params) => (
-                <TextField {...params} label="Sports" placeholder="Seleccioná sports" />
+          <Box 
+            component="form" 
+            onSubmit={handleSave}
+            noValidate
+          >
+            <Stack spacing={2}>
+              <Typography variant="subtitle2">Editar datos del instructor</Typography>
+              {error && (
+                <Typography variant="body2" color="error">{error}</Typography>
               )}
-            />
-            <Autocomplete
-              multiple
-              options={languageOptions}
-              value={form.languages}
-              onChange={(_, newValue) => setForm((prev) => ({ ...prev, languages: newValue }))}
-              renderTags={(value, getTagProps) => value.map((option, index) => (
-                <Chip variant="filled" size="small" label={option} {...getTagProps({ index })} />
-              ))}
-              renderInput={(params) => (
-                <TextField {...params} label="Languages" placeholder="Seleccioná idiomas" />
-              )}
-            />
-            <Autocomplete
-              multiple
-              freeSolo
-              options={resortOptions}
-              loading={resortsLoading}
-              value={form.resorts}
-              onChange={(_, newValue) => setForm((prev) => ({ ...prev, resorts: newValue }))}
-              renderTags={(value, getTagProps) => value.map((option, index) => (
-                <Chip variant="filled" size="small" label={formatLabel(option)} {...getTagProps({ index })} />
-              ))}
-              renderInput={(params) => (
-                <TextField {...params} label="Resorts" placeholder="Seleccioná resorts" />
-              )}
-            />
-            <Autocomplete
-              multiple
-              freeSolo
-              options={resortOptions}
-              loading={resortsLoading}
-              value={form.resortsEnum}
-              onChange={(_, newValue) => setForm((prev) => ({ ...prev, resortsEnum: newValue }))}
-              renderTags={(value, getTagProps) => value.map((option, index) => (
-                <Chip variant="filled" size="small" label={formatLabel(option)} {...getTagProps({ index })} />
-              ))}
-              renderInput={(params) => (
-                <TextField {...params} label="Resorts Enum" placeholder="Seleccioná resorts enum" />
-              )}
-            />
-            <Stack direction="row" spacing={2} justifyContent="flex-end">
-              <Button variant="outlined" onClick={() => setIsEditing(false)}>Cancelar</Button>
-              <LoadingButton loading={saving} variant="contained" onClick={handleSave}>
-                Guardar
-              </LoadingButton>
+              
+              {/* Sección de imagen */}
+              <Box>
+                <Typography variant="body2" sx={{ mb: 1 }}>Foto de perfil</Typography>
+                <Stack direction="row" spacing={2} alignItems="center">
+                  <Avatar 
+                    src={imagePreview || teacher?.imageLink} 
+                    alt={teacher?.name}
+                    sx={{ width: 80, height: 80 }}
+                  />
+                  <Stack spacing={1}>
+                    <Button
+                      type="button"
+                      variant="outlined"
+                      component="label"
+                      size="small"
+                      startIcon={<Iconify icon="eva:upload-fill" />}
+                    >
+                      Cambiar imagen
+                      <input
+                        type="file"
+                        hidden
+                        accept="image/*"
+                        onChange={handleImageChange}
+                      />
+                    </Button>
+                    {imagePreview && (
+                      <Button
+                        type="button"
+                        variant="text"
+                        size="small"
+                        color="error"
+                        onClick={handleRemoveImage}
+                        startIcon={<Iconify icon="eva:trash-2-outline" />}
+                      >
+                        Quitar imagen
+                      </Button>
+                    )}
+                  </Stack>
+                </Stack>
+              </Box>
+
+              <TextField
+                label="Nombre"
+                value={form.name}
+                onChange={handleChange('name')}
+                fullWidth
+              />
+              <TextField
+                label="Apellido"
+                value={form.lastname}
+                onChange={handleChange('lastname')}
+                fullWidth
+              />
+              <TextField
+                label="Email"
+                value={form.email}
+                onChange={handleChange('email')}
+                fullWidth
+              />
+              <TextField
+                label="Teléfono"
+                value={form.cellphone}
+                onChange={handleChange('cellphone')}
+                fullWidth
+              />
+              <TextField
+                label="Código País"
+                value={form.countryCode}
+                onChange={handleChange('countryCode')}
+                fullWidth
+              />
+              <TextField
+                label="Rol"
+                value={form.role}
+                onChange={handleChange('role')}
+                fullWidth
+              />
+              <TextField
+                label="Nivel"
+                value={form.level}
+                onChange={handleChange('level')}
+                fullWidth
+              />
+              <Autocomplete
+                multiple
+                options={sportsOptions}
+                value={form.sports}
+                onChange={(_, newValue) => setForm((prev) => ({ ...prev, sports: newValue }))}
+                renderTags={(value, getTagProps) => value.map((option, index) => (
+                  <Chip variant="filled" size="small" label={option} {...getTagProps({ index })} />
+                ))}
+                renderInput={(params) => (
+                  <TextField {...params} label="Sports" placeholder="Seleccioná sports" />
+                )}
+              />
+              <Autocomplete
+                multiple
+                options={languageOptions}
+                value={form.languages}
+                onChange={(_, newValue) => setForm((prev) => ({ ...prev, languages: newValue }))}
+                renderTags={(value, getTagProps) => value.map((option, index) => (
+                  <Chip variant="filled" size="small" label={option} {...getTagProps({ index })} />
+                ))}
+                renderInput={(params) => (
+                  <TextField {...params} label="Languages" placeholder="Seleccioná idiomas" />
+                )}
+              />
+              <Autocomplete
+                multiple
+                freeSolo
+                options={resortOptions}
+                loading={resortsLoading}
+                value={form.resorts}
+                onChange={(_, newValue) => setForm((prev) => ({ ...prev, resorts: newValue }))}
+                renderTags={(value, getTagProps) => value.map((option, index) => (
+                  <Chip variant="filled" size="small" label={formatLabel(option)} {...getTagProps({ index })} />
+                ))}
+                renderInput={(params) => (
+                  <TextField {...params} label="Resorts" placeholder="Seleccioná resorts" />
+                )}
+              />
+              <Autocomplete
+                multiple
+                freeSolo
+                options={resortOptions}
+                loading={resortsLoading}
+                value={form.resortsEnum}
+                onChange={(_, newValue) => setForm((prev) => ({ ...prev, resortsEnum: newValue }))}
+                renderTags={(value, getTagProps) => value.map((option, index) => (
+                  <Chip variant="filled" size="small" label={formatLabel(option)} {...getTagProps({ index })} />
+                ))}
+                renderInput={(params) => (
+                  <TextField {...params} label="Resorts Enum" placeholder="Seleccioná resorts enum" />
+                )}
+              />
+              <Stack direction="row" spacing={2} justifyContent="flex-end">
+                <Button type="button" variant="outlined" onClick={() => setIsEditing(false)}>Cancelar</Button>
+                <LoadingButton type="submit" loading={saving} variant="contained">
+                  Guardar
+                </LoadingButton>
+              </Stack>
             </Stack>
-          </Stack>
+          </Box>
         )}
       </Box>
     </Drawer>

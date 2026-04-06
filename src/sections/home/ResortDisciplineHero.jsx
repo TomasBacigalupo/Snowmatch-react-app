@@ -2,7 +2,8 @@ import { m } from 'framer-motion';
 import { Link as RouterLink, useNavigate, useParams } from 'react-router-dom';
 // @mui
 import { styled, useTheme } from '@mui/material/styles';
-import { Button, Box, Link, Container, Typography, Stack, Grid, Select, Hidden, Card, Avatar } from '@mui/material';
+import { Button, Box, Link, Container, Typography, Stack, Grid, Select, Card, Avatar } from '@mui/material';
+import Hidden from 'src/components/LegacyHidden';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // components

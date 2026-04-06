@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Drawer, Dialog, Grid, Typography, IconButton, Button, Avatar, Stack, AvatarGroup, Box, Divider, SwipeableDrawer } from '@mui/material';
 import Iconify from 'src/components/Iconify';
-import { Hidden } from '@mui/material';
+import Hidden from 'src/components/LegacyHidden';
 import { useTheme } from '@mui/system';
 import { useDispatch, useSelector } from 'src/redux/store';
 import { proCheck } from 'src/redux/slices/video';

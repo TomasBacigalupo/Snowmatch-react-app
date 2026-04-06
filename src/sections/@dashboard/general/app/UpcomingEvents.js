@@ -38,7 +38,9 @@ export default function UpcomingEvents() {
   const [currentIndex, setCurrentIndex] = useState(theme.direction === 'rtl' ? _appFeatured.length - 1 : 0);
   const dispatch = useDispatch()
   const {upcomingEvents} = useSelector(state => state.calendar)
-  useEffect(()=>dispatch(getUpcomingEvents()),[])
+  useEffect(() => {
+    dispatch(getUpcomingEvents());
+  }, [dispatch]);
 
 
   const settings = {

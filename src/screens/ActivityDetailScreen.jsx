@@ -34,14 +34,10 @@ import {
   Timer,
   TrendingDown,
   TrendingUp,
-  Map,
   Delete,
-  Edit,
 } from '@mui/icons-material';
 import { skiRecorderDB } from '../lib/db/sqlite';
 import { speedMsToKmh } from '../lib/geo/haversine';
-import { MapboxTrack } from '../components/skiRecorder/MapboxTrack';
-
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -166,26 +162,6 @@ export const ActivityDetailScreen = ({
       case 'UPHILL': return 'Subida/Lift';
       default: return 'Desconocido';
     }
-  };
-
-  const calculateBounds = (samples) => {
-    if (!samples || samples.length === 0) {
-      return { north: 0, south: 0, east: 0, west: 0 };
-    }
-
-    let north = samples[0].lat;
-    let south = samples[0].lat;
-    let east = samples[0].lng;
-    let west = samples[0].lng;
-
-    samples.forEach(sample => {
-      north = Math.max(north, sample.lat);
-      south = Math.min(south, sample.lat);
-      east = Math.max(east, sample.lng);
-      west = Math.min(west, sample.lng);
-    });
-
-    return { north, south, east, west };
   };
 
   if (loading) {
@@ -341,7 +317,6 @@ export const ActivityDetailScreen = ({
         <Tabs value={tabValue} onChange={(e, newValue) => setTabValue(newValue)}>
           <Tab label="Segmentos" />
           <Tab label="Puntos GPS" />
-          <Tab label="Mapa" />
         </Tabs>
       </Box>
 
@@ -499,47 +474,12 @@ export const ActivityDetailScreen = ({
               <ListItem>
                 <ListItemText
                   primary={`... y ${samples.length - 100} puntos más`}
-                  secondary="Usa el mapa para ver todos los puntos"
+                  secondary="Solo se listan los primeros 100 puntos"
                 />
               </ListItem>
             )}
           </List>
         </Paper>
-      </TabPanel>
-
-      {/* Map Tab */}
-      <TabPanel value={tabValue} index={2}>
-        <Typography variant="h6" gutterBottom>
-          Mapa de la Actividad
-        </Typography>
-        <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-          Visualización de la ruta seguida durante la actividad
-        </Typography>
-        
-        {samples.length > 0 ? (
-          <MapboxTrack
-            samples={samples}
-            segments={segments}
-            height={500}
-            showSegmentColors={true}
-            fitBounds={true}
-            bounds={calculateBounds(samples)}
-            className="activity-map"
-            useTestData={true}
-          />
-        ) : (
-          <Paper elevation={1} sx={{ height: 400, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <Box textAlign="center">
-              <Map sx={{ fontSize: 60, color: 'text.secondary', mb: 2 }} />
-              <Typography variant="h6" color="text.secondary">
-                Sin datos GPS
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                No hay puntos GPS disponibles para mostrar en el mapa
-              </Typography>
-            </Box>
-          </Paper>
-        )}
       </TabPanel>
 
       {/* Delete Confirmation Dialog */}

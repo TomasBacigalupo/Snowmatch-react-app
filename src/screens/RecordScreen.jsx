@@ -42,8 +42,6 @@ import {
   TrendingUp,
   RadioButtonChecked,
   RadioButtonUnchecked,
-  Terrain,
-  Directions,
 } from '@mui/icons-material';
 import { useSkiRecorder } from '../lib/recorder/useSkiRecorder';
 import { 
@@ -55,7 +53,6 @@ import {
   CurveCountCard,
   AverageSpeedCard
 } from '../components/skiRecorder/StatCard';
-import { LazyMapboxTrack } from '../components/skiRecorder/MapboxTrack';
 import { speedMsToKmh } from '../lib/geo/haversine';
 
 export const RecordScreen = () => {
@@ -64,8 +61,6 @@ export const RecordScreen = () => {
     status,
     currentActivity,
     currentSegment,
-    samples,
-    segments,
     metrics,
     startRecording,
     pauseRecording,
@@ -479,37 +474,6 @@ export const RecordScreen = () => {
             </Zoom>
           </Grid>
         </Grid>
-
-        {/* Live Map */}
-        {status !== 'idle' && (
-          <Zoom in timeout={2000}>
-            <Card sx={{ 
-              mb: 4,
-              background: 'rgba(255, 255, 255, 0.95)',
-              backdropFilter: 'blur(10px)',
-              border: '1px solid rgba(255, 255, 255, 0.2)'
-            }}>
-              <CardContent sx={{ p: 3 }}>
-                <Box display="flex" alignItems="center" gap={2} mb={3}>
-                  <Avatar sx={{ bgcolor: 'secondary.main' }}>
-                    <Terrain />
-                  </Avatar>
-                  <Typography variant="h6" fontWeight={600}>
-                    Live Track
-                  </Typography>
-                </Box>
-                <LazyMapboxTrack
-                  samples={samples}
-                  segments={segments}
-                  height={300}
-                  showSegmentColors={true}
-                  fitBounds={true}
-                  useTestData={true}
-                />
-              </CardContent>
-            </Card>
-          </Zoom>
-        )}
 
         {/* Floating Action Button for quick access */}
         {status === 'recording' && (

@@ -23,7 +23,6 @@ import useLocales from 'src/hooks/useLocales';
 import { date } from 'yup/lib/locale';
 import { VideoLibrary, Upload, CalendarMonth, Help, EventAvailable, Star, Share, OpenInNew, CheckCircle } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
-import { Share as CapacitorShare } from '@capacitor/share';
 import { getCommentedCount, getTotalHours } from 'src/redux/slices/video';
 import UserLessonsList from 'src/sections/@dashboard/user/list/UserLessonsList';
 import { getBookings } from 'src/redux/slices/bookings';
@@ -353,16 +352,22 @@ export default function GeneralApp() {
                     color="primary"
                     onClick={async () => {
                       try {
-                        await CapacitorShare.share({
-                          title: 'SnowMatch',
-                          text: translate('dashboard.getTheMost.refer.description'),
-                          url: "https://snowmatch.pro"
-                        });
+                        if (navigator.share) {
+                          await navigator.share({
+                            title: 'SnowMatch',
+                            text: translate('dashboard.getTheMost.refer.description'),
+                            url: 'https://snowmatch.pro',
+                          });
+                        } else {
+                          await navigator.clipboard.writeText('https://snowmatch.pro');
+                        }
                       } catch (error) {
                         console.error('Error sharing:', error);
-                        // Fallback for when sharing fails
-                        const shareUrl =  "https://snowmatch.pro";
-                        navigator.clipboard.writeText(shareUrl);
+                        try {
+                          await navigator.clipboard.writeText('https://snowmatch.pro');
+                        } catch (e) {
+                          console.error('Clipboard fallback failed:', e);
+                        }
                       }
                     }}
                     sx={{

@@ -1,5 +1,4 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { Gesture } from '@capacitor/core';
 import {
   Box,
   Card,

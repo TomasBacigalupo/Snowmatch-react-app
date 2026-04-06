@@ -4,7 +4,7 @@ import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import { useDispatch, useSelector } from 'react-redux';
 import { setPremiumTeachers, setStandardTeachers } from 'src/redux/slices/teachers';
 import { premiumLesson, standardLesson } from 'src/services/facebook';
-import { Typography, Drawer, Button, Hidden } from '@mui/material';
+import { Typography, Drawer, Button } from '@mui/material';
 import { Grid, IconButton, Box } from '@mui/material';
 import Iconify from "src/components/Iconify";
 import useLocales from 'src/hooks/useLocales';

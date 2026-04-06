@@ -17,11 +17,6 @@ import { useFormContext } from 'react-hook-form';
 import Iconify from '../../components/Iconify';
 import useLocales from '../../hooks/useLocales';
 
-// Import video handling dependencies
-import { Camera } from '@capacitor/camera';
-import { VideoPicker } from '@coderpradp/capacitor-plugin-video-picker';
-import { VideoEditor } from '@awesome-cordova-plugins/video-editor';
-
 // ----------------------------------------------------------------------
 
 const container = {
@@ -65,140 +60,78 @@ const VideoUploadStep = forwardRef(({ validateField }, ref) => {
         clearTimeout(fileSelectionTimeoutRef.current);
       }
 
-      // Check if we're in a mobile environment (Capacitor)
-      const isMobile = window.Capacitor && window.Capacitor.isNativePlatform();
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.accept = 'video/*';
 
-      if (isMobile) {
-        // Mobile environment - use Capacitor plugins
+      const resetLoading = () => {
+        if (fileSelectionTimeoutRef.current) {
+          clearTimeout(fileSelectionTimeoutRef.current);
+        }
+        setIsUploading(false);
+        isUploadingRef.current = false;
+      };
+
+      input.onchange = async (event) => {
+        if (fileSelectionTimeoutRef.current) {
+          clearTimeout(fileSelectionTimeoutRef.current);
+        }
+
+        const picked = event.target.files[0];
+        console.log('File selected:', picked);
+
+        if (!picked) {
+          resetLoading();
+          return;
+        }
+
         try {
-          console.log('Requesting camera permissions...');
-          await Camera.requestPermissions();
-          
-          console.log('Opening video picker...');
-          const videos = await VideoPicker.pick();
-          const file = videos.files[0];
-          console.log('Mobile video selected:', file);
+          console.log('Processing video file...');
 
-          if (!file) {
-            setError(translate('videoOnboarding.upload.noVideoSelected'));
-            setIsUploading(false);
-            isUploadingRef.current = false;
-            return;
+          if (videoPreviewUrl) {
+            URL.revokeObjectURL(videoPreviewUrl);
           }
 
-          const videoUrl = file.webPath;
-          console.log('Mobile video URL:', videoUrl);
-          
-          // Set video immediately
+          const videoUrl = URL.createObjectURL(picked);
+          console.log('Video URL created:', videoUrl);
+
           setVideoPreviewUrl(videoUrl);
-          setSelectedFile(file);
-          setValue('videoFile', file);
-          
-          // Set default values first (will be updated when metadata loads)
+          setSelectedFile(picked);
+          setValue('videoFile', picked);
+
           setVideoDuration(60);
           setTrimEnd(30);
           setValue('videoDuration', 60);
-          
-          console.log('Mobile video loaded successfully');
-          setIsUploading(false);
-          isUploadingRef.current = false;
 
-        } catch (mobileError) {
-          console.error('Mobile video picker error:', mobileError);
-          setError(translate('videoOnboarding.upload.galleryError'));
-          setIsUploading(false);
-          isUploadingRef.current = false;
-          return;
-        }
-      } else {
-        // Browser environment - use HTML file input
-        const input = document.createElement('input');
-        input.type = 'file';
-        input.accept = 'video/*';
-        
-        const resetLoading = () => {
-          if (fileSelectionTimeoutRef.current) {
-            clearTimeout(fileSelectionTimeoutRef.current);
-          }
-          setIsUploading(false);
-          isUploadingRef.current = false;
-        };
-        
-        input.onchange = async (event) => {
-          if (fileSelectionTimeoutRef.current) {
-            clearTimeout(fileSelectionTimeoutRef.current);
-          }
-          
-          const selectedFile = event.target.files[0];
-          console.log('File selected:', selectedFile);
-          
-          if (!selectedFile) {
-            resetLoading();
-            return;
-          }
-
-          try {
-            console.log('Processing video file...');
-            
-            // Clean up previous URL if exists
-            if (videoPreviewUrl) {
-              URL.revokeObjectURL(videoPreviewUrl);
-            }
-
-            const videoUrl = URL.createObjectURL(selectedFile);
-            console.log('Video URL created:', videoUrl);
-            
-            // Set preview immediately so user sees something
-            setVideoPreviewUrl(videoUrl);
-            setSelectedFile(selectedFile);
-            setValue('videoFile', selectedFile);
-            
-            // Set default values first (will be updated when metadata loads)
-            setVideoDuration(60);
-            setTrimEnd(30);
-            setValue('videoDuration', 60);
-            
-            console.log('Video loaded successfully');
-            resetLoading();
-          } catch (error) {
-            console.error('Error processing video:', error);
-            setError(translate('videoOnboarding.upload.selectionError'));
-            resetLoading();
-          }
-        };
-
-        // Handle cancel case
-        input.oncancel = () => {
+          console.log('Video loaded successfully');
           resetLoading();
-        };
-        
-        // Set a timeout to detect if the user closed the dialog without selecting
-        // This handles cases where oncancel is not supported
-        window.addEventListener('focus', () => {
-          fileSelectionTimeoutRef.current = setTimeout(() => {
-            // Check if we're still in uploading state
-            // If onchange was called, resetLoading() would have been called and isUploadingRef would be false
-            if (isUploadingRef.current) {
-              console.log('File selection cancelled or timed out');
-              resetLoading();
-            }
-          }, 500);
-        }, { once: true });
-        
-        input.click();
-      }
+        } catch (err) {
+          console.error('Error processing video:', err);
+          setError(translate('videoOnboarding.upload.selectionError'));
+          resetLoading();
+        }
+      };
+
+      input.oncancel = () => {
+        resetLoading();
+      };
+
+      window.addEventListener('focus', () => {
+        fileSelectionTimeoutRef.current = setTimeout(() => {
+          if (isUploadingRef.current) {
+            console.log('File selection cancelled or timed out');
+            resetLoading();
+          }
+        }, 500);
+      }, { once: true });
+
+      input.click();
 
     } catch (error) {
       console.error('Error selecting video:', error);
       setError(translate('videoOnboarding.upload.selectionError') + ' ' + error.message);
       setIsUploading(false);
       isUploadingRef.current = false;
-    } finally {
-      // Set isUploading to false for mobile
-      if (window.Capacitor && window.Capacitor.isNativePlatform()) {
-        setIsUploading(false);
-        isUploadingRef.current = false;
-      }
     }
   }, [setValue, translate, videoPreviewUrl]);
 
@@ -209,67 +142,31 @@ const VideoUploadStep = forwardRef(({ validateField }, ref) => {
       setIsTrimming(true);
       setError(null);
 
-      // Check if we're in a mobile environment (Capacitor)
-      const isMobile = window.Capacitor && window.Capacitor.isNativePlatform();
-      
-      if (isMobile) {
-        // Mobile environment - use VideoEditor plugin
-        try {
-          const trimmedVideo = await VideoEditor.trim(videoPreviewUrl, trimStart, trimEnd);
-          
-          if (trimmedVideo) {
-            setValue('trimmedVideo', trimmedVideo);
-            setSelectedFile(trimmedVideo);
-            setVideoPreviewUrl(trimmedVideo.webPath || trimmedVideo);
-            
-            // Update duration for trimmed video
-            const video = document.createElement('video');
-            video.src = trimmedVideo.webPath || trimmedVideo;
-            video.addEventListener('loadedmetadata', () => {
-              setVideoDuration(video.duration);
-            });
-          }
-        } catch (mobileTrimError) {
-          console.error('Mobile video trimming error:', mobileTrimError);
-          setError(translate('videoOnboarding.upload.mobileTrimError'));
-        }
-      } else {
-        // Browser environment - use canvas-based trimming (simplified)
-        try {
-          const video = document.createElement('video');
-          video.src = videoPreviewUrl;
-          
-          video.addEventListener('loadedmetadata', () => {
-            // For browser, we'll create a trimmed version using canvas
-            const canvas = document.createElement('canvas');
-            const ctx = canvas.getContext('2d');
-            
-            // Set canvas dimensions
-            canvas.width = video.videoWidth;
-            canvas.height = video.videoHeight;
-            
-            // Create a new video element for the trimmed version
-            const trimmedVideoElement = document.createElement('video');
-            
-            // For now, we'll just update the trim values and show a message
-            // In a real implementation, you'd use MediaRecorder API or similar
-            setValue('trimStart', trimStart);
-            setValue('trimEnd', trimEnd);
-            setValue('trimmedVideo', selectedFile); // Use original file with trim markers
-            
-            // Update duration to trimmed duration
-            const trimmedDuration = trimEnd - trimStart;
-            setVideoDuration(trimmedDuration);
-            
-            // Show success message
-            console.log(`Video trimmed from ${trimStart}s to ${trimEnd}s (${trimmedDuration}s total)`);
-          });
-          
-          video.load();
-        } catch (browserTrimError) {
-          console.error('Browser video trimming error:', browserTrimError);
-          setError(translate('videoOnboarding.upload.browserTrimError'));
-        }
+      try {
+        const video = document.createElement('video');
+        video.src = videoPreviewUrl;
+
+        video.addEventListener('loadedmetadata', () => {
+          const canvas = document.createElement('canvas');
+          canvas.getContext('2d');
+
+          canvas.width = video.videoWidth;
+          canvas.height = video.videoHeight;
+
+          setValue('trimStart', trimStart);
+          setValue('trimEnd', trimEnd);
+          setValue('trimmedVideo', selectedFile);
+
+          const trimmedDuration = trimEnd - trimStart;
+          setVideoDuration(trimmedDuration);
+
+          console.log(`Video trimmed from ${trimStart}s to ${trimEnd}s (${trimmedDuration}s total)`);
+        });
+
+        video.load();
+      } catch (browserTrimError) {
+        console.error('Browser video trimming error:', browserTrimError);
+        setError(translate('videoOnboarding.upload.browserTrimError'));
       }
 
     } catch (error) {

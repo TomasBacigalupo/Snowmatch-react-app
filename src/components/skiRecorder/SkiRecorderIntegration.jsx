@@ -36,7 +36,6 @@ export const SkiRecorderIntegration = ({
             <br />• Automatic segment detection (Downhill vs Uphill/Lift)
             <br />• Offline storage - no internet required
             <br />• Battery optimization for all-day recording
-            <br />• Interactive maps with colored tracks
             <br />• Comprehensive activity metrics
           </Typography>
         </Alert>

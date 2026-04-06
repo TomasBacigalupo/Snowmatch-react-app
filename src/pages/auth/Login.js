@@ -20,8 +20,6 @@ import { RegisterStudentForm } from '../../sections/auth/register';
 import useLocales from 'src/hooks/useLocales';
 import AppleLoginButton from 'src/sections/auth/AppleLoginButton';
 import GoogleLoginButton from 'src/sections/auth/GoogleLoginButton';
-import { Capacitor } from '@capacitor/core';
-
 // ----------------------------------------------------------------------
 
 const RootStyle = styled('div')(({ theme }) => ({
@@ -77,7 +75,7 @@ export default function Login({fromModal = false}) {
   const mdUp = useResponsive('up', 'md');
   const { translate } = useLocales();
   const navigate = useNavigate();
-  const isIOS = Capacitor.getPlatform() === 'ios';
+  const isIOS = typeof navigator !== 'undefined' && /iPad|iPhone|iPod/i.test(navigator.userAgent);
 
   const [showForm, setShowForm] = useState(false);
   const [showRegisterForm, setShowRegisterForm] = useState(false);

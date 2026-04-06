@@ -3,8 +3,6 @@ import PropTypes from 'prop-types';
 
 import IconButton from '@mui/material/IconButton';
 import ShareIcon from '@mui/icons-material/IosShare';
-import { Share } from '@capacitor/share';
-
 
 const ShareButton = ({ teacherName }) => {
   const current_location = window.location.href;  
@@ -12,14 +10,12 @@ const ShareButton = ({ teacherName }) => {
     title: `Vení a esquiar con ${teacherName}!`,
     text: `Vení a esquiar con ${teacherName}!`,
     url: `https://snowmatch.pro${current_location.split('localhost')[1]}`,
-    dialogTitle: 'Share with buddies',
   };
 
   const handleShare = async () => {
     if (navigator.share) {
       try {
-        //await navigator.share(shareData);
-        await Share.share(shareData);
+        await navigator.share(shareData);
         console.log('Content shared successfully');
       } catch (error) {
         console.error('Error sharing content:', error);

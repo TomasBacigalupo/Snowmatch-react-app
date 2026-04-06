@@ -16,8 +16,6 @@ import MenuPopover from '../../../components/MenuPopover';
 import { IconButtonAnimate } from '../../../components/animate';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import useLocales from 'src/hooks/useLocales';
-import { InAppBrowser } from '@capacitor/inappbrowser';
-import { Dialog } from '@capacitor/dialog';
 import { dispatch } from 'src/redux/store';
 import { updateUserPhoneAndName } from 'src/redux/slices/teachers';
 import Iconify from 'src/components/Iconify';
@@ -110,14 +108,10 @@ export default function AccountPopover() {
   };
 
   const handleDeleteAccount = async () => {
-    const { value } = await Dialog.confirm({
-      title: 'Eliminar cuenta',
-      message: '¿Estás seguro de que deseas eliminar tu cuenta? Esta acción no se puede deshacer.',
-      okButtonTitle: 'Eliminar',
-      cancelButtonTitle: 'Cancelar',
-    });
-  
-    if (value) {
+    const ok = window.confirm(
+      '¿Estás seguro de que deseas eliminar tu cuenta? Esta acción no se puede deshacer.'
+    );
+    if (ok) {
       deleteAccount();
     }
   };
@@ -224,10 +218,8 @@ export default function AccountPopover() {
       {!isAuthenticated && (
         <MenuItem 
           sx={{ m: 1, py: 1.5 }} 
-          onClick={async () => {
-            await InAppBrowser.openInWebView({
-              url: "https://blog.snowmatch.pro/soporte/"
-            });
+          onClick={() => {
+            window.open('https://blog.snowmatch.pro/soporte/', '_blank', 'noopener,noreferrer');
             handleClose();
           }}
         >

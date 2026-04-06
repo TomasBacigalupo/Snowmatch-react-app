@@ -1,99 +1,137 @@
-#custom-calendar .css-epd502 {
-    width: 100% !important;
-}
-#custom-calendar .css-mvmu1r {
-    width: 100% !important;
-    justify-content: space-between !important
+/* MUI X v7 uses DateCalendar / DayCalendar; old hashed class overrides are removed (emotion hashes change per build). */
+
+#custom-calendar {
+  width: 100%;
+  overflow: visible;
 }
 
-#custom-calendar .MuiCalendarPicker-root .css-169iwlq-MuiCalendarPicker-root {
-    justify-content: space-between !important;
-    width: 100% !important;
+#custom-calendar .MuiDateCalendar-root {
+  width: 100%;
+  height: auto;
+  max-height: none;
+  margin: 0 auto;
 }
 
-#custom-calendar .css-1dozdou {
-    padding-left: 16px !important;
-    width: 100% !important;
-    justify-content: space-between !important
+/* Let the month grid use its natural height; 100% here was clipping rows inside the dialog */
+#custom-calendar .MuiPickersSlideTransition-root.MuiDayCalendar-slideTransition {
+  height: auto !important;
+  min-height: 0;
+  max-height: none !important;
+  overflow: visible;
 }
 
-#custom-calendar .css-1n2mv2k {
-    justify-content: space-between !important
+#custom-calendar .MuiPickersFadeTransitionGroup-root.MuiDateCalendar-viewTransitionContainer {
+  overflow: visible;
 }
+
+#custom-calendar .MuiPickersFadeTransitionGroup-root.MuiDateCalendar-viewTransitionContainer > * {
+  height: auto !important;
+  min-height: 0;
+}
+
+#custom-calendar .MuiPickersFadeTransitionGroup-root.MuiDateCalendar-viewTransitionContainer > * > * {
+  height: auto !important;
+}
+
+/* vw was relative to the viewport, not the dialog — on desktop 13vw per cell made the grid taller than the modal */
+#custom-calendar .MuiDayCalendar-weekDayLabel {
+  width: auto;
+  flex: 1 1 0;
+  min-width: 0;
+  max-width: 48px;
+  height: auto;
+  min-height: 32px;
+  margin: 0 2px;
+}
+
+#custom-calendar .MuiPickersDay-root {
+  width: clamp(36px, 11vw, 44px) !important;
+  height: clamp(36px, 11vw, 44px) !important;
+  max-width: 44px;
+  max-height: 44px;
+}
+
+#custom-calendar .MuiPickersDay-root.MuiPickersDay-dayWithMargin {
+  width: clamp(36px, 11vw, 44px) !important;
+  height: clamp(36px, 11vw, 44px) !important;
+}
+
+#custom-calendar .MuiDayCalendar-weekContainer {
+  justify-content: center;
+}
+
+#custom-calendar .MuiDayCalendar-header {
+  justify-content: space-between;
+}
+
+/* Legacy class names (pre-v7) — harmless if absent */
 #custom-calendar .MuiCalendarPicker-root {
-    width: 100% !important;
-    padding-inline: 16px;
-  }
-
-#custom-calendar .PrivatePickersFadeTransitionGroup-root .MuiCalendarPicker-viewTransitionContainer .css-1wvgxus-MuiCalendarPicker-viewTransitionContainer {
-    width: 100% !important;
-    justify-content: space-between !important
+  width: 100% !important;
+  padding-inline: 8px;
 }
-
 
 #custom-calendar .date-selection {
-    padding: 3%;
-    position: fixed;
-    bottom: 0;
-    right: -100%;
-    width: 100%;
-    height: 100%;
-    background-color: var(--background-color);
-    transition: right 0.3s ease-in-out;
-    z-index: 5;
-
-    display: flex;
-    flex-direction: column;
+  padding: 3%;
+  position: fixed;
+  bottom: 0;
+  right: -100%;
+  width: 100%;
+  height: 100%;
+  background-color: var(--background-color);
+  transition: right 0.3s ease-in-out;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
 }
-  
+
 #custom-calendar .date-selection.open {
-    right: 0;
+  right: 0;
 }
 
 #custom-calendar .date-selection-container {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10% 0;
-    height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10% 0;
+  height: 100%;
 }
 
 #custom-calendar .date-selection-container .date-selection-content {
-    width: 100%;
-    height: fit-content;
+  width: 100%;
+  height: fit-content;
 }
 
 #custom-calendar .date-selection-container .highlighted {
-    width: 80%;
-    color: var(--boka-color-low);
-    display: flex;
-
-    font-size: 12px;
-    font-style: normal;
-    font-weight: 500;
-    line-height: 266%;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    text-align: start;
-    padding: 0 3%;
+  width: 80%;
+  color: var(--boka-color-low);
+  display: flex;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 266%;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  text-align: start;
+  padding: 0 3%;
 }
 
 #custom-calendar .date-selection-container .selected-date {
-    width: 100%;
-    display: flex;
-    color: var(--light-background);
-    font-size: 24px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: 133.4%;
-    letter-spacing: 0.25px;
-    text-align: start;
-    padding: 0 3%;
+  width: 100%;
+  display: flex;
+  color: var(--light-background);
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 133.4%;
+  letter-spacing: 0.25px;
+  text-align: start;
+  padding: 0 3%;
 }
 
 #custom-calendar div.calendar {
-    height: 100%;
+  height: auto;
+  min-height: 0;
 }
 
 #custom-calendar button.MuiButtonBase-root.MuiPickersDay-root.MuiPickersDay-dayWithMargin {
@@ -101,65 +139,37 @@
 }
 
 *:focus:not(.focus-visible) {
-    outline: none;
+  outline: none;
 }
 
 #custom-calendar button.MuiButtonBase-root.MuiPickersDay-root.MuiPickersDay-dayWithMargin.Mui-disabled {
-    color: var(--subtitle-color);
-  }
+  color: var(--subtitle-color);
+}
 
-#custom-calendar div.calendar button.MuiButtonBase-root.MuiPickersDay-root.MuiPickersDay-dayWithMargin.Mui-selected, div.calendar button.MuiPickersMonth-monthButton.Mui-selected {
-    color: var(--background-color);
-    background-color: var(--boka-color);
+#custom-calendar div.calendar button.MuiButtonBase-root.MuiPickersDay-root.MuiPickersDay-dayWithMargin.Mui-selected,
+div.calendar button.MuiButtonBase-root.MuiPickersMonth-monthButton.Mui-selected {
+  color: var(--background-color);
+  background-color: var(--boka-color);
 }
 
 #custom-calendar button.MuiButtonBase-root.MuiIconButton-root.MuiPickersCalendarHeader-switchViewButton {
-    color: var(--subtitle-color)
+  color: var(--subtitle-color);
 }
 
 #custom-calendar div.MuiPickersArrowSwitcher-root button {
-    color: var(--subtitle-color)
+  color: var(--subtitle-color);
 }
 
-#custom-calendar div.MuiDayCalendar-header > span{
-    color: var(--subtitle-color)
+#custom-calendar div.MuiDayCalendar-header > span {
+  color: var(--subtitle-color);
 }
 
 #custom-calendar .date-selection-container .button-section {
-    width: 100%;
-    display: flex;
-    justify-content: center;
+  width: 100%;
+  display: flex;
+  justify-content: center;
 }
 
 #custom-calendar .date-selection-container .button-section .boka-button {
-    width: 90%;
-}
-
-#custom-calendar div.calendar div.MuiDateCalendar-root {
-    height: 100%;
-    max-height: 100%;
-    width: 100%;
-}
-
-#custom-calendar .MuiPickersFadeTransitionGroup-root.MuiDateCalendar-viewTransitionContainer > * {
-    height: 100%;
-}
-
-#custom-calendar .MuiPickersFadeTransitionGroup-root.MuiDateCalendar-viewTransitionContainer > * > * {
-    height: 100%;
-}
-
-#custom-calendar .MuiTypography-root.MuiTypography-caption.MuiDayCalendar-weekDayLabel{
-    width: 14vw;
-    height: 14vw;
-}
-
-#custom-calendar .MuiPickersDay-root.MuiPickersDay-dayWithMargin {
-    width: 13vw;
-    height: 13vw;
-}
-
-#custom-calendar .MuiPickersSlideTransition-root.MuiDayCalendar-slideTransition {
-    height: 100%;
-    max-height: 100%;
+  width: 90%;
 }

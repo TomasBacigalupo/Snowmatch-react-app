@@ -8,8 +8,6 @@ import useLocales from "src/hooks/useLocales";
 import useAuth from "src/hooks/useAuth";
 import { PATH_AUTH } from "src/routes/paths";
 import { useNavigate } from "react-router";
-import { Camera } from '@capacitor/camera';
-import { VideoPicker } from '@coderpradp/capacitor-plugin-video-picker';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { FFmpeg } from '@ffmpeg/ffmpeg';
 import AcademyWelcome from 'src/sections/@dashboard/video/AcademyWelcome';
@@ -48,14 +46,23 @@ export default function VideoUploadBottomSheet({ open, onClose, onOpen, course, 
     const dispatch = useDispatch();
     const { isLoading } = useSelector((state) => state.video)
 
+    const blobFromSelected = async (file) => {
+        if (file instanceof File || file instanceof Blob) {
+            return file instanceof File ? file : file;
+        }
+        if (file?.webPath) {
+            const res = await fetch(file.webPath);
+            return res.blob();
+        }
+        throw new Error('No valid video file');
+    };
+
     const handleUpload = useCallback(async () => {
         console.log("handeleUpload")
         console.log("selectedFile", selectedFile)
         setLoadingCompresor(true)
 
-        const file = selectedFile;
-        const fetchedFile = await fetch(file.webPath);
-        const blobFile = await fetchedFile.blob();
+        const blobFile = await blobFromSelected(selectedFile);
 
         console.log("blobFile", blobFile.type);
 
@@ -102,6 +109,9 @@ export default function VideoUploadBottomSheet({ open, onClose, onOpen, course, 
     }, [selectedFile, setLoadingCompresor, setActiveStep, dispatch]);
 
     const resetUploadState = () => {
+        if (videoPreviewUrl && String(videoPreviewUrl).startsWith('blob:')) {
+            URL.revokeObjectURL(videoPreviewUrl);
+        }
         setSelectedFile(null);
         setVideoPreviewUrl(null);
         setActiveStep(0);
@@ -128,18 +138,23 @@ export default function VideoUploadBottomSheet({ open, onClose, onOpen, course, 
 
     const uploadVideo = async () => {
         try {
-            await Camera.requestPermissions();
-
-            const videos = await VideoPicker.pick();
-            const file = videos.files[0];
-
-            setVideoPreviewUrl(file.webPath);
+            const file = await new Promise((resolve, reject) => {
+                const input = document.createElement('input');
+                input.type = 'file';
+                input.accept = 'video/*';
+                input.onchange = () => {
+                    const f = input.files?.[0];
+                    if (f) resolve(f);
+                    else reject(new Error('No file selected'));
+                };
+                input.oncancel = () => reject(new Error('Cancelled'));
+                input.click();
+            });
+            const url = URL.createObjectURL(file);
+            setVideoPreviewUrl(url);
             setSelectedFile(file);
-
-            console.log("file.path", file.path);
-
         } catch (error) {
-            console.error('Error uploading video:', error.message);
+            console.error('Error selecting video:', error?.message || error);
         }
     };
 

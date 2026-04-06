@@ -1,27 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { Card, CardContent, Avatar, Typography, IconButton, Box, Button } from "@mui/material";
 import { ChevronLeft, ChevronRight } from "@mui/icons-material";
-import SwipeableViews from "react-swipeable-views";
+import { useSwipeable } from "react-swipeable";
 import Markdown from "src/components/Markdown";
 import VideoReviewedBottomSheet from "./VideoReviewedBottomSheet";
 import useLocales from "src/hooks/useLocales";
 
-const tips = [
-    {
-        id: 1,
-        name: "Morgan Engel",
-        title: "CSIA Level 4 Examiner",
-        avatar: "https://via.placeholder.com/50", // Reemplaza con la URL real de la imagen
-        tip: "Imagine your skis are on a set of winding train tracks. Each foot has to stay on its track otherwise you will derail. This should leave clean tracks with equal distance apart.",
-    },
-    {
-        id: 2,
-        name: "John Doe",
-        title: "Professional Ski Instructor",
-        avatar: "https://via.placeholder.com/50",
-        tip: "Keep your knees slightly bent and your weight centered to maintain balance and control.",
-    },
-];
 const safeSliceMarkdown = (text, length) => {
     if (!text) return "";
     if (text.length <= length) return text;
@@ -32,26 +16,50 @@ const LatestTips = ({ video }) => {
     const { translate } = useLocales();
     const [isVideoDetailOpen, setIsVideoDetailOpen] = useState(false);
     const [index, setIndex] = useState(0);
-    const [selectedVideo, setSelectedVideo] = useState(null)
+    const [selectedVideo, setSelectedVideo] = useState(null);
+
+    const transformedVideos = useMemo(
+        () =>
+            video?.videoComments?.map((comment) => ({
+                video,
+                comment,
+            })) || [],
+        [video]
+    );
+
+    const count = transformedVideos.length;
+
+    useEffect(() => {
+        if (count === 0) {
+            setIndex(0);
+            return;
+        }
+        setIndex((prev) => Math.min(prev, count - 1));
+    }, [count]);
 
     const handleNext = () => {
-        setIndex((prev) => (prev + 1) % tips.length);
+        if (count === 0) return;
+        setIndex((prev) => (prev + 1) % count);
     };
 
     const handleBack = () => {
-        setIndex((prev) => (prev - 1 + tips.length) % tips.length);
+        if (count === 0) return;
+        setIndex((prev) => (prev - 1 + count) % count);
     };
+
+    const swipeHandlers = useSwipeable({
+        onSwipedLeft: handleNext,
+        onSwipedRight: handleBack,
+        preventScrollOnSwipe: true,
+        trackMouse: true,
+    });
 
     const handleReadMore = (video) => {
         setSelectedVideo(video)
         setIsVideoDetailOpen(true)
     }
 
-    // Transform videos into array of {video, comment} objects
-    const transformedVideos = video?.videoComments?.map(comment => ({
-        video: video,
-        comment: comment
-    })) || [];
+    const { video: slideVideo, comment } = transformedVideos[index] || {};
 
     return (
         <Box
@@ -96,34 +104,28 @@ const LatestTips = ({ video }) => {
                         }
                     }}
                 >
-                    <IconButton onClick={handleBack} size="small">
+                    <IconButton onClick={handleBack} size="small" disabled={count <= 1}>
                         <ChevronLeft />
                     </IconButton>
-                    <IconButton onClick={handleNext} size="small">
+                    <IconButton onClick={handleNext} size="small" disabled={count <= 1}>
                         <ChevronRight />
                     </IconButton>
                 </Box>
             </Box>
 
-            <SwipeableViews
-                index={index}
-                onChangeIndex={setIndex}
-                style={{ 
-                    overflow: 'visible', 
-                    borderRadius: '0px',
-                    pb: 0
-                }}
-                containerStyle={{ 
-                    height: 'fit-content',
-                    overflow: 'visible',
-                    pb: 0
-                }}
-            >
-                {console.log('video', video)}
-                {console.log('transformedVideos', transformedVideos)}
-                {transformedVideos.map(({video, comment}) => (
+            {count > 0 && slideVideo && (
+                <Box
+                    {...swipeHandlers}
+                    sx={{
+                        overflow: 'visible',
+                        borderRadius: '0px',
+                        pb: 0,
+                        height: 'fit-content',
+                        touchAction: 'pan-y',
+                    }}
+                >
                     <Card
-                        key={video.id}
+                        key={slideVideo.id}
                         sx={{
                             backgroundColor: '#fff',
                             borderRadius: '0px',
@@ -131,30 +133,26 @@ const LatestTips = ({ video }) => {
                             height: '100%',
                             '& .MuiCardContent-root': {
                                 height: '100%',
-                                pb: 0
-                            }
+                                pb: 0,
+                            },
                         }}
                     >
                         <CardContent
                             sx={{
                                 px: 2,
                                 pt: 2,
-                                pb: 0
+                                pb: 0,
                             }}
                         >
-                            <Box
-                                display="flex"
-                                alignItems="center"
-                                mb={1.5}
-                            >
+                            <Box display="flex" alignItems="center" mb={1.5}>
                                 <Avatar
-                                    src={video?.reviewer?.imageLink}
+                                    src={slideVideo?.reviewer?.imageLink}
                                     sx={{
                                         width: 44,
                                         height: 44,
                                         mr: 1.5,
                                         border: '2px solid #fff',
-                                        boxShadow: '0 2px 8px rgba(0,0,0,0.08)'
+                                        boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
                                     }}
                                 />
                                 <Box>
@@ -164,10 +162,10 @@ const LatestTips = ({ video }) => {
                                             fontWeight: 600,
                                             fontSize: '0.95rem',
                                             color: '#1d1d1f',
-                                            lineHeight: 1.2
+                                            lineHeight: 1.2,
                                         }}
                                     >
-                                        {video?.reviewer?.name}
+                                        {slideVideo?.reviewer?.name}
                                     </Typography>
                                 </Box>
                             </Box>
@@ -187,7 +185,7 @@ const LatestTips = ({ video }) => {
                                     mb: 3,
                                     color: '#424245',
                                     fontSize: '0.925rem',
-                                    lineHeight: 1.4
+                                    lineHeight: 1.4,
                                 }}
                             >
                                 {safeSliceMarkdown(comment, 100)}
@@ -196,18 +194,18 @@ const LatestTips = ({ video }) => {
                             <Button
                                 variant="outlined"
                                 fullWidth
-                                onClick={() => handleReadMore(video)}
+                                onClick={() => handleReadMore(slideVideo)}
                                 sx={{
                                     textTransform: 'none',
-                                    mt: 1
+                                    mt: 1,
                                 }}
                             >
                                 {translate('latestTips.readMore')}
                             </Button>
                         </CardContent>
                     </Card>
-                ))}
-            </SwipeableViews>
+                </Box>
+            )}
 
             {isVideoDetailOpen && <VideoReviewedBottomSheet
                 open={isVideoDetailOpen}

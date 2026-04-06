@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { Capacitor } from "@capacitor/core";
 import "cordova-plugin-purchase/www/store.js";
 import {
     SwipeableDrawer,
@@ -30,7 +29,6 @@ import WhatsAppIcon from '@mui/icons-material/WhatsApp';
 
 
 const { store, ProductType, Platform } = window.CdvPurchase || {};
-const platformName = Capacitor.getPlatform() === "android" ? Platform.GOOGLE_PLAY : Platform.APPLE_APPSTORE;
 const productId = "pro.videos.hundred";
 
 
@@ -84,8 +82,8 @@ const PremiumContainer = ({
     const { user } = useAuth()
     const dispatch = useDispatch()
 
-    const isIOS = Capacitor.getPlatform() === 'ios';
-    const isWeb = Capacitor.getPlatform() === 'web';
+    const isIOS = typeof navigator !== 'undefined' && /iPad|iPhone|iPod/i.test(navigator.userAgent);
+    const isWeb = true;
 
     useEffect(() => {
         if (!window.CdvPurchase || !window.CdvPurchase.store) {

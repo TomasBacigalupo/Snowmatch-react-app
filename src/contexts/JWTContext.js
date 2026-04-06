@@ -4,8 +4,49 @@ import PropTypes from 'prop-types';
 import axios from '../utils/axios';
 import { isValidToken, setSession } from '../utils/jwt';
 import jwtDecode from 'jwt-decode';
-import { PushNotifications } from '@capacitor/push-notifications';
 
+// ----------------------------------------------------------------------
+
+function parseJwtPayload(token) {
+  try {
+    const part = token.split('.')[1];
+    const base64 = part.replace(/-/g, '+').replace(/_/g, '/');
+    const padded = base64.padEnd(base64.length + (4 - (base64.length % 4)) % 4, '=');
+    return JSON.parse(atob(padded));
+  } catch (e) {
+    return {};
+  }
+}
+
+function loadGsiScript() {
+  return new Promise((resolve, reject) => {
+    if (window.google?.accounts?.id) {
+      resolve();
+      return;
+    }
+    const existing = document.querySelector('script[src="https://accounts.google.com/gsi/client"]');
+    if (existing) {
+      const done = () => {
+        if (window.google?.accounts?.id) resolve();
+        else reject(new Error('Google Sign-In failed to initialize'));
+      };
+      if (window.google?.accounts?.id) {
+        resolve();
+        return;
+      }
+      existing.addEventListener('load', done);
+      existing.addEventListener('error', () => reject(new Error('GSI load failed')));
+      return;
+    }
+    const s = document.createElement('script');
+    s.src = 'https://accounts.google.com/gsi/client';
+    s.async = true;
+    s.defer = true;
+    s.onload = () => resolve();
+    s.onerror = () => reject(new Error('Failed to load Google Sign-In'));
+    document.head.appendChild(s);
+  });
+}
 
 // ----------------------------------------------------------------------
 
@@ -207,26 +248,13 @@ function AuthProvider({ children }) {
 
 
   const registerNotifications = async () => {
-
-    await PushNotifications.addListener('registration', token => {
-
-      axios.post(`/api/users/notificationTokens/${token.value}`)
-
-      console.info('Registration token: ', token.value);
-    });
-
-    let permStatus = await PushNotifications.checkPermissions();
-
-    if (permStatus.receive === 'prompt') {
-      permStatus = await PushNotifications.requestPermissions();
+    try {
+      if (typeof Notification === 'undefined') return;
+      await Notification.requestPermission();
+    } catch (e) {
+      console.warn('Notifications not registered:', e);
     }
-
-    if (permStatus.receive !== 'granted') {
-      throw new Error('User denied permissions!');
-    }
-
-    await PushNotifications.register();
-  }
+  };
 
   const login = async (username, password) => {
     const response = await axios.post('/api/login', {
@@ -346,132 +374,104 @@ function AuthProvider({ children }) {
   };
 
   const loginWithApple = async () => {
-    try {
-      console.log('loginWithApple');
-      const appleSignInPlugin = await import('@capacitor-community/apple-sign-in');
-      const { SignInWithApple } = appleSignInPlugin;
-      const options = {
-        clientId: 'pro.snowmatch',
-        redirectURI: '',
-        scopes: 'email name',
-        state: '12345', // Ensure this is a dynamically generated state for production
-        nonce: 'nonce', // Ensure this is a securely generated nonce for production
-      };
-
-      const signin = await SignInWithApple.authorize(options);
-      console.log('Apple login successeeeee', signin.response.identityToken);
-
-      // Extraer información adicional del usuario de Apple si está disponible
-      const userInfo = signin.response.user || {};
-      const firstName = userInfo.name?.firstName || '';
-      const lastName = userInfo.name?.lastName || '';
-      const email = userInfo.email || '';
-
-      const response = await axios.post('/api/auth/apple/login', {
-        "idToken": signin.response.identityToken,
-        "firstName": firstName,
-        "lastName": lastName,
-        "email": email
-      });
-
-      const user = response.data;
-      const accessToken = user.token;
-      setSession(accessToken);
-      window.localStorage.setItem('accessToken', accessToken);
-      registerNotifications();
-      dispatch({
-        type: 'REGISTER',
-        payload: {
-          user,
-          isAuthenticated: true
-        },
-      });
-    }
-    catch (e) {
-      console.log("error", e)
-    }
+    console.warn('Apple Sign-In is not available in the browser build.');
+    throw new Error('Apple sign-in is not available in the browser. Please use email or Google.');
   };
 
   const loginWithGoogle = async () => {
-    try {
-      const { SocialLogin } = await import('@capgo/capacitor-social-login');
-      const { Capacitor } = await import('@capacitor/core');
+    const clientId =
+      process.env.REACT_APP_GOOGLE_WEB_CLIENT_ID ||
+      '864910142009-d8jai0985rn4b13jge8ng0gmf0hjejfp.apps.googleusercontent.com';
 
-      let options = {};
-      options = {
-        google: {
-          iOSClientId: '864910142009-d8jai0985rn4b13jge8ng0gmf0hjejfp.apps.googleusercontent.com',
-          iOSServerClientId: '864910142009-d8jai0985rn4b13jge8ng0gmf0hjejfp.apps.googleusercontent.com',
-          iOSUrlScheme: 'com.googleusercontent.apps.864910142009-d8jai0985rn4b13jge8ng0gmf0hjejfp',
-          // mode: 'offline',
-        },
+    await loadGsiScript();
+
+    return new Promise((resolve, reject) => {
+      const container = document.createElement('div');
+      container.style.position = 'fixed';
+      container.style.left = '-9999px';
+      document.body.appendChild(container);
+
+      let settled = false;
+      const finish = (fn) => {
+        if (settled) return;
+        settled = true;
+        if (container.parentNode) {
+          container.parentNode.removeChild(container);
+        }
+        fn();
       };
 
-      await SocialLogin.initialize(options);
-      await SocialLogin.logout({ provider: 'google' }); // limpia la sesión anterior
+      window.google.accounts.id.initialize({
+        client_id: clientId,
+        callback: async (credentialResponse) => {
+          try {
+            const idToken = credentialResponse.credential;
+            const payload = parseJwtPayload(idToken);
+            const firstName = payload.given_name || '';
+            const lastName = payload.family_name || '';
+            const email = payload.email || '';
+            const displayName = payload.name || '';
 
-      const result = await SocialLogin.login({
-        provider: 'google',
-        options: {
-          scopes: ['email', 'profile'],
-          forceRefreshToken: true
-        }
+            let extractedFirstName = firstName;
+            let extractedLastName = lastName;
+            if (!firstName && !lastName && displayName) {
+              const nameParts = displayName.split(' ');
+              if (nameParts.length >= 2) {
+                extractedFirstName = nameParts[0];
+                extractedLastName = nameParts.slice(1).join(' ');
+              } else if (nameParts.length === 1) {
+                extractedFirstName = nameParts[0];
+              }
+            }
+
+            const response = await axios.post('/api/auth/google/login', {
+              idToken,
+              firstName: extractedFirstName,
+              lastName: extractedLastName,
+              email,
+              displayName,
+            });
+
+            const user = response.data;
+            const accessToken = user.token;
+            setSession(accessToken);
+            window.localStorage.setItem('accessToken', accessToken);
+            await registerNotifications();
+            dispatch({
+              type: 'REGISTER',
+              payload: {
+                user,
+                isAuthenticated: true,
+              },
+            });
+            finish(() => resolve());
+          } catch (err) {
+            finish(() => reject(err));
+          }
+        },
       });
 
-      console.log('Google login result:', result);
+      window.google.accounts.id.renderButton(container, {
+        type: 'standard',
+        theme: 'outline',
+        size: 'large',
+        text: 'signin_with',
+        width: 320,
+      });
 
-      const idToken = result?.result?.idToken;
-      const firstName = result?.result?.firstName || result?.result?.givenName || '';
-      const lastName = result?.result?.lastName || result?.result?.familyName || '';
-      const email = result?.result?.email || '';
-      const displayName = result?.result?.displayName || '';
-
-      // Si no tenemos firstName y lastName, intentamos extraerlos del displayName
-      let extractedFirstName = firstName;
-      let extractedLastName = lastName;
-      
-      if (!firstName && !lastName && displayName) {
-        const nameParts = displayName.split(' ');
-        if (nameParts.length >= 2) {
-          extractedFirstName = nameParts[0];
-          extractedLastName = nameParts.slice(1).join(' ');
-        } else if (nameParts.length === 1) {
-          extractedFirstName = nameParts[0];
-        }
-      }
-
-      if (idToken) {
-        const response = await axios.post('/api/auth/google/login', {
-          "idToken": idToken,
-          "firstName": extractedFirstName,
-          "lastName": extractedLastName,
-          "email": email,
-          "displayName": displayName
-        });
-
-        const user = response.data;
-        const accessToken = user.token;
-
-        setSession(accessToken);
-        window.localStorage.setItem('accessToken', accessToken);
-
-        await registerNotifications();
-
-        dispatch({
-          type: 'REGISTER',
-          payload: {
-            user,
-            isAuthenticated: true
-          },
-        });
+      const btn = container.querySelector('div[role="button"]');
+      if (btn) {
+        btn.click();
       } else {
-        throw new Error('No ID token returned from Google login.');
+        finish(() => reject(new Error('Google Sign-In could not be started.')));
       }
 
-    } catch (error) {
-      console.error('Google login error:', error);
-      throw error;
-    }
+      setTimeout(() => {
+        if (!settled) {
+          finish(() => reject(new Error('Google sign-in timed out or was closed.')));
+        }
+      }, 120000);
+    });
   };
 
   return (

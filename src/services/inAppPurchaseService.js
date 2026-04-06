@@ -1,4 +1,3 @@
-// import { Capacitor } from "@capacitor/core";
 // import "cordova-plugin-purchase/www/store.js";
 
 // const { store, ProductType, Platform } = window.CdvPurchase;

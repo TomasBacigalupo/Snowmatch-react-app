@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
-import { useRef } from 'react';
-import { SnackbarProvider } from 'notistack';
+import { SnackbarProvider, useSnackbar } from 'notistack';
 // @mui
 import { alpha, useTheme } from '@mui/material/styles';
 import { Box, GlobalStyles } from '@mui/material';
@@ -52,28 +51,34 @@ function SnackbarStyles() {
 
 // ----------------------------------------------------------------------
 
+function SnackbarCloseButton({ snackbarKey }) {
+  const { closeSnackbar } = useSnackbar();
+  return (
+    <IconButtonAnimate size="small" onClick={() => closeSnackbar(snackbarKey)} sx={{ p: 0.5 }}>
+      <Iconify icon={'eva:close-fill'} />
+    </IconButtonAnimate>
+  );
+}
+
+SnackbarCloseButton.propTypes = {
+  snackbarKey: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+};
+
 NotistackProvider.propTypes = {
   children: PropTypes.node,
 };
 
 export default function NotistackProvider({ children }) {
-  const notistackRef = useRef(null);
-
-  const onClose = (key) => () => {
-    notistackRef.current.closeSnackbar(key);
-  };
-
   return (
     <>
       <SnackbarStyles />
 
       <SnackbarProvider
-        ref={notistackRef}
         dense
         maxSnack={5}
         preventDuplicate
         autoHideDuration={3000}
-        variant="success" // Set default variant
+        variant="success"
         anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
         iconVariant={{
           info: <SnackbarIcon icon={'eva:info-fill'} color="info" />,
@@ -81,12 +86,7 @@ export default function NotistackProvider({ children }) {
           warning: <SnackbarIcon icon={'eva:alert-triangle-fill'} color="warning" />,
           error: <SnackbarIcon icon={'eva:alert-circle-fill'} color="error" />,
         }}
-        // With close as default
-        action={(key) => (
-          <IconButtonAnimate size="small" onClick={onClose(key)} sx={{ p: 0.5 }}>
-            <Iconify icon={'eva:close-fill'} />
-          </IconButtonAnimate>
-        )}
+        action={(key) => <SnackbarCloseButton snackbarKey={key} />}
       >
         {children}
       </SnackbarProvider>

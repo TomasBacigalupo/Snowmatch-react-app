@@ -9,9 +9,7 @@ import useLocales from "src/hooks/useLocales";
 import useAuth from "src/hooks/useAuth";
 import { PATH_AUTH } from "src/routes/paths";
 import { useNavigate } from "react-router";
-import { Camera, CameraSource, CameraResultType } from '@capacitor/camera';
 import { VideoEditor } from '@awesome-cordova-plugins/video-editor';
-import { VideoPicker } from '@coderpradp/capacitor-plugin-video-picker';
 import { FFmpeg, fetchFile } from '@ffmpeg/ffmpeg';
 import { LoadingButton } from "@mui/lab";
 import Login from "src/pages/auth/Login";
@@ -64,15 +62,24 @@ export default function ExcerciseBottomSheet({ open, onClose, onOpen, course, de
     const { isLoading } = useSelector((state) => state.video)
 
 
+    const blobFromSelected = async (file) => {
+        if (file instanceof File || file instanceof Blob) {
+            return file instanceof File ? file : file;
+        }
+        if (file?.webPath) {
+            const res = await fetch(file.webPath);
+            return res.blob();
+        }
+        throw new Error('No valid video file');
+    };
+
     const startCompression = useCallback(async () => {
         console.log("startCompression")
         console.log("selectedFile", selectedFile)
         setLoadingCompresor(true)
         setActiveStep(3); // Move to compression step
 
-        const file = selectedFile;
-        const fetchedFile = await fetch(file.webPath);
-        const blobFile = await fetchedFile.blob();
+        const blobFile = await blobFromSelected(selectedFile);
 
         console.log("blobFile", blobFile.type);
 
@@ -120,6 +127,9 @@ export default function ExcerciseBottomSheet({ open, onClose, onOpen, course, de
     }, [selectedFile, setLoadingCompresor, setActiveStep, dispatch, level, latitude, longitude]);
 
     const resetUploadState = () => {
+        if (videoPreviewUrl && String(videoPreviewUrl).startsWith('blob:')) {
+            URL.revokeObjectURL(videoPreviewUrl);
+        }
         setSelectedFile(null);
         setVideoPreviewUrl(null);
         setVideoDuration(0);
@@ -167,19 +177,24 @@ export default function ExcerciseBottomSheet({ open, onClose, onOpen, course, de
 
     const uploadVideo = async () => {
         try {
-            await Camera.requestPermissions();
-
-            const videos = await VideoPicker.pick();
-            const file = videos.files[0];
-
-            setVideoPreviewUrl(file.webPath);
+            const file = await new Promise((resolve, reject) => {
+                const input = document.createElement('input');
+                input.type = 'file';
+                input.accept = 'video/*';
+                input.onchange = () => {
+                    const f = input.files?.[0];
+                    if (f) resolve(f);
+                    else reject(new Error('No file selected'));
+                };
+                input.oncancel = () => reject(new Error('Cancelled'));
+                input.click();
+            });
+            const url = URL.createObjectURL(file);
+            setVideoPreviewUrl(url);
             setSelectedFile(file);
             setActiveStep(1); // Move to video trimming step
-
-            console.log("file.path", file.path);
-
         } catch (error) {
-            console.error('Error uploading video:', error.message);
+            console.error('Error selecting video:', error?.message || error);
         }
     };
 

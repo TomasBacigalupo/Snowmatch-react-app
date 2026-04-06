@@ -19,11 +19,11 @@ import {
   TablePagination,
   FormControlLabel,
   DialogTitle,
-  Hidden,
   DialogContent,
   DialogActions,
   Typography
 } from '@mui/material';
+import Hidden from 'src/components/LegacyHidden';
 
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';

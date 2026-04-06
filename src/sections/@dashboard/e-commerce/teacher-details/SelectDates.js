@@ -1,6 +1,8 @@
-import { PickersDay, StaticDatePicker, StaticDateRangePicker } from "@mui/lab";
-import { Button, DialogActions, DialogContent, DialogTitle, Grid, TextField, Box, Typography, Paper, Drawer, useMediaQuery, useTheme } from "@mui/material";
-import React, { useEffect, useState, useCallback } from "react";
+import { StaticDateRangePicker } from "@mui/lab";
+import { PickersDay } from "@mui/x-date-pickers/PickersDay";
+import { StaticDatePicker } from "@mui/x-date-pickers/StaticDatePicker";
+import { Button, DialogActions, DialogContent, DialogTitle, Grid, Box, Typography, Paper, Drawer, useMediaQuery, useTheme } from "@mui/material";
+import React, { useEffect, useState, useMemo } from "react";
 import { DialogAnimate } from "src/components/animate";
 import useLocales from "src/hooks/useLocales";
 import { styled } from '@mui/material/styles';
@@ -58,48 +60,43 @@ export default function SelectDates({ handleClose, onSubmit, isRange, product })
     const totalDays = Math.floor((to - from) / (1000 * 60 * 60 * 24));
 
     useEffect(() => {
-        dispatch(getEventsByTeacherId(teacher?.id, date.getMonth() + 1));
-    }, [dispatch, teacher])
+        if (!teacher?.id) return;
+        dispatch(getEventsByTeacherId(teacher.id, date.getMonth() + 1));
+    }, [dispatch, teacher?.id, date]);
 
-    const renderWeekPickerDay = useCallback((date, _selectedDates, pickersDayProps) => {
-        if (!date) {
-            return <PickersDay {...pickersDayProps} onClick={() => console.log("clicked2")} />;
-        }
+    // MUI X v7 removed renderDay; multi-select is implemented via slots.day.
+    const multiSelectDaySlot = useMemo(() => {
+        const MultiSelectPickersDay = React.forwardRef((props, ref) => {
+            const { day, selected: _calendarSelected, onDaySelect: _calendarOnDaySelect, ...pickersDayProps } = props;
+            const dayIsBetween =
+                selectedDates.length > 0 &&
+                selectedDates.some((d) => isSameDay(d, day));
 
-        const dayIsBetween = selectedDates.length > 0 && selectedDates.find(_date => isSameDay(_date, date)) !== undefined;
-        const isFirstDay = false;
-        const isLastDay = false;
-        const isRandomDay = true;
-
-        return (
-            <CustomPickersDay
-                {...pickersDayProps}
-                onClick={(newValue) => {
-                    setDate(newValue);
-
-                    if (selectedDates.find(d => isSameDay(d, newValue))) {
-                        setDates(selectedDates.filter(d => !isSameDay(d, newValue)));
-                    }
-
-                }}
-                onDaySelect={(newValue) => {
-                    setDate(newValue);
-
-                    if (selectedDates.find(d => isSameDay(d, newValue))) {
-                        setDates(selectedDates.filter(d => !isSameDay(d, newValue)));
-                    } else {
-                        setSelectTimeModal(true);
-                        setDates([...selectedDates, newValue]);
-                    }
-
-                }}
-                disableMargin
-                dayIsBetween={dayIsBetween}
-                isFirstDay={isFirstDay}
-                isLastDay={isLastDay}
-                isRandomDay={isRandomDay}
-            />
-        );
+            return (
+                <CustomPickersDay
+                    ref={ref}
+                    {...pickersDayProps}
+                    day={day}
+                    selected={dayIsBetween}
+                    onDaySelect={(clickedDay) => {
+                        setDate(clickedDay);
+                        if (selectedDates.some((d) => isSameDay(d, clickedDay))) {
+                            setDates(selectedDates.filter((d) => !isSameDay(d, clickedDay)));
+                        } else {
+                            setSelectTimeModal(true);
+                            setDates([...selectedDates, clickedDay]);
+                        }
+                    }}
+                    disableMargin
+                    dayIsBetween={dayIsBetween}
+                    isFirstDay={false}
+                    isLastDay={false}
+                    isRandomDay
+                />
+            );
+        });
+        MultiSelectPickersDay.displayName = "MultiSelectPickersDay";
+        return MultiSelectPickersDay;
     }, [selectedDates]);
 
     const handleChangeRange = (newRange) => {
@@ -321,30 +318,53 @@ export default function SelectDates({ handleClose, onSubmit, isRange, product })
                     <TimeSelectionContent />
                 </DialogAnimate>
             )}
-            <Grid container width={'100%'} height={'100%'}>
-                <Grid id='custom-calendar' item xs={12} width={'100%'} height={'100%'}>
-                    {!isRange && <StaticDatePicker
-                        onChange={() => { }}
-                        disabledDates={events.map(e => new Date(e.start))}
-                        shouldDisableDate={(date) => events.some(e => isSameDay(date, new Date(e.start)))}
-                        showToolbar={false}
-                        renderDay={renderWeekPickerDay}
-                        renderInput={(params) => <TextField {...params} />}
-                        inputFormat="'Week of' MMM d"
-                        disablePast
-                        //prevent to highlight the current day
-                        value={null}
-                    />}
-                    {isRange && <StaticDateRangePicker
-                        onChange={handleChangeRange}
-                        shouldDisableDate={(date) => !events.some(e => isSameDay(date, new Date(e.start)))}
-                        showToolbar={false}
-                        value={range}
-                        defaultValue={range}
-                        disablePast={true}
-                    />}
+            <Box
+                sx={{
+                    overflow: 'visible',
+                    px: { xs: 1, sm: 2 },
+                    py: 1,
+                    maxHeight: { xs: 'min(85dvh, 640px)', sm: '72vh' },
+                    overflowY: 'auto',
+                    width: '100%',
+                }}
+            >
+                <Grid container width="100%" sx={{ minHeight: 0 }}>
+                    <Grid id="custom-calendar" item xs={12} width="100%" sx={{ minHeight: 0 }}>
+                        {!isRange && (
+                            <StaticDatePicker
+                                value={null}
+                                onChange={() => {}}
+                                shouldDisableDate={(d) =>
+                                    events.some((e) => isSameDay(d, new Date(e.start)))
+                                }
+                                disablePast
+                                onMonthChange={(month) => setDate(month)}
+                                slots={{ day: multiSelectDaySlot }}
+                                slotProps={{
+                                    toolbar: { hidden: true },
+                                }}
+                                sx={{
+                                    width: '100%',
+                                    maxWidth: '100%',
+                                    '& .MuiPickersLayout-root': { overflow: 'visible' },
+                                }}
+                            />
+                        )}
+                        {isRange && (
+                            <StaticDateRangePicker
+                                onChange={handleChangeRange}
+                                shouldDisableDate={(d) =>
+                                    !events.some((e) => isSameDay(d, new Date(e.start)))
+                                }
+                                showToolbar={false}
+                                value={range}
+                                defaultValue={range}
+                                disablePast
+                            />
+                        )}
+                    </Grid>
                 </Grid>
-            </Grid>
+            </Box>
             <DialogActions>
                 <Button fullWidth variant='outlined' onClick={handleClose}>
                     {translate('general.cancel')}

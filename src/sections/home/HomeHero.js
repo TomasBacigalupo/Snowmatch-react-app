@@ -2,7 +2,7 @@ import { m } from 'framer-motion';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // @mui
 import { styled, useTheme } from '@mui/material/styles';
-import { Button, Box, Link, Container, Typography, Stack, Grid, Select, Hidden, Card, Avatar, Chip } from '@mui/material';
+import { Button, Box, Link, Container, Typography, Stack, Grid, Select, Card, Avatar, Chip } from '@mui/material';
 // routes
 import { PATH_DASHBOARD, PATH_GUEST } from '../../routes/paths';
 // components

@@ -153,7 +153,9 @@ export default function TeacherDetailsSummary({ isProduct, cart, teacher, onAddC
     product: products[0]?.id ?? "",
   };
 
-  useEffect(() => dispatch(getTeacherProductsById(id)), [id])
+  useEffect(() => {
+    dispatch(getTeacherProductsById(id));
+  }, [dispatch, id]);
 
   const methods = useForm({
     defaultValues,

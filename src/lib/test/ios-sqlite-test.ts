@@ -1,5 +1,5 @@
 /**
- * iOS SQLite Test - Optimized for @capacitor-community/sqlite
+ * Ski recorder storage smoke test (browser localStorage backend)
  * Tests the ski tracking database functionality on iOS
  */
 

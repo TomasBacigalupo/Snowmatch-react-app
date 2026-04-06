@@ -1,6 +1,4 @@
 import { useEffect, useState } from 'react';
-import { App } from '@capacitor/app';
-import { Capacitor } from '@capacitor/core';
 import { useNavigate } from 'react-router-dom';
 
 export const useDeepLink = () => {
@@ -8,42 +6,7 @@ export const useDeepLink = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Only run on native platforms
-    if (!Capacitor.isNativePlatform()) {
-      return;
-    }
-
-    // Handle app URL open events
-    const handleAppUrlOpen = (event) => {
-      console.log('App opened with URL:', event.url);
-      setDeepLink(event.url);
-      
-      // Parse the URL and handle different routes
-      handleDeepLink(event.url);
-    };
-
-    // Handle app state changes
-    const handleAppStateChange = (state) => {
-      console.log('App state changed:', state);
-    };
-
-    // Add listeners
-    App.addListener('appUrlOpen', handleAppUrlOpen);
-    App.addListener('appStateChange', handleAppStateChange);
-
-    // Get the initial URL if the app was opened with a deep link
-    App.getLaunchUrl().then((result) => {
-      if (result?.url) {
-        console.log('App launched with URL:', result.url);
-        setDeepLink(result.url);
-        handleDeepLink(result.url);
-      }
-    });
-
-    // Cleanup listeners
-    return () => {
-      App.removeAllListeners();
-    };
+    // Web: deep links are regular URLs handled by the router; no native app URL events.
   }, [navigate]);
 
   const handleDeepLink = (url) => {

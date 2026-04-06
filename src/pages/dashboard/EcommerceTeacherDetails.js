@@ -3,7 +3,8 @@ import { useParams, useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 // @mui
 import { alpha, styled } from '@mui/material/styles';
-import { Box, Tab, Card, Grid, Divider, Container, Typography, Hidden, Button } from '@mui/material';
+import { Box, Tab, Card, Grid, Divider, Container, Typography, Button } from '@mui/material';
+import Hidden from 'src/components/LegacyHidden';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';

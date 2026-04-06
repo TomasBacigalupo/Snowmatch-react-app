@@ -1,11 +1,11 @@
 #!/bin/bash
 
-# Script rápido para deploy (asume que ya hiciste build)
+# Upload existing ./build to S3 only. For SEO, run `npm run deploy` first so build is prerendered.
 # Uso: ./deploy-quick.sh
 
 set -e
 
-BUCKET_NAME="app.snowmatch.pro"
+BUCKET_NAME="snowmatch.pro"
 BUILD_DIR="build"
 
 if [ ! -d "$BUILD_DIR" ]; then

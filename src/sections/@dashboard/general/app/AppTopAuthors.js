@@ -35,7 +35,9 @@ export default function AppTopAuthors() {
   const dispatch = useDispatch()
   const {translate} = useLocales()
   const {topClients} = useSelector(state => state.teachers)
-  useEffect(()=>dispatch(getTopClients()),[])
+  useEffect(() => {
+    dispatch(getTopClients());
+  }, [dispatch]);
 
   const sample = [
     {

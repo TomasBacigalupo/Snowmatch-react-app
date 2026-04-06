@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Box, Typography, Button, Alert, CircularProgress } from "@mui/material";
-import { Geolocation } from '@capacitor/geolocation';
 import { useTranslation } from "react-i18next";
 import useLocales from "src/hooks/useLocales";
 import mapboxgl from 'mapbox-gl';
@@ -31,17 +30,16 @@ export default function LocationStep({ onNext, onBack, onLocationSelect, setLati
         setError(null);
         
         try {
-            // Request permissions
-            const permissions = await Geolocation.requestPermissions();
-            if (permissions.location !== 'granted') {
-                throw new Error('Location permission denied');
+            if (!navigator.geolocation) {
+                throw new Error('Geolocation not supported');
             }
 
-            // Get current position
-            const position = await Geolocation.getCurrentPosition({
-                enableHighAccuracy: false,
-                timeout: 8000,
-                maximumAge: 300000
+            const position = await new Promise((resolve, reject) => {
+                navigator.geolocation.getCurrentPosition(resolve, reject, {
+                    enableHighAccuracy: false,
+                    timeout: 8000,
+                    maximumAge: 300000,
+                });
             });
 
             const location = {

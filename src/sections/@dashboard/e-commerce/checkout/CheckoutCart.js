@@ -2,7 +2,7 @@ import sum from 'lodash/sum';
 import { useState } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // @mui
-import { Grid, Card, Button, CardHeader, Typography, Box, DialogTitle, Hidden } from '@mui/material';
+import { Grid, Card, Button, CardHeader, Typography, Box, DialogTitle } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../../../redux/store';
 import {

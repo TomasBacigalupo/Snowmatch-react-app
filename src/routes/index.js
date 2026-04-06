@@ -26,7 +26,6 @@ import UnratedVideos from 'src/pages/dashboard/UnratedVideos';
 import CourseLevels from 'src/pages/dashboard/CourseLevels';
 import BackButtonLayout from 'src/layouts/BackButtonLayout';
 import Training from 'src/pages/dashboard/Training';
-import Maps from 'src/pages/dashboard/Maps';
 import SkiTracking from 'src/pages/dashboard/SkiTracking';
 import SearchPage from 'src/pages/search/resort/discipline';
 import BlogEmbed from '../pages/BlogEmbed';
@@ -192,13 +191,6 @@ export default function Router() {
           element: (<GuestLayout />),
           children: [
             { path: 'feed', element: <Feed /> },
-          ]
-        },
-        {
-          path: 'maps',
-          element: (<GuestLayout />),
-          children: [
-            { path: ':id', element: <Maps /> }
           ]
         },
         {

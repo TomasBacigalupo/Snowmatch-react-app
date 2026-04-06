@@ -3,7 +3,6 @@
  * Handles location tracking, segment detection, and data persistence
  */
 
-import { registerPlugin } from '@capacitor/core';
 import { 
   Activity, 
   Segment, 
@@ -20,22 +19,6 @@ import { CurveDetector } from './curveDetection';
 import { haversineDistance, calculateSpeed } from '../geo/haversine';
 import { smoothSamples } from '../geo/smoothing';
 
-// Define types for background geolocation plugin
-interface BackgroundGeolocationPlugin {
-  addWatcher(options: {
-    backgroundMessage?: string;
-    backgroundTitle?: string;
-    requestPermissions?: boolean;
-    stale?: boolean;
-    distanceFilter?: number;
-  }, callback: (location: any, error: any) => void): Promise<string>;
-  
-  removeWatcher(options: { id: string }): Promise<void>;
-}
-
-// Import background geolocation plugin
-const BackgroundGeolocation = registerPlugin<BackgroundGeolocationPlugin>('BackgroundGeolocation');
-
 export class SkiRecorder {
   private status: RecordingStatus = 'idle';
   private config: SkiRecorderConfig = DEFAULT_CONFIG;
@@ -48,8 +31,8 @@ export class SkiRecorder {
   private samples: Sample[] = [];
   private segments: Segment[] = [];
   
-  // Location tracking
-  private watchId: string | null = null;
+  // Location tracking (browser Geolocation API watch id)
+  private watchId: number | null = null;
   private lastSample: Sample | null = null;
   private lastLocationUpdate: number = 0;
   
@@ -99,7 +82,7 @@ export class SkiRecorder {
     this.segmentDetector.updateConfig(this.config.segmentDetection);
     
     // Update location tracking if currently recording
-    if (this.status === 'recording' && this.watchId) {
+    if (this.status === 'recording' && this.watchId !== null) {
       this.updateLocationTracking();
     }
   }
@@ -343,61 +326,42 @@ export class SkiRecorder {
    */
   private async startLocationTracking(): Promise<void> {
     const profile = this.getCurrentAccuracyProfile();
-    
-    // Use background geolocation for continuous tracking
-    this.watchId = await BackgroundGeolocation.addWatcher(
-      {
-        // Enable background tracking
-        backgroundMessage: "SnowMatch está registrando tu actividad de esquí",
-        backgroundTitle: "Grabando Esquí",
-        
-        // Request permissions automatically
-        requestPermissions: true,
-        
-        // Don't deliver stale locations
-        stale: false,
-        
-        // Distance filter based on current profile
-        distanceFilter: profile.enableHighAccuracy ? 10 : 50,
-      },
-      (location, error) => {
-        if (error) {
-          console.error('Background location error:', error);
-          if (error.code === 'NOT_AUTHORIZED') {
-            console.warn('Location permission denied');
-          }
-          return;
-        }
-        
-        if (location) {
-          // Convert background geolocation format to our expected format
-          const position: GeolocationPosition = {
-            coords: {
-              latitude: location.latitude,
-              longitude: location.longitude,
-              accuracy: location.accuracy,
-              altitude: location.altitude,
-              speed: location.speed,
-              heading: location.bearing,
-              altitudeAccuracy: null,
-              toJSON: () => ({}), // Required by GeolocationCoordinates interface
-            },
-            timestamp: location.time,
-            toJSON: () => ({}), // Required by GeolocationPosition interface
-          };
-          
-          this.handleLocationUpdate(position);
-        }
+
+    if (!navigator.geolocation) {
+      throw new Error('Geolocation is not supported in this browser');
+    }
+
+    return new Promise((resolve, reject) => {
+      try {
+        const options: PositionOptions = {
+          enableHighAccuracy: profile.enableHighAccuracy,
+          maximumAge: 0,
+          timeout: 15000,
+        };
+
+        this.watchId = navigator.geolocation.watchPosition(
+          (position) => this.handleLocationUpdate(position),
+          (err) => {
+            console.error('Geolocation error:', err);
+            if (err.code === 1) {
+              console.warn('Location permission denied');
+            }
+          },
+          options
+        );
+        resolve();
+      } catch (e) {
+        reject(e);
       }
-    );
+    });
   }
 
   /**
    * Stop location tracking
    */
   private stopLocationTracking(): void {
-    if (this.watchId) {
-      BackgroundGeolocation.removeWatcher({ id: this.watchId });
+    if (this.watchId !== null) {
+      navigator.geolocation.clearWatch(this.watchId);
       this.watchId = null;
     }
   }
@@ -406,7 +370,7 @@ export class SkiRecorder {
    * Update location tracking with new accuracy profile
    */
   private updateLocationTracking(): void {
-    if (this.watchId && this.status === 'recording') {
+    if (this.watchId !== null && this.status === 'recording') {
       this.stopLocationTracking();
       this.startLocationTracking();
     }

@@ -1,4 +1,4 @@
-import { StaticDateRangePicker } from "@mui/lab";
+import { StaticDateRangePicker } from '@mui/x-date-pickers-pro/StaticDateRangePicker';
 import { PickersDay } from "@mui/x-date-pickers/PickersDay";
 import { StaticDatePicker } from "@mui/x-date-pickers/StaticDatePicker";
 import { Button, DialogActions, DialogContent, DialogTitle, Grid, Box, Typography, Paper, Drawer, useMediaQuery, useTheme } from "@mui/material";
@@ -356,9 +356,8 @@ export default function SelectDates({ handleClose, onSubmit, isRange, product })
                                 shouldDisableDate={(d) =>
                                     !events.some((e) => isSameDay(d, new Date(e.start)))
                                 }
-                                showToolbar={false}
+                                slotProps={{ toolbar: { hidden: true } }}
                                 value={range}
-                                defaultValue={range}
                                 disablePast
                             />
                         )}

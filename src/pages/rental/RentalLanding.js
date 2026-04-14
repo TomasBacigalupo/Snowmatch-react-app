@@ -21,7 +21,7 @@ import {
   useTheme,
   useMediaQuery,
 } from '@mui/material';
-import { DateRangePicker } from '@mui/lab';
+import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { es } from 'date-fns/locale';
@@ -337,9 +337,7 @@ export default function RentalLanding() {
                   value={dateRange}
                   onChange={(newValue) => {
                     setDateRange(newValue);
-                    // Cerrar el selector cuando se selecciona la fecha de fin
                     if (newValue[0] && newValue[1]) {
-                      // Simular un click fuera del selector para cerrarlo
                       setTimeout(() => {
                         const event = new MouseEvent('mousedown', {
                           bubbles: true,
@@ -350,16 +348,10 @@ export default function RentalLanding() {
                       }, 100);
                     }
                   }}
-                  renderInput={(startProps, endProps) => (
-                    <Stack direction="row" spacing={2} alignItems="center">
-                      <StyledTextField {...startProps} fullWidth />
-                      <Typography variant="body2" sx={{ color: '#666666', fontWeight: 500 }}>
-                        hasta
-                      </Typography>
-                      <StyledTextField {...endProps} fullWidth />
-                    </Stack>
-                  )}
                   minDate={new Date()}
+                  localeText={{ start: 'Desde', end: 'Hasta' }}
+                  slots={{ textField: StyledTextField }}
+                  slotProps={{ textField: { fullWidth: true } }}
                 />
               </LocalizationProvider>
 

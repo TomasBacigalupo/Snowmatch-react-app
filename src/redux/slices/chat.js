@@ -339,6 +339,33 @@ export function getConversation(conversationId) {
   };
 }
 
+export function getAdminConversation(conversationId) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get('/api/admin/chat/conversation', {
+        params: { conversationId },
+      });
+      dispatch(slice.actions.getConversationSuccess(response.data.conversation));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+export function getAdminParticipants(conversationId) {
+  return async (dispatch) => {
+    try {
+      const response = await axios.get('/api/admin/chat/participants', {
+        params: { conversationId },
+      });
+      dispatch(slice.actions.getParticipantsSuccess(response.data.participants));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
 // ----------------------------------------------------------------------
 
 export function markConversationAsRead(conversationId) {

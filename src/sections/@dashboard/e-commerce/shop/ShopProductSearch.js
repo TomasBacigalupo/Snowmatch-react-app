@@ -33,8 +33,7 @@ import useLocales from 'src/hooks/useLocales';
 import { useDispatch } from 'src/redux/store';
 import { searchTeachers } from 'src/services/facebook';
 import { filterTeachers } from 'src/redux/slices/teachers';
-import { DesktopDateRangePicker, MobileDateRangePicker, StaticDateRangePicker } from '@mui/lab';
-import dayjs from 'dayjs';
+import { StaticDateRangePicker } from '@mui/x-date-pickers-pro/StaticDateRangePicker';
 import { Language } from '@mui/icons-material';
 import axios from 'src/utils/axios';
 import { resortTransformation, transformResortsForUI } from 'src/utils/resortTransformation';
@@ -452,26 +451,19 @@ export default function ShopProductSearch({ filters, teachers }) {
                       onChange={() => setExpanded(false)}
                       render={({ field }) => (
                         <StaticDateRangePicker
-                          showToolbar={false}
                           {...field}
                           disablePast
                           calendars={1}
-                          defaultValue={[dayjs("2022-04-17"), dayjs("2022-04-21")]}
-                          renderInput={(startProps, endProps) => (
-                            <Box display="flex" alignItems="center">
-                              <TextField
-                                {...startProps}
-                                label={translate("landingPRO.start_date")}
-                                placeholder={translate("landingPRO.start_date")}
-                              />
-                              <Box sx={{ mx: 2 }}> - </Box>
-                              <TextField
-                                {...endProps}
-                                label={translate("landingPRO.end_date")}
-                                placeholder={translate("landingPRO.start_date")}
-                              />
-                            </Box>
-                          )}
+                          slotProps={{
+                            toolbar: { hidden: true },
+                            textField: ({ position }) => ({
+                              label:
+                                position === 'start'
+                                  ? translate('landingPRO.start_date')
+                                  : translate('landingPRO.end_date'),
+                              placeholder: translate('landingPRO.start_date'),
+                            }),
+                          }}
                         />
                       )}
                     />
@@ -750,26 +742,19 @@ export default function ShopProductSearch({ filters, teachers }) {
                         onChange={() => setExpanded(false)}
                         render={({ field }) => (
                           <StaticDateRangePicker
-                            showToolbar={false}
                             {...field}
                             disablePast
                             calendars={1}
-                            defaultValue={[dayjs("2022-04-17"), dayjs("2022-04-21")]}
-                            renderInput={(startProps, endProps) => (
-                              <Box display="flex" alignItems="center">
-                                <TextField
-                                  {...startProps}
-                                  label={translate("landingPRO.start_date")}
-                                  placeholder={translate("landingPRO.start_date")}
-                                />
-                                <Box sx={{ mx: 2 }}> - </Box>
-                                <TextField
-                                  {...endProps}
-                                  label={translate("landingPRO.end_date")}
-                                  placeholder={translate("landingPRO.start_date")}
-                                />
-                              </Box>
-                            )}
+                            slotProps={{
+                              toolbar: { hidden: true },
+                              textField: ({ position }) => ({
+                                label:
+                                  position === 'start'
+                                    ? translate('landingPRO.start_date')
+                                    : translate('landingPRO.end_date'),
+                                placeholder: translate('landingPRO.start_date'),
+                              }),
+                            }}
                           />
                         )}
                       />

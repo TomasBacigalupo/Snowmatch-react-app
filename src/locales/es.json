@@ -1,4 +1,146 @@
 {
+    "mainHeader": {
+        "nuestroEquipo": "Nuestro equipo"
+    },
+    "premiumVideoPlans": {
+        "paymentMethodTitle": "Completá tu compra",
+        "continueOnWhatsApp": "Continuar en WhatsApp",
+        "cancel": "Cancelar"
+    },
+    "aboutPage": {
+        "pageTitle": "Nosotros",
+        "hero": {
+            "headline": "Quiénes somos",
+            "subheadline": "SnowMatch conecta esquiadores y snowboarders con instructores certificados y herramientas para mejorar en la nieve: desde reservar clases hasta feedback en video."
+        },
+        "what": {
+            "title": "¿Qué es SnowMatch?",
+            "body": "Facilitamos reservar clases en grandes centros, recibir feedback honesto sobre tu esquí y aprender con entrenadores de confianza. Ya sea que planifiques un viaje en familia o entrenes para tu próximo objetivo, unimos instructores y tecnología en un solo lugar.",
+            "feature1Title": "Instructores verificados",
+            "feature1Body": "Perfiles, reseñas y certificaciones para saber con quién esquiás antes de reservar.",
+            "feature2Title": "Centros en todo el mundo",
+            "feature2Body": "Desde los Andes hasta los Rockies y los Alpes — encontrá clases donde viajes.",
+            "feature3Title": "Video e IA",
+            "feature3Body": "Subí tus líneas y recibí feedback estructurado de coaches y nuestras herramientas de IA.",
+            "cta": "Buscar clases",
+            "image1Alt": "Esquiador en la montaña",
+            "image2Alt": "Paisaje de centro de esquí"
+        },
+        "vision": {
+            "quote": "Creemos que todos merecen coaching claro y honesto — en la montaña y por video — para que el esquí siga siendo divertido y el progreso sea alcanzable.",
+            "imageAlt": "Esquí en la montaña"
+        },
+        "team": {
+            "title": "Nuestro equipo",
+            "subtitle": "Las personas detrás de SnowMatch.",
+            "members": {
+                "tomasBacigalupo": {
+                    "name": "Tomas Bacigalupo",
+                    "role": "Fundador",
+                    "subtitle": "Esquiador alpino · Juegos Olímpicos de la Juventud",
+                    "bio": "Fundador de SnowMatch. Lidera la visión del producto y Snow, tu instructor IA."
+                },
+                "juanManuelFaccio": {
+                    "name": "Juan Manuel Faccio",
+                    "role": "Equipo",
+                    "subtitle": "",
+                    "bio": "Parte del equipo de SnowMatch."
+                },
+                "maricuManzano": {
+                    "name": "Maricu Manzano",
+                    "role": "Equipo",
+                    "subtitle": "",
+                    "bio": "Parte del equipo de SnowMatch."
+                },
+                "mathiasPinna": {
+                    "name": "Mathias Pinna",
+                    "role": "Equipo",
+                    "subtitle": "",
+                    "bio": "Parte del equipo de SnowMatch."
+                },
+                "danisa": {
+                    "name": "Danisa",
+                    "role": "Equipo",
+                    "subtitle": "",
+                    "bio": "Parte del equipo de SnowMatch."
+                },
+                "tomasSoleno": {
+                    "name": "Tomas Soleño",
+                    "role": "Entrenador principal",
+                    "subtitle": "Instructor nivel 5 · Patagonia",
+                    "bio": "Instructor de esquí en Japón, Argentina y Estados Unidos. Lidera coaching y correcciones."
+                },
+                "fedeMarcachini": {
+                    "name": "Fede Marcachini",
+                    "role": "Equipo",
+                    "subtitle": "",
+                    "bio": "Parte del equipo de SnowMatch."
+                },
+                "matiMarcachini": {
+                    "name": "Mati Marcachini",
+                    "role": "Equipo",
+                    "subtitle": "",
+                    "bio": "Parte del equipo de SnowMatch."
+                },
+                "juanaPinedo": {
+                    "name": "Juana Pinedo",
+                    "role": "Equipo",
+                    "subtitle": "Instructora AADIDESS nivel 3 — profesora en Aspen y en Catedral",
+                    "bio": "Parte del equipo de SnowMatch."
+                },
+                "cocoEvia": {
+                    "name": "Coco Evia",
+                    "role": "Equipo",
+                    "subtitle": "",
+                    "bio": "Parte del equipo de SnowMatch."
+                },
+                "juanaCastroSicneros": {
+                    "name": "Juana Castro Sicneros",
+                    "role": "Equipo",
+                    "subtitle": "Instructora N3 AADIDESS - PSIA",
+                    "bio": "Parte del equipo de SnowMatch."
+                }
+            }
+        },
+        "testimonials": {
+            "overline": "Historias en la nieve",
+            "title": "Lo que dicen quienes aprenden",
+            "intro": "Agradecemos a cada esquiador y familia que confía en SnowMatch para reservar una clase o mejorar su técnica.",
+            "readMore": "Contactanos",
+            "items": [
+                {
+                    "name": "Sofía M.",
+                    "date": "marzo 2025",
+                    "content": "Reservar en Catedral fue sencillo y el instructor fue excelente con los chicos. Vamos a usar SnowMatch otra vez la próxima temporada."
+                },
+                {
+                    "name": "James K.",
+                    "date": "febrero 2025",
+                    "content": "El análisis en video me ayudó a corregir la postura de una forma que las clases grupales no lograron. Notas claras y rápidas."
+                },
+                {
+                    "name": "Valentina R.",
+                    "date": "enero 2025",
+                    "content": "Comparé instructores, leí reseñas y elegí alguien acorde a mi nivel. Todo el flujo tomó minutos."
+                },
+                {
+                    "name": "Thomas H.",
+                    "date": "diciembre 2024",
+                    "content": "Por fin un solo lugar para encontrar profes certificados en los centros que visitamos. El soporte respondió al toque."
+                },
+                {
+                    "name": "Lucía P.",
+                    "date": "agosto 2024",
+                    "content": "SnowMatch nos simplificó planificar el viaje. Tener todo en una app cambia las reglas para las familias."
+                },
+                {
+                    "name": "Marco D.",
+                    "date": "julio 2024",
+                    "content": "Instructores profesionales, reserva fácil y progreso real en la nieve. Muy recomendable si querés mejorar de verdad."
+                }
+            ]
+        }
+    },
     "homeHero": {
         "headlinePart1": "Llevá tu esquí al",
         "headlinePart2": "siguiente nivel.",
@@ -70,8 +212,11 @@
         "hero": {
             "headline": "Tu próxima clase empieza acá",
             "subheadline": "Buscá clases de esquí y snowboard por centro, compará instructores certificados y reservá con confianza.",
-            "cta": "Buscar clases",
-            "secondaryCta": "Video coaching y feedback con IA"
+            "cta": "Buscar clases"
+        },
+        "whatsapp": {
+            "bookMessage": "Quiero reservar",
+            "bookMessageResort": "Quiero reservar — {{resort}}"
         },
         "features": {
             "title": "Por qué reservar con SnowMatch",
@@ -81,6 +226,37 @@
             "card2Body": "Desde los Andes hasta las Rocosas y los Alpes — encontrá clases donde viajás.",
             "card3Title": "Reserva simple",
             "card3Body": "Elegí fechas, tipo de clase e instructor en un flujo pensado para esquiadores y familias."
+        },
+        "tarifas": {
+            "menuLabel": "Tarifas",
+            "adultos": "Tarifas para adultos",
+            "ninos": "Tarifas para niños",
+            "equipos": "Tarifas equipos",
+            "reservar": "Reservar",
+            "sectionTitle": "Tarifas",
+            "sectionSubtitle": "Elegí una categoría para ver detalles y reservar.",
+            "adultosBody": "Las tarifas de clases privadas y grupales para adultos varían según el centro, la duración y el instructor.",
+            "ninosBody": "Clases para niños y familias — los precios dependen de la franja etaria y el formato en cada centro.",
+            "equiposBody": "Alquiler y packs de equipo los gestiona cada centro; te guiamos al flujo de reserva correcto.",
+            "requestRateButton": "Consultar precio",
+            "requestRateMessageAdultos": "Quiero consultar precios para clases de adultos.",
+            "requestRateMessageNinos": "Quiero consultar precios para clases de niños / familia.",
+            "requestRateMessageEquipos": "Quiero consultar precios de alquiler de equipo."
+        },
+        "escuela": {
+            "menuLabel": "Escuela",
+            "clases": "Clases",
+            "rental": "Rental",
+            "ninos": "Niños",
+            "reservar": "Reservar",
+            "sectionTitle": "Escuela de esquí y snowboard",
+            "sectionSubtitle": "Qué ofrecemos en los centros asociados y cómo empezar.",
+            "clasesBody": "Clases privadas y grupales de esquí y snowboard con instructores certificados — buscá por centro, nivel y fechas.",
+            "rentalBody": "Esquís, botas, tablas y cascos en el rental de cada centro; los detalles aparecen en tu flujo de reserva.",
+            "ninosBody": "Programas infantiles y clases pensadas para familias — filtrá por centro para ver opciones por edad y tamaño de grupo.",
+            "requestRateMessageClases": "Quiero consultar precios para clases de esquí o snowboard.",
+            "requestRateMessageRental": "Quiero consultar precios de alquiler de equipo de esquí o snowboard.",
+            "requestRateMessageNinos": "Quiero consultar precios para clases de esquí para niños o en familia."
         },
         "resorts": {
             "title": "Destinos populares",
@@ -2333,7 +2509,8 @@
         "snowboardLessons": "Clases de Snowboard",
         "groupLessons": "Clases Grupales",
         "privateLessons": "Clases Privadas",
-        "childrenLessons": "Clases para Niños"
+        "childrenLessons": "Clases para Niños",
+        "groupLessonFrom": "Clases grupales desde {{price}}"
     },
     "homeFilter": {
         "title": "Clases de {{discipline}} en {{resort}}",

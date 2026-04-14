@@ -15,6 +15,7 @@ import MotionLazyContainer from './components/animate/MotionLazyContainer';
 import DeviceRedirect from './components/DeviceRedirect';
 import CompleteProfileModal from './components/CompleteProfileModal';
 import LegalDisclaimerModal from './components/LegalDisclaimerModal';
+import WhatsAppFloatButton from './components/WhatsAppFloatButton';
 import useCompleteProfile from './hooks/useCompleteProfile';
 import { RentalCartProvider } from './contexts/RentalCartContext';
 
@@ -37,6 +38,8 @@ function AppContent() {
         onClose={handleSkipCompleteProfile}
         onComplete={handleCompleteProfile}
       />
+
+      <WhatsAppFloatButton />
     </>
   );
 }

@@ -1,7 +1,8 @@
-import { useLocation } from 'react-router-dom';
+import { useState } from 'react';
+import { useLocation, Link as RouterLink } from 'react-router-dom';
 // @mui
 import { styled, useTheme } from '@mui/material/styles';
-import { Box, Button, AppBar, Toolbar, Container } from '@mui/material';
+import { Box, Button, AppBar, Toolbar, Container, Menu, MenuItem } from '@mui/material';
 // hooks
 import useOffSetTop from '../../hooks/useOffSetTop';
 import useResponsive from '../../hooks/useResponsive';
@@ -16,12 +17,14 @@ import Label from '../../components/Label';
 import MenuDesktop from './MenuDesktop';
 import MenuMobile from './MenuMobile';
 import navConfig from './MenuConfig';
-import { Link as RouterLink } from 'react-router-dom';
 import AccountPopover from '../dashboard/header/AccountPopover';
 import LanguagePopover from '../dashboard/header/LanguagePopover';
 import useLocales from 'src/hooks/useLocales';
 import HoverButton from 'src/components/HoverButton';
+import Iconify from 'src/components/Iconify';
+import { snowmatchBookingWhatsAppUrl } from 'src/utils/snowmatchWhatsApp';
 
+const LANG_PREFIX_PATH = /^\/(es|en|pt|fr)(\/|$)/i;
 
 // ----------------------------------------------------------------------
 
@@ -64,6 +67,13 @@ export default function MainHeader() {
 
   const isHome = pathname === '/';
 
+  const [tarifasAnchor, setTarifasAnchor] = useState(null);
+  const [escuelaAnchor, setEscuelaAnchor] = useState(null);
+  const langSegMatch = pathname.match(LANG_PREFIX_PATH);
+  const langPrefix = langSegMatch ? `/${langSegMatch[1].toLowerCase()}` : null;
+  const aboutTeamPath = langPrefix ? `${langPrefix}/about-us` : '/about-us';
+  const bookWhatsAppHref = snowmatchBookingWhatsAppUrl(translate('languageHome.whatsapp.bookMessage'));
+
   return (
     <AppBar sx={{ boxShadow: 0, bgcolor: 'transparent', paddingTop: 'env(safe-area-inset-top)'}}>
       <ToolbarStyle
@@ -88,6 +98,125 @@ export default function MainHeader() {
             v3.3.0
           </Label> */}
           <Box sx={{ flexGrow: 1 }} />
+
+          {langPrefix && (
+            <>
+              <Button
+                color="inherit"
+                onClick={(e) => setTarifasAnchor(e.currentTarget)}
+                endIcon={<Iconify icon="eva:arrow-ios-downward-fill" width={18} />}
+                sx={{
+                  mr: { xs: 0.5, sm: 1 },
+                  fontWeight: 600,
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                {translate('languageHome.tarifas.menuLabel')}
+              </Button>
+              <Menu
+                anchorEl={tarifasAnchor}
+                open={Boolean(tarifasAnchor)}
+                onClose={() => setTarifasAnchor(null)}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+                transformOrigin={{ vertical: 'top', horizontal: 'left' }}
+              >
+                <MenuItem
+                  component={RouterLink}
+                  to={`${langPrefix}#tarifas-adultos`}
+                  onClick={() => setTarifasAnchor(null)}
+                >
+                  {translate('languageHome.tarifas.adultos')}
+                </MenuItem>
+                <MenuItem
+                  component={RouterLink}
+                  to={`${langPrefix}#tarifas-ninos`}
+                  onClick={() => setTarifasAnchor(null)}
+                >
+                  {translate('languageHome.tarifas.ninos')}
+                </MenuItem>
+                <MenuItem
+                  component={RouterLink}
+                  to={`${langPrefix}#tarifas-equipos`}
+                  onClick={() => setTarifasAnchor(null)}
+                >
+                  {translate('languageHome.tarifas.equipos')}
+                </MenuItem>
+                <MenuItem
+                  component="a"
+                  href={bookWhatsAppHref}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => setTarifasAnchor(null)}
+                >
+                  {translate('languageHome.tarifas.reservar')}
+                </MenuItem>
+              </Menu>
+
+              <Button
+                color="inherit"
+                onClick={(e) => setEscuelaAnchor(e.currentTarget)}
+                endIcon={<Iconify icon="eva:arrow-ios-downward-fill" width={18} />}
+                sx={{
+                  mr: { xs: 0.5, sm: 1 },
+                  fontWeight: 600,
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                {translate('languageHome.escuela.menuLabel')}
+              </Button>
+              <Menu
+                anchorEl={escuelaAnchor}
+                open={Boolean(escuelaAnchor)}
+                onClose={() => setEscuelaAnchor(null)}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+                transformOrigin={{ vertical: 'top', horizontal: 'left' }}
+              >
+                <MenuItem
+                  component={RouterLink}
+                  to={`${langPrefix}#escuela-clases`}
+                  onClick={() => setEscuelaAnchor(null)}
+                >
+                  {translate('languageHome.escuela.clases')}
+                </MenuItem>
+                <MenuItem
+                  component={RouterLink}
+                  to={`${langPrefix}#escuela-rental`}
+                  onClick={() => setEscuelaAnchor(null)}
+                >
+                  {translate('languageHome.escuela.rental')}
+                </MenuItem>
+                <MenuItem
+                  component={RouterLink}
+                  to={`${langPrefix}#escuela-ninos`}
+                  onClick={() => setEscuelaAnchor(null)}
+                >
+                  {translate('languageHome.escuela.ninos')}
+                </MenuItem>
+                <MenuItem
+                  component="a"
+                  href={bookWhatsAppHref}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => setEscuelaAnchor(null)}
+                >
+                  {translate('languageHome.escuela.reservar')}
+                </MenuItem>
+              </Menu>
+            </>
+          )}
+
+          <Button
+            component={RouterLink}
+            to={aboutTeamPath}
+            color="inherit"
+            sx={{
+              mr: { xs: 0.5, sm: 1 },
+              fontWeight: 600,
+              whiteSpace: 'nowrap',
+            }}
+          >
+            {translate('mainHeader.nuestroEquipo')}
+          </Button>
           
           {/* {pathname === '/' && isDesktop && <MenuDesktop isOffset={isOffset} isHome={isHome} navConfig={navConfig} />} */}
           {pathname === '/' && !isDesktop && <MenuMobile isOffset={isOffset} isHome={isHome} navConfig={navConfig} />} 

@@ -8,7 +8,9 @@ import {
   addRecipients,
   onSendMessage,
   getConversation,
+  getAdminConversation,
   getParticipants,
+  getAdminParticipants,
   markConversationAsRead,
   resetActiveConversation,
   sendMessage,
@@ -51,11 +53,26 @@ export default function ChatWindow() {
   const { contacts, recipients, participants, activeConversationId } = useSelector((state) => state.chat);
   const conversation = useSelector((state) => conversationSelector(state));
 
+  const isAdminUserChatMonitor = pathname.includes('/admin/user-chats');
+
   const mode = conversationId ? 'DETAIL' : 'COMPOSE';
-  const displayParticipants = participants.filter((item) => item.id !== '8864c717-587d-472a-929a-8e5f298024da-0');
+  const displayParticipants = isAdminUserChatMonitor
+    ? participants
+    : participants.filter((item) => item.id !== '8864c717-587d-472a-929a-8e5f298024da-0');
 
   useEffect(() => {
     const getDetails = async () => {
+      if (isAdminUserChatMonitor) {
+        await dispatch(getAdminParticipants(conversationId));
+        try {
+          await dispatch(getAdminConversation(conversationId));
+        } catch (error) {
+          console.error(error);
+          navigate(PATH_DASHBOARD.admin.userChats);
+        }
+        return;
+      }
+
       dispatch(getParticipants(conversationId));
       try {
         await dispatch(getConversation(conversationId));
@@ -85,10 +102,10 @@ export default function ChatWindow() {
   }, [conversationId]);
 
   useEffect(() => {
-    if (activeConversationId) {
+    if (!isAdminUserChatMonitor && activeConversationId) {
       dispatch(markConversationAsRead(activeConversationId));
     }
-  }, [dispatch, activeConversationId]);
+  }, [dispatch, activeConversationId, isAdminUserChatMonitor]);
 
   const handleAddRecipients = (recipients) => {
     dispatch(addRecipients(recipients));
@@ -140,7 +157,7 @@ export default function ChatWindow() {
           <ChatMessageInput
             conversationId={conversationId}
             onSend={handleSendMessage}
-            disabled={pathname === PATH_DASHBOARD.chat.new}
+            disabled={pathname === PATH_DASHBOARD.chat.new || isAdminUserChatMonitor}
           />
         </Stack>
 

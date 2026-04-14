@@ -1,4 +1,146 @@
 {
+  "mainHeader": {
+    "nuestroEquipo": "Our team"
+  },
+  "premiumVideoPlans": {
+    "paymentMethodTitle": "Complete your purchase",
+    "continueOnWhatsApp": "Continue on WhatsApp",
+    "cancel": "Cancel"
+  },
+  "aboutPage": {
+    "pageTitle": "About us",
+    "hero": {
+      "headline": "Who we are",
+      "subheadline": "SnowMatch connects skiers and snowboarders with certified instructors and tools that help you improve on snow — from booking lessons to video feedback."
+    },
+    "what": {
+      "title": "What is SnowMatch?",
+      "body": "We make it easier to book lessons at great resorts, get honest feedback on your skiing, and learn with coaches you can trust. Whether you are planning a family trip or working toward your next goal, we bring instructors and technology together in one place.",
+      "feature1Title": "Verified instructors",
+      "feature1Body": "Profiles, reviews, and certifications so you know who you are skiing with before you book.",
+      "feature2Title": "Resorts worldwide",
+      "feature2Body": "From the Andes to the Rockies and the Alps — find lessons where you are traveling.",
+      "feature3Title": "Video and AI feedback",
+      "feature3Body": "Upload your runs and get structured feedback from coaches and our AI tools.",
+      "cta": "Search for lessons",
+      "image1Alt": "Skier on the mountain",
+      "image2Alt": "Ski resort landscape"
+    },
+    "vision": {
+      "quote": "We believe everyone deserves clear, honest coaching — on the hill and through video — so skiing stays fun and progress feels achievable.",
+      "imageAlt": "Skiing in the mountains"
+    },
+    "team": {
+      "title": "Our team",
+      "subtitle": "The people behind SnowMatch.",
+      "members": {
+        "tomasBacigalupo": {
+          "name": "Tomas Bacigalupo",
+          "role": "Founder",
+          "subtitle": "Alpine skier · Youth Olympic Games",
+          "bio": "Founder of SnowMatch. Leads product vision and Snow, your AI instructor."
+        },
+        "juanManuelFaccio": {
+          "name": "Juan Manuel Faccio",
+          "role": "Team",
+          "subtitle": "",
+          "bio": "Part of the SnowMatch team."
+        },
+        "maricuManzano": {
+          "name": "Maricu Manzano",
+          "role": "Team",
+          "subtitle": "",
+          "bio": "Part of the SnowMatch team."
+        },
+        "mathiasPinna": {
+          "name": "Mathias Pinna",
+          "role": "Team",
+          "subtitle": "",
+          "bio": "Part of the SnowMatch team."
+        },
+        "danisa": {
+          "name": "Danisa",
+          "role": "Team",
+          "subtitle": "",
+          "bio": "Part of the SnowMatch team."
+        },
+        "tomasSoleno": {
+          "name": "Tomas Soleño",
+          "role": "Lead coach",
+          "subtitle": "Level 5 instructor · Patagonia",
+          "bio": "Ski instructor in Japan, Argentina, and the United States. Leads coaching and corrections."
+        },
+        "fedeMarcachini": {
+          "name": "Fede Marcachini",
+          "role": "Team",
+          "subtitle": "",
+          "bio": "Part of the SnowMatch team."
+        },
+        "matiMarcachini": {
+          "name": "Mati Marcachini",
+          "role": "Team",
+          "subtitle": "",
+          "bio": "Part of the SnowMatch team."
+        },
+        "juanaPinedo": {
+          "name": "Juana Pinedo",
+          "role": "Team",
+          "subtitle": "AADIDESS level 3 instructor · Teaches at Aspen and Catedral",
+          "bio": "Part of the SnowMatch team."
+        },
+        "cocoEvia": {
+          "name": "Coco Evia",
+          "role": "Team",
+          "subtitle": "",
+          "bio": "Part of the SnowMatch team."
+        },
+        "juanaCastroSicneros": {
+          "name": "Juana Castro Sicneros",
+          "role": "Team",
+          "subtitle": "Level 3 ski instructor · AADIDESS · PSIA",
+          "bio": "Part of the SnowMatch team."
+        }
+      }
+    },
+    "testimonials": {
+      "overline": "Stories from the snow",
+      "title": "What learners say",
+      "intro": "We are grateful to every skier and family who uses SnowMatch to book a lesson or sharpen their technique.",
+      "readMore": "Get in touch",
+      "items": [
+        {
+          "name": "Sofía M.",
+          "date": "March 2025",
+          "content": "Booking at Catedral was straightforward and our instructor was fantastic with the kids. We will use SnowMatch again next season."
+        },
+        {
+          "name": "James K.",
+          "date": "February 2025",
+          "content": "The video feedback helped me fix my stance in a way group lessons never did. Clear notes and quick turnaround."
+        },
+        {
+          "name": "Valentina R.",
+          "date": "January 2025",
+          "content": "I compared a few instructors, read reviews, and picked someone who matched my level. The whole flow took minutes."
+        },
+        {
+          "name": "Thomas H.",
+          "date": "December 2024",
+          "content": "Finally a single place to find certified pros at the resorts we visit. Support answered fast when I had a question."
+        },
+        {
+          "name": "Lucía P.",
+          "date": "August 2024",
+          "content": "SnowMatch made planning our trip so much easier. Having everything in one app is a game changer for families."
+        },
+        {
+          "name": "Marco D.",
+          "date": "July 2024",
+          "content": "Professional instructors, easy booking, and real progress on the snow. Highly recommend for anyone serious about improving."
+        }
+      ]
+    }
+  },
   "homeHero": {
     "headlinePart1": "Take your skiing to the",
     "headlinePart2": "next level.",
@@ -70,8 +212,11 @@
     "hero": {
       "headline": "Your next lesson starts here",
       "subheadline": "Search ski and snowboard lessons by resort, compare certified instructors, and book with confidence.",
-      "cta": "Search for lessons",
-      "secondaryCta": "Video coaching & AI feedback"
+      "cta": "Search for lessons"
+    },
+    "whatsapp": {
+      "bookMessage": "I'd like to book",
+      "bookMessageResort": "I'd like to book — {{resort}}"
     },
     "features": {
       "title": "Why book with SnowMatch",
@@ -81,6 +226,37 @@
       "card2Body": "From the Andes to the Rockies and the Alps — find lessons where you are traveling.",
       "card3Title": "Simple booking",
       "card3Body": "Pick your dates, lesson type, and instructor in a guided flow designed for skiers and families."
+    },
+    "tarifas": {
+      "menuLabel": "Rates",
+      "adultos": "Adult rates",
+      "ninos": "Kids rates",
+      "equipos": "Equipment rates",
+      "reservar": "Book",
+      "sectionTitle": "Rates",
+      "sectionSubtitle": "Browse by category and book when you are ready.",
+      "adultosBody": "Private and group lesson pricing for adults depends on the resort, duration, and instructor.",
+      "ninosBody": "Kids and family lessons — pricing varies by age group and lesson format at each resort.",
+      "equiposBody": "Rental and equipment packages are offered by each resort; we connect you to the right booking flow.",
+      "requestRateButton": "Request a rate",
+      "requestRateMessageAdultos": "I'd like to request a rate for adult lessons.",
+      "requestRateMessageNinos": "I'd like to request a rate for kids / family lessons.",
+      "requestRateMessageEquipos": "I'd like to request a rate for equipment rental."
+    },
+    "escuela": {
+      "menuLabel": "School",
+      "clases": "Lessons",
+      "rental": "Rental",
+      "ninos": "Kids",
+      "reservar": "Book",
+      "sectionTitle": "Ski school",
+      "sectionSubtitle": "What we offer at partner resorts and how to get started.",
+      "clasesBody": "Private and group ski and snowboard lessons with certified instructors — search by resort, level, and dates.",
+      "rentalBody": "Skis, boots, boards, and helmets are available at each resort’s rental shop; details appear in your booking flow.",
+      "ninosBody": "Kids’ programs and family-friendly lessons — filter by resort to see age-specific options and group sizes.",
+      "requestRateMessageClases": "I'd like to request a rate for ski or snowboard lessons.",
+      "requestRateMessageRental": "I'd like to request a rate for ski or snowboard rental.",
+      "requestRateMessageNinos": "I'd like to request a rate for kids’ or family ski school lessons."
     },
     "resorts": {
       "title": "Popular destinations",
@@ -2099,7 +2275,8 @@
     "snowboardLessons": "Snowboard Lessons",
     "groupLessons": "Group Lessons",
     "privateLessons": "Private Lessons",
-    "childrenLessons": "Children's Lessons"
+    "childrenLessons": "Children's Lessons",
+    "groupLessonFrom": "Group lessons from {{price}}"
   },
   "homeWhySnowmatch": {
     "overline": "Why Snowmatch",

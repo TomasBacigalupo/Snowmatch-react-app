@@ -1,5 +1,147 @@
 {
-    "homeHero": {
+  "mainHeader": {
+    "nuestroEquipo": "Nossa equipe"
+  },
+  "premiumVideoPlans": {
+    "paymentMethodTitle": "Concluir sua compra",
+    "continueOnWhatsApp": "Continuar no WhatsApp",
+    "cancel": "Cancelar"
+  },
+  "aboutPage": {
+    "pageTitle": "Sobre nós",
+    "hero": {
+      "headline": "Quem somos",
+      "subheadline": "A SnowMatch conecta esquiadores e snowboarders a instrutores certificados e ferramentas para evoluir na neve — de reservar aulas a feedback em vídeo."
+    },
+    "what": {
+      "title": "O que é a SnowMatch?",
+      "body": "Facilitamos reservar aulas em grandes estações, receber feedback honesto sobre seu esqui e aprender com treinadores de confiança. Viagem em família ou meta na neve: unimos instrutores e tecnologia num só lugar.",
+      "feature1Title": "Instrutores verificados",
+      "feature1Body": "Perfis, avaliações e certificações para saber com quem você esquia antes de reservar.",
+      "feature2Title": "Estações pelo mundo",
+      "feature2Body": "Dos Andes aos Rockies e aos Alpes — encontre aulas onde você viaja.",
+      "feature3Title": "Vídeo e IA",
+      "feature3Body": "Envie suas descidas e receba feedback estruturado de coaches e das nossas ferramentas de IA.",
+      "cta": "Buscar aulas",
+      "image1Alt": "Esquiador na montanha",
+      "image2Alt": "Paisagem da estação de esqui"
+    },
+    "vision": {
+      "quote": "Acreditamos que todos merecem um coaching claro e honesto — na montanha e em vídeo — para o esqui continuar divertido e o progresso parecer possível.",
+      "imageAlt": "Esqui na montanha"
+    },
+    "team": {
+      "title": "Nossa equipe",
+      "subtitle": "As pessoas por trás da SnowMatch.",
+      "members": {
+        "tomasBacigalupo": {
+          "name": "Tomas Bacigalupo",
+          "role": "Fundador",
+          "subtitle": "Esquiador alpino · Jogos Olímpicos da Juventude",
+          "bio": "Fundador da SnowMatch. Lidera a visão do produto e o Snow, seu instrutor de IA."
+        },
+        "juanManuelFaccio": {
+          "name": "Juan Manuel Faccio",
+          "role": "Equipe",
+          "subtitle": "",
+          "bio": "Parte da equipe SnowMatch."
+        },
+        "maricuManzano": {
+          "name": "Maricu Manzano",
+          "role": "Equipe",
+          "subtitle": "",
+          "bio": "Parte da equipe SnowMatch."
+        },
+        "mathiasPinna": {
+          "name": "Mathias Pinna",
+          "role": "Equipe",
+          "subtitle": "",
+          "bio": "Parte da equipe SnowMatch."
+        },
+        "danisa": {
+          "name": "Danisa",
+          "role": "Equipe",
+          "subtitle": "",
+          "bio": "Parte da equipe SnowMatch."
+        },
+        "tomasSoleno": {
+          "name": "Tomas Soleño",
+          "role": "Coach principal",
+          "subtitle": "Instrutor nível 5 · Patagônia",
+          "bio": "Instrutor de esqui no Japão, Argentina e Estados Unidos. Lidera coaching e correções."
+        },
+        "fedeMarcachini": {
+          "name": "Fede Marcachini",
+          "role": "Equipe",
+          "subtitle": "",
+          "bio": "Parte da equipe SnowMatch."
+        },
+        "matiMarcachini": {
+          "name": "Mati Marcachini",
+          "role": "Equipe",
+          "subtitle": "",
+          "bio": "Parte da equipe SnowMatch."
+        },
+        "juanaPinedo": {
+          "name": "Juana Pinedo",
+          "role": "Equipe",
+          "subtitle": "Instrutora AADIDESS nível 3 — professora em Aspen e Catedral",
+          "bio": "Parte da equipe SnowMatch."
+        },
+        "cocoEvia": {
+          "name": "Coco Evia",
+          "role": "Equipe",
+          "subtitle": "",
+          "bio": "Parte da equipe SnowMatch."
+        },
+        "juanaCastroSicneros": {
+          "name": "Juana Castro Sicneros",
+          "role": "Equipe",
+          "subtitle": "Instrutora N3 AADIDESS - PSIA",
+          "bio": "Parte da equipe SnowMatch."
+        }
+      }
+    },
+    "testimonials": {
+      "overline": "Histórias na neve",
+      "title": "O que dizem quem aprende",
+      "intro": "Somos gratos a cada esquiador e família que confia na SnowMatch para reservar uma aula ou aprimorar a técnica.",
+      "readMore": "Fale conosco",
+      "items": [
+        {
+          "name": "Sofía M.",
+          "date": "março 2025",
+          "content": "Reservar em Catedral foi simples e nosso instrutor foi ótimo com as crianças. Vamos usar a SnowMatch de novo na próxima temporada."
+        },
+        {
+          "name": "James K.",
+          "date": "fevereiro 2025",
+          "content": "O feedback em vídeo me ajudou a corrigir a postura de um jeito que as aulas em grupo não conseguiram. Notas claras e rápidas."
+        },
+        {
+          "name": "Valentina R.",
+          "date": "janeiro 2025",
+          "content": "Comparei instrutores, li avaliações e escolhi alguém no meu nível. O fluxo inteiro levou minutos."
+        },
+        {
+          "name": "Thomas H.",
+          "date": "dezembro 2024",
+          "content": "Enfim um só lugar para achar pros certificados nas estações que visitamos. O suporte respondeu na hora."
+        },
+        {
+          "name": "Lucía P.",
+          "date": "agosto 2024",
+          "content": "A SnowMatch facilitou planejar a viagem. Ter tudo num app faz diferença para famílias."
+        },
+        {
+          "name": "Marco D.",
+          "date": "julho 2024",
+          "content": "Instrutores profissionais, reserva fácil e progresso real na neve. Recomendo para quem quer melhorar de verdade."
+        }
+      ]
+    }
+  },
+  "homeHero": {
         "headlinePart1": "Leve seu esqui ao",
         "headlinePart2": "próximo nível.",
         "description": "Melhore sua técnica de esqui, conecte-se com instrutores na sua estação de esqui, ou envie seus vídeos e receba feedback de treinadores certificados.",
@@ -70,8 +212,11 @@
     "hero": {
       "headline": "Sua próxima aula começa aqui",
       "subheadline": "Busque aulas de esqui e snowboard por estação, compare instrutores certificados e reserve com confiança.",
-      "cta": "Buscar aulas",
-      "secondaryCta": "Video coaching e feedback com IA"
+      "cta": "Buscar aulas"
+    },
+    "whatsapp": {
+      "bookMessage": "Quero reservar",
+      "bookMessageResort": "Quero reservar — {{resort}}"
     },
     "features": {
       "title": "Por que reservar com o SnowMatch",
@@ -81,6 +226,37 @@
       "card2Body": "Dos Andes às Rochosas e aos Alpes — encontre aulas onde você viaja.",
       "card3Title": "Reserva simples",
       "card3Body": "Escolha datas, tipo de aula e instrutor em um fluxo pensado para esquiadores e famílias."
+    },
+    "tarifas": {
+      "menuLabel": "Tarifas",
+      "adultos": "Tarifas para adultos",
+      "ninos": "Tarifas para crianças",
+      "equipos": "Tarifas de equipamento",
+      "reservar": "Reservar",
+      "sectionTitle": "Tarifas",
+      "sectionSubtitle": "Escolha uma categoria para ver detalhes e reservar.",
+      "adultosBody": "Os preços de aulas particulares e em grupo para adultos variam conforme a estação, duração e instrutor.",
+      "ninosBody": "Aulas para crianças e famílias — os valores dependem da faixa etária e do formato em cada estação.",
+      "equiposBody": "Aluguel e pacotes de equipamento são oferecidos por cada estação; conectamos você ao fluxo certo.",
+      "requestRateButton": "Solicitar orçamento",
+      "requestRateMessageAdultos": "Gostaria de solicitar um orçamento para aulas de adultos.",
+      "requestRateMessageNinos": "Gostaria de solicitar um orçamento para aulas infantis / em família.",
+      "requestRateMessageEquipos": "Gostaria de solicitar um orçamento para aluguel de equipamento."
+    },
+    "escuela": {
+      "menuLabel": "Escola",
+      "clases": "Aulas",
+      "rental": "Rental",
+      "ninos": "Crianças",
+      "reservar": "Reservar",
+      "sectionTitle": "Escola de esqui e snowboard",
+      "sectionSubtitle": "O que oferecemos nas estações parceiras e como começar.",
+      "clasesBody": "Aulas particulares e em grupo de esqui e snowboard com instrutores certificados — busque por estação, nível e datas.",
+      "rentalBody": "Esquis, botas, pranchas e capacetes no rental de cada estação; os detalhes aparecem no fluxo de reserva.",
+      "ninosBody": "Programas infantis e aulas para famílias — filtre por estação para ver opções por idade e tamanho do grupo.",
+      "requestRateMessageClases": "Gostaria de solicitar um orçamento para aulas de esqui ou snowboard.",
+      "requestRateMessageRental": "Gostaria de solicitar um orçamento para aluguel de equipamento de esqui ou snowboard.",
+      "requestRateMessageNinos": "Gostaria de solicitar um orçamento para aulas infantis ou em família."
     },
     "resorts": {
       "title": "Destinos populares",

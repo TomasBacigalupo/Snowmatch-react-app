@@ -18,7 +18,7 @@ import {
   useTheme,
   useMediaQuery
 } from '@mui/material';
-import { DateRangePicker } from '@mui/lab';
+import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { es, ptBR } from 'date-fns/locale';
@@ -240,16 +240,10 @@ const TripHero = ({
               <DateRangePicker
                 value={dateRange}
                 onChange={(newValue) => setDateRange(newValue)}
-                renderInput={(startProps, endProps) => (
-                  <Stack direction="row" spacing={2} alignItems="center">
-                    <StyledTextField {...startProps} fullWidth />
-                    <Typography variant="body2" sx={{ color: '#666666', fontWeight: 500 }}>
-                      hasta
-                    </Typography>
-                    <StyledTextField {...endProps} fullWidth />
-                  </Stack>
-                )}
                 minDate={new Date()}
+                localeText={{ start: 'Desde', end: 'Hasta' }}
+                slots={{ textField: StyledTextField }}
+                slotProps={{ textField: { fullWidth: true } }}
               />
             </LocalizationProvider>
 

@@ -3,7 +3,7 @@ import { format, isSameDay, isSameMonth } from 'date-fns';
 import { useState } from 'react';
 // @mui
 import { Box, Paper, Stack, Tooltip, Checkbox, IconButton, OutlinedInput, ClickAwayListener } from '@mui/material';
-import { MobileDateRangePicker } from '@mui/lab';
+import { MobileDateRangePicker } from '@mui/x-date-pickers-pro/MobileDateRangePicker';
 // utils
 import uuidv4 from '../../../utils/uuidv4';
 // components
@@ -117,7 +117,11 @@ export default function KanbanTaskAdd({ onAddTask, onCloseAddTask }) {
                 onOpen={onOpenPicker}
                 value={dueDate}
                 onChange={onChangeDueDate}
-                renderInput={() => {}}
+                slotProps={{
+                  textField: {
+                    sx: { position: 'absolute', width: 1, height: 1, overflow: 'hidden', clip: 'rect(0 0 0 0)' },
+                  },
+                }}
               />
             </Stack>
           </Stack>

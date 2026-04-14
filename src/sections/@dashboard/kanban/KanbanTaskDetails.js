@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { useState, useRef } from 'react';
 // @mui
-import { MobileDateRangePicker, MobileDateTimePicker } from '@mui/lab';
+import { MobileDateTimePicker } from '@mui/x-date-pickers/MobileDateTimePicker';
 import { styled } from '@mui/material/styles';
 import {
   Box,
@@ -205,8 +205,8 @@ export default function KanbanTaskDetails({ card, isOpen, onClose, onDeleteTask 
                   onOpen={onOpenPicker}
                   value={dueDate}
                   onChange={onChangeDueDate}
-                  inputFormat="dd/MM/yyyy hh:mm a"
-                  renderInput={(params) => <TextField {...params} />}
+                  format="dd/MM/yyyy hh:mm a"
+                  slotProps={{ textField: { fullWidth: true } }}
                 />
                 
               </>
@@ -231,8 +231,8 @@ export default function KanbanTaskDetails({ card, isOpen, onClose, onDeleteTask 
                   onOpen={onOpenPicker}
                   value={dueDate}
                   onChange={onChangeDueDate}
-                  inputFormat="dd/MM/yyyy hh:mm a"
-                  renderInput={(params) => <TextField {...params}/>}
+                  format="dd/MM/yyyy hh:mm a"
+                  slotProps={{ textField: { fullWidth: true } }}
                 />
 
               </>

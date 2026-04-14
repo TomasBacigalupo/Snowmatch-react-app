@@ -11,7 +11,7 @@
 #
 # Environment:
 #   S3_BUCKET                   Default: snowmatch.pro
-#   AWS_REGION                  Passed to aws if set (optional)
+#   AWS_REGION                  Default: us-east-1 (override: export AWS_REGION=...)
 #   CLOUDFRONT_DISTRIBUTION_ID  If set, invalidates /* after sync
 #
 
@@ -23,6 +23,8 @@ cd "$ROOT_DIR"
 
 BUILD_DIR="${BUILD_DIR:-build}"
 S3_BUCKET="${S3_BUCKET:-snowmatch.pro}"
+# Default region avoids empty-array + set -u failures on macOS Bash; matches typical snowmatch.pro bucket.
+AWS_REGION="${AWS_REGION:-us-east-1}"
 DEPLOY_ONLY=0
 
 for arg in "$@"; do
@@ -35,10 +37,10 @@ for arg in "$@"; do
   esac
 done
 
-aws_maybe_region=()
-if [[ -n "${AWS_REGION:-}" ]]; then
-  aws_maybe_region=(--region "$AWS_REGION")
-fi
+# Do not use "${arr[@]}" when arr may be empty: with `set -u`, macOS Bash errors on unbound [@].
+aws_s3_sync() {
+  aws s3 sync "$BUILD_DIR" "s3://$S3_BUCKET" --region "$AWS_REGION" "$@"
+}
 
 die() {
   echo "Error: $*" >&2
@@ -50,24 +52,21 @@ require_cmd() {
 }
 
 sync_to_s3() {
-  echo "☁️  Syncing $BUILD_DIR → s3://$S3_BUCKET ..."
+  echo "☁️  Syncing $BUILD_DIR → s3://$S3_BUCKET (region: $AWS_REGION) ..."
 
-  aws s3 sync "$BUILD_DIR" "s3://$S3_BUCKET" \
-    "${aws_maybe_region[@]}" \
+  aws_s3_sync \
     --delete \
     --cache-control "public, max-age=31536000, immutable" \
     --exclude "*.html" \
     --exclude "service-worker.js" \
     --exclude "manifest.json"
 
-  aws s3 sync "$BUILD_DIR" "s3://$S3_BUCKET" \
-    "${aws_maybe_region[@]}" \
+  aws_s3_sync \
     --exclude "*" \
     --include "*.html" \
     --cache-control "no-cache, no-store, must-revalidate"
 
-  aws s3 sync "$BUILD_DIR" "s3://$S3_BUCKET" \
-    "${aws_maybe_region[@]}" \
+  aws_s3_sync \
     --exclude "*" \
     --include "service-worker.js" \
     --include "manifest.json" \

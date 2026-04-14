@@ -6,7 +6,7 @@ import { getTeachers, getTeachersAdmin, createBookingSuccess, clearSuccessMessag
 import { useSelector } from 'react-redux';
 import { createAdminBooking, setBookingSuccess } from 'src/redux/slices/bookings';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { DateRangePicker } from '@mui/lab';
+import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -297,19 +297,12 @@ const BookingModal = ({ isOpen, onClose, refreshBookings, filterTeacherId, filte
                     <Grid item xs={12} md={8}>
                         <LocalizationProvider dateAdapter={AdapterDateFns}>
                             <DateRangePicker
-                                startText="Start Date"
-                                endText="End Date"
+                                localeText={{ start: 'Start Date', end: 'End Date' }}
                                 value={[dateRange.startDate, dateRange.endDate]}
                                 onChange={(newValue) => {
                                     handleDateRangeChange(newValue[0], newValue[1]);
                                 }}
-                                renderInput={(startProps, endProps) => (
-                                    <>
-                                        <TextField {...startProps} />
-                                        <Box sx={{ mx: 2 }}> to </Box>
-                                        <TextField {...endProps} />
-                                    </>
-                                )}
+                                slotProps={{ textField: { fullWidth: true } }}
                             />
                         </LocalizationProvider>
                     </Grid>
@@ -524,7 +517,7 @@ const BookingModal = ({ isOpen, onClose, refreshBookings, filterTeacherId, filte
                                         dateTimes: updatedDateTimes
                                     }));
                                 }}
-                                renderInput={(params) => <TextField {...params} fullWidth />}
+                                slotProps={{ textField: { fullWidth: true } }}
                             />
                         </LocalizationProvider>
                         <FormControl fullWidth>

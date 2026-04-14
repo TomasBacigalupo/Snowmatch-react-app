@@ -15,6 +15,22 @@ import {
 // Local storage key
 const STORAGE_KEY = 'legalDisclaimerAccepted';
 
+function hasAcceptedDisclaimer() {
+  try {
+    return (
+      localStorage.getItem(STORAGE_KEY) === 'true' ||
+      localStorage.getItem(`${STORAGE_KEY}_never`) === 'true'
+    );
+  } catch {
+    return false;
+  }
+}
+
+/** react-snap uses this UA; opening the dialog during crawl bakes open markup into static HTML and breaks hydration (Accept stops working in production). */
+function isReactSnapPrerender() {
+  return typeof navigator !== 'undefined' && /ReactSnap/i.test(navigator.userAgent || '');
+}
+
 export default function LegalDisclaimerModal() {
   const location = useLocation();
   const [open, setOpen] = useState(false);
@@ -24,34 +40,38 @@ export default function LegalDisclaimerModal() {
   const isIndexRoute = location.pathname === '/';
 
   useEffect(() => {
-    // Don't show modal if we're on the index route
     if (isIndexRoute) {
+      return;
+    }
+    if (isReactSnapPrerender()) {
       return;
     }
 
     try {
-      const accepted = localStorage.getItem(`${STORAGE_KEY}_never`);
-      if (!accepted) {
+      if (!hasAcceptedDisclaimer()) {
         setOpen(true);
       }
-    } catch (err) {
-      // If localStorage is not available, still show the modal
+    } catch {
       setOpen(true);
     }
   }, [isIndexRoute]);
 
   const handleAccept = () => {
     try {
-      // Persist that the user accepted the disclaimer so we don't show it again
       localStorage.setItem(STORAGE_KEY, 'true');
       if (neverShow) {
-        // Also store an explicit never-show flag (kept for future use if needed)
         localStorage.setItem(`${STORAGE_KEY}_never`, 'true');
       }
-    } catch (err) {
+    } catch {
       // ignore localStorage errors
     }
     setOpen(false);
+  };
+
+  const handleDialogClose = (_event, reason) => {
+    if (reason === 'backdropClick') {
+      handleAccept();
+    }
   };
 
   // Don't render if on index route
@@ -62,19 +82,20 @@ export default function LegalDisclaimerModal() {
   return (
     <Dialog
       open={open}
-      onClose={() => {}}
+      onClose={handleDialogClose}
       aria-labelledby="legal-disclaimer-title"
       maxWidth="sm"
       fullWidth
       disableEscapeKeyDown
-      PaperProps={{ sx: { borderRadius: 2 } }}
+      scroll="paper"
+      PaperProps={{ sx: { borderRadius: 2, maxHeight: 'calc(100% - 48px)' } }}
     >
       <DialogTitle id="legal-disclaimer-title" sx={{ textAlign: 'center', mb: 2 }}>
         Disclaimer
       </DialogTitle>
 
-      <DialogContent >
-        <Box >
+      <DialogContent dividers sx={{ overflowY: 'auto' }}>
+        <Box>
           <Typography variant="body1" paragraph>
             Snowmatch operates as a certified ski and snowboard school exclusively within Cerro Catedral, Bariloche, Argentina. In this location, Snowmatch provides instruction and training services under its official certification and in compliance with all applicable local regulations.
           </Typography>

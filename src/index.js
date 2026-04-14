@@ -1,6 +1,9 @@
 // i18n
 import './locales/i18n';
 
+// MUI X Pro (date range pickers) — set REACT_APP_MUI_X_LICENSE in .env to remove license console noise
+import { LicenseInfo } from '@mui/x-license';
+
 // highlight
 import './utils/highlight';
 
@@ -22,7 +25,7 @@ import 'react-lazy-load-image-component/src/effects/blur.css';
 import 'react-lazy-load-image-component/src/effects/opacity.css';
 import 'react-lazy-load-image-component/src/effects/black-and-white.css';
 
-import { createRoot } from 'react-dom/client';
+import { createRoot, hydrateRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import { Provider as ReduxProvider } from 'react-redux';
@@ -48,11 +51,15 @@ import App from './App';
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 import reportWebVitals from './reportWebVitals';
 
+if (process.env.REACT_APP_MUI_X_LICENSE) {
+  LicenseInfo.setLicenseKey(process.env.REACT_APP_MUI_X_LICENSE);
+}
+
 // ----------------------------------------------------------------------
 
-const root = createRoot(document.getElementById('root'));
+const container = document.getElementById('root');
 
-root.render(
+const app = (
   <AuthProvider>
     <HelmetProvider>
       <ReduxProvider store={store}>
@@ -71,6 +78,13 @@ root.render(
     </HelmetProvider>
   </AuthProvider>
 );
+
+// react-snap prerender fills #root; hydrate to avoid replacing static HTML on load.
+if (container.hasChildNodes()) {
+  hydrateRoot(container, app);
+} else {
+  createRoot(container).render(app);
+}
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

@@ -1,4 +1,146 @@
 {
+    "mainHeader": {
+        "nuestroEquipo": "Notre équipe"
+    },
+    "premiumVideoPlans": {
+        "paymentMethodTitle": "Finaliser votre achat",
+        "continueOnWhatsApp": "Continuer sur WhatsApp",
+        "cancel": "Annuler"
+    },
+    "aboutPage": {
+        "pageTitle": "À propos",
+        "hero": {
+            "headline": "Qui sommes-nous",
+            "subheadline": "SnowMatch relie skieurs et snowboarders à des moniteurs certifiés et à des outils pour progresser sur la neige — des réservations de cours au retour vidéo."
+        },
+        "what": {
+            "title": "Qu'est-ce que SnowMatch ?",
+            "body": "Nous simplifions la réservation de cours dans de belles stations, des retours honnêtes sur votre ski et l'apprentissage avec des coachs de confiance. Voyage en famille ou objectif sportif : nous réunissons moniteurs et technologie au même endroit.",
+            "feature1Title": "Moniteurs vérifiés",
+            "feature1Body": "Profils, avis et certifications pour savoir avec qui vous skiez avant de réserver.",
+            "feature2Title": "Stations partout dans le monde",
+            "feature2Body": "Des Andes aux Rocheuses et aux Alpes — trouvez des cours là où vous voyagez.",
+            "feature3Title": "Vidéo et IA",
+            "feature3Body": "Envoyez vos runs et recevez des retours structurés de nos coachs et outils IA.",
+            "cta": "Rechercher des cours",
+            "image1Alt": "Skieur à la montagne",
+            "image2Alt": "Paysage de station de ski"
+        },
+        "vision": {
+            "quote": "Nous croyons que chacun mérite un coaching clair et honnête — sur la piste et en vidéo — pour que le ski reste ludique et que la progression paraisse accessible.",
+            "imageAlt": "Ski en montagne"
+        },
+        "team": {
+            "title": "Notre équipe",
+            "subtitle": "Les personnes derrière SnowMatch.",
+            "members": {
+                "tomasBacigalupo": {
+                    "name": "Tomas Bacigalupo",
+                    "role": "Fondateur",
+                    "subtitle": "Skieur alpin · Jeux Olympiques de la Jeunesse",
+                    "bio": "Fondateur de SnowMatch. Pilote la vision produit et Snow, votre instructeur IA."
+                },
+                "juanManuelFaccio": {
+                    "name": "Juan Manuel Faccio",
+                    "role": "Équipe",
+                    "subtitle": "",
+                    "bio": "Membre de l'équipe SnowMatch."
+                },
+                "maricuManzano": {
+                    "name": "Maricu Manzano",
+                    "role": "Équipe",
+                    "subtitle": "",
+                    "bio": "Membre de l'équipe SnowMatch."
+                },
+                "mathiasPinna": {
+                    "name": "Mathias Pinna",
+                    "role": "Équipe",
+                    "subtitle": "",
+                    "bio": "Membre de l'équipe SnowMatch."
+                },
+                "danisa": {
+                    "name": "Danisa",
+                    "role": "Équipe",
+                    "subtitle": "",
+                    "bio": "Membre de l'équipe SnowMatch."
+                },
+                "tomasSoleno": {
+                    "name": "Tomas Soleño",
+                    "role": "Coach principal",
+                    "subtitle": "Instructeur niveau 5 · Patagonie",
+                    "bio": "Instructeur de ski au Japon, en Argentine et aux États-Unis. Pilote le coaching et les corrections."
+                },
+                "fedeMarcachini": {
+                    "name": "Fede Marcachini",
+                    "role": "Équipe",
+                    "subtitle": "",
+                    "bio": "Membre de l'équipe SnowMatch."
+                },
+                "matiMarcachini": {
+                    "name": "Mati Marcachini",
+                    "role": "Équipe",
+                    "subtitle": "",
+                    "bio": "Membre de l'équipe SnowMatch."
+                },
+                "juanaPinedo": {
+                    "name": "Juana Pinedo",
+                    "role": "Équipe",
+                    "subtitle": "Monitrice AADIDESS niveau 3 — enseigne à Aspen et Catedral",
+                    "bio": "Membre de l'équipe SnowMatch."
+                },
+                "cocoEvia": {
+                    "name": "Coco Evia",
+                    "role": "Équipe",
+                    "subtitle": "",
+                    "bio": "Membre de l'équipe SnowMatch."
+                },
+                "juanaCastroSicneros": {
+                    "name": "Juana Castro Sicneros",
+                    "role": "Équipe",
+                    "subtitle": "Monitrice N3 AADIDESS - PSIA",
+                    "bio": "Membre de l'équipe SnowMatch."
+                }
+            }
+        },
+        "testimonials": {
+            "overline": "Récits sur la neige",
+            "title": "Ce que disent les skieurs",
+            "intro": "Merci à chaque skieur et famille qui fait confiance à SnowMatch pour réserver un cours ou affiner sa technique.",
+            "readMore": "Nous contacter",
+            "items": [
+                {
+                    "name": "Sofía M.",
+                    "date": "mars 2025",
+                    "content": "Réserver à Catedral a été simple et notre moniteur a été génial avec les enfants. Nous réutiliserons SnowMatch la saison prochaine."
+                },
+                {
+                    "name": "James K.",
+                    "date": "février 2025",
+                    "content": "L'analyse vidéo m'a aidé à corriger ma posture comme les cours collectifs ne l'avaient pas fait. Des conseils clairs et rapides."
+                },
+                {
+                    "name": "Valentina R.",
+                    "date": "janvier 2025",
+                    "content": "J'ai comparé des moniteurs, lu les avis et choisi quelqu'un adapté à mon niveau. Tout a pris quelques minutes."
+                },
+                {
+                    "name": "Thomas H.",
+                    "date": "décembre 2024",
+                    "content": "Enfin un seul endroit pour trouver des pros certifiés dans les stations que nous visitons. Le support a répondu très vite."
+                },
+                {
+                    "name": "Lucía P.",
+                    "date": "août 2024",
+                    "content": "SnowMatch a simplifié l'organisation de notre voyage. Tout dans une appli change la donne pour les familles."
+                },
+                {
+                    "name": "Marco D.",
+                    "date": "juillet 2024",
+                    "content": "Moniteurs pros, réservation facile et vraie progression sur la neige. Je recommande pour progresser sérieusement."
+                }
+            ]
+        }
+    },
     "homeHero": {
         "headlinePart1": "Améliorez votre ski au",
         "headlinePart2": "niveau supérieur.",
@@ -70,8 +212,11 @@
         "hero": {
             "headline": "Votre prochain cours commence ici",
             "subheadline": "Recherchez des cours de ski et snowboard par station, comparez les moniteurs certifiés et réservez en toute confiance.",
-            "cta": "Rechercher des cours",
-            "secondaryCta": "Coaching vidéo et retour IA"
+            "cta": "Rechercher des cours"
+        },
+        "whatsapp": {
+            "bookMessage": "Je souhaite réserver",
+            "bookMessageResort": "Je souhaite réserver — {{resort}}"
         },
         "features": {
             "title": "Pourquoi réserver avec SnowMatch",
@@ -81,6 +226,37 @@
             "card2Body": "Des Andes aux Rocheuses et aux Alpes — trouvez des cours là où vous voyagez.",
             "card3Title": "Réservation simple",
             "card3Body": "Choisissez dates, type de cours et moniteur dans un parcours pensé pour skieurs et familles."
+        },
+        "tarifas": {
+            "menuLabel": "Tarifs",
+            "adultos": "Tarifs adultes",
+            "ninos": "Tarifs enfants",
+            "equipos": "Tarifs équipement",
+            "reservar": "Réserver",
+            "sectionTitle": "Tarifs",
+            "sectionSubtitle": "Choisissez une catégorie pour voir les détails et réserver.",
+            "adultosBody": "Les tarifs des cours privés et collectifs pour adultes varient selon la station, la durée et le moniteur.",
+            "ninosBody": "Cours enfants et familles — les prix dépendent du groupe d’âge et du format à chaque station.",
+            "equiposBody": "Location et forfaits matériel sont gérés par chaque station ; nous vous orientons vers le bon parcours.",
+            "requestRateButton": "Demander un tarif",
+            "requestRateMessageAdultos": "Je souhaite demander un tarif pour des cours adultes.",
+            "requestRateMessageNinos": "Je souhaite demander un tarif pour des cours enfants / famille.",
+            "requestRateMessageEquipos": "Je souhaite demander un tarif pour la location de matériel."
+        },
+        "escuela": {
+            "menuLabel": "École",
+            "clases": "Cours",
+            "rental": "Location",
+            "ninos": "Enfants",
+            "reservar": "Réserver",
+            "sectionTitle": "École de ski et snowboard",
+            "sectionSubtitle": "Ce que nous proposons dans les stations partenaires et comment commencer.",
+            "clasesBody": "Cours privés et collectifs de ski et snowboard avec moniteurs certifiés — recherchez par station, niveau et dates.",
+            "rentalBody": "Skis, chaussures, planches et casques en magasin de location ; les détails figurent dans votre parcours de réservation.",
+            "ninosBody": "Stages enfants et cours adaptés aux familles — filtrez par station pour voir les options par âge et taille de groupe.",
+            "requestRateMessageClases": "Je souhaite demander un tarif pour des cours de ski ou snowboard.",
+            "requestRateMessageRental": "Je souhaite demander un tarif pour la location de matériel de ski ou snowboard.",
+            "requestRateMessageNinos": "Je souhaite demander un tarif pour des cours enfants ou en famille."
         },
         "resorts": {
             "title": "Destinations populaires",

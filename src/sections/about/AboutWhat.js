@@ -1,18 +1,16 @@
-import PropTypes from 'prop-types';
 import { m } from 'framer-motion';
+import { Link as RouterLink, useParams } from 'react-router-dom';
 // @mui
 import { alpha, useTheme, styled } from '@mui/material/styles';
-import { Box, Grid, Button, Container, Typography, LinearProgress } from '@mui/material';
+import { Box, Grid, Button, Container, Typography, Stack } from '@mui/material';
 // hooks
 import useResponsive from '../../hooks/useResponsive';
-// utils
-import { fPercent } from '../../utils/formatNumber';
-// _mock_
-import { _skills } from '../../_mock';
+import useLocales from '../../hooks/useLocales';
 // components
 import Image from '../../components/Image';
 import Iconify from '../../components/Iconify';
 import { MotionViewport, varFade } from '../../components/animate';
+import { PATH_PAGE } from '../../routes/paths';
 
 // ----------------------------------------------------------------------
 
@@ -25,16 +23,40 @@ const RootStyle = styled('div')(({ theme }) => ({
   },
 }));
 
+const FEATURE_ICONS = ['eva:shield-fill', 'eva:map-fill', 'eva:video-fill'];
+
 // ----------------------------------------------------------------------
 
 export default function AboutWhat() {
   const theme = useTheme();
+  const { translate } = useLocales();
+  const { lng } = useParams();
+  const lang = lng || 'en';
+  const homePath = PATH_PAGE.marketingHome(lang);
 
   const isDesktop = useResponsive('up', 'md');
 
   const isLight = theme.palette.mode === 'light';
 
   const shadow = `-40px 40px 80px ${alpha(isLight ? theme.palette.grey[500] : theme.palette.common.black, 0.48)}`;
+
+  const features = [
+    {
+      icon: FEATURE_ICONS[0],
+      title: translate('aboutPage.what.feature1Title'),
+      body: translate('aboutPage.what.feature1Body'),
+    },
+    {
+      icon: FEATURE_ICONS[1],
+      title: translate('aboutPage.what.feature2Title'),
+      body: translate('aboutPage.what.feature2Body'),
+    },
+    {
+      icon: FEATURE_ICONS[2],
+      title: translate('aboutPage.what.feature3Title'),
+      body: translate('aboutPage.what.feature3Body'),
+    },
+  ];
 
   return (
     <RootStyle>
@@ -46,8 +68,8 @@ export default function AboutWhat() {
                 <Grid item xs={6}>
                   <m.div variants={varFade().inUp}>
                     <Image
-                      alt="our office 1"
-                      src="https://minimal-assets-api.vercel.app/assets/images/about/what-1.jpg"
+                      alt={translate('aboutPage.what.image1Alt')}
+                      src="/assets/bariloche.jpg"
                       ratio="3/4"
                       sx={{
                         borderRadius: 2,
@@ -59,8 +81,8 @@ export default function AboutWhat() {
                 <Grid item xs={6}>
                   <m.div variants={varFade().inUp}>
                     <Image
-                      alt="our office 2"
-                      src="https://minimal-assets-api.vercel.app/assets/images/about/what-2.jpg"
+                      alt={translate('aboutPage.what.image2Alt')}
+                      src="/assets/chapelco.png"
                       ratio="1/1"
                       sx={{ borderRadius: 2 }}
                     />
@@ -73,76 +95,67 @@ export default function AboutWhat() {
           <Grid item xs={12} md={6} lg={5}>
             <m.div variants={varFade().inRight}>
               <Typography variant="h2" sx={{ mb: 3 }}>
-                What is minimal?
+                {translate('aboutPage.what.title')}
               </Typography>
             </m.div>
 
             <m.div variants={varFade().inRight}>
               <Typography
                 sx={{
-                  color: (theme) => (theme.palette.mode === 'light' ? 'text.secondary' : 'common.white'),
+                  color: (t) => (t.palette.mode === 'light' ? 'text.secondary' : 'common.white'),
                 }}
               >
-                Our theme is the most advanced and user-friendly theme you will find on the market, we have
-                documentation and video to help set your site really easily, pre-installed demos you can import in one
-                click and everything from the theme options to page content can be edited from the front-end. This is
-                the theme you are looking for.
+                {translate('aboutPage.what.body')}
               </Typography>
             </m.div>
 
-            <Box sx={{ my: 5 }}>
-              {_skills.map((progress) => (
-                <m.div key={progress.label} variants={varFade().inRight}>
-                  <ProgressItem progress={progress} />
+            <Stack spacing={2.5} sx={{ my: 5 }}>
+              {features.map((item) => (
+                <m.div key={item.title} variants={varFade().inRight}>
+                  <Stack direction="row" spacing={2} alignItems="flex-start">
+                    <Box
+                      sx={{
+                        width: 48,
+                        height: 48,
+                        borderRadius: 1.5,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        bgcolor: alpha(theme.palette.primary.main, 0.12),
+                        color: 'primary.main',
+                        flexShrink: 0,
+                      }}
+                    >
+                      <Iconify icon={item.icon} width={26} height={26} />
+                    </Box>
+                    <Box>
+                      <Typography variant="subtitle1" sx={{ fontWeight: 700, mb: 0.5 }}>
+                        {item.title}
+                      </Typography>
+                      <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                        {item.body}
+                      </Typography>
+                    </Box>
+                  </Stack>
                 </m.div>
               ))}
-            </Box>
+            </Stack>
 
             <m.div variants={varFade().inRight}>
               <Button
-                variant="outlined"
-                color="inherit"
+                component={RouterLink}
+                to={homePath}
+                variant="contained"
+                color="primary"
                 size="large"
-                endIcon={<Iconify icon={'ic:round-arrow-right-alt'} width={24} height={24} />}
+                endIcon={<Iconify icon="ic:round-arrow-right-alt" width={24} height={24} />}
               >
-                Check out our work
+                {translate('aboutPage.what.cta')}
               </Button>
             </m.div>
           </Grid>
         </Grid>
       </Container>
     </RootStyle>
-  );
-}
-
-// ----------------------------------------------------------------------
-
-ProgressItem.propTypes = {
-  progress: PropTypes.shape({
-    label: PropTypes.string,
-    value: PropTypes.number,
-  }),
-};
-
-function ProgressItem({ progress }) {
-  const { label, value } = progress;
-
-  return (
-    <Box sx={{ mt: 3 }}>
-      <Box sx={{ mb: 1.5, display: 'flex', alignItems: 'center' }}>
-        <Typography variant="subtitle2">{label}&nbsp;-&nbsp;</Typography>
-        <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-          {fPercent(value)}
-        </Typography>
-      </Box>
-      <LinearProgress
-        variant="determinate"
-        value={value}
-        sx={{
-          '& .MuiLinearProgress-bar': { bgcolor: 'grey.700' },
-          '&.MuiLinearProgress-determinate': { bgcolor: 'divider' },
-        }}
-      />
-    </Box>
   );
 }

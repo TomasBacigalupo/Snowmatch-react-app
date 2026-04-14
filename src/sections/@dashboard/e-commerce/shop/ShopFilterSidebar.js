@@ -24,7 +24,6 @@ import Iconify from '../../../../components/Iconify';
 import Scrollbar from '../../../../components/Scrollbar';
 import { ColorManyPicker } from '../../../../components/color-utils';
 import { RHFMultiCheckbox, RHFRadioGroup, RHFTextField, RHFSelect } from '../../../../components/hook-form';
-import { MobileDatePicker, MobileDateRangePicker } from '@mui/lab';
 import useLocales from 'src/hooks/useLocales';
 import { FilterSharp } from '@mui/icons-material';
 import { ContourLayer } from 'deck.gl';

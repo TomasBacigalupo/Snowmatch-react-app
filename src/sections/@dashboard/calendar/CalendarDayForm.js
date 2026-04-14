@@ -8,7 +8,8 @@ import { useForm, Controller, useWatch } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { Box, Stack, Button, Tooltip, TextField, IconButton, DialogActions, ToggleButton, ToggleButtonGroup, Paper, Typography, Grid } from '@mui/material';
-import { DateRangePicker, LoadingButton, MobileDatePicker, MobileDateRangePicker, MobileDateTimePicker } from '@mui/lab';
+import { LoadingButton } from '@mui/lab';
+import { MobileDateRangePicker } from '@mui/x-date-pickers-pro/MobileDateRangePicker';
 // redux
 import { useDispatch } from '../../../redux/store';
 import { createEvent, updateEvent, deleteEvent, createBusinessEvent, updateBusinessEvent, deleteSchoolEvent, updateEventByUserIdAndEventId, createEventByUserId, adminDeleteEvent, blockDays, assignDays, deleteBusinessEvent } from '../../../redux/slices/calendar';
@@ -473,20 +474,14 @@ export default function CalendarDayForm({ event, range, onCancel, clients, membe
         }
         <Box>
           <MobileDateRangePicker
-            label="Día"
-            startText="Desde"
-            endText="Hasta"
-            value={values.dateRange} // dateRange should be an array [startDate, endDate]
+            value={values.dateRange}
             onChange={(newValue) => {
-              setValue('dateRange', newValue); // Update formik's field value
+              setValue('dateRange', newValue);
             }}
-            renderInput={(startProps, endProps) => (
-              <>
-                <TextField {...startProps} fullWidth />
-                <Box sx={{ mx: 2 }}>-</Box>
-                <TextField {...endProps} fullWidth />
-              </>
-            )}
+            localeText={{ start: 'Desde', end: 'Hasta' }}
+            slotProps={{
+              textField: { fullWidth: true },
+            }}
           />
         </Box>
         {block === 'block' && <>

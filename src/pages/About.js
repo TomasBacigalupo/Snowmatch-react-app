@@ -3,6 +3,7 @@ import { styled } from '@mui/material/styles';
 import { Divider } from '@mui/material';
 // components
 import Page from '../components/Page';
+import useLocales from '../hooks/useLocales';
 import { AboutHero, AboutWhat, AboutTeam, AboutVision, AboutTestimonials } from '../sections/about';
 
 // ----------------------------------------------------------------------
@@ -17,8 +18,10 @@ const RootStyle = styled('div')(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 export default function About() {
+  const { translate } = useLocales();
+
   return (
-    <Page title="About us">
+    <Page title={translate('aboutPage.pageTitle')}>
       <RootStyle>
         <AboutHero />
 

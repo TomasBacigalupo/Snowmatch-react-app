@@ -20,7 +20,6 @@ import SchoolList from 'src/pages/dashboard/SchoolsList';
 import RegisterStudent from 'src/pages/auth/RegisterStudent';
 import RoleBasedGuard from 'src/guards/RoleBasedGuard';
 import ReviewTeacher from 'src/pages/dashboard/ReviewTeacher';
-import VideoUpload from 'src/pages/dashboard/VideoUpload';
 import UploadedVideos from 'src/pages/dashboard/UploadedVideos';
 import UnratedVideos from 'src/pages/dashboard/UnratedVideos';
 import CourseLevels from 'src/pages/dashboard/CourseLevels';
@@ -489,8 +488,11 @@ export default function Router() {
                 { path: 'clients', element: <AdminReviewClients /> },
                 { path: 'bookings', element: <AdminReviewBookings /> },
                 { path: 'broadcast', element: <AdminBroadcastLesson /> },
+                { path: 'user-chats', element: <AdminUserChats /> },
+                { path: 'user-chats/:conversationId', element: <AdminUserChats /> },
                 { path: 'financial', element: <AdminFinancialDashboard /> },
                 { path: 'rental', element: <AdminRental /> },
+                { path: 'group-lesson-resorts', element: <AdminGroupLessonResorts /> },
                 { path: ':id/confirm', element: <AdminConfirm /> },
                 { path: ':id/events', element: <AdminUserEvents /> },
               ],
@@ -663,9 +665,11 @@ const LessonDetails = Loadable(lazy(() => import('src/pages/dashboard/LessonDeta
 const AdminReview = Loadable(lazy(() => import('../pages/dashboard/AdminReview')));
 const AdminReviewClients = Loadable(lazy(() => import('../pages/dashboard/AdminReviewClients')));
 const AdminReviewBookings = Loadable(lazy(() => import('../pages/dashboard/AdminReviewBookings')));
+const AdminUserChats = Loadable(lazy(() => import('../pages/dashboard/AdminUserChats')));
 const AdminBroadcastLesson = Loadable(lazy(() => import('../pages/dashboard/AdminBroadcastLesson')));
 const AdminFinancialDashboard = Loadable(lazy(() => import('../pages/dashboard/AdminFinancialDashboard')));
 const AdminRental = Loadable(lazy(() => import('../pages/dashboard/AdminRental')));
+const AdminGroupLessonResorts = Loadable(lazy(() => import('../pages/dashboard/AdminGroupLessonResorts')));
 const AdminConfirm = Loadable(lazy(() => import('../pages/dashboard/AdminConfirm')));
 const AdminUserEvents = Loadable(lazy(() => import('../pages/dashboard/AdminUserEvents')));
 
@@ -702,6 +706,7 @@ const Counts = Loadable(lazy(() => import('../pages/Counts')));
 
 // VideoCoach Landing
 const VideoCoach = Loadable(lazy(() => import('../pages/search/videoCoach/VideoCoach')));
+const VideoUpload = Loadable(lazy(() => import('src/pages/dashboard/VideoUpload')));
 
 //School
 const Products = Loadable(lazy(() => import('../pages/dashboard/Products')))

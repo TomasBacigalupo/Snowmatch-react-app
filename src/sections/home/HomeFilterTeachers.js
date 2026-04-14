@@ -1,6 +1,6 @@
 import { Controller, useForm } from 'react-hook-form';
 // @mui
-import { MobileDateRangePicker } from '@mui/lab';
+import { MobileDateRangePicker } from '@mui/x-date-pickers-pro/MobileDateRangePicker';
 import { Grid, Card, TextField, Typography, Box, Image, Chip } from '@mui/material';
 //
 import { FormProvider, RHFAutocomplete } from 'src/components/hook-form';
@@ -229,49 +229,38 @@ export default function HomeFilterTeachers({ resort, discipline, type, resortSlu
                                 render={({ field }) => (
                                     <MobileDateRangePicker
                                         {...field}
-                                        startText={translate("filter.checkIn")}
-                                        endText={translate("filter.checkOut")}
                                         value={field.value}
                                         onChange={(newValue) => {
                                             field.onChange(newValue);
                                             if (newValue && newValue[0]) setValue('from', newValue[0]);
                                             if (newValue && newValue[1]) setValue('to', newValue[1]);
                                         }}
-                                        renderInput={(startProps, endProps) => (
-                                            <>
-                                                <TextField
-                                                    {...startProps}
-                                                    fullWidth
-                                                    placeholder={translate("filter.when")}
-                                                    sx={{
-                                                        '& .MuiOutlinedInput-root': {
-                                                            borderTopRightRadius: 0,
-                                                            borderBottomRightRadius: 0,
-                                                            borderRightWidth: 'none',
-
-                                                        },
-                                                        '& .MuiInputBase-input': {
-                                                            color: '#000000',
-                                                        },
-                                                    }}
-                                                />
-                                                <TextField
-                                                    {...endProps}
-                                                    fullWidth
-                                                    placeholder={translate("filter.when")}
-                                                    sx={{
-                                                        '& .MuiOutlinedInput-root': {
-                                                            borderTopLeftRadius: 0,
-                                                            borderBottomLeftRadius: 0,
-
-                                                        },
-                                                        '& .MuiInputBase-input': {
-                                                            color: '#000000',
-                                                        },
-                                                    }}
-                                                />
-                                            </>
-                                        )}
+                                        localeText={{
+                                            start: translate('filter.checkIn'),
+                                            end: translate('filter.checkOut'),
+                                        }}
+                                        slotProps={{
+                                            textField: ({ position }) => ({
+                                                fullWidth: true,
+                                                placeholder: translate('filter.when'),
+                                                sx:
+                                                    position === 'start'
+                                                        ? {
+                                                              '& .MuiOutlinedInput-root': {
+                                                                  borderTopRightRadius: 0,
+                                                                  borderBottomRightRadius: 0,
+                                                              },
+                                                              '& .MuiInputBase-input': { color: '#000000' },
+                                                          }
+                                                        : {
+                                                              '& .MuiOutlinedInput-root': {
+                                                                  borderTopLeftRadius: 0,
+                                                                  borderBottomLeftRadius: 0,
+                                                              },
+                                                              '& .MuiInputBase-input': { color: '#000000' },
+                                                          },
+                                            }),
+                                        }}
                                     />
                                 )}
                             />

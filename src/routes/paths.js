@@ -180,7 +180,10 @@ export const PATH_DASHBOARD = {
     bookings: path(ROOTS_DASHBOARD, '/admin/bookings'),
     financial: path(ROOTS_DASHBOARD, '/admin/financial'),
     rental: path(ROOTS_DASHBOARD, '/admin/rental'),
+    groupLessonResorts: path(ROOTS_DASHBOARD, '/admin/group-lesson-resorts'),
     broadcastLesson: path(ROOTS_DASHBOARD, '/admin/broadcast'),
+    userChats: path(ROOTS_DASHBOARD, '/admin/user-chats'),
+    userChatsView: (conversationId) => path(ROOTS_DASHBOARD, `/admin/user-chats/${conversationId}`),
     confirm: (id) => path(ROOTS_DASHBOARD, `/admin/${id}/confirm`),
     events: (id) => path(ROOTS_DASHBOARD, `/admin/${id}/events`)
   }

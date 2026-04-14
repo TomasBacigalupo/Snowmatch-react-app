@@ -20,6 +20,7 @@ import bookingReducer from './slices/bookings';
 import videoReducer from './slices/video';
 import video from './slices/video';
 import rentalReducer from './slices/rental';
+import groupLessonResortConfigReducer from './slices/groupLessonResortConfig';
 
 
 // ----------------------------------------------------------------------
@@ -56,6 +57,7 @@ const rootReducer = combineReducers({
   bookings: bookingReducer,
   video: videoReducer,
   rental: rentalReducer,
+  groupLessonResortConfig: groupLessonResortConfigReducer,
 });
 
 export { rootPersistConfig, rootReducer };

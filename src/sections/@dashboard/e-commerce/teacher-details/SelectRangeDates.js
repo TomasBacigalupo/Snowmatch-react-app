@@ -1,4 +1,4 @@
-import { StaticDateRangePicker } from "@mui/lab";
+import { StaticDateRangePicker } from '@mui/x-date-pickers-pro/StaticDateRangePicker';
 import { Button, DialogActions, DialogContent, Grid, TextField, Box, Typography } from "@mui/material";
 import React from "react";
 import { useState } from "react";
@@ -13,19 +13,18 @@ export default function SelectRangeDates({ handleClose, onSubmit}) {
                 <Grid container>
                     <Grid item xs={12}>
                         <StaticDateRangePicker
-                            toolbarTitle=''
                             displayStaticWrapperAs="mobile"
                             value={value}
                             onChange={(newValue) => {
                                 setValue(newValue);
                             }}
-                            renderInput={(startProps, endProps) => (
-                                <React.Fragment>
-                                    <TextField {...startProps} />
-                                    <Box sx={{ mx: 2 }}> to </Box>
-                                    <TextField {...endProps} />
-                                </React.Fragment>
-                            )}
+                            slotProps={{
+                                toolbar: { hidden: true },
+                                textField: ({ position }) => ({
+                                    fullWidth: true,
+                                    sx: position === 'end' ? { mt: 1 } : undefined,
+                                }),
+                            }}
                         />
                     </Grid>
                     <Grid item xs={12}>

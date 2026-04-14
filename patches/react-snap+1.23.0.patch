@@ -1,0 +1,172 @@
+diff --git a/node_modules/react-snap/index.js b/node_modules/react-snap/index.js
+index e663275..1095863 100644
+--- a/node_modules/react-snap/index.js
++++ b/node_modules/react-snap/index.js
+@@ -74,7 +74,9 @@ const defaultOptions = {
+   //# another feature creep
+   // tribute to Netflix Server Side Only React https://twitter.com/NetflixUIE/status/923374215041912833
+   // but this will also remove code which registers service worker
+-  removeScriptTags: false
++  removeScriptTags: false,
++  // When true, a failed route is skipped (no static HTML written); crawl continues and exits 0.
++  skipFailedSnapshots: false
+ };
+ 
+ /**
+@@ -171,13 +173,17 @@ const preloadResources = opt => {
+             as: "image"
+           });
+         } else {
+-          await page.evaluate(route => {
+-            const linkTag = document.createElement("link");
+-            linkTag.setAttribute("rel", "preload");
+-            linkTag.setAttribute("as", "image");
+-            linkTag.setAttribute("href", route);
+-            document.body.appendChild(linkTag);
+-          }, route);
++          try {
++            await page.evaluate(route => {
++              const linkTag = document.createElement("link");
++              linkTag.setAttribute("rel", "preload");
++              linkTag.setAttribute("as", "image");
++              linkTag.setAttribute("href", route);
++              document.body.appendChild(linkTag);
++            }, route);
++          } catch (e) {
++            /* page closed or navigating — avoid UnhandledPromiseRejection */
++          }
+         }
+       } else if (cacheAjaxRequests && ct.includes("json")) {
+         const json = await response.json();
+@@ -211,12 +217,16 @@ const preloadResources = opt => {
+       const domain = `${urlObj.protocol}//${urlObj.host}`;
+       if (uniqueResources.has(domain)) return;
+       uniqueResources.add(domain);
+-      await page.evaluate(route => {
+-        const linkTag = document.createElement("link");
+-        linkTag.setAttribute("rel", "preconnect");
+-        linkTag.setAttribute("href", route);
+-        document.head.appendChild(linkTag);
+-      }, domain);
++      try {
++        await page.evaluate(route => {
++          const linkTag = document.createElement("link");
++          linkTag.setAttribute("rel", "preconnect");
++          linkTag.setAttribute("href", route);
++          document.head.appendChild(linkTag);
++        }, domain);
++      } catch (e) {
++        /* page closed or navigating during crawl — common with Maps/third-party */
++      }
+     }
+   });
+   return { ajaxCache, http2PushManifestItems };
+@@ -272,7 +282,9 @@ const inlineCss = async opt => {
+     skippable: request =>
+       options.skipThirdPartyRequests && !request.url().startsWith(basePath),
+     browser: browser,
+-    userAgent: options.userAgent
++    userAgent: options.userAgent,
++    timeout: options.timeout != null ? options.timeout : undefined,
++    waitUntil: options.waitUntil || "load"
+   });
+   const criticalCss = minimalcssResult.finalCss;
+   const criticalCssSize = Buffer.byteLength(criticalCss, "utf8");
+diff --git a/node_modules/react-snap/src/puppeteer_utils.js b/node_modules/react-snap/src/puppeteer_utils.js
+index c4b7641..9c3d80c 100644
+--- a/node_modules/react-snap/src/puppeteer_utils.js
++++ b/node_modules/react-snap/src/puppeteer_utils.js
+@@ -37,13 +37,21 @@ const enableLogging = opt => {
+   page.on("console", msg => {
+     const text = msg.text();
+     if (text === "JSHandle@object") {
+-      Promise.all(msg.args().map(objectToJson)).then(args =>
+-        console.log(`💬  console.log at ${route}:`, ...args)
+-      );
++      Promise.all(msg.args().map(objectToJson))
++        .then(args =>
++          console.log(`💬  console.log at ${route}:`, ...args)
++        )
++        .catch(() => {
++          /* page closed before handles resolved — common during navigation */
++        });
+     } else if (text === "JSHandle@error") {
+-      Promise.all(msg.args().map(errorToString)).then(args =>
+-        console.log(`💬  console.log at ${route}:`, ...args)
+-      );
++      Promise.all(msg.args().map(errorToString))
++        .then(args =>
++          console.log(`💬  console.log at ${route}:`, ...args)
++        )
++        .catch(() => {
++          /* page closed before handles resolved */
++        });
+     } else {
+       console.log(`️️️💬  console.log at ${route}:`, text);
+     }
+@@ -209,8 +217,9 @@ const crawl = async opt => {
+     }
+ 
+     if (!shuttingDown && !skipExistingFile) {
++      let page;
+       try {
+-        const page = await browser.newPage();
++        page = await browser.newPage();
+         await page._client.send("ServiceWorker.disable");
+         await page.setCacheEnabled(options.puppeteer.cache);
+         if (options.viewport) await page.setViewport(options.viewport);
+@@ -221,7 +230,9 @@ const crawl = async opt => {
+           options,
+           route,
+           onError: () => {
+-            shuttingDown = true;
++            if (!options.skipFailedSnapshots) {
++              shuttingDown = true;
++            }
+           },
+           sourcemapStore
+         });
+@@ -229,7 +240,11 @@ const crawl = async opt => {
+         await page.setUserAgent(options.userAgent);
+         const tracker = createTracker(page);
+         try {
+-          await page.goto(pageUrl, { waitUntil: "networkidle0" });
++          const waitUntil = options.waitUntil || "load";
++          if (options.timeout != null) {
++            page.setDefaultNavigationTimeout(options.timeout);
++          }
++          await page.goto(pageUrl, { waitUntil });
+         } catch (e) {
+           e.message = augmentTimeoutError(e.message, tracker);
+           throw e;
+@@ -243,12 +258,27 @@ const crawl = async opt => {
+         }
+         afterFetch && (await afterFetch({ page, route, browser, addToQueue }));
+         await page.close();
++        page = undefined;
+         console.log(`✅  crawled ${processed + 1} out of ${enqued} (${route})`);
+       } catch (e) {
+-        if (!shuttingDown) {
+-          console.log(`🔥  error at ${route}`, e);
++        if (page) {
++          try {
++            await page.close();
++          } catch (closeErr) {
++            /* ignore */
++          }
++        }
++        if (options.skipFailedSnapshots) {
++          console.log(
++            `⚠️  skip prerender (no static HTML for this URL): ${route}`,
++            e && e.message ? e.message : e
++          );
++        } else {
++          if (!shuttingDown) {
++            console.log(`🔥  error at ${route}`, e);
++          }
++          shuttingDown = true;
+         }
+-        shuttingDown = true;
+       }
+     } else {
+       // this message creates a lot of noise

@@ -15,8 +15,6 @@ import VideoReviewedBottomSheet from 'src/sections/@dashboard/video/VideoReviewe
 import PerformanceChart from 'src/sections/@dashboard/general/analytics/PerformanceChart';
 import AnalyticsChallangeWidget from 'src/sections/@dashboard/general/analytics/AnalyticsChallangeWidget';
 import LeaderBoardRightDrawer from 'src/sections/@dashboard/video/LeaderBoardRightDrawer';
-import { buyProduct, getProducts } from 'src/services/inAppPurchaseService'
-import PremiumContainer from 'src/sections/payment/Premiumcontainer';
 import useAuth from 'src/hooks/useAuth';
 import { Help, HelpOutline } from '@mui/icons-material';
 import LastVideo from 'src/sections/@dashboard/video/LastVideo';

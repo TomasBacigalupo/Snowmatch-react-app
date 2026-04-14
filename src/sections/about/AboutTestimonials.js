@@ -1,10 +1,12 @@
 import PropTypes from 'prop-types';
 import { m } from 'framer-motion';
+import { Link as RouterLink, useParams } from 'react-router-dom';
 // @mui
 import { alpha, styled, useTheme } from '@mui/material/styles';
-import { Box, Grid, Link, Paper, Rating, Container, Typography } from '@mui/material';
+import { Box, Grid, Paper, Rating, Container, Typography, Button } from '@mui/material';
 // hooks
 import useResponsive from '../../hooks/useResponsive';
+import useLocales from '../../hooks/useLocales';
 // utils
 import cssStyles from '../../utils/cssStyles';
 // components
@@ -13,58 +15,24 @@ import { MotionViewport, varFade } from '../../components/animate';
 
 // ----------------------------------------------------------------------
 
-const TESTIMONIALS = [
-  {
-    name: 'Jenny Wilson',
-    rating: 5,
-    dateCreate: 'April 19, 2021',
-    content: `Excellent Work! Thanks a lot!`,
-  },
-  {
-    name: 'Cody Fisher',
-    rating: 5,
-    dateCreate: 'April 19, 2021',
-    content: `It's a very good dashboard and we are really liking the product . We've done some things, like migrate to TS and implementing a react useContext api, to fit our job methodology but the product is one of the best in terms of design and application architecture. The team did a really good job.`,
-  },
-  {
-    name: 'Marvin McKinney',
-    rating: 5,
-    dateCreate: 'April 19, 2021',
-    content: `Customer support is realy fast and helpful the desgin of this theme is looks amazing also the code is very clean and readble realy good job !`,
-  },
-  {
-    name: 'Darrell Steward',
-    rating: 5,
-    dateCreate: 'April 19, 2021',
-    content: `Amazing, really good code quality and gives you a lot of examples for implementations.`,
-  },
-  {
-    name: 'Jacob Jones',
-    rating: 5,
-    dateCreate: 'April 19, 2021',
-    content: `Got a few questions after purchasing the product. The owner responded very fast and very helpfull. Overall the code is excellent and works very good. 5/5 stars!`,
-  },
-  {
-    name: 'Bessie Cooper',
-    rating: 5,
-    dateCreate: 'April 19, 2021',
-    content: `CEO of Codealy.io here. We’ve built a developer assessment platform that makes sense - tasks are based on git repositories and run in virtual machines. We automate the pain points - storing candidates code, running it and sharing test results with the whole team, remotely. Bought this template as we need to provide an awesome dashboard for our early customers. I am super happy with purchase. The code is just as good as the design. Thanks!`,
-  },
-];
+const BG_IMAGE = '/assets/how-to/screens.webp';
 
 const RootStyle = styled('div')(({ theme }) => ({
   textAlign: 'center',
   padding: theme.spacing(10, 0),
   backgroundSize: 'cover',
-  backgroundImage: `linear-gradient(to right, ${alpha(theme.palette.grey[900], 0.8)} , ${alpha(
+  backgroundPosition: 'center',
+  backgroundImage: `linear-gradient(to right, ${alpha(theme.palette.grey[900], 0.88)} , ${alpha(
     theme.palette.grey[900],
-    0.8
-  )}), url(https://minimal-assets-api.vercel.app/assets/images/about/testimonials.jpg)`,
+    0.88
+  )}), url(${BG_IMAGE})`,
   [theme.breakpoints.up('md')]: {
     textAlign: 'left',
     padding: 0,
-    height: 840,
+    minHeight: 720,
     overflow: 'hidden',
+    display: 'flex',
+    alignItems: 'center',
   },
 }));
 
@@ -72,44 +40,54 @@ const RootStyle = styled('div')(({ theme }) => ({
 
 export default function AboutTestimonials() {
   const isDesktop = useResponsive('up', 'md');
+  const { translate } = useLocales();
+  const items = translate('aboutPage.testimonials.items', { returnObjects: true });
+  const list = Array.isArray(items) ? items : [];
+
+  const { lng } = useParams();
+  const lang = lng || 'en';
+  const contactPath = `/${lang}/contact-us`;
 
   return (
     <RootStyle>
-      <Container component={MotionViewport} sx={{ position: 'relative', height: 1 }}>
+      <Container component={MotionViewport} sx={{ position: 'relative', py: { xs: 0, md: 10 } }}>
         <Grid
           container
           spacing={3}
           alignItems="center"
           justifyContent={{ xs: 'center', md: 'space-between' }}
-          sx={{ height: 1 }}
         >
           <Grid item xs={10} md={4}>
-            <Box sx={{ maxWidth: { md: 360 } }}>
+            <Box sx={{ maxWidth: { md: 380 } }}>
               <m.div variants={varFade().inUp}>
-                <Typography component="p" variant="overline" sx={{ mb: 2, color: 'text.secondary' }}>
-                  Testimonials
+                <Typography component="p" variant="overline" sx={{ mb: 2, color: 'primary.light' }}>
+                  {translate('aboutPage.testimonials.overline')}
                 </Typography>
               </m.div>
 
               <m.div variants={varFade().inUp}>
-                <Typography variant="h2" sx={{ mb: 3, color: 'common.white' }}>
-                  Who love <br />
-                  my work
+                <Typography variant="h2" sx={{ mb: 3, color: 'common.white', fontWeight: 800 }}>
+                  {translate('aboutPage.testimonials.title')}
                 </Typography>
               </m.div>
 
               <m.div variants={varFade().inUp}>
-                <Typography sx={{ color: 'common.white' }}>
-                  Our goal is to create a product and service that you’re satisfied with and use it every day. This is
-                  why we’re constantly working on our services to make it better every day and really listen to what our
-                  users has to say.
-                </Typography>
+                <Typography sx={{ color: 'grey.300' }}>{translate('aboutPage.testimonials.intro')}</Typography>
               </m.div>
 
               {!isDesktop && (
                 <Box sx={{ mt: 3, display: 'flex', justifyContent: 'center' }}>
                   <m.div variants={varFade().inUp}>
-                    <TestimonialLink />
+                    <Button
+                      component={RouterLink}
+                      to={contactPath}
+                      color="inherit"
+                      variant="outlined"
+                      endIcon={<Iconify icon="ic:round-arrow-right-alt" sx={{ width: 20, height: 20 }} />}
+                      sx={{ color: 'common.white', borderColor: 'rgba(255,255,255,0.5)' }}
+                    >
+                      {translate('aboutPage.testimonials.readMore')}
+                    </Button>
                   </m.div>
                 </Box>
               )}
@@ -126,9 +104,9 @@ export default function AboutTestimonials() {
               position: { md: 'absolute' },
             }}
           >
-            <Grid container spacing={isDesktop ? 3 : 0} alignItems="center">
+            <Grid container spacing={isDesktop ? 3 : 0} alignItems="flex-start">
               <Grid item xs={12} md={6}>
-                {TESTIMONIALS.slice(0, 3).map((testimonial) => (
+                {list.slice(0, 3).map((testimonial) => (
                   <m.div key={testimonial.name} variants={varFade().inUp}>
                     <TestimonialCard testimonial={testimonial} />
                   </m.div>
@@ -136,7 +114,7 @@ export default function AboutTestimonials() {
               </Grid>
 
               <Grid item xs={12} md={6}>
-                {TESTIMONIALS.slice(3, 6).map((testimonial) => (
+                {list.slice(3, 6).map((testimonial) => (
                   <m.div key={testimonial.name} variants={varFade().inUp}>
                     <TestimonialCard testimonial={testimonial} />
                   </m.div>
@@ -147,9 +125,18 @@ export default function AboutTestimonials() {
         </Grid>
 
         {isDesktop && (
-          <Box sx={{ bottom: 60, position: 'absolute' }}>
+          <Box sx={{ mt: 6, display: { md: 'block' } }}>
             <m.div variants={varFade().inLeft}>
-              <TestimonialLink />
+              <Button
+                component={RouterLink}
+                to={contactPath}
+                color="inherit"
+                variant="text"
+                endIcon={<Iconify icon="ic:round-arrow-right-alt" sx={{ width: 20, height: 20 }} />}
+                sx={{ color: 'common.white' }}
+              >
+                {translate('aboutPage.testimonials.readMore')}
+              </Button>
             </m.div>
           </Box>
         )}
@@ -160,19 +147,10 @@ export default function AboutTestimonials() {
 
 // ----------------------------------------------------------------------
 
-function TestimonialLink() {
-  return (
-    <Link href="#" variant="subtitle2" sx={{ display: 'flex', alignItems: 'center' }}>
-      Read more testimonials
-      <Iconify icon={'ic:round-arrow-right-alt'} sx={{ ml: 1, width: 20, height: 20 }} />
-    </Link>
-  );
-}
-
 TestimonialCard.propTypes = {
   testimonial: PropTypes.shape({
     content: PropTypes.string,
-    dateCreate: PropTypes.string,
+    date: PropTypes.string,
     name: PropTypes.string,
     rating: PropTypes.number,
   }),
@@ -181,7 +159,7 @@ TestimonialCard.propTypes = {
 function TestimonialCard({ testimonial }) {
   const theme = useTheme();
 
-  const { name, rating, dateCreate, content } = testimonial;
+  const { name, date, content } = testimonial;
 
   return (
     <Paper
@@ -199,9 +177,9 @@ function TestimonialCard({ testimonial }) {
         {name}
       </Typography>
       <Typography gutterBottom component="p" variant="caption" sx={{ color: 'grey.500' }}>
-        {dateCreate}
+        {date}
       </Typography>
-      <Rating value={rating} readOnly size="small" />
+      <Rating value={5} readOnly size="small" />
       <Typography variant="body2" sx={{ mt: 1.5 }}>
         {content}
       </Typography>

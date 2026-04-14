@@ -19,18 +19,24 @@ import Page from '../components/Page';
 import useLocales from '../hooks/useLocales';
 import Iconify from '../components/Iconify';
 import { MotionViewport, varContainer, varFade } from '../components/animate';
+import { snowmatchBookingWhatsAppUrl, SNOWMATCH_BOOKING_WHATSAPP_PHONE } from '../utils/snowmatchWhatsApp';
 
 const VALID_LANGS = ['es', 'en', 'pt', 'fr'];
 
 const OG_IMAGE = 'https://snowmatchimages.s3.amazonaws.com/profile/ClaseNiñoss.jpeg';
+
+const HOW_IT_WORKS_IMAGE = '/assets/how-it-works.png';
 
 function localeFromLang(lang) {
   const map = { es: 'es_ES', en: 'en_US', pt: 'pt_BR', fr: 'fr_FR' };
   return map[lang] || 'en_US';
 }
 
-function lessonsPath(lng, resortSlug) {
-  return `/${lng}/search/${resortSlug}/lessons`;
+function bookingWaHref(translate, resortName = null) {
+  const msg = resortName
+    ? translate('languageHome.whatsapp.bookMessageResort', { resort: resortName })
+    : translate('languageHome.whatsapp.bookMessage');
+  return snowmatchBookingWhatsAppUrl(msg);
 }
 
 const FEATURED_RESORTS = [
@@ -102,6 +108,19 @@ export default function LanguageHome() {
       onChangeLang(lng.toLowerCase());
     }
   }, [lng, onChangeLang]);
+
+  useEffect(() => {
+    const scrollToHash = () => {
+      const id = window.location.hash.replace(/^#/, '');
+      if (!id) return;
+      requestAnimationFrame(() => {
+        document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    };
+    scrollToHash();
+    window.addEventListener('hashchange', scrollToHash);
+    return () => window.removeEventListener('hashchange', scrollToHash);
+  }, []);
 
   const baseUrl = 'https://snowmatch.pro';
   const canonicalPath = `/${lang}/`;
@@ -251,22 +270,15 @@ export default function LanguageHome() {
                   <Box component={m.div} variants={varFade().inRight}>
                     <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} sx={{ pt: 3, justifyContent: { xs: 'center', md: 'flex-start' } }}>
                       <Button
-                        component={RouterLink}
-                        to={lessonsPath(lang, 'cerro-catedral')}
+                        component="a"
+                        href={bookingWaHref(translate)}
+                        target="_blank"
+                        rel="noopener noreferrer"
                         variant="contained"
                         size="large"
                         sx={{ px: 4, py: 1.5, fontWeight: 700 }}
                       >
                         {translate('languageHome.hero.cta')}
-                      </Button>
-                      <Button
-                        component={RouterLink}
-                        to={`/${lang}/ai`}
-                        variant="outlined"
-                        size="large"
-                        sx={{ px: 3, py: 1.5 }}
-                      >
-                        {translate('languageHome.hero.secondaryCta')}
                       </Button>
                     </Stack>
                   </Box>
@@ -384,6 +396,198 @@ export default function LanguageHome() {
           </Container>
         </Box>
 
+        {/* Tarifas (anchor targets for header menu) */}
+        <Box
+          component="section"
+          aria-labelledby="language-home-tarifas"
+          sx={{ py: { xs: 6, md: 10 }, bgcolor: 'background.paper' }}
+        >
+          <Container maxWidth="lg" component={MotionViewport} disableAnimatedMobile={false}>
+            <Box component={m.div} variants={varFade().inUp}>
+              <Typography
+                id="language-home-tarifas"
+                variant="h2"
+                sx={{ fontSize: { xs: '1.5rem', md: '2rem' }, fontWeight: 700, mb: 1, textAlign: 'center' }}
+              >
+                {translate('languageHome.tarifas.sectionTitle')}
+              </Typography>
+              <Typography variant="body1" color="text.secondary" sx={{ textAlign: 'center', mb: 4, maxWidth: 560, mx: 'auto' }}>
+                {translate('languageHome.tarifas.sectionSubtitle')}
+              </Typography>
+            </Box>
+            <Stack spacing={4}>
+              <Box
+                id="tarifas-adultos"
+                component={m.div}
+                variants={varFade().inUp}
+                sx={{ scrollMarginTop: { xs: 88, md: 96 } }}
+              >
+                <Typography variant="h6" component="h3" fontWeight={700} gutterBottom>
+                  {translate('languageHome.tarifas.adultos')}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  {translate('languageHome.tarifas.adultosBody')}
+                </Typography>
+                <Button
+                  component="a"
+                  href={`https://wa.me/${SNOWMATCH_BOOKING_WHATSAPP_PHONE}?text=${encodeURIComponent(translate('languageHome.tarifas.requestRateMessageAdultos'))}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  variant="outlined"
+                  size="small"
+                  sx={{ mt: 2, fontWeight: 600 }}
+                >
+                  {translate('languageHome.tarifas.requestRateButton')}
+                </Button>
+              </Box>
+              <Box
+                id="tarifas-ninos"
+                component={m.div}
+                variants={varFade().inUp}
+                sx={{ scrollMarginTop: { xs: 88, md: 96 } }}
+              >
+                <Typography variant="h6" component="h3" fontWeight={700} gutterBottom>
+                  {translate('languageHome.tarifas.ninos')}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  {translate('languageHome.tarifas.ninosBody')}
+                </Typography>
+                <Button
+                  component="a"
+                  href={`https://wa.me/${SNOWMATCH_BOOKING_WHATSAPP_PHONE}?text=${encodeURIComponent(translate('languageHome.tarifas.requestRateMessageNinos'))}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  variant="outlined"
+                  size="small"
+                  sx={{ mt: 2, fontWeight: 600 }}
+                >
+                  {translate('languageHome.tarifas.requestRateButton')}
+                </Button>
+              </Box>
+              <Box
+                id="tarifas-equipos"
+                component={m.div}
+                variants={varFade().inUp}
+                sx={{ scrollMarginTop: { xs: 88, md: 96 } }}
+              >
+                <Typography variant="h6" component="h3" fontWeight={700} gutterBottom>
+                  {translate('languageHome.tarifas.equipos')}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  {translate('languageHome.tarifas.equiposBody')}
+                </Typography>
+                <Button
+                  component="a"
+                  href={`https://wa.me/${SNOWMATCH_BOOKING_WHATSAPP_PHONE}?text=${encodeURIComponent(translate('languageHome.tarifas.requestRateMessageEquipos'))}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  variant="outlined"
+                  size="small"
+                  sx={{ mt: 2, fontWeight: 600 }}
+                >
+                  {translate('languageHome.tarifas.requestRateButton')}
+                </Button>
+              </Box>
+            </Stack>
+          </Container>
+        </Box>
+
+        {/* Escuela (anchor targets for header menu) */}
+        <Box
+          component="section"
+          aria-labelledby="language-home-escuela"
+          sx={{ py: { xs: 6, md: 10 }, bgcolor: 'background.default' }}
+        >
+          <Container maxWidth="lg" component={MotionViewport} disableAnimatedMobile={false}>
+            <Box component={m.div} variants={varFade().inUp}>
+              <Typography
+                id="language-home-escuela"
+                variant="h2"
+                sx={{ fontSize: { xs: '1.5rem', md: '2rem' }, fontWeight: 700, mb: 1, textAlign: 'center' }}
+              >
+                {translate('languageHome.escuela.sectionTitle')}
+              </Typography>
+              <Typography variant="body1" color="text.secondary" sx={{ textAlign: 'center', mb: 4, maxWidth: 560, mx: 'auto' }}>
+                {translate('languageHome.escuela.sectionSubtitle')}
+              </Typography>
+            </Box>
+            <Stack spacing={4}>
+              <Box
+                id="escuela-clases"
+                component={m.div}
+                variants={varFade().inUp}
+                sx={{ scrollMarginTop: { xs: 88, md: 96 } }}
+              >
+                <Typography variant="h6" component="h3" fontWeight={700} gutterBottom>
+                  {translate('languageHome.escuela.clases')}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  {translate('languageHome.escuela.clasesBody')}
+                </Typography>
+                <Button
+                  component="a"
+                  href={`https://wa.me/${SNOWMATCH_BOOKING_WHATSAPP_PHONE}?text=${encodeURIComponent(translate('languageHome.escuela.requestRateMessageClases'))}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  variant="outlined"
+                  size="small"
+                  sx={{ mt: 2, fontWeight: 600 }}
+                >
+                  {translate('languageHome.tarifas.requestRateButton')}
+                </Button>
+              </Box>
+              <Box
+                id="escuela-rental"
+                component={m.div}
+                variants={varFade().inUp}
+                sx={{ scrollMarginTop: { xs: 88, md: 96 } }}
+              >
+                <Typography variant="h6" component="h3" fontWeight={700} gutterBottom>
+                  {translate('languageHome.escuela.rental')}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  {translate('languageHome.escuela.rentalBody')}
+                </Typography>
+                <Button
+                  component="a"
+                  href={`https://wa.me/${SNOWMATCH_BOOKING_WHATSAPP_PHONE}?text=${encodeURIComponent(translate('languageHome.escuela.requestRateMessageRental'))}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  variant="outlined"
+                  size="small"
+                  sx={{ mt: 2, fontWeight: 600 }}
+                >
+                  {translate('languageHome.tarifas.requestRateButton')}
+                </Button>
+              </Box>
+              <Box
+                id="escuela-ninos"
+                component={m.div}
+                variants={varFade().inUp}
+                sx={{ scrollMarginTop: { xs: 88, md: 96 } }}
+              >
+                <Typography variant="h6" component="h3" fontWeight={700} gutterBottom>
+                  {translate('languageHome.escuela.ninos')}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  {translate('languageHome.escuela.ninosBody')}
+                </Typography>
+                <Button
+                  component="a"
+                  href={`https://wa.me/${SNOWMATCH_BOOKING_WHATSAPP_PHONE}?text=${encodeURIComponent(translate('languageHome.escuela.requestRateMessageNinos'))}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  variant="outlined"
+                  size="small"
+                  sx={{ mt: 2, fontWeight: 600 }}
+                >
+                  {translate('languageHome.tarifas.requestRateButton')}
+                </Button>
+              </Box>
+            </Stack>
+          </Container>
+        </Box>
+
         {/* Resorts */}
         <Box sx={{ py: { xs: 6, md: 10 } }}>
           <Container maxWidth="lg" component={MotionViewport} disableAnimatedMobile={false}>
@@ -409,7 +613,13 @@ export default function LanguageHome() {
                         height: '100%',
                       }}
                     >
-                      <CardActionArea component={RouterLink} to={lessonsPath(lang, slug)} sx={{ height: '100%', alignItems: 'stretch' }}>
+                      <CardActionArea
+                        component="a"
+                        href={bookingWaHref(translate, translate(labelKey))}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        sx={{ height: '100%', alignItems: 'stretch' }}
+                      >
                         <Box sx={{ position: 'relative', overflow: 'hidden' }}>
                           <Box
                             component={m.img}
@@ -477,7 +687,7 @@ export default function LanguageHome() {
                   >
                     <Box
                       component="img"
-                      src={OG_IMAGE}
+                      src={HOW_IT_WORKS_IMAGE}
                       alt={translate('languageHome.images.howSide')}
                       sx={{ width: 1, height: { xs: 280, md: 400 }, objectFit: 'cover', display: 'block' }}
                     />
@@ -555,7 +765,9 @@ export default function LanguageHome() {
 
         {/* Bottom CTA */}
         <Box
+          id="reservar"
           sx={{
+            scrollMarginTop: { xs: 88, md: 96 },
             py: { xs: 8, md: 10 },
             background: (theme) => theme.palette.gradients.primary,
             color: (theme) => theme.palette.primary.contrastText,
@@ -589,8 +801,10 @@ export default function LanguageHome() {
                 {translate('languageHome.bottom.subtitle')}
               </Typography>
               <Button
-                component={RouterLink}
-                to={lessonsPath(lang, 'cerro-catedral')}
+                component="a"
+                href={bookingWaHref(translate)}
+                target="_blank"
+                rel="noopener noreferrer"
                 variant="contained"
                 color="inherit"
                 size="large"

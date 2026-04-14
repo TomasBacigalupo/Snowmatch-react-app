@@ -13,6 +13,7 @@
     "snap": "rm -f build/200.html build/404.html build/500.html && npx react-snap",
     "deploy-pi": "npx react-app-rewired --max-old-space-size=50000 build -f .env.production",
     "deploy": "./deploy-to-s3.sh",
+    "deploy:prerender": "./scripts/build-prerender-deploy.sh",
     "deploy:quick": "./deploy-quick.sh",
     "deploy:upload-only": "./scripts/build-prerender-deploy.sh --deploy-only",
     "eject": "react-scripts eject",
@@ -20,12 +21,14 @@
     "lint:fix": "eslint --fix --ext .js,.jsx ./src",
     "clear-all": "rm -rf build node_modules",
     "re-start": "rm -rf build node_modules && yarn install && yarn start",
-    "re-build": "rm -rf build node_modules && yarn install && yarn build"
+    "re-build": "rm -rf build node_modules && yarn install && yarn build",
+    "postinstall": "patch-package"
   },
   "reactSnap": {
     "source": "build",
     "destination": "build",
-    "timeout": 900000,
+    "timeout": 120000,
+    "waitUntil": "load",
     "puppeteerArgs": [
       "--no-sandbox",
       "--disable-setuid-sandbox",
@@ -34,31 +37,28 @@
       "--disable-gpu"
     ],
     "include": [
-        "/",
-        "/es",
-        "/en",
-        "/pt",
-        "/fr",
-        "/en/all-teachers",
-        "/es/all-teachers",
-        "/pt/all-teachers",
-        "/fr/all-teachers",
-        "/all-teachers"
+      "/",
+      "/es",
+      "/en",
+      "/pt",
+      "/fr",
+      "/en/all-teachers",
+      "/es/all-teachers",
+      "/pt/all-teachers",
+      "/fr/all-teachers",
+      "/all-teachers"
     ],
     "puppeteerExecutablePath": "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
     "minifyHtml": {
       "collapseWhitespace": false,
       "removeComments": false
     },
-    "waitUntil": [
-      "networkidle0",
-      "load",
-      "domcontentloaded"
-    ],
     "puppeteerIgnoreHTTPSErrors": true,
+    "preconnectThirdParty": false,
     "fixWebpackChunksIssue": false,
     "removeBlobs": true,
-    "inlineCss": true
+    "inlineCss": true,
+    "skipFailedSnapshots": true
   },
   "eslintConfig": {
     "extends": [
@@ -90,6 +90,8 @@
     "@auth0/auth0-spa-js": "^1.21.1",
     "@awesome-cordova-plugins/core": "^6.14.0",
     "@awesome-cordova-plugins/video-editor": "^6.14.0",
+    "@emoji-mart/data": "^1.2.1",
+    "@emoji-mart/react": "^1.1.1",
     "@emotion/cache": "^11.14.0",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
@@ -114,6 +116,7 @@
     "@mui/system": "^6.4.12",
     "@mui/x-data-grid": "^7.29.4",
     "@mui/x-date-pickers": "^7.29.4",
+    "@mui/x-date-pickers-pro": "^7.29.4",
     "@react-pdf/renderer": "^4.3.3",
     "@reduxjs/toolkit": "^1.8.0",
     "@turf/bbox": "^6.5.0",
@@ -125,15 +128,12 @@
     "browserify-zlib": "^0.2.0",
     "buffer": "^6.0.3",
     "change-case": "^4.1.2",
-    "cordova-plugin-purchase": "^13.12.1",
     "cordova-plugin-video-editor": "^1.1.3",
     "d3-array": "^3.1.1",
     "d3-scale": "^4.0.2",
     "date-fns": "^2.28.0",
     "dayjs": "^1.11.7",
     "deck.gl": "^8.7.0",
-    "@emoji-mart/data": "^1.2.1",
-    "@emoji-mart/react": "^1.1.1",
     "emoji-mart": "^5.6.0",
     "fetch-inject": "^3.2.0",
     "firebase": "^9.6.8",
@@ -169,7 +169,6 @@
     "react-helmet-async": "^1.2.3",
     "react-hook-form": "^7.27.1",
     "react-i18next": "^11.15.6",
-    "yet-another-react-lightbox": "^3.30.1",
     "react-intersection-observer": "^9.16.0",
     "react-lazy-load-image-component": "^1.5.1",
     "react-map-gl": "^6.1.19",
@@ -202,13 +201,14 @@
     "util": "^0.12.4",
     "web-vitals": "^2.1.4",
     "worker-loader": "^3.0.8",
+    "yet-another-react-lightbox": "^3.30.1",
     "yup": "^0.32.11"
   },
   "devDependencies": {
-    "@types/react": "^18.3.18",
-    "@types/react-dom": "^18.3.5",
     "@babel/core": "^7.17.5",
     "@babel/eslint-parser": "^7.17.0",
+    "@types/react": "^18.3.18",
+    "@types/react-dom": "^18.3.5",
     "@typescript-eslint/eslint-plugin": "^5.12.1",
     "@typescript-eslint/parser": "^5.12.1",
     "babel-eslint": "^10.1.0",
@@ -222,6 +222,7 @@
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-react": "^7.28.0",
     "eslint-plugin-react-hooks": "^4.3.0",
+    "patch-package": "^8.0.1",
     "prettier": "^2.5.1",
     "typescript": "^4.5.5"
   }

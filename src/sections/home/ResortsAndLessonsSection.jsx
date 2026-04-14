@@ -3,8 +3,10 @@ import { Link as RouterLink } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 import { useTranslation } from 'react-i18next';
 import { ChevronRight } from '@mui/icons-material';
-import { useState } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import useLocales from 'src/hooks/useLocales';
+import axios from 'src/utils/axios';
+import { GROUP_LESSON_RESORT_SLUG_TO_ENUM } from 'src/utils/groupLessonResortOptions';
 
 const ScrollContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -232,6 +234,44 @@ const ResortsAndLessonsSection = () => {
   const { t } = useTranslation();
   const { currentLang } = useLocales();
   const [selectedFilter, setSelectedFilter] = useState('all');
+  const [groupConfigByEnum, setGroupConfigByEnum] = useState({});
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const { data } = await axios.get('/api/group-lesson-resort-config');
+        if (cancelled || !Array.isArray(data)) return;
+        const map = {};
+        data.forEach((row) => {
+          if (row?.resort) map[row.resort] = row;
+        });
+        setGroupConfigByEnum(map);
+      } catch {
+        /* static resort cards still work */
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const mergedResorts = useMemo(
+    () =>
+      resorts.map((r) => {
+        const enumKey = GROUP_LESSON_RESORT_SLUG_TO_ENUM[r.slug];
+        const cfg = enumKey ? groupConfigByEnum[enumKey] : null;
+        const groupPriceLabel =
+          cfg?.price != null ? `${cfg.price} ${cfg.currency || ''}`.trim() : null;
+        return {
+          ...r,
+          displayImage: cfg?.imageUrl || r.image,
+          displayDescription: cfg?.description || r.description,
+          groupPriceLabel,
+        };
+      }),
+    [groupConfigByEnum]
+  );
 
   const scrollToRight = () => {
     const container = document.getElementById('resorts-scroll-container');
@@ -251,12 +291,14 @@ const ResortsAndLessonsSection = () => {
   ];
 
   // Filtrar resorts basado en el filtro seleccionado
-  const filteredResorts = selectedFilter === 'all' 
-    ? resorts 
-    : resorts.filter(resort => 
-        resort.lessonTypes.some(lesson => lesson.type === selectedFilter) ||
-        resort.categories.some(category => category.type === selectedFilter)
-      );
+  const filteredResorts =
+    selectedFilter === 'all'
+      ? mergedResorts
+      : mergedResorts.filter(
+          (resort) =>
+            resort.lessonTypes.some((lesson) => lesson.type === selectedFilter) ||
+            resort.categories.some((category) => category.type === selectedFilter)
+        );
 
   return (
     <section aria-labelledby="resorts-heading">
@@ -301,7 +343,7 @@ const ResortsAndLessonsSection = () => {
                 <ResortCard key={resort.id} component={RouterLink} to={`/${currentLang.value}/${resort.slug}`}>
                   <ImageContainer>
                     <img
-                      src={resort.image}
+                      src={resort.displayImage}
                       alt={`${resort.name} - ${resort.location} - Clases de esquí y snowboard`}
                       loading="lazy"
                     />
@@ -317,8 +359,17 @@ const ResortsAndLessonsSection = () => {
                     </LocationText>
                     
                     <DescriptionText>
-                      {resort.description}
+                      {resort.displayDescription}
                     </DescriptionText>
+
+                    {resort.groupPriceLabel && (
+                      <Typography
+                        variant="caption"
+                        sx={{ display: 'block', mb: 1, fontWeight: 600, color: 'text.primary' }}
+                      >
+                        {t('resortsAndLessons.groupLessonFrom', { price: resort.groupPriceLabel })}
+                      </Typography>
+                    )}
                     
                     <Box sx={{ mt: 'auto' }}>
                       <Typography 

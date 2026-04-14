@@ -1,0 +1,41 @@
+diff --git a/node_modules/minimalcss/src/run.js b/node_modules/minimalcss/src/run.js
+index eae32df..a584798 100644
+--- a/node_modules/minimalcss/src/run.js
++++ b/node_modules/minimalcss/src/run.js
+@@ -187,6 +187,7 @@ const processPage = ({
+     };
+ 
+     const debug = options.debug || false;
++    const navWaitUntil = options.waitUntil || 'networkidle0';
+     const loadimages = options.loadimages || false;
+     const styletags = options.styletags || false;
+     const withoutjavascript =
+@@ -248,9 +249,16 @@ const processPage = ({
+         const responseUrl = response.url();
+         const resourceType = response.request().resourceType();
+         if (response.status() >= 400) {
+-          return safeReject(
+-            new Error(`${response.status()} on ${responseUrl}`)
+-          );
++          // Do not fail the whole run on API/XHR errors (common during react-snap).
++          // Only stylesheets and the main document are required for minimalcss.
++          const failFatal =
++            resourceType === 'stylesheet' || resourceType === 'document';
++          if (failFatal) {
++            return safeReject(
++              new Error(`${response.status()} on ${responseUrl}`)
++            );
++          }
++          return;
+         } else if (response.status() >= 300 && response.status() !== 304) {
+           // If the 'Location' header points to a relative URL,
+           // convert it to an absolute URL.
+@@ -309,7 +317,7 @@ const processPage = ({
+       // Second, goto the page and evaluate it with JavaScript.
+       // The 'waitUntil' option determines how long we wait for all
+       // possible assets to load.
+-      response = await page.goto(pageUrl, { waitUntil: 'networkidle0' });
++      response = await page.goto(pageUrl, { waitUntil: navWaitUntil });
+       if (!isOk(response)) {
+         return safeReject(
+           new Error(`${response.status()} on ${pageUrl} (second time)`)

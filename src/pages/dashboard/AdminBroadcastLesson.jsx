@@ -14,6 +14,8 @@ import {
   Divider,
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import { format } from 'date-fns';
 import Page from '../../components/Page';
 import { useDispatch, useSelector } from '../../redux/store';
 import { broadcastLesson, getTeachersAdmin, clearSuccessMessage } from '../../redux/slices/admin';
@@ -33,8 +35,8 @@ export default function AdminBroadcastLesson() {
   const [price, setPrice] = useState('0');
   const [currency, setCurrency] = useState('ARS');
   const [maxStudents, setMaxStudents] = useState('');
-  const [startStr, setStartStr] = useState('');
-  const [endStr, setEndStr] = useState('');
+  const [startAt, setStartAt] = useState(null);
+  const [endAt, setEndAt] = useState(null);
   const [selected, setSelected] = useState({});
   const [submitting, setSubmitting] = useState(false);
   const [instructorSearch, setInstructorSearch] = useState('');
@@ -65,12 +67,22 @@ export default function AdminBroadcastLesson() {
       window.alert('Title must be at least 3 characters');
       return;
     }
+    if (!startAt || !endAt) {
+      // eslint-disable-next-line no-alert
+      window.alert('Select start and end date/time');
+      return;
+    }
+    if (endAt <= startAt) {
+      // eslint-disable-next-line no-alert
+      window.alert('End must be after start');
+      return;
+    }
     const body = {
       title: title.trim(),
       description: description?.trim() || '',
       textColor,
-      start: startStr.trim(),
-      end: endStr.trim(),
+      start: format(startAt, 'yyyy-MM-dd HH:mm:ss'),
+      end: format(endAt, 'yyyy-MM-dd HH:mm:ss'),
       type: 'App Class',
       price: Number(price),
       currency,
@@ -161,19 +173,30 @@ export default function AdminBroadcastLesson() {
               fullWidth
               helperText="Used to load instructors list; adjust and wait for reload"
             />
-            <TextField
-              label="Start (yyyy-MM-dd HH:mm:ss)"
-              value={startStr}
-              onChange={(e) => setStartStr(e.target.value)}
-              fullWidth
-              placeholder="2026-04-10 10:00:00"
+            <DateTimePicker
+              label="Start"
+              value={startAt}
+              onChange={setStartAt}
+              format="dd/MM/yyyy HH:mm"
+              slotProps={{
+                textField: {
+                  fullWidth: true,
+                  helperText: 'Local time; API format yyyy-MM-dd HH:mm:ss',
+                },
+              }}
             />
-            <TextField
-              label="End (yyyy-MM-dd HH:mm:ss)"
-              value={endStr}
-              onChange={(e) => setEndStr(e.target.value)}
-              fullWidth
-              placeholder="2026-04-10 12:00:00"
+            <DateTimePicker
+              label="End"
+              value={endAt}
+              onChange={setEndAt}
+              format="dd/MM/yyyy HH:mm"
+              minDateTime={startAt || undefined}
+              slotProps={{
+                textField: {
+                  fullWidth: true,
+                  helperText: 'Local time; API format yyyy-MM-dd HH:mm:ss',
+                },
+              }}
             />
             <TextField label="Price" value={price} onChange={(e) => setPrice(e.target.value)} type="number" />
             <TextField

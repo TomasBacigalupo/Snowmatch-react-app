@@ -1,0 +1,2 @@
+"use strict";(self.webpackChunkSnowMatch=self.webpackChunkSnowMatch||[]).push([[7734],{27734:(e,n,i)=>{i.r(n),i.d(n,{SocialLogin:()=>c});const c=(0,i(66653).registerPlugin)("SocialLogin",{web:()=>i.e(1422).then(i.bind(i,88088)).then((e=>new e.SocialLoginWeb))})}}]);
+//# sourceMappingURL=7734.b58973fb.chunk.js.map

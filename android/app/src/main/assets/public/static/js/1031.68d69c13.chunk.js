@@ -1,0 +1,2 @@
+"use strict";(self.webpackChunkSnowMatch=self.webpackChunkSnowMatch||[]).push([[1031],{81031:(e,t,h)=>{h.r(t),h.d(t,{default:()=>c});var s=h(26445),n=h(25212),r=h(17827),a=h(38072),o=h(80184);function c(){return(0,o.jsx)(n.Z,{title:"Productos",sx:{height:1},children:(0,o.jsx)(s.Z,{maxWidth:!1,sx:{height:1},children:(0,o.jsx)(r.Z,{heading:"Productos",links:[{name:"Dashboard",href:a.vB.root},{name:"Productos"}]})})})}}}]);
+//# sourceMappingURL=1031.68d69c13.chunk.js.map

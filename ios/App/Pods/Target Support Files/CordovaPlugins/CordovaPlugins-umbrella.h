@@ -1,0 +1,22 @@
+#ifdef __OBJC__
+#import <UIKit/UIKit.h>
+#else
+#ifndef FOUNDATION_EXPORT
+#if defined(__cplusplus)
+#define FOUNDATION_EXPORT extern "C"
+#else
+#define FOUNDATION_EXPORT extern
+#endif
+#endif
+#endif
+
+#import "FileUtility.h"
+#import "InAppPurchase.h"
+#import "SKProduct+LocalizedPrice.h"
+#import "SKProductDiscount+LocalizedPrice.h"
+#import "SDAVAssetExportSession.h"
+#import "VideoEditor.h"
+
+FOUNDATION_EXPORT double CordovaPluginsVersionNumber;
+FOUNDATION_EXPORT const unsigned char CordovaPluginsVersionString[];
+

@@ -1,0 +1,39 @@
+{
+  "name": "CapgoCapacitorSocialLogin",
+  "version": "7.4.7",
+  "summary": "All social logins in one plugin",
+  "license": "MIT",
+  "homepage": "git+https://github.com/Cap-go/capacitor-social-login.git",
+  "authors": "Martin Donadieu <martin@capgo.app>",
+  "source": {
+    "git": "git+https://github.com/Cap-go/capacitor-social-login.git",
+    "tag": "7.4.7"
+  },
+  "source_files": "ios/Sources/**/*.{swift,h,m,c,cc,mm,cpp}",
+  "exclude_files": [
+    "**/node_modules/**/*",
+    "**/examples/**/*"
+  ],
+  "platforms": {
+    "ios": "14.0"
+  },
+  "dependencies": {
+    "Capacitor": [
+
+    ],
+    "FBSDKCoreKit": [
+      "17.4.0"
+    ],
+    "FBSDKLoginKit": [
+      "17.4.0"
+    ],
+    "GoogleSignIn": [
+      "~> 8.0.0"
+    ],
+    "Alamofire": [
+      "~> 5.10.2"
+    ]
+  },
+  "swift_versions": "5.1",
+  "swift_version": "5.1"
+}

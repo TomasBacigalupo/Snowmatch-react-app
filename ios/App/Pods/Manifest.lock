@@ -1,0 +1,213 @@
+PODS:
+  - Alamofire (5.10.2)
+  - AppAuth (1.7.6):
+    - AppAuth/Core (= 1.7.6)
+    - AppAuth/ExternalUserAgent (= 1.7.6)
+  - AppAuth/Core (1.7.6)
+  - AppAuth/ExternalUserAgent (1.7.6):
+    - AppAuth/Core
+  - AppCheckCore (11.2.0):
+    - GoogleUtilities/Environment (~> 8.0)
+    - GoogleUtilities/UserDefaults (~> 8.0)
+    - PromisesObjC (~> 2.4)
+  - Capacitor (6.2.0):
+    - CapacitorCordova
+  - CapacitorApp (7.0.1):
+    - Capacitor
+  - CapacitorCamera (6.1.2):
+    - Capacitor
+  - CapacitorCommunityAppleSignIn (7.0.0):
+    - Capacitor
+  - CapacitorCommunityBackgroundGeolocation (1.2.26):
+    - Capacitor
+  - CapacitorCommunityMedia (7.0.1):
+    - Capacitor
+    - SDWebImage
+  - CapacitorCommunitySqlite (6.0.0):
+    - Capacitor
+    - SQLCipher
+    - ZIPFoundation
+  - CapacitorCordova (6.2.0)
+  - CapacitorDevice (7.0.0):
+    - Capacitor
+  - CapacitorDialog (7.0.0):
+    - Capacitor
+  - CapacitorFilesystem (6.0.3):
+    - Capacitor
+  - CapacitorGeolocation (7.1.0):
+    - Capacitor
+    - IONGeolocationLib (~> 1.0)
+  - CapacitorInappbrowser (2.0.0):
+    - Capacitor
+    - OSInAppBrowserLib (~> 1.0)
+  - CapacitorPushNotifications (7.0.0):
+    - Capacitor
+  - CapacitorShare (7.0.1):
+    - Capacitor
+  - CapgoCapacitorSocialLogin (7.4.7):
+    - Alamofire (~> 5.10.2)
+    - Capacitor
+    - FBSDKCoreKit (= 17.4.0)
+    - FBSDKLoginKit (= 17.4.0)
+    - GoogleSignIn (~> 8.0.0)
+  - CoderpradpCapacitorPluginVideoPicker (6.0.2):
+    - Capacitor
+  - CordovaPlugins (6.0.0):
+    - CapacitorCordova
+  - FBAEMKit (17.4.0):
+    - FBSDKCoreKit_Basics (= 17.4.0)
+  - FBSDKCoreKit (17.4.0):
+    - FBAEMKit (= 17.4.0)
+    - FBSDKCoreKit_Basics (= 17.4.0)
+  - FBSDKCoreKit_Basics (17.4.0)
+  - FBSDKLoginKit (17.4.0):
+    - FBSDKCoreKit (= 17.4.0)
+  - GoogleSignIn (8.0.0):
+    - AppAuth (< 2.0, >= 1.7.3)
+    - AppCheckCore (~> 11.0)
+    - GTMAppAuth (< 5.0, >= 4.1.1)
+    - GTMSessionFetcher/Core (~> 3.3)
+  - GoogleUtilities/Environment (8.0.2):
+    - GoogleUtilities/Privacy
+  - GoogleUtilities/Logger (8.0.2):
+    - GoogleUtilities/Environment
+    - GoogleUtilities/Privacy
+  - GoogleUtilities/Privacy (8.0.2)
+  - GoogleUtilities/UserDefaults (8.0.2):
+    - GoogleUtilities/Logger
+    - GoogleUtilities/Privacy
+  - GTMAppAuth (4.1.1):
+    - AppAuth/Core (~> 1.7)
+    - GTMSessionFetcher/Core (< 4.0, >= 3.3)
+  - GTMSessionFetcher/Core (3.5.0)
+  - IONGeolocationLib (1.0.0)
+  - OSInAppBrowserLib (1.0.0)
+  - PromisesObjC (2.4.0)
+  - SDWebImage (5.20.0):
+    - SDWebImage/Core (= 5.20.0)
+  - SDWebImage/Core (5.20.0)
+  - SQLCipher (4.10.0):
+    - SQLCipher/standard (= 4.10.0)
+  - SQLCipher/common (4.10.0)
+  - SQLCipher/standard (4.10.0):
+    - SQLCipher/common
+  - ZIPFoundation (0.9.19)
+
+DEPENDENCIES:
+  - "Capacitor (from `../../node_modules/@capacitor/ios`)"
+  - "CapacitorApp (from `../../node_modules/@capacitor/app`)"
+  - "CapacitorCamera (from `../../node_modules/@capacitor/camera`)"
+  - "CapacitorCommunityAppleSignIn (from `../../node_modules/@capacitor-community/apple-sign-in`)"
+  - "CapacitorCommunityBackgroundGeolocation (from `../../node_modules/@capacitor-community/background-geolocation`)"
+  - "CapacitorCommunityMedia (from `../../node_modules/@capacitor-community/media`)"
+  - "CapacitorCommunitySqlite (from `../../node_modules/@capacitor-community/sqlite`)"
+  - "CapacitorCordova (from `../../node_modules/@capacitor/ios`)"
+  - "CapacitorDevice (from `../../node_modules/@capacitor/device`)"
+  - "CapacitorDialog (from `../../node_modules/@capacitor/dialog`)"
+  - "CapacitorFilesystem (from `../../node_modules/@capacitor/filesystem`)"
+  - "CapacitorGeolocation (from `../../node_modules/@capacitor/geolocation`)"
+  - "CapacitorInappbrowser (from `../../node_modules/@capacitor/inappbrowser`)"
+  - "CapacitorPushNotifications (from `../../node_modules/@capacitor/push-notifications`)"
+  - "CapacitorShare (from `../../node_modules/@capacitor/share`)"
+  - "CapgoCapacitorSocialLogin (from `../../node_modules/@capgo/capacitor-social-login`)"
+  - "CoderpradpCapacitorPluginVideoPicker (from `../../node_modules/@coderpradp/capacitor-plugin-video-picker`)"
+  - CordovaPlugins (from `../capacitor-cordova-ios-plugins`)
+
+SPEC REPOS:
+  trunk:
+    - Alamofire
+    - AppAuth
+    - AppCheckCore
+    - FBAEMKit
+    - FBSDKCoreKit
+    - FBSDKCoreKit_Basics
+    - FBSDKLoginKit
+    - GoogleSignIn
+    - GoogleUtilities
+    - GTMAppAuth
+    - GTMSessionFetcher
+    - IONGeolocationLib
+    - OSInAppBrowserLib
+    - PromisesObjC
+    - SDWebImage
+    - SQLCipher
+    - ZIPFoundation
+
+EXTERNAL SOURCES:
+  Capacitor:
+    :path: "../../node_modules/@capacitor/ios"
+  CapacitorApp:
+    :path: "../../node_modules/@capacitor/app"
+  CapacitorCamera:
+    :path: "../../node_modules/@capacitor/camera"
+  CapacitorCommunityAppleSignIn:
+    :path: "../../node_modules/@capacitor-community/apple-sign-in"
+  CapacitorCommunityBackgroundGeolocation:
+    :path: "../../node_modules/@capacitor-community/background-geolocation"
+  CapacitorCommunityMedia:
+    :path: "../../node_modules/@capacitor-community/media"
+  CapacitorCommunitySqlite:
+    :path: "../../node_modules/@capacitor-community/sqlite"
+  CapacitorCordova:
+    :path: "../../node_modules/@capacitor/ios"
+  CapacitorDevice:
+    :path: "../../node_modules/@capacitor/device"
+  CapacitorDialog:
+    :path: "../../node_modules/@capacitor/dialog"
+  CapacitorFilesystem:
+    :path: "../../node_modules/@capacitor/filesystem"
+  CapacitorGeolocation:
+    :path: "../../node_modules/@capacitor/geolocation"
+  CapacitorInappbrowser:
+    :path: "../../node_modules/@capacitor/inappbrowser"
+  CapacitorPushNotifications:
+    :path: "../../node_modules/@capacitor/push-notifications"
+  CapacitorShare:
+    :path: "../../node_modules/@capacitor/share"
+  CapgoCapacitorSocialLogin:
+    :path: "../../node_modules/@capgo/capacitor-social-login"
+  CoderpradpCapacitorPluginVideoPicker:
+    :path: "../../node_modules/@coderpradp/capacitor-plugin-video-picker"
+  CordovaPlugins:
+    :path: "../capacitor-cordova-ios-plugins"
+
+SPEC CHECKSUMS:
+  Alamofire: 7193b3b92c74a07f85569e1a6c4f4237291e7496
+  AppAuth: d4f13a8fe0baf391b2108511793e4b479691fb73
+  AppCheckCore: cc8fd0a3a230ddd401f326489c99990b013f0c4f
+  Capacitor: 1f3c7b9802d958cd8c4eb63895fff85dff2e1eea
+  CapacitorApp: d63334c052278caf5d81585d80b21905c6f93f39
+  CapacitorCamera: 9052bd3f464f135ba983feccd8ac1266272f0549
+  CapacitorCommunityAppleSignIn: 9f938324c6939545f001fa66a2eaaf3a93fda64e
+  CapacitorCommunityBackgroundGeolocation: 64561a9463d1decd1b58349a5b999327e24bf9ed
+  CapacitorCommunityMedia: 93af2d4e36ce412f04f4f5c28d6ed8bf74ccdf66
+  CapacitorCommunitySqlite: fdbfb423d23a1e76a568146f61366cb134a98136
+  CapacitorCordova: b33e7f4aa4ed105dd43283acdd940964374a87d9
+  CapacitorDevice: 62066b65e148a133df7b8c5bf972ba835b329748
+  CapacitorDialog: 0c8fcf2de9464df5f28c070c02d5aa0dfd80047a
+  CapacitorFilesystem: fa3099b3c3aa43a1b51362d0c999301ab1a9a752
+  CapacitorGeolocation: 0d4eeb930b58a6896ec0b495a0f638fb49df69db
+  CapacitorInappbrowser: 7ff2c75c4cfc178cbbb99fbe382b2381bcc187c6
+  CapacitorPushNotifications: c4feed483e03825369c278f5bab75100fb3f94a0
+  CapacitorShare: 58d6c2da63b093e8693287b2d36db92435538435
+  CapgoCapacitorSocialLogin: 0f54b39b8a0ad5f7c42e8d712578c1d7bc09ace2
+  CoderpradpCapacitorPluginVideoPicker: a410fb1f4a36683bcd90d5729bf42765c5126d04
+  CordovaPlugins: bb5597ee03a5bea28fbf88a0fd462515ed18ad8e
+  FBAEMKit: 58cb5f302cdd715a56d4c1d0dfdd2e423ac1421a
+  FBSDKCoreKit: 94d7461d0cecf441b1ba7c41acfff41daa8ccd41
+  FBSDKCoreKit_Basics: 151b43db8b834d3f0e02f95d36a44ffd36265e45
+  FBSDKLoginKit: 5c1cd53c91a2282b3a4fe6e6d3dcf2b8b0d33d55
+  GoogleSignIn: ce8c89bb9b37fb624b92e7514cc67335d1e277e4
+  GoogleUtilities: 26a3abef001b6533cf678d3eb38fd3f614b7872d
+  GTMAppAuth: f69bd07d68cd3b766125f7e072c45d7340dea0de
+  GTMSessionFetcher: 5aea5ba6bd522a239e236100971f10cb71b96ab6
+  IONGeolocationLib: 81f33f88d025846946de2cf63b0c7628e7c6bc9d
+  OSInAppBrowserLib: c3d0b21a0c8b6d81e69117ad08bb6b8a4849c4e1
+  PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
+  SDWebImage: 73c6079366fea25fa4bb9640d5fb58f0893facd8
+  SQLCipher: eb79c64049cb002b4e9fcb30edb7979bf4706dfc
+  ZIPFoundation: b8c29ea7ae353b309bc810586181fd073cb3312c
+
+PODFILE CHECKSUM: 80848c2253465050de1c99940fb342c14113c576
+
+COCOAPODS: 1.14.2

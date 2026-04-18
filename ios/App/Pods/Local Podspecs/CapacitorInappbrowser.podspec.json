@@ -1,0 +1,26 @@
+{
+  "name": "CapacitorInappbrowser",
+  "version": "2.0.0",
+  "summary": "The InAppBrowser Plugin provides a web browser view that allows you to load any web page externally. It behaves as a standard web browser and is useful to load untrusted content without risking your application's security. It offers three different ways to open URLs; in a WebView, in an in-app system browser (Custom Tabs for Android and SFSafariViewController for iOS), and in the device's default browser.",
+  "license": "MIT",
+  "homepage": "git+https://github.com/ionic-team/capacitor-os-inappbrowser.git",
+  "authors": "Outsystems",
+  "source": {
+    "git": "git+https://github.com/ionic-team/capacitor-os-inappbrowser.git",
+    "tag": "2.0.0"
+  },
+  "source_files": "ios/Sources/InAppBrowserPlugin/*.{swift,h,m,c,cc,mm,cpp}",
+  "platforms": {
+    "ios": "14.0"
+  },
+  "dependencies": {
+    "OSInAppBrowserLib": [
+      "~> 1.0"
+    ],
+    "Capacitor": [
+
+    ]
+  },
+  "swift_versions": "5.1",
+  "swift_version": "5.1"
+}

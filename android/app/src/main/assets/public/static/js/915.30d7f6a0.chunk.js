@@ -1,0 +1,2 @@
+"use strict";(self.webpackChunkSnowMatch=self.webpackChunkSnowMatch||[]).push([[915],{30915:(e,n,t)=>{t.r(n),t.d(n,{InAppBrowserWeb:()=>m});var o=t(66653);class m extends o.WebPlugin{openInWebView(e){throw this.unimplemented("Not implemented on web.")}openInSystemBrowser(e){throw this.unimplemented("Not implemented on web.")}openInExternalBrowser(e){throw this.unimplemented("Not implemented on web.")}close(){throw this.unimplemented("Not implemented on web.")}}}}]);
+//# sourceMappingURL=915.30d7f6a0.chunk.js.map

@@ -1,0 +1,62 @@
+[
+	{
+		"pkg": "@capacitor-community/apple-sign-in",
+		"classpath": "com.getcapacitor.community.applesignin.SignInWithApple"
+	},
+	{
+		"pkg": "@capacitor-community/background-geolocation",
+		"classpath": "com.equimaps.capacitor_background_geolocation.BackgroundGeolocation"
+	},
+	{
+		"pkg": "@capacitor-community/media",
+		"classpath": "com.getcapacitor.community.media.MediaPlugin"
+	},
+	{
+		"pkg": "@capacitor-community/sqlite",
+		"classpath": "com.getcapacitor.community.database.sqlite.CapacitorSQLitePlugin"
+	},
+	{
+		"pkg": "@capacitor/app",
+		"classpath": "com.capacitorjs.plugins.app.AppPlugin"
+	},
+	{
+		"pkg": "@capacitor/camera",
+		"classpath": "com.capacitorjs.plugins.camera.CameraPlugin"
+	},
+	{
+		"pkg": "@capacitor/device",
+		"classpath": "com.capacitorjs.plugins.device.DevicePlugin"
+	},
+	{
+		"pkg": "@capacitor/dialog",
+		"classpath": "com.capacitorjs.plugins.dialog.DialogPlugin"
+	},
+	{
+		"pkg": "@capacitor/filesystem",
+		"classpath": "com.capacitorjs.plugins.filesystem.FilesystemPlugin"
+	},
+	{
+		"pkg": "@capacitor/geolocation",
+		"classpath": "com.capacitorjs.plugins.geolocation.GeolocationPlugin"
+	},
+	{
+		"pkg": "@capacitor/inappbrowser",
+		"classpath": "com.capacitorjs.osinappbrowser.InAppBrowserPlugin"
+	},
+	{
+		"pkg": "@capacitor/push-notifications",
+		"classpath": "com.capacitorjs.plugins.pushnotifications.PushNotificationsPlugin"
+	},
+	{
+		"pkg": "@capacitor/share",
+		"classpath": "com.capacitorjs.plugins.share.SharePlugin"
+	},
+	{
+		"pkg": "@capgo/capacitor-social-login",
+		"classpath": "ee.forgr.capacitor.social.login.SocialLoginPlugin"
+	},
+	{
+		"pkg": "@coderpradp/capacitor-plugin-video-picker",
+		"classpath": "com.coderpradp.capacitor.plugins.videopicker.VideoPickerPlugin"
+	}
+]

@@ -2,7 +2,7 @@ import { useEffect, useState, useCallback } from 'react';
 import { Dialog, DialogContent, Select, TextField, FormControl, InputLabel, MenuItem, DialogActions, DialogTitle, Button, Box, Autocomplete, Typography, IconButton, Grid, Checkbox, FormControlLabel, Chip } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { useDispatch } from 'src/redux/store';
-import { getTeachers, getTeachersAdmin, createBookingSuccess, clearSuccessMessage } from 'src/redux/slices/admin';
+import { getTeachers, getFilteredTeachersForAdminBooking, createBookingSuccess, clearSuccessMessage } from 'src/redux/slices/admin';
 import { useSelector } from 'react-redux';
 import { createAdminBooking, setBookingSuccess } from 'src/redux/slices/bookings';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
@@ -49,13 +49,6 @@ const BookingModal = ({ isOpen, onClose, refreshBookings, filterTeacherId, filte
     const { bookSuccess, isLoading, error } = useSelector((state) => state.bookings);
 
     console.log('Current state:', { bookSuccess, teacherId, isOpen });
-
-    useEffect(() => {
-        // Only call getTeachers when teacherSearch changes, not when teacher is selected
-        if (formData.teacherSearch) {
-            dispatch(getTeachers(1, "TEACHER", formData.teacherSearch, 0))
-        }
-    }, [formData.teacherSearch])
 
     useEffect(() => {
         // Only call getTeachers when studentSearch changes, not when student is selected
@@ -230,13 +223,13 @@ const BookingModal = ({ isOpen, onClose, refreshBookings, filterTeacherId, filte
     };
 
     const handleTeacherInputChange = (event, newValue) => {
-        // dispatch(getTeachers(0, "TEACHER", newValue, 0));
-        const filters = formData.dateTimes.map((dateTime) => ({
-            from: `${dateTime.date}T05:00:00`,
-            to: `${dateTime.date}T20:00:00`,
-            time: dateTime.time,
-        }));
-        dispatch(getTeachersAdmin(newValue, 0, filters, formData.resort));
+        dispatch(
+            getFilteredTeachersForAdminBooking({
+                nameSearch: newValue,
+                resort: formData.resort,
+                dateTimes: formData.dateTimes,
+            })
+        );
     };
 
     const debouncedStudentSearch = useCallback(
@@ -333,6 +326,8 @@ const BookingModal = ({ isOpen, onClose, refreshBookings, filterTeacherId, filte
                                 }))}
                             >
                                 <MenuItem value="Cerro Catedral">Cerro Catedral</MenuItem>
+                                <MenuItem value="Portillo">Portillo</MenuItem>
+                                <MenuItem value="La Parva">La Parva</MenuItem>
                             </Select>
                         </FormControl>
                     </Grid>

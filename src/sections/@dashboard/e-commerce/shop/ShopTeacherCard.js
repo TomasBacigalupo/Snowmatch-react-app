@@ -34,13 +34,14 @@ export default function ShopTeacherCard({ teacher, fullBlack = false, disabled =
 
   
   const getResortToShow = () => {
-    if (resorts && resorts?.length > 1) {
-      if (resorts?.find(r => r === filters.resort)) {
-        return filters.resort
-      }
+    if (!resorts?.length) {
+      return '';
     }
-    return resorts[0]
-  }
+    if (resorts.length > 1 && filters?.resort && resorts.includes(filters.resort)) {
+      return filters.resort;
+    }
+    return resorts[0];
+  };
 
   const linkTo = `/${currentLang?.value}/profile/${id}?resort=${getResortToShow()}`;
 

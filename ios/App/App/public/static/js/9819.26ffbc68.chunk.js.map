@@ -1,0 +1,1 @@
+{"version":3,"file":"static/js/9819.26ffbc68.chunk.js","mappings":"6IAIA,MAAMA,GAAkBC,E,SAAAA,gBAAsC,kBAAmB,CAC/EC,IAAK,IAAM,+BAAgBC,MAAMC,GAAM,IAAIA,EAAEC","sources":["../../../src/index.ts"],"names":["SignInWithApple","registerPlugin","web","then","m","SignInWithAppleWeb"],"sourceRoot":""}

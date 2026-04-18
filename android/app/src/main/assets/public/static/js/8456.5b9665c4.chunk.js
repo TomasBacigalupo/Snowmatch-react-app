@@ -1,0 +1,2 @@
+"use strict";(self.webpackChunkSnowMatch=self.webpackChunkSnowMatch||[]).push([[8456],{18456:(e,n,a)=>{a.r(n),a.d(n,{DialogWeb:()=>l});var s=a(66653);class l extends s.WebPlugin{async alert(e){window.alert(e.message)}async prompt(e){const n=window.prompt(e.message,e.inputText||"");return{value:null!==n?n:"",cancelled:null===n}}async confirm(e){return{value:window.confirm(e.message)}}}}}]);
+//# sourceMappingURL=8456.5b9665c4.chunk.js.map

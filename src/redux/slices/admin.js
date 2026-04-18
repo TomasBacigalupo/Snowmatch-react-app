@@ -249,6 +249,55 @@ export function getTeachersAdmin(name, page, filters, resort, size = 20) {
   };
 }
 
+/** GET /api/users/filter_teachers — UserService.getFilteredFreeTeachersInTimeRange (resortsEnum, AVAILABLE, authorized). */
+export function getFilteredTeachersForAdminBooking({
+  nameSearch,
+  resort,
+  dateTimes,
+  page = 0,
+  size = 100,
+  level = 0,
+}) {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const validDates = (dateTimes || []).map((dt) => dt.date).filter(Boolean);
+      if (validDates.length === 0) {
+        dispatch(slice.actions.getTeachersSuccess([]));
+        return;
+      }
+      const sorted = [...validDates].sort();
+      const startDate = `${sorted[0]}T00:00:00`;
+      const endDate = `${sorted[sorted.length - 1]}T23:59:59`;
+
+      const q = new URLSearchParams({
+        level: String(level),
+        startDate,
+        endDate,
+        page: String(page),
+        size: String(size),
+      });
+      if (resort) {
+        q.append('resort', resort);
+      }
+
+      const response = await axios.get(`/api/users/filter_teachers?${q.toString()}`);
+      let teachers = response.data || [];
+      const needle = (nameSearch || '').trim().toLowerCase();
+      if (needle) {
+        teachers = teachers.filter(
+          (t) =>
+            (t.name && t.name.toLowerCase().includes(needle)) ||
+            (t.lastname && t.lastname.toLowerCase().includes(needle))
+        );
+      }
+      dispatch(slice.actions.getTeachersSuccess(teachers));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
 /** POST /api/admin/events/broadcast — Uber-style offer to multiple instructors. */
 export function broadcastLesson(body) {
   return async () => {

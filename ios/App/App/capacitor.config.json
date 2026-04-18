@@ -1,0 +1,46 @@
+{
+	"appId": "pro.snowmatch",
+	"appName": "SnowMatch",
+	"webDir": "build",
+	"server": {},
+	"android": {
+		"useLegacyBridge": true
+	},
+	"plugins": {
+		"App": {
+			"url": "https://snowmatch.pro",
+			"appLinks": {
+				"ios": {
+					"appId": "pro.snowmatch",
+					"appName": "SnowMatch"
+				},
+				"android": {
+					"scheme": "https",
+					"packageName": "pro.snowmatch"
+				}
+			}
+		}
+	},
+	"packageClassList": [
+		"SignInWithApple",
+		"SignInWithApple",
+		"BackgroundGeolocation",
+		"BackgroundGeolocation",
+		"MediaPlugin",
+		"MediaPlugin",
+		"CapacitorSQLitePlugin",
+		"CapacitorSQLitePlugin",
+		"AppPlugin",
+		"CAPCameraPlugin",
+		"DevicePlugin",
+		"DialogPlugin",
+		"FilesystemPlugin",
+		"GeolocationPlugin",
+		"InAppBrowserPlugin",
+		"PushNotificationsPlugin",
+		"SharePlugin",
+		"SocialLoginPlugin",
+		"VideoPickerPlugin",
+		"CDVPlugin"
+	]
+}

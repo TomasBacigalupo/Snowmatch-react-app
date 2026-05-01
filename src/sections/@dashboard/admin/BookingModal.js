@@ -4,7 +4,7 @@ import { LoadingButton } from '@mui/lab';
 import { useDispatch } from 'src/redux/store';
 import { getTeachers, getFilteredTeachersForAdminBooking, createBookingSuccess, clearSuccessMessage } from 'src/redux/slices/admin';
 import { useSelector } from 'react-redux';
-import { createAdminBooking, setBookingSuccess } from 'src/redux/slices/bookings';
+import { createAdminBooking, createAdminBookingIntent, setBookingSuccess, setIntentSuccess } from 'src/redux/slices/bookings';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -46,7 +46,7 @@ const BookingModal = ({ isOpen, onClose, refreshBookings, filterTeacherId, filte
     const [studentId, setStudentId] = useState(null);
 
     const { teachers, successMessage } = useSelector((state) => state.admin);
-    const { bookSuccess, isLoading, error } = useSelector((state) => state.bookings);
+    const { bookSuccess, intentSuccess, isLoading, error } = useSelector((state) => state.bookings);
 
     console.log('Current state:', { bookSuccess, teacherId, isOpen });
 
@@ -91,8 +91,37 @@ const BookingModal = ({ isOpen, onClose, refreshBookings, filterTeacherId, filte
     }, [bookSuccess, teacherId, dispatch, enqueueSnackbar, onClose]);
 
     useEffect(() => {
+        if (intentSuccess) {
+            enqueueSnackbar('Reserva pendiente guardada. Asigná un instructor en la pestaña Pendientes.', { variant: 'success' });
+            setFormData({
+                teacher: null,
+                student: null,
+                dateTimes: [{ date: '', time: 'ALL_DAY', price: '' }],
+                resort: 'Cerro Catedral',
+                children: 0,
+                adults: 0,
+                teacherSearch: '',
+                studentSearch: '',
+                bookingType: 'ASSIGNED',
+                includesLaunch: false,
+                includesEquipment: false,
+                paymentStatus: 'PAID',
+                paymentMethod: 'CASH',
+                internalComment: '',
+                comment: ''
+            });
+            setDateRange({ startDate: null, endDate: null });
+            setTeacherId(null);
+            setStudentId(null);
+            dispatch(setIntentSuccess(false));
+            onClose();
+        }
+    }, [intentSuccess, dispatch, enqueueSnackbar, onClose]);
+
+    useEffect(() => {
         if(isOpen){
-            dispatch(setBookingSuccess(false))
+            dispatch(setBookingSuccess(false));
+            dispatch(setIntentSuccess(false));
         }
     },[isOpen, dispatch])
 
@@ -182,6 +211,10 @@ const BookingModal = ({ isOpen, onClose, refreshBookings, filterTeacherId, filte
     };
 
     const handleSubmit = () => {
+        if (!studentId) {
+            enqueueSnackbar('Seleccioná un estudiante', { variant: 'warning' });
+            return;
+        }
         const totalPrice = formData.dateTimes.reduce((acc, curr) => acc + Number(curr.price), 0);
         const events = formData.dateTimes.map((dateTime) => ({
             title: formData.bookingType === 'REFERRED' ? 'Referida' : 'Asignada',
@@ -193,17 +226,23 @@ const BookingModal = ({ isOpen, onClose, refreshBookings, filterTeacherId, filte
             textColor: formData.bookingType === 'REFERRED' ? '#00FF00' : '#FF0000' 
         }));
 
-        console.log({
-            teacherId: teacherId,
-            studentId: studentId,
-            dateTimes: formData.dateTimes,
-            price: totalPrice,
-            resort: formData.resort,
-            children: Number(formData.children),
-            adults: Number(formData.adults),
-            eventList: events,
-            bookingType: formData.bookingType
-        });
+        if (!teacherId) {
+            dispatch(createAdminBookingIntent(
+                studentId,
+                formData.comment,
+                Number(formData.children),
+                Number(formData.adults),
+                events,
+                totalPrice,
+                formData.bookingType,
+                formData.includesLaunch,
+                formData.includesEquipment,
+                formData.paymentStatus,
+                formData.paymentMethod,
+                formData.internalComment,
+                formData.resort));
+            return;
+        }
 
         dispatch(createAdminBooking(
             teacherId,
@@ -665,7 +704,7 @@ const BookingModal = ({ isOpen, onClose, refreshBookings, filterTeacherId, filte
                     variant="contained" 
                     loading={isLoading}
                 >
-                    Create Booking
+                    {teacherId ? 'Create Booking' : 'Guardar sin instructor'}
                 </LoadingButton>
             </DialogActions>
         </Dialog>

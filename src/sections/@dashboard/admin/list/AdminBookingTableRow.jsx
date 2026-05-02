@@ -13,6 +13,7 @@ import BookingDetailsDrawer from './BookingDetailsDrawer';
 
 AdminBookingTableRow.propTypes = {
     row: PropTypes.object,
+    isGearAdminList: PropTypes.bool,
     onEditRow: PropTypes.func,
     onConfirmRow: PropTypes.func,
     onDeclineRow: PropTypes.func,
@@ -22,13 +23,24 @@ AdminBookingTableRow.propTypes = {
     refreshBookings: PropTypes.func,
 };
 
-export default function AdminBookingTableRow({ row, onEditRow, onConfirmRow, onDeclineRow, onWapp, onEvents, onDeleteRow, refreshBookings }) {
+export default function AdminBookingTableRow({
+    row,
+    isGearAdminList = false,
+    onEditRow,
+    onConfirmRow,
+    onDeclineRow,
+    onWapp,
+    onEvents,
+    onDeleteRow,
+    refreshBookings,
+}) {
     const theme = useTheme();
     const [openDrawer, setOpenDrawer] = useState(false);
 
-    const { imageLink, userComment, state, resort, adults, children, eventList, id, price, internalComment, includesLunch, includesEquipments, paymentStatus } = row;
-    const { name, lastname, id: teacherId, role, level } = row.teacher;
-    const { name: studentName, lastname: studentLastname, id: studentId } = row.student;
+    const { imageLink, userComment, state, resort, adults, children, eventList, id, price, internalComment, includesLunch, includesEquipments, paymentStatus, type } = row;
+    const teacher = row.teacher;
+    const { name, lastname, id: teacherId, role, level } = teacher || {};
+    const { name: studentName, lastname: studentLastname, id: studentId } = row.student || {};
 
     const formatDate = (dateString) => {
         return new Date(dateString).toLocaleDateString('es-AR', {
@@ -97,6 +109,147 @@ export default function AdminBookingTableRow({ row, onEditRow, onConfirmRow, onD
         setOpenDrawer(true);
     };
 
+    const notesCombined = [internalComment, userComment].filter(Boolean).join(' — ') || '-';
+
+    const rowMenuActions = (
+        <>
+            {!isGearAdminList && eventList?.length > 0 && (
+                <MenuItem
+                    onClick={() => {
+                        onEvents();
+                        handleCloseMenu();
+                    }}
+                >
+                    <Iconify icon={'eva:calendar-fill'} />
+                    Ver clases en el calendario
+                </MenuItem>
+            )}
+            <MenuItem
+                onClick={() => {
+                    onWapp();
+                    handleCloseMenu();
+                }}
+            >
+                <Iconify icon={'mdi:whatsapp'} />
+                Contactár por Whats app
+            </MenuItem>
+            <MenuItem
+                onClick={() => {
+                    onEditRow();
+                    handleCloseMenu();
+                }}
+            >
+                <Iconify icon={'eva:edit-fill'} />
+                Editar
+            </MenuItem>
+            <MenuItem
+                onClick={() => {
+                    onDeleteRow();
+                    handleCloseMenu();
+                }}
+                sx={{ color: 'error.main' }}
+            >
+                <Iconify icon={'eva:trash-2-outline'} />
+                Eliminar
+            </MenuItem>
+        </>
+    );
+
+    if (isGearAdminList) {
+        return (
+            <>
+                <TableRow
+                    hover
+                    onClick={handleRowClick}
+                    sx={{
+                        cursor: 'pointer',
+                        '&:hover': {
+                            backgroundColor: theme.palette.action.hover,
+                        },
+                    }}
+                >
+                    <TableCell align="left">
+                        <Typography variant="subtitle2" noWrap>
+                            {id}
+                        </Typography>
+                    </TableCell>
+
+                    <TableCell align="left">
+                        <Typography variant="subtitle2" noWrap>
+                            {`${studentName || ''} ${studentLastname || ''}`.trim() || '—'}
+                        </Typography>
+                        <Typography variant="caption" color="text.secondary">
+                            ID: {studentId ?? '—'}
+                        </Typography>
+                    </TableCell>
+
+                    <TableCell align="left">
+                        <Label
+                            variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
+                            color={
+                                (state === 'DECLINED' && 'error') ||
+                                (state === 'PENDING' && 'warning') ||
+                                'success'
+                            }
+                            sx={{ textTransform: 'capitalize' }}
+                        >
+                            {state || '—'}
+                        </Label>
+                        {type === 'GEAR_ONLY' && (
+                            <Typography variant="caption" color="text.secondary" display="block" sx={{ mt: 0.5 }}>
+                                Equipo
+                            </Typography>
+                        )}
+                    </TableCell>
+
+                    <TableCell align="left">{resort || '—'}</TableCell>
+
+                    <TableCell align="left">
+                        <Typography variant="subtitle2" color="primary.main">
+                            {formatPrice(price)}
+                        </Typography>
+                    </TableCell>
+
+                    <TableCell align="left">
+                        <Label
+                            variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
+                            color={
+                                (paymentStatus === 'PENDING' && 'warning') ||
+                                (paymentStatus === 'PAID' && 'success') ||
+                                'error'
+                            }
+                            sx={{ textTransform: 'capitalize' }}
+                        >
+                            {paymentStatus || 'PENDING'}
+                        </Label>
+                    </TableCell>
+
+                    <TableCell align="left" sx={{ maxWidth: 280 }}>
+                        <Typography variant="body2" noWrap title={notesCombined}>
+                            {notesCombined}
+                        </Typography>
+                    </TableCell>
+
+                    <TableCell align="right" onClick={(e) => e.stopPropagation()}>
+                        <TableMoreMenu
+                            open={openMenu}
+                            onOpen={handleOpenMenu}
+                            onClose={handleCloseMenu}
+                            actions={rowMenuActions}
+                        />
+                    </TableCell>
+                </TableRow>
+
+                <BookingDetailsDrawer
+                    open={openDrawer}
+                    onClose={() => setOpenDrawer(false)}
+                    booking={row}
+                    refreshBookings={refreshBookings}
+                />
+            </>
+        );
+    }
+
     return (
         <>
             <TableRow
@@ -126,10 +279,10 @@ export default function AdminBookingTableRow({ row, onEditRow, onConfirmRow, onD
 
                 <TableCell align="left">
                     <Typography variant="subtitle2" noWrap>
-                        {`${name} ${lastname}`}
+                        {teacher ? `${name} ${lastname}` : '— (solo equipo)'}
                     </Typography>
                     <Typography variant="caption" color="text.secondary">
-                        ID: {teacherId}
+                        {teacherId != null ? `ID: ${teacherId}` : type === 'GEAR_ONLY' ? 'Rental' : ''}
                     </Typography>
                 </TableCell>
 
@@ -202,47 +355,7 @@ export default function AdminBookingTableRow({ row, onEditRow, onConfirmRow, onD
                         open={openMenu}
                         onOpen={handleOpenMenu}
                         onClose={handleCloseMenu}
-                        actions={
-                            <>
-                                <MenuItem
-                                    onClick={() => {
-                                        onEvents();
-                                        handleCloseMenu();
-                                    }}
-                                >
-                                    <Iconify icon={'eva:calendar-fill'} />
-                                    Ver clases en el calendario
-                                </MenuItem>
-                                <MenuItem
-                                    onClick={() => {
-                                        onWapp();
-                                        handleCloseMenu();
-                                    }}
-                                >
-                                    <Iconify icon={'mdi:whatsapp'} />
-                                    Contactár por Whats app
-                                </MenuItem>
-                                <MenuItem
-                                    onClick={() => {
-                                        onEditRow();
-                                        handleCloseMenu();
-                                    }}
-                                >
-                                    <Iconify icon={'eva:edit-fill'} />
-                                    Editar
-                                </MenuItem>
-                                <MenuItem
-                                    onClick={() => {
-                                        onDeleteRow();
-                                        handleCloseMenu();
-                                    }}
-                                    sx={{ color: 'error.main' }}
-                                >
-                                    <Iconify icon={'eva:trash-2-outline'} />
-                                    Eliminar
-                                </MenuItem>
-                            </>
-                        }
+                        actions={rowMenuActions}
                     />
                 </TableCell>
             </TableRow>

@@ -1136,7 +1136,13 @@
             "videoCorrections": "Correções de Vídeo",
             "rental": "Aluguel"
         },
-        "Independent PROs": "PROs Independentes"
+        "Independent PROs": "PROs Independentes",
+        "broadcast lesson": "Difundir aula",
+        "financial dashboard": "Painel financeiro",
+        "group lessons by resort": "Aulas em grupo por estância",
+        "rental products": "Produtos de aluguel",
+        "user chats": "Chats de usuários",
+        "lesson bookings": "Reservas de aulas"
     },
     "calendar": {
         "newEvent": "Criar evento",

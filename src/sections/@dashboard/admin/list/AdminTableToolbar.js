@@ -52,6 +52,10 @@ AdminTableToolbar.propTypes = {
   onFilterDate: PropTypes.func,
   optionsRole: PropTypes.arrayOf(PropTypes.string),
   bookings: PropTypes.bool,
+  /** When true, hide instructor ID field and quick teacher chips (e.g. gear-only bookings). */
+  hideInstructorFilters: PropTypes.bool,
+  /** When true with bookings, month dropdown includes all 12 months. */
+  showFullMonthList: PropTypes.bool,
 };
 
 export default function AdminTableToolbar({
@@ -72,6 +76,8 @@ export default function AdminTableToolbar({
   onFilterResort,
   optionsRole,
   bookings = false,
+  hideInstructorFilters = false,
+  showFullMonthList = false,
   showRole = true,
   showLevel = true,
   showMountain = true,
@@ -265,13 +271,29 @@ export default function AdminTableToolbar({
             textTransform: 'capitalize',
           }}
         >
-          {[
-            { value: '06', label: 'June' },
-            { value: '07', label: 'July' },
-            { value: '08', label: 'August' },
-            { value: '09', label: 'September' },
-            { value: '10', label: 'October' },
-          ].map((option) => (
+          {(bookings && showFullMonthList
+            ? [
+                { value: '01', label: 'January' },
+                { value: '02', label: 'February' },
+                { value: '03', label: 'March' },
+                { value: '04', label: 'April' },
+                { value: '05', label: 'May' },
+                { value: '06', label: 'June' },
+                { value: '07', label: 'July' },
+                { value: '08', label: 'August' },
+                { value: '09', label: 'September' },
+                { value: '10', label: 'October' },
+                { value: '11', label: 'November' },
+                { value: '12', label: 'December' },
+              ]
+            : [
+                { value: '06', label: 'June' },
+                { value: '07', label: 'July' },
+                { value: '08', label: 'August' },
+                { value: '09', label: 'September' },
+                { value: '10', label: 'October' },
+              ]
+          ).map((option) => (
             <MenuItem
               key={option.value}
               value={option.value}
@@ -288,7 +310,7 @@ export default function AdminTableToolbar({
           ))}
         </TextField>}
 
-        {showTeacherId && <TextField
+        {showTeacherId && !hideInstructorFilters && <TextField
           fullWidth
           label="Teacher ID"
           value={filterTeacherId}
@@ -307,7 +329,23 @@ export default function AdminTableToolbar({
         />}
       </Stack>
 
-      {bookings && (
+      {bookings && onFilterName && (
+        <TextField
+          fullWidth
+          value={filterName}
+          onChange={(event) => onFilterName(event.target.value)}
+          placeholder="Buscar por cliente o ID de reserva…"
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <Iconify icon={'eva:search-fill'} sx={{ color: 'text.disabled', width: 20, height: 20 }} />
+              </InputAdornment>
+            ),
+          }}
+        />
+      )}
+
+      {bookings && !hideInstructorFilters && (
         <Stack
           direction="row"
           spacing={1}

@@ -354,7 +354,7 @@ export default function RentalLocation() {
                   variant="outlined"
                   onClick={() => setFilters({ level: [], type: [], priceRange: [0, 200] })}
                 >
-                  Limpiar filtros
+                  Limpiar filtros.-
                 </Button>
               </Card>
             )}

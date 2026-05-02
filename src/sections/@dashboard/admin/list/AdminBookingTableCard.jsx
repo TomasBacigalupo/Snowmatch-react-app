@@ -11,6 +11,7 @@ import { TableMoreMenu } from '../../../../components/table';
 
 AdminBookingTableCard.propTypes = {
     row: PropTypes.object,
+    isGearAdminList: PropTypes.bool,
     selected: PropTypes.bool,
     onEditRow: PropTypes.func,
     onSelectRow: PropTypes.func,
@@ -22,12 +23,25 @@ AdminBookingTableCard.propTypes = {
     refreshBookings: PropTypes.func,
 };
 
-export default function AdminBookingTableCard({ row, selected, onEditRow, onSelectRow, onConfirmRow, onDeclineRow, onWapp, onEvents, onDeleteRow, refreshBookings }) {
+export default function AdminBookingTableCard({
+    row,
+    isGearAdminList = false,
+    selected,
+    onEditRow,
+    onSelectRow,
+    onConfirmRow,
+    onDeclineRow,
+    onWapp,
+    onEvents,
+    onDeleteRow,
+    refreshBookings,
+}) {
     const theme = useTheme();
     
-    const { imageLink, userComment, state, resort, adults, children, eventList, id, price } = row;
-    const { name, lastname, id: teacherId } = row.teacher;
-    const { name: studentName, lastname: studentLastname, id: studentId } = row.student;
+    const { imageLink, userComment, state, resort, adults, children, eventList, id, price, internalComment, type } = row;
+    const teacher = row.teacher;
+    const { name, lastname, id: teacherId } = teacher || {};
+    const { name: studentName, lastname: studentLastname, id: studentId } = row.student || {};
 
     const formatDate = (dateString) => {
         return new Date(dateString).toLocaleDateString('es-AR', {
@@ -90,6 +104,7 @@ export default function AdminBookingTableCard({ row, selected, onEditRow, onSele
                         onClose={handleCloseMenu}
                         actions={
                             <>
+                                {!isGearAdminList && eventList?.length > 0 && (
                                 <MenuItem
                                     onClick={() => {
                                         onEvents();
@@ -99,6 +114,7 @@ export default function AdminBookingTableCard({ row, selected, onEditRow, onSele
                                     <Iconify icon={'eva:calendar-fill'} />
                                     Ver clases en el calendario
                                 </MenuItem>
+                                )}
                                 <MenuItem
                                     onClick={() => {
                                         onWapp();
@@ -144,41 +160,54 @@ export default function AdminBookingTableCard({ row, selected, onEditRow, onSele
                     </Typography>
                 </Box>
 
+                {!isGearAdminList && (
                 <Box sx={{ mt: 2 }}>
                     <Typography variant="subtitle2" gutterBottom>
                         Instructor
                     </Typography>
                     <Typography variant="body2" gutterBottom>
-                        {`${name} ${lastname}`}
+                        {teacher ? `${name} ${lastname}` : '— (solo equipo)'}
                     </Typography>
                     <Typography variant="caption" color="text.secondary" gutterBottom>
-                        ID: {teacherId}
+                        {teacherId != null ? `ID: ${teacherId}` : ''}
                     </Typography>
                 </Box>
+                )}
 
                 <Box sx={{ mt: 2 }}>
                     <Typography variant="subtitle2" gutterBottom>
-                        Detalles de la Reserva
+                        {isGearAdminList ? 'Reserva de equipo' : 'Detalles de la Reserva'}
                     </Typography>
                     <Box display="flex" flexDirection="column" gap={1}>
+                        {!isGearAdminList && (
+                        <>
                         <Typography variant="body2">
                             {`${eventList?.length || 0} clases`}
                         </Typography>
                         <Typography variant="body2">
                             {getDateRange()}
                         </Typography>
+                        </>
+                        )}
                         <Typography variant="body2">
                             {resort}
                         </Typography>
+                        {!isGearAdminList && (
                         <Typography variant="body2">
                             {`${adults} adultos, ${children} niños`}
                         </Typography>
+                        )}
+                        {isGearAdminList && type === 'GEAR_ONLY' && (
+                            <Typography variant="caption" color="text.secondary">
+                                Sin clases — solo alquiler de equipo
+                            </Typography>
+                        )}
                         <Typography variant="body2" color="primary.main">
                             {formatPrice(price)}
                         </Typography>
-                        {userComment && (
+                        {(internalComment || userComment) && (
                             <Typography variant="body2" color="text.secondary">
-                                {userComment}
+                                {[internalComment, userComment].filter(Boolean).join(' — ')}
                             </Typography>
                         )}
                     </Box>

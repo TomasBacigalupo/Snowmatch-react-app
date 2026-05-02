@@ -27,6 +27,8 @@ TableHeadCustom.propTypes = {
   onSelectAllRows: PropTypes.func,
   order: PropTypes.oneOf(['asc', 'desc']),
   sx: PropTypes.object,
+  /** When false, do not append the extra trailing "Acciones" column (use if headLabel already ends with actions). */
+  appendTrailingActionsLabel: PropTypes.bool,
 };
 
 export default function TableHeadCustom({
@@ -38,6 +40,7 @@ export default function TableHeadCustom({
   onSort,
   onSelectAllRows,
   sx,
+  appendTrailingActionsLabel = true,
 }) {
   return (
     <TableHead sx={sx}>
@@ -78,9 +81,9 @@ export default function TableHeadCustom({
             )}
           </TableCell>
         ))}
-        <TableCell padding="checkbox">
-            Acciones
-          </TableCell>
+        {appendTrailingActionsLabel && (
+          <TableCell padding="checkbox">Acciones</TableCell>
+        )}
       </TableRow>
     </TableHead>
   );

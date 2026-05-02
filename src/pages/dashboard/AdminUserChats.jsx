@@ -71,13 +71,6 @@ export default function AdminUserChats() {
   const { themeStretch } = useSettings();
   const { isAdmin, isInitialized } = useAuth();
 
-  if (!isInitialized) {
-    return <LoadingScreen isDashboard />;
-  }
-  if (!isAdmin) {
-    return <Navigate to={PATH_DASHBOARD.root} replace />;
-  }
-
   const [rows, setRows] = useState([]);
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(0);
@@ -112,11 +105,17 @@ export default function AdminUserChats() {
   }, []);
 
   useEffect(() => {
-    if (!conversationId) {
-      setPage(0);
-      loadPage(0, false);
-    }
-  }, [conversationId, loadPage]);
+    if (!isInitialized || !isAdmin || conversationId) return;
+    setPage(0);
+    loadPage(0, false);
+  }, [isInitialized, isAdmin, conversationId, loadPage]);
+
+  if (!isInitialized) {
+    return <LoadingScreen isDashboard />;
+  }
+  if (!isAdmin) {
+    return <Navigate to={PATH_DASHBOARD.root} replace />;
+  }
 
   const handleRowClick = (id) => {
     navigate(PATH_DASHBOARD.admin.userChatsView(id));

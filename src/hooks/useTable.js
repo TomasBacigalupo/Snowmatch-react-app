@@ -69,6 +69,7 @@ export default function useTable(props) {
     page,
     setPage,
     orderBy,
+    setOrderBy,
     rowsPerPage,
     //
     selected,

@@ -312,7 +312,7 @@ export function broadcastLesson(body) {
   };
 }
 
-export function getBookings(teacherId, studentId, month, page, size = 100000, resort, day) {
+export function getBookings(teacherId, studentId, month, page, size = 100000, resort, day, bookingKind, year, state) {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
@@ -323,6 +323,9 @@ export function getBookings(teacherId, studentId, month, page, size = 100000, re
       if (month) params.append('month', month);
       if (resort) params.append('resort', resort);
       if (day) params.append('day', day);
+      if (bookingKind) params.append('bookingKind', bookingKind);
+      if (year != null && year !== '') params.append('year', year);
+      if (state && String(state).toLowerCase() !== 'all') params.append('state', state);
       params.append('size', size);
 
       const response = await axios.get(`/api/admin/bookings/filter?${params.toString()}`);

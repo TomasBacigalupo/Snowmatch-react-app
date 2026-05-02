@@ -19,6 +19,7 @@ import {
 } from '@mui/material';
 import { Star, ShoppingCart, Info } from '@mui/icons-material';
 import { useRentalCart } from '../../contexts/RentalCartContext';
+import TruncatedGearText from './TruncatedGearText';
 
 // ----------------------------------------------------------------------
 
@@ -127,9 +128,7 @@ export default function ProductCard({ product, onAddToCart }) {
       <CardContent sx={{ flexGrow: 1, p: 3 }}>
         {/* Title and Rating */}
         <Box sx={{ mb: 2 }}>
-          <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>
-            {productTitle}
-          </Typography>
+          <TruncatedGearText variant="h6" text={productTitle} sx={{ fontWeight: 600, mb: 1 }} />
           
           <Stack direction="row" alignItems="center" spacing={1}>
             <Rating value={product.rating} precision={0.1} size="small" readOnly />
@@ -140,9 +139,12 @@ export default function ProductCard({ product, onAddToCart }) {
         </Box>
 
         {/* Description */}
-        <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-          {product.description}
-        </Typography>
+        <TruncatedGearText
+          variant="body2"
+          text={product.description}
+          color="text.secondary"
+          sx={{ mb: 2 }}
+        />
 
         {/* Ideal For */}
         <Typography variant="body2" sx={{ mb: 2, fontStyle: 'italic' }}>

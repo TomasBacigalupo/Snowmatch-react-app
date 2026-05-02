@@ -8,11 +8,21 @@ import Iconify from '../../../../components/Iconify';
 
 // ----------------------------------------------------------------------
 
+const GEAR_HIDDEN_TITLES = new Set([
+    'Horas Asignadas',
+    'Horas Requeridas',
+    'Total Horas',
+    'Total Adultos',
+    'Total Niños',
+]);
+
 BookingSummary.propTypes = {
     bookings: PropTypes.array,
+    /** When true (admin /bookings/equipos), hide class-hour and capacity stats that do not apply to gear-only bookings. */
+    isGearBookings: PropTypes.bool,
 };
 
-export default function BookingSummary({ bookings }) {
+export default function BookingSummary({ bookings, isGearBookings = false }) {
     const theme = useTheme();
     const [showRevenue, setShowRevenue] = useState(false);
 
@@ -177,10 +187,14 @@ export default function BookingSummary({ bookings }) {
         },
     ];
 
+    const summaryItems = isGearBookings
+        ? SUMMARY.filter((item) => !GEAR_HIDDEN_TITLES.has(item.title))
+        : SUMMARY;
+
     return (
         <Card sx={{ p: 3, mb: 3 }}>
             <Grid container spacing={3}>
-                {SUMMARY.map((item) => (
+                {summaryItems.map((item) => (
                     <Grid item xs={12} sm={6} md={3} key={item.title}>
                         <Stack
                             direction="row"

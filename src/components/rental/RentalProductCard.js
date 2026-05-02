@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 import {
@@ -6,10 +6,10 @@ import {
   Card,
   CardMedia,
   CardContent,
-  Typography,
   useTheme,
   useMediaQuery,
 } from '@mui/material';
+import TruncatedGearText from './TruncatedGearText';
 
 // ----------------------------------------------------------------------
 
@@ -79,14 +79,14 @@ export default function RentalProductCard({ product, onAddToCart, location }) {
 
       <CardContent sx={{ flexGrow: 1, p: 3 }}>
         {/* Title */}
-        <Typography variant="h6" sx={{ fontWeight: 700, mb: 2, fontSize: '1.1rem' }}>
-          {productTitle}
-        </Typography>
+        <TruncatedGearText
+          variant="h6"
+          text={productTitle}
+          sx={{ fontWeight: 700, mb: 2, fontSize: '1.1rem' }}
+        />
 
         {/* Description */}
-        <Typography variant="body2" color="text.secondary">
-          {product.description}
-        </Typography>
+        <TruncatedGearText variant="body2" text={product.description} color="text.secondary" />
       </CardContent>
     </StyledCard>
   );

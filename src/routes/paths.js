@@ -178,6 +178,7 @@ export const PATH_DASHBOARD = {
     review: path(ROOTS_DASHBOARD, '/admin/review'),
     reviewClients: path(ROOTS_DASHBOARD, '/admin/clients'),
     bookings: path(ROOTS_DASHBOARD, '/admin/bookings'),
+    bookingsEquipos: path(ROOTS_DASHBOARD, '/admin/bookings/equipos'),
     financial: path(ROOTS_DASHBOARD, '/admin/financial'),
     rental: path(ROOTS_DASHBOARD, '/admin/rental'),
     groupLessonResorts: path(ROOTS_DASHBOARD, '/admin/group-lesson-resorts'),

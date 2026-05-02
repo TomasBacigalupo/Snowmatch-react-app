@@ -1,11 +1,9 @@
 import { paramCase } from 'change-case';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // @mui
 import {
   Box,
-  Tab,
-  Tabs,
   Card,
   Table,
   Switch,
@@ -28,9 +26,8 @@ import Hidden from 'src/components/LegacyHidden';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // hooks
-import useTabs from '../../hooks/useTabs';
 import useSettings from '../../hooks/useSettings';
-import useTable, { getComparator, emptyRows } from '../../hooks/useTable';
+import useTable, { emptyRows } from '../../hooks/useTable';
 // _mock_
 import { _userList } from '../../_mock';
 // components
@@ -57,8 +54,6 @@ import BookingDetailsDrawer from 'src/sections/@dashboard/admin/list/BookingDeta
 // ---------------------------------------------------------------------
 
 
-const STATUS_OPTIONS = ['PENDING', 'ACCEPTED', 'DECLINED'];
-
 const ROLE_OPTIONS = [
   'PENDING', 'ACCEPTED', 'DECLINED'
 ];
@@ -78,14 +73,109 @@ const TABLE_HEAD = [
   { id: 'paymentStatus', label: 'Estado Pago', align: 'left' },
 ];
 
+/** Admin list for GEAR_ONLY / rental bookings (no lessons, no instructor). */
+const TABLE_HEAD_GEAR = [
+  { id: 'id', label: 'ID', align: 'left' },
+  { id: 'student', label: 'Cliente', align: 'left' },
+  { id: 'state', label: 'Estado', align: 'left' },
+  { id: 'resort', label: 'Centro', align: 'left' },
+  { id: 'price', label: 'Precio', align: 'left' },
+  { id: 'paymentStatus', label: 'Estado pago', align: 'left' },
+  { id: 'comments', label: 'Notas', align: 'left' },
+];
+
+function sumBookingHours(row) {
+  if (!row.eventList?.length) return 0;
+  let total = 0;
+  row.eventList.forEach((event) => {
+    const start = new Date(event.start);
+    const end = new Date(event.end);
+    const durationInHours = (end - start) / (1000 * 60 * 60);
+    if (durationInHours === 4) {
+      total += 3;
+    } else if (durationInHours > 5) {
+      total += 6;
+    } else {
+      total += durationInHours;
+    }
+  });
+  return total;
+}
+
+function compareAdminBookings(rowA, rowB, orderBy, order) {
+  const dir = order === 'desc' ? -1 : 1;
+  const cmpNum = (a, b) => {
+    if (a < b) return -1 * dir;
+    if (a > b) return 1 * dir;
+    return 0;
+  };
+  const cmpStr = (a, b) => {
+    const sa = String(a ?? '').toLowerCase();
+    const sb = String(b ?? '').toLowerCase();
+    if (sa < sb) return -1 * dir;
+    if (sa > sb) return 1 * dir;
+    return 0;
+  };
+  switch (orderBy) {
+    case 'student':
+      return cmpStr(
+        `${rowA.student?.name || ''} ${rowA.student?.lastname || ''}`.trim(),
+        `${rowB.student?.name || ''} ${rowB.student?.lastname || ''}`.trim()
+      );
+    case 'teacher':
+      return cmpStr(
+        `${rowA.teacher?.name || ''} ${rowA.teacher?.lastname || ''}`.trim(),
+        `${rowB.teacher?.name || ''} ${rowB.teacher?.lastname || ''}`.trim()
+      );
+    case 'events':
+      return cmpNum(rowA.eventList?.length || 0, rowB.eventList?.length || 0);
+    case 'hours':
+      return cmpNum(sumBookingHours(rowA), sumBookingHours(rowB));
+    case 'dates': {
+      const da = rowA.eventList?.length ? new Date(rowA.eventList[0].start).getTime() : 0;
+      const db = rowB.eventList?.length ? new Date(rowB.eventList[0].start).getTime() : 0;
+      return cmpNum(da, db);
+    }
+    case 'capacity':
+      return cmpNum(
+        (rowA.adults || 0) + (rowA.children || 0),
+        (rowB.adults || 0) + (rowB.children || 0)
+      );
+    case 'price':
+      return cmpNum(Number(rowA.price) || 0, Number(rowB.price) || 0);
+    case 'internalComment':
+      return cmpStr(rowA.internalComment, rowB.internalComment);
+    case 'includes':
+      return cmpNum(
+        (rowA.includesLunch ? 1 : 0) + (rowA.includesEquipments ? 2 : 0),
+        (rowB.includesLunch ? 1 : 0) + (rowB.includesEquipments ? 2 : 0)
+      );
+    case 'paymentStatus':
+      return cmpStr(rowA.paymentStatus, rowB.paymentStatus);
+    case 'state':
+      return cmpStr(rowA.state, rowB.state);
+    case 'comments':
+      return cmpStr(
+        `${rowA.internalComment || ''} ${rowA.userComment || ''}`,
+        `${rowB.internalComment || ''} ${rowB.userComment || ''}`
+      );
+    case 'resort':
+      return cmpStr(rowA.resort, rowB.resort);
+    case 'id':
+    default:
+      return cmpNum(Number(rowA.id) || 0, Number(rowB.id) || 0);
+  }
+}
+
 // ----------------------------------------------------------------------
 
-export default function AdminReviewBookings() {
+export function AdminBookingsPage({ bookingListKind, pageTitle, heading }) {
   const {
     dense,
     page,
     order,
     orderBy,
+    setOrderBy,
     rowsPerPage,
     setPage,
     //
@@ -114,14 +204,18 @@ export default function AdminReviewBookings() {
   const [isOpen, setIsOpen] = useState(false);
   
   console.log('AdminReviewBookings - isOpen state:', isOpen);
-  const [filterMonth, setFilterMonth] = useState('');
+  const [filterMonth, setFilterMonth] = useState(() =>
+    bookingListKind === 'gear' ? String(new Date().getMonth() + 1).padStart(2, '0') : ''
+  );
   const [filterTeacherId, setFilterTeacherId] = useState('');
   const [filterStudentId, setFilterStudentId] = useState('');
   const [teachers, setTeachers] = useState([]);
   const [students, setStudents] = useState([]);
-  const [filterResort, setFilterResort] = useState('');
+  const [filterResort, setFilterResort] = useState(() =>
+    bookingListKind === 'lesson' ? 'Cerro Catedral' : ''
+  );
   const [filterDate, setFilterDate] = useState('');
-  const { currentTab: filterStatus, onChangeTab: onChangeFilterStatus } = useTabs('PENDING');
+  const filterStatus = 'all';
   const [selectedBooking, setSelectedBooking] = useState(null);
   const handleFilterName = (filterName) => {
     setFilterName(filterName);
@@ -153,26 +247,58 @@ export default function AdminReviewBookings() {
     setFilterLevel(event.target.value);
   };
 
+  const filterYear = new Date().getFullYear();
+
+  const dispatchBookings = (partial = {}) => {
+    const teacherForQuery = bookingListKind === 'gear' ? '' : (partial.teacherId ?? filterTeacherId);
+    const dayArg =
+      partial.day != null
+        ? partial.day
+        : filterDate
+          ? new Date(filterDate).getDate()
+          : undefined;
+    const stateArg =
+      partial.state !== undefined
+        ? partial.state
+        : filterStatus !== 'all'
+          ? filterStatus
+          : undefined;
+    dispatch(
+      getBookings(
+        teacherForQuery,
+        partial.studentId ?? filterStudentId,
+        partial.month ?? filterMonth,
+        partial.page ?? page,
+        partial.rowsPerPage ?? rowsPerPage,
+        partial.resort ?? filterResort,
+        dayArg,
+        partial.bookingKind ?? bookingListKind,
+        partial.year ?? filterYear,
+        stateArg
+      )
+    );
+  };
+
   const handleFilterMonth = (event) => {
     setFilterMonth(event.target.value);
-    dispatch(getBookings(filterTeacherId, filterStudentId, event.target.value, page, rowsPerPage, filterResort));
+    dispatchBookings({ month: event.target.value });
   };
 
   const handleFilterResort = (event) => {
     setFilterResort(event.target.value);
-    dispatch(getBookings(filterTeacherId, filterStudentId, filterMonth, page, rowsPerPage, event.target.value));
+    dispatchBookings({ resort: event.target.value });
   };
 
   const handleFilterTeacherId = (event) => {
     const value = event?.target?.value ?? event;
     setFilterTeacherId(value);
-    dispatch(getBookings(value, filterStudentId, filterMonth, page, rowsPerPage, filterResort));
+    dispatchBookings({ teacherId: value });
   };
 
   const handleFilterStudentId = (event) => {
     const value = event.target.value;
     setFilterStudentId(value);
-    dispatch(getBookings(filterTeacherId, value, filterMonth, page, rowsPerPage, filterResort));
+    dispatchBookings({ studentId: value });
   };
 
   const handleDeleteRows = (selected) => {
@@ -193,33 +319,41 @@ export default function AdminReviewBookings() {
     window.open(`https://wa.me/${countryCode}${cellphone}?text=Hola ${name}, `, '_blank')
   }
 
-  const dataFiltered = applySortFilter({
-    tableData,
-    comparator: getComparator(order, orderBy),
-    filterName,
-    filterRole,
-    filterStatus,
-  });
+  const displayBookings = useMemo(() => {
+    let rows = tableData ?? [];
+    if (filterName?.trim()) {
+      const q = filterName.toLowerCase().trim();
+      rows = rows.filter((row) => {
+        const s = row.student;
+        const full = `${s?.name || ''} ${s?.lastname || ''}`.toLowerCase();
+        return full.includes(q) || String(row.id).includes(q);
+      });
+    }
+    const stabilized = rows.map((el, index) => [el, index]);
+    stabilized.sort((a, b) => {
+      const ord = compareAdminBookings(a[0], b[0], orderBy, order);
+      if (ord !== 0) return ord;
+      return a[1] - b[1];
+    });
+    return stabilized.map((el) => el[0]);
+  }, [tableData, filterName, order, orderBy]);
 
   const denseHeight = dense ? 52 : 72;
 
-  const isNotFound =
-    (!dataFiltered.length && !!filterName) ||
-    (!dataFiltered.length && !!filterRole) ||
-    (!dataFiltered.length && !!filterStatus);
+  const isNotFound = displayBookings.length === 0;
 
   const dispatch = useDispatch();
 
-  const { teachers: reduxTeachers, isOpenModal, isOpenEditBookingModal, isOpenDeleteModal, selectedEmail, selectedBookingId, bookings } = useSelector((state) => { return state.admin });
+  const { teachers: reduxTeachers, isOpenModal, isOpenEditBookingModal, isOpenDeleteModal, selectedEmail, selectedBookingId, bookings } = useSelector((state) => state.admin);
 
   console.log('Modal states:', { isOpenDeleteModal, selectedBookingId });
 
   const [reqPage, setReqPage] = useState(0);
 
   const onChangePage2 = async (event, newPage) => {
-    dispatch(getTeachers(newPage + 1, filterRole))
-    setPage(newPage)
-  }
+    setPage(newPage);
+    dispatchBookings({ page: newPage });
+  };
 
   const onChangePage3 = (event, newPage) => {
     dispatch(getTeachers(newPage, filterRole))
@@ -241,8 +375,14 @@ export default function AdminReviewBookings() {
   }, [bookings]);
 
   useEffect(() => {
-    user && dispatch(getBookings(filterTeacherId, filterStudentId, filterMonth, page, rowsPerPage))
-  }, [page, rowsPerPage])
+    if (user) dispatchBookings();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [page, rowsPerPage, bookingListKind]);
+
+  useEffect(() => {
+    setPage(0);
+    setOrderBy(bookingListKind === 'gear' ? 'id' : 'student');
+  }, [bookingListKind, setOrderBy, setPage]);
 
   useEffect(() => {
     if (reduxTeachers) {
@@ -262,44 +402,44 @@ export default function AdminReviewBookings() {
   }
 
   const refreshBookings = () => {
-    dispatch(getBookings(filterTeacherId, filterStudentId, filterMonth, page, rowsPerPage, filterResort));
-  }
+    dispatchBookings();
+  };
 
   const handleFilterDate = (event) => {
     console.log('handleFilterDate called with event:', event);
     setFilterDate(event);
     const month = event.getMonth() + 1;
     const day = event.getDate();
-    dispatch(getBookings(filterTeacherId, filterStudentId, month, page, rowsPerPage, filterResort, day));
+    setFilterMonth(String(month));
+    dispatchBookings({ month: String(month), day });
   };
 
+  const tableHeadLabel = bookingListKind === 'gear' ? TABLE_HEAD_GEAR : TABLE_HEAD;
+
   return (
-    <Page title="Admin Review: List">
+    <Page title={pageTitle}>
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <HeaderBreadcrumbs
-          heading="Bookings Reveiw List"
-          links={[
-            { name: 'Dashboard', href: PATH_DASHBOARD.root },
-            { name: 'Admin', href: PATH_DASHBOARD.admin.root },
-            { name: 'Bookings' },
-          ]}
+          heading={heading}
           action={
-            <Button
-              variant="contained"
-              startIcon={<Iconify icon="eva:plus-fill" />}
-              onClick={() => setIsOpen(true)}
-              sx={{
-                px: 3,
-                py: 1.5,
-                borderRadius: 1,
-                boxShadow: (theme) => theme.customShadows?.primary,
-                '&:hover': {
-                  boxShadow: (theme) => theme.customShadows?.primaryHover,
-                },
-              }}
-            >
-              Nueva Reserva
-            </Button>
+            bookingListKind === 'lesson' ? (
+              <Button
+                variant="contained"
+                startIcon={<Iconify icon="eva:plus-fill" />}
+                onClick={() => setIsOpen(true)}
+                sx={{
+                  px: 3,
+                  py: 1.5,
+                  borderRadius: 1,
+                  boxShadow: (theme) => theme.customShadows?.primary,
+                  '&:hover': {
+                    boxShadow: (theme) => theme.customShadows?.primaryHover,
+                  },
+                }}
+              >
+                Nueva Reserva
+              </Button>
+            ) : undefined
           }
         />
         <AdminTableToolbar
@@ -318,24 +458,28 @@ export default function AdminReviewBookings() {
           onFilterStudentId={handleFilterStudentId}
           onFilterResort={handleFilterResort}
           onFilterDate={handleFilterDate}
-          bookings={true}
+          bookings
+          hideInstructorFilters={bookingListKind === 'gear'}
+          showFullMonthList
         />
-        <BookingSummary bookings={tableData} />
+        <BookingSummary bookings={displayBookings} isGearBookings={bookingListKind === 'gear'} />
         <Card>
-          <BookingModal
-            isOpen={isOpen}
-            onClose={() => {
-              console.log('BookingModal onClose called');
-              setIsOpen(false);
-              refreshBookings();
-            }}
-            filterTeacherId={filterTeacherId}
-            filterStudentId={filterStudentId}
-            filterMonth={filterMonth}
-            page={page}
-            rowsPerPage={rowsPerPage}
-            filterResort={filterResort}
-          />
+          {bookingListKind === 'lesson' && (
+            <BookingModal
+              isOpen={isOpen}
+              onClose={() => {
+                console.log('BookingModal onClose called');
+                setIsOpen(false);
+                refreshBookings();
+              }}
+              filterTeacherId={filterTeacherId}
+              filterStudentId={filterStudentId}
+              filterMonth={filterMonth}
+              page={page}
+              rowsPerPage={rowsPerPage}
+              filterResort={filterResort}
+            />
+          )}
           <Divider />
           <Scrollbar>
             <Hidden smDown>
@@ -344,11 +488,11 @@ export default function AdminReviewBookings() {
                   <TableSelectedActions
                     dense={dense}
                     numSelected={selected.length}
-                    rowCount={tableData.length}
+                    rowCount={displayBookings.length}
                     onSelectAllRows={(checked) =>
                       onSelectAllRows(
                         checked,
-                        tableData?.map((row) => row.id)
+                        displayBookings?.map((row) => row.id)
                       )
                     }
                     actions={
@@ -365,30 +509,41 @@ export default function AdminReviewBookings() {
                   <TableHeadCustom
                     order={order}
                     orderBy={orderBy}
-                    headLabel={TABLE_HEAD}
-                    rowCount={tableData?.length ?? 0}
+                    headLabel={tableHeadLabel}
+                    rowCount={displayBookings?.length ?? 0}
                     numSelected={selected.length}
                     onSort={onSort}
                     onSelectAllRows={(checked) =>
                       onSelectAllRows(
                         checked,
-                        tableData?.map((row) => row.id)
+                        displayBookings?.map((row) => row.id)
                       )
                     }
                   />
 
                   <TableBody>
-                    {tableData?.map((row) => (
+                    {displayBookings?.map((row) => (
                       <AdminBookingTableRow
-                        key={row.userId}
+                        key={row.id}
                         row={row}
-                        selected={selected.includes(row.userId)}
-                        onSelectRow={() => onSelectRow(row.userId)}
+                        isGearAdminList={bookingListKind === 'gear'}
+                        selected={selected.includes(row.id)}
+                        onSelectRow={() => onSelectRow(row.id)}
                         onEditRow={() => handleEditRow(row.id)}
                         onConfirmRow={() => handleConfirmRow(row.id)}
-                        onDeclineRow={() => handleDeclineOpenModal(row.email)}
-                        onWapp={() => { handleContactWapp(row.countryCode, row.cellphone, row.name) }}
-                        onEvents={() => { navigate(PATH_DASHBOARD.admin.events(row.teacher.id)) }}
+                        onDeclineRow={() =>
+                          handleDeclineOpenModal(row.student?.email || row.email)
+                        }
+                        onWapp={() => {
+                          handleContactWapp(
+                            row.student?.countryCode || row.countryCode,
+                            row.student?.cellphone || row.cellphone,
+                            row.student?.name || row.name
+                          );
+                        }}
+                        onEvents={() => {
+                          if (row.teacher?.id) navigate(PATH_DASHBOARD.admin.events(row.teacher.id));
+                        }}
                         onDeleteRow={() => handleDeleteRow(row.id)}
                         refreshBookings={refreshBookings}
                       />))}
@@ -401,20 +556,30 @@ export default function AdminReviewBookings() {
               </TableContainer>
             </Hidden>
             <Hidden smUp>
-              {tableData?.map((row) => (
-                <Box onClick={() =>{ 
+              {displayBookings?.map((row) => (
+                <Box key={row.id} onClick={() =>{ 
                   setOpenDrawer(true)
                   setSelectedBooking(row)
                 }}><AdminBookingTableCard
-                  key={row.userId}
                   row={row}
-                  selected={selected.includes(row.userId)}
-                  onSelectRow={() => onSelectRow(row.userId)}
+                  isGearAdminList={bookingListKind === 'gear'}
+                  selected={selected.includes(row.id)}
+                  onSelectRow={() => onSelectRow(row.id)}
                   onEditRow={() => handleEditRow(row.id)}
                   onConfirmRow={() => handleConfirmRow(row.id)}
-                  onDeclineRow={() => handleDeclineOpenModal(row.email)}
-                  onWapp={() => { handleContactWapp(row.countryCode, row.cellphone, row.name) }}
-                  onEvents={() => { navigate(PATH_DASHBOARD.admin.events(row.id)) }}
+                  onDeclineRow={() =>
+                    handleDeclineOpenModal(row.student?.email || row.email)
+                  }
+                  onWapp={() => {
+                    handleContactWapp(
+                      row.student?.countryCode || row.countryCode,
+                      row.student?.cellphone || row.cellphone,
+                      row.student?.name || row.name
+                    );
+                  }}
+                  onEvents={() => {
+                    if (row.teacher?.id) navigate(PATH_DASHBOARD.admin.events(row.teacher.id));
+                  }}
                   onDeleteRow={() => handleDeleteRow(row.id)}
                   refreshBookings={refreshBookings}
                 /></Box>))}
@@ -481,35 +646,12 @@ export default function AdminReviewBookings() {
   );
 }
 
-// ----------------------------------------------------------------------
-
-function applySortFilter({ tableData, comparator, filterName, filterStatus, filterRole }) {
-  return tableData
-
-  if (tableData.length === 0) {
-    return tableData
-  }
-  const stabilizedThis = tableData?.map((el, index) => [el, index]);
-
-  stabilizedThis?.sort((a, b) => {
-    const order = comparator(a[0], b[0]);
-    if (order !== 0) return order;
-    return a[1] - b[1];
-  });
-
-  tableData = stabilizedThis?.map((el) => el[0]);
-
-  if (filterName) {
-    tableData = tableData?.filter((item) => item.name.toLowerCase().indexOf(filterName.toLowerCase()) !== -1);
-  }
-
-  if (filterStatus !== 'all') {
-    tableData = tableData?.filter((item) => item.status === filterStatus);
-  }
-
-  if (filterRole !== 'all') {
-    tableData = tableData?.filter((item) => item.role === filterRole);
-  }
-
-  return tableData;
+export default function AdminReviewBookings() {
+  return (
+    <AdminBookingsPage
+      bookingListKind="lesson"
+      pageTitle="Admin Review: List"
+      heading="Bookings Reveiw List"
+    />
+  );
 }

@@ -23,6 +23,7 @@ import ReviewTeacher from 'src/pages/dashboard/ReviewTeacher';
 import UploadedVideos from 'src/pages/dashboard/UploadedVideos';
 import UnratedVideos from 'src/pages/dashboard/UnratedVideos';
 import CourseLevels from 'src/pages/dashboard/CourseLevels';
+import AdminBookingsLayout from '../pages/dashboard/AdminBookingsLayout';
 import BackButtonLayout from 'src/layouts/BackButtonLayout';
 import Training from 'src/pages/dashboard/Training';
 import SkiTracking from 'src/pages/dashboard/SkiTracking';
@@ -486,7 +487,14 @@ export default function Router() {
                 { element: <Navigate to="/dashboard/admin/review" replace />, index: true },
                 { path: 'review', element: <AdminReview /> },
                 { path: 'clients', element: <AdminReviewClients /> },
-                { path: 'bookings', element: <AdminReviewBookings /> },
+                {
+                  path: 'bookings',
+                  element: <AdminBookingsLayout />,
+                  children: [
+                    { index: true, element: <AdminReviewBookings /> },
+                    { path: 'equipos', element: <AdminGearBookings /> },
+                  ],
+                },
                 { path: 'broadcast', element: <AdminBroadcastLesson /> },
                 { path: 'user-chats', element: <AdminUserChats /> },
                 { path: 'user-chats/:conversationId', element: <AdminUserChats /> },
@@ -665,6 +673,7 @@ const LessonDetails = Loadable(lazy(() => import('src/pages/dashboard/LessonDeta
 const AdminReview = Loadable(lazy(() => import('../pages/dashboard/AdminReview')));
 const AdminReviewClients = Loadable(lazy(() => import('../pages/dashboard/AdminReviewClients')));
 const AdminReviewBookings = Loadable(lazy(() => import('../pages/dashboard/AdminReviewBookings')));
+const AdminGearBookings = Loadable(lazy(() => import('../pages/dashboard/AdminGearBookings')));
 const AdminUserChats = Loadable(lazy(() => import('../pages/dashboard/AdminUserChats')));
 const AdminBroadcastLesson = Loadable(lazy(() => import('../pages/dashboard/AdminBroadcastLesson')));
 const AdminFinancialDashboard = Loadable(lazy(() => import('../pages/dashboard/AdminFinancialDashboard')));

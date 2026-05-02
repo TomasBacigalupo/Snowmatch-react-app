@@ -34,12 +34,9 @@ import {
   FormHelperText,
   InputAdornment,
   Skeleton,
-  Checkbox,
   useTheme,
   useMediaQuery,
 } from '@mui/material';
-// routes
-import { PATH_DASHBOARD } from '../../routes/paths';
 // hooks
 import useSettings from '../../hooks/useSettings';
 // components
@@ -47,7 +44,8 @@ import Page from '../../components/Page';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
 import Iconify from '../../components/Iconify';
 import Scrollbar from '../../components/Scrollbar';
-import { TableEmptyRows, TableHeadCustom, TableNoData, TableSelectedActions } from '../../components/table';
+import TruncatedGearText from '../../components/rental/TruncatedGearText';
+import { TableEmptyRows, TableHeadCustom, TableNoData } from '../../components/table';
 import { emptyRows } from '../../hooks/useTable';
 // sections
 import RentalProductForm from '../../sections/@dashboard/admin/rental/RentalProductForm';
@@ -95,11 +93,9 @@ export default function AdminRental() {
   // Local state
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(20);
-  const [selected, setSelected] = useState([]);
-  const [filterName, setFilterName] = useState('');
   const [filterCategory, setFilterCategory] = useState('all');
   const [filterStatus, setFilterStatus] = useState('all');
-  const [filterResort, setFilterResort] = useState('');
+  const [filterResort, setFilterResort] = useState('CERRO_CATEDRAL');
   const [orderBy, setOrderBy] = useState('name');
   const [order, setOrder] = useState('asc');
   
@@ -112,13 +108,12 @@ export default function AdminRental() {
   // Load rental items on component mount
   useEffect(() => {
     loadRentalItems();
-  }, [page, rowsPerPage, filterName, filterCategory, filterStatus, filterResort, orderBy, order]);
+  }, [page, rowsPerPage, filterCategory, filterStatus, filterResort, orderBy, order]);
 
   const loadRentalItems = async () => {
     const filters = {
       page,
       size: rowsPerPage,
-      name: filterName || undefined,
       category: filterCategory !== 'all' ? filterCategory : undefined,
       status: filterStatus !== 'all' ? filterStatus : undefined,
       resortId: filterResort || undefined,
@@ -136,35 +131,6 @@ export default function AdminRental() {
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
-  };
-
-  const handleSelectRow = (id) => {
-    const selectedIndex = selected.indexOf(id);
-    let newSelected = [];
-
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, id);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1)
-      );
-    }
-
-    setSelected(newSelected);
-  };
-
-  const handleSelectAllRows = (event) => {
-    if (event.target.checked) {
-      const newSelecteds = items.map((n) => n.id);
-      setSelected(newSelecteds);
-      return;
-    }
-    setSelected([]);
   };
 
   const handleSort = (id) => {
@@ -211,11 +177,6 @@ export default function AdminRental() {
     }
   };
 
-  const handleBulkDelete = async () => {
-    // Implement bulk delete functionality
-    console.log('Bulk delete selected items:', selected);
-  };
-
   const filteredItems = items || [];
   const isNotFound = !filteredItems.length && !loading;
 
@@ -224,11 +185,6 @@ export default function AdminRental() {
       <Container maxWidth={themeStretch ? false : 'xl'}>
         <HeaderBreadcrumbs
           heading="Gestión de Productos de Rental"
-          links={[
-            { name: 'Dashboard', href: PATH_DASHBOARD.root },
-            { name: 'Admin', href: PATH_DASHBOARD.admin.root },
-            { name: 'Rental' },
-          ]}
           action={
             <Button
               variant="contained"
@@ -243,33 +199,15 @@ export default function AdminRental() {
         <Stack spacing={3}>
           {/* Filters Bar */}
           <RentalFiltersBar
-            filterName={filterName}
             filterCategory={filterCategory}
             filterStatus={filterStatus}
             filterResort={filterResort}
-            onFilterName={setFilterName}
             onFilterCategory={setFilterCategory}
             onFilterStatus={setFilterStatus}
             onFilterResort={setFilterResort}
             categoryOptions={CATEGORY_OPTIONS}
             statusOptions={STATUS_OPTIONS}
           />
-
-          {/* Selected Actions */}
-          {selected.length > 0 && (
-            <TableSelectedActions
-              numSelected={selected.length}
-              rowCount={filteredItems.length}
-              onSelectAllRows={handleSelectAllRows}
-              actions={
-                <Tooltip title="Eliminar seleccionados">
-                  <IconButton color="primary" onClick={handleBulkDelete}>
-                    <Iconify icon="eva:trash-2-fill" />
-                  </IconButton>
-                </Tooltip>
-              }
-            />
-          )}
 
           {/* Products Table */}
           <Card>
@@ -281,9 +219,8 @@ export default function AdminRental() {
                     orderBy={orderBy}
                     headLabel={TABLE_HEAD}
                     rowCount={filteredItems.length}
-                    numSelected={selected.length}
                     onSort={handleSort}
-                    onSelectAllRows={handleSelectAllRows}
+                    appendTrailingActionsLabel={false}
                   />
 
                   <TableBody>
@@ -291,24 +228,9 @@ export default function AdminRental() {
                       .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                       .map((row) => {
                         const { id, name, description, category, pricePerDay, imageUrl, status, variants } = row;
-                        const isItemSelected = selected.indexOf(id) !== -1;
 
                         return (
-                          <TableRow
-                            hover
-                            key={id}
-                            tabIndex={-1}
-                            role="checkbox"
-                            selected={isItemSelected}
-                            aria-checked={isItemSelected}
-                          >
-                            <TableCell padding="checkbox">
-                              <Checkbox
-                                checked={isItemSelected}
-                                onChange={() => handleSelectRow(id)}
-                              />
-                            </TableCell>
-
+                          <TableRow hover key={id} tabIndex={-1}>
                             <TableCell sx={{ display: 'flex', alignItems: 'center' }}>
                               <Avatar
                                 alt={name}
@@ -319,12 +241,12 @@ export default function AdminRental() {
                             </TableCell>
 
                             <TableCell>
-                              <Typography variant="subtitle2" noWrap>
-                                {name}
-                              </Typography>
-                              <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
-                                {description}
-                              </Typography>
+                              <TruncatedGearText variant="subtitle2" text={name} />
+                              <TruncatedGearText
+                                variant="body2"
+                                text={description}
+                                sx={{ color: 'text.secondary', display: 'block', mt: 0.5 }}
+                              />
                             </TableCell>
 
                             <TableCell>

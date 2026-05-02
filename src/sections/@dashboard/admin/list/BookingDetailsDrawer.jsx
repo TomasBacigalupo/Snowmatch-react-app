@@ -20,6 +20,12 @@ import {
   DialogActions,
   TextField,
   InputAdornment,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 // components
@@ -36,6 +42,7 @@ import PayoutEditModal from './PayoutEditModal';
 import { useDispatch } from 'react-redux';
 import { createPayout } from '../../../../redux/slices/bookings';
 import { fetchPayouts } from 'src/redux/slices/admin';
+import axios from 'src/utils/axios';
 
 BookingDetailsDrawer.propTypes = {
   open: PropTypes.bool,
@@ -60,6 +67,9 @@ export default function BookingDetailsDrawer({ open, onClose, booking, refreshBo
   const payoutFileInputRef = useRef(null);
   const [file, setFile] = useState(null);
   const [filePreviewUrl, setFilePreviewUrl] = useState(null);
+  const [rentalLines, setRentalLines] = useState([]);
+  const [rentalLinesLoading, setRentalLinesLoading] = useState(false);
+  const [rentalLinesError, setRentalLinesError] = useState(null);
 
   const handleEditClick = () => {
     setEditModalOpen(true);
@@ -144,7 +154,9 @@ export default function BookingDetailsDrawer({ open, onClose, booking, refreshBo
     setPayoutModalOpen(false);
     setPayoutAmount('');
     setFile(null);
-    dispatch(fetchPayouts(booking.id));
+    if (booking?.id) {
+      dispatch(fetchPayouts(booking.id));
+    }
     if (payoutFileInputRef.current) {
       payoutFileInputRef.current.value = '';
     }
@@ -178,6 +190,10 @@ export default function BookingDetailsDrawer({ open, onClose, booking, refreshBo
       return;
     }
     try {
+      if (!booking?.id || !booking?.teacher?.id) {
+        alert('Faltan datos de la reserva o del instructor.');
+        return;
+      }
       // Llamar a la función del Redux slice para crear el payout
       await dispatch(createPayout(booking.id, file, booking.teacher.id, parseFloat(payoutAmount)));
       
@@ -225,8 +241,9 @@ export default function BookingDetailsDrawer({ open, onClose, booking, refreshBo
     }).format(price);
   };
 
-  const calendarEvents = booking?.eventList?.map(event => ({
-    title: `Clase con ${booking.teacher.name} ${booking.teacher.lastname}`,
+  const teacherLabel = [booking?.teacher?.name, booking?.teacher?.lastname].filter(Boolean).join(' ') || 'Instructor';
+  const calendarEvents = booking?.eventList?.map((event) => ({
+    title: `Clase con ${teacherLabel}`,
     start: event.start,
     end: event.end,
     allDay: false,
@@ -237,6 +254,42 @@ export default function BookingDetailsDrawer({ open, onClose, booking, refreshBo
       dispatch(fetchPayouts(booking.id));
     }
   }, [open, booking?.id, dispatch]);
+
+  useEffect(() => {
+    const shouldFetch =
+      open &&
+      booking?.id &&
+      (booking?.type === 'GEAR_ONLY' || booking?.includesEquipments);
+    if (!shouldFetch) {
+      setRentalLines([]);
+      setRentalLinesError(null);
+      return undefined;
+    }
+    let cancelled = false;
+    setRentalLinesLoading(true);
+    setRentalLinesError(null);
+    axios
+      .get(`/api/rental/admin/reservations/booking/${booking.id}`)
+      .then((res) => {
+        if (!cancelled) {
+          setRentalLines(Array.isArray(res.data) ? res.data : []);
+        }
+      })
+      .catch((err) => {
+        if (!cancelled) {
+          setRentalLinesError(typeof err === 'string' ? err : err?.message || 'Error');
+          setRentalLines([]);
+        }
+      })
+      .finally(() => {
+        if (!cancelled) {
+          setRentalLinesLoading(false);
+        }
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [open, booking?.id, booking?.type, booking?.includesEquipments]);
 
   // Cleanup object URL when file changes or component unmounts
   useEffect(() => {
@@ -345,14 +398,14 @@ export default function BookingDetailsDrawer({ open, onClose, booking, refreshBo
                     )}
                   </Stack>
                   <Typography variant="body1">
-                    {`${booking?.student.name} ${booking?.student.lastname}`}
+                    {[booking?.student?.name, booking?.student?.lastname].filter(Boolean).join(' ') || '—'}
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
-                    ID: {booking?.student.id}
+                    ID: {booking?.student?.id ?? '—'}
                   </Typography>
                   {booking?.student?.cellphone && (
                     <Typography variant="body2" color="text.secondary">
-                      Tel: {booking?.student.cellphone}
+                      Tel: {booking.student.cellphone}
                     </Typography>
                   )}
                 </Box>
@@ -389,14 +442,14 @@ export default function BookingDetailsDrawer({ open, onClose, booking, refreshBo
                     </Stack>
                   </Stack>
                   <Typography variant="body1">
-                    {`${booking?.teacher.name} ${booking?.teacher.lastname}`}
+                    {[booking?.teacher?.name, booking?.teacher?.lastname].filter(Boolean).join(' ') || '—'}
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
-                    ID: {booking?.teacher.id}
+                    ID: {booking?.teacher?.id ?? '—'}
                   </Typography>
                   {booking?.teacher?.phone && (
                     <Typography variant="body2" color="text.secondary">
-                      Tel: {booking?.teacher.cellphone}
+                      Tel: {booking?.teacher?.cellphone}
                     </Typography>
                   )}
                 </Box>
@@ -445,12 +498,12 @@ export default function BookingDetailsDrawer({ open, onClose, booking, refreshBo
                   <Typography variant="body2" color="text.secondary">
                     Método de Pago
                   </Typography>
-                  {console.log({booking})}
                   <Label
                     variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
                     color={
                       (booking?.bookingPaymentMethod === "CASH" && 'default') ||
                       (booking?.bookingPaymentMethod === "TRANSFER" && 'info') ||
+                      (booking?.bookingPaymentMethod === "WIRE_TRANSFER" && 'info') ||
                       (booking?.bookingPaymentMethod === "DEBIT_CARD" && 'secondary') ||
                       (booking?.bookingPaymentMethod === "CREDIT_CARD" && 'primary') ||
                       'default'
@@ -483,6 +536,104 @@ export default function BookingDetailsDrawer({ open, onClose, booking, refreshBo
                 </Grid>
               </Grid>
             </Box>
+
+            {(booking?.type === 'GEAR_ONLY' ||
+              booking?.includesEquipments ||
+              booking?.rentalFulfillment ||
+              rentalLines.length > 0) && (
+              <Box>
+                <Typography variant="subtitle1" gutterBottom>
+                  Equipo / alquiler
+                </Typography>
+                {(booking?.rentalFulfillment || booking?.rentalDestinationDetail) && (
+                  <Stack spacing={1} sx={{ mb: 2 }}>
+                    {booking?.rentalFulfillment && (
+                      <Typography variant="body2" color="text.secondary">
+                        Entrega:{' '}
+                        <Typography component="span" variant="body2" color="text.primary">
+                          {booking.rentalFulfillment === 'SHIP_TO_HOTEL_OR_HOME'
+                            ? 'Envío a hotel o domicilio'
+                            : booking.rentalFulfillment === 'PICKUP_IN_SHOP'
+                            ? 'Retiro en tienda'
+                            : booking.rentalFulfillment}
+                        </Typography>
+                      </Typography>
+                    )}
+                    {booking?.rentalDestinationType && (
+                      <Typography variant="body2" color="text.secondary">
+                        Tipo de destino:{' '}
+                        <Typography component="span" variant="body2" color="text.primary">
+                          {booking.rentalDestinationType === 'HOTEL_OR_CABIN'
+                            ? 'Hotel / cabaña'
+                            : booking.rentalDestinationType === 'HOME_ADDRESS'
+                            ? 'Domicilio'
+                            : booking.rentalDestinationType}
+                        </Typography>
+                      </Typography>
+                    )}
+                    {booking?.rentalDestinationDetail && (
+                      <Typography variant="body2" color="text.secondary">
+                        Dirección / hotel:{' '}
+                        <Typography component="span" variant="body2" color="text.primary">
+                          {booking.rentalDestinationDetail}
+                        </Typography>
+                      </Typography>
+                    )}
+                  </Stack>
+                )}
+                {rentalLinesLoading && (
+                  <Typography variant="body2" color="text.secondary">
+                    Cargando líneas de alquiler…
+                  </Typography>
+                )}
+                {rentalLinesError && (
+                  <Alert severity="warning" sx={{ mb: 1 }}>
+                    {rentalLinesError}
+                  </Alert>
+                )}
+                {!rentalLinesLoading && rentalLines.length > 0 && (
+                  <TableContainer>
+                    <Table size="small">
+                      <TableHead>
+                        <TableRow>
+                          <TableCell>Ítem</TableCell>
+                          <TableCell>Variante</TableCell>
+                          <TableCell>Fechas</TableCell>
+                          <TableCell>Participante</TableCell>
+                          <TableCell align="right">Altura cm</TableCell>
+                          <TableCell align="right">Peso kg</TableCell>
+                          <TableCell align="right">Pie cm</TableCell>
+                          <TableCell>Nivel</TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {rentalLines.map((row) => (
+                          <TableRow key={row.id}>
+                            <TableCell>{row.itemName || '—'}</TableCell>
+                            <TableCell>{row.variantSummary || '—'}</TableCell>
+                            <TableCell>
+                              {[row.startDate, row.endDate].filter(Boolean).join(' → ') || '—'}
+                            </TableCell>
+                            <TableCell>
+                              {[row.renterFirstName, row.renterLastName].filter(Boolean).join(' ') || '— (titular)'}
+                            </TableCell>
+                            <TableCell align="right">{row.renterHeightCm ?? '—'}</TableCell>
+                            <TableCell align="right">{row.renterWeightKg ?? '—'}</TableCell>
+                            <TableCell align="right">{row.renterFootLengthCm ?? '—'}</TableCell>
+                            <TableCell>{row.renterSkiLevel || '—'}</TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                )}
+                {!rentalLinesLoading && !rentalLinesError && rentalLines.length === 0 && (
+                  <Typography variant="body2" color="text.secondary">
+                    Sin líneas de alquiler registradas para esta reserva.
+                  </Typography>
+                )}
+              </Box>
+            )}
 
             {/* Comentarios */}
             <Box>

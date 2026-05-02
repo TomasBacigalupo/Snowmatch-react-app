@@ -109,7 +109,7 @@ export default function RentalProductForm({ item, onSave, onCancel, categoryOpti
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [formData, setFormData] = useState({
-    resortId: item?.resortId || '',
+    resortId: item?.resortId || 'CERRO_CATEDRAL',
     category: item?.category || '',
     name: item?.name || '',
     description: item?.description || '',

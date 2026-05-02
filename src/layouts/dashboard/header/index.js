@@ -81,7 +81,6 @@ export default function DashboardHeader({ onOpenSidebar, isCollapse = false, ver
       <Toolbar
         sx={{
           minHeight: '100% !important',
-          px: { lg: 5 },
           paddingTop: 'env(safe-area-inset-top)',
         }}
       >

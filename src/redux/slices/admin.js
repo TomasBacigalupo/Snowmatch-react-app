@@ -24,6 +24,7 @@ const initialState = {
   documents: [],
   successMessage: null,
   payouts: [],
+  bookingIntents: [],
   financialData: {
     bookings: [],
     payouts: [],
@@ -95,6 +96,11 @@ const slice = createSlice({
       console.log(action.payload)
       state.isLoading = false;
       state.bookings = action.payload;
+    },
+
+    getBookingIntentsSuccess(state, action) {
+      state.isLoading = false;
+      state.bookingIntents = action.payload;
     },
 
     openModal(state, email) {
@@ -332,6 +338,50 @@ export function getBookings(teacherId, studentId, month, page, size = 100000, re
       dispatch(slice.actions.getBookingsSuccess(response.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+export function getBookingIntents(studentId, month, page, size = 100, resort, year) {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const params = new URLSearchParams();
+      params.append('page', page ?? 0);
+      params.append('size', size);
+      params.append('state', 'OPEN');
+      if (studentId) params.append('studentId', studentId);
+      if (month) params.append('month', month);
+      if (resort) params.append('resort', resort);
+      if (year != null) params.append('year', year);
+      const response = await axios.get(`/api/admin/booking-intents/filter?${params.toString()}`);
+      dispatch(slice.actions.getBookingIntentsSuccess(response.data));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+export function convertBookingIntent(intentId, teacherId, onDone) {
+  return async () => {
+    try {
+      await axios.post(`/api/admin/booking-intents/${intentId}/convert`, { teacherId });
+      if (onDone) await onDone();
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+      throw error;
+    }
+  };
+}
+
+export function cancelBookingIntent(intentId, onDone) {
+  return async () => {
+    try {
+      await axios.delete(`/api/admin/booking-intents/${intentId}`);
+      if (onDone) await onDone();
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+      throw error;
     }
   };
 }

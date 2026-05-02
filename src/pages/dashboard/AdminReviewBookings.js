@@ -19,7 +19,9 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
-  Typography
+  Typography,
+  Tabs,
+  Tab,
 } from '@mui/material';
 import Hidden from 'src/components/LegacyHidden';
 
@@ -40,12 +42,13 @@ import { TableEmptyRows, TableHeadCustom, TableNoData, TableSelectedActions } fr
 import { AdminTableToolbar, AdminTableRow } from '../../sections/@dashboard/admin/list';
 //cosas de fede
 import { useDispatch, useSelector } from '../../redux/store';
-import { getTeachers, openModal, closeModal, getBooking, getBookings, openEditBookingModal, deleteBooking, openDeleteModal, closeDeleteModal } from '../../redux/slices/admin'
+import { getTeachers, openModal, closeModal, getBooking, getBookings, getBookingIntents, openEditBookingModal, deleteBooking, openDeleteModal, closeDeleteModal } from '../../redux/slices/admin'
 import { DialogAnimate } from '../../components/animate';
 import DeclineForm from '../../sections/@dashboard/admin/DeclineForm';
 import AdminTableCard from 'src/sections/@dashboard/admin/list/AdminTableCard';
 import AdminBookingTableRow from 'src/sections/@dashboard/admin/list/AdminBookingTableRow';
 import AdminBookingTableCard from 'src/sections/@dashboard/admin/list/AdminBookingTableCard';
+import AdminBookingIntentTableRow from 'src/sections/@dashboard/admin/list/AdminBookingIntentTableRow';
 import BookingModal from 'src/sections/@dashboard/admin/BookingModal';
 import BookingSummary from 'src/sections/@dashboard/admin/list/BookingSummary';
 import useAuth from 'src/hooks/useAuth';
@@ -215,7 +218,9 @@ export function AdminBookingsPage({ bookingListKind, pageTitle, heading }) {
     bookingListKind === 'lesson' ? 'Cerro Catedral' : ''
   );
   const [filterDate, setFilterDate] = useState('');
+  const [listTab, setListTab] = useState(0);
   const filterStatus = 'all';
+  const activeListTab = bookingListKind === 'lesson' ? listTab : 0;
   const [selectedBooking, setSelectedBooking] = useState(null);
   const handleFilterName = (filterName) => {
     setFilterName(filterName);
@@ -344,7 +349,9 @@ export function AdminBookingsPage({ bookingListKind, pageTitle, heading }) {
 
   const dispatch = useDispatch();
 
-  const { teachers: reduxTeachers, isOpenModal, isOpenEditBookingModal, isOpenDeleteModal, selectedEmail, selectedBookingId, bookings } = useSelector((state) => state.admin);
+  const { teachers: reduxTeachers, isOpenModal, isOpenEditBookingModal, isOpenDeleteModal, selectedEmail, selectedBookingId, bookings, bookingIntents } = useSelector((state) => state.admin);
+
+  const displayRows = activeListTab === 0 ? displayBookings : (bookingIntents ?? []);
 
   console.log('Modal states:', { isOpenDeleteModal, selectedBookingId });
 
@@ -405,6 +412,27 @@ export function AdminBookingsPage({ bookingListKind, pageTitle, heading }) {
     dispatchBookings();
   };
 
+  const refreshBookingIntents = () => {
+    const y = new Date().getFullYear();
+    dispatch(
+      getBookingIntents(
+        filterStudentId || undefined,
+        filterMonth || undefined,
+        page,
+        rowsPerPage,
+        filterResort || undefined,
+        y
+      )
+    );
+  };
+
+  useEffect(() => {
+    if (bookingListKind === 'lesson' && listTab === 1) {
+      refreshBookingIntents();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- refresh after tab/filters
+  }, [bookingListKind, listTab, filterStudentId, filterMonth, page, rowsPerPage, filterResort, dispatch]);
+
   const handleFilterDate = (event) => {
     console.log('handleFilterDate called with event:', event);
     setFilterDate(event);
@@ -442,6 +470,12 @@ export function AdminBookingsPage({ bookingListKind, pageTitle, heading }) {
             ) : undefined
           }
         />
+        {bookingListKind === 'lesson' && (
+          <Tabs value={listTab} onChange={(e, v) => setListTab(v)} sx={{ px: 2, mb: 1 }}>
+            <Tab label="Reservas" />
+            <Tab label="Pendientes (sin instructor)" />
+          </Tabs>
+        )}
         <AdminTableToolbar
           filterName={filterName}
           filterRole={filterRole}
@@ -462,7 +496,10 @@ export function AdminBookingsPage({ bookingListKind, pageTitle, heading }) {
           hideInstructorFilters={bookingListKind === 'gear'}
           showFullMonthList
         />
-        <BookingSummary bookings={displayBookings} isGearBookings={bookingListKind === 'gear'} />
+        <BookingSummary
+          bookings={activeListTab === 0 ? displayBookings : []}
+          isGearBookings={bookingListKind === 'gear'}
+        />
         <Card>
           {bookingListKind === 'lesson' && (
             <BookingModal
@@ -471,6 +508,7 @@ export function AdminBookingsPage({ bookingListKind, pageTitle, heading }) {
                 console.log('BookingModal onClose called');
                 setIsOpen(false);
                 refreshBookings();
+                refreshBookingIntents();
               }}
               filterTeacherId={filterTeacherId}
               filterStudentId={filterStudentId}
@@ -484,15 +522,15 @@ export function AdminBookingsPage({ bookingListKind, pageTitle, heading }) {
           <Scrollbar>
             <Hidden smDown>
               <TableContainer sx={{ minWidth: 800, position: 'relative' }}>
-                {selected.length > 0 && (
+                {selected.length > 0 && activeListTab === 0 && (
                   <TableSelectedActions
                     dense={dense}
                     numSelected={selected.length}
-                    rowCount={displayBookings.length}
+                    rowCount={displayRows.length}
                     onSelectAllRows={(checked) =>
                       onSelectAllRows(
                         checked,
-                        displayBookings?.map((row) => row.id)
+                        displayRows?.map((row) => row.id)
                       )
                     }
                     actions={
@@ -509,86 +547,117 @@ export function AdminBookingsPage({ bookingListKind, pageTitle, heading }) {
                   <TableHeadCustom
                     order={order}
                     orderBy={orderBy}
-                    headLabel={tableHeadLabel}
-                    rowCount={displayBookings?.length ?? 0}
+                    headLabel={activeListTab === 0 ? tableHeadLabel : TABLE_HEAD}
+                    rowCount={displayRows?.length ?? 0}
                     numSelected={selected.length}
                     onSort={onSort}
                     onSelectAllRows={(checked) =>
-                      onSelectAllRows(
-                        checked,
-                        displayBookings?.map((row) => row.id)
-                      )
+                      activeListTab === 0
+                        ? onSelectAllRows(
+                            checked,
+                            displayRows?.map((row) => row.id)
+                          )
+                        : undefined
                     }
                   />
 
                   <TableBody>
-                    {displayBookings?.map((row) => (
-                      <AdminBookingTableRow
-                        key={row.id}
-                        row={row}
-                        isGearAdminList={bookingListKind === 'gear'}
-                        selected={selected.includes(row.id)}
-                        onSelectRow={() => onSelectRow(row.id)}
-                        onEditRow={() => handleEditRow(row.id)}
-                        onConfirmRow={() => handleConfirmRow(row.id)}
-                        onDeclineRow={() =>
-                          handleDeclineOpenModal(row.student?.email || row.email)
-                        }
-                        onWapp={() => {
-                          handleContactWapp(
-                            row.student?.countryCode || row.countryCode,
-                            row.student?.cellphone || row.cellphone,
-                            row.student?.name || row.name
-                          );
-                        }}
-                        onEvents={() => {
-                          if (row.teacher?.id) navigate(PATH_DASHBOARD.admin.events(row.teacher.id));
-                        }}
-                        onDeleteRow={() => handleDeleteRow(row.id)}
-                        refreshBookings={refreshBookings}
-                      />))}
+                    {activeListTab === 0
+                      ? displayRows?.map((row) => (
+                          <AdminBookingTableRow
+                            key={row.id}
+                            row={row}
+                            isGearAdminList={bookingListKind === 'gear'}
+                            selected={selected.includes(row.id)}
+                            onSelectRow={() => onSelectRow(row.id)}
+                            onEditRow={() => handleEditRow(row.id)}
+                            onConfirmRow={() => handleConfirmRow(row.id)}
+                            onDeclineRow={() =>
+                              handleDeclineOpenModal(row.student?.email || row.email)
+                            }
+                            onWapp={() => {
+                              handleContactWapp(
+                                row.student?.countryCode || row.countryCode,
+                                row.student?.cellphone || row.cellphone,
+                                row.student?.name || row.name
+                              );
+                            }}
+                            onEvents={() => {
+                              if (row.teacher?.id) navigate(PATH_DASHBOARD.admin.events(row.teacher.id));
+                            }}
+                            onDeleteRow={() => handleDeleteRow(row.id)}
+                            refreshBookings={refreshBookings}
+                          />
+                        ))
+                      : displayRows?.map((row) => (
+                          <AdminBookingIntentTableRow
+                            key={row.id}
+                            row={row}
+                            onRefreshIntents={refreshBookingIntents}
+                          />
+                        ))}
 
                     <TableEmptyRows height={denseHeight} emptyRows={0} />
 
-                    <TableNoData isNotFound={isNotFound} />
+                    <TableNoData
+                      isNotFound={
+                        activeListTab === 0 ? isNotFound : !(bookingIntents && bookingIntents.length)
+                      }
+                    />
                   </TableBody>
                 </Table>
               </TableContainer>
             </Hidden>
             <Hidden smUp>
-              {displayBookings?.map((row) => (
-                <Box key={row.id} onClick={() =>{ 
-                  setOpenDrawer(true)
-                  setSelectedBooking(row)
-                }}><AdminBookingTableCard
-                  row={row}
-                  isGearAdminList={bookingListKind === 'gear'}
-                  selected={selected.includes(row.id)}
-                  onSelectRow={() => onSelectRow(row.id)}
-                  onEditRow={() => handleEditRow(row.id)}
-                  onConfirmRow={() => handleConfirmRow(row.id)}
-                  onDeclineRow={() =>
-                    handleDeclineOpenModal(row.student?.email || row.email)
-                  }
-                  onWapp={() => {
-                    handleContactWapp(
-                      row.student?.countryCode || row.countryCode,
-                      row.student?.cellphone || row.cellphone,
-                      row.student?.name || row.name
-                    );
-                  }}
-                  onEvents={() => {
-                    if (row.teacher?.id) navigate(PATH_DASHBOARD.admin.events(row.teacher.id));
-                  }}
-                  onDeleteRow={() => handleDeleteRow(row.id)}
+              {activeListTab === 0 &&
+                displayBookings?.map((row) => (
+                  <Box
+                    key={row.id}
+                    onClick={() => {
+                      setOpenDrawer(true);
+                      setSelectedBooking(row);
+                    }}
+                  >
+                    <AdminBookingTableCard
+                      row={row}
+                      isGearAdminList={bookingListKind === 'gear'}
+                      selected={selected.includes(row.id)}
+                      onSelectRow={() => onSelectRow(row.id)}
+                      onEditRow={() => handleEditRow(row.id)}
+                      onConfirmRow={() => handleConfirmRow(row.id)}
+                      onDeclineRow={() =>
+                        handleDeclineOpenModal(row.student?.email || row.email)
+                      }
+                      onWapp={() => {
+                        handleContactWapp(
+                          row.student?.countryCode || row.countryCode,
+                          row.student?.cellphone || row.cellphone,
+                          row.student?.name || row.name
+                        );
+                      }}
+                      onEvents={() => {
+                        if (row.teacher?.id) navigate(PATH_DASHBOARD.admin.events(row.teacher.id));
+                      }}
+                      onDeleteRow={() => handleDeleteRow(row.id)}
+                      refreshBookings={refreshBookings}
+                    />
+                  </Box>
+                ))}
+              {bookingListKind === 'lesson' && activeListTab === 1 && (
+                <Box sx={{ p: 2 }}>
+                  <Typography variant="body2" color="text.secondary">
+                    Pendientes sin instructor: abrí esta página en escritorio para asignar o cancelar.
+                  </Typography>
+                </Box>
+              )}
+              {openDrawer && selectedBooking && (
+                <BookingDetailsDrawer
+                  open={openDrawer}
+                  onClose={() => setOpenDrawer(false)}
+                  booking={selectedBooking}
                   refreshBookings={refreshBookings}
-                /></Box>))}
-             {openDrawer && selectedBooking && <BookingDetailsDrawer
-                open={openDrawer}
-                onClose={() => setOpenDrawer(false)}
-                booking={selectedBooking}
-                refreshBookings={refreshBookings}
-              />}
+                />
+              )}
             </Hidden>
 
           </Scrollbar>

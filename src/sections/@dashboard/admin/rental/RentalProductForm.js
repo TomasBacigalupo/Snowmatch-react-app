@@ -96,6 +96,38 @@ const isValidUrl = (string) => {
   }
 };
 
+function itemToFormValues(item) {
+  if (!item) {
+    return {
+      resortId: 'CERRO_CATEDRAL',
+      category: '',
+      name: '',
+      description: '',
+      imageUrl: '',
+      pricePerDay: 0,
+      variants: [],
+    };
+  }
+  return {
+    resortId: item.resortId != null && item.resortId !== '' ? String(item.resortId) : '',
+    category: item.category != null ? String(item.category) : '',
+    name: item.name ?? '',
+    description: item.description ?? '',
+    imageUrl: item.imageUrl ?? '',
+    pricePerDay: item.pricePerDay != null ? Number(item.pricePerDay) : 0,
+    variants: Array.isArray(item.variants)
+      ? item.variants.map((v) => ({
+          id: v.id,
+          size: v.size ?? '',
+          skillLevel: v.skillLevel != null ? String(v.skillLevel) : '',
+          gender: v.gender != null ? String(v.gender) : '',
+          unitsTotal: v.unitsTotal != null ? Number(v.unitsTotal) : 0,
+          unitsAvailable: v.unitsAvailable,
+        }))
+      : [],
+  };
+}
+
 // ----------------------------------------------------------------------
 
 export default function RentalProductForm({ item, onSave, onCancel, categoryOptions = [] }) {
@@ -103,20 +135,23 @@ export default function RentalProductForm({ item, onSave, onCancel, categoryOpti
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const [openVariantDialog, setOpenVariantDialog] = useState(false);
   const [editingVariantIndex, setEditingVariantIndex] = useState(null);
-  const [imagePreview, setImagePreview] = useState('');
+  const [imagePreview, setImagePreview] = useState(() => (item?.imageUrl ? String(item.imageUrl) : ''));
   const [errors, setErrors] = useState({});
   const [touched, setTouched] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const [formData, setFormData] = useState({
-    resortId: item?.resortId || 'CERRO_CATEDRAL',
-    category: item?.category || '',
-    name: item?.name || '',
-    description: item?.description || '',
-    imageUrl: item?.imageUrl || '',
-    pricePerDay: item?.pricePerDay || 0,
-    variants: item?.variants || [],
-  });
+  const [formData, setFormData] = useState(() => itemToFormValues(item));
+
+  const itemSyncKey = item?.id != null ? String(item.id) : 'create';
+
+  useEffect(() => {
+    setFormData(itemToFormValues(item));
+    setErrors({});
+    setTouched({});
+    setImagePreview(item?.imageUrl ? String(item.imageUrl) : '');
+    setOpenVariantDialog(false);
+    setEditingVariantIndex(null);
+  }, [itemSyncKey]);
 
   // Update image preview when imageUrl changes
   useEffect(() => {
@@ -175,8 +210,8 @@ export default function RentalProductForm({ item, onSave, onCancel, categoryOpti
     const newVariants = [...formData.variants];
     
     if (editingVariantIndex !== null) {
-      // Edit existing variant
-      newVariants[editingVariantIndex] = variantData;
+      const prevId = formData.variants[editingVariantIndex]?.id;
+      newVariants[editingVariantIndex] = prevId != null ? { ...variantData, id: prevId } : variantData;
     } else {
       // Add new variant
       newVariants.push(variantData);
@@ -358,7 +393,7 @@ export default function RentalProductForm({ item, onSave, onCancel, categoryOpti
             {/* Variants List */}
             <Stack spacing={2}>
               {formData.variants.map((variant, index) => (
-                <Card key={index} variant="outlined">
+                <Card key={variant.id != null ? String(variant.id) : `new-${index}`} variant="outlined">
                   <CardContent>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                       <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>

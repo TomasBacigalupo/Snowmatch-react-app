@@ -88,7 +88,7 @@ export default function AdminRental() {
   const dispatch = useDispatch();
   
   // State for rental items
-  const { items, loading, error, successMessage } = useSelector((state) => state.rental);
+  const { items, isLoading, error, successMessage } = useSelector((state) => state.rental);
   
   // Local state
   const [page, setPage] = useState(0);
@@ -178,7 +178,7 @@ export default function AdminRental() {
   };
 
   const filteredItems = items || [];
-  const isNotFound = !filteredItems.length && !loading;
+  const isNotFound = !filteredItems.length && !isLoading;
 
   return (
     <Page title="Admin: Rental Management">
@@ -328,6 +328,7 @@ export default function AdminRental() {
           </DialogTitle>
           <DialogContent>
             <RentalProductForm
+              key={editingItem?.id ?? 'create'}
               item={editingItem}
               onSave={handleSaveItem}
               onCancel={handleCloseForm}

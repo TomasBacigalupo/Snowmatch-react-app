@@ -23,6 +23,7 @@ const initialState = {
     adults: 1,
     children: 0,
     bookSuccess: false,
+    intentSuccess: false,
     events: [],
     assignedStudents: [],
     preferenceId:'',
@@ -247,6 +248,16 @@ const slice = createSlice({
             state.bookSuccess = action.payload;
         },
 
+        setIntentSuccess(state, action) {
+            state.intentSuccess = action.payload;
+        },
+
+        createIntentSuccess(state) {
+            state.isLoading = false;
+            state.loadingPayment = false;
+            state.intentSuccess = true;
+        },
+
         // UPDATE BOOKING WITH INVOICE
         updateBookingWithInvoice(state, action) {
             const { bookingId, invoiceData } = action.payload;
@@ -322,7 +333,7 @@ const slice = createSlice({
 export default slice.reducer;
 
 // Actions
-export const { openModal, closeModal, selectEvent, changeMessage, bookingPending, changeAsignedStudents, onCreateBookingError, setBookingSuccess, updateBookingWithInvoice, updateBookingWithPayout } = slice.actions;
+export const { openModal, closeModal, selectEvent, changeMessage, bookingPending, changeAsignedStudents, onCreateBookingError, setBookingSuccess, setIntentSuccess, updateBookingWithInvoice, updateBookingWithPayout } = slice.actions;
 
 // ----------------------------------------------------------------------
 
@@ -630,6 +641,71 @@ export function createAdminBooking(teacherId, studentId, message, children, adul
                 bookingPaymentMethod: paymentMethod
             });
             dispatch(slice.actions.createBookingSuccess());
+        } catch (error) {
+            dispatch(slice.actions.hasError(error));
+        }
+    };
+}
+
+export function createAdminBookingIntent(studentId, message, children, adults, events, totalPrice, bookingType, includesLaunch, includesEquipment, paymentStatus, paymentMethod, internalComment, resort) {
+    return async () => {
+        dispatch(slice.actions.startLoading());
+        try {
+            await axios.post(`/api/admin/booking-intents?businessId=13`, {
+                student: { id: studentId },
+                userComment: message,
+                eventList: events.map(e => {
+                    if (e.lessonTime === 'AFTERNOON') {
+                        return {
+                            ...e,
+                            start: dayjs(e.start),
+                            end: dayjs(e.start),
+                            lessonTime: 'AFTERNOON'
+                        };
+                    }
+                    if (e.lessonTime === 'AFTERNOON_2_HS') {
+                        return {
+                            ...e,
+                            start: dayjs(e.start),
+                            end: dayjs(e.start),
+                            lessonTime: 'AFTERNOON_2_HS'
+                        };
+                    }
+                    if (e.lessonTime === 'MORNING_2_HS') {
+                        return {
+                            ...e,
+                            start: dayjs(e.start),
+                            end: dayjs(e.start),
+                            lessonTime: 'MORNING_2_HS'
+                        };
+                    }
+                    if (e.lessonTime === 'MORNING') {
+                        return {
+                            ...e,
+                            start: dayjs(e.start),
+                            end: dayjs(e.start),
+                            lessonTime: 'MORNING'
+                        };
+                    }
+                    return {
+                        ...e,
+                        start: dayjs(e.start),
+                        end: dayjs(e.start),
+                        lessonTime: 'ALL_DAY'
+                    };
+                }),
+                children,
+                adults,
+                price: totalPrice,
+                type: bookingType,
+                includesLaunch,
+                includesEquipment,
+                paymentStatus,
+                internalComment,
+                resort,
+                bookingPaymentMethod: paymentMethod
+            });
+            dispatch(slice.actions.createIntentSuccess());
         } catch (error) {
             dispatch(slice.actions.hasError(error));
         }

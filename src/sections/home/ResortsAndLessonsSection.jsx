@@ -244,7 +244,7 @@ const ResortsAndLessonsSection = () => {
         if (cancelled || !Array.isArray(data)) return;
         const map = {};
         data.forEach((row) => {
-          if (row?.resort) map[row.resort] = row;
+          if (row?.resort && map[row.resort] == null) map[row.resort] = row;
         });
         setGroupConfigByEnum(map);
       } catch {
@@ -263,14 +263,43 @@ const ResortsAndLessonsSection = () => {
         const cfg = enumKey ? groupConfigByEnum[enumKey] : null;
         const groupPriceLabel =
           cfg?.price != null ? `${cfg.price} ${cfg.currency || ''}`.trim() : null;
+        const displayGroupLessonTitle =
+          typeof cfg?.title === 'string' && cfg.title.trim() ? cfg.title.trim() : null;
+        const groupLessonMetaLines = [];
+        if (cfg?.includesGear) {
+          groupLessonMetaLines.push(t('resortsAndLessons.groupLessonGearIncluded'));
+        }
+        const level = typeof cfg?.skiLevel === 'string' ? cfg.skiLevel.trim() : '';
+        if (level) {
+          groupLessonMetaLines.push(t('resortsAndLessons.groupLessonSkiLevel', { level }));
+        }
+        const minA = cfg?.minAge;
+        if (minA != null && minA !== '' && Number.isFinite(Number(minA))) {
+          groupLessonMetaLines.push(t('resortsAndLessons.groupLessonMinAge', { age: Number(minA) }));
+        }
+        const minD = cfg?.minDays;
+        if (minD != null && minD !== '' && Number.isFinite(Number(minD)) && Number(minD) >= 1) {
+          groupLessonMetaLines.push(t('resortsAndLessons.groupLessonMinDays', { count: Number(minD) }));
+        }
+        const st = typeof cfg?.startTime === 'string' ? cfg.startTime.trim().slice(0, 5) : '';
+        const et = typeof cfg?.endTime === 'string' ? cfg.endTime.trim().slice(0, 5) : '';
+        if (st && et) {
+          groupLessonMetaLines.push(t('resortsAndLessons.groupLessonTimeRange', { start: st, end: et }));
+        } else if (st) {
+          groupLessonMetaLines.push(t('resortsAndLessons.groupLessonStartTime', { time: st }));
+        } else if (et) {
+          groupLessonMetaLines.push(t('resortsAndLessons.groupLessonEndTime', { time: et }));
+        }
         return {
           ...r,
           displayImage: cfg?.imageUrl || r.image,
           displayDescription: cfg?.description || r.description,
+          displayGroupLessonTitle,
           groupPriceLabel,
+          groupLessonMetaLines,
         };
       }),
-    [groupConfigByEnum]
+    [groupConfigByEnum, t]
   );
 
   const scrollToRight = () => {
@@ -357,10 +386,35 @@ const ResortsAndLessonsSection = () => {
                     <LocationText>
                       {resort.location}
                     </LocationText>
-                    
+
+                    {resort.displayGroupLessonTitle ? (
+                      <Typography
+                        component="p"
+                        variant="subtitle1"
+                        sx={{ fontWeight: 700, mt: 1, mb: 0.5, color: 'text.primary' }}
+                      >
+                        {resort.displayGroupLessonTitle}
+                      </Typography>
+                    ) : null}
+
                     <DescriptionText>
                       {resort.displayDescription}
                     </DescriptionText>
+
+                    {Array.isArray(resort.groupLessonMetaLines) && resort.groupLessonMetaLines.length > 0 ? (
+                      <Stack component="ul" sx={{ m: 0, pl: 2, mb: 1 }} spacing={0.25}>
+                        {resort.groupLessonMetaLines.map((line) => (
+                          <Typography
+                            key={line}
+                            component="li"
+                            variant="caption"
+                            sx={{ color: 'text.secondary' }}
+                          >
+                            {line}
+                          </Typography>
+                        ))}
+                      </Stack>
+                    ) : null}
 
                     {resort.groupPriceLabel && (
                       <Typography

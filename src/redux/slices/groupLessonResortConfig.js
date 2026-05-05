@@ -19,20 +19,124 @@ export const fetchGroupLessonResortConfigs = createAsyncThunk(
   }
 );
 
-export const updateGroupLessonResortConfig = createAsyncThunk(
-  'groupLessonResortConfig/update',
-  async ({ resort, price, currency, imageUrl, description }, { rejectWithValue }) => {
+export const createGroupLessonResortConfig = createAsyncThunk(
+  'groupLessonResortConfig/create',
+  async (
+    {
+      resort,
+      price,
+      currency,
+      imageUrl,
+      title,
+      description,
+      includesGear,
+      skiLevel,
+      minAge,
+      minDays,
+      startTime,
+      endTime,
+    },
+    { rejectWithValue }
+  ) => {
     try {
-      const response = await axios.put(`/api/admin/group-lesson-resort-config/${resort}`, {
+      const response = await axios.post('/api/admin/group-lesson-resort-config', {
+        resort,
         price: Number(price),
         currency: currency || 'ARS',
         imageUrl: imageUrl || null,
+        title: title?.trim() ? title.trim() : null,
         description: description || null,
+        includesGear: Boolean(includesGear),
+        skiLevel: skiLevel?.trim() ? skiLevel.trim() : null,
+        minAge:
+          minAge === '' || minAge == null
+            ? null
+            : (() => {
+                const n = Number(minAge);
+                return Number.isFinite(n) ? n : null;
+              })(),
+        minDays:
+          minDays === '' || minDays == null
+            ? null
+            : (() => {
+                const n = Number(minDays);
+                return Number.isFinite(n) ? n : null;
+              })(),
+        startTime: startTime?.trim() ? startTime.trim() : null,
+        endTime: endTime?.trim() ? endTime.trim() : null,
       });
       return response.data;
     } catch (error) {
       return rejectWithValue(
         typeof error === 'string' ? error : error?.message || 'Error saving config'
+      );
+    }
+  }
+);
+
+export const updateGroupLessonResortConfig = createAsyncThunk(
+  'groupLessonResortConfig/update',
+  async (
+    {
+      id,
+      price,
+      currency,
+      imageUrl,
+      title,
+      description,
+      includesGear,
+      skiLevel,
+      minAge,
+      minDays,
+      startTime,
+      endTime,
+    },
+    { rejectWithValue }
+  ) => {
+    try {
+      const response = await axios.put(`/api/admin/group-lesson-resort-config/${id}`, {
+        price: Number(price),
+        currency: currency || 'ARS',
+        imageUrl: imageUrl || null,
+        title: title?.trim() ? title.trim() : null,
+        description: description || null,
+        includesGear: Boolean(includesGear),
+        skiLevel: skiLevel?.trim() ? skiLevel.trim() : null,
+        minAge:
+          minAge === '' || minAge == null
+            ? null
+            : (() => {
+                const n = Number(minAge);
+                return Number.isFinite(n) ? n : null;
+              })(),
+        minDays:
+          minDays === '' || minDays == null
+            ? null
+            : (() => {
+                const n = Number(minDays);
+                return Number.isFinite(n) ? n : null;
+              })(),
+        startTime: startTime?.trim() ? startTime.trim() : null,
+        endTime: endTime?.trim() ? endTime.trim() : null,
+      });
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(
+        typeof error === 'string' ? error : error?.message || 'Error saving config'
+      );
+    }
+  }
+);
+
+export const deleteGroupLessonResortConfig = createAsyncThunk(
+  'groupLessonResortConfig/delete',
+  async (id, { rejectWithValue }) => {
+    try {
+      await axios.delete(`/api/admin/group-lesson-resort-config/${id}`);
+      return id;
+    } catch (error) {
+      return rejectWithValue(
+        typeof error === 'string' ? error : error?.message || 'Error deleting config'
       );
     }
   }
@@ -60,6 +164,21 @@ const slice = createSlice({
         state.isLoading = false;
         state.error = action.payload;
       })
+      .addCase(createGroupLessonResortConfig.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(createGroupLessonResortConfig.fulfilled, (state, action) => {
+        state.isLoading = false;
+        const created = action.payload;
+        if (created?.id != null) {
+          state.items.push(created);
+        }
+      })
+      .addCase(createGroupLessonResortConfig.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload;
+      })
       .addCase(updateGroupLessonResortConfig.pending, (state) => {
         state.isLoading = true;
         state.error = null;
@@ -67,8 +186,8 @@ const slice = createSlice({
       .addCase(updateGroupLessonResortConfig.fulfilled, (state, action) => {
         state.isLoading = false;
         const updated = action.payload;
-        if (!updated?.resort) return;
-        const idx = state.items.findIndex((x) => x.resort === updated.resort);
+        if (updated?.id == null) return;
+        const idx = state.items.findIndex((x) => x.id === updated.id);
         if (idx >= 0) {
           state.items[idx] = updated;
         } else {
@@ -76,6 +195,19 @@ const slice = createSlice({
         }
       })
       .addCase(updateGroupLessonResortConfig.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload;
+      })
+      .addCase(deleteGroupLessonResortConfig.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(deleteGroupLessonResortConfig.fulfilled, (state, action) => {
+        state.isLoading = false;
+        const id = action.payload;
+        state.items = state.items.filter((x) => x.id !== id);
+      })
+      .addCase(deleteGroupLessonResortConfig.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload;
       });

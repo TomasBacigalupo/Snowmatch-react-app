@@ -15,6 +15,7 @@ import { NumericFormat } from 'react-number-format';
 import ShopTeacherCard from 'src/sections/@dashboard/e-commerce/shop/ShopTeacherCard';
 import { PATH_DASHBOARD } from 'src/routes/paths';
 import { useSnackbar } from 'notistack';
+import { ADMIN_BOOKING_RESORT_OPTIONS } from 'src/utils/adminBookingResortOptions';
 
 const BookingModal = ({ isOpen, onClose, refreshBookings, filterTeacherId, filterStudentId, filterMonth, page, rowsPerPage, filterResort }) => {
     const dispatch = useDispatch();
@@ -23,7 +24,7 @@ const BookingModal = ({ isOpen, onClose, refreshBookings, filterTeacherId, filte
         teacher: null,
         student: null,
         dateTimes: [{ date: '', time: 'ALL_DAY', price: '' }],
-        resort: 'Cerro Catedral',
+        resort: 'CERRO_CATEDRAL',
         children: 0,
         adults: 0,
         comment: '',
@@ -69,7 +70,7 @@ const BookingModal = ({ isOpen, onClose, refreshBookings, filterTeacherId, filte
                 teacher: null,
                 student: null,
                 dateTimes: [{ date: '', time: 'ALL_DAY', price: '' }],
-                resort: 'Cerro Catedral',
+                resort: 'CERRO_CATEDRAL',
                 children: 0,
                 adults: 0,
                 teacherSearch: '',
@@ -92,12 +93,12 @@ const BookingModal = ({ isOpen, onClose, refreshBookings, filterTeacherId, filte
 
     useEffect(() => {
         if (intentSuccess) {
-            enqueueSnackbar('Reserva pendiente guardada. Asigná un instructor en la pestaña Pendientes.', { variant: 'success' });
+            enqueueSnackbar('Reserva pendiente guardada.', { variant: 'success' });
             setFormData({
                 teacher: null,
                 student: null,
                 dateTimes: [{ date: '', time: 'ALL_DAY', price: '' }],
-                resort: 'Cerro Catedral',
+                resort: 'CERRO_CATEDRAL',
                 children: 0,
                 adults: 0,
                 teacherSearch: '',
@@ -211,10 +212,6 @@ const BookingModal = ({ isOpen, onClose, refreshBookings, filterTeacherId, filte
     };
 
     const handleSubmit = () => {
-        if (!studentId) {
-            enqueueSnackbar('Seleccioná un estudiante', { variant: 'warning' });
-            return;
-        }
         const totalPrice = formData.dateTimes.reduce((acc, curr) => acc + Number(curr.price), 0);
         const events = formData.dateTimes.map((dateTime) => ({
             title: formData.bookingType === 'REFERRED' ? 'Referida' : 'Asignada',
@@ -226,8 +223,10 @@ const BookingModal = ({ isOpen, onClose, refreshBookings, filterTeacherId, filte
             textColor: formData.bookingType === 'REFERRED' ? '#00FF00' : '#FF0000' 
         }));
 
-        if (!teacherId) {
-            dispatch(createAdminBookingIntent(
+        // Confirmed booking only when both student and instructor are set.
+        if (studentId && teacherId) {
+            dispatch(createAdminBooking(
+                teacherId,
                 studentId,
                 formData.comment,
                 Number(formData.children),
@@ -244,9 +243,8 @@ const BookingModal = ({ isOpen, onClose, refreshBookings, filterTeacherId, filte
             return;
         }
 
-        dispatch(createAdminBooking(
-            teacherId,
-            studentId,
+        dispatch(createAdminBookingIntent(
+            studentId ?? null,
             formData.comment,
             Number(formData.children),
             Number(formData.adults),
@@ -258,7 +256,8 @@ const BookingModal = ({ isOpen, onClose, refreshBookings, filterTeacherId, filte
             formData.paymentStatus,
             formData.paymentMethod,
             formData.internalComment,
-            formData.resort));
+            formData.resort,
+            teacherId ?? null));
     };
 
     const handleTeacherInputChange = (event, newValue) => {
@@ -305,7 +304,10 @@ const BookingModal = ({ isOpen, onClose, refreshBookings, filterTeacherId, filte
         >
             <DialogTitle>Create Booking</DialogTitle>
             <DialogContent>
-                <Typography variant="h6" sx={{ mb: 2 }}>Student</Typography>
+                <Typography variant="h6" sx={{ mb: 2 }}>Estudiante</Typography>
+                <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+                    Opcional para una reserva pendiente (intent). Con instructor y sin estudiante se guarda pendiente con el instructor en el calendario. Con ambos se crea una reserva confirmada.
+                </Typography>
                 <Grid container spacing={2}>
                     <Grid item xs={12} md={4}>
                         <FormControl fullWidth>
@@ -315,7 +317,7 @@ const BookingModal = ({ isOpen, onClose, refreshBookings, filterTeacherId, filte
                                 getOptionLabel={(option) => `${option.name} ${option.lastname}`}
                                 value={formData.student}
                                 onChange={(e, newValue) => {
-                                    setStudentId(newValue.id);
+                                    setStudentId(newValue?.id ?? null);
                                     setFormData((prevData) => ({
                                         ...prevData,
                                         student: newValue || null,
@@ -364,9 +366,11 @@ const BookingModal = ({ isOpen, onClose, refreshBookings, filterTeacherId, filte
                                     resort: e.target.value,
                                 }))}
                             >
-                                <MenuItem value="Cerro Catedral">Cerro Catedral</MenuItem>
-                                <MenuItem value="Portillo">Portillo</MenuItem>
-                                <MenuItem value="La Parva">La Parva</MenuItem>
+                                {ADMIN_BOOKING_RESORT_OPTIONS.map((opt) => (
+                                  <MenuItem key={opt.value} value={opt.value}>
+                                    {opt.label}
+                                  </MenuItem>
+                                ))}
                             </Select>
                         </FormControl>
                     </Grid>
@@ -704,7 +708,7 @@ const BookingModal = ({ isOpen, onClose, refreshBookings, filterTeacherId, filte
                     variant="contained" 
                     loading={isLoading}
                 >
-                    {teacherId ? 'Create Booking' : 'Guardar sin instructor'}
+                    {studentId && teacherId ? 'Create Booking' : 'Guardar pendiente'}
                 </LoadingButton>
             </DialogActions>
         </Dialog>

@@ -22,6 +22,7 @@ import {
   Typography,
   Tabs,
   Tab,
+  Collapse,
 } from '@mui/material';
 import Hidden from 'src/components/LegacyHidden';
 
@@ -215,9 +216,12 @@ export function AdminBookingsPage({ bookingListKind, pageTitle, heading }) {
   const [teachers, setTeachers] = useState([]);
   const [students, setStudents] = useState([]);
   const [filterResort, setFilterResort] = useState(() =>
-    bookingListKind === 'lesson' ? 'Cerro Catedral' : ''
+    bookingListKind === 'lesson' ? 'CERRO_CATEDRAL' : ''
   );
-  const [filterDate, setFilterDate] = useState('');
+  /** Calendar year for month/day filters (must match lesson event dates in DB). */
+  const [filterYear, setFilterYear] = useState(() => new Date().getFullYear());
+  const [filterDate, setFilterDate] = useState(null);
+  const [statsOpen, setStatsOpen] = useState(false);
   const [listTab, setListTab] = useState(0);
   const filterStatus = 'all';
   const activeListTab = bookingListKind === 'lesson' ? listTab : 0;
@@ -252,13 +256,13 @@ export function AdminBookingsPage({ bookingListKind, pageTitle, heading }) {
     setFilterLevel(event.target.value);
   };
 
-  const filterYear = new Date().getFullYear();
-
   const dispatchBookings = (partial = {}) => {
     const teacherForQuery = bookingListKind === 'gear' ? '' : (partial.teacherId ?? filterTeacherId);
     const dayArg =
-      partial.day != null
-        ? partial.day
+      'day' in partial
+        ? partial.day == null
+          ? undefined
+          : partial.day
         : filterDate
           ? new Date(filterDate).getDate()
           : undefined;
@@ -286,7 +290,15 @@ export function AdminBookingsPage({ bookingListKind, pageTitle, heading }) {
 
   const handleFilterMonth = (event) => {
     setFilterMonth(event.target.value);
+    setPage(0);
     dispatchBookings({ month: event.target.value });
+  };
+
+  const handleFilterYear = (event) => {
+    const y = Number(event.target.value);
+    setFilterYear(y);
+    setPage(0);
+    dispatchBookings({ year: y });
   };
 
   const handleFilterResort = (event) => {
@@ -413,7 +425,6 @@ export function AdminBookingsPage({ bookingListKind, pageTitle, heading }) {
   };
 
   const refreshBookingIntents = () => {
-    const y = new Date().getFullYear();
     dispatch(
       getBookingIntents(
         filterStudentId || undefined,
@@ -421,7 +432,7 @@ export function AdminBookingsPage({ bookingListKind, pageTitle, heading }) {
         page,
         rowsPerPage,
         filterResort || undefined,
-        y
+        filterYear
       )
     );
   };
@@ -431,15 +442,22 @@ export function AdminBookingsPage({ bookingListKind, pageTitle, heading }) {
       refreshBookingIntents();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps -- refresh after tab/filters
-  }, [bookingListKind, listTab, filterStudentId, filterMonth, page, rowsPerPage, filterResort, dispatch]);
+  }, [bookingListKind, listTab, filterStudentId, filterMonth, filterYear, page, rowsPerPage, filterResort, dispatch]);
 
-  const handleFilterDate = (event) => {
-    console.log('handleFilterDate called with event:', event);
-    setFilterDate(event);
-    const month = event.getMonth() + 1;
-    const day = event.getDate();
-    setFilterMonth(String(month));
-    dispatchBookings({ month: String(month), day });
+  const handleFilterDate = (newValue) => {
+    setFilterDate(newValue);
+    if (newValue == null) {
+      setPage(0);
+      dispatchBookings({ day: undefined });
+      return;
+    }
+    const month = newValue.getMonth() + 1;
+    const day = newValue.getDate();
+    const y = newValue.getFullYear();
+    setFilterMonth(String(month).padStart(2, '0'));
+    setFilterYear(y);
+    setPage(0);
+    dispatchBookings({ month: String(month).padStart(2, '0'), day, year: y });
   };
 
   const tableHeadLabel = bookingListKind === 'gear' ? TABLE_HEAD_GEAR : TABLE_HEAD;
@@ -480,13 +498,16 @@ export function AdminBookingsPage({ bookingListKind, pageTitle, heading }) {
           filterName={filterName}
           filterRole={filterRole}
           filterLevel={filterLevel}
+          filterYear={filterYear}
           filterMonth={filterMonth}
           filterTeacherId={filterTeacherId}
           filterStudentId={filterStudentId}
+          filterResort={filterResort}
           filterDate={filterDate}
           onFilterName={handleFilterName}
           onFilterRole={handleFilterRole}
           onFilterLevel={handleFilterLevel}
+          onFilterYear={handleFilterYear}
           onFilterMonth={handleFilterMonth}
           onFilterTeacherId={handleFilterTeacherId}
           onFilterStudentId={handleFilterStudentId}
@@ -494,12 +515,27 @@ export function AdminBookingsPage({ bookingListKind, pageTitle, heading }) {
           onFilterDate={handleFilterDate}
           bookings
           hideInstructorFilters={bookingListKind === 'gear'}
-          showFullMonthList
         />
-        <BookingSummary
-          bookings={activeListTab === 0 ? displayBookings : []}
-          isGearBookings={bookingListKind === 'gear'}
-        />
+        <Button
+          color="inherit"
+          size="small"
+          onClick={() => setStatsOpen((o) => !o)}
+          endIcon={
+            <Iconify
+              icon={statsOpen ? 'eva:chevron-up-fill' : 'eva:chevron-down-fill'}
+              sx={{ width: 20, height: 20 }}
+            />
+          }
+          sx={{ alignSelf: 'flex-start', px: 0, mb: statsOpen ? 1 : 0, typography: 'body2' }}
+        >
+          Show stats
+        </Button>
+        <Collapse in={statsOpen}>
+          <BookingSummary
+            bookings={activeListTab === 0 ? displayBookings : []}
+            isGearBookings={bookingListKind === 'gear'}
+          />
+        </Collapse>
         <Card>
           {bookingListKind === 'lesson' && (
             <BookingModal

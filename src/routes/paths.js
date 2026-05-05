@@ -181,6 +181,7 @@ export const PATH_DASHBOARD = {
     bookingsEquipos: path(ROOTS_DASHBOARD, '/admin/bookings/equipos'),
     financial: path(ROOTS_DASHBOARD, '/admin/financial'),
     rental: path(ROOTS_DASHBOARD, '/admin/rental'),
+    rentalProviders: path(ROOTS_DASHBOARD, '/admin/rental-providers'),
     groupLessonResorts: path(ROOTS_DASHBOARD, '/admin/group-lesson-resorts'),
     broadcastLesson: path(ROOTS_DASHBOARD, '/admin/broadcast'),
     userChats: path(ROOTS_DASHBOARD, '/admin/user-chats'),

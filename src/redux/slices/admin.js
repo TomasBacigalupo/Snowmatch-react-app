@@ -362,10 +362,14 @@ export function getBookingIntents(studentId, month, page, size = 100, resort, ye
   };
 }
 
-export function convertBookingIntent(intentId, teacherId, onDone) {
+export function convertBookingIntent(intentId, teacherId, onDone, studentUserId) {
   return async () => {
     try {
-      await axios.post(`/api/admin/booking-intents/${intentId}/convert`, { teacherId });
+      const body = { teacherId };
+      if (studentUserId != null && studentUserId !== '') {
+        body.studentUserId = Number(studentUserId);
+      }
+      await axios.post(`/api/admin/booking-intents/${intentId}/convert`, body);
       if (onDone) await onDone();
     } catch (error) {
       dispatch(slice.actions.hasError(error));

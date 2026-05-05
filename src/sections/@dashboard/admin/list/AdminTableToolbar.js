@@ -1,5 +1,7 @@
 import PropTypes from 'prop-types';
-import { Stack, InputAdornment, TextField, MenuItem, Chip } from '@mui/material';
+import { useState } from 'react';
+import { Stack, InputAdornment, TextField, MenuItem, Chip, Collapse, Button } from '@mui/material';
+import { ADMIN_BOOKING_RESORT_FILTER_OPTIONS } from 'src/utils/adminBookingResortOptions';
 // components
 import Iconify from '../../../../components/Iconify';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
@@ -23,22 +25,23 @@ const TEACHER_CHIPS = [
   { name: 'Marta', value: 902 },
 ];
 
-const RESORT_OPTIONS = [
-  'Cerro Catedral',
-  'Chapelco',
-  'Cerro Bayo',
-  'Cerro Castor',
-  'Las Pendientes',
-  'Lago Hermoso',
-  'Las Leñas',
-  'Perito Moreno',
+const MONTH_OPTIONS_JUNE_OCT = [
+  { value: '06', label: 'June' },
+  { value: '07', label: 'July' },
+  { value: '08', label: 'August' },
+  { value: '09', label: 'September' },
+  { value: '10', label: 'October' },
 ];
+
+const BOOKING_FILTER_YEAR_RANGE = 8;
 
 AdminTableToolbar.propTypes = {
   filterName: PropTypes.string,
   filterRole: PropTypes.string,
   filterLevel: PropTypes.number,
   filterMonth: PropTypes.string,
+  /** Season / calendar year for admin booking month filter (optional). */
+  filterYear: PropTypes.number,
   filterTeacherId: PropTypes.string,
   filterStudentId: PropTypes.string,
   filterResort: PropTypes.string,
@@ -46,6 +49,7 @@ AdminTableToolbar.propTypes = {
   onFilterRole: PropTypes.func,
   onFilterLevel: PropTypes.func,
   onFilterMonth: PropTypes.func,
+  onFilterYear: PropTypes.func,
   onFilterTeacherId: PropTypes.func,
   onFilterStudentId: PropTypes.func,
   onFilterResort: PropTypes.func,
@@ -54,8 +58,6 @@ AdminTableToolbar.propTypes = {
   bookings: PropTypes.bool,
   /** When true, hide instructor ID field and quick teacher chips (e.g. gear-only bookings). */
   hideInstructorFilters: PropTypes.bool,
-  /** When true with bookings, month dropdown includes all 12 months. */
-  showFullMonthList: PropTypes.bool,
 };
 
 export default function AdminTableToolbar({
@@ -63,6 +65,7 @@ export default function AdminTableToolbar({
   filterRole,
   filterLevel,
   filterMonth,
+  filterYear,
   filterTeacherId,
   filterStudentId,
   filterResort,
@@ -71,13 +74,13 @@ export default function AdminTableToolbar({
   onFilterRole,
   onFilterLevel,
   onFilterMonth,
+  onFilterYear,
   onFilterTeacherId,
   onFilterStudentId,
   onFilterResort,
   optionsRole,
   bookings = false,
   hideInstructorFilters = false,
-  showFullMonthList = false,
   showRole = true,
   showLevel = true,
   showMountain = true,
@@ -90,6 +93,9 @@ export default function AdminTableToolbar({
   showResort = true,
   onFilterDate = null
 }) {
+  const [moreFiltersOpen, setMoreFiltersOpen] = useState(false);
+  const bookingYearOptions = Array.from({ length: BOOKING_FILTER_YEAR_RANGE }, (_, i) => new Date().getFullYear() - i);
+
   return (
     <Stack spacing={2}>
       <Stack
@@ -111,9 +117,12 @@ export default function AdminTableToolbar({
           <LocalizationProvider dateAdapter={AdapterDateFns}>
             <DatePicker
               label="Date"
-              value={filterDate}
+              value={filterDate ?? null}
               onChange={onFilterDate}
-              renderInput={(params) => <TextField {...params} fullWidth />}
+              slotProps={{
+                field: { clearable: true },
+                textField: { fullWidth: true },
+              }}
             />
           </LocalizationProvider>
 
@@ -205,10 +214,10 @@ export default function AdminTableToolbar({
               textTransform: 'capitalize',
             }}
           >
-            {RESORT_OPTIONS.map((option) => (
+            {ADMIN_BOOKING_RESORT_FILTER_OPTIONS.map((option) => (
               <MenuItem
-                key={option}
-                value={option}
+                key={option.value}
+                value={option.value}
                 sx={{
                   mx: 1,
                   my: 0.5,
@@ -217,7 +226,7 @@ export default function AdminTableToolbar({
                   textTransform: 'capitalize',
                 }}
               >
-                {option}
+                {option.label}
               </MenuItem>
             ))}
           </TextField>
@@ -255,60 +264,63 @@ export default function AdminTableToolbar({
           />
         )}
 
-        {showMonth && <TextField
-          fullWidth
-          select
-          label="Month"
-          value={filterMonth}
-          onChange={onFilterMonth}
-          SelectProps={{
-            MenuProps: {
-              sx: { '& .MuiPaper-root': { maxHeight: 260 } },
-            },
-          }}
-          sx={{
-            maxWidth: { sm: 240 },
-            textTransform: 'capitalize',
-          }}
-        >
-          {(bookings && showFullMonthList
-            ? [
-                { value: '01', label: 'January' },
-                { value: '02', label: 'February' },
-                { value: '03', label: 'March' },
-                { value: '04', label: 'April' },
-                { value: '05', label: 'May' },
-                { value: '06', label: 'June' },
-                { value: '07', label: 'July' },
-                { value: '08', label: 'August' },
-                { value: '09', label: 'September' },
-                { value: '10', label: 'October' },
-                { value: '11', label: 'November' },
-                { value: '12', label: 'December' },
-              ]
-            : [
-                { value: '06', label: 'June' },
-                { value: '07', label: 'July' },
-                { value: '08', label: 'August' },
-                { value: '09', label: 'September' },
-                { value: '10', label: 'October' },
-              ]
-          ).map((option) => (
-            <MenuItem
-              key={option.value}
-              value={option.value}
-              sx={{
-                mx: 1,
-                my: 0.5,
-                borderRadius: 0.75,
-                typography: 'body2',
-                textTransform: 'capitalize',
-              }}
-            >
-              {option.label}
-            </MenuItem>
-          ))}
-        </TextField>}
+        {showMonth && typeof filterYear === 'number' && onFilterYear && (
+          <TextField
+            fullWidth
+            select
+            label="Year"
+            value={filterYear}
+            onChange={onFilterYear}
+            SelectProps={{
+              MenuProps: {
+                sx: { '& .MuiPaper-root': { maxHeight: 260 } },
+              },
+            }}
+            sx={{
+              maxWidth: { sm: 240 },
+            }}
+          >
+            {bookingYearOptions.map((y) => (
+              <MenuItem key={y} value={y} sx={{ mx: 1, my: 0.5, borderRadius: 0.75, typography: 'body2' }}>
+                {y}
+              </MenuItem>
+            ))}
+          </TextField>
+        )}
+        {showMonth && (
+          <TextField
+            fullWidth
+            select
+            label="Month"
+            value={filterMonth}
+            onChange={onFilterMonth}
+            SelectProps={{
+              MenuProps: {
+                sx: { '& .MuiPaper-root': { maxHeight: 260 } },
+              },
+            }}
+            sx={{
+              maxWidth: { sm: 240 },
+              textTransform: 'capitalize',
+            }}
+          >
+            {MONTH_OPTIONS_JUNE_OCT.map((option) => (
+              <MenuItem
+                key={option.value}
+                value={option.value}
+                sx={{
+                  mx: 1,
+                  my: 0.5,
+                  borderRadius: 0.75,
+                  typography: 'body2',
+                  textTransform: 'capitalize',
+                }}
+              >
+                {option.label}
+              </MenuItem>
+            ))}
+          </TextField>
+        )}
 
         {showTeacherId && !hideInstructorFilters && <TextField
           fullWidth
@@ -330,41 +342,60 @@ export default function AdminTableToolbar({
       </Stack>
 
       {bookings && onFilterName && (
-        <TextField
-          fullWidth
-          value={filterName}
-          onChange={(event) => onFilterName(event.target.value)}
-          placeholder="Buscar por cliente o ID de reserva…"
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <Iconify icon={'eva:search-fill'} sx={{ color: 'text.disabled', width: 20, height: 20 }} />
-              </InputAdornment>
-            ),
-          }}
-        />
-      )}
-
-      {bookings && !hideInstructorFilters && (
-        <Stack
-          direction="row"
-          spacing={1}
-          sx={{
-            flexWrap: 'wrap',
-            gap: 1,
-            pb: 1,
-            alignItems: 'center'
-          }}
-        >
-          {TEACHER_CHIPS.map((teacher) => (
-            <Chip
-              key={teacher.value}
-              label={teacher.name}
-              onClick={() => onFilterTeacherId(teacher.value)}
-              color={filterTeacherId === teacher.value ? 'primary' : 'default'}
-            />
-          ))}
-        </Stack>
+        <>
+          <Button
+            color="inherit"
+            size="small"
+            onClick={() => setMoreFiltersOpen((o) => !o)}
+            endIcon={
+              <Iconify
+                icon={moreFiltersOpen ? 'eva:chevron-up-fill' : 'eva:chevron-down-fill'}
+                sx={{ width: 20, height: 20 }}
+              />
+            }
+            sx={{ alignSelf: 'flex-start', px: 0, typography: 'body2' }}
+          >
+            More filters
+          </Button>
+          <Collapse in={moreFiltersOpen}>
+            <Stack spacing={2} sx={{ pt: 0.5 }}>
+              <TextField
+                fullWidth
+                value={filterName}
+                onChange={(event) => onFilterName(event.target.value)}
+                placeholder="Buscar por cliente o ID de reserva…"
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <Iconify icon={'eva:search-fill'} sx={{ color: 'text.disabled', width: 20, height: 20 }} />
+                    </InputAdornment>
+                  ),
+                }}
+              />
+              {!hideInstructorFilters && (
+                <Stack
+                  direction="row"
+                  spacing={1}
+                  sx={{
+                    flexWrap: 'wrap',
+                    gap: 1,
+                    pb: 1,
+                    alignItems: 'center',
+                  }}
+                >
+                  {TEACHER_CHIPS.map((teacher) => (
+                    <Chip
+                      key={teacher.value}
+                      label={teacher.name}
+                      onClick={() => onFilterTeacherId(teacher.value)}
+                      color={filterTeacherId === teacher.value ? 'primary' : 'default'}
+                    />
+                  ))}
+                </Stack>
+              )}
+            </Stack>
+          </Collapse>
+        </>
       )}
     </Stack>
   );

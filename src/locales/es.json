@@ -904,6 +904,7 @@
     },
     "calendar": {
         "name": "Calendario",
+        "openLessonDetails": "Ver detalles completos de la clase",
         "newEvent": "Crear Evento",
         "editEvent": "Editar Evento",
         "addEvent": "Crear Evento",
@@ -2516,7 +2517,14 @@
         "groupLessons": "Clases Grupales",
         "privateLessons": "Clases Privadas",
         "childrenLessons": "Clases para Niños",
-        "groupLessonFrom": "Clases grupales desde {{price}}"
+        "groupLessonFrom": "Clases grupales desde {{price}}",
+        "groupLessonGearIncluded": "Incluye equipo",
+        "groupLessonSkiLevel": "Nivel de esquí: {{level}}",
+        "groupLessonMinAge": "Edad mínima {{age}}",
+        "groupLessonMinDays": "Mínimo {{count}} días",
+        "groupLessonTimeRange": "{{start}} – {{end}}",
+        "groupLessonStartTime": "Desde las {{time}}",
+        "groupLessonEndTime": "Hasta las {{time}}"
     },
     "homeFilter": {
         "title": "Clases de {{discipline}} en {{resort}}",

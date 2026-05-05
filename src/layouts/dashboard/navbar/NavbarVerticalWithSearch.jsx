@@ -146,6 +146,7 @@ export default function NavbarVerticalWithSearch({ isOpenSidebar, onCloseSidebar
               { title: 'user chats', path: PATH_DASHBOARD.admin.userChats },
               { title: 'financial dashboard', path: PATH_DASHBOARD.admin.financial },
               { title: 'rental products', path: PATH_DASHBOARD.admin.rental },
+              { title: 'rental providers', path: PATH_DASHBOARD.admin.rentalProviders },
               { title: 'group lessons by resort', path: PATH_DASHBOARD.admin.groupLessonResorts },
             ],
           }]})

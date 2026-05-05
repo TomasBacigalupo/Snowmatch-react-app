@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   Box,
   Grid,
@@ -33,6 +34,7 @@ import {
   Edit as EditIcon,
   Image as ImageIcon,
 } from '@mui/icons-material';
+import { getRentalProviders } from '../../../../redux/slices/rental';
 
 // ----------------------------------------------------------------------
 
@@ -105,6 +107,7 @@ function itemToFormValues(item) {
       description: '',
       imageUrl: '',
       pricePerDay: 0,
+      rentalProviderId: '',
       variants: [],
     };
   }
@@ -115,6 +118,12 @@ function itemToFormValues(item) {
     description: item.description ?? '',
     imageUrl: item.imageUrl ?? '',
     pricePerDay: item.pricePerDay != null ? Number(item.pricePerDay) : 0,
+    rentalProviderId:
+      item.rentalProviderId != null && item.rentalProviderId !== ''
+        ? String(item.rentalProviderId)
+        : item.rentalProvider?.id != null
+          ? String(item.rentalProvider.id)
+          : '',
     variants: Array.isArray(item.variants)
       ? item.variants.map((v) => ({
           id: v.id,
@@ -131,6 +140,8 @@ function itemToFormValues(item) {
 // ----------------------------------------------------------------------
 
 export default function RentalProductForm({ item, onSave, onCancel, categoryOptions = [] }) {
+  const dispatch = useDispatch();
+  const rentalProviders = useSelector((state) => state.rental.providers);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const [openVariantDialog, setOpenVariantDialog] = useState(false);
@@ -160,11 +171,23 @@ export default function RentalProductForm({ item, onSave, onCancel, categoryOpti
     }
   }, [formData.imageUrl]);
 
+  useEffect(() => {
+    if (formData.resortId) {
+      dispatch(getRentalProviders({ resortId: formData.resortId }));
+    }
+  }, [dispatch, formData.resortId]);
+
   const handleChange = (field, value) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
-    // Clear error when user starts typing
-    if (errors[field]) {
-      setErrors(prev => ({ ...prev, [field]: '' }));
+    if (field === 'resortId') {
+      setFormData((prev) => ({ ...prev, resortId: value, rentalProviderId: '' }));
+    } else {
+      setFormData((prev) => ({ ...prev, [field]: value }));
+    }
+    if (field !== 'resortId' && errors[field]) {
+      setErrors((prev) => ({ ...prev, [field]: '' }));
+    }
+    if (field === 'resortId' && errors.resortId) {
+      setErrors((prev) => ({ ...prev, resortId: '' }));
     }
   };
 
@@ -263,6 +286,28 @@ export default function RentalProductForm({ item, onSave, onCancel, categoryOpti
               {touched.resortId && errors.resortId && (
                 <FormHelperText>{errors.resortId}</FormHelperText>
               )}
+            </FormControl>
+          </Grid>
+
+          <Grid item xs={12} md={6}>
+            <FormControl fullWidth>
+              <InputLabel id="rental-product-provider-label">Proveedor (opcional)</InputLabel>
+              <Select
+                labelId="rental-product-provider-label"
+                label="Proveedor (opcional)"
+                value={formData.rentalProviderId || ''}
+                onChange={(e) => handleChange('rentalProviderId', e.target.value)}
+              >
+                <MenuItem value="">
+                  <em>Sin proveedor</em>
+                </MenuItem>
+                {(Array.isArray(rentalProviders) ? rentalProviders : []).map((p) => (
+                  <MenuItem key={p.id} value={String(p.id)}>
+                    {p.name}
+                  </MenuItem>
+                ))}
+              </Select>
+              <FormHelperText>Proveedores del resort seleccionado</FormHelperText>
             </FormControl>
           </Grid>
 

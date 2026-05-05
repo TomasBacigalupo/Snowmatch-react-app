@@ -647,12 +647,11 @@ export function createAdminBooking(teacherId, studentId, message, children, adul
     };
 }
 
-export function createAdminBookingIntent(studentId, message, children, adults, events, totalPrice, bookingType, includesLaunch, includesEquipment, paymentStatus, paymentMethod, internalComment, resort) {
+export function createAdminBookingIntent(studentId, message, children, adults, events, totalPrice, bookingType, includesLaunch, includesEquipment, paymentStatus, paymentMethod, internalComment, resort, calendarTeacherId) {
     return async () => {
         dispatch(slice.actions.startLoading());
         try {
-            await axios.post(`/api/admin/booking-intents?businessId=13`, {
-                student: { id: studentId },
+            const payload = {
                 userComment: message,
                 eventList: events.map(e => {
                     if (e.lessonTime === 'AFTERNOON') {
@@ -704,7 +703,14 @@ export function createAdminBookingIntent(studentId, message, children, adults, e
                 internalComment,
                 resort,
                 bookingPaymentMethod: paymentMethod
-            });
+            };
+            if (studentId != null && studentId !== '') {
+                payload.student = { id: Number(studentId) };
+            }
+            if (calendarTeacherId != null && calendarTeacherId !== '') {
+                payload.teacher = { id: Number(calendarTeacherId) };
+            }
+            await axios.post(`/api/admin/booking-intents?businessId=13`, payload);
             dispatch(slice.actions.createIntentSuccess());
         } catch (error) {
             dispatch(slice.actions.hasError(error));

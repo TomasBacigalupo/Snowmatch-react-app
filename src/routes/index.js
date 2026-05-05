@@ -51,6 +51,8 @@ const Loadable = (Component) => (props) => {
   );
 };
 
+const AdminRentalProviders = Loadable(lazy(() => import('../pages/dashboard/AdminRentalProviders')));
+
 export default function Router() {
   const isMobile = false;
 
@@ -500,6 +502,7 @@ export default function Router() {
                 { path: 'user-chats/:conversationId', element: <AdminUserChats /> },
                 { path: 'financial', element: <AdminFinancialDashboard /> },
                 { path: 'rental', element: <AdminRental /> },
+                { path: 'rental-providers', element: <AdminRentalProviders /> },
                 { path: 'group-lesson-resorts', element: <AdminGroupLessonResorts /> },
                 { path: ':id/confirm', element: <AdminConfirm /> },
                 { path: ':id/events', element: <AdminUserEvents /> },
@@ -536,11 +539,16 @@ export default function Router() {
         },
         
         {
+          path: '/index',
+          element: <MainLayout />,
+          children: [{ index: true, element: <AdminPlatformIndex /> }],
+        },
+        {
           path: '/:lng',
           element: <MainLayout />,
           children: [
             { path: 'video-onboarding', element: <VideoOnboardingPage /> },
-            { element: <LanguageHome />, index: true },
+            { element: <AdminPlatformIndex />, index: true },
             {
               path: 'ai',
               element: isMobile ? <Navigate to="/match/videoCoach/upload" replace /> : <HomePage />,
@@ -576,9 +584,9 @@ export default function Router() {
           path: '/',
           element: <MainLayout />,
           children: [
-            { path: 'language', element: <Navigate to="/en" replace /> },
+            { path: 'language', element: <Navigate to="/index" replace /> },
             {
-              element: isMobile ? <Navigate to="/match/videoCoach/upload" replace /> : <Navigate to="/en" replace />,
+              element: isMobile ? <Navigate to="/match/videoCoach/upload" replace /> : <Navigate to="/index" replace />,
               index: true
             },
             { path: 'all-teachers', element: <AllTeachers /> },
@@ -690,7 +698,7 @@ const Calendar = Loadable(lazy(() => import('../pages/dashboard/Calendar')));
 const Kanban = Loadable(lazy(() => import('../pages/dashboard/Kanban')));
 
 // MAIN
-const LanguageHome = Loadable(lazy(() => import('../pages/LanguageHome')));
+const AdminPlatformIndex = Loadable(lazy(() => import('../pages/AdminPlatformIndex')));
 const HomePage = Loadable(lazy(() => import('../pages/Home')));
 const HomePageBariloche = Loadable(lazy(() => import('../pages/HomeBariloche')));
 const HomePageLagoHermoso = Loadable(lazy(() => import('../pages/HomeLagoHermoso')));

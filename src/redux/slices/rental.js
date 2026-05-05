@@ -13,6 +13,9 @@ const initialState = {
   items: [],
   totalItems: 0,
   currentItem: null,
+  providers: [],
+  providersLoading: false,
+  providersError: null,
 };
 
 // ----------------------------------------------------------------------
@@ -120,6 +123,79 @@ export const deleteRentalVariant = createAsyncThunk(
   }
 );
 
+export const getRentalProviders = createAsyncThunk(
+  'rental/getRentalProviders',
+  async (filters = {}, { rejectWithValue }) => {
+    try {
+      const params = new URLSearchParams();
+      if (filters.resortId) {
+        params.append('resortId', filters.resortId);
+      }
+      const qs = params.toString();
+      const response = await axios.get(`/api/rental/admin/providers${qs ? `?${qs}` : ''}`);
+      return response.data;
+    } catch (error) {
+      const msg =
+        (typeof error.response?.data === 'string' && error.response.data) ||
+        error.response?.data?.message ||
+        error.message ||
+        'Error fetching rental providers';
+      return rejectWithValue(msg);
+    }
+  }
+);
+
+export const createRentalProvider = createAsyncThunk(
+  'rental/createRentalProvider',
+  async (body, { rejectWithValue }) => {
+    try {
+      const response = await axios.post('/api/rental/admin/providers', body);
+      return response.data;
+    } catch (error) {
+      const msg =
+        (typeof error.response?.data === 'string' && error.response.data) ||
+        error.response?.data?.message ||
+        error.message ||
+        'Error creating rental provider';
+      return rejectWithValue(msg);
+    }
+  }
+);
+
+export const updateRentalProvider = createAsyncThunk(
+  'rental/updateRentalProvider',
+  async ({ id, ...body }, { rejectWithValue }) => {
+    try {
+      const response = await axios.put(`/api/rental/admin/providers/${id}`, body);
+      return response.data;
+    } catch (error) {
+      const msg =
+        (typeof error.response?.data === 'string' && error.response.data) ||
+        error.response?.data?.message ||
+        error.message ||
+        'Error updating rental provider';
+      return rejectWithValue(msg);
+    }
+  }
+);
+
+export const deleteRentalProvider = createAsyncThunk(
+  'rental/deleteRentalProvider',
+  async (id, { rejectWithValue }) => {
+    try {
+      await axios.delete(`/api/rental/admin/providers/${id}`);
+      return id;
+    } catch (error) {
+      const msg =
+        (typeof error.response?.data === 'string' && error.response.data) ||
+        error.response?.data?.message ||
+        error.message ||
+        'Error deleting rental provider';
+      return rejectWithValue(msg);
+    }
+  }
+);
+
 // ----------------------------------------------------------------------
 
 const rentalSlice = createSlice({
@@ -137,6 +213,9 @@ const rentalSlice = createSlice({
     },
     clearCurrentItem: (state) => {
       state.currentItem = null;
+    },
+    clearProvidersError: (state) => {
+      state.providersError = null;
     },
   },
   extraReducers: (builder) => {
@@ -299,11 +378,67 @@ const rentalSlice = createSlice({
         state.isLoading = false;
         state.error = action.payload;
       });
+
+    builder
+      .addCase(getRentalProviders.pending, (state) => {
+        state.providersLoading = true;
+        state.providersError = null;
+      })
+      .addCase(getRentalProviders.fulfilled, (state, action) => {
+        state.providersLoading = false;
+        state.providers = Array.isArray(action.payload) ? action.payload : [];
+      })
+      .addCase(getRentalProviders.rejected, (state, action) => {
+        state.providersLoading = false;
+        state.providersError = action.payload;
+      });
+
+    builder
+      .addCase(createRentalProvider.pending, (state) => {
+        state.providersLoading = true;
+        state.providersError = null;
+      })
+      .addCase(createRentalProvider.fulfilled, (state) => {
+        state.providersLoading = false;
+        state.successMessage = 'Proveedor creado';
+      })
+      .addCase(createRentalProvider.rejected, (state, action) => {
+        state.providersLoading = false;
+        state.providersError = action.payload;
+      });
+
+    builder
+      .addCase(updateRentalProvider.pending, (state) => {
+        state.providersLoading = true;
+        state.providersError = null;
+      })
+      .addCase(updateRentalProvider.fulfilled, (state) => {
+        state.providersLoading = false;
+        state.successMessage = 'Proveedor actualizado';
+      })
+      .addCase(updateRentalProvider.rejected, (state, action) => {
+        state.providersLoading = false;
+        state.providersError = action.payload;
+      });
+
+    builder
+      .addCase(deleteRentalProvider.pending, (state) => {
+        state.providersLoading = true;
+        state.providersError = null;
+      })
+      .addCase(deleteRentalProvider.fulfilled, (state) => {
+        state.providersLoading = false;
+        state.successMessage = 'Proveedor eliminado';
+      })
+      .addCase(deleteRentalProvider.rejected, (state, action) => {
+        state.providersLoading = false;
+        state.providersError = action.payload;
+      });
   },
 });
 
 // ----------------------------------------------------------------------
 
-export const { clearError, clearMessage, setCurrentItem, clearCurrentItem } = rentalSlice.actions;
+export const { clearError, clearMessage, setCurrentItem, clearCurrentItem, clearProvidersError } = rentalSlice.actions;
 
 export default rentalSlice.reducer; 

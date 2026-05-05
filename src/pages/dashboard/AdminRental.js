@@ -59,6 +59,7 @@ const TABLE_HEAD = [
   { id: 'image', label: 'Imagen', align: 'left' },
   { id: 'name', label: 'Nombre', align: 'left' },
   { id: 'category', label: 'Categoría', align: 'left' },
+  { id: 'provider', label: 'Proveedor', align: 'left' },
   { id: 'pricePerDay', label: 'Precio/día', align: 'right' },
   { id: 'variants', label: 'Variantes', align: 'center' },
   { id: 'status', label: 'Estado', align: 'center' },
@@ -151,10 +152,15 @@ export default function AdminRental() {
 
   const handleSaveItem = async (itemData) => {
     try {
+      const rentalProviderId =
+        itemData.rentalProviderId && String(itemData.rentalProviderId).trim() !== ''
+          ? itemData.rentalProviderId
+          : null;
+      const payload = { ...itemData, rentalProviderId };
       if (editingItem) {
-        await dispatch(updateRentalItem({ id: editingItem.id, ...itemData }));
+        await dispatch(updateRentalItem({ id: editingItem.id, ...payload }));
       } else {
-        await dispatch(createRentalItem(itemData));
+        await dispatch(createRentalItem(payload));
       }
       handleCloseForm();
       loadRentalItems();
@@ -227,7 +233,17 @@ export default function AdminRental() {
                     {filteredItems
                       .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                       .map((row) => {
-                        const { id, name, description, category, pricePerDay, imageUrl, status, variants } = row;
+                        const {
+                          id,
+                          name,
+                          description,
+                          category,
+                          pricePerDay,
+                          imageUrl,
+                          status,
+                          variants,
+                          rentalProvider,
+                        } = row;
 
                         return (
                           <TableRow hover key={id} tabIndex={-1}>
@@ -256,6 +272,12 @@ export default function AdminRental() {
                                 color="primary"
                                 variant="outlined"
                               />
+                            </TableCell>
+
+                            <TableCell>
+                              <Typography variant="body2" noWrap sx={{ maxWidth: 160 }} title={rentalProvider?.name}>
+                                {rentalProvider?.name || '—'}
+                              </Typography>
                             </TableCell>
 
                             <TableCell align="right">

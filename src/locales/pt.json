@@ -1145,6 +1145,7 @@
         "lesson bookings": "Reservas de aulas"
     },
     "calendar": {
+        "openLessonDetails": "Ver detalhes completos da aula",
         "newEvent": "Criar evento",
         "editEvent": "Editar evento",
         "addEvent": "Criar evento",
@@ -2497,7 +2498,15 @@
         "snowboardLessons": "Aulas de Snowboard",
         "groupLessons": "Aulas em Grupo",
         "privateLessons": "Aulas Particulares",
-        "childrenLessons": "Aulas para Crianças"
+        "childrenLessons": "Aulas para Crianças",
+        "groupLessonFrom": "Aulas em grupo a partir de {{price}}",
+        "groupLessonGearIncluded": "Equipamento incluído",
+        "groupLessonSkiLevel": "Nível de esqui: {{level}}",
+        "groupLessonMinAge": "Idade mínima {{age}}",
+        "groupLessonMinDays": "Mínimo {{count}} dias",
+        "groupLessonTimeRange": "{{start}} – {{end}}",
+        "groupLessonStartTime": "A partir das {{time}}",
+        "groupLessonEndTime": "Até as {{time}}"
     },
     "homeWhySnowmatch": {
         "overline": "Por que Snowmatch",

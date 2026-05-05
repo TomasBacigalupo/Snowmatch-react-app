@@ -711,6 +711,7 @@
   },
   "calendar": {
     "name": "Calendar",
+    "openLessonDetails": "Open full lesson details",
     "newEvent": "Create Event",
     "editEvent": "Edit Event",
     "addEvent": "Add Event",
@@ -2282,7 +2283,14 @@
     "groupLessons": "Group Lessons",
     "privateLessons": "Private Lessons",
     "childrenLessons": "Children's Lessons",
-    "groupLessonFrom": "Group lessons from {{price}}"
+    "groupLessonFrom": "Group lessons from {{price}}",
+    "groupLessonGearIncluded": "Gear included",
+    "groupLessonSkiLevel": "Ski level: {{level}}",
+    "groupLessonMinAge": "Minimum age {{age}}",
+    "groupLessonMinDays": "Minimum {{count}} days",
+    "groupLessonTimeRange": "{{start}} – {{end}}",
+    "groupLessonStartTime": "From {{time}}",
+    "groupLessonEndTime": "Until {{time}}"
   },
   "homeWhySnowmatch": {
     "overline": "Why Snowmatch",

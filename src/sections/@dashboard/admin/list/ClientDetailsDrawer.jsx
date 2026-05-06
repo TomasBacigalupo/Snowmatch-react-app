@@ -1,8 +1,16 @@
 import { Drawer, Box, IconButton, Typography, Stack, Divider, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Card } from '@mui/material';
 import Iconify from 'src/components/Iconify';
 import { useDispatch, useSelector } from 'react-redux';
-import { getTeacher, getBookings } from 'src/redux/slices/admin';
+import {
+  getTeacher,
+  getBookings,
+  getUserTeamMembers,
+  createUserTeamMember,
+  updateUserTeamMember,
+  deleteUserTeamMember,
+} from 'src/redux/slices/admin';
 import { useEffect } from 'react';
+import { useState } from 'react';
 import { useSnackbar } from 'notistack';
 import Label from 'src/components/Label';
 import { useTheme } from '@mui/material/styles';
@@ -12,6 +20,7 @@ export default function ClientDetailsDrawer({ open, onClose, client }) {
   const theme = useTheme();
   const { teacher, bookings } = useSelector((state) => state.admin);
   const { enqueueSnackbar } = useSnackbar();
+  const [teamMembers, setTeamMembers] = useState([]);
 
   const handleCopyToClipboard = (text) => {
     navigator.clipboard.writeText(text);
@@ -22,8 +31,29 @@ export default function ClientDetailsDrawer({ open, onClose, client }) {
     if (client?.id) {
       dispatch(getTeacher(client.id));
       dispatch(getBookings(undefined, client.id, undefined, undefined, undefined, undefined)); // Get all bookings for this teacher
+      dispatch(getUserTeamMembers(client.id)).then((res) => {
+        setTeamMembers(res || []);
+      });
     }
   }, [dispatch, client?.id]);
+
+  const reloadTeamMembers = () => {
+    if (!client?.id) return;
+    dispatch(getUserTeamMembers(client.id)).then((res) => setTeamMembers(res || []));
+  };
+
+  const promptTeamMember = (seed = {}) => {
+    const firstName = window.prompt('First name', seed.firstName ?? '');
+    if (!firstName) return null;
+    const lastName = window.prompt('Last name', seed.lastName ?? '');
+    if (!lastName) return null;
+    const skiLevel = Number(window.prompt('Ski level (1-5)', String(seed.skiLevel ?? 2)));
+    const heightCm = Number(window.prompt('Height cm', String(seed.heightCm ?? 170)));
+    const weightKg = Number(window.prompt('Weight kg', String(seed.weightKg ?? 70)));
+    const footLengthCm = Number(window.prompt('Foot length cm', String(seed.footLengthCm ?? 25)));
+    const age = Number(window.prompt('Age', String(seed.age ?? 18)));
+    return { firstName, lastName, skiLevel, heightCm, weightKg, footLengthCm, age };
+  };
 
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString('es-AR', {
@@ -204,6 +234,68 @@ export default function ClientDetailsDrawer({ open, onClose, client }) {
               <Typography variant="body2" color="text.secondary">
                 No hay reservas para este cliente.
               </Typography>
+            )}
+          </Box>
+          <Box>
+            <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ mb: 1 }}>
+              <Typography variant="h6">Team members ({teamMembers.length || 0})</Typography>
+              <IconButton
+                onClick={() => {
+                  const body = promptTeamMember();
+                  if (!body) return;
+                  dispatch(createUserTeamMember(client.id, body))
+                    .then(() => {
+                      enqueueSnackbar('Team member created', { variant: 'success' });
+                      reloadTeamMembers();
+                    })
+                    .catch(() => enqueueSnackbar('Could not create team member', { variant: 'error' }));
+                }}
+              >
+                <Iconify icon="eva:plus-fill" />
+              </IconButton>
+            </Stack>
+            {teamMembers.length > 0 ? (
+              <Card sx={{ p: 1 }}>
+                {teamMembers.map((tm) => (
+                  <Stack key={tm.id} direction="row" alignItems="center" justifyContent="space-between" sx={{ p: 1 }}>
+                    <Typography variant="body2">
+                      {tm.firstName} {tm.lastName} · L{tm.skiLevel} · {tm.heightCm}cm · {tm.weightKg}kg
+                    </Typography>
+                    <Stack direction="row" spacing={1}>
+                      <IconButton
+                        size="small"
+                        onClick={() => {
+                          const body = promptTeamMember(tm);
+                          if (!body) return;
+                          dispatch(updateUserTeamMember(client.id, tm.id, body))
+                            .then(() => {
+                              enqueueSnackbar('Team member updated', { variant: 'success' });
+                              reloadTeamMembers();
+                            })
+                            .catch(() => enqueueSnackbar('Could not update team member', { variant: 'error' }));
+                        }}
+                      >
+                        <Iconify icon="eva:edit-fill" />
+                      </IconButton>
+                      <IconButton
+                        size="small"
+                        onClick={() => {
+                          dispatch(deleteUserTeamMember(client.id, tm.id))
+                            .then(() => {
+                              enqueueSnackbar('Team member deleted', { variant: 'success' });
+                              reloadTeamMembers();
+                            })
+                            .catch(() => enqueueSnackbar('Could not delete team member', { variant: 'error' }));
+                        }}
+                      >
+                        <Iconify icon="eva:trash-2-fill" />
+                      </IconButton>
+                    </Stack>
+                  </Stack>
+                ))}
+              </Card>
+            ) : (
+              <Typography variant="body2" color="text.secondary">No team members.</Typography>
             )}
           </Box>
           {/* Add more client details as needed */}

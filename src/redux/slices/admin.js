@@ -402,6 +402,33 @@ export function getTeacher(id) {
   };
 }
 
+export function getUserTeamMembers(userId) {
+  return async () => {
+    const response = await axios.get(`/api/admin/users/${userId}/team-members`);
+    return response.data || [];
+  };
+}
+
+export function createUserTeamMember(userId, body) {
+  return async () => {
+    const response = await axios.post(`/api/admin/users/${userId}/team-members`, body);
+    return response.data;
+  };
+}
+
+export function updateUserTeamMember(userId, teamMemberId, body) {
+  return async () => {
+    const response = await axios.put(`/api/admin/users/${userId}/team-members/${teamMemberId}`, body);
+    return response.data;
+  };
+}
+
+export function deleteUserTeamMember(userId, teamMemberId) {
+  return async () => {
+    await axios.delete(`/api/admin/users/${userId}/team-members/${teamMemberId}`);
+  };
+}
+
 export function declineTeacher(teacherData) {
   return async () => {
     dispatch(slice.actions.startLoading());

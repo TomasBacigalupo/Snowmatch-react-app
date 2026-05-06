@@ -8,6 +8,7 @@ import Label from '../../../../components/Label';
 import Iconify from '../../../../components/Iconify';
 import { TableMoreMenu } from '../../../../components/table';
 import BookingDetailsDrawer from './BookingDetailsDrawer';
+import GearBookingDetailsDrawer from './GearBookingDetailsDrawer';
 
 // ----------------------------------------------------------------------
 
@@ -240,12 +241,21 @@ export default function AdminBookingTableRow({
                     </TableCell>
                 </TableRow>
 
-                <BookingDetailsDrawer
-                    open={openDrawer}
-                    onClose={() => setOpenDrawer(false)}
-                    booking={row}
-                    refreshBookings={refreshBookings}
-                />
+                {isGearAdminList ? (
+                    <GearBookingDetailsDrawer
+                        open={openDrawer}
+                        onClose={() => setOpenDrawer(false)}
+                        booking={row}
+                        refreshBookings={refreshBookings}
+                    />
+                ) : (
+                    <BookingDetailsDrawer
+                        open={openDrawer}
+                        onClose={() => setOpenDrawer(false)}
+                        booking={row}
+                        refreshBookings={refreshBookings}
+                    />
+                )}
             </>
         );
     }
@@ -360,12 +370,21 @@ export default function AdminBookingTableRow({
                 </TableCell>
             </TableRow>
 
-            <BookingDetailsDrawer
-                open={openDrawer}
-                onClose={() => setOpenDrawer(false)}
-                booking={row}
-                refreshBookings={refreshBookings}
-            />
+            {isGearAdminList ? (
+                <GearBookingDetailsDrawer
+                    open={openDrawer}
+                    onClose={() => setOpenDrawer(false)}
+                    booking={row}
+                    refreshBookings={refreshBookings}
+                />
+            ) : (
+                <BookingDetailsDrawer
+                    open={openDrawer}
+                    onClose={() => setOpenDrawer(false)}
+                    booking={row}
+                    refreshBookings={refreshBookings}
+                />
+            )}
         </>
     );
 }

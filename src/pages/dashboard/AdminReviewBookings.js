@@ -54,6 +54,7 @@ import BookingModal from 'src/sections/@dashboard/admin/BookingModal';
 import BookingSummary from 'src/sections/@dashboard/admin/list/BookingSummary';
 import useAuth from 'src/hooks/useAuth';
 import BookingDetailsDrawer from 'src/sections/@dashboard/admin/list/BookingDetailsDrawer';
+import GearBookingDetailsDrawer from 'src/sections/@dashboard/admin/list/GearBookingDetailsDrawer';
 
 // ---------------------------------------------------------------------
 
@@ -687,12 +688,21 @@ export function AdminBookingsPage({ bookingListKind, pageTitle, heading }) {
                 </Box>
               )}
               {openDrawer && selectedBooking && (
-                <BookingDetailsDrawer
-                  open={openDrawer}
-                  onClose={() => setOpenDrawer(false)}
-                  booking={selectedBooking}
-                  refreshBookings={refreshBookings}
-                />
+                bookingListKind === 'gear' ? (
+                  <GearBookingDetailsDrawer
+                    open={openDrawer}
+                    onClose={() => setOpenDrawer(false)}
+                    booking={selectedBooking}
+                    refreshBookings={refreshBookings}
+                  />
+                ) : (
+                  <BookingDetailsDrawer
+                    open={openDrawer}
+                    onClose={() => setOpenDrawer(false)}
+                    booking={selectedBooking}
+                    refreshBookings={refreshBookings}
+                  />
+                )
               )}
             </Hidden>
 

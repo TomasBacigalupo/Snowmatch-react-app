@@ -124,6 +124,7 @@ export default function AdminConfirmForm({ isEdit, currentTeacher, documents }) 
     disciplines: Yup.array().of(Yup.string()),
     sports: Yup.array().of(Yup.string()),
     authorized: Yup.boolean(),
+    canSetOwnCalendarPrices: Yup.boolean(),
     zenriseClient: Yup.string(),
     zenriseSecret: Yup.string(),
     priority: Yup.number(),
@@ -155,6 +156,7 @@ export default function AdminConfirmForm({ isEdit, currentTeacher, documents }) 
       twUrl: currentTeacher?.twUrl || '',
       disciplines: currentTeacher?.disciplines || [],
       authorized: currentTeacher?.authorized || false,
+      canSetOwnCalendarPrices: currentTeacher?.canSetOwnCalendarPrices ?? true,
       zenriseClient: currentTeacher?.zenriseClient || '',
       zenriseSecret: currentTeacher?.zenriseSecret || '',
       priority: currentTeacher?.priority || 0,
@@ -282,6 +284,11 @@ export default function AdminConfirmForm({ isEdit, currentTeacher, documents }) 
                 <RHFSwitch
                   name="authorized"
                   label="is authorized"
+                  sx={{ mb: 1, mx: 0, width: 1 }}
+                />
+                <RHFSwitch
+                  name="canSetOwnCalendarPrices"
+                  label="Can set own calendar prices"
                   sx={{ mb: 1, mx: 0, width: 1 }}
                 />
               </Stack>

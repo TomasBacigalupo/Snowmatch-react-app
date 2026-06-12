@@ -66,6 +66,8 @@ const emptyForm = () => ({
   name: '',
   resortId: 'CERRO_CATEDRAL',
   storePickupLocation: '',
+  locationLatitude: '',
+  locationLongitude: '',
   rentalDeliveryEnabled: false,
   enabledPaymentMethods: [],
 });
@@ -111,6 +113,8 @@ export default function AdminRentalProviders() {
       name: row.name || '',
       resortId: row.resortId || 'CERRO_CATEDRAL',
       storePickupLocation: row.storePickupLocation || '',
+      locationLatitude: row.locationLatitude ?? '',
+      locationLongitude: row.locationLongitude ?? '',
       rentalDeliveryEnabled: Boolean(row.rentalDeliveryEnabled),
       enabledPaymentMethods: Array.isArray(row.enabledPaymentMethods) ? [...row.enabledPaymentMethods] : [],
     });
@@ -140,10 +144,28 @@ export default function AdminRentalProviders() {
       setSnackbar({ open: true, message: 'La ubicación de retiro en tienda es obligatoria', severity: 'error' });
       return;
     }
+    const hasLatitude = String(form.locationLatitude).trim() !== '';
+    const hasLongitude = String(form.locationLongitude).trim() !== '';
+    if (hasLatitude !== hasLongitude) {
+      setSnackbar({ open: true, message: 'Latitud y longitud deben cargarse juntas', severity: 'error' });
+      return;
+    }
+    const parsedLatitude = hasLatitude ? Number(form.locationLatitude) : null;
+    const parsedLongitude = hasLongitude ? Number(form.locationLongitude) : null;
+    if (hasLatitude && (!Number.isFinite(parsedLatitude) || parsedLatitude < -90 || parsedLatitude > 90)) {
+      setSnackbar({ open: true, message: 'Latitud inválida (rango: -90 a 90)', severity: 'error' });
+      return;
+    }
+    if (hasLongitude && (!Number.isFinite(parsedLongitude) || parsedLongitude < -180 || parsedLongitude > 180)) {
+      setSnackbar({ open: true, message: 'Longitud inválida (rango: -180 a 180)', severity: 'error' });
+      return;
+    }
     const body = {
       name: form.name.trim(),
       resortId: form.resortId,
       storePickupLocation: form.storePickupLocation.trim(),
+      locationLatitude: parsedLatitude,
+      locationLongitude: parsedLongitude,
       rentalDeliveryEnabled: form.rentalDeliveryEnabled,
       enabledPaymentMethods: form.enabledPaymentMethods,
     };
@@ -225,6 +247,7 @@ export default function AdminRentalProviders() {
                     <TableCell>Nombre</TableCell>
                     <TableCell>Resort</TableCell>
                     <TableCell>Retiro en tienda</TableCell>
+                    <TableCell>Coordenadas</TableCell>
                     <TableCell>Entrega</TableCell>
                     <TableCell>Medios de pago</TableCell>
                     <TableCell align="right">Acciones</TableCell>
@@ -241,6 +264,11 @@ export default function AdminRentalProviders() {
                         <Typography variant="body2" noWrap title={row.storePickupLocation}>
                           {row.storePickupLocation}
                         </Typography>
+                      </TableCell>
+                      <TableCell>
+                        {row.locationLatitude != null && row.locationLongitude != null
+                          ? `${row.locationLatitude}, ${row.locationLongitude}`
+                          : '-'}
                       </TableCell>
                       <TableCell>
                         <Chip
@@ -273,7 +301,7 @@ export default function AdminRentalProviders() {
                   ))}
                   {!providersLoading && rows.length === 0 && (
                     <TableRow>
-                      <TableCell colSpan={6}>
+                      <TableCell colSpan={7}>
                         <Typography variant="body2" color="text.secondary" sx={{ py: 2 }}>
                           No hay proveedores.
                         </Typography>
@@ -320,6 +348,22 @@ export default function AdminRentalProviders() {
                 multiline
                 minRows={3}
               />
+              <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
+                <TextField
+                  label="Latitud (opcional)"
+                  value={form.locationLatitude}
+                  onChange={(e) => setForm((p) => ({ ...p, locationLatitude: e.target.value }))}
+                  fullWidth
+                  inputProps={{ inputMode: 'decimal' }}
+                />
+                <TextField
+                  label="Longitud (opcional)"
+                  value={form.locationLongitude}
+                  onChange={(e) => setForm((p) => ({ ...p, locationLongitude: e.target.value }))}
+                  fullWidth
+                  inputProps={{ inputMode: 'decimal' }}
+                />
+              </Stack>
               <FormControlLabel
                 control={
                   <Switch

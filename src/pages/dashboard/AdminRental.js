@@ -158,9 +158,9 @@ export default function AdminRental() {
           : null;
       const payload = { ...itemData, rentalProviderId };
       if (editingItem) {
-        await dispatch(updateRentalItem({ id: editingItem.id, ...payload }));
+        await dispatch(updateRentalItem({ id: editingItem.id, ...payload })).unwrap();
       } else {
-        await dispatch(createRentalItem(payload));
+        await dispatch(createRentalItem(payload)).unwrap();
       }
       handleCloseForm();
       loadRentalItems();

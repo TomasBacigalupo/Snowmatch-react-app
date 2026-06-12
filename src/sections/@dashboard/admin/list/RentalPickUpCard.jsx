@@ -147,26 +147,108 @@ export default function RentalPickUpCard({ line, onMarkReadyPickup }) {
             </Stack>
           </Collapse>
 
-          <Box>
-            <Typography variant="caption" color="text.secondary" display="block" sx={{ mb: 1 }}>
-              Calculado (referencia tienda)
-            </Typography>
-            <Grid container spacing={2}>
+          <Box
+            sx={{
+              p: 0,
+              borderRadius: 1.5,
+              border: 1,
+              borderColor: 'primary.light',
+              bgcolor: 'primary.lighter',
+            }}
+          >
+            <Grid
+              container
+              rowSpacing={1.25}
+              columnSpacing={0}
+              sx={{
+                justifyContent: 'space-between',
+                m: 0,
+                width: '100%',
+              }}
+            >
               <Grid size={{ xs: 12, sm: 6 }}>
-                <Typography variant="body2" component="div">
-                  Longitud esquí: <strong>{skiLen ? skiLen.label : '—'}</strong>
-                </Typography>
+                <Box
+                  sx={{
+                    p: 1.25,
+                    borderRadius: 1.25,
+                    bgcolor: 'background.paper',
+                    border: 1,
+                    borderColor: 'divider',
+                    minHeight: 68,
+                    display: 'flex',
+                    flexDirection: 'column',
+                  }}
+                >
+                  <Typography variant="caption" color="text.secondary" display="block">
+                    Longitud esquí
+                  </Typography>
+                  <Typography variant="h5" sx={{ fontWeight: 800, lineHeight: 1.2 }}>
+                    {skiLen ? skiLen.label : '—'}
+                  </Typography>
+                </Box>
               </Grid>
               <Grid size={{ xs: 12, sm: 6 }}>
-                <Typography variant="body2" component="div">
-                  DIN (aprox.): <strong>{din != null ? din : '—'}</strong>
-                </Typography>
+                <Box
+                  sx={{
+                    p: 1.25,
+                    borderRadius: 1.25,
+                    bgcolor: 'background.paper',
+                    border: 1,
+                    borderColor: 'divider',
+                    minHeight: 68,
+                    display: 'flex',
+                    flexDirection: 'column',
+                  }}
+                >
+                  <Typography variant="caption" color="text.secondary" display="block">
+                    DIN (aprox.)
+                  </Typography>
+                  <Typography variant="h5" sx={{ fontWeight: 800, lineHeight: 1.2 }}>
+                    {din != null ? din : '—'}
+                  </Typography>
+                </Box>
               </Grid>
               <Grid size={{ xs: 12 }}>
-                <Typography variant="body2" component="div">
-                  Apertura fijación / suela bota:{' '}
-                  <strong>{soleMm != null ? `${soleMm} mm` : '—'}</strong>
-                </Typography>
+                <Box
+                  sx={{
+                    p: 1.25,
+                    borderRadius: 1.25,
+                    bgcolor: 'background.paper',
+                    border: 1,
+                    borderColor: 'divider',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    minHeight: 68,
+                  }}
+                >
+                  <Typography variant="caption" color="text.secondary" display="block">
+                    Talla bota esquí (Mondo)
+                  </Typography>
+                  <Typography variant="h5" sx={{ fontWeight: 800, lineHeight: 1.2 }}>
+                    {foot != null && foot !== '' ? `${foot}` : '—'}
+                  </Typography>
+                </Box>
+              </Grid>
+              <Grid size={{ xs: 12 }}>
+                <Box
+                  sx={{
+                    p: 1.25,
+                    borderRadius: 1.25,
+                    bgcolor: 'background.paper',
+                    border: 1,
+                    borderColor: 'divider',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    minHeight: 68,
+                  }}
+                >
+                  <Typography variant="caption" color="text.secondary" display="block">
+                    Apertura fijación / suela bota
+                  </Typography>
+                  <Typography variant="h5" sx={{ fontWeight: 800, lineHeight: 1.2 }}>
+                    {soleMm != null ? `${soleMm} mm` : '—'}
+                  </Typography>
+                </Box>
               </Grid>
             </Grid>
           </Box>

@@ -149,6 +149,7 @@ export default function NavbarVerticalWithSearch({ isOpenSidebar, onCloseSidebar
               { title: 'rental providers', path: PATH_DASHBOARD.admin.rentalProviders },
               { title: 'group lessons by resort', path: PATH_DASHBOARD.admin.groupLessonResorts },
               { title: 'resort admins', path: PATH_DASHBOARD.admin.resortAdmins },
+              { title: 'user calendars', path: PATH_DASHBOARD.admin.userCalendars },
             ],
           }]})
     }

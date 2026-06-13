@@ -188,7 +188,8 @@ export const PATH_DASHBOARD = {
     resortAdmins: path(ROOTS_DASHBOARD, '/admin/resort-admins'),
     userChatsView: (conversationId) => path(ROOTS_DASHBOARD, `/admin/user-chats/${conversationId}`),
     confirm: (id) => path(ROOTS_DASHBOARD, `/admin/${id}/confirm`),
-    events: (id) => path(ROOTS_DASHBOARD, `/admin/${id}/events`)
+    events: (id) => path(ROOTS_DASHBOARD, `/admin/${id}/events`),
+    userCalendars: path(ROOTS_DASHBOARD, '/admin/user-calendars'),
   }
 };
 

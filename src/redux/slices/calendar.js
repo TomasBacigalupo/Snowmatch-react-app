@@ -13,6 +13,7 @@ const initialState = {
   isLoading: false,
   error: null,
   events: [],
+  dayPrices: [],
   isOpenModal: false,
   selectedEventId: null,
   selectedRange: null,
@@ -82,6 +83,12 @@ const slice = createSlice({
     getUpcomingEventsSuccess(state, action) {
       state.isLoading = false;
       state.upcomingEvents = action.payload;
+    },
+
+    // GET DAY PRICES
+    getDayPricesSuccess(state, action) {
+      state.isLoading = false;
+      state.dayPrices = action.payload;
     },
 
 
@@ -679,6 +686,20 @@ export function setDeclined(eventId) {
     try {
       await axios.put(`/api/events/lessons/${eventId}/decline`);
       dispatch(slice.actions.declinedLessonSuccess({ eventId }));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+export function getDayPricesByUserId(id, from, to) {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get(
+        `/api/users/teacher/byId/${id}/day-prices?from=${from}&to=${to}`
+      );
+      dispatch(slice.actions.getDayPricesSuccess(response.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }

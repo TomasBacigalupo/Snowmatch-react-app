@@ -22,7 +22,7 @@ const useCurrentRole = () => {
 };
 
 export default function RoleBasedGuard({ accessibleRoles, children }) {
-  const { isAuthenticated, isStudent, isTeacher, isAdmin, user } = useAuth()
+  const { isAuthenticated, isStudent, isTeacher, isAdmin, isResortAdmin, user } = useAuth()
   const currentRole = useCurrentRole();
   const dispatch = useDispatch()
   const { requestedRoute } = useSelector (state => state.config)
@@ -51,6 +51,9 @@ export default function RoleBasedGuard({ accessibleRoles, children }) {
     }
     if (isAdmin) {
       return <Navigate to={'/dashboard/admin/bookings'} />
+    }
+    if (isResortAdmin) {
+      return <Navigate to={'/dashboard/admin/rental'} />
     }
     return <Navigate to={'/access-denied'} />
   }

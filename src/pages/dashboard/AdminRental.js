@@ -52,6 +52,7 @@ import RentalProductForm from '../../sections/@dashboard/admin/rental/RentalProd
 import RentalFiltersBar from '../../sections/@dashboard/admin/rental/RentalFiltersBar';
 // redux
 import { getRentalItems, createRentalItem, updateRentalItem, deleteRentalItem } from '../../redux/slices/rental';
+import useAuth from '../../hooks/useAuth';
 
 // ----------------------------------------------------------------------
 
@@ -87,6 +88,8 @@ export default function AdminRental() {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const dispatch = useDispatch();
+  const { isResortAdmin, user } = useAuth();
+  const lockedResort = isResortAdmin ? user?.managedResort : null;
   
   // State for rental items
   const { items, isLoading, error, successMessage } = useSelector((state) => state.rental);
@@ -96,7 +99,7 @@ export default function AdminRental() {
   const [rowsPerPage, setRowsPerPage] = useState(20);
   const [filterCategory, setFilterCategory] = useState('all');
   const [filterStatus, setFilterStatus] = useState('all');
-  const [filterResort, setFilterResort] = useState('CERRO_CATEDRAL');
+  const [filterResort, setFilterResort] = useState(lockedResort || 'CERRO_CATEDRAL');
   const [orderBy, setOrderBy] = useState('name');
   const [order, setOrder] = useState('asc');
   
@@ -107,6 +110,12 @@ export default function AdminRental() {
   const [itemToDelete, setItemToDelete] = useState(null);
 
   // Load rental items on component mount
+  useEffect(() => {
+    if (lockedResort) {
+      setFilterResort(lockedResort);
+    }
+  }, [lockedResort]);
+
   useEffect(() => {
     loadRentalItems();
   }, [page, rowsPerPage, filterCategory, filterStatus, filterResort, orderBy, order]);
@@ -213,6 +222,7 @@ export default function AdminRental() {
             onFilterResort={setFilterResort}
             categoryOptions={CATEGORY_OPTIONS}
             statusOptions={STATUS_OPTIONS}
+            lockResort={lockedResort}
           />
 
           {/* Products Table */}
@@ -355,6 +365,7 @@ export default function AdminRental() {
               onSave={handleSaveItem}
               onCancel={handleCloseForm}
               categoryOptions={CATEGORY_OPTIONS}
+              lockResort={lockedResort}
             />
           </DialogContent>
         </Dialog>

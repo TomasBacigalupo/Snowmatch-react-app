@@ -45,6 +45,7 @@ import {
   deleteRentalProvider,
   clearProvidersError,
 } from '../../redux/slices/rental';
+import useAuth from '../../hooks/useAuth';
 
 const RESORT_OPTIONS = [
   { value: 'CERRO_CATEDRAL', label: 'Cerro Catedral' },
@@ -73,9 +74,11 @@ const emptyForm = () => ({
 export default function AdminRentalProviders() {
   const { themeStretch } = useSettings();
   const dispatch = useDispatch();
+  const { isResortAdmin, user } = useAuth();
+  const lockedResort = isResortAdmin ? user?.managedResort : null;
   const { providers, providersLoading, providersError } = useSelector((s) => s.rental);
 
-  const [filterResort, setFilterResort] = useState('');
+  const [filterResort, setFilterResort] = useState(lockedResort || '');
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [form, setForm] = useState(emptyForm);
@@ -85,6 +88,12 @@ export default function AdminRentalProviders() {
   const load = () => {
     dispatch(getRentalProviders(filterResort ? { resortId: filterResort } : {}));
   };
+
+  useEffect(() => {
+    if (lockedResort) {
+      setFilterResort(lockedResort);
+    }
+  }, [lockedResort]);
 
   useEffect(() => {
     load();
@@ -101,7 +110,7 @@ export default function AdminRentalProviders() {
 
   const openCreate = () => {
     setEditingId(null);
-    setForm(emptyForm());
+    setForm({ ...emptyForm(), resortId: lockedResort || 'CERRO_CATEDRAL' });
     setDialogOpen(true);
   };
 
@@ -202,9 +211,13 @@ export default function AdminRentalProviders() {
                   label="Filtrar por resort"
                   value={filterResort}
                   onChange={(e) => setFilterResort(e.target.value)}
+                  disabled={Boolean(lockedResort)}
                 >
-                  <MenuItem value="">Todos</MenuItem>
-                  {RESORT_OPTIONS.map((o) => (
+                  {!lockedResort && <MenuItem value="">Todos</MenuItem>}
+                  {(lockedResort
+                    ? RESORT_OPTIONS.filter((o) => o.value === lockedResort)
+                    : RESORT_OPTIONS
+                  ).map((o) => (
                     <MenuItem key={o.value} value={o.value}>
                       {o.label}
                     </MenuItem>
@@ -303,8 +316,12 @@ export default function AdminRentalProviders() {
                   label="Resort"
                   value={form.resortId}
                   onChange={(e) => setForm((p) => ({ ...p, resortId: e.target.value }))}
+                  disabled={Boolean(lockedResort)}
                 >
-                  {RESORT_OPTIONS.map((o) => (
+                  {(lockedResort
+                    ? RESORT_OPTIONS.filter((o) => o.value === lockedResort)
+                    : RESORT_OPTIONS
+                  ).map((o) => (
                     <MenuItem key={o.value} value={o.value}>
                       {o.label}
                     </MenuItem>

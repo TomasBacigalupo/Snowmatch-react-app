@@ -31,6 +31,7 @@ RentalFiltersBar.propTypes = {
   onFilterResort: PropTypes.func,
   categoryOptions: PropTypes.array,
   statusOptions: PropTypes.array,
+  lockResort: PropTypes.string,
 };
 
 export default function RentalFiltersBar({
@@ -42,14 +43,17 @@ export default function RentalFiltersBar({
   onFilterResort,
   categoryOptions = [],
   statusOptions = [],
+  lockResort = null,
 }) {
   const handleClearFilters = () => {
     onFilterCategory('all');
     onFilterStatus('all');
-    onFilterResort('');
+    if (!lockResort) {
+      onFilterResort('');
+    }
   };
 
-  const hasActiveFilters = filterCategory !== 'all' || filterStatus !== 'all' || filterResort;
+  const hasActiveFilters = filterCategory !== 'all' || filterStatus !== 'all' || (!lockResort && filterResort);
 
   return (
     <Card sx={{ p: 3 }}>
@@ -77,8 +81,12 @@ export default function RentalFiltersBar({
           onChange={(e) => onFilterResort(e.target.value)}
           label="Resort"
           sx={{ minWidth: 150 }}
+          disabled={Boolean(lockResort)}
         >
-          {RESORT_OPTIONS.map((option) => (
+          {(lockResort
+            ? RESORT_OPTIONS.filter((option) => option.value === lockResort)
+            : RESORT_OPTIONS
+          ).map((option) => (
             <MenuItem key={option.value} value={option.value}>
               {option.label}
             </MenuItem>

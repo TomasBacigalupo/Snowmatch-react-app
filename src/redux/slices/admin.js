@@ -25,6 +25,8 @@ const initialState = {
   successMessage: null,
   payouts: [],
   bookingIntents: [],
+  resortAdmins: [],
+  searchedUser: null,
   financialData: {
     bookings: [],
     payouts: [],
@@ -212,6 +214,20 @@ const slice = createSlice({
       state.isLoading = false;
       state.error = null;
       state.successMessage = action.payload;
+    },
+
+    getResortAdminsSuccess(state, action) {
+      state.isLoading = false;
+      state.resortAdmins = action.payload;
+    },
+
+    findUserByEmailSuccess(state, action) {
+      state.isLoading = false;
+      state.searchedUser = action.payload;
+    },
+
+    clearSearchedUser(state) {
+      state.searchedUser = null;
     },
   }
 });
@@ -760,6 +776,62 @@ export function getAllPayouts(page = 0, pageSize = 1000) {
     try {
       const response = await axios.get(`/api/payouts/?page=${page}&pageSize=${pageSize}`);
       dispatch(slice.actions.getAllPayoutsSuccess(response.data));
+      return response.data;
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+      throw error;
+    }
+  };
+}
+
+export function getResortAdmins(page = 1) {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get(`/api/admin/resort-admins?page=${page}`);
+      dispatch(slice.actions.getResortAdminsSuccess(response.data));
+      return response.data;
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+      throw error;
+    }
+  };
+}
+
+export function findUserByEmail(email) {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get(`/api/admin/users/by-email/${encodeURIComponent(email)}`);
+      dispatch(slice.actions.findUserByEmailSuccess(response.data));
+      return response.data;
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+      dispatch(slice.actions.clearSearchedUser());
+      throw error;
+    }
+  };
+}
+
+export function assignResortAdmin(userId, resort) {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.put(`/api/admin/users/${userId}/assign-resort-admin?resort=${encodeURIComponent(resort)}`);
+      dispatch(slice.actions.findUserByEmailSuccess(response.data));
+      return response.data;
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+      throw error;
+    }
+  };
+}
+
+export function revokeResortAdmin(userId) {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.put(`/api/admin/users/${userId}/revoke-resort-admin`);
       return response.data;
     } catch (error) {
       dispatch(slice.actions.hasError(error));

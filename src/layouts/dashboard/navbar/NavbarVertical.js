@@ -146,6 +146,22 @@ export default function NavbarVertical({ isOpenSidebar, onCloseSidebar, isGuest,
               { title: 'rental products', path: PATH_DASHBOARD.admin.rental },
               { title: 'rental providers', path: PATH_DASHBOARD.admin.rentalProviders },
               { title: 'group lessons by resort', path: PATH_DASHBOARD.admin.groupLessonResorts },
+              { title: 'resort admins', path: PATH_DASHBOARD.admin.resortAdmins },
+            ],
+          }]})
+    }
+    if (user?.user?.role === 'RESORT_ADMIN') {
+        navConfig.push({
+          subheader: 'Resort Admin',
+          items: [
+          {
+            title: 'resort admin',
+            path: PATH_DASHBOARD.admin.root,
+            icon: ICONS.user,
+            children: [
+              { title: 'review teachers', path: PATH_DASHBOARD.admin.review },
+              { title: 'rental products', path: PATH_DASHBOARD.admin.rental },
+              { title: 'rental providers', path: PATH_DASHBOARD.admin.rentalProviders },
             ],
           }]})
     }

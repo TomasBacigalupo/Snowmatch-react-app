@@ -58,7 +58,8 @@ const initialState = {
   phoneVerified: false,
   user: null,
   isTeacher: false,
-  isStudent: false
+  isStudent: false,
+  isResortAdmin: false
 };
 
 const handlers = {
@@ -75,6 +76,7 @@ const handlers = {
       isTeacher: user?.role === 'TEACHER',
       isStudent: user?.role === 'STUDENT',
       isAdmin: user?.role === 'ADMIN',
+      isResortAdmin: user?.role === 'RESORT_ADMIN',
     };
   },
   LOGIN: (state, action) => {
@@ -89,6 +91,7 @@ const handlers = {
       isTeacher: user?.role === 'TEACHER',
       isStudent: user?.role === 'STUDENT',
       isAdmin: user?.role === 'ADMIN',
+      isResortAdmin: user?.role === 'RESORT_ADMIN',
     };
   },
   ADDTOPREMIUM: (state) => ({
@@ -106,6 +109,7 @@ const handlers = {
     isTeacher: false,
     isStudent: false,
     isAdmin: false,
+    isResortAdmin: false,
   }),
   REGISTER: (state, action) => {
     const { user } = action.payload;
@@ -120,6 +124,7 @@ const handlers = {
       isTeacher: user?.role === 'TEACHER',
       isStudent: user?.role === 'STUDENT',
       isAdmin: user?.role === 'ADMIN',
+      isResortAdmin: user?.role === 'RESORT_ADMIN',
     };
     
     console.log('REGISTER reducer:', { 
@@ -144,6 +149,7 @@ const handlers = {
       isTeacher: user?.role === 'TEACHER',
       isStudent: user?.role === 'STUDENT',
       isAdmin: user?.role === 'ADMIN',
+      isResortAdmin: user?.role === 'RESORT_ADMIN',
     };
   },
   UPDATE: (state, action) => {

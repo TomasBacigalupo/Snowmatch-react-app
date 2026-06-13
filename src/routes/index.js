@@ -386,7 +386,7 @@ export default function Router() {
           path: 'dashboard',
           element: (
             <AuthGuard>
-              <RoleBasedGuard accessibleRoles={['ADMIN', 'TEACHER', 'SCHOOL_ADMIN']}>
+              <RoleBasedGuard accessibleRoles={['ADMIN', 'TEACHER', 'SCHOOL_ADMIN', 'RESORT_ADMIN']}>
                 <DashboardLayout />
               </RoleBasedGuard>
             </AuthGuard>
@@ -504,6 +504,7 @@ export default function Router() {
                 { path: 'rental', element: <AdminRental /> },
                 { path: 'rental-providers', element: <AdminRentalProviders /> },
                 { path: 'group-lesson-resorts', element: <AdminGroupLessonResorts /> },
+                { path: 'resort-admins', element: <AdminResortAdmins /> },
                 { path: ':id/confirm', element: <AdminConfirm /> },
                 { path: ':id/events', element: <AdminUserEvents /> },
               ],
@@ -687,6 +688,7 @@ const AdminBroadcastLesson = Loadable(lazy(() => import('../pages/dashboard/Admi
 const AdminFinancialDashboard = Loadable(lazy(() => import('../pages/dashboard/AdminFinancialDashboard')));
 const AdminRental = Loadable(lazy(() => import('../pages/dashboard/AdminRental')));
 const AdminGroupLessonResorts = Loadable(lazy(() => import('../pages/dashboard/AdminGroupLessonResorts')));
+const AdminResortAdmins = Loadable(lazy(() => import('../pages/dashboard/AdminResortAdmins')));
 const AdminConfirm = Loadable(lazy(() => import('../pages/dashboard/AdminConfirm')));
 const AdminUserEvents = Loadable(lazy(() => import('../pages/dashboard/AdminUserEvents')));
 

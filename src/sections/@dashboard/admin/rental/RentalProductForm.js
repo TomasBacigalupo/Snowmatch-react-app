@@ -98,10 +98,10 @@ const isValidUrl = (string) => {
   }
 };
 
-function itemToFormValues(item) {
+function itemToFormValues(item, lockResort) {
   if (!item) {
     return {
-      resortId: 'CERRO_CATEDRAL',
+      resortId: lockResort || 'CERRO_CATEDRAL',
       category: '',
       name: '',
       description: '',
@@ -139,7 +139,7 @@ function itemToFormValues(item) {
 
 // ----------------------------------------------------------------------
 
-export default function RentalProductForm({ item, onSave, onCancel, categoryOptions = [] }) {
+export default function RentalProductForm({ item, onSave, onCancel, categoryOptions = [], lockResort = null }) {
   const dispatch = useDispatch();
   const rentalProviders = useSelector((state) => state.rental.providers);
   const theme = useTheme();
@@ -151,12 +151,12 @@ export default function RentalProductForm({ item, onSave, onCancel, categoryOpti
   const [touched, setTouched] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const [formData, setFormData] = useState(() => itemToFormValues(item));
+  const [formData, setFormData] = useState(() => itemToFormValues(item, lockResort));
 
   const itemSyncKey = item?.id != null ? String(item.id) : 'create';
 
   useEffect(() => {
-    setFormData(itemToFormValues(item));
+    setFormData(itemToFormValues(item, lockResort));
     setErrors({});
     setTouched({});
     setImagePreview(item?.imageUrl ? String(item.imageUrl) : '');
@@ -276,8 +276,12 @@ export default function RentalProductForm({ item, onSave, onCancel, categoryOpti
                 onChange={(e) => handleChange('resortId', e.target.value)}
                 onBlur={() => handleBlur('resortId')}
                 label="Resort *"
+                disabled={Boolean(lockResort)}
               >
-                {RESORT_OPTIONS.map((option) => (
+                {(lockResort
+                  ? RESORT_OPTIONS.filter((option) => option.value === lockResort)
+                  : RESORT_OPTIONS
+                ).map((option) => (
                   <MenuItem key={option.value} value={option.value}>
                     {option.label}
                   </MenuItem>

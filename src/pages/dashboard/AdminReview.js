@@ -41,6 +41,7 @@ import TeacherDetailsDrawer from 'src/sections/@dashboard/admin/list/TeacherDeta
 //cosas de fede
 import { useDispatch, useSelector } from '../../redux/store';
 import { getTeachers, openModal, closeModal } from '../../redux/slices/admin'
+import useAuth from '../../hooks/useAuth';
 import { DialogAnimate } from '../../components/animate';
 import DeclineForm from '../../sections/@dashboard/admin/DeclineForm';
 import AdminTableCard from 'src/sections/@dashboard/admin/list/AdminTableCard';
@@ -160,6 +161,8 @@ export default function AdminReview() {
     (!dataFiltered.length && !!filterStatus);
 
   const dispatch = useDispatch();
+  const { isResortAdmin, user } = useAuth();
+  const managedResort = user?.managedResort;
 
   const { teachers, isOpenModal, selectedEmail } = useSelector((state) => { return state.admin });
 
@@ -188,8 +191,18 @@ export default function AdminReview() {
   }
 
   useEffect(() => {
-    setTableData(teachers ?? []);
-  }, [teachers]);
+    let data = teachers ?? [];
+    if (isResortAdmin && managedResort) {
+      data = data.filter((teacher) => {
+        const enumMatch = Array.isArray(teacher.resortsEnum)
+          && teacher.resortsEnum.some((r) => String(r) === managedResort || r?.name === managedResort);
+        const legacyMatch = Array.isArray(teacher.resorts)
+          && teacher.resorts.some((r) => String(r) === managedResort);
+        return enumMatch || legacyMatch;
+      });
+    }
+    setTableData(data);
+  }, [teachers, isResortAdmin, managedResort]);
 
   useEffect(() => {
     dispatch(getTeachers(page, filterRole, filterName, filterLevel))

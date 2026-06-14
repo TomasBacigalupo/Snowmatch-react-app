@@ -1,6 +1,7 @@
 import { paramCase } from 'change-case';
 import { useState, useEffect, useMemo } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { ADMIN_BOOKING_RESORT_FILTER_OPTIONS } from 'src/utils/adminBookingResortOptions';
 // @mui
 import {
   Box,
@@ -220,7 +221,7 @@ export function AdminBookingsPage({ bookingListKind, pageTitle, heading }) {
     bookingListKind === 'lesson' ? 'CERRO_CATEDRAL' : ''
   );
   /** Calendar year for month/day filters (must match lesson event dates in DB). */
-  const [filterYear, setFilterYear] = useState(() => new Date().getFullYear());
+  const [filterYear, setFilterYear] = useState(() => new Date().getFullYear() - 1);
   const [filterDate, setFilterDate] = useState(null);
   const [statsOpen, setStatsOpen] = useState(false);
   const [listTab, setListTab] = useState(0);
@@ -273,14 +274,23 @@ export function AdminBookingsPage({ bookingListKind, pageTitle, heading }) {
         : filterStatus !== 'all'
           ? filterStatus
           : undefined;
+    // Resort filter is handled entirely client-side because the DB has inconsistent
+    // formats (CERRO_CATEDRAL and "Cerro Catedral"). Sending resort to the API only
+    // returns one format. Instead: send no resort, load a larger batch (2000 covers
+    // a full season at any resort), and filter both formats client-side.
+    const resortValue = partial.resort !== undefined ? partial.resort : filterResort;
+    const resortActive = !!resortValue;
+    const resortForApi = '';
+    const effectiveSize = resortActive ? 2000 : (partial.rowsPerPage ?? rowsPerPage);
+    const effectivePage = resortActive ? 0 : (partial.page ?? page);
     dispatch(
       getBookings(
         teacherForQuery,
         partial.studentId ?? filterStudentId,
         partial.month ?? filterMonth,
-        partial.page ?? page,
-        partial.rowsPerPage ?? rowsPerPage,
-        partial.resort ?? filterResort,
+        effectivePage,
+        effectiveSize,
+        resortForApi,
         dayArg,
         partial.bookingKind ?? bookingListKind,
         partial.year ?? filterYear,
@@ -304,6 +314,7 @@ export function AdminBookingsPage({ bookingListKind, pageTitle, heading }) {
 
   const handleFilterResort = (event) => {
     setFilterResort(event.target.value);
+    setPage(0);
     dispatchBookings({ resort: event.target.value });
   };
 
@@ -339,6 +350,16 @@ export function AdminBookingsPage({ bookingListKind, pageTitle, heading }) {
 
   const displayBookings = useMemo(() => {
     let rows = tableData ?? [];
+    if (filterResort) {
+      const resortLabel = ADMIN_BOOKING_RESORT_FILTER_OPTIONS.find((o) => o.value === filterResort)?.label;
+      rows = rows.filter((row) => row.resort === (resortLabel ?? filterResort) || row.resort === filterResort);
+      // API year filter keys on booking creation date, not lesson date — filter by event year client-side
+      if (filterYear) {
+        rows = rows.filter((row) =>
+          Array.isArray(row.eventList) && row.eventList.some((e) => new Date(e.start).getFullYear() === filterYear)
+        );
+      }
+    }
     if (filterName?.trim()) {
       const q = filterName.toLowerCase().trim();
       rows = rows.filter((row) => {
@@ -354,7 +375,7 @@ export function AdminBookingsPage({ bookingListKind, pageTitle, heading }) {
       return a[1] - b[1];
     });
     return stabilized.map((el) => el[0]);
-  }, [tableData, filterName, order, orderBy]);
+  }, [tableData, filterName, filterResort, filterYear, order, orderBy]);
 
   const denseHeight = dense ? 52 : 72;
 
@@ -364,7 +385,14 @@ export function AdminBookingsPage({ bookingListKind, pageTitle, heading }) {
 
   const { teachers: reduxTeachers, isOpenModal, isOpenEditBookingModal, isOpenDeleteModal, selectedEmail, selectedBookingId, bookings, bookingIntents } = useSelector((state) => state.admin);
 
-  const displayRows = activeListTab === 0 ? displayBookings : (bookingIntents ?? []);
+  // When resort is active, we loaded all records and paginate client-side.
+  const pagedBookings = useMemo(() => {
+    if (!filterResort) return displayBookings;
+    const start = page * rowsPerPage;
+    return displayBookings.slice(start, start + rowsPerPage);
+  }, [displayBookings, filterResort, page, rowsPerPage]);
+
+  const displayRows = activeListTab === 0 ? pagedBookings : (bookingIntents ?? []);
 
   console.log('Modal states:', { isOpenDeleteModal, selectedBookingId });
 
@@ -372,7 +400,7 @@ export function AdminBookingsPage({ bookingListKind, pageTitle, heading }) {
 
   const onChangePage2 = async (event, newPage) => {
     setPage(newPage);
-    dispatchBookings({ page: newPage });
+    if (!filterResort) dispatchBookings({ page: newPage });
   };
 
   const onChangePage3 = (event, newPage) => {
@@ -387,6 +415,12 @@ export function AdminBookingsPage({ bookingListKind, pageTitle, heading }) {
 
   const handleStudentInputChange = (event, newValue) => {
     dispatch(getTeachers(1, "STUDENT", newValue, 0));
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    const newSize = Number(event.target.value);
+    onChangeRowsPerPage(event);
+    if (!filterResort) dispatchBookings({ rowsPerPage: newSize, page: 0 });
   };
 
   useEffect(() => {
@@ -712,11 +746,11 @@ export function AdminBookingsPage({ bookingListKind, pageTitle, heading }) {
             <TablePagination
               rowsPerPageOptions={[5, 10, 25, 50, 100, 200, 500, 1000, 2000, 5000, 10000, 20000, 50000, 100000]}
               component="div"
-              count={-1}
+              count={filterResort ? displayBookings.length : -1}
               rowsPerPage={rowsPerPage}
               page={page}
               onPageChange={onChangePage2}
-              onRowsPerPageChange={onChangeRowsPerPage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
             />
 
             <FormControlLabel

@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useLocation } from 'react-router-dom';
 // @mui
 import { styled, useTheme } from '@mui/material/styles';
@@ -80,14 +80,64 @@ export default function NavbarVertical({ isOpenSidebar, onCloseSidebar, isGuest,
   const { isCollapse, collapseClick, collapseHover, onToggleCollapse, onHoverEnter, onHoverLeave } =
     useCollapseDrawer();
 
-  const config = isGuest ? resort === "Cerro Catedral" ? navConfigGuestCatedral :navConfigGuest : navConfig;
-
   useEffect(() => {
     if (isOpenSidebar) {
       onCloseSidebar();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]);
+
+  const { user: authUser } = useAuth();
+  const userRole = authUser?.role;
+
+  const config = useMemo(() => {
+    const base = isGuest
+      ? (resort === 'Cerro Catedral' ? navConfigGuestCatedral : navConfigGuest)
+      : navConfig;
+
+    if (userRole === 'ADMIN') {
+      return [...base, {
+        subheader: 'Admin',
+        items: [{
+          title: 'admin',
+          path: PATH_DASHBOARD.admin.root,
+          icon: ICONS.user,
+          children: [
+            { title: 'review teachers', path: PATH_DASHBOARD.admin.review },
+            { title: 'review clients', path: PATH_DASHBOARD.admin.reviewClients },
+            { title: 'lesson bookings', path: PATH_DASHBOARD.admin.bookings },
+            { title: 'equipment bookings', path: PATH_DASHBOARD.admin.bookingsEquipos },
+            { title: 'user chats', path: PATH_DASHBOARD.admin.userChats },
+            { title: 'broadcast lesson', path: PATH_DASHBOARD.admin.broadcastLesson },
+            { title: 'financial dashboard', path: PATH_DASHBOARD.admin.financial },
+            { title: 'rental products', path: PATH_DASHBOARD.admin.rental },
+            { title: 'rental providers', path: PATH_DASHBOARD.admin.rentalProviders },
+            { title: 'group lessons by resort', path: PATH_DASHBOARD.admin.groupLessonResorts },
+            { title: 'resort admins', path: PATH_DASHBOARD.admin.resortAdmins },
+            { title: 'user calendars', path: PATH_DASHBOARD.admin.userCalendars },
+          ],
+        }],
+      }];
+    }
+
+    if (userRole === 'RESORT_ADMIN') {
+      return [...base, {
+        subheader: 'Resort Admin',
+        items: [{
+          title: 'resort admin',
+          path: PATH_DASHBOARD.admin.root,
+          icon: ICONS.user,
+          children: [
+            { title: 'review teachers', path: PATH_DASHBOARD.admin.review },
+            { title: 'rental products', path: PATH_DASHBOARD.admin.rental },
+            { title: 'rental providers', path: PATH_DASHBOARD.admin.rentalProviders },
+          ],
+        }],
+      }];
+    }
+
+    return base;
+  }, [isGuest, resort, userRole]);
 
   const renderContent = (
     <Scrollbar
@@ -123,50 +173,6 @@ export default function NavbarVertical({ isOpenSidebar, onCloseSidebar, isGuest,
       {/* {!isCollapse && <NavbarDocs />} */}
     </Scrollbar>
   );
-
-  const user = useAuth()
-
-  useEffect(() => {
-    if (user?.user?.role === 'ADMIN') {
-        navConfig.push({
-          subheader: 'Admin',
-          items: [
-          {
-            title: 'admin',
-            path: PATH_DASHBOARD.admin.root,
-            icon: ICONS.user,
-            children: [
-              { title: 'review teachers', path: PATH_DASHBOARD.admin.review },
-              { title: 'review clients', path: PATH_DASHBOARD.admin.reviewClients },
-              { title: 'lesson bookings', path: PATH_DASHBOARD.admin.bookings },
-              { title: 'equipment bookings', path: PATH_DASHBOARD.admin.bookingsEquipos },
-              { title: 'user chats', path: PATH_DASHBOARD.admin.userChats },
-              { title: 'broadcast lesson', path: PATH_DASHBOARD.admin.broadcastLesson },
-              { title: 'financial dashboard', path: PATH_DASHBOARD.admin.financial },
-              { title: 'rental products', path: PATH_DASHBOARD.admin.rental },
-              { title: 'rental providers', path: PATH_DASHBOARD.admin.rentalProviders },
-              { title: 'group lessons by resort', path: PATH_DASHBOARD.admin.groupLessonResorts },
-              { title: 'resort admins', path: PATH_DASHBOARD.admin.resortAdmins },
-              { title: 'user calendars', path: PATH_DASHBOARD.admin.userCalendars },
-            ],
-          }]})
-    }
-    if (user?.user?.role === 'RESORT_ADMIN') {
-        navConfig.push({
-          subheader: 'Resort Admin',
-          items: [
-          {
-            title: 'resort admin',
-            path: PATH_DASHBOARD.admin.root,
-            icon: ICONS.user,
-            children: [
-              { title: 'review teachers', path: PATH_DASHBOARD.admin.review },
-              { title: 'rental products', path: PATH_DASHBOARD.admin.rental },
-              { title: 'rental providers', path: PATH_DASHBOARD.admin.rentalProviders },
-            ],
-          }]})
-    }
-  }, [])
 
   return (
     <RootStyle

@@ -29,6 +29,7 @@ export default function AdminTableRowClients({ row, selected, onEditRow, onSelec
   const [openMenu, setOpenMenuActions] = useState(null);
 
   const handleOpenMenu = (event) => {
+    event.stopPropagation();
     setOpenMenuActions(event.currentTarget);
   };
 
@@ -91,6 +92,15 @@ export default function AdminTableRowClients({ row, selected, onEditRow, onSelec
                 <Iconify icon={'eva:edit-fill'} />
                 Edit
               </MenuItem> */}
+              <MenuItem
+                onClick={() => {
+                  onClick();
+                  handleCloseMenu();
+                }}
+              >
+                <Iconify icon={'eva:eye-fill'} />
+                View Details
+              </MenuItem>
               <MenuItem
                 onClick={() => {
                   onEvents();

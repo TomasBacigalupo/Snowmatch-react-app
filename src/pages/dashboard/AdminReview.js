@@ -1,17 +1,13 @@
 import { paramCase } from 'change-case';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // @mui
 import {
   Box,
-  Tab,
-  Tabs,
   Card,
   Table,
   Switch,
-  Button,
   Tooltip,
-  Divider,
   TableBody,
   Container,
   IconButton,
@@ -38,7 +34,6 @@ import { TableEmptyRows, TableHeadCustom, TableNoData, TableSelectedActions } fr
 // sections
 import { AdminTableToolbar, AdminTableRow } from '../../sections/@dashboard/admin/list';
 import TeacherDetailsDrawer from 'src/sections/@dashboard/admin/list/TeacherDetailsDrawer';
-//cosas de fede
 import { useDispatch, useSelector } from '../../redux/store';
 import { getTeachers, openModal, closeModal } from '../../redux/slices/admin'
 import useAuth from '../../hooks/useAuth';
@@ -46,24 +41,18 @@ import { DialogAnimate } from '../../components/animate';
 import DeclineForm from '../../sections/@dashboard/admin/DeclineForm';
 import AdminTableCard from 'src/sections/@dashboard/admin/list/AdminTableCard';
 
-// ---------------------------------------------------------------------
+// ----------------------------------------------------------------------
 
-
-const STATUS_OPTIONS = ['all', 'UNDER_REVIEW'];
-
-const ROLE_OPTIONS = [
-  'TEACHER',
-  'STUDENT'
-];
+const ROLE_OPTIONS = ['TEACHER', 'STUDENT'];
 
 const TABLE_HEAD = [
-  { id: 'name', label: 'Name', align: 'left' },
+  { id: 'select', label: '', width: 48 },
   { id: 'id', label: 'Id', align: 'left' },
+  { id: 'name', label: 'Name', align: 'left' },
   { id: 'role', label: 'Role', align: 'left' },
   { id: 'level', label: 'Level', align: 'left' },
   { id: 'isAuthorized', label: 'Authorized', align: 'center' },
   { id: 'state', label: 'State', align: 'left' },
-  { id: '' },
 ];
 
 // ----------------------------------------------------------------------
@@ -76,32 +65,49 @@ export default function AdminReview() {
     orderBy,
     rowsPerPage,
     setPage,
-    //
     selected,
     setSelected,
     onSelectRow,
     onSelectAllRows,
-    //
     onSort,
     onChangeDense,
     onChangePage,
     onChangeRowsPerPage,
-  } = useTable();
+  } = useTable({ defaultRowsPerPage: 10 });
 
   const { themeStretch } = useSettings();
-
   const navigate = useNavigate();
 
   const [tableData, setTableData] = useState([]);
-
+  const [filterNameInput, setFilterNameInput] = useState('');
   const [filterName, setFilterName] = useState('');
   const [filterRole, setFilterRole] = useState(ROLE_OPTIONS[0]);
   const [filterLevel, setFilterLevel] = useState(0);
+  const [filterResort, setFilterResort] = useState('');
 
-  const { currentTab: filterStatus, onChangeTab: onChangeFilterStatus } = useTabs('all');
+  const debounceRef = useRef(null);
 
-  const handleFilterName = (filterName) => {
-    setFilterName(filterName);
+  const handleFilterName = (value) => {
+    setFilterNameInput(value);
+    clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(() => {
+      setFilterName(value);
+      setPage(0);
+    }, 400);
+  };
+
+  const handleFilterRole = (event) => {
+    setFilterRole(event.target.value);
+    setPage(0);
+  };
+
+  const handleFilterLevel = (event) => {
+    setFilterLevel(event.target.value);
+    setPage(0);
+  };
+
+  const handleFilterResort = (event) => {
+    setFilterResort(event.target.value);
     setPage(0);
   };
 
@@ -113,24 +119,9 @@ export default function AdminReview() {
     dispatch(closeModal());
   };
 
-  const handleFilterRole = (event) => {
-    setFilterRole(event.target.value);
-  };
-
-  const handleFilterLevel = (event) => {
-    setFilterLevel(event.target.value);
-  };
-
-  // const handleDeleteRow = (id) => {
-  //   const deleteRow = tableData.filter((row) => row.id !== id);
-  //   setSelected([]);
-  //   setTableData(deleteRow);
-  // };
-
-  const handleDeleteRows = (selected) => {
-    const deleteRows = tableData.filter((row) => !selected.includes(row.id));
+  const handleDeleteRows = (ids) => {
+    setTableData((prev) => prev.filter((row) => !ids.includes(row.id)));
     setSelected([]);
-    setTableData(deleteRows);
   };
 
   const handleEditRow = (id) => {
@@ -142,31 +133,18 @@ export default function AdminReview() {
   };
 
   const handleContactWapp = (countryCode, cellphone, name) => {
-    window.open(`https://wa.me/${countryCode}${cellphone}?text=Hola ${name}, `, '_blank')
-  }
-
-  const dataFiltered = applySortFilter({
-    tableData,
-    comparator: getComparator(order, orderBy),
-    filterName,
-    filterRole,
-    filterStatus,
-  });
+    window.open(`https://wa.me/${countryCode}${cellphone}?text=Hola ${name}, `, '_blank');
+  };
 
   const denseHeight = dense ? 52 : 72;
-
-  const isNotFound =
-    (!dataFiltered.length && !!filterName) ||
-    (!dataFiltered.length && !!filterRole) ||
-    (!dataFiltered.length && !!filterStatus);
+  const isNotFound = !tableData.length && (!!filterName || !!filterResort);
 
   const dispatch = useDispatch();
   const { isResortAdmin, user } = useAuth();
   const managedResort = user?.managedResort;
 
-  const { teachers, isOpenModal, selectedEmail } = useSelector((state) => { return state.admin });
+  const { teachers, isOpenModal, selectedEmail } = useSelector((state) => state.admin);
 
-  const [reqPage, setReqPage] = useState(0);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [selectedTeacher, setSelectedTeacher] = useState(null);
 
@@ -179,75 +157,70 @@ export default function AdminReview() {
     setDrawerOpen(false);
   };
 
-  const onChangePage2 = async (event, newPage) => {
-    dispatch(getTeachers(newPage + 1, filterRole))
-    setPage(newPage)
-  }
+  const onChangePage2 = (event, newPage) => {
+    dispatch(getTeachers(newPage + 1, filterRole, filterName, filterLevel, rowsPerPage, filterResort));
+    setPage(newPage);
+  };
 
-  const onChangePage3 = (event, newPage) => {
-    dispatch(getTeachers(newPage, filterRole))
-    setTableData(teachers ?? [])
-    setPage(newPage)
-  }
+  const handleChangeRowsPerPage = (event) => {
+    onChangeRowsPerPage(event);
+    setPage(0);
+    dispatch(getTeachers(1, filterRole, filterName, filterLevel, Number(event.target.value), filterResort));
+  };
 
   useEffect(() => {
     let data = teachers ?? [];
-    if (isResortAdmin && managedResort) {
+    const resortToMatch = filterResort || (isResortAdmin ? managedResort : null);
+    if (resortToMatch) {
       data = data.filter((teacher) => {
         const enumMatch = Array.isArray(teacher.resortsEnum)
-          && teacher.resortsEnum.some((r) => String(r) === managedResort || r?.name === managedResort);
+          && teacher.resortsEnum.some((r) => String(r) === resortToMatch || r?.name === resortToMatch);
         const legacyMatch = Array.isArray(teacher.resorts)
-          && teacher.resorts.some((r) => String(r) === managedResort);
+          && teacher.resorts.some((r) => String(r) === resortToMatch);
         return enumMatch || legacyMatch;
       });
     }
     setTableData(data);
-  }, [teachers, isResortAdmin, managedResort]);
+  }, [teachers, isResortAdmin, managedResort, filterResort]);
 
   useEffect(() => {
-    dispatch(getTeachers(page, filterRole, filterName, filterLevel))
-  }, [filterRole, filterName, filterLevel, page])
+    dispatch(getTeachers(1, filterRole, filterName, filterLevel, rowsPerPage, filterResort));
+    setPage(0);
+  }, [filterRole, filterName, filterLevel, filterResort]);
 
   useEffect(() => {
-    dispatch(getTeachers(1));
+    dispatch(getTeachers(1, undefined, undefined, undefined, rowsPerPage));
   }, []);
 
   return (
     <Page title="Admin Review: List">
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <HeaderBreadcrumbs
-          heading="Teacher Reveiw List"
+          heading="Teacher Review List"
           links={[
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
             { name: 'Admin', href: PATH_DASHBOARD.admin.root },
             { name: 'Review' },
           ]}
-        // action={
-        //   <Button
-        //     variant="contained"
-        //     component={RouterLink}
-        //     to={PATH_DASHBOARD.user.new}
-        //     startIcon={<Iconify icon={'eva:plus-fill'} />}
-        //   >
-        //     New Client
-        //   </Button>
-        // }
         />
 
         <Card>
           <AdminTableToolbar
-            filterName={filterName}
+            filterName={filterNameInput}
             filterRole={filterRole}
             filterLevel={filterLevel}
+            filterResort={filterResort}
             onFilterName={handleFilterName}
             onFilterRole={handleFilterRole}
             onFilterLevel={handleFilterLevel}
+            onFilterResort={handleFilterResort}
             optionsRole={ROLE_OPTIONS}
             showSearchAdmin={false}
             showRole={false}
             showMonth={false}
             showTeacherId={false}
             showStudentId={false}
+            showResort={true}
           />
 
           <Scrollbar>
@@ -259,10 +232,7 @@ export default function AdminReview() {
                     numSelected={selected.length}
                     rowCount={tableData.length}
                     onSelectAllRows={(checked) =>
-                      onSelectAllRows(
-                        checked,
-                        tableData?.map((row) => row.id)
-                      )
+                      onSelectAllRows(checked, tableData.map((row) => row.id))
                     }
                     actions={
                       <Tooltip title="Delete">
@@ -273,7 +243,6 @@ export default function AdminReview() {
                     }
                   />
                 )}
-
                 <Table size={dense ? 'small' : 'medium'}>
                   <TableHeadCustom
                     order={order}
@@ -283,65 +252,58 @@ export default function AdminReview() {
                     numSelected={selected.length}
                     onSort={onSort}
                     onSelectAllRows={(checked) =>
-                      onSelectAllRows(
-                        checked,
-                        tableData?.map((row) => row.id)
-                      )
+                      onSelectAllRows(checked, tableData.map((row) => row.id))
                     }
                   />
 
                   <TableBody>
                     {tableData?.map((row) => (
                       <AdminTableRow
-                        key={row.userId}
+                        key={row.id}
                         row={row}
-                        selected={selected.includes(row.userId)}
-                        onSelectRow={() => onSelectRow(row.userId)}
+                        selected={selected.includes(row.id)}
+                        onSelectRow={() => onSelectRow(row.id)}
                         onEditRow={() => handleEditRow(row.id)}
                         onConfirmRow={() => handleConfirmRow(row.id)}
                         onDeclineRow={() => handleDeclineOpenModal(row.email)}
-                        onWapp={() => { handleContactWapp(row.countryCode, row.cellphone, row.name) }}
-                        onEvents={() => { navigate(PATH_DASHBOARD.admin.events(row.id)) }}
+                        onWapp={() => handleContactWapp(row.countryCode, row.cellphone, row.name)}
+                        onEvents={() => navigate(PATH_DASHBOARD.admin.events(row.id))}
                         onClick={() => handleRowClick(row)}
-                      />))}
-
+                      />
+                    ))}
                     <TableEmptyRows height={denseHeight} emptyRows={0} />
-
                     <TableNoData isNotFound={isNotFound} />
                   </TableBody>
                 </Table>
               </TableContainer>
             </Hidden>
+
             <Hidden smUp>
               {tableData?.map((row) => (
                 <AdminTableCard
-                  key={row.userId}
+                  key={row.id}
                   row={row}
-                  selected={selected.includes(row.userId)}
-                  onSelectRow={() => onSelectRow(row.userId)}
                   onEditRow={() => handleEditRow(row.id)}
                   onConfirmRow={() => handleConfirmRow(row.id)}
                   onDeclineRow={() => handleDeclineOpenModal(row.email)}
-                  onWapp={()=>{handleContactWapp(row.countryCode, row.cellphone, row.name)}}
-                  onEvents={() => { navigate(PATH_DASHBOARD.admin.events(row.id)) }}
+                  onWapp={() => handleContactWapp(row.countryCode, row.cellphone, row.name)}
+                  onEvents={() => navigate(PATH_DASHBOARD.admin.events(row.id))}
                   onClick={() => handleRowClick(row)}
-                />))}
-
+                />
+              ))}
             </Hidden>
-
           </Scrollbar>
 
           <Box sx={{ position: 'relative' }}>
             <TablePagination
-              rowsPerPageOptions={[5, 10, 25]}
+              rowsPerPageOptions={[5, 10, 25, 50]}
               component="div"
               count={-1}
               rowsPerPage={rowsPerPage}
               page={page}
               onPageChange={onChangePage2}
-              onRowsPerPageChange={onChangeRowsPerPage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
             />
-
             <FormControlLabel
               control={<Switch checked={dense} onChange={onChangeDense} />}
               label="Dense"
@@ -349,48 +311,14 @@ export default function AdminReview() {
             />
           </Box>
         </Card>
+
         <TeacherDetailsDrawer open={drawerOpen} onClose={handleCloseDrawer} teacher={selectedTeacher} />
+
         <DialogAnimate open={isOpenModal} onClose={handleDeclineCloseModal}>
           <DialogTitle>{'Seguro que queres Eliminar la reserva?'}</DialogTitle>
-          <DeclineForm
-            email={selectedEmail}
-            onCancel={handleDeclineCloseModal}
-          ></DeclineForm>
+          <DeclineForm email={selectedEmail} onCancel={handleDeclineCloseModal} />
         </DialogAnimate>
       </Container>
     </Page>
   );
-}
-
-// ----------------------------------------------------------------------
-
-function applySortFilter({ tableData, comparator, filterName, filterStatus, filterRole }) {
-  return tableData
-  
-  if (tableData.length === 0) {
-    return tableData
-  }
-  const stabilizedThis = tableData?.map((el, index) => [el, index]);
-
-  stabilizedThis?.sort((a, b) => {
-    const order = comparator(a[0], b[0]);
-    if (order !== 0) return order;
-    return a[1] - b[1];
-  });
-
-  tableData = stabilizedThis?.map((el) => el[0]);
-
-  if (filterName) {
-    tableData = tableData?.filter((item) => item.name.toLowerCase().indexOf(filterName.toLowerCase()) !== -1);
-  }
-
-  if (filterStatus !== 'all') {
-    tableData = tableData?.filter((item) => item.status === filterStatus);
-  }
-
-  if (filterRole !== 'all') {
-    tableData = tableData?.filter((item) => item.role === filterRole);
-  }
-
-  return tableData;
 }

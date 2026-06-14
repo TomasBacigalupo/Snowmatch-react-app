@@ -1,24 +1,20 @@
 import { paramCase } from 'change-case';
-import { useState, useEffect } from 'react';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 // @mui
 import {
-    Box,
-    Tab,
-    Tabs,
-    Card,
-    Table,
-    Switch,
-    Button,
-    Tooltip,
-    Divider,
-    TableBody,
-    Container,
-    IconButton,
-    TableContainer,
-    TablePagination,
-    FormControlLabel,
-    DialogTitle,
+  Box,
+  Card,
+  Table,
+  Switch,
+  Tooltip,
+  TableBody,
+  Container,
+  IconButton,
+  TableContainer,
+  TablePagination,
+  FormControlLabel,
+  DialogTitle,
 } from '@mui/material';
 import Hidden from 'src/components/LegacyHidden';
 // routes
@@ -26,9 +22,7 @@ import { PATH_DASHBOARD } from '../../routes/paths';
 // hooks
 import useTabs from '../../hooks/useTabs';
 import useSettings from '../../hooks/useSettings';
-import useTable, { getComparator, emptyRows } from '../../hooks/useTable';
-// _mock_
-import { _userList } from '../../_mock';
+import useTable, { getComparator } from '../../hooks/useTable';
 // components
 import Page from '../../components/Page';
 import Iconify from '../../components/Iconify';
@@ -36,357 +30,297 @@ import Scrollbar from '../../components/Scrollbar';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
 import { TableEmptyRows, TableHeadCustom, TableNoData, TableSelectedActions } from '../../components/table';
 // sections
-import { AdminTableToolbar, AdminTableRow } from '../../sections/@dashboard/admin/list';
-//cosas de fede
+import { AdminTableToolbar } from '../../sections/@dashboard/admin/list';
 import { useDispatch, useSelector } from '../../redux/store';
-import { getTeachers, openModal, closeModal } from '../../redux/slices/admin'
+import { getTeachers, openModal, closeModal } from '../../redux/slices/admin';
 import { DialogAnimate } from '../../components/animate';
 import DeclineForm from '../../sections/@dashboard/admin/DeclineForm';
 import AdminTableCard from 'src/sections/@dashboard/admin/list/AdminTableCard';
 import AdminTableRowClients from 'src/sections/@dashboard/admin/list/AdminTableRowClients';
 import ClientDetailsDrawer from 'src/sections/@dashboard/admin/list/ClientDetailsDrawer';
 
-// ---------------------------------------------------------------------
+// ----------------------------------------------------------------------
 
-
-const STATUS_OPTIONS = ['all', 'UNDER_REVIEW'];
-
-const ROLE_OPTIONS = [
-    'TEACHER',
-    'STUDENT'
-];
+const ROLE_OPTIONS = ['TEACHER', 'STUDENT'];
 
 const TABLE_HEAD = [
-    { id: 'id', label: 'Id', align: 'left' },
-    { id: 'name', label: 'Name', align: 'left' },
-    { id: 'phone', label: 'Telefono', align: 'left' },
-    { id: 'email', label: 'Email', align: 'left' },
-    { id: 'credits', label: 'Creditos', align: 'left' }
+  { id: 'id', label: 'Id', align: 'left' },
+  { id: 'name', label: 'Name', align: 'left' },
+  { id: 'phone', label: 'Telefono', align: 'left' },
+  { id: 'email', label: 'Email', align: 'left' },
+  { id: 'credits', label: 'Creditos', align: 'left' },
 ];
 
 // ----------------------------------------------------------------------
 
 export default function AdminReviewClients() {
-    const {
-        dense,
-        page,
-        order,
-        orderBy,
-        rowsPerPage,
-        setPage,
-        //
-        selected,
-        setSelected,
-        onSelectRow,
-        onSelectAllRows,
-        //
-        onSort,
-        onChangeDense,
-        onChangePage,
-        onChangeRowsPerPage,
-    } = useTable();
+  const {
+    dense,
+    page,
+    order,
+    orderBy,
+    rowsPerPage,
+    setPage,
+    selected,
+    setSelected,
+    onSelectRow,
+    onSelectAllRows,
+    onSort,
+    onChangeDense,
+    onChangeRowsPerPage,
+  } = useTable({ defaultRowsPerPage: 10 });
 
-    const { themeStretch } = useSettings();
+  const { themeStretch } = useSettings();
+  const navigate = useNavigate();
 
-    const navigate = useNavigate();
+  const [tableData, setTableData] = useState([]);
+  const [filterNameInput, setFilterNameInput] = useState('');
+  const [filterName, setFilterName] = useState('');
+  const [filterRole, setFilterRole] = useState(ROLE_OPTIONS[1]);
+  const [filterLevel, setFilterLevel] = useState(0);
+  const [filterResort, setFilterResort] = useState('');
 
-    const [tableData, setTableData] = useState([]);
+  const debounceRef = useRef(null);
 
-    const [filterName, setFilterName] = useState('');
-    const [filterRole, setFilterRole] = useState(ROLE_OPTIONS[1]);
-    const [filterLevel, setFilterLevel] = useState(0);
+  const [selectedClient, setSelectedClient] = useState(null);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
-    const { currentTab: filterStatus, onChangeTab: onChangeFilterStatus } = useTabs('all');
+  const handleFilterName = (value) => {
+    setFilterNameInput(value);
+    clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(() => {
+      setFilterName(value);
+      setPage(0);
+    }, 400);
+  };
 
-    const [selectedClient, setSelectedClient] = useState(null);
-    const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const handleFilterRole = (event) => {
+    setFilterRole(event.target.value);
+    setPage(0);
+  };
 
-    const handleFilterName = (filterName) => {
-        setFilterName(filterName);
-        setPage(0);
-    };
+  const handleFilterLevel = (event) => {
+    setFilterLevel(event.target.value);
+    setPage(0);
+  };
 
-    const handleDeclineOpenModal = (email) => {
-        dispatch(openModal(email));
-    };
+  const handleFilterResort = (event) => {
+    setFilterResort(event.target.value);
+    setPage(0);
+  };
 
-    const handleDeclineCloseModal = () => {
-        dispatch(closeModal());
-    };
+  const handleDeclineOpenModal = (email) => {
+    dispatch(openModal(email));
+  };
 
-    const handleFilterRole = (event) => {
-        setFilterRole(event.target.value);
-    };
+  const handleDeclineCloseModal = () => {
+    dispatch(closeModal());
+  };
 
-    const handleFilterLevel = (event) => {
-        setFilterLevel(event.target.value);
-    };
+  const handleDeleteRows = (selected) => {
+    const deleteRows = tableData.filter((row) => !selected.includes(row.id));
+    setSelected([]);
+    setTableData(deleteRows);
+  };
 
-    // const handleDeleteRow = (id) => {
-    //   const deleteRow = tableData.filter((row) => row.id !== id);
-    //   setSelected([]);
-    //   setTableData(deleteRow);
-    // };
+  const handleEditRow = (id) => {
+    navigate(PATH_DASHBOARD.user.edit(paramCase(id)));
+  };
 
-    const handleDeleteRows = (selected) => {
-        const deleteRows = tableData.filter((row) => !selected.includes(row.id));
-        setSelected([]);
-        setTableData(deleteRows);
-    };
+  const handleConfirmRow = (id) => {
+    navigate(PATH_DASHBOARD.admin.confirm(id));
+  };
 
-    const handleEditRow = (id) => {
-        navigate(PATH_DASHBOARD.user.edit(paramCase(id)));
-    };
+  const handleContactWapp = (countryCode, cellphone, name) => {
+    window.open(`https://wa.me/${countryCode}${cellphone}?text=Hola ${name}, `, '_blank');
+  };
 
-    const handleConfirmRow = (id) => {
-        navigate(PATH_DASHBOARD.admin.confirm(id));
-    };
+  const denseHeight = dense ? 52 : 72;
+  const isNotFound = !tableData.length && (!!filterName || !!filterResort);
 
-    const handleContactWapp = (countryCode, cellphone, name) => {
-        window.open(`https://wa.me/${countryCode}${cellphone}?text=Hola ${name}, `, '_blank')
+  const dispatch = useDispatch();
+  const { teachers, isOpenModal, selectedEmail } = useSelector((state) => state.admin);
+
+  const onChangePage2 = (event, newPage) => {
+    dispatch(getTeachers(newPage + 1, filterRole, filterName, filterLevel, rowsPerPage, filterResort));
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    onChangeRowsPerPage(event);
+    setPage(0);
+    dispatch(getTeachers(1, filterRole, filterName, filterLevel, Number(event.target.value), filterResort));
+  };
+
+  const handleRowClick = (row) => {
+    setSelectedClient(row);
+    setIsDrawerOpen(true);
+  };
+
+  const handleCloseDrawer = () => {
+    setIsDrawerOpen(false);
+    setSelectedClient(null);
+  };
+
+  useEffect(() => {
+    let data = teachers ?? [];
+    if (filterResort) {
+      data = data.filter((client) => {
+        const enumMatch = Array.isArray(client.resortsEnum)
+          && client.resortsEnum.some((r) => String(r) === filterResort || r?.name === filterResort);
+        const legacyMatch = Array.isArray(client.resorts)
+          && client.resorts.some((r) => String(r) === filterResort);
+        return enumMatch || legacyMatch;
+      });
     }
+    setTableData(data);
+  }, [teachers, filterResort]);
 
-    const dataFiltered = applySortFilter({
-        tableData,
-        comparator: getComparator(order, orderBy),
-        filterName,
-        filterRole,
-        filterStatus,
-    });
+  useEffect(() => {
+    dispatch(getTeachers(1, filterRole, filterName, filterLevel, rowsPerPage, filterResort));
+    setPage(0);
+  }, [filterRole, filterName, filterLevel, filterResort]);
 
-    const denseHeight = dense ? 52 : 72;
+  useEffect(() => {
+    dispatch(getTeachers(1, ROLE_OPTIONS[1], undefined, undefined, rowsPerPage));
+  }, []);
 
-    const isNotFound =
-        (!dataFiltered.length && !!filterName) ||
-        (!dataFiltered.length && !!filterRole) ||
-        (!dataFiltered.length && !!filterStatus);
+  return (
+    <Page title="Admin Clients: List">
+      <Container maxWidth={themeStretch ? false : 'lg'}>
+        <HeaderBreadcrumbs
+          heading="Clients List"
+          links={[
+            { name: 'Dashboard', href: PATH_DASHBOARD.root },
+            { name: 'Admin', href: PATH_DASHBOARD.admin.root },
+            { name: 'Clients' },
+          ]}
+        />
 
-    const dispatch = useDispatch();
+        <Card>
+          <AdminTableToolbar
+            filterName={filterNameInput}
+            filterRole={filterRole}
+            filterLevel={filterLevel}
+            filterResort={filterResort}
+            onFilterName={handleFilterName}
+            onFilterRole={handleFilterRole}
+            onFilterLevel={handleFilterLevel}
+            onFilterResort={handleFilterResort}
+            optionsRole={ROLE_OPTIONS}
+            showRole={false}
+            showLevel={false}
+            showMountain={false}
+            showTeacherId={false}
+            showMonth={false}
+            showStudentId={false}
+            showSearchAdmin={false}
+            showResort={true}
+          />
 
-    const { teachers, isOpenModal, selectedEmail } = useSelector((state) => { return state.admin });
+          <Scrollbar>
+            <Hidden smDown>
+              <TableContainer sx={{ minWidth: 800, position: 'relative' }}>
+                {selected.length > 0 && (
+                  <TableSelectedActions
+                    dense={dense}
+                    numSelected={selected.length}
+                    rowCount={tableData.length}
+                    onSelectAllRows={(checked) =>
+                      onSelectAllRows(checked, tableData?.map((row) => row.id))
+                    }
+                    actions={
+                      <Tooltip title="Delete">
+                        <IconButton color="primary" onClick={() => handleDeleteRows(selected)}>
+                          <Iconify icon={'eva:trash-2-outline'} />
+                        </IconButton>
+                      </Tooltip>
+                    }
+                  />
+                )}
 
-    const [reqPage, setReqPage] = useState(0);
+                <Table size={dense ? 'small' : 'medium'}>
+                  <TableHeadCustom
+                    order={order}
+                    orderBy={orderBy}
+                    headLabel={TABLE_HEAD}
+                    rowCount={tableData?.length ?? 0}
+                    numSelected={selected.length}
+                    onSort={onSort}
+                    onSelectAllRows={(checked) =>
+                      onSelectAllRows(checked, tableData?.map((row) => row.id))
+                    }
+                  />
 
-    const onChangePage2 = async (event, newPage) => {
-        dispatch(getTeachers(newPage + 1, filterRole))
-        setPage(newPage)
-    }
+                  <TableBody>
+                    {tableData?.map((row) => (
+                      <AdminTableRowClients
+                        key={row.userId}
+                        row={row}
+                        selected={selected.includes(row.userId)}
+                        onSelectRow={() => onSelectRow(row.userId)}
+                        onEditRow={() => handleEditRow(row.id)}
+                        onConfirmRow={() => handleConfirmRow(row.id)}
+                        onDeclineRow={() => handleDeclineOpenModal(row.email)}
+                        onWapp={() => handleContactWapp(row.countryCode, row.cellphone, row.name)}
+                        onEvents={() => navigate(PATH_DASHBOARD.admin.events(row.id))}
+                        onClick={() => handleRowClick(row)}
+                      />
+                    ))}
+                    <TableEmptyRows height={denseHeight} emptyRows={0} />
+                    <TableNoData isNotFound={isNotFound} />
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </Hidden>
 
-    const onChangePage3 = (event, newPage) => {
-        dispatch(getTeachers(newPage, filterRole))
-        setTableData(teachers ?? [])
-        setPage(newPage)
-    }
-
-    useEffect(() => {
-        setTableData(teachers ?? []);
-    }, [teachers]);
-
-    useEffect(() => {
-        dispatch(getTeachers(page, filterRole, filterName, filterLevel))
-    }, [filterRole, filterName, filterLevel, page])
-
-    useEffect(() => {
-        dispatch(getTeachers(1));
-    }, []);
-
-    const handleRowClick = (row) => {
-        setSelectedClient(row);
-        setIsDrawerOpen(true);
-    };
-
-    const handleCloseDrawer = () => {
-        setIsDrawerOpen(false);
-        setSelectedClient(null);
-    };
-
-    return (
-        <Page title="Admin Review: List">
-            <Container maxWidth={themeStretch ? false : 'lg'}>
-                <HeaderBreadcrumbs
-                    heading="Clients Reveiw List"
-                    links={[
-                        { name: 'Dashboard', href: PATH_DASHBOARD.root },
-                        { name: 'Admin', href: PATH_DASHBOARD.admin.root },
-                        { name: 'Review' },
-                    ]}
-                // action={
-                //   <Button
-                //     variant="contained"
-                //     component={RouterLink}
-                //     to={PATH_DASHBOARD.user.new}
-                //     startIcon={<Iconify icon={'eva:plus-fill'} />}
-                //   >
-                //     New Client
-                //   </Button>
-                // }
+            <Hidden smUp>
+              {tableData?.map((row) => (
+                <AdminTableCard
+                  key={row.userId}
+                  row={row}
+                  selected={selected.includes(row.userId)}
+                  onSelectRow={() => onSelectRow(row.userId)}
+                  onEditRow={() => handleEditRow(row.id)}
+                  onConfirmRow={() => handleConfirmRow(row.id)}
+                  onDeclineRow={() => handleDeclineOpenModal(row.email)}
+                  onWapp={() => handleContactWapp(row.countryCode, row.cellphone, row.name)}
+                  onEvents={() => navigate(PATH_DASHBOARD.admin.events(row.id))}
+                  onClick={() => handleRowClick(row)}
                 />
+              ))}
+            </Hidden>
+          </Scrollbar>
 
-                <Card>
-                    <AdminTableToolbar
-                        filterName={filterName}
-                        filterRole={filterRole}
-                        filterLevel={filterLevel}
-                        onFilterName={handleFilterName}
-                        onFilterRole={handleFilterRole}
-                        onFilterLevel={handleFilterLevel}
-                        optionsRole={ROLE_OPTIONS}
-                        showRole={false}
-                        showLevel={false}
-                        showMountain={false}
-                        showTeacherId={false}
-                        showMonth={false}
-                        showStudentId={false}
-                        showSearchAdmin={false}
-                        showResort={false}
-                    />
+          <Box sx={{ position: 'relative' }}>
+            <TablePagination
+              rowsPerPageOptions={[5, 10, 25, 50]}
+              component="div"
+              count={-1}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onPageChange={onChangePage2}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+            />
+            <FormControlLabel
+              control={<Switch checked={dense} onChange={onChangeDense} />}
+              label="Dense"
+              sx={{ px: 3, py: 1.5, top: 0, position: { md: 'absolute' } }}
+            />
+          </Box>
+        </Card>
 
-                    <Scrollbar>
-                        <Hidden smDown>
-                            <TableContainer sx={{ minWidth: 800, position: 'relative' }}>
-                                {selected.length > 0 && (
-                                    <TableSelectedActions
-                                        dense={dense}
-                                        numSelected={selected.length}
-                                        rowCount={tableData.length}
-                                        onSelectAllRows={(checked) =>
-                                            onSelectAllRows(
-                                                checked,
-                                                tableData?.map((row) => row.id)
-                                            )
-                                        }
-                                        actions={
-                                            <Tooltip title="Delete">
-                                                <IconButton color="primary" onClick={() => handleDeleteRows(selected)}>
-                                                    <Iconify icon={'eva:trash-2-outline'} />
-                                                </IconButton>
-                                            </Tooltip>
-                                        }
-                                    />
-                                )}
+        <DialogAnimate open={isOpenModal} onClose={handleDeclineCloseModal}>
+          <DialogTitle>{'Seguro que queres declinar?'}</DialogTitle>
+          <DeclineForm email={selectedEmail} onCancel={handleDeclineCloseModal} />
+        </DialogAnimate>
 
-                                <Table size={dense ? 'small' : 'medium'}>
-                                    <TableHeadCustom
-                                        order={order}
-                                        orderBy={orderBy}
-                                        headLabel={TABLE_HEAD}
-                                        rowCount={tableData?.length ?? 0}
-                                        numSelected={selected.length}
-                                        onSort={onSort}
-                                        onSelectAllRows={(checked) =>
-                                            onSelectAllRows(
-                                                checked,
-                                                tableData?.map((row) => row.id)
-                                            )
-                                        }
-                                    />
-
-                                    <TableBody>
-                                        {tableData?.map((row) => (
-                                            <AdminTableRowClients
-                                                key={row.userId}
-                                                row={row}
-                                                selected={selected.includes(row.userId)}
-                                                onSelectRow={() => onSelectRow(row.userId)}
-                                                onEditRow={() => handleEditRow(row.id)}
-                                                onConfirmRow={() => handleConfirmRow(row.id)}
-                                                onDeclineRow={() => handleDeclineOpenModal(row.email)}
-                                                onWapp={() => { handleContactWapp(row.countryCode, row.cellphone, row.name) }}
-                                                onEvents={() => { navigate(PATH_DASHBOARD.admin.events(row.id)) }}
-                                                onClick={() => handleRowClick(row)}
-                                            />))}
-
-                                        <TableEmptyRows height={denseHeight} emptyRows={0} />
-
-                                        <TableNoData isNotFound={isNotFound} />
-                                    </TableBody>
-                                </Table>
-                            </TableContainer>
-                        </Hidden>
-                        <Hidden smUp>
-                            {tableData?.map((row) => (
-                                <AdminTableCard
-                                    key={row.userId}
-                                    row={row}
-                                    selected={selected.includes(row.userId)}
-                                    onSelectRow={() => onSelectRow(row.userId)}
-                                    onEditRow={() => handleEditRow(row.id)}
-                                    onConfirmRow={() => handleConfirmRow(row.id)}
-                                    onDeclineRow={() => handleDeclineOpenModal(row.email)}
-                                    onWapp={() => { handleContactWapp(row.countryCode, row.cellphone, row.name) }}
-                                    onEvents={() => { navigate(PATH_DASHBOARD.admin.events(row.id)) }}
-                                    onClick={() => handleRowClick(row)}
-                                />))}
-
-                        </Hidden>
-
-                    </Scrollbar>
-
-                    <Box sx={{ position: 'relative' }}>
-                        <TablePagination
-                            rowsPerPageOptions={[5, 10, 25]}
-                            component="div"
-                            count={-1}
-                            rowsPerPage={rowsPerPage}
-                            page={page}
-                            onPageChange={onChangePage2}
-                            onRowsPerPageChange={onChangeRowsPerPage}
-                        />
-
-                        <FormControlLabel
-                            control={<Switch checked={dense} onChange={onChangeDense} />}
-                            label="Dense"
-                            sx={{ px: 3, py: 1.5, top: 0, position: { md: 'absolute' } }}
-                        />
-                    </Box>
-                </Card>
-                <DialogAnimate open={isOpenModal} onClose={handleDeclineCloseModal}>
-                    <DialogTitle>{'Seguro que queres declinar?'}</DialogTitle>
-                    <DeclineForm
-                        email={selectedEmail}
-                        onCancel={handleDeclineCloseModal}
-                    ></DeclineForm>
-                </DialogAnimate>
-
-                <ClientDetailsDrawer
-                    open={isDrawerOpen}
-                    onClose={handleCloseDrawer}
-                    client={selectedClient}
-                />
-            </Container>
-        </Page>
-    );
-}
-
-// ----------------------------------------------------------------------
-
-function applySortFilter({ tableData, comparator, filterName, filterStatus, filterRole }) {
-    return tableData
-
-    if (tableData.length === 0) {
-        return tableData
-    }
-    const stabilizedThis = tableData?.map((el, index) => [el, index]);
-
-    stabilizedThis?.sort((a, b) => {
-        const order = comparator(a[0], b[0]);
-        if (order !== 0) return order;
-        return a[1] - b[1];
-    });
-
-    tableData = stabilizedThis?.map((el) => el[0]);
-
-    if (filterName) {
-        tableData = tableData?.filter((item) => item.name.toLowerCase().indexOf(filterName.toLowerCase()) !== -1);
-    }
-
-    if (filterStatus !== 'all') {
-        tableData = tableData?.filter((item) => item.status === filterStatus);
-    }
-
-    if (filterRole !== 'all') {
-        tableData = tableData?.filter((item) => item.role === filterRole);
-    }
-
-    return tableData;
+        <ClientDetailsDrawer
+          open={isDrawerOpen}
+          onClose={handleCloseDrawer}
+          client={selectedClient}
+        />
+      </Container>
+    </Page>
+  );
 }

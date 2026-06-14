@@ -202,7 +202,7 @@ export default function AdminTableToolbar({
             fullWidth
             select
             label="Resort"
-            value={filterResort}
+            value={filterResort ?? ''}
             onChange={onFilterResort}
             SelectProps={{
               MenuProps: {
@@ -214,6 +214,9 @@ export default function AdminTableToolbar({
               textTransform: 'capitalize',
             }}
           >
+            <MenuItem value="" sx={{ mx: 1, my: 0.5, borderRadius: 0.75, typography: 'body2', color: 'text.secondary' }}>
+              All resorts
+            </MenuItem>
             {ADMIN_BOOKING_RESORT_FILTER_OPTIONS.map((option) => (
               <MenuItem
                 key={option.value}
@@ -292,7 +295,7 @@ export default function AdminTableToolbar({
             fullWidth
             select
             label="Month"
-            value={filterMonth}
+            value={filterMonth ?? ''}
             onChange={onFilterMonth}
             SelectProps={{
               MenuProps: {
@@ -304,6 +307,9 @@ export default function AdminTableToolbar({
               textTransform: 'capitalize',
             }}
           >
+            <MenuItem value="" sx={{ mx: 1, my: 0.5, borderRadius: 0.75, typography: 'body2', color: 'text.secondary' }}>
+              All months
+            </MenuItem>
             {MONTH_OPTIONS_JUNE_OCT.map((option) => (
               <MenuItem
                 key={option.value}

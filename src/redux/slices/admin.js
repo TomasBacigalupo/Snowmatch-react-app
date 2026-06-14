@@ -240,11 +240,19 @@ export const { openModal, closeModal, getSelectedEmail, openEditBookingModal, op
 
 // ----------------------------------------------------------------------
 
-export function getTeachers(page, role, name, level) {
+export function getTeachers(page, role, name, level, size = 25, resort = '') {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`/api/admin/filter?page=${page}&role=${role}&level=${level}&name=${name}`);
+      const params = new URLSearchParams({
+        page: page ?? 0,
+        role: role ?? '',
+        level: level ?? '',
+        name: name ?? '',
+        size,
+        ...(resort ? { resort } : {}),
+      });
+      const response = await axios.get(`/api/admin/filter?${params.toString()}`);
       dispatch(slice.actions.getTeachersSuccess(response.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));

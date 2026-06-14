@@ -24,11 +24,13 @@ AdminTableRow.propTypes = {
 export default function AdminTableRow({ row, selected, onEditRow, onSelectRow, onConfirmRow, onDeclineRow, onWapp, onEvents, onClick }) {
   const theme = useTheme();
 
-  const { name, lastname, imageLink, role, level, authorized, state, id } = row;
+  const { name, lastname, imageLink, role, level, authorized, isAuthorized, state, id } = row;
+  const isAuth = authorized || isAuthorized || row.isauthorized;
 
   const [openMenu, setOpenMenuActions] = useState(null);
 
   const handleOpenMenu = (event) => {
+    event.stopPropagation();
     setOpenMenuActions(event.currentTarget);
   };
 
@@ -39,17 +41,19 @@ export default function AdminTableRow({ row, selected, onEditRow, onSelectRow, o
   return (
     <TableRow hover selected={selected} onClick={onClick} sx={{ cursor: 'pointer' }}>
       <TableCell padding="checkbox">
-        <Checkbox checked={selected} onClick={onSelectRow} />
+        <Checkbox
+          checked={selected}
+          onClick={(e) => { e.stopPropagation(); onSelectRow(); }}
+        />
       </TableCell>
-
+      <TableCell align="left">
+        {id}
+      </TableCell>
       <TableCell sx={{ display: 'flex', alignItems: 'center' }}>
         <Avatar alt={name} src={"imageLink"} sx={{ mr: 2 }} />
         <Typography variant="subtitle2" noWrap>
           {name + " " + lastname}
         </Typography>
-      </TableCell>
-      <TableCell align="left">
-        {id}
       </TableCell>
 
       <TableCell align="left">
@@ -62,13 +66,11 @@ export default function AdminTableRow({ row, selected, onEditRow, onSelectRow, o
 
       <TableCell align="center">
         <Iconify
-          //todo verificar que funcione con cambios de back
-          icon={authorized ? 'eva:checkmark-circle-fill' : 'eva:clock-outline'}
+          icon={isAuth ? 'eva:checkmark-circle-fill' : 'eva:clock-outline'}
           sx={{
             width: 20,
             height: 20,
-            color: 'success.main',
-            ...(!authorized && { color: 'warning.main' }),
+            color: isAuth ? 'success.main' : 'warning.main',
           }}
         />
       </TableCell>
@@ -109,6 +111,15 @@ export default function AdminTableRow({ row, selected, onEditRow, onSelectRow, o
                 <Iconify icon={'eva:edit-fill'} />
                 Edit
               </MenuItem> */}
+              <MenuItem
+                onClick={() => {
+                  onClick();
+                  handleCloseMenu();
+                }}
+              >
+                <Iconify icon={'eva:eye-fill'} />
+                View Details
+              </MenuItem>
               <MenuItem
                 onClick={() => {
                   onEvents();

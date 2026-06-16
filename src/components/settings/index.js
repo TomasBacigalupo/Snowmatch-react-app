@@ -16,7 +16,6 @@ import Scrollbar from '../Scrollbar';
 import { IconButtonAnimate, varFade } from '../animate';
 //
 import ToggleButton from './ToggleButton';
-import SettingMode from './SettingMode';
 import SettingLayout from './SettingLayout';
 import SettingStretch from './SettingStretch';
 import SettingDirection from './SettingDirection';
@@ -48,11 +47,10 @@ const RootStyle = styled(m.div)(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 export default function Settings() {
-  const { themeMode, themeDirection, themeColorPresets, themeStretch, themeLayout, onResetSetting } = useSettings();
+  const { themeDirection, themeColorPresets, themeStretch, themeLayout, onResetSetting } = useSettings();
   const [open, setOpen] = useState(false);
 
   const notDefault =
-    themeMode !== defaultSettings.themeMode ||
     themeDirection !== defaultSettings.themeDirection ||
     themeColorPresets !== defaultSettings.themeColorPresets ||
     themeLayout !== defaultSettings.themeLayout ||
@@ -117,11 +115,6 @@ export default function Settings() {
 
               <Scrollbar sx={{ flexGrow: 1 }}>
                 <Stack spacing={3} sx={{ p: 3 }}>
-                  <Stack spacing={1.5}>
-                    <Typography variant="subtitle2">Mode</Typography>
-                    <SettingMode />
-                  </Stack>
-
                   <Stack spacing={1.5}>
                     <Typography variant="subtitle2">Direction</Typography>
                     <SettingDirection />

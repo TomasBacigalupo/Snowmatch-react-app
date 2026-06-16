@@ -40,7 +40,7 @@ export default function AdminBookingIntentTableRow({ row, onRefreshIntents }) {
 
   useEffect(() => {
     if (assignOpen) {
-      dispatch(getTeachers(1, 'TEACHER', '', 0));
+      dispatch(getTeachers(0, 'TEACHER', '', 0));
     }
   }, [assignOpen, dispatch]);
 
@@ -190,7 +190,7 @@ export default function AdminBookingIntentTableRow({ row, onRefreshIntents }) {
               value={selectedTeacher}
               onChange={(e, newValue) => setSelectedTeacher(newValue)}
               onInputChange={(e, newInputValue) => {
-                dispatch(getTeachers(1, 'TEACHER', newInputValue, 0));
+                dispatch(getTeachers(0, 'TEACHER', newInputValue, 0));
               }}
               getOptionLabel={(option) =>
                 `${option?.name || ''} ${option?.lastname || ''}`.trim() || String(option?.id ?? '')

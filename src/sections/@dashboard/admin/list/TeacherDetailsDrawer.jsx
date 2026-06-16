@@ -193,7 +193,7 @@ export default function TeacherDetailsDrawer({ open, onClose, teacher }) {
       };
 
       await dispatch(editTeacher(payload));
-      await dispatch(getTeachers(1));
+      await dispatch(getTeachers(0));
       setIsEditing(false);
       onClose();
     } catch (e) {

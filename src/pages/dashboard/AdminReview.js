@@ -158,14 +158,14 @@ export default function AdminReview() {
   };
 
   const onChangePage2 = (event, newPage) => {
-    dispatch(getTeachers(newPage + 1, filterRole, filterName, filterLevel, rowsPerPage, filterResort));
+    dispatch(getTeachers(newPage, filterRole, filterName, filterLevel, rowsPerPage, filterResort));
     setPage(newPage);
   };
 
   const handleChangeRowsPerPage = (event) => {
     onChangeRowsPerPage(event);
     setPage(0);
-    dispatch(getTeachers(1, filterRole, filterName, filterLevel, Number(event.target.value), filterResort));
+    dispatch(getTeachers(0, filterRole, filterName, filterLevel, Number(event.target.value), filterResort));
   };
 
   useEffect(() => {
@@ -184,13 +184,9 @@ export default function AdminReview() {
   }, [teachers, isResortAdmin, managedResort, filterResort]);
 
   useEffect(() => {
-    dispatch(getTeachers(1, filterRole, filterName, filterLevel, rowsPerPage, filterResort));
+    dispatch(getTeachers(0, filterRole, filterName, filterLevel, rowsPerPage, filterResort));
     setPage(0);
   }, [filterRole, filterName, filterLevel, filterResort]);
-
-  useEffect(() => {
-    dispatch(getTeachers(1, undefined, undefined, undefined, rowsPerPage));
-  }, []);
 
   return (
     <Page title="Admin Review: List">

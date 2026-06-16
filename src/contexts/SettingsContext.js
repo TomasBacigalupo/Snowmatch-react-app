@@ -39,20 +39,6 @@ function SettingsProvider({ children }) {
     themeLayout: initialState.themeLayout,
   });
 
-  const onChangeMode = (event) => {
-    setSettings({
-      ...settings,
-      themeMode: event.target.value,
-    });
-  };
-
-  const onToggleMode = () => {
-    setSettings({
-      ...settings,
-      themeMode: settings.themeMode === 'light' ? 'dark' : 'light',
-    });
-  };
-
   const onChangeDirection = (event) => {
     setSettings({
       ...settings,
@@ -95,9 +81,9 @@ function SettingsProvider({ children }) {
     <SettingsContext.Provider
       value={{
         ...settings,
-        // Mode
-        onChangeMode,
-        onToggleMode,
+        themeMode: 'light',
+        onChangeMode: () => {},
+        onToggleMode: () => {},
         // Direction
         onChangeDirection,
         // Color

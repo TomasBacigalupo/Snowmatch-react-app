@@ -142,14 +142,14 @@ export default function AdminReviewClients() {
   const { teachers, isOpenModal, selectedEmail } = useSelector((state) => state.admin);
 
   const onChangePage2 = (event, newPage) => {
-    dispatch(getTeachers(newPage + 1, filterRole, filterName, filterLevel, rowsPerPage, filterResort));
+    dispatch(getTeachers(newPage, filterRole, filterName, filterLevel, rowsPerPage, filterResort));
     setPage(newPage);
   };
 
   const handleChangeRowsPerPage = (event) => {
     onChangeRowsPerPage(event);
     setPage(0);
-    dispatch(getTeachers(1, filterRole, filterName, filterLevel, Number(event.target.value), filterResort));
+    dispatch(getTeachers(0, filterRole, filterName, filterLevel, Number(event.target.value), filterResort));
   };
 
   const handleRowClick = (row) => {
@@ -177,13 +177,9 @@ export default function AdminReviewClients() {
   }, [teachers, filterResort]);
 
   useEffect(() => {
-    dispatch(getTeachers(1, filterRole, filterName, filterLevel, rowsPerPage, filterResort));
+    dispatch(getTeachers(0, filterRole, filterName, filterLevel, rowsPerPage, filterResort));
     setPage(0);
   }, [filterRole, filterName, filterLevel, filterResort]);
-
-  useEffect(() => {
-    dispatch(getTeachers(1, ROLE_OPTIONS[1], undefined, undefined, rowsPerPage));
-  }, []);
 
   return (
     <Page title="Admin Clients: List">

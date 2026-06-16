@@ -78,13 +78,13 @@ export default function AdminUserCalendars() {
   }, [dayPrices]);
 
   useEffect(() => {
-    dispatch(getTeachers(1, 'TEACHER', '', 0));
+    dispatch(getTeachers(0, 'TEACHER', '', 0));
   }, [dispatch]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
       if (teacherSearch) {
-        dispatch(getTeachers(1, 'TEACHER', teacherSearch, 0));
+        dispatch(getTeachers(0, 'TEACHER', teacherSearch, 0));
       }
     }, 400);
     return () => clearTimeout(timer);

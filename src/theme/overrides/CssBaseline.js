@@ -13,6 +13,7 @@ export default function CssBaseline() {
           width: '100%',
           height: '100%',
           WebkitOverflowScrolling: 'touch',
+          colorScheme: 'light',
         },
         body: {
           width: '100%',

@@ -40,6 +40,24 @@ const RootStyle = styled('div')(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
+const ADMIN_HIDDEN_NAV_TITLES = new Set([
+  'overview',
+  'videoCoach',
+  'SnowMatch',
+  'clinicas',
+  'calendar',
+  'school',
+  'chat',
+]);
+
+const filterNavForAdmin = (navSections) =>
+  navSections
+    .map((section) => ({
+      ...section,
+      items: section.items.filter((item) => !ADMIN_HIDDEN_NAV_TITLES.has(item.title)),
+    }))
+    .filter((section) => section.items.length > 0);
+
 const getIcon = (name) => <SvgIconStyle src={`/icons/${name}.svg`} sx={{ width: 1, height: 1 }} />;
 
 const ICONS = {
@@ -58,6 +76,21 @@ const ICONS = {
   dashboard: getIcon('ic_dashboard'),
   match: getIcon('ic_match')
 };
+
+const ADMIN_NAV_ITEMS = [
+  { title: 'review teachers', path: PATH_DASHBOARD.admin.review, icon: ICONS.user },
+  { title: 'review clients', path: PATH_DASHBOARD.admin.reviewClients, icon: ICONS.user },
+  { title: 'lesson bookings', path: PATH_DASHBOARD.admin.bookings, icon: ICONS.booking },
+  { title: 'equipment bookings', path: PATH_DASHBOARD.admin.bookingsEquipos, icon: ICONS.booking },
+  { title: 'user chats', path: PATH_DASHBOARD.admin.userChats, icon: ICONS.chat },
+  { title: 'broadcast lesson', path: PATH_DASHBOARD.admin.broadcastLesson, icon: ICONS.mail },
+  { title: 'financial dashboard', path: PATH_DASHBOARD.admin.financial, icon: ICONS.banking },
+  { title: 'rental products', path: PATH_DASHBOARD.admin.rental, icon: ICONS.ecommerce },
+  { title: 'rental providers', path: PATH_DASHBOARD.admin.rentalProviders, icon: ICONS.ecommerce },
+  { title: 'group lessons by resort', path: PATH_DASHBOARD.admin.groupLessonResorts, icon: ICONS.calendar },
+  { title: 'resort admins', path: PATH_DASHBOARD.admin.resortAdmins, icon: ICONS.user },
+  { title: 'user calendars', path: PATH_DASHBOARD.admin.userCalendars, icon: ICONS.calendar },
+];
 
 NavbarVertical.propTypes = {
   isOpenSidebar: PropTypes.bool,
@@ -96,27 +129,9 @@ export default function NavbarVertical({ isOpenSidebar, onCloseSidebar, isGuest,
       : navConfig;
 
     if (userRole === 'ADMIN') {
-      return [...base, {
-        subheader: 'Admin',
-        items: [{
-          title: 'admin',
-          path: PATH_DASHBOARD.admin.root,
-          icon: ICONS.user,
-          children: [
-            { title: 'review teachers', path: PATH_DASHBOARD.admin.review },
-            { title: 'review clients', path: PATH_DASHBOARD.admin.reviewClients },
-            { title: 'lesson bookings', path: PATH_DASHBOARD.admin.bookings },
-            { title: 'equipment bookings', path: PATH_DASHBOARD.admin.bookingsEquipos },
-            { title: 'user chats', path: PATH_DASHBOARD.admin.userChats },
-            { title: 'broadcast lesson', path: PATH_DASHBOARD.admin.broadcastLesson },
-            { title: 'financial dashboard', path: PATH_DASHBOARD.admin.financial },
-            { title: 'rental products', path: PATH_DASHBOARD.admin.rental },
-            { title: 'rental providers', path: PATH_DASHBOARD.admin.rentalProviders },
-            { title: 'group lessons by resort', path: PATH_DASHBOARD.admin.groupLessonResorts },
-            { title: 'resort admins', path: PATH_DASHBOARD.admin.resortAdmins },
-            { title: 'user calendars', path: PATH_DASHBOARD.admin.userCalendars },
-          ],
-        }],
+      const adminBase = filterNavForAdmin(base);
+      return [...adminBase, {
+        items: ADMIN_NAV_ITEMS,
       }];
     }
 

@@ -54,7 +54,7 @@ const BookingModal = ({ isOpen, onClose, refreshBookings, filterTeacherId, filte
     useEffect(() => {
         // Only call getTeachers when studentSearch changes, not when student is selected
         if (formData.studentSearch) {
-            dispatch(getTeachers(1, "STUDENT", formData.studentSearch, 0))
+            dispatch(getTeachers(0, "STUDENT", formData.studentSearch, 0))
         }
     }, [formData.studentSearch])
 

@@ -410,11 +410,11 @@ export function AdminBookingsPage({ bookingListKind, pageTitle, heading }) {
   }
 
   const handleTeacherInputChange = (event, newValue) => {
-    dispatch(getTeachers(1, "TEACHER", newValue, 0));
+    dispatch(getTeachers(0, "TEACHER", newValue, 0));
   };
 
   const handleStudentInputChange = (event, newValue) => {
-    dispatch(getTeachers(1, "STUDENT", newValue, 0));
+    dispatch(getTeachers(0, "STUDENT", newValue, 0));
   };
 
   const handleChangeRowsPerPage = (event) => {

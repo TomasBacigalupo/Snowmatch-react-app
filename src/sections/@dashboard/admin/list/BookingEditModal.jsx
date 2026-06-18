@@ -54,6 +54,7 @@ export default function BookingEditModal({ open, onClose, booking, onSave }) {
       price: parseFloat(formData.get('price')) || 0,
       includesLaunch: formData.get('includesLaunch') === 'on',
       includesEquipments: formData.get('includesEquipments') === 'on',
+      showPriceToTeacher: formData.get('showPriceToTeacher') === 'on',
       state: formData.get('state'),
       type: formData.get('type'),
       resort: formData.get('resort'),
@@ -76,6 +77,7 @@ export default function BookingEditModal({ open, onClose, booking, onSave }) {
       children: parseInt(formData.get('children'), 10),
       includesEquipments: formData.get('includesEquipments') === 'true',
       includesLaunch: formData.get('includesLaunch') === 'true',
+      showPriceToTeacher: formData.get('showPriceToTeacher') === 'on',
       price: parseFloat(formData.get('price')),
       state: formData.get('state'),
       type: formData.get('type'),
@@ -277,6 +279,16 @@ export default function BookingEditModal({ open, onClose, booking, onSave }) {
                     />
                   }
                   label="Incluye Almuerzo"
+                />
+
+                <FormControlLabel
+                  control={
+                    <Switch
+                      name="showPriceToTeacher"
+                      defaultChecked={booking?.showPriceToTeacher ?? true}
+                    />
+                  }
+                  label="Mostrar precio al profesor"
                 />
               </Stack>
             </Stack>

@@ -32,7 +32,7 @@ import { TableEmptyRows, TableHeadCustom, TableNoData, TableSelectedActions } fr
 // sections
 import { AdminTableToolbar } from '../../sections/@dashboard/admin/list';
 import { useDispatch, useSelector } from '../../redux/store';
-import { getTeachers, openModal, closeModal } from '../../redux/slices/admin';
+import { getTeachers, openModal, closeModal, setClientContacted } from '../../redux/slices/admin';
 import { DialogAnimate } from '../../components/animate';
 import DeclineForm from '../../sections/@dashboard/admin/DeclineForm';
 import AdminTableCard from 'src/sections/@dashboard/admin/list/AdminTableCard';
@@ -49,6 +49,7 @@ const TABLE_HEAD = [
   { id: 'phone', label: 'Telefono', align: 'left' },
   { id: 'email', label: 'Email', align: 'left' },
   { id: 'credits', label: 'Creditos', align: 'left' },
+  { id: 'contacted', label: 'Contacted', align: 'center' },
 ];
 
 // ----------------------------------------------------------------------
@@ -260,6 +261,7 @@ export default function AdminReviewClients() {
                         onDeclineRow={() => handleDeclineOpenModal(row.email)}
                         onWapp={() => handleContactWapp(row.countryCode, row.cellphone, row.name)}
                         onEvents={() => navigate(PATH_DASHBOARD.admin.events(row.id))}
+                        onContactedChange={(contacted) => dispatch(setClientContacted(row.id, contacted))}
                         onClick={() => handleRowClick(row)}
                       />
                     ))}
@@ -282,6 +284,7 @@ export default function AdminReviewClients() {
                   onDeclineRow={() => handleDeclineOpenModal(row.email)}
                   onWapp={() => handleContactWapp(row.countryCode, row.cellphone, row.name)}
                   onEvents={() => navigate(PATH_DASHBOARD.admin.events(row.id))}
+                  onContactedChange={(contacted) => dispatch(setClientContacted(row.id, contacted))}
                   onClick={() => handleRowClick(row)}
                 />
               ))}

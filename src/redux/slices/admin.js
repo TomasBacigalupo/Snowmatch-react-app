@@ -69,6 +69,17 @@ const slice = createSlice({
       state.teachers = action.payload;
     },
 
+    updateClientContacted(state, action) {
+      const { userId, contacted } = action.payload || {};
+      state.teachers = (state.teachers || []).map((u) =>
+        u?.id === userId ? { ...u, contacted } : u
+      );
+      if (state.teacher?.id === userId) {
+        state.teacher = { ...state.teacher, contacted };
+      }
+      state.isLoading = false;
+    },
+
     getDocumentsSuccess(state, action) {
       state.isLoading = false;
       state.documents = action.payload;
@@ -254,6 +265,25 @@ export function getTeachers(page, role, name, level, size = 25, resort = '') {
       });
       const response = await axios.get(`/api/admin/filter?${params.toString()}`);
       dispatch(slice.actions.getTeachersSuccess(response.data));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+export function setClientContacted(userId, contacted) {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.put(
+        `/api/admin/users/${userId}/contacted?contacted=${contacted}`
+      );
+      dispatch(
+        slice.actions.updateClientContacted({
+          userId,
+          contacted: response?.data?.contacted,
+        })
+      );
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }
@@ -582,6 +612,7 @@ export function editAdminBooking(bookingId, {
   internalComment,
   includesLaunch,
   includesEquipments,
+  showPriceToTeacher,
   paymentStatus,
   bookingPaymentMethod
 }) {
@@ -604,6 +635,7 @@ export function editAdminBooking(bookingId, {
               internalComment,
               includesLaunch,
               includesEquipments,
+              showPriceToTeacher,
               paymentStatus,
               bookingPaymentMethod
           });

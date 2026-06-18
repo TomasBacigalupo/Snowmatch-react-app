@@ -18,13 +18,14 @@ AdminTableCard.propTypes = {
     onDeleteRow: PropTypes.func,
     onWapp: PropTypes.func,
     onEvents: PropTypes.func,
+    onContactedChange: PropTypes.func,
     onClick: PropTypes.func,
 };
 
-export default function AdminTableCard({ row, selected, onEditRow, onSelectRow, onConfirmRow, onDeclineRow, onWapp, onEvents, onClick }) {
+export default function AdminTableCard({ row, selected, onEditRow, onSelectRow, onConfirmRow, onDeclineRow, onWapp, onEvents, onContactedChange, onClick }) {
     const theme = useTheme();
 
-    const { name, lastname, imageLink, role, level, authorized, state, id, emailVerified } = row;
+    const { name, lastname, imageLink, role, level, authorized, state, id, emailVerified, contacted } = row;
 
     const [openMenu, setOpenMenuActions] = useState(null);
 
@@ -77,12 +78,17 @@ export default function AdminTableCard({ row, selected, onEditRow, onSelectRow, 
 
                     </Box>
 
-                    <TableMoreMenu
-                        open={openMenu}
-                        onOpen={handleOpenMenu}
-                        onClose={handleCloseMenu}
-                        actions={
-                            <>
+                    <Box display="flex" alignItems="center" gap={1} onClick={(e) => e.stopPropagation()}>
+                        <Checkbox
+                            checked={!!contacted}
+                            onChange={(e) => onContactedChange?.(e.target.checked)}
+                        />
+                        <TableMoreMenu
+                            open={openMenu}
+                            onOpen={handleOpenMenu}
+                            onClose={handleCloseMenu}
+                            actions={
+                                <>
                                 <MenuItem
                                     onClick={(e) => {
                                         e.stopPropagation();
@@ -124,9 +130,10 @@ export default function AdminTableCard({ row, selected, onEditRow, onSelectRow, 
                                     <Iconify icon={'eva:trash-2-outline'} />
                                     Decline
                                 </MenuItem>
-                            </>
-                        }
-                    />
+                                </>
+                            }
+                        />
+                    </Box>
                 </Box>
                 <Box ml={2} display='flex'>
                     <Box flex='1'>

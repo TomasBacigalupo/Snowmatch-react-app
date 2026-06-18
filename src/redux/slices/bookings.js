@@ -580,7 +580,7 @@ export function createBooking(teacherId, message, children, adults, events, tota
     };
 }
 
-export function createAdminBooking(teacherId, studentId, message, children, adults, events, totalPrice, bookingType, includesLaunch, includesEquipment, paymentStatus, paymentMethod, internalComment, resort) {
+export function createAdminBooking(teacherId, studentId, message, children, adults, events, totalPrice, bookingType, includesLaunch, includesEquipment, showPriceToTeacher, paymentStatus, paymentMethod, internalComment, resort) {
     return async () => {
         dispatch(slice.actions.startLoading());
         try {
@@ -635,6 +635,7 @@ export function createAdminBooking(teacherId, studentId, message, children, adul
                 type: bookingType,
                 includesLaunch: includesLaunch,
                 includesEquipment: includesEquipment,
+                showPriceToTeacher: showPriceToTeacher,
                 paymentStatus: paymentStatus,
                 internalComment: internalComment,
                 resort: resort,

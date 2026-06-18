@@ -33,6 +33,7 @@ const BookingModal = ({ isOpen, onClose, refreshBookings, filterTeacherId, filte
         bookingType: 'ASSIGNED',
         includesLaunch: false,
         includesEquipment: false,
+        showPriceToTeacher: true,
         paymentStatus: 'PAID',
         paymentMethod: 'CASH',
         internalComment: ''
@@ -78,6 +79,7 @@ const BookingModal = ({ isOpen, onClose, refreshBookings, filterTeacherId, filte
                 bookingType: 'ASSIGNED',
                 includesLaunch: false,
                 includesEquipment: false,
+                showPriceToTeacher: true,
                 paymentStatus: 'PAID',
                 paymentMethod: 'CASH',
                 internalComment: ''
@@ -106,6 +108,7 @@ const BookingModal = ({ isOpen, onClose, refreshBookings, filterTeacherId, filte
                 bookingType: 'ASSIGNED',
                 includesLaunch: false,
                 includesEquipment: false,
+                showPriceToTeacher: true,
                 paymentStatus: 'PAID',
                 paymentMethod: 'CASH',
                 internalComment: '',
@@ -236,6 +239,7 @@ const BookingModal = ({ isOpen, onClose, refreshBookings, filterTeacherId, filte
                 formData.bookingType,
                 formData.includesLaunch,
                 formData.includesEquipment,
+                formData.showPriceToTeacher,
                 formData.paymentStatus,
                 formData.paymentMethod,
                 formData.internalComment,
@@ -457,6 +461,18 @@ const BookingModal = ({ isOpen, onClose, refreshBookings, filterTeacherId, filte
                                     />
                                 }
                                 label="Incluye Equipo"
+                            />
+                            <FormControlLabel
+                                control={
+                                    <Checkbox
+                                        checked={formData.showPriceToTeacher}
+                                        onChange={(e) => setFormData((prevData) => ({
+                                            ...prevData,
+                                            showPriceToTeacher: e.target.checked,
+                                        }))}
+                                    />
+                                }
+                                label="Mostrar precio al profesor"
                             />
                         </Box>
                     </Grid>

@@ -18,13 +18,14 @@ AdminTableRowClients.propTypes = {
   onDeleteRow: PropTypes.func,
   onWapp: PropTypes.func,
   onEvents: PropTypes.func,
+  onContactedChange: PropTypes.func,
   onClick: PropTypes.func,
 };
 
-export default function AdminTableRowClients({ row, selected, onEditRow, onSelectRow, onConfirmRow, onDeclineRow, onWapp, onEvents, onClick }) {
+export default function AdminTableRowClients({ row, selected, onEditRow, onSelectRow, onConfirmRow, onDeclineRow, onWapp, onEvents, onContactedChange, onClick }) {
   const theme = useTheme();
 
-  const { name, lastname, email, state, id, cellphone, proCheckCredits } = row;
+  const { name, lastname, email, state, id, cellphone, proCheckCredits, contacted } = row;
 
   const [openMenu, setOpenMenuActions] = useState(null);
 
@@ -64,6 +65,13 @@ export default function AdminTableRowClients({ row, selected, onEditRow, onSelec
 
       <TableCell align="left" sx={{ textTransform: 'capitalize' }}>
         {proCheckCredits}
+      </TableCell>
+
+      <TableCell align="center" onClick={(e) => e.stopPropagation()}>
+        <Checkbox
+          checked={!!contacted}
+          onChange={(e) => onContactedChange?.(e.target.checked)}
+        />
       </TableCell>
       
       <TableCell align="right">

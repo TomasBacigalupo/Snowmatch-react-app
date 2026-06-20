@@ -45,7 +45,7 @@ import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
 import Iconify from '../../components/Iconify';
 import Scrollbar from '../../components/Scrollbar';
 import TruncatedGearText from '../../components/rental/TruncatedGearText';
-import { TableEmptyRows, TableHeadCustom, TableNoData } from '../../components/table';
+import { TableEmptyRows, TableHeadCustom } from '../../components/table';
 import { emptyRows } from '../../hooks/useTable';
 // sections
 import RentalProductForm from '../../sections/@dashboard/admin/rental/RentalProductForm';
@@ -195,6 +195,42 @@ export default function AdminRental() {
   const filteredItems = items || [];
   const isNotFound = !filteredItems.length && !isLoading;
 
+  const renderTableSkeleton = () =>
+    Array.from({ length: rowsPerPage }).map((_, index) => (
+      <TableRow key={`skeleton-${index}`}>
+        <TableCell>
+          <Skeleton variant="rounded" width={48} height={48} />
+        </TableCell>
+        <TableCell>
+          <Stack spacing={0.5}>
+            <Skeleton width="80%" height={20} />
+            <Skeleton width="60%" height={16} />
+          </Stack>
+        </TableCell>
+        <TableCell>
+          <Skeleton width={64} height={24} sx={{ borderRadius: 1 }} />
+        </TableCell>
+        <TableCell>
+          <Skeleton width="70%" height={20} />
+        </TableCell>
+        <TableCell align="right">
+          <Skeleton width={60} height={20} sx={{ ml: 'auto' }} />
+        </TableCell>
+        <TableCell align="center">
+          <Skeleton width={80} height={20} sx={{ mx: 'auto' }} />
+        </TableCell>
+        <TableCell align="center">
+          <Skeleton width={64} height={24} sx={{ borderRadius: 1, mx: 'auto' }} />
+        </TableCell>
+        <TableCell align="center">
+          <Stack direction="row" spacing={1} justifyContent="center">
+            <Skeleton variant="circular" width={32} height={32} />
+            <Skeleton variant="circular" width={32} height={32} />
+          </Stack>
+        </TableCell>
+      </TableRow>
+    ));
+
   return (
     <Page title="Admin: Rental Management">
       <Container maxWidth={themeStretch ? false : 'xl'}>
@@ -240,7 +276,9 @@ export default function AdminRental() {
                   />
 
                   <TableBody>
-                    {filteredItems
+                    {isLoading
+                      ? renderTableSkeleton()
+                      : filteredItems
                       .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                       .map((row) => {
                         const {
@@ -325,11 +363,33 @@ export default function AdminRental() {
                           </TableRow>
                         );
                       })}
-                    <TableEmptyRows
-                      height={52}
-                      emptyRows={emptyRows(page, rowsPerPage, filteredItems.length)}
-                    />
-                    <TableNoData isNotFound={isNotFound} />
+                    {!isLoading && (
+                      <TableEmptyRows
+                        height={52}
+                        emptyRows={emptyRows(page, rowsPerPage, filteredItems.length)}
+                      />
+                    )}
+                    {isNotFound && (
+                      <TableRow>
+                        <TableCell colSpan={TABLE_HEAD.length}>
+                          <Stack alignItems="center" spacing={2} sx={{ py: 6 }}>
+                            <Typography variant="h5">
+                              Acá vas a ver tus productos en alquiler
+                            </Typography>
+                            <Typography variant="body2" color="text.secondary">
+                              Todavía no tenés ninguno. Creá uno para empezar.
+                            </Typography>
+                            <Button
+                              variant="contained"
+                              startIcon={<Iconify icon="eva:plus-fill" />}
+                              onClick={() => handleOpenForm()}
+                            >
+                              Crear producto
+                            </Button>
+                          </Stack>
+                        </TableCell>
+                      </TableRow>
+                    )}
                   </TableBody>
                 </Table>
               </TableContainer>

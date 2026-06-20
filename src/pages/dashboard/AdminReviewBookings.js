@@ -44,7 +44,7 @@ import { TableEmptyRows, TableHeadCustom, TableNoData, TableSelectedActions } fr
 import { AdminTableToolbar, AdminTableRow } from '../../sections/@dashboard/admin/list';
 //cosas de fede
 import { useDispatch, useSelector } from '../../redux/store';
-import { getTeachers, openModal, closeModal, getBooking, getBookings, getBookingIntents, openEditBookingModal, deleteBooking, openDeleteModal, closeDeleteModal } from '../../redux/slices/admin'
+import { getTeachers, openModal, closeModal, getBooking, getBookings, getResortAdminBookings, getBookingIntents, getResortAdminBookingIntents, openEditBookingModal, deleteBooking, openDeleteModal, closeDeleteModal } from '../../redux/slices/admin'
 import { DialogAnimate } from '../../components/animate';
 import DeclineForm from '../../sections/@dashboard/admin/DeclineForm';
 import AdminTableCard from 'src/sections/@dashboard/admin/list/AdminTableCard';
@@ -196,7 +196,8 @@ export function AdminBookingsPage({ bookingListKind, pageTitle, heading }) {
     onChangeRowsPerPage,
   } = useTable();
 
-  const { user } = useAuth();
+  const { user, isResortAdmin } = useAuth();
+  const lockedResort = isResortAdmin ? user?.managedResort : null;
 
   const { themeStretch } = useSettings();
 
@@ -218,10 +219,10 @@ export function AdminBookingsPage({ bookingListKind, pageTitle, heading }) {
   const [teachers, setTeachers] = useState([]);
   const [students, setStudents] = useState([]);
   const [filterResort, setFilterResort] = useState(() =>
-    bookingListKind === 'lesson' ? 'CERRO_CATEDRAL' : ''
+    bookingListKind === 'lesson' ? (lockedResort || 'CERRO_CATEDRAL') : (lockedResort || '')
   );
   /** Calendar year for month/day filters (must match lesson event dates in DB). */
-  const [filterYear, setFilterYear] = useState(() => new Date().getFullYear() - 1);
+  const [filterYear, setFilterYear] = useState(() => new Date().getFullYear());
   const [filterDate, setFilterDate] = useState(null);
   const [statsOpen, setStatsOpen] = useState(false);
   const [listTab, setListTab] = useState(0);
@@ -283,20 +284,36 @@ export function AdminBookingsPage({ bookingListKind, pageTitle, heading }) {
     const resortForApi = '';
     const effectiveSize = resortActive ? 2000 : (partial.rowsPerPage ?? rowsPerPage);
     const effectivePage = resortActive ? 0 : (partial.page ?? page);
-    dispatch(
-      getBookings(
-        teacherForQuery,
-        partial.studentId ?? filterStudentId,
-        partial.month ?? filterMonth,
-        effectivePage,
-        effectiveSize,
-        resortForApi,
-        dayArg,
-        partial.bookingKind ?? bookingListKind,
-        partial.year ?? filterYear,
-        stateArg
-      )
-    );
+    if (isResortAdmin) {
+      dispatch(
+        getResortAdminBookings(
+          teacherForQuery,
+          partial.studentId ?? filterStudentId,
+          partial.month ?? filterMonth,
+          effectivePage,
+          effectiveSize,
+          dayArg,
+          partial.bookingKind ?? bookingListKind,
+          partial.year ?? filterYear,
+          stateArg
+        )
+      );
+    } else {
+      dispatch(
+        getBookings(
+          teacherForQuery,
+          partial.studentId ?? filterStudentId,
+          partial.month ?? filterMonth,
+          effectivePage,
+          effectiveSize,
+          resortForApi,
+          dayArg,
+          partial.bookingKind ?? bookingListKind,
+          partial.year ?? filterYear,
+          stateArg
+        )
+      );
+    }
   };
 
   const handleFilterMonth = (event) => {
@@ -313,6 +330,7 @@ export function AdminBookingsPage({ bookingListKind, pageTitle, heading }) {
   };
 
   const handleFilterResort = (event) => {
+    if (lockedResort) return;
     setFilterResort(event.target.value);
     setPage(0);
     dispatchBookings({ resort: event.target.value });
@@ -424,6 +442,14 @@ export function AdminBookingsPage({ bookingListKind, pageTitle, heading }) {
   };
 
   useEffect(() => {
+    if (!lockedResort) return;
+    setFilterResort(lockedResort);
+    setPage(0);
+    dispatchBookings({ resort: lockedResort, page: 0 });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [lockedResort]);
+
+  useEffect(() => {
     setTableData(bookings ?? []);
     console.log({ bookings })
   }, [bookings]);
@@ -460,16 +486,28 @@ export function AdminBookingsPage({ bookingListKind, pageTitle, heading }) {
   };
 
   const refreshBookingIntents = () => {
-    dispatch(
-      getBookingIntents(
-        filterStudentId || undefined,
-        filterMonth || undefined,
-        page,
-        rowsPerPage,
-        filterResort || undefined,
-        filterYear
-      )
-    );
+    if (isResortAdmin) {
+      dispatch(
+        getResortAdminBookingIntents(
+          filterStudentId || undefined,
+          filterMonth || undefined,
+          page,
+          rowsPerPage,
+          filterYear
+        )
+      );
+    } else {
+      dispatch(
+        getBookingIntents(
+          filterStudentId || undefined,
+          filterMonth || undefined,
+          page,
+          rowsPerPage,
+          filterResort || undefined,
+          filterYear
+        )
+      );
+    }
   };
 
   useEffect(() => {
@@ -503,7 +541,7 @@ export function AdminBookingsPage({ bookingListKind, pageTitle, heading }) {
         <HeaderBreadcrumbs
           heading={heading}
           action={
-            bookingListKind === 'lesson' ? (
+            bookingListKind === 'lesson' && !isResortAdmin ? (
               <Button
                 variant="contained"
                 startIcon={<Iconify icon="eva:plus-fill" />}
@@ -550,6 +588,7 @@ export function AdminBookingsPage({ bookingListKind, pageTitle, heading }) {
           onFilterDate={handleFilterDate}
           bookings
           hideInstructorFilters={bookingListKind === 'gear'}
+          lockResort={lockedResort}
         />
         <Button
           color="inherit"
@@ -674,6 +713,8 @@ export function AdminBookingsPage({ bookingListKind, pageTitle, heading }) {
                       isNotFound={
                         activeListTab === 0 ? isNotFound : !(bookingIntents && bookingIntents.length)
                       }
+                      title="Acá vas a poder ver y gestionar las solicitudes de reserva que ocurran en tu centro de esquí"
+                      hideImage
                     />
                   </TableBody>
                 </Table>

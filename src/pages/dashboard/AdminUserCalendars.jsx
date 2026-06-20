@@ -22,9 +22,10 @@ import {
 import { useDispatch, useSelector } from '../../redux/store';
 import {
   getEventsByUserId,
+  getResortAdminEventsByUserId,
   getDayPricesByUserId,
 } from '../../redux/slices/calendar';
-import { getTeachers, getTeacher } from '../../redux/slices/admin';
+import { getTeachers, getResortAdminTeachers, getTeacher } from '../../redux/slices/admin';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // hooks
@@ -34,6 +35,7 @@ import useResponsive from '../../hooks/useResponsive';
 import Page from '../../components/Page';
 import { DialogAnimate } from '../../components/animate';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
+import useAuth from '../../hooks/useAuth';
 // sections
 import { CalendarStyle, CalendarToolbar } from '../../sections/@dashboard/calendar';
 
@@ -51,6 +53,7 @@ const formatEventDate = (date) => {
 
 export default function AdminUserCalendars() {
   const { themeStretch } = useSettings();
+  const { isResortAdmin } = useAuth();
   const dispatch = useDispatch();
   const isDesktop = useResponsive('up', 'sm');
   const calendarRef = useRef(null);
@@ -78,24 +81,36 @@ export default function AdminUserCalendars() {
   }, [dayPrices]);
 
   useEffect(() => {
-    dispatch(getTeachers(0, 'TEACHER', '', 0));
-  }, [dispatch]);
+    if (isResortAdmin) {
+      dispatch(getResortAdminTeachers(0, 'TEACHER', '', 0));
+    } else {
+      dispatch(getTeachers(0, 'TEACHER', '', 0));
+    }
+  }, [dispatch, isResortAdmin]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
       if (teacherSearch) {
-        dispatch(getTeachers(0, 'TEACHER', teacherSearch, 0));
+        if (isResortAdmin) {
+          dispatch(getResortAdminTeachers(0, 'TEACHER', teacherSearch, 0));
+        } else {
+          dispatch(getTeachers(0, 'TEACHER', teacherSearch, 0));
+        }
       }
     }, 400);
     return () => clearTimeout(timer);
-  }, [teacherSearch, dispatch]);
+  }, [teacherSearch, dispatch, isResortAdmin]);
 
   useEffect(() => {
     if (userId) {
       dispatch(getTeacher(userId));
-      dispatch(getEventsByUserId(userId));
+      if (isResortAdmin) {
+        dispatch(getResortAdminEventsByUserId(userId));
+      } else {
+        dispatch(getEventsByUserId(userId));
+      }
     }
-  }, [userId, dispatch]);
+  }, [userId, dispatch, isResortAdmin]);
 
   useEffect(() => {
     if (teacher && userId && String(teacher.id) === String(userId)) {

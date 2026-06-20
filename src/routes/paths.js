@@ -175,6 +175,7 @@ export const PATH_DASHBOARD = {
   },
   admin: {
     root: path(ROOTS_DASHBOARD, '/admin'),
+    dashboard: path(ROOTS_DASHBOARD, '/admin/dashboard'),
     review: path(ROOTS_DASHBOARD, '/admin/review'),
     reviewClients: path(ROOTS_DASHBOARD, '/admin/clients'),
     bookings: path(ROOTS_DASHBOARD, '/admin/bookings'),

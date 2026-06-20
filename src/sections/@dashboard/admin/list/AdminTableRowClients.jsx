@@ -67,12 +67,14 @@ export default function AdminTableRowClients({ row, selected, onEditRow, onSelec
         {proCheckCredits}
       </TableCell>
 
-      <TableCell align="center" onClick={(e) => e.stopPropagation()}>
-        <Checkbox
-          checked={!!contacted}
-          onChange={(e) => onContactedChange?.(e.target.checked)}
-        />
-      </TableCell>
+      {onContactedChange && (
+        <TableCell align="center" onClick={(e) => e.stopPropagation()}>
+          <Checkbox
+            checked={!!contacted}
+            onChange={(e) => onContactedChange?.(e.target.checked)}
+          />
+        </TableCell>
+      )}
       
       <TableCell align="right">
         <TableMoreMenu

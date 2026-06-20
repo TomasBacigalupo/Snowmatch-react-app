@@ -706,56 +706,69 @@ export function getDayPricesByUserId(id, from, to) {
   };
 }
 
+const mapEventsResponse = (data) =>
+  data.map((e) => {
+    const dateStart = new Date(e.start);
+    const dateEnd = new Date(e.end);
+    const utcOffset = dateStart.getTimezoneOffset() * 60000;
+    const adjustedDateStart = new Date(dateStart.getTime() + utcOffset);
+    const adjustedDateEnd = new Date(dateEnd.getTime() + utcOffset);
+    if (e?.source === 'APP' && e.eventType === 'CLASS') {
+      return {
+        ...e,
+        title: e.title ?? 'Match',
+        name: 'Clase Solicitada',
+        description: e.description ?? 'Un usuario ah solicitado una clase este dia',
+        start: adjustedDateStart,
+        end: adjustedDateEnd,
+        textColor: e.textColor ?? '#FFC107',
+        type: 'App class',
+        price: Number(e.price),
+      };
+    }
+    if (e?.source === 'PRODUCT' && e.eventType === 'CLASS') {
+      let title = e.title;
+      if (e.title === 'PRIVATE_FULL_DAY') {
+        title = 'Clase privada día completo';
+      }
+      if (e.title === 'PRIVATE_HALF_DAY') {
+        title = 'Clase privada medio día';
+      }
+
+      return {
+        ...e,
+        title,
+        start: adjustedDateStart,
+        end: adjustedDateEnd,
+        textColor: '#00AB55',
+        type: 'App class',
+      };
+    }
+    return {
+      ...e,
+      start: adjustedDateStart,
+      end: adjustedDateEnd,
+    };
+  });
+
 export function getEventsByUserId(id) {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.get(`/api/admin/user/${id}/event?page=1&size=300`);
+      dispatch(slice.actions.getEventsSuccess(mapEventsResponse(response.data)));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
 
-      const events = response.data.map(e => {
-        const dateStart = new Date(e.start);
-        const dateEnd = new Date(e.end);
-        const utcOffset = dateStart.getTimezoneOffset() * 60000; // Get the UTC offset in milliseconds
-        const adjustedDateStart = new Date(dateStart.getTime() + utcOffset);
-        const adjustedDateEnd = new Date(dateEnd.getTime() + utcOffset);
-        if (e?.source === 'APP' && e.eventType === "CLASS") {
-          return {
-            ...e,
-            title: e.title ?? 'Match',
-            name: 'Clase Solicitada',
-            description: e.description ?? 'Un usuario ah solicitado una clase este dia',
-            start: adjustedDateStart,
-            end: adjustedDateEnd,
-            textColor: e.textColor ?? "#FFC107",
-            type: "App class",
-            price: Number(e.price)
-          };
-        }
-        if (e?.source === 'PRODUCT' && e.eventType === "CLASS") {
-          let title = e.title
-          if (e.title === 'PRIVATE_FULL_DAY') {
-            title = 'Clase privada día completo'
-          }
-          if (e.title === 'PRIVATE_HALF_DAY') {
-            title = 'Clase privada medio día'
-          }
-
-          return {
-            ...e,
-            title: title,
-            start: adjustedDateStart,
-            end: adjustedDateEnd,
-            textColor: "#00AB55",
-            type: "App class"
-          };
-        }
-        return {
-          ...e,
-          start: adjustedDateStart,
-          end: adjustedDateEnd
-        };
-      })
-      dispatch(slice.actions.getEventsSuccess(events));
+export function getResortAdminEventsByUserId(id) {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get(`/api/resort-admin/user/${id}/event?page=1&size=300`);
+      dispatch(slice.actions.getEventsSuccess(mapEventsResponse(response.data)));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }

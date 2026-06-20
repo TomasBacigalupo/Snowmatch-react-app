@@ -13,6 +13,7 @@ import {
   TableHead,
   TableRow,
   Typography,
+  Skeleton,
 } from '@mui/material';
 import { formatDistanceToNowStrict } from 'date-fns';
 // utils
@@ -29,10 +30,12 @@ import Scrollbar from '../../components/Scrollbar';
 import { ChatWindow } from '../../sections/@dashboard/chat';
 import useAuth from '../../hooks/useAuth';
 import LoadingScreen from '../../components/LoadingScreen';
+import { formatAdminBookingResortLabel } from '../../utils/adminBookingResortOptions';
 
 // ----------------------------------------------------------------------
 
 const PAGE_SIZE = 50;
+const SKELETON_ROW_COUNT = 10;
 
 function participantLabel(p) {
   if (!p) return '—';
@@ -69,18 +72,25 @@ export default function AdminUserChats() {
   const { conversationId } = useParams();
   const navigate = useNavigate();
   const { themeStretch } = useSettings();
-  const { isAdmin, isInitialized } = useAuth();
+  const { isAdmin, isResortAdmin, isInitialized, user } = useAuth();
+  const lockedResort = isResortAdmin ? user?.managedResort : null;
+  const canAccessAdminChats = isAdmin || isResortAdmin;
 
   const [rows, setRows] = useState([]);
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(0);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const loadPage = useCallback(async (pageToLoad, append) => {
     setLoading(true);
     try {
-      const res = await axios.get('/api/admin/chat/conversations', {
-        params: { page: pageToLoad, size: PAGE_SIZE },
+      const params = { page: pageToLoad, size: PAGE_SIZE };
+      const chatApiBase = isResortAdmin ? '/api/resort-admin/chat' : '/api/admin/chat';
+      if (lockedResort) {
+        params.resort = lockedResort;
+      }
+      const res = await axios.get(`${chatApiBase}/conversations`, {
+        params,
       });
       const list = res.data.conversations || [];
       const t =
@@ -102,18 +112,18 @@ export default function AdminUserChats() {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [isResortAdmin, lockedResort]);
 
   useEffect(() => {
-    if (!isInitialized || !isAdmin || conversationId) return;
+    if (!isInitialized || !canAccessAdminChats || conversationId) return;
     setPage(0);
     loadPage(0, false);
-  }, [isInitialized, isAdmin, conversationId, loadPage]);
+  }, [isInitialized, canAccessAdminChats, conversationId, lockedResort, loadPage]);
 
   if (!isInitialized) {
     return <LoadingScreen isDashboard />;
   }
-  if (!isAdmin) {
+  if (!canAccessAdminChats) {
     return <Navigate to={PATH_DASHBOARD.root} replace />;
   }
 
@@ -126,6 +136,24 @@ export default function AdminUserChats() {
     setPage(next);
     loadPage(next, true);
   };
+
+  const renderTableSkeleton = () =>
+    Array.from({ length: SKELETON_ROW_COUNT }).map((_, index) => (
+      <TableRow key={`skeleton-${index}`}>
+        <TableCell>
+          <Skeleton width={48} height={20} />
+        </TableCell>
+        <TableCell>
+          <Skeleton width="70%" height={20} />
+        </TableCell>
+        <TableCell>
+          <Skeleton width="50%" height={20} />
+        </TableCell>
+        <TableCell>
+          <Skeleton width={80} height={20} />
+        </TableCell>
+      </TableRow>
+    ));
 
   if (conversationId) {
     return (
@@ -161,7 +189,9 @@ export default function AdminUserChats() {
           links={[{ name: 'Dashboard', href: PATH_DASHBOARD.root }, { name: 'User chats' }]}
         />
         <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-          All user chat threads, newest first (read-only).
+          {lockedResort
+            ? `User chat threads at ${formatAdminBookingResortLabel(lockedResort)}, newest first (read-only).`
+            : 'All user chat threads, newest first (read-only).'}
         </Typography>
         <Card>
           <TableContainer sx={{ maxHeight: 'calc(100dvh - 220px)' }}>
@@ -176,33 +206,35 @@ export default function AdminUserChats() {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {rows.map((conv) => {
-                    const id = conv.conversationId ?? conv.id;
-                    const [p1, p2] = conv.participants || [];
-                    return (
-                      <TableRow
-                        key={id}
-                        hover
-                        sx={{ cursor: 'pointer' }}
-                        onClick={() => handleRowClick(id)}
-                      >
-                        <TableCell>{id}</TableCell>
-                        <TableCell>
-                          {participantLabel(p1)}
-                          <Typography component="span" variant="body2" color="text.secondary" sx={{ mx: 0.5 }}>
-                            ↔
-                          </Typography>
-                          {participantLabel(p2)}
-                        </TableCell>
-                        <TableCell>
-                          <Typography variant="body2" noWrap sx={{ maxWidth: 360 }}>
-                            {previewText(conv)}
-                          </Typography>
-                        </TableCell>
-                        <TableCell>{lastActivityLabel(conv)}</TableCell>
-                      </TableRow>
-                    );
-                  })}
+                  {loading && rows.length === 0
+                    ? renderTableSkeleton()
+                    : rows.map((conv) => {
+                        const id = conv.conversationId ?? conv.id;
+                        const [p1, p2] = conv.participants || [];
+                        return (
+                          <TableRow
+                            key={id}
+                            hover
+                            sx={{ cursor: 'pointer' }}
+                            onClick={() => handleRowClick(id)}
+                          >
+                            <TableCell>{id}</TableCell>
+                            <TableCell>
+                              {participantLabel(p1)}
+                              <Typography component="span" variant="body2" color="text.secondary" sx={{ mx: 0.5 }}>
+                                ↔
+                              </Typography>
+                              {participantLabel(p2)}
+                            </TableCell>
+                            <TableCell>
+                              <Typography variant="body2" noWrap sx={{ maxWidth: 360 }}>
+                                {previewText(conv)}
+                              </Typography>
+                            </TableCell>
+                            <TableCell>{lastActivityLabel(conv)}</TableCell>
+                          </TableRow>
+                        );
+                      })}
                   {!loading && rows.length === 0 && (
                     <TableRow>
                       <TableCell colSpan={4}>

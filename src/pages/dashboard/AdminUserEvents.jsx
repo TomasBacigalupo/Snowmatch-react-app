@@ -10,7 +10,7 @@ import { useState, useRef, useEffect } from 'react';
 import { Card, Button, Container, DialogTitle } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
-import { getEventsByUserId, openModal, closeModal, updateEvent, selectEvent, selectRange } from '../../redux/slices/calendar';
+import { getEventsByUserId, getResortAdminEventsByUserId, openModal, closeModal, updateEvent, selectEvent, selectRange } from '../../redux/slices/calendar';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // hooks
@@ -25,7 +25,9 @@ import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
 import { CalendarForm, CalendarStyle, CalendarToolbar } from '../../sections/@dashboard/calendar';
 import { getClients } from 'src/redux/slices/clients';
 import useLocales from 'src/hooks/useLocales';
+import useAuth from 'src/hooks/useAuth';
 import HoverButton from 'src/components/HoverButton';
+import { SkeletonCalendar } from 'src/components/skeleton';
 import LessonForm from 'src/sections/@dashboard/calendar/LessonForm';
 import { getBusinessMembers } from 'src/redux/slices/business';
 import { useParams } from 'react-router';
@@ -42,6 +44,7 @@ const selectedEventSelector = (state) => {
 
 export default function Calendar() {
     const { translate } = useLocales()
+    const { isResortAdmin } = useAuth();
     const { themeStretch } = useSettings();
 
     const dispatch = useDispatch();
@@ -56,17 +59,21 @@ export default function Calendar() {
 
     const selectedEvent = useSelector(selectedEventSelector);
 
-    const { events, isOpenModal, selectedRange } = useSelector((state) => state.calendar);
+    const { events, isOpenModal, selectedRange, isLoading } = useSelector((state) => state.calendar);
     const { members } = useSelector((state) => state.business);
     const { clients } = useSelector((state) => state.clients);
 
     const { id } = useParams();
 
     useEffect(() => {
-        dispatch(getEventsByUserId(id))
+        if (isResortAdmin) {
+            dispatch(getResortAdminEventsByUserId(id));
+        } else {
+            dispatch(getEventsByUserId(id));
+        }
         dispatch(getClients())
         dispatch(getBusinessMembers())
-    }, [dispatch]);
+    }, [dispatch, id, isResortAdmin]);
 
     useEffect(() => {
         const calendarEl = calendarRef.current;
@@ -190,28 +197,32 @@ export default function Calendar() {
                             onToday={handleClickToday}
                             onChangeView={handleChangeView}
                         />
-                        <FullCalendar
-                            weekends
-                            editable
-                            droppable
-                            selectable
-                            events={events}
-                            ref={calendarRef}
-                            rerenderDelay={10}
-                            initialDate={date}
-                            initialView={view}
-                            dayMaxEventRows={3}
-                            eventDisplay="block"
-                            headerToolbar={false}
-                            allDayMaintainDuration
-                            eventResizableFromStart
-                            select={handleSelectRange}
-                            eventDrop={handleDropEvent}
-                            eventClick={handleSelectEvent}
-                            eventResize={handleResizeEvent}
-                            height={isDesktop ? 720 : 'auto'}
-                            plugins={[listPlugin, dayGridPlugin, timelinePlugin, timeGridPlugin, interactionPlugin]}
-                        />
+                        {isLoading ? (
+                            <SkeletonCalendar height={isDesktop ? 720 : 480} />
+                        ) : (
+                            <FullCalendar
+                                weekends
+                                editable
+                                droppable
+                                selectable
+                                events={events}
+                                ref={calendarRef}
+                                rerenderDelay={10}
+                                initialDate={date}
+                                initialView={view}
+                                dayMaxEventRows={3}
+                                eventDisplay="block"
+                                headerToolbar={false}
+                                allDayMaintainDuration
+                                eventResizableFromStart
+                                select={handleSelectRange}
+                                eventDrop={handleDropEvent}
+                                eventClick={handleSelectEvent}
+                                eventResize={handleResizeEvent}
+                                height={isDesktop ? 720 : 'auto'}
+                                plugins={[listPlugin, dayGridPlugin, timelinePlugin, timeGridPlugin, interactionPlugin]}
+                            />
+                        )}
                     </CalendarStyle>
                 </Card>
 

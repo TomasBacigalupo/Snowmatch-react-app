@@ -7,6 +7,11 @@ const initialState = {
   items: [],
 };
 
+const groupLessonResortConfigApiBase = (useResortAdmin) =>
+  useResortAdmin
+    ? '/api/resort-admin/group-lesson-resort-config'
+    : '/api/admin/group-lesson-resort-config';
+
 export const fetchGroupLessonResortConfigs = createAsyncThunk(
   'groupLessonResortConfig/fetchAll',
   async (_, { rejectWithValue }) => {
@@ -35,11 +40,12 @@ export const createGroupLessonResortConfig = createAsyncThunk(
       minDays,
       startTime,
       endTime,
+      useResortAdmin = false,
     },
     { rejectWithValue }
   ) => {
     try {
-      const response = await axios.post('/api/admin/group-lesson-resort-config', {
+      const response = await axios.post(groupLessonResortConfigApiBase(useResortAdmin), {
         resort,
         price: Number(price),
         currency: currency || 'ARS',
@@ -90,11 +96,12 @@ export const updateGroupLessonResortConfig = createAsyncThunk(
       minDays,
       startTime,
       endTime,
+      useResortAdmin = false,
     },
     { rejectWithValue }
   ) => {
     try {
-      const response = await axios.put(`/api/admin/group-lesson-resort-config/${id}`, {
+      const response = await axios.put(`${groupLessonResortConfigApiBase(useResortAdmin)}/${id}`, {
         price: Number(price),
         currency: currency || 'ARS',
         imageUrl: imageUrl || null,
@@ -130,9 +137,9 @@ export const updateGroupLessonResortConfig = createAsyncThunk(
 
 export const deleteGroupLessonResortConfig = createAsyncThunk(
   'groupLessonResortConfig/delete',
-  async (id, { rejectWithValue }) => {
+  async ({ id, useResortAdmin = false }, { rejectWithValue }) => {
     try {
-      await axios.delete(`/api/admin/group-lesson-resort-config/${id}`);
+      await axios.delete(`${groupLessonResortConfigApiBase(useResortAdmin)}/${id}`);
       return id;
     } catch (error) {
       return rejectWithValue(

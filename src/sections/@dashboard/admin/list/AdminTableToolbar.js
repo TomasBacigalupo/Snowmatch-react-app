@@ -58,6 +58,8 @@ AdminTableToolbar.propTypes = {
   bookings: PropTypes.bool,
   /** When true, hide instructor ID field and quick teacher chips (e.g. gear-only bookings). */
   hideInstructorFilters: PropTypes.bool,
+  /** When set, resort filter is fixed to this value and the selector is disabled. */
+  lockResort: PropTypes.string,
 };
 
 export default function AdminTableToolbar({
@@ -91,6 +93,7 @@ export default function AdminTableToolbar({
   showStudentId = true,
   showSearchAdmin = true,
   showResort = true,
+  lockResort = null,
   onFilterDate = null
 }) {
   const [moreFiltersOpen, setMoreFiltersOpen] = useState(false);
@@ -202,8 +205,9 @@ export default function AdminTableToolbar({
             fullWidth
             select
             label="Resort"
-            value={filterResort ?? ''}
+            value={lockResort || filterResort || ''}
             onChange={onFilterResort}
+            disabled={Boolean(lockResort)}
             SelectProps={{
               MenuProps: {
                 sx: { '& .MuiPaper-root': { maxHeight: 260 } },
@@ -214,10 +218,15 @@ export default function AdminTableToolbar({
               textTransform: 'capitalize',
             }}
           >
-            <MenuItem value="" sx={{ mx: 1, my: 0.5, borderRadius: 0.75, typography: 'body2', color: 'text.secondary' }}>
-              All resorts
-            </MenuItem>
-            {ADMIN_BOOKING_RESORT_FILTER_OPTIONS.map((option) => (
+            {!lockResort && (
+              <MenuItem value="" sx={{ mx: 1, my: 0.5, borderRadius: 0.75, typography: 'body2', color: 'text.secondary' }}>
+                All resorts
+              </MenuItem>
+            )}
+            {(lockResort
+              ? ADMIN_BOOKING_RESORT_FILTER_OPTIONS.filter((option) => option.value === lockResort)
+              : ADMIN_BOOKING_RESORT_FILTER_OPTIONS
+            ).map((option) => (
               <MenuItem
                 key={option.value}
                 value={option.value}

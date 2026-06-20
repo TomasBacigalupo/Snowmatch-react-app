@@ -23,6 +23,7 @@ import { PATH_DASHBOARD } from '../../routes/paths';
 import useTabs from '../../hooks/useTabs';
 import useSettings from '../../hooks/useSettings';
 import useTable, { getComparator } from '../../hooks/useTable';
+import useAuth from '../../hooks/useAuth';
 // components
 import Page from '../../components/Page';
 import Iconify from '../../components/Iconify';
@@ -32,7 +33,7 @@ import { TableEmptyRows, TableHeadCustom, TableNoData, TableSelectedActions } fr
 // sections
 import { AdminTableToolbar } from '../../sections/@dashboard/admin/list';
 import { useDispatch, useSelector } from '../../redux/store';
-import { getTeachers, openModal, closeModal, setClientContacted } from '../../redux/slices/admin';
+import { getTeachers, getResortAdminClients, openModal, closeModal, setClientContacted } from '../../redux/slices/admin';
 import { DialogAnimate } from '../../components/animate';
 import DeclineForm from '../../sections/@dashboard/admin/DeclineForm';
 import AdminTableCard from 'src/sections/@dashboard/admin/list/AdminTableCard';
@@ -51,6 +52,8 @@ const TABLE_HEAD = [
   { id: 'credits', label: 'Creditos', align: 'left' },
   { id: 'contacted', label: 'Contacted', align: 'center' },
 ];
+
+const RESORT_ADMIN_TABLE_HEAD = TABLE_HEAD.filter((col) => col.id !== 'contacted');
 
 // ----------------------------------------------------------------------
 
@@ -73,6 +76,8 @@ export default function AdminReviewClients() {
 
   const { themeStretch } = useSettings();
   const navigate = useNavigate();
+  const { isResortAdmin } = useAuth();
+  const tableHead = isResortAdmin ? RESORT_ADMIN_TABLE_HEAD : TABLE_HEAD;
 
   const [tableData, setTableData] = useState([]);
   const [filterNameInput, setFilterNameInput] = useState('');
@@ -142,15 +147,23 @@ export default function AdminReviewClients() {
   const dispatch = useDispatch();
   const { teachers, isOpenModal, selectedEmail } = useSelector((state) => state.admin);
 
+  const fetchClients = (pageNum, size) => {
+    if (isResortAdmin) {
+      dispatch(getResortAdminClients(pageNum, filterName, size));
+    } else {
+      dispatch(getTeachers(pageNum, filterRole, filterName, filterLevel, size, filterResort));
+    }
+  };
+
   const onChangePage2 = (event, newPage) => {
-    dispatch(getTeachers(newPage, filterRole, filterName, filterLevel, rowsPerPage, filterResort));
+    fetchClients(newPage, rowsPerPage);
     setPage(newPage);
   };
 
   const handleChangeRowsPerPage = (event) => {
     onChangeRowsPerPage(event);
     setPage(0);
-    dispatch(getTeachers(0, filterRole, filterName, filterLevel, Number(event.target.value), filterResort));
+    fetchClients(0, Number(event.target.value));
   };
 
   const handleRowClick = (row) => {
@@ -164,6 +177,10 @@ export default function AdminReviewClients() {
   };
 
   useEffect(() => {
+    if (isResortAdmin) {
+      setTableData(teachers ?? []);
+      return;
+    }
     let data = teachers ?? [];
     if (filterResort) {
       data = data.filter((client) => {
@@ -175,12 +192,13 @@ export default function AdminReviewClients() {
       });
     }
     setTableData(data);
-  }, [teachers, filterResort]);
+  }, [teachers, filterResort, isResortAdmin]);
 
   useEffect(() => {
-    dispatch(getTeachers(0, filterRole, filterName, filterLevel, rowsPerPage, filterResort));
+    fetchClients(0, rowsPerPage);
     setPage(0);
-  }, [filterRole, filterName, filterLevel, filterResort]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filterRole, filterName, filterLevel, filterResort, isResortAdmin]);
 
   return (
     <Page title="Admin Clients: List">
@@ -189,7 +207,7 @@ export default function AdminReviewClients() {
           heading="Clients List"
           links={[
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
-            { name: 'Admin', href: PATH_DASHBOARD.admin.root },
+            { name: isResortAdmin ? 'Resort Admin' : 'Admin', href: PATH_DASHBOARD.admin.root },
             { name: 'Clients' },
           ]}
         />
@@ -212,7 +230,7 @@ export default function AdminReviewClients() {
             showMonth={false}
             showStudentId={false}
             showSearchAdmin={false}
-            showResort={true}
+            showResort={!isResortAdmin}
           />
 
           <Scrollbar>
@@ -240,7 +258,7 @@ export default function AdminReviewClients() {
                   <TableHeadCustom
                     order={order}
                     orderBy={orderBy}
-                    headLabel={TABLE_HEAD}
+                    headLabel={tableHead}
                     rowCount={tableData?.length ?? 0}
                     numSelected={selected.length}
                     onSort={onSort}
@@ -261,7 +279,11 @@ export default function AdminReviewClients() {
                         onDeclineRow={() => handleDeclineOpenModal(row.email)}
                         onWapp={() => handleContactWapp(row.countryCode, row.cellphone, row.name)}
                         onEvents={() => navigate(PATH_DASHBOARD.admin.events(row.id))}
-                        onContactedChange={(contacted) => dispatch(setClientContacted(row.id, contacted))}
+                        onContactedChange={
+                          isResortAdmin
+                            ? undefined
+                            : (contacted) => dispatch(setClientContacted(row.id, contacted))
+                        }
                         onClick={() => handleRowClick(row)}
                       />
                     ))}
@@ -284,7 +306,11 @@ export default function AdminReviewClients() {
                   onDeclineRow={() => handleDeclineOpenModal(row.email)}
                   onWapp={() => handleContactWapp(row.countryCode, row.cellphone, row.name)}
                   onEvents={() => navigate(PATH_DASHBOARD.admin.events(row.id))}
-                  onContactedChange={(contacted) => dispatch(setClientContacted(row.id, contacted))}
+                  onContactedChange={
+                    isResortAdmin
+                      ? undefined
+                      : (contacted) => dispatch(setClientContacted(row.id, contacted))
+                  }
                   onClick={() => handleRowClick(row)}
                 />
               ))}

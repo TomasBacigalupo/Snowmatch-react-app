@@ -6,7 +6,7 @@ import { setRequestedRoute } from 'src/redux/slices/config';
 import { Navigate } from 'react-router';
 import { useSnackbar } from 'notistack';
 import AccessDenied from 'src/pages/AccessDenied';
-import { PATH_AUTH } from 'src/routes/paths';
+import { PATH_AUTH, PATH_DASHBOARD } from 'src/routes/paths';
 
 // ----------------------------------------------------------------------
 
@@ -53,7 +53,7 @@ export default function RoleBasedGuard({ accessibleRoles, children }) {
       return <Navigate to={'/dashboard/admin/bookings'} />
     }
     if (isResortAdmin) {
-      return <Navigate to={'/dashboard/admin/rental'} />
+      return <Navigate to={PATH_DASHBOARD.admin.dashboard} />
     }
     return <Navigate to={'/access-denied'} />
   }

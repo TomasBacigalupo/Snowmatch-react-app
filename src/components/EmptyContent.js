@@ -20,25 +20,31 @@ const RootStyle = styled('div')(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 EmptyContent.propTypes = {
-  title: PropTypes.string.isRequired,
-  img: PropTypes.string,
+  title: PropTypes.string,
+  img: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   description: PropTypes.string,
 };
 
 export default function EmptyContent({ title, description, img, ...other }) {
+  const showImage = img !== false;
+
   return (
     <RootStyle {...other}>
-      <Image
-        disabledEffect
-        visibleByDefault
-        alt="empty content"
-        src={'https://i.imgur.com/JndUpOn.png'}
-        sx={{ height: 240, mb: 3 }}
-      />
+      {showImage && (
+        <Image
+          disabledEffect
+          visibleByDefault
+          alt="empty content"
+          src={typeof img === 'string' ? img : 'https://i.imgur.com/JndUpOn.png'}
+          sx={{ height: 240, mb: 3 }}
+        />
+      )}
 
-      <Typography variant="h5" gutterBottom>
-        {title}
-      </Typography>
+      {title && (
+        <Typography variant="h5" gutterBottom>
+          {title}
+        </Typography>
+      )}
 
       {description && (
         <Typography variant="body2" sx={{ color: 'text.secondary' }}>

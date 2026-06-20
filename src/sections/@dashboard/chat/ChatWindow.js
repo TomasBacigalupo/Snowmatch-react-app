@@ -20,6 +20,8 @@ import {
 import webSocketService from '../../../services/websocketService';
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
+// hooks
+import useAuth from '../../../hooks/useAuth';
 //
 import ChatRoom from './ChatRoom';
 import ChatMessageList from './ChatMessageList';
@@ -50,6 +52,7 @@ export default function ChatWindow() {
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const { conversationId } = useParams();
+  const { isResortAdmin } = useAuth();
   const { contacts, recipients, participants, activeConversationId } = useSelector((state) => state.chat);
   const conversation = useSelector((state) => conversationSelector(state));
 
@@ -63,9 +66,10 @@ export default function ChatWindow() {
   useEffect(() => {
     const getDetails = async () => {
       if (isAdminUserChatMonitor) {
-        await dispatch(getAdminParticipants(conversationId));
+        const adminChatOpts = { resortAdmin: isResortAdmin };
+        await dispatch(getAdminParticipants(conversationId, adminChatOpts));
         try {
-          await dispatch(getAdminConversation(conversationId));
+          await dispatch(getAdminConversation(conversationId, adminChatOpts));
         } catch (error) {
           console.error(error);
           navigate(PATH_DASHBOARD.admin.userChats);

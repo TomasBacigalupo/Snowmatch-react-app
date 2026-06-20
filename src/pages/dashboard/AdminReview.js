@@ -9,12 +9,15 @@ import {
   Switch,
   Tooltip,
   TableBody,
+  TableCell,
+  TableRow,
   Container,
   IconButton,
   TableContainer,
   TablePagination,
   FormControlLabel,
   DialogTitle,
+  Skeleton,
 } from '@mui/material';
 import Hidden from 'src/components/LegacyHidden';
 // routes
@@ -35,7 +38,7 @@ import { TableEmptyRows, TableHeadCustom, TableNoData, TableSelectedActions } fr
 import { AdminTableToolbar, AdminTableRow } from '../../sections/@dashboard/admin/list';
 import TeacherDetailsDrawer from 'src/sections/@dashboard/admin/list/TeacherDetailsDrawer';
 import { useDispatch, useSelector } from '../../redux/store';
-import { getTeachers, openModal, closeModal } from '../../redux/slices/admin'
+import { getTeachers, getResortAdminTeachers, openModal, closeModal } from '../../redux/slices/admin'
 import useAuth from '../../hooks/useAuth';
 import { DialogAnimate } from '../../components/animate';
 import DeclineForm from '../../sections/@dashboard/admin/DeclineForm';
@@ -77,6 +80,10 @@ export default function AdminReview() {
 
   const { themeStretch } = useSettings();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { isResortAdmin, user } = useAuth();
+  const lockedResort = isResortAdmin ? user?.managedResort : null;
+  const { teachers, isOpenModal, selectedEmail, isLoading } = useSelector((state) => state.admin);
 
   const [tableData, setTableData] = useState([]);
   const [filterNameInput, setFilterNameInput] = useState('');
@@ -84,6 +91,8 @@ export default function AdminReview() {
   const [filterRole, setFilterRole] = useState(ROLE_OPTIONS[0]);
   const [filterLevel, setFilterLevel] = useState(0);
   const [filterResort, setFilterResort] = useState('');
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [selectedTeacher, setSelectedTeacher] = useState(null);
 
   const debounceRef = useRef(null);
 
@@ -107,6 +116,7 @@ export default function AdminReview() {
   };
 
   const handleFilterResort = (event) => {
+    if (lockedResort) return;
     setFilterResort(event.target.value);
     setPage(0);
   };
@@ -138,15 +148,19 @@ export default function AdminReview() {
 
   const denseHeight = dense ? 52 : 72;
   const isNotFound = !tableData.length && (!!filterName || !!filterResort);
+  const paginationCount =
+    !isLoading && tableData.length < rowsPerPage ? page * rowsPerPage + tableData.length : -1;
 
-  const dispatch = useDispatch();
-  const { isResortAdmin, user } = useAuth();
-  const managedResort = user?.managedResort;
-
-  const { teachers, isOpenModal, selectedEmail } = useSelector((state) => state.admin);
-
-  const [drawerOpen, setDrawerOpen] = useState(false);
-  const [selectedTeacher, setSelectedTeacher] = useState(null);
+  const renderTableSkeleton = () =>
+    Array.from({ length: rowsPerPage }).map((_, index) => (
+      <TableRow key={`skeleton-${index}`}>
+        {TABLE_HEAD.map((headCell) => (
+          <TableCell key={headCell.id} align={headCell.align} padding={headCell.id === 'select' ? 'checkbox' : 'normal'}>
+            <Skeleton width={headCell.id === 'select' ? 24 : '80%'} height={dense ? 20 : 24} />
+          </TableCell>
+        ))}
+      </TableRow>
+    ));
 
   const handleRowClick = (row) => {
     setSelectedTeacher(row);
@@ -157,36 +171,52 @@ export default function AdminReview() {
     setDrawerOpen(false);
   };
 
+  const fetchTeachers = (pageNum, size) => {
+    if (isResortAdmin) {
+      dispatch(getResortAdminTeachers(pageNum, filterRole, filterName, filterLevel, size));
+    } else {
+      dispatch(getTeachers(pageNum, filterRole, filterName, filterLevel, size, filterResort));
+    }
+  };
+
   const onChangePage2 = (event, newPage) => {
-    dispatch(getTeachers(newPage, filterRole, filterName, filterLevel, rowsPerPage, filterResort));
+    fetchTeachers(newPage, rowsPerPage);
     setPage(newPage);
   };
 
   const handleChangeRowsPerPage = (event) => {
     onChangeRowsPerPage(event);
     setPage(0);
-    dispatch(getTeachers(0, filterRole, filterName, filterLevel, Number(event.target.value), filterResort));
+    fetchTeachers(0, Number(event.target.value));
   };
 
   useEffect(() => {
-    let data = teachers ?? [];
-    const resortToMatch = filterResort || (isResortAdmin ? managedResort : null);
-    if (resortToMatch) {
-      data = data.filter((teacher) => {
-        const enumMatch = Array.isArray(teacher.resortsEnum)
-          && teacher.resortsEnum.some((r) => String(r) === resortToMatch || r?.name === resortToMatch);
-        const legacyMatch = Array.isArray(teacher.resorts)
-          && teacher.resorts.some((r) => String(r) === resortToMatch);
-        return enumMatch || legacyMatch;
-      });
-    }
-    setTableData(data);
-  }, [teachers, isResortAdmin, managedResort, filterResort]);
+    if (!lockedResort) return;
+    setFilterResort(lockedResort);
+    setPage(0);
+  }, [lockedResort, setPage]);
 
   useEffect(() => {
-    dispatch(getTeachers(0, filterRole, filterName, filterLevel, rowsPerPage, filterResort));
+    let data = teachers ?? [];
+    if (!isResortAdmin) {
+      const resortToMatch = filterResort || lockedResort;
+      if (resortToMatch) {
+        data = data.filter((teacher) => {
+          const enumMatch = Array.isArray(teacher.resortsEnum)
+            && teacher.resortsEnum.some((r) => String(r) === resortToMatch || r?.name === resortToMatch);
+          const legacyMatch = Array.isArray(teacher.resorts)
+            && teacher.resorts.some((r) => String(r) === resortToMatch);
+          return enumMatch || legacyMatch;
+        });
+      }
+    }
+    setTableData(data);
+  }, [teachers, lockedResort, filterResort, isResortAdmin]);
+
+  useEffect(() => {
+    fetchTeachers(0, rowsPerPage);
     setPage(0);
-  }, [filterRole, filterName, filterLevel, filterResort]);
+  }, [filterRole, filterName, filterLevel, filterResort, isResortAdmin]);
 
   return (
     <Page title="Admin Review: List">
@@ -216,7 +246,8 @@ export default function AdminReview() {
             showMonth={false}
             showTeacherId={false}
             showStudentId={false}
-            showResort={true}
+            showResort
+            lockResort={lockedResort}
           />
 
           <Scrollbar>
@@ -253,40 +284,50 @@ export default function AdminReview() {
                   />
 
                   <TableBody>
-                    {tableData?.map((row) => (
-                      <AdminTableRow
-                        key={row.id}
-                        row={row}
-                        selected={selected.includes(row.id)}
-                        onSelectRow={() => onSelectRow(row.id)}
-                        onEditRow={() => handleEditRow(row.id)}
-                        onConfirmRow={() => handleConfirmRow(row.id)}
-                        onDeclineRow={() => handleDeclineOpenModal(row.email)}
-                        onWapp={() => handleContactWapp(row.countryCode, row.cellphone, row.name)}
-                        onEvents={() => navigate(PATH_DASHBOARD.admin.events(row.id))}
-                        onClick={() => handleRowClick(row)}
-                      />
-                    ))}
-                    <TableEmptyRows height={denseHeight} emptyRows={0} />
-                    <TableNoData isNotFound={isNotFound} />
+                    {isLoading
+                      ? renderTableSkeleton()
+                      : tableData?.map((row) => (
+                          <AdminTableRow
+                            key={row.id}
+                            row={row}
+                            selected={selected.includes(row.id)}
+                            onSelectRow={() => onSelectRow(row.id)}
+                            onEditRow={() => handleEditRow(row.id)}
+                            onConfirmRow={() => handleConfirmRow(row.id)}
+                            onDeclineRow={() => handleDeclineOpenModal(row.email)}
+                            onWapp={() => handleContactWapp(row.countryCode, row.cellphone, row.name)}
+                            onEvents={() => navigate(PATH_DASHBOARD.admin.events(row.id))}
+                            onClick={() => handleRowClick(row)}
+                          />
+                        ))}
+                    {!isLoading && <TableEmptyRows height={denseHeight} emptyRows={0} />}
+                    <TableNoData isNotFound={!isLoading && isNotFound} />
                   </TableBody>
                 </Table>
               </TableContainer>
             </Hidden>
 
             <Hidden smUp>
-              {tableData?.map((row) => (
-                <AdminTableCard
-                  key={row.id}
-                  row={row}
-                  onEditRow={() => handleEditRow(row.id)}
-                  onConfirmRow={() => handleConfirmRow(row.id)}
-                  onDeclineRow={() => handleDeclineOpenModal(row.email)}
-                  onWapp={() => handleContactWapp(row.countryCode, row.cellphone, row.name)}
-                  onEvents={() => navigate(PATH_DASHBOARD.admin.events(row.id))}
-                  onClick={() => handleRowClick(row)}
-                />
-              ))}
+              {isLoading
+                ? Array.from({ length: rowsPerPage }).map((_, index) => (
+                    <Card key={`card-skeleton-${index}`} sx={{ width: '100%', my: 0.5, p: 2 }}>
+                      <Skeleton variant="text" width="60%" height={28} />
+                      <Skeleton variant="text" width="40%" />
+                      <Skeleton variant="text" width="50%" />
+                    </Card>
+                  ))
+                : tableData?.map((row) => (
+                    <AdminTableCard
+                      key={row.id}
+                      row={row}
+                      onEditRow={() => handleEditRow(row.id)}
+                      onConfirmRow={() => handleConfirmRow(row.id)}
+                      onDeclineRow={() => handleDeclineOpenModal(row.email)}
+                      onWapp={() => handleContactWapp(row.countryCode, row.cellphone, row.name)}
+                      onEvents={() => navigate(PATH_DASHBOARD.admin.events(row.id))}
+                      onClick={() => handleRowClick(row)}
+                    />
+                  ))}
             </Hidden>
           </Scrollbar>
 
@@ -294,7 +335,7 @@ export default function AdminReview() {
             <TablePagination
               rowsPerPageOptions={[5, 10, 25, 50]}
               component="div"
-              count={-1}
+              count={paginationCount}
               rowsPerPage={rowsPerPage}
               page={page}
               onPageChange={onChangePage2}

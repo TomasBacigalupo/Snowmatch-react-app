@@ -46,6 +46,8 @@ const initialState = {
       bookingsTimeSeries: [],
     },
   },
+  resortStats: null,
+  isLoadingResortStats: false,
 };
 
 const slice = createSlice({
@@ -240,6 +242,21 @@ const slice = createSlice({
     clearSearchedUser(state) {
       state.searchedUser = null;
     },
+
+    startLoadingResortStats(state) {
+      state.isLoadingResortStats = true;
+      state.error = null;
+    },
+
+    getResortAdminStatsSuccess(state, action) {
+      state.isLoadingResortStats = false;
+      state.resortStats = action.payload;
+    },
+
+    hasResortStatsError(state, action) {
+      state.isLoadingResortStats = false;
+      state.error = action.payload;
+    },
   }
 });
 
@@ -264,6 +281,42 @@ export function getTeachers(page, role, name, level, size = 25, resort = '') {
         ...(resort ? { resort } : {}),
       });
       const response = await axios.get(`/api/admin/filter?${params.toString()}`);
+      dispatch(slice.actions.getTeachersSuccess(response.data));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+export function getResortAdminTeachers(page, role, name, level, size = 25) {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const params = new URLSearchParams({
+        page: page ?? 0,
+        role: role ?? '',
+        level: level ?? '',
+        name: name ?? '',
+        size,
+      });
+      const response = await axios.get(`/api/resort-admin/teachers/filter?${params.toString()}`);
+      dispatch(slice.actions.getTeachersSuccess(response.data));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+export function getResortAdminClients(page, name, size = 25) {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const params = new URLSearchParams({
+        page: page ?? 0,
+        name: name ?? '',
+        size,
+      });
+      const response = await axios.get(`/api/resort-admin/clients/filter?${params.toString()}`);
       dispatch(slice.actions.getTeachersSuccess(response.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
@@ -396,6 +449,29 @@ export function getBookings(teacherId, studentId, month, page, size = 100000, re
   };
 }
 
+export function getResortAdminBookings(teacherId, studentId, month, page, size = 100000, day, bookingKind, year, state) {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const params = new URLSearchParams();
+      if (page) params.append('page', page);
+      if (teacherId) params.append('teacherId', teacherId);
+      if (studentId) params.append('studentId', studentId);
+      if (month) params.append('month', month);
+      if (day) params.append('day', day);
+      if (bookingKind) params.append('bookingKind', bookingKind);
+      if (year != null && year !== '') params.append('year', year);
+      if (state && String(state).toLowerCase() !== 'all') params.append('state', state);
+      params.append('size', size);
+
+      const response = await axios.get(`/api/resort-admin/bookings/filter?${params.toString()}`);
+      dispatch(slice.actions.getBookingsSuccess(response.data));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
 export function getBookingIntents(studentId, month, page, size = 100, resort, year) {
   return async () => {
     dispatch(slice.actions.startLoading());
@@ -409,6 +485,25 @@ export function getBookingIntents(studentId, month, page, size = 100, resort, ye
       if (resort) params.append('resort', resort);
       if (year != null) params.append('year', year);
       const response = await axios.get(`/api/admin/booking-intents/filter?${params.toString()}`);
+      dispatch(slice.actions.getBookingIntentsSuccess(response.data));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+export function getResortAdminBookingIntents(studentId, month, page, size = 100, year) {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const params = new URLSearchParams();
+      params.append('page', page ?? 0);
+      params.append('size', size);
+      params.append('state', 'OPEN');
+      if (studentId) params.append('studentId', studentId);
+      if (month) params.append('month', month);
+      if (year != null) params.append('year', year);
+      const response = await axios.get(`/api/resort-admin/booking-intents/filter?${params.toString()}`);
       dispatch(slice.actions.getBookingIntentsSuccess(response.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
@@ -876,6 +971,21 @@ export function revokeResortAdmin(userId) {
     } catch (error) {
       dispatch(slice.actions.hasError(error));
       throw error;
+    }
+  };
+}
+
+export function getResortAdminStats(year) {
+  return async () => {
+    dispatch(slice.actions.startLoadingResortStats());
+    try {
+      const response = await axios.get('/api/resort-admin/stats', {
+        params: { year },
+      });
+      dispatch(slice.actions.getResortAdminStatsSuccess(response.data));
+    } catch (error) {
+      const message = error?.response?.data || error?.message || 'Error loading resort stats';
+      dispatch(slice.actions.hasResortStatsError(message));
     }
   };
 }

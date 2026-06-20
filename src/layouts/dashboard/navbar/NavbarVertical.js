@@ -92,6 +92,16 @@ const ADMIN_NAV_ITEMS = [
   { title: 'user calendars', path: PATH_DASHBOARD.admin.userCalendars, icon: ICONS.calendar },
 ];
 
+const RESORT_ADMIN_NAV_ITEMS = [
+  { title: 'dashboard', path: PATH_DASHBOARD.admin.dashboard, icon: ICONS.analytics },
+  { title: 'review teachers', path: PATH_DASHBOARD.admin.review, icon: ICONS.user },
+  { title: 'clients', path: PATH_DASHBOARD.admin.reviewClients, icon: ICONS.user },
+  { title: 'lesson bookings', path: PATH_DASHBOARD.admin.bookings, icon: ICONS.booking },
+  { title: 'user chats', path: PATH_DASHBOARD.admin.userChats, icon: ICONS.chat },
+  { title: 'rental products', path: PATH_DASHBOARD.admin.rental, icon: ICONS.ecommerce },
+  { title: 'group lessons by resort', path: PATH_DASHBOARD.admin.groupLessonResorts, icon: ICONS.calendar },
+];
+
 NavbarVertical.propTypes = {
   isOpenSidebar: PropTypes.bool,
   onCloseSidebar: PropTypes.func,
@@ -136,18 +146,9 @@ export default function NavbarVertical({ isOpenSidebar, onCloseSidebar, isGuest,
     }
 
     if (userRole === 'RESORT_ADMIN') {
-      return [...base, {
+      return [{
         subheader: 'Resort Admin',
-        items: [{
-          title: 'resort admin',
-          path: PATH_DASHBOARD.admin.root,
-          icon: ICONS.user,
-          children: [
-            { title: 'review teachers', path: PATH_DASHBOARD.admin.review },
-            { title: 'rental products', path: PATH_DASHBOARD.admin.rental },
-            { title: 'rental providers', path: PATH_DASHBOARD.admin.rentalProviders },
-          ],
-        }],
+        items: RESORT_ADMIN_NAV_ITEMS,
       }];
     }
 

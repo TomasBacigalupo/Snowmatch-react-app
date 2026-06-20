@@ -498,6 +498,7 @@ export default function Router() {
                   ],
                 },
                 { path: 'broadcast', element: <AdminBroadcastLesson /> },
+                { path: 'dashboard', element: <AdminResortDashboard /> },
                 { path: 'user-chats', element: <AdminUserChats /> },
                 { path: 'user-chats/:conversationId', element: <AdminUserChats /> },
                 { path: 'financial', element: <AdminFinancialDashboard /> },
@@ -687,6 +688,7 @@ const AdminGearBookings = Loadable(lazy(() => import('../pages/dashboard/AdminGe
 const AdminUserChats = Loadable(lazy(() => import('../pages/dashboard/AdminUserChats')));
 const AdminBroadcastLesson = Loadable(lazy(() => import('../pages/dashboard/AdminBroadcastLesson')));
 const AdminFinancialDashboard = Loadable(lazy(() => import('../pages/dashboard/AdminFinancialDashboard')));
+const AdminResortDashboard = Loadable(lazy(() => import('../pages/dashboard/AdminResortDashboard')));
 const AdminRental = Loadable(lazy(() => import('../pages/dashboard/AdminRental')));
 const AdminGroupLessonResorts = Loadable(lazy(() => import('../pages/dashboard/AdminGroupLessonResorts')));
 const AdminResortAdmins = Loadable(lazy(() => import('../pages/dashboard/AdminResortAdmins')));

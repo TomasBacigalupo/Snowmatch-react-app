@@ -339,11 +339,12 @@ export function getConversation(conversationId) {
   };
 }
 
-export function getAdminConversation(conversationId) {
+export function getAdminConversation(conversationId, { resortAdmin = false } = {}) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get('/api/admin/chat/conversation', {
+      const base = resortAdmin ? '/api/resort-admin/chat' : '/api/admin/chat';
+      const response = await axios.get(`${base}/conversation`, {
         params: { conversationId },
       });
       dispatch(slice.actions.getConversationSuccess(response.data.conversation));
@@ -353,10 +354,11 @@ export function getAdminConversation(conversationId) {
   };
 }
 
-export function getAdminParticipants(conversationId) {
+export function getAdminParticipants(conversationId, { resortAdmin = false } = {}) {
   return async (dispatch) => {
     try {
-      const response = await axios.get('/api/admin/chat/participants', {
+      const base = resortAdmin ? '/api/resort-admin/chat' : '/api/admin/chat';
+      const response = await axios.get(`${base}/participants`, {
         params: { conversationId },
       });
       dispatch(slice.actions.getParticipantsSuccess(response.data.participants));

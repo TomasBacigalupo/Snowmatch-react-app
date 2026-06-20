@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   Box,
@@ -28,6 +28,7 @@ import {
   IconButton,
   Checkbox,
   FormControlLabel,
+  Skeleton,
 } from '@mui/material';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import axios from '../../utils/axios';
@@ -46,6 +47,7 @@ import {
   GROUP_LESSON_RESORT_OPTIONS,
   GROUP_LESSON_CURRENCY_OPTIONS,
 } from '../../utils/groupLessonResortOptions';
+import useAuth from '../../hooks/useAuth';
 
 const emptyForm = {
   id: null,
@@ -73,7 +75,20 @@ const timeToInput = (v) => {
 export default function AdminGroupLessonResorts() {
   const { themeStretch } = useSettings();
   const dispatch = useDispatch();
+  const { isResortAdmin, user } = useAuth();
+  const lockedResort = isResortAdmin ? user?.managedResort : null;
   const { items, isLoading, error } = useSelector((state) => state.groupLessonResortConfig);
+  const displayItems = useMemo(
+    () => (lockedResort ? items.filter((row) => row.resort === lockedResort) : items),
+    [items, lockedResort]
+  );
+  const resortOptions = useMemo(
+    () =>
+      lockedResort
+        ? GROUP_LESSON_RESORT_OPTIONS.filter((opt) => opt.value === lockedResort)
+        : GROUP_LESSON_RESORT_OPTIONS,
+    [lockedResort]
+  );
 
   const [dialogOpen, setDialogOpen] = useState(false);
   const [form, setForm] = useState(emptyForm);
@@ -103,8 +118,8 @@ export default function AdminGroupLessonResorts() {
 
   const openNew = () => {
     resetImagePick();
-    setForm(emptyForm);
-    setResortLocked(false);
+    setForm(lockedResort ? { ...emptyForm, resort: lockedResort } : emptyForm);
+    setResortLocked(Boolean(lockedResort));
     setDialogOpen(true);
   };
 
@@ -162,7 +177,10 @@ export default function AdminGroupLessonResorts() {
         const presignedParams = form.id
           ? { configId: form.id }
           : { resort: form.resort };
-        const presignedResponse = await axios.get('/api/admin/group-lesson-resort-config/image-presigned-url', {
+        const presignedBase = isResortAdmin
+          ? '/api/resort-admin/group-lesson-resort-config/image-presigned-url'
+          : '/api/admin/group-lesson-resort-config/image-presigned-url';
+        const presignedResponse = await axios.get(presignedBase, {
           params: presignedParams,
         });
         const { presignedUrl, imageUrl: uploadedPublicUrl } = presignedResponse.data || {};
@@ -199,6 +217,7 @@ export default function AdminGroupLessonResorts() {
               minDays: form.minDays,
               startTime: form.startTime,
               endTime: form.endTime,
+              useResortAdmin: isResortAdmin,
             })
           )
         : await dispatch(
@@ -215,6 +234,7 @@ export default function AdminGroupLessonResorts() {
               minDays: form.minDays,
               startTime: form.startTime,
               endTime: form.endTime,
+              useResortAdmin: isResortAdmin,
             })
           );
 
@@ -243,11 +263,53 @@ export default function AdminGroupLessonResorts() {
     }
   };
 
+  const renderTableSkeleton = () =>
+    Array.from({ length: 8 }).map((_, index) => (
+      <TableRow key={`skeleton-${index}`}>
+        <TableCell>
+          <Skeleton width={32} height={20} />
+        </TableCell>
+        <TableCell>
+          <Stack spacing={0.5}>
+            <Skeleton width="80%" height={20} />
+            <Skeleton width="50%" height={16} />
+          </Stack>
+        </TableCell>
+        <TableCell>
+          <Skeleton width="70%" height={20} />
+        </TableCell>
+        <TableCell align="right">
+          <Skeleton width={72} height={20} sx={{ ml: 'auto' }} />
+        </TableCell>
+        <TableCell>
+          <Skeleton variant="rounded" width={56} height={40} />
+        </TableCell>
+        <TableCell>
+          <Skeleton width="90%" height={20} />
+        </TableCell>
+        <TableCell>
+          <Stack spacing={0.5}>
+            <Skeleton width="85%" height={14} />
+            <Skeleton width="70%" height={14} />
+            <Skeleton width="60%" height={14} />
+          </Stack>
+        </TableCell>
+        <TableCell align="right">
+          <Stack direction="row" spacing={1} justifyContent="flex-end">
+            <Skeleton width={56} height={28} sx={{ borderRadius: 1 }} />
+            <Skeleton variant="circular" width={32} height={32} />
+          </Stack>
+        </TableCell>
+      </TableRow>
+    ));
+
   const confirmDelete = async () => {
     if (deleteTarget == null) return;
     setSaving(true);
     try {
-      const action = await dispatch(deleteGroupLessonResortConfig(deleteTarget.id));
+      const action = await dispatch(
+        deleteGroupLessonResortConfig({ id: deleteTarget.id, useResortAdmin: isResortAdmin })
+      );
       if (deleteGroupLessonResortConfig.fulfilled.match(action)) {
         setSnackbar({ open: true, message: 'Eliminado', severity: 'success' });
         setDeleteTarget(null);
@@ -302,7 +364,11 @@ export default function AdminGroupLessonResorts() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {items.length === 0 && !isLoading && (
+                {isLoading ? (
+                  renderTableSkeleton()
+                ) : (
+                  <>
+                {displayItems.length === 0 && (
                   <TableRow>
                     <TableCell colSpan={8}>
                       <Typography color="text.secondary" variant="body2">
@@ -311,7 +377,7 @@ export default function AdminGroupLessonResorts() {
                     </TableCell>
                   </TableRow>
                 )}
-                {items.map((row) => (
+                {displayItems.map((row) => (
                   <TableRow key={row.id}>
                     <TableCell>{row.id}</TableCell>
                     <TableCell>
@@ -374,6 +440,8 @@ export default function AdminGroupLessonResorts() {
                     </TableCell>
                   </TableRow>
                 ))}
+                  </>
+                )}
               </TableBody>
             </Table>
           </TableContainer>
@@ -390,12 +458,14 @@ export default function AdminGroupLessonResorts() {
                   label="Centro de esquí"
                   value={form.resort}
                   onChange={(e) => setForm((f) => ({ ...f, resort: e.target.value }))}
-                  disabled={resortLocked}
+                  disabled={resortLocked || Boolean(lockedResort)}
                 >
-                  <MenuItem value="">
-                    <em>Seleccionar…</em>
-                  </MenuItem>
-                  {GROUP_LESSON_RESORT_OPTIONS.map((opt) => (
+                  {!lockedResort && (
+                    <MenuItem value="">
+                      <em>Seleccionar…</em>
+                    </MenuItem>
+                  )}
+                  {resortOptions.map((opt) => (
                     <MenuItem key={opt.value} value={opt.value}>
                       {opt.label}
                     </MenuItem>

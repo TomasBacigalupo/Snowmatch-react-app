@@ -6,10 +6,9 @@
 #   ./scripts/deploy-s3.sh
 #
 # Environment:
-#   BUILD_DIR                   Default: build
-#   S3_BUCKET                   Default: snowmatch.pro
-#   AWS_REGION                  Default: us-east-1
-#   CLOUDFRONT_DISTRIBUTION_ID  If set, invalidates /* after sync
+#   BUILD_DIR     Default: build
+#   S3_BUCKET     Default: app.snowmatch.pro
+#   AWS_REGION    Default: us-east-1
 #
 
 set -euo pipefail
@@ -19,7 +18,7 @@ ROOT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 cd "$ROOT_DIR"
 
 BUILD_DIR="${BUILD_DIR:-build}"
-S3_BUCKET="${S3_BUCKET:-snowmatch.pro}"
+S3_BUCKET="${S3_BUCKET:-app.snowmatch.pro}"
 AWS_REGION="${AWS_REGION:-us-east-1}"
 
 die() {
@@ -57,12 +56,5 @@ aws_s3_sync \
   --include "service-worker.js" \
   --include "manifest.json" \
   --cache-control "no-cache, no-store, must-revalidate"
-
-if [[ -n "${CLOUDFRONT_DISTRIBUTION_ID:-}" ]]; then
-  echo "🔄 CloudFront invalidation: ${CLOUDFRONT_DISTRIBUTION_ID} /*"
-  aws cloudfront create-invalidation \
-    --distribution-id "$CLOUDFRONT_DISTRIBUTION_ID" \
-    --paths "/*" >/dev/null
-fi
 
 echo "✅ Deploy finished: https://$S3_BUCKET"

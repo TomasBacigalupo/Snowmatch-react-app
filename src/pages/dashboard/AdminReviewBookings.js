@@ -588,28 +588,33 @@ export function AdminBookingsPage({ bookingListKind, pageTitle, heading }) {
           onFilterDate={handleFilterDate}
           bookings
           hideInstructorFilters={bookingListKind === 'gear'}
+          hideMoreFilters={isResortAdmin}
           lockResort={lockedResort}
         />
-        <Button
-          color="inherit"
-          size="small"
-          onClick={() => setStatsOpen((o) => !o)}
-          endIcon={
-            <Iconify
-              icon={statsOpen ? 'eva:chevron-up-fill' : 'eva:chevron-down-fill'}
-              sx={{ width: 20, height: 20 }}
-            />
-          }
-          sx={{ alignSelf: 'flex-start', px: 0, mb: statsOpen ? 1 : 0, typography: 'body2' }}
-        >
-          Show stats
-        </Button>
-        <Collapse in={statsOpen}>
-          <BookingSummary
-            bookings={activeListTab === 0 ? displayBookings : []}
-            isGearBookings={bookingListKind === 'gear'}
-          />
-        </Collapse>
+        {!isResortAdmin && (
+          <>
+            <Button
+              color="inherit"
+              size="small"
+              onClick={() => setStatsOpen((o) => !o)}
+              endIcon={
+                <Iconify
+                  icon={statsOpen ? 'eva:chevron-up-fill' : 'eva:chevron-down-fill'}
+                  sx={{ width: 20, height: 20 }}
+                />
+              }
+              sx={{ alignSelf: 'flex-start', px: 0, mb: statsOpen ? 1 : 0, typography: 'body2' }}
+            >
+              Show stats
+            </Button>
+            <Collapse in={statsOpen}>
+              <BookingSummary
+                bookings={activeListTab === 0 ? displayBookings : []}
+                isGearBookings={bookingListKind === 'gear'}
+              />
+            </Collapse>
+          </>
+        )}
         <Card>
           {bookingListKind === 'lesson' && (
             <BookingModal

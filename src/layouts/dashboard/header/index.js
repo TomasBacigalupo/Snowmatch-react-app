@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 // @mui
 import { styled } from '@mui/material/styles';
-import { Box, Stack, AppBar, Toolbar } from '@mui/material';
+import { Box, Stack, AppBar, Toolbar, Typography } from '@mui/material';
 // hooks
 import useOffSetTop from '../../../hooks/useOffSetTop';
 import useResponsive from '../../../hooks/useResponsive';
@@ -65,8 +65,10 @@ DashboardHeader.propTypes = {
 export default function DashboardHeader({ onOpenSidebar, isCollapse = false, verticalLayout = false }) {
   const isOffset = useOffSetTop(HEADER.DASHBOARD_DESKTOP_HEIGHT) && !verticalLayout;
   const isDesktop = useResponsive('up', 'lg');
-  const { isAuthenticated, isStudent, isTeacher } = useAuth();
+  const { isAuthenticated, isStudent, isTeacher, isResortAdmin, user } = useAuth();
   const navigate = useNavigate();
+
+  const userDisplayName = [user?.name, user?.lastname || user?.lastName].filter(Boolean).join(' ').trim();
 
   const handleChatClick = () => {
     if (isStudent) {
@@ -81,6 +83,8 @@ export default function DashboardHeader({ onOpenSidebar, isCollapse = false, ver
       <Toolbar
         sx={{
           minHeight: '100% !important',
+          px: { xs: 1.5, sm: 2 },
+          py: 0,
           paddingTop: 'env(safe-area-inset-top)',
         }}
       >
@@ -96,19 +100,26 @@ export default function DashboardHeader({ onOpenSidebar, isCollapse = false, ver
         <Box sx={{ flexGrow: 1 }} />
 
         <Stack direction="row" alignItems="center" spacing={{ xs: 0.5, sm: 1.5 }}>
-          {/* just for testing */}
-          {/* <LanguagePopover /> */}
-          
-          <NotificationsPopover />
-          
-          {isAuthenticated && (
-            <IconButtonAnimate onClick={handleChatClick} sx={{ color: 'text.primary' }}>
-              <Iconify icon="hugeicons:bubble-chat" />
-            </IconButtonAnimate>
+          <LanguagePopover />
+
+          {isResortAdmin ? (
+            <Typography variant="subtitle2" noWrap sx={{ color: 'text.primary', maxWidth: 240 }}>
+              {userDisplayName || user?.email}
+            </Typography>
+          ) : (
+            <>
+              <NotificationsPopover />
+
+              {isAuthenticated && (
+                <IconButtonAnimate onClick={handleChatClick} sx={{ color: 'text.primary' }}>
+                  <Iconify icon="hugeicons:bubble-chat" />
+                </IconButtonAnimate>
+              )}
+
+              {/* <ContactsPopover /> */}
+              <AccountPopover />
+            </>
           )}
-          
-          {/* <ContactsPopover /> */}
-          <AccountPopover />
         </Stack>
       </Toolbar>
     </RootStyle>

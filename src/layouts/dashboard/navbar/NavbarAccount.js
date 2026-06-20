@@ -9,7 +9,11 @@ import useAuth from '../../../hooks/useAuth';
 import { PATH_DASHBOARD } from '../../../routes/paths';
 // components
 import MyAvatar from '../../../components/MyAvatar';
-import Logo from 'src/components/Logo';
+import {
+  CERRO_BAYO_LOGO,
+  isCerroBayoResortAdmin,
+  isResortAdminNavLoading,
+} from '../../../utils/resortAdminBranding';
 
 // ----------------------------------------------------------------------
 
@@ -24,15 +28,25 @@ const RootStyle = styled('div')(({ theme }) => ({
   }),
 }));
 
-// Add this new styled component for the logo
-const LogoStyle = styled('img')({
+const LogoStyle = styled('img')(({ theme }) => ({
   width: 400,
+  maxWidth: '100%',
   alignSelf: 'center',
   cursor: 'pointer',
   transition: 'transform 0.2s',
   '&:hover': {
     transform: 'scale(1.02)',
   },
+  ...(theme.palette.mode === 'light' && {
+    filter: 'none',
+  }),
+}));
+
+const CerroBayoLogoStyle = styled('img')({
+  width: 205,
+  maxWidth: '100%',
+  height: 'auto',
+  alignSelf: 'center',
 });
 
 // ----------------------------------------------------------------------
@@ -42,16 +56,25 @@ NavbarAccount.propTypes = {
 };
 
 export default function NavbarAccount({ isCollapse }) {
-  const { user } = useAuth();
+  const { user, isInitialized } = useAuth();
+  const navLoading = isResortAdminNavLoading({ isInitialized, user });
+  const showCerroBayoLogo = isCerroBayoResortAdmin(user);
 
-  if (!user) return <Link underline="none" color="inherit" component={RouterLink} to={PATH_DASHBOARD.user.account}>
-    <>
-      <LogoStyle
-        src="/logo/snowmatch.png"
-        alt="Snowmatch Logo"
-      />
-    </>
-  </Link>;
+  if (showCerroBayoLogo) {
+    return (
+      <Link underline="none" color="inherit" component={RouterLink} to={PATH_DASHBOARD.user.account}>
+        <CerroBayoLogoStyle src={CERRO_BAYO_LOGO} alt="Cerro Bayo Ski Boutique" />
+      </Link>
+    );
+  }
+
+  if (navLoading) {
+    return (
+      <Link underline="none" color="inherit" component={RouterLink} to={PATH_DASHBOARD.user.account}>
+        <LogoStyle src="/logo/snowmatch.png" alt="Snowmatch Logo" />
+      </Link>
+    );
+  }
 
   return (
     <Link underline="none" color="inherit" component={RouterLink} to={PATH_DASHBOARD.user.account}>

@@ -20,8 +20,10 @@ import navConfig from './NavConfig';
 import navConfigGuest from './NavConfigGuest';
 import NavbarDocs from './NavbarDocs';
 import NavbarAccount from './NavbarAccount';
+import NavbarMenuSkeleton from './NavbarMenuSkeleton';
 import CollapseButton from './CollapseButton';
 import useAuth from 'src/hooks/useAuth';
+import { isCerroBayoResortAdmin, isResortAdminNavLoading } from '../../../utils/resortAdminBranding';
 import { PATH_DASHBOARD } from '../../../routes/paths';
 import SvgIconStyle from '../../../components/SvgIconStyle';
 import SchoolIcon from '@mui/icons-material/School';
@@ -130,8 +132,10 @@ export default function NavbarVertical({ isOpenSidebar, onCloseSidebar, isGuest,
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]);
 
-  const { user: authUser } = useAuth();
+  const { user: authUser, isInitialized } = useAuth();
   const userRole = authUser?.role;
+  const navLoading = isResortAdminNavLoading({ isInitialized, user: authUser });
+  const showCerroBayoNavSkeleton = navLoading && isCerroBayoResortAdmin(authUser);
 
   const config = useMemo(() => {
     const base = isGuest
@@ -147,7 +151,6 @@ export default function NavbarVertical({ isOpenSidebar, onCloseSidebar, isGuest,
 
     if (userRole === 'RESORT_ADMIN') {
       return [{
-        subheader: 'Resort Admin',
         items: RESORT_ADMIN_NAV_ITEMS,
       }];
     }
@@ -163,26 +166,28 @@ export default function NavbarVertical({ isOpenSidebar, onCloseSidebar, isGuest,
       }}
     >
       <Stack
-        spacing={3}
+        direction="row"
+        alignItems="center"
+        justifyContent="space-between"
         sx={{
-          pt: 'env(safe-area-inset-top)',
+          pt: { xs: 'env(safe-area-inset-top)', lg: 2 },
           pb: 2,
           px: 2.5,
           flexShrink: 0,
-          ...(isCollapse && { alignItems: 'center' }),
+          ...(isCollapse && { justifyContent: 'center' }),
         }}
       >
-        <Stack direction="row" alignItems="center" justifyContent="space-between">
-          {/* <Logo /> */}
-          {isDesktop && !isCollapse && (
-            <CollapseButton onToggleCollapse={onToggleCollapse} collapseClick={collapseClick} />
-          )}
-        </Stack>
-
         <NavbarAccount isCollapse={isCollapse} />
+        {isDesktop && !isCollapse && (
+          <CollapseButton onToggleCollapse={onToggleCollapse} collapseClick={collapseClick} />
+        )}
       </Stack>
 
-      <NavSectionVertical navConfig={config} isCollapse={isCollapse} />
+      {showCerroBayoNavSkeleton ? (
+        <NavbarMenuSkeleton count={RESORT_ADMIN_NAV_ITEMS.length} isCollapse={isCollapse} />
+      ) : (
+        <NavSectionVertical navConfig={config} isCollapse={isCollapse} />
+      )}
 
       <Box sx={{ flexGrow: 1 }} />
 

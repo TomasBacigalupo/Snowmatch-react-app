@@ -101,7 +101,7 @@ export default function LanguageHome() {
   const { lng } = useParams();
   const { onChangeLang, translate } = useLocales();
 
-  const lang = (lng || 'en').toLowerCase();
+  const lang = (lng || 'es').toLowerCase();
 
   useEffect(() => {
     if (lng && VALID_LANGS.includes(lng.toLowerCase())) {
@@ -157,7 +157,7 @@ export default function LanguageHome() {
   });
 
   if (lng && !VALID_LANGS.includes(lang)) {
-    return <Navigate to="/en" replace />;
+    return <Navigate to="/es" replace />;
   }
 
   return (

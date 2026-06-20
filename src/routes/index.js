@@ -145,7 +145,7 @@ export default function Router() {
           children: [
             { path: 'legal/privacy', element: <PrivacyPolicy /> },
             { path: 'instructor', element: <InstructorLanding /> },
-            { path: 'enterprise', element: <Navigate to="en/enterprise" replace /> }
+            { path: 'enterprise', element: <Navigate to="es/enterprise" replace /> }
           ]
         },
         {
@@ -587,9 +587,9 @@ export default function Router() {
           path: '/',
           element: <MainLayout />,
           children: [
-            { path: 'language', element: <Navigate to="/index" replace /> },
+            { path: 'language', element: <Navigate to="/es" replace /> },
             {
-              element: isMobile ? <Navigate to="/match/videoCoach/upload" replace /> : <Navigate to="/index" replace />,
+              element: isMobile ? <Navigate to="/match/videoCoach/upload" replace /> : <Navigate to="/es" replace />,
               index: true
             },
             { path: 'all-teachers', element: <AllTeachers /> },

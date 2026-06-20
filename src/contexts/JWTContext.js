@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import axios from '../utils/axios';
 import { isValidToken, setSession } from '../utils/jwt';
 import jwtDecode from 'jwt-decode';
+import { syncResortAdminManagedResortCache } from '../utils/resortAdminBranding';
 
 // ----------------------------------------------------------------------
 
@@ -65,6 +66,7 @@ const initialState = {
 const handlers = {
   INITIALIZE: (state, action) => {
     const { isAuthenticated, user, isAuthorized, emailVerified } = action.payload;
+    syncResortAdminManagedResortCache(user);
     return {
       ...state,
       isAuthenticated,
@@ -81,6 +83,7 @@ const handlers = {
   },
   LOGIN: (state, action) => {
     const { user } = action.payload;
+    syncResortAdminManagedResortCache(user);
     return {
       ...state,
       isAuthenticated: true,
@@ -101,19 +104,23 @@ const handlers = {
       premiumExpiration: "2028-02-20"
     }
   }),
-  LOGOUT: (state) => ({
-    ...state,
-    isAuthenticated: false,
-    user: null,
-    isAuthorized: false,
-    isTeacher: false,
-    isStudent: false,
-    isAdmin: false,
-    isResortAdmin: false,
-  }),
+  LOGOUT: (state) => {
+    syncResortAdminManagedResortCache(null);
+    return {
+      ...state,
+      isAuthenticated: false,
+      user: null,
+      isAuthorized: false,
+      isTeacher: false,
+      isStudent: false,
+      isAdmin: false,
+      isResortAdmin: false,
+    };
+  },
   REGISTER: (state, action) => {
     const { user } = action.payload;
-    
+    syncResortAdminManagedResortCache(user);
+
     const newState = {
       ...state,
       isAuthenticated: true,
@@ -138,6 +145,7 @@ const handlers = {
   },
   VERIFY: (state, action) => {
     const { user } = action.payload;
+    syncResortAdminManagedResortCache(user);
     return {
       ...state,
       isAuthenticated: true,

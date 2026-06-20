@@ -142,7 +142,7 @@ export default function AdminReviewClients() {
   };
 
   const denseHeight = dense ? 52 : 72;
-  const isNotFound = !tableData.length && (!!filterName || !!filterResort);
+  const isNotFound = !tableData.length;
 
   const dispatch = useDispatch();
   const { teachers, isOpenModal, selectedEmail } = useSelector((state) => state.admin);
@@ -288,7 +288,11 @@ export default function AdminReviewClients() {
                       />
                     ))}
                     <TableEmptyRows height={denseHeight} emptyRows={0} />
-                    <TableNoData isNotFound={isNotFound} />
+                    <TableNoData
+                      isNotFound={isNotFound}
+                      title="Acá vas a poder ver la información de los esquiadores que solicitan servicios en el centro de esquí"
+                      hideImage
+                    />
                   </TableBody>
                 </Table>
               </TableContainer>

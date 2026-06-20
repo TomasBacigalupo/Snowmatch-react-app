@@ -16,20 +16,21 @@ const resources = {
   pt: { translations: ptLocales },
 };
 
-// Synchronous default language setting (before async detection)
-const defaultLang = localStorage.getItem('i18nextLng') || 'es';
-
 i18n
+  .use(LanguageDetector)
   .use(initReactI18next)
-  .use(LanguageDetector) // Keep this for web
   .init({
     resources,
-    lng: defaultLang, // Set initial language synchronously
+    lng: localStorage.getItem('i18nextLng') || 'es',
     fallbackLng: 'es',
     debug: false,
     ns: ['translations'],
     defaultNS: 'translations',
     interpolation: { escapeValue: false },
+    detection: {
+      order: ['localStorage'],
+      caches: ['localStorage'],
+    },
   });
 
 export default i18n;

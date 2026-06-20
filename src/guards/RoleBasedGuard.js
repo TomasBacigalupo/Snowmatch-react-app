@@ -22,11 +22,15 @@ const useCurrentRole = () => {
 };
 
 export default function RoleBasedGuard({ accessibleRoles, children }) {
-  const { isAuthenticated, isStudent, isTeacher, isAdmin, isResortAdmin, user } = useAuth()
+  const { isAuthenticated, isStudent, isTeacher, isAdmin, isResortAdmin, user, isInitialized } = useAuth()
   const currentRole = useCurrentRole();
   const dispatch = useDispatch()
   const { requestedRoute } = useSelector (state => state.config)
   const {enqueueSnackbar} = useSnackbar()
+
+  if (!isInitialized) {
+    return <>{children}</>;
+  }
 
   if (isAuthenticated && requestedRoute !== null) {
     const to = requestedRoute

@@ -16,6 +16,7 @@ import { useDispatch } from 'src/redux/store';
 import { setRequestedRoute } from 'src/redux/slices/config';
 import Register from 'src/pages/auth/Register';
 import RegisterStudent from 'src/pages/auth/RegisterStudent';
+import { isValidToken } from '../utils/jwt';
 
 // ----------------------------------------------------------------------
 
@@ -31,6 +32,18 @@ export default function AuthGuard({ children }) {
   const dispatch = useDispatch()
 
   if (!isInitialized) {
+    const accessToken = window.localStorage.getItem('accessToken');
+    const isDashboardRoute = pathname.startsWith('/dashboard');
+
+    if (accessToken && isValidToken(accessToken) && isDashboardRoute) {
+      return (
+        <>
+          {children}
+          <LoadingScreen isDashboard />
+        </>
+      );
+    }
+
     return <LoadingScreen />;
   }
 

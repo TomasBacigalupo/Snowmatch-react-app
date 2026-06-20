@@ -58,6 +58,8 @@ AdminTableToolbar.propTypes = {
   bookings: PropTypes.bool,
   /** When true, hide instructor ID field and quick teacher chips (e.g. gear-only bookings). */
   hideInstructorFilters: PropTypes.bool,
+  /** When true, hide the collapsible "More filters" section (e.g. resort admin bookings). */
+  hideMoreFilters: PropTypes.bool,
   /** When set, resort filter is fixed to this value and the selector is disabled. */
   lockResort: PropTypes.string,
 };
@@ -83,6 +85,7 @@ export default function AdminTableToolbar({
   optionsRole,
   bookings = false,
   hideInstructorFilters = false,
+  hideMoreFilters = false,
   showRole = true,
   showLevel = true,
   showMountain = true,
@@ -356,7 +359,7 @@ export default function AdminTableToolbar({
         />}
       </Stack>
 
-      {bookings && onFilterName && (
+      {bookings && onFilterName && !hideMoreFilters && (
         <>
           <Button
             color="inherit"

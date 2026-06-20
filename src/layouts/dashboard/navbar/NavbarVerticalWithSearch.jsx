@@ -155,7 +155,6 @@ export default function NavbarVerticalWithSearch({ isOpenSidebar, onCloseSidebar
     }
     if (user?.user?.role === 'RESORT_ADMIN') {
         navConfig.push({
-          subheader: 'Resort Admin',
           items: [
             { title: 'review teachers', path: PATH_DASHBOARD.admin.review, icon: ICONS.user },
             { title: 'clients', path: PATH_DASHBOARD.admin.reviewClients, icon: ICONS.user },

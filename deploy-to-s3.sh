@@ -1,5 +1,13 @@
 #!/usr/bin/env bash
-# Backward-compatible entry: build → prerender → S3 (see scripts/build-prerender-deploy.sh).
+# Build (production) and sync ./build to S3.
 set -euo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-exec "$ROOT/scripts/build-prerender-deploy.sh" "$@"
+cd "$ROOT"
+
+require_cmd() {
+  command -v "$1" >/dev/null 2>&1 || { echo "Error: missing command: $1" >&2; exit 1; }
+}
+
+require_cmd npm
+npm run build
+exec "$ROOT/scripts/deploy-s3.sh"

@@ -16,7 +16,7 @@ jobs:
       contents: read
 
     env:
-      S3_BUCKET: snowmatch.pro
+      S3_BUCKET: app.snowmatch.pro
       AWS_REGION: us-east-1
 
     steps:
@@ -26,11 +26,18 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: npm
 
       - name: Install dependencies
         run: npm ci
+
+      - name: Validate AWS secrets
+        run: |
+          if [[ -z "${{ secrets.AWS_ACCESS_KEY_ID }}" || -z "${{ secrets.AWS_SECRET_ACCESS_KEY }}" ]]; then
+            echo "::error::Missing GitHub secrets. Add AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY under Settings → Secrets and variables → Actions."
+            exit 1
+          fi
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
@@ -43,6 +50,4 @@ jobs:
         run: npm run build
 
       - name: Deploy to S3
-        env:
-          CLOUDFRONT_DISTRIBUTION_ID: ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }}
         run: ./scripts/deploy-s3.sh

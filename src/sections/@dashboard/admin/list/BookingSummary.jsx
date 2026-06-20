@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 // @mui
 import { Box, Card, Grid, Typography, Stack, IconButton } from '@mui/material';
 import { alpha, useTheme } from '@mui/material/styles';
@@ -8,12 +9,12 @@ import Iconify from '../../../../components/Iconify';
 
 // ----------------------------------------------------------------------
 
-const GEAR_HIDDEN_TITLES = new Set([
-    'Horas Asignadas',
-    'Horas Requeridas',
-    'Total Horas',
-    'Total Adultos',
-    'Total Niños',
+const GEAR_HIDDEN_KEYS = new Set([
+    'assignedHours',
+    'requiredHours',
+    'totalHours',
+    'totalAdults',
+    'totalChildren',
 ]);
 
 BookingSummary.propTypes = {
@@ -24,6 +25,7 @@ BookingSummary.propTypes = {
 
 export default function BookingSummary({ bookings, isGearBookings = false }) {
     const theme = useTheme();
+    const { t } = useTranslation();
     const [showRevenue, setShowRevenue] = useState(false);
 
     const calculateHours = (events) => {
@@ -134,68 +136,76 @@ export default function BookingSummary({ bookings, isGearBookings = false }) {
         return `${Math.round(hours)}h`;
     };
 
-    const SUMMARY = [
+    const SUMMARY = useMemo(() => [
         {
-            title: 'Total Reservas',
+            key: 'totalBookings',
+            title: t('adminBookings.summary.totalBookings'),
             total: stats.total,
             icon: 'eva:file-text-fill',
             color: theme.palette.primary.main,
         },
         {
-            title: 'Horas Asignadas',
+            key: 'assignedHours',
+            title: t('adminBookings.summary.assignedHours'),
             total: formatHours(stats.assignedHours),
             icon: 'eva:clock-fill',
             color: theme.palette.warning.main,
         },
         {
-            title: 'Horas Requeridas',
+            key: 'requiredHours',
+            title: t('adminBookings.summary.requiredHours'),
             total: formatHours(stats.requiredHours),
             icon: 'eva:calendar-fill',
             color: theme.palette.success.main,
         },
         {
-            title: 'Total Horas',
+            key: 'totalHours',
+            title: t('adminBookings.summary.totalHours'),
             total: formatHours(stats.totalHours),
             icon: 'eva:time-fill',
             color: theme.palette.info.main,
         },
         {
-            title: 'Ingresos Totales',
+            key: 'totalRevenue',
+            title: t('adminBookings.summary.totalRevenue'),
             total: formatPrice(stats.totalRevenue),
             icon: 'eva:trending-up-fill',
             color: theme.palette.info.main,
             isRevenue: true,
         },
         {
-            title: 'Pagos Totales',
+            key: 'totalPayments',
+            title: t('adminBookings.summary.totalPayments'),
             total: formatPrice(stats.totalTeacherPayments),
             icon: 'eva:credit-card-fill',
             color: theme.palette.error.main,
             isRevenue: true,
         },
         {
-            title: 'Total Adultos',
+            key: 'totalAdults',
+            title: t('adminBookings.summary.totalAdults'),
             total: stats.totalAdults,
             icon: 'eva:people-fill',
             color: theme.palette.success.dark,
         },
         {
-            title: 'Total Niños',
+            key: 'totalChildren',
+            title: t('adminBookings.summary.totalChildren'),
             total: stats.totalChildren,
             icon: 'eva:person-fill',
             color: theme.palette.warning.dark,
         },
-    ];
+    ], [t, theme, stats]);
 
     const summaryItems = isGearBookings
-        ? SUMMARY.filter((item) => !GEAR_HIDDEN_TITLES.has(item.title))
+        ? SUMMARY.filter((item) => !GEAR_HIDDEN_KEYS.has(item.key))
         : SUMMARY;
 
     return (
         <Card sx={{ p: 3, mb: 3 }}>
             <Grid container spacing={3}>
                 {summaryItems.map((item) => (
-                    <Grid item xs={12} sm={6} md={3} key={item.title}>
+                    <Grid item xs={12} sm={6} md={3} key={item.key}>
                         <Stack
                             direction="row"
                             alignItems="center"

@@ -3,6 +3,7 @@ import * as Yup from 'yup';
 import merge from 'lodash/merge';
 import { isBefore } from 'date-fns';
 import { useSnackbar } from 'notistack';
+import { useTranslation } from 'react-i18next';
 // form
 import { useForm, Controller } from 'react-hook-form';
 import { useMemo } from 'react';
@@ -33,6 +34,7 @@ DeclineTeacherForm.propTypes = {
 export default function DeclineTeacherForm({ email, onCancel }) {
 
   const dispatch = useDispatch();
+  const { t } = useTranslation();
 
 
   const DeclineSchema = Yup.object().shape({
@@ -80,7 +82,7 @@ export default function DeclineTeacherForm({ email, onCancel }) {
       reset();
       console.log(response)
       console.log("SENT")
-      enqueueSnackbar('Decline success!');
+      enqueueSnackbar(t('adminReview.declineDialog.success'));
       onCancel();
     } catch (error) {
       console.error(error);
@@ -94,11 +96,11 @@ export default function DeclineTeacherForm({ email, onCancel }) {
         <DialogActions>
 
             <Button variant="outlined" color="inherit" onClick={onCancel}>
-            No
+            {t('adminReview.declineDialog.no')}
             </Button>
 
             <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-            Si
+            {t('adminReview.declineDialog.yes')}
             </LoadingButton>
         </DialogActions>
     </FormProvider>

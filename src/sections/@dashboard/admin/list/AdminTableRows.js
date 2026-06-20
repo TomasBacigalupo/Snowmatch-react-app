@@ -1,8 +1,9 @@
 import PropTypes from 'prop-types';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 // @mui
 import { useTheme } from '@mui/material/styles';
-import { Avatar, Checkbox, TableRow, TableCell, Typography, MenuItem } from '@mui/material';
+import { Avatar, TableRow, TableCell, Typography, MenuItem } from '@mui/material';
 // components
 import Label from '../../../../components/Label';
 import Iconify from '../../../../components/Iconify';
@@ -12,19 +13,18 @@ import { TableMoreMenu } from '../../../../components/table';
 
 AdminTableRow.propTypes = {
   row: PropTypes.object,
-  selected: PropTypes.bool,
   onEditRow: PropTypes.func,
-  onSelectRow: PropTypes.func,
   onDeleteRow: PropTypes.func,
   onWapp: PropTypes.func,
   onEvents: PropTypes.func,
   onClick: PropTypes.func,
 };
 
-export default function AdminTableRow({ row, selected, onEditRow, onSelectRow, onConfirmRow, onDeclineRow, onWapp, onEvents, onClick }) {
+export default function AdminTableRow({ row, onEditRow, onConfirmRow, onDeclineRow, onWapp, onEvents, onClick }) {
+  const { t } = useTranslation();
   const theme = useTheme();
 
-  const { name, lastname, imageLink, role, level, authorized, isAuthorized, state, id } = row;
+  const { name, lastname, imageLink, level, authorized, isAuthorized, state, id } = row;
   const isAuth = authorized || isAuthorized || row.isauthorized;
 
   const [openMenu, setOpenMenuActions] = useState(null);
@@ -39,25 +39,15 @@ export default function AdminTableRow({ row, selected, onEditRow, onSelectRow, o
   };
 
   return (
-    <TableRow hover selected={selected} onClick={onClick} sx={{ cursor: 'pointer' }}>
-      <TableCell padding="checkbox">
-        <Checkbox
-          checked={selected}
-          onClick={(e) => { e.stopPropagation(); onSelectRow(); }}
-        />
-      </TableCell>
+    <TableRow hover onClick={onClick} sx={{ cursor: 'pointer' }}>
       <TableCell align="left">
         {id}
       </TableCell>
       <TableCell sx={{ display: 'flex', alignItems: 'center' }}>
-        <Avatar alt={name} src={"imageLink"} sx={{ mr: 2 }} />
+        <Avatar alt={`${name} ${lastname}`.trim()} src={imageLink} sx={{ mr: 2 }} />
         <Typography variant="subtitle2" noWrap>
           {name + " " + lastname}
         </Typography>
-      </TableCell>
-
-      <TableCell align="left">
-        {role}
       </TableCell>
 
       <TableCell align="left" sx={{ textTransform: 'capitalize' }}>
@@ -118,7 +108,7 @@ export default function AdminTableRow({ row, selected, onEditRow, onSelectRow, o
                 }}
               >
                 <Iconify icon={'eva:eye-fill'} />
-                View Details
+                {t('adminReview.menu.viewDetails')}
               </MenuItem>
               <MenuItem
                 onClick={() => {
@@ -127,7 +117,7 @@ export default function AdminTableRow({ row, selected, onEditRow, onSelectRow, o
                 }}
               >
                 <Iconify icon={'eva:calendar-fill'} />
-                Events
+                {t('adminReview.menu.events')}
               </MenuItem>
               <MenuItem
                 onClick={() => {
@@ -136,7 +126,7 @@ export default function AdminTableRow({ row, selected, onEditRow, onSelectRow, o
                 }}
               >
                 <Iconify icon={'mdi:whatsapp'} />
-                Wapp
+                {t('adminReview.menu.wapp')}
               </MenuItem>
               <MenuItem
                 onClick={() => {
@@ -145,7 +135,7 @@ export default function AdminTableRow({ row, selected, onEditRow, onSelectRow, o
                 }}
               >
                 <Iconify icon={'eva:edit-fill'} />
-                Edit
+                {t('adminReview.menu.edit')}
               </MenuItem>
               <MenuItem
                 onClick={() => {
@@ -155,7 +145,7 @@ export default function AdminTableRow({ row, selected, onEditRow, onSelectRow, o
                 sx={{ color: 'error.main' }}
               >
                 <Iconify icon={'eva:trash-2-outline'} />
-                Decline
+                {t('adminReview.menu.decline')}
               </MenuItem>
             </>
           }

@@ -714,6 +714,233 @@
     "contactSupport247": "Contact support 24/7",
     "help": "Help"
   },
+  "adminReview": {
+    "pageTitle": "Admin Review: List",
+    "heading": "Teacher Review List",
+    "breadcrumb": {
+      "review": "Review"
+    },
+    "dense": "Dense",
+    "searchByNamePlaceholder": "Search by name",
+    "filters": {
+      "resort": "Resort",
+      "allResorts": "All resorts"
+    },
+    "table": {
+      "id": "Id",
+      "name": "Name",
+      "level": "Level",
+      "authorized": "Authorized",
+      "state": "State"
+    },
+    "menu": {
+      "viewDetails": "View Details",
+      "events": "Events",
+      "wapp": "Wapp",
+      "edit": "Edit",
+      "decline": "Decline"
+    },
+    "card": {
+      "id": "Id: {{id}}",
+      "level": "Level: {{level}}",
+      "role": "Role: {{role}}"
+    },
+    "declineDialog": {
+      "title": "Are you sure you want to decline this teacher?",
+      "success": "Decline success!",
+      "yes": "Yes",
+      "no": "No"
+    },
+    "drawer": {
+      "state": "State",
+      "roleAndLevel": "Role and Level",
+      "role": "Role: {{role}}",
+      "level": "Level: {{level}}",
+      "resorts": "Resorts",
+      "sports": "Sports",
+      "languages": "Languages",
+      "contact": "Contact",
+      "email": "Email: {{email}}",
+      "phone": "Tel: {{phone}}",
+      "countryCode": "Country Code: {{code}}",
+      "seeMore": "See more",
+      "editTeacherData": "Edit teacher data",
+      "profilePhoto": "Profile photo",
+      "changeImage": "Change image",
+      "removeImage": "Remove image",
+      "firstName": "First name",
+      "lastName": "Last name",
+      "emailField": "Email",
+      "phoneField": "Phone",
+      "countryCodeField": "Country Code",
+      "roleField": "Role",
+      "levelField": "Level",
+      "sportsPlaceholder": "Select sports",
+      "languagesPlaceholder": "Select languages",
+      "resortsPlaceholder": "Select resorts",
+      "resortsEnum": "Resorts Enum",
+      "resortsEnumPlaceholder": "Select resorts enum",
+      "cancel": "Cancel",
+      "save": "Save",
+      "uploadImageError": "Could not upload image: {{message}}",
+      "saveError": "Could not save changes"
+    }
+  },
+  "adminUserChats": {
+    "backToList": "Back to list",
+    "descriptionAll": "All user chat threads, newest first (read-only).",
+    "descriptionResort": "User chat threads at {{resort}}, newest first (read-only).",
+    "empty": "No conversations found.",
+    "loadMore": "Load more",
+    "loading": "Loading…",
+    "photoPreview": "Photo",
+    "table": {
+      "activity": "Activity",
+      "id": "ID",
+      "lastMessage": "Last message",
+      "participants": "Participants"
+    }
+  },
+  "adminUserCalendars": {
+    "searchTeacherLabel": "Search teacher by name",
+    "searchTeacherPlaceholder": "Type name or lastname",
+    "selectTeacherHint": "Select a teacher to view their calendar settings.",
+    "noTeachersFound": "No teachers found",
+    "typeToSearchTeachers": "Type to search teachers"
+  },
+  "adminBookings": {
+    "pageTitle": "Admin Review: List",
+    "heading": "Bookings Review List",
+    "gearPageTitle": "Admin: Equipment Bookings",
+    "gearHeading": "Equipment Bookings",
+    "dense": "Dense",
+    "newBooking": "New Booking",
+    "showStats": "Show stats",
+    "tabs": {
+      "bookings": "Bookings",
+      "pendingNoInstructor": "Pending (no instructor)"
+    },
+    "filters": {
+      "date": "Date",
+      "year": "Year",
+      "month": "Month",
+      "allMonths": "All months",
+      "teacherId": "Teacher ID",
+      "studentId": "Student ID",
+      "moreFilters": "More filters",
+      "searchBookingPlaceholder": "Search by customer or booking ID…",
+      "months": {
+        "06": "June",
+        "07": "July",
+        "08": "August",
+        "09": "September",
+        "10": "October"
+      }
+    },
+    "table": {
+      "id": "ID",
+      "student": "Customer",
+      "teacher": "Instructor",
+      "classes": "Classes",
+      "hours": "Hours",
+      "dates": "Dates",
+      "resort": "Resort",
+      "capacity": "Capacity",
+      "price": "Price",
+      "internalComment": "Internal Comment",
+      "includes": "Includes",
+      "paymentStatus": "Payment Status",
+      "state": "Status",
+      "center": "Center",
+      "notes": "Notes",
+      "actions": "Actions"
+    },
+    "menu": {
+      "viewCalendar": "View classes on calendar",
+      "whatsapp": "Contact via WhatsApp",
+      "edit": "Edit",
+      "delete": "Delete"
+    },
+    "row": {
+      "gearOnly": "— (gear only)",
+      "rental": "Rental",
+      "equipment": "Equipment",
+      "classesCount": "{{count}} classes",
+      "hoursCount": "{{count}} hrs",
+      "adultsCount": "{{count}} adults",
+      "childrenCount": "{{count}} children",
+      "withLunch": "✓ Lunch",
+      "withoutLunch": "✗ No lunch",
+      "withEquipment": "✓ Equipment",
+      "withoutEquipment": "✗ No equipment",
+      "lunch": "Lunch",
+      "equipmentShort": "Equipment"
+    },
+    "card": {
+      "bookingTitle": "Booking #{{id}}",
+      "client": "Customer",
+      "instructor": "Instructor",
+      "gearDetails": "Equipment booking",
+      "bookingDetails": "Booking details",
+      "gearOnlyNote": "No classes — equipment rental only",
+      "adultsChildren": "{{adults}} adults, {{children}} children"
+    },
+    "intent": {
+      "unassigned": "Unassigned",
+      "assignInstructor": "Assign instructor",
+      "cancel": "Cancel",
+      "cancelConfirm": "Cancel this pending booking?",
+      "assignDialogTitle": "Assign instructor",
+      "instructor": "Instructor",
+      "instructorPlaceholder": "Search by first or last name",
+      "instructorHelper": "Type to filter instructors by name.",
+      "studentRequired": "Student (required)",
+      "studentPlaceholder": "Search student",
+      "studentHelper": "This pending booking has no student: choose one to confirm the booking.",
+      "close": "Close",
+      "confirm": "Confirm"
+    },
+    "summary": {
+      "totalBookings": "Total Bookings",
+      "assignedHours": "Assigned Hours",
+      "requiredHours": "Required Hours",
+      "totalHours": "Total Hours",
+      "totalRevenue": "Total Revenue",
+      "totalPayments": "Total Payments",
+      "totalAdults": "Total Adults",
+      "totalChildren": "Total Children"
+    },
+    "empty": {
+      "title": "Here you can view and manage booking requests that occur at your ski resort"
+    },
+    "mobilePendingHint": "Pending without instructor: open this page on desktop to assign or cancel.",
+    "declineDialog": {
+      "title": "Are you sure you want to decline?"
+    },
+    "editDialog": {
+      "title": "Are you sure you want to edit this booking?"
+    },
+    "deleteDialog": {
+      "title": "Are you sure you want to delete the booking?",
+      "body": "This booking and its information will no longer be visible.",
+      "cancel": "Cancel",
+      "confirm": "Delete"
+    },
+    "deleteTooltip": "Delete",
+    "whatsappGreeting": "Hello {{name}}, "
+  },
+  "adminBookingResorts": {
+    "CERRO_CATEDRAL": "Cerro Catedral",
+    "CHAPELCO": "Chapelco",
+    "CERRO_BAYO": "Cerro Bayo",
+    "CERRO_CASTOR": "Cerro Castor",
+    "PENITENTES": "Las Pendientes",
+    "LAGO_HERMOSO": "Lago Hermoso",
+    "LAS_LEÑAS": "Las Leñas",
+    "CERRO_PERITO_MORENO": "Cerro Perito Moreno",
+    "PORTILLO": "Portillo",
+    "LA_PARVA": "La Parva"
+  },
   "calendar": {
     "name": "Calendar",
     "openLessonDetails": "Open full lesson details",

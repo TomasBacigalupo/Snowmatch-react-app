@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Stack, InputAdornment, TextField, MenuItem, Chip, Collapse, Button } from '@mui/material';
 import { ADMIN_BOOKING_RESORT_FILTER_OPTIONS } from 'src/utils/adminBookingResortOptions';
 // components
@@ -25,13 +26,7 @@ const TEACHER_CHIPS = [
   { name: 'Marta', value: 902 },
 ];
 
-const MONTH_OPTIONS_JUNE_OCT = [
-  { value: '06', label: 'June' },
-  { value: '07', label: 'July' },
-  { value: '08', label: 'August' },
-  { value: '09', label: 'September' },
-  { value: '10', label: 'October' },
-];
+const MONTH_OPTION_VALUES = ['06', '07', '08', '09', '10'];
 
 const BOOKING_FILTER_YEAR_RANGE = 8;
 
@@ -99,6 +94,7 @@ export default function AdminTableToolbar({
   lockResort = null,
   onFilterDate = null
 }) {
+  const { t } = useTranslation();
   const [moreFiltersOpen, setMoreFiltersOpen] = useState(false);
   const bookingYearOptions = Array.from({ length: BOOKING_FILTER_YEAR_RANGE }, (_, i) => new Date().getFullYear() - i);
 
@@ -122,7 +118,7 @@ export default function AdminTableToolbar({
         {onFilterDate && (
           <LocalizationProvider dateAdapter={AdapterDateFns}>
             <DatePicker
-              label="Date"
+              label={bookings ? t('adminBookings.filters.date') : 'Date'}
               value={filterDate ?? null}
               onChange={onFilterDate}
               slotProps={{
@@ -207,7 +203,7 @@ export default function AdminTableToolbar({
           <TextField
             fullWidth
             select
-            label="Resort"
+            label={t('adminReview.filters.resort')}
             value={lockResort || filterResort || ''}
             onChange={onFilterResort}
             disabled={Boolean(lockResort)}
@@ -223,7 +219,7 @@ export default function AdminTableToolbar({
           >
             {!lockResort && (
               <MenuItem value="" sx={{ mx: 1, my: 0.5, borderRadius: 0.75, typography: 'body2', color: 'text.secondary' }}>
-                All resorts
+                {t('adminReview.filters.allResorts')}
               </MenuItem>
             )}
             {(lockResort
@@ -252,7 +248,7 @@ export default function AdminTableToolbar({
             fullWidth
             value={filterName}
             onChange={(event) => onFilterName(event.target.value)}
-            placeholder="Search Admin..."
+            placeholder={t('adminReview.searchByNamePlaceholder')}
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
@@ -268,7 +264,7 @@ export default function AdminTableToolbar({
             fullWidth
             value={filterName}
             onChange={(event) => onFilterName(event.target.value)}
-            placeholder="Search Admin..."
+            placeholder={t('adminReview.searchByNamePlaceholder')}
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
@@ -283,7 +279,7 @@ export default function AdminTableToolbar({
           <TextField
             fullWidth
             select
-            label="Year"
+            label={bookings ? t('adminBookings.filters.year') : 'Year'}
             value={filterYear}
             onChange={onFilterYear}
             SelectProps={{
@@ -306,7 +302,7 @@ export default function AdminTableToolbar({
           <TextField
             fullWidth
             select
-            label="Month"
+            label={bookings ? t('adminBookings.filters.month') : 'Month'}
             value={filterMonth ?? ''}
             onChange={onFilterMonth}
             SelectProps={{
@@ -320,12 +316,12 @@ export default function AdminTableToolbar({
             }}
           >
             <MenuItem value="" sx={{ mx: 1, my: 0.5, borderRadius: 0.75, typography: 'body2', color: 'text.secondary' }}>
-              All months
+              {bookings ? t('adminBookings.filters.allMonths') : 'All months'}
             </MenuItem>
-            {MONTH_OPTIONS_JUNE_OCT.map((option) => (
+            {MONTH_OPTION_VALUES.map((value) => (
               <MenuItem
-                key={option.value}
-                value={option.value}
+                key={value}
+                value={value}
                 sx={{
                   mx: 1,
                   my: 0.5,
@@ -334,7 +330,7 @@ export default function AdminTableToolbar({
                   textTransform: 'capitalize',
                 }}
               >
-                {option.label}
+                {bookings ? t(`adminBookings.filters.months.${value}`) : value}
               </MenuItem>
             ))}
           </TextField>
@@ -342,7 +338,7 @@ export default function AdminTableToolbar({
 
         {showTeacherId && !hideInstructorFilters && <TextField
           fullWidth
-          label="Teacher ID"
+          label={bookings ? t('adminBookings.filters.teacherId') : 'Teacher ID'}
           value={filterTeacherId}
           onChange={onFilterTeacherId}
           type="text"
@@ -351,7 +347,7 @@ export default function AdminTableToolbar({
 
         {showStudentId && <TextField
           fullWidth
-          label="Student ID"
+          label={bookings ? t('adminBookings.filters.studentId') : 'Student ID'}
           value={filterStudentId}
           onChange={onFilterStudentId}
           type="text"
@@ -373,7 +369,7 @@ export default function AdminTableToolbar({
             }
             sx={{ alignSelf: 'flex-start', px: 0, typography: 'body2' }}
           >
-            More filters
+            {t('adminBookings.filters.moreFilters')}
           </Button>
           <Collapse in={moreFiltersOpen}>
             <Stack spacing={2} sx={{ pt: 0.5 }}>
@@ -381,7 +377,7 @@ export default function AdminTableToolbar({
                 fullWidth
                 value={filterName}
                 onChange={(event) => onFilterName(event.target.value)}
-                placeholder="Buscar por cliente o ID de reserva…"
+                placeholder={t('adminBookings.filters.searchBookingPlaceholder')}
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">

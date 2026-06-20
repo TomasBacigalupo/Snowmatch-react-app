@@ -1149,6 +1149,233 @@
         "lesson bookings": "Reservas de aulas",
         "contactSupport247": "Contactar suporte 24/7"
     },
+    "adminReview": {
+        "pageTitle": "Admin Revisão: Lista",
+        "heading": "Lista de revisão de instrutores",
+        "breadcrumb": {
+            "review": "Revisão"
+        },
+        "dense": "Compacto",
+        "searchByNamePlaceholder": "Buscar por nome",
+        "filters": {
+            "resort": "Resort",
+            "allResorts": "Todos os resorts"
+        },
+        "table": {
+            "id": "Id",
+            "name": "Nome",
+            "level": "Nível",
+            "authorized": "Autorizado",
+            "state": "Estado"
+        },
+        "menu": {
+            "viewDetails": "Ver detalhes",
+            "events": "Eventos",
+            "wapp": "Wapp",
+            "edit": "Editar",
+            "decline": "Recusar"
+        },
+        "card": {
+            "id": "Id: {{id}}",
+            "level": "Nível: {{level}}",
+            "role": "Função: {{role}}"
+        },
+        "declineDialog": {
+            "title": "Tem certeza de que deseja recusar este instrutor?",
+            "success": "Recusa realizada com sucesso!",
+            "yes": "Sim",
+            "no": "Não"
+        },
+        "drawer": {
+            "state": "Estado",
+            "roleAndLevel": "Função e Nível",
+            "role": "Função: {{role}}",
+            "level": "Nível: {{level}}",
+            "resorts": "Resorts",
+            "sports": "Esportes",
+            "languages": "Idiomas",
+            "contact": "Contato",
+            "email": "Email: {{email}}",
+            "phone": "Tel: {{phone}}",
+            "countryCode": "Código do País: {{code}}",
+            "seeMore": "Ver mais",
+            "editTeacherData": "Editar dados do instrutor",
+            "profilePhoto": "Foto de perfil",
+            "changeImage": "Alterar imagem",
+            "removeImage": "Remover imagem",
+            "firstName": "Nome",
+            "lastName": "Sobrenome",
+            "emailField": "Email",
+            "phoneField": "Telefone",
+            "countryCodeField": "Código do País",
+            "roleField": "Função",
+            "levelField": "Nível",
+            "sportsPlaceholder": "Selecione esportes",
+            "languagesPlaceholder": "Selecione idiomas",
+            "resortsPlaceholder": "Selecione resorts",
+            "resortsEnum": "Resorts Enum",
+            "resortsEnumPlaceholder": "Selecione resorts enum",
+            "cancel": "Cancelar",
+            "save": "Salvar",
+            "uploadImageError": "Não foi possível enviar a imagem: {{message}}",
+            "saveError": "Não foi possível salvar as alterações"
+        }
+    },
+    "adminUserChats": {
+        "backToList": "Voltar à lista",
+        "descriptionAll": "Todos os threads de chat entre usuários, do mais recente ao mais antigo (somente leitura).",
+        "descriptionResort": "Threads de chat entre usuários em {{resort}}, do mais recente ao mais antigo (somente leitura).",
+        "empty": "Nenhuma conversa encontrada.",
+        "loadMore": "Carregar mais",
+        "loading": "Carregando…",
+        "photoPreview": "Foto",
+        "table": {
+            "activity": "Atividade",
+            "id": "ID",
+            "lastMessage": "Última mensagem",
+            "participants": "Participantes"
+        }
+    },
+    "adminUserCalendars": {
+        "searchTeacherLabel": "Buscar instrutor por nome",
+        "searchTeacherPlaceholder": "Digite nome ou sobrenome",
+        "selectTeacherHint": "Selecione um instrutor para ver as configurações do calendário.",
+        "noTeachersFound": "Nenhum instrutor encontrado",
+        "typeToSearchTeachers": "Digite para buscar instrutores"
+    },
+    "adminBookings": {
+        "pageTitle": "Admin Revisão: Lista",
+        "heading": "Lista de revisão de reservas",
+        "gearPageTitle": "Admin: Reservas de equipamentos",
+        "gearHeading": "Reservas de equipamentos",
+        "dense": "Compacto",
+        "newBooking": "Nova Reserva",
+        "showStats": "Mostrar estatísticas",
+        "tabs": {
+            "bookings": "Reservas",
+            "pendingNoInstructor": "Pendentes (sem instrutor)"
+        },
+        "filters": {
+            "date": "Data",
+            "year": "Ano",
+            "month": "Mês",
+            "allMonths": "Todos os meses",
+            "teacherId": "ID Instrutor",
+            "studentId": "ID Estudante",
+            "moreFilters": "Mais filtros",
+            "searchBookingPlaceholder": "Buscar por cliente ou ID da reserva…",
+            "months": {
+                "06": "Junho",
+                "07": "Julho",
+                "08": "Agosto",
+                "09": "Setembro",
+                "10": "Outubro"
+            }
+        },
+        "table": {
+            "id": "ID",
+            "student": "Cliente",
+            "teacher": "Instrutor",
+            "classes": "Aulas",
+            "hours": "Horas",
+            "dates": "Datas",
+            "resort": "Montanha",
+            "capacity": "Capacidade",
+            "price": "Preço",
+            "internalComment": "Comentário Interno",
+            "includes": "Inclui",
+            "paymentStatus": "Status do Pagamento",
+            "state": "Status",
+            "center": "Centro",
+            "notes": "Notas",
+            "actions": "Ações"
+        },
+        "menu": {
+            "viewCalendar": "Ver aulas no calendário",
+            "whatsapp": "Contatar via WhatsApp",
+            "edit": "Editar",
+            "delete": "Excluir"
+        },
+        "row": {
+            "gearOnly": "— (somente equipamento)",
+            "rental": "Aluguel",
+            "equipment": "Equipamento",
+            "classesCount": "{{count}} aulas",
+            "hoursCount": "{{count}} h",
+            "adultsCount": "{{count}} adultos",
+            "childrenCount": "{{count}} crianças",
+            "withLunch": "✓ Almoço",
+            "withoutLunch": "✗ Sem almoço",
+            "withEquipment": "✓ Equipamento",
+            "withoutEquipment": "✗ Sem equipamento",
+            "lunch": "Almoço",
+            "equipmentShort": "Equipamento"
+        },
+        "card": {
+            "bookingTitle": "Reserva #{{id}}",
+            "client": "Cliente",
+            "instructor": "Instrutor",
+            "gearDetails": "Reserva de equipamento",
+            "bookingDetails": "Detalhes da reserva",
+            "gearOnlyNote": "Sem aulas — apenas aluguel de equipamento",
+            "adultsChildren": "{{adults}} adultos, {{children}} crianças"
+        },
+        "intent": {
+            "unassigned": "Não atribuído",
+            "assignInstructor": "Atribuir instrutor",
+            "cancel": "Cancelar",
+            "cancelConfirm": "Cancelar esta reserva pendente?",
+            "assignDialogTitle": "Atribuir instrutor",
+            "instructor": "Instrutor",
+            "instructorPlaceholder": "Buscar por nome ou sobrenome",
+            "instructorHelper": "Digite para filtrar instrutores por nome.",
+            "studentRequired": "Estudante (obrigatório)",
+            "studentPlaceholder": "Buscar estudante",
+            "studentHelper": "Esta pendência não tem estudante: escolha um para confirmar a reserva.",
+            "close": "Fechar",
+            "confirm": "Confirmar"
+        },
+        "summary": {
+            "totalBookings": "Total de Reservas",
+            "assignedHours": "Horas Atribuídas",
+            "requiredHours": "Horas Requeridas",
+            "totalHours": "Total de Horas",
+            "totalRevenue": "Receita Total",
+            "totalPayments": "Pagamentos Totais",
+            "totalAdults": "Total de Adultos",
+            "totalChildren": "Total de Crianças"
+        },
+        "empty": {
+            "title": "Aqui você pode ver e gerenciar solicitações de reserva que ocorrem no seu centro de esqui"
+        },
+        "mobilePendingHint": "Pendentes sem instrutor: abra esta página no desktop para atribuir ou cancelar.",
+        "declineDialog": {
+            "title": "Tem certeza de que deseja recusar?"
+        },
+        "editDialog": {
+            "title": "Tem certeza de que deseja editar esta reserva?"
+        },
+        "deleteDialog": {
+            "title": "Tem certeza de que deseja excluir a reserva?",
+            "body": "Esta reserva e suas informações não poderão mais ser visualizadas",
+            "cancel": "Cancelar",
+            "confirm": "Excluir"
+        },
+        "deleteTooltip": "Excluir",
+        "whatsappGreeting": "Olá {{name}}, "
+    },
+    "adminBookingResorts": {
+        "CERRO_CATEDRAL": "Cerro Catedral",
+        "CHAPELCO": "Chapelco",
+        "CERRO_BAYO": "Cerro Bayo",
+        "CERRO_CASTOR": "Cerro Castor",
+        "PENITENTES": "Las Pendientes",
+        "LAGO_HERMOSO": "Lago Hermoso",
+        "LAS_LEÑAS": "Las Leñas",
+        "CERRO_PERITO_MORENO": "Cerro Perito Moreno",
+        "PORTILLO": "Portillo",
+        "LA_PARVA": "La Parva"
+    },
     "calendar": {
         "openLessonDetails": "Ver detalhes completos da aula",
         "newEvent": "Criar evento",

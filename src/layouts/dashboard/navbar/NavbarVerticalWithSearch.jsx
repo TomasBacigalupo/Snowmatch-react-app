@@ -26,6 +26,8 @@ import useAuth from 'src/hooks/useAuth';
 import { PATH_DASHBOARD } from '../../../routes/paths';
 import SvgIconStyle from '../../../components/SvgIconStyle';
 import SchoolIcon from '@mui/icons-material/School';
+import CastForEducationIcon from '@mui/icons-material/CastForEducation';
+import PeopleIcon from '@mui/icons-material/People';
 import { useSelector } from 'react-redux';
 import navConfigGuestCatedral from './NavConfigCatedral';
 
@@ -156,8 +158,9 @@ export default function NavbarVerticalWithSearch({ isOpenSidebar, onCloseSidebar
     if (user?.user?.role === 'RESORT_ADMIN') {
         navConfig.push({
           items: [
-            { title: 'review teachers', path: PATH_DASHBOARD.admin.review, icon: ICONS.user },
-            { title: 'clients', path: PATH_DASHBOARD.admin.reviewClients, icon: ICONS.user },
+            { title: 'review teachers', path: PATH_DASHBOARD.admin.review, icon: <CastForEducationIcon /> },
+            { title: 'user calendars', path: PATH_DASHBOARD.admin.userCalendars, icon: ICONS.calendar },
+            { title: 'clients', path: PATH_DASHBOARD.admin.reviewClients, icon: <PeopleIcon /> },
             { title: 'lesson bookings', path: PATH_DASHBOARD.admin.bookings, icon: ICONS.booking },
             { title: 'user chats', path: PATH_DASHBOARD.admin.userChats, icon: ICONS.chat },
             { title: 'rental products', path: PATH_DASHBOARD.admin.rental, icon: ICONS.ecommerce },

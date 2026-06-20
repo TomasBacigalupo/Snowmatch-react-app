@@ -5,6 +5,7 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import dayjs from 'dayjs';
 // @mui
 import {
@@ -52,7 +53,9 @@ const formatEventDate = (date) => {
 };
 
 export default function AdminUserCalendars() {
+  const { t } = useTranslation();
   const { themeStretch } = useSettings();
+  const pageTitle = t('menu.user calendars');
   const { isResortAdmin } = useAuth();
   const dispatch = useDispatch();
   const isDesktop = useResponsive('up', 'sm');
@@ -229,14 +232,14 @@ export default function AdminUserCalendars() {
   );
 
   return (
-    <Page title="User Calendars">
+    <Page title={pageTitle}>
       <Container maxWidth={themeStretch ? false : 'xl'}>
         <HeaderBreadcrumbs
-          heading="User Calendars"
+          heading={pageTitle}
           links={[
-            { name: 'Dashboard', href: PATH_DASHBOARD.root },
-            { name: 'Admin', href: PATH_DASHBOARD.admin.root },
-            { name: 'User Calendars' },
+            { name: t('menu.dashboard'), href: PATH_DASHBOARD.root },
+            { name: t('menu.admin'), href: PATH_DASHBOARD.admin.root },
+            { name: pageTitle },
           ]}
         />
 
@@ -251,16 +254,20 @@ export default function AdminUserCalendars() {
             renderInput={(params) => (
               <TextField
                 {...params}
-                label="Search teacher by name"
-                placeholder="Type name or lastname"
+                label={t('adminUserCalendars.searchTeacherLabel')}
+                placeholder={t('adminUserCalendars.searchTeacherPlaceholder')}
                 autoFocus={!userId}
               />
             )}
-            noOptionsText={teacherSearch ? 'No teachers found' : 'Type to search teachers'}
+            noOptionsText={
+              teacherSearch
+                ? t('adminUserCalendars.noTeachersFound')
+                : t('adminUserCalendars.typeToSearchTeachers')
+            }
           />
           {!userId && (
             <Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}>
-              Select a teacher to view their calendar settings.
+              {t('adminUserCalendars.selectTeacherHint')}
             </Typography>
           )}
         </Card>

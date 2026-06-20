@@ -1,18 +1,17 @@
 import { paramCase } from 'change-case';
-import { useState, useEffect, useRef } from 'react';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { useState, useEffect, useRef, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 // @mui
 import {
   Box,
   Card,
   Table,
   Switch,
-  Tooltip,
   TableBody,
   TableCell,
   TableRow,
   Container,
-  IconButton,
   TableContainer,
   TablePagination,
   FormControlLabel,
@@ -23,22 +22,18 @@ import Hidden from 'src/components/LegacyHidden';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // hooks
-import useTabs from '../../hooks/useTabs';
 import useSettings from '../../hooks/useSettings';
-import useTable, { getComparator, emptyRows } from '../../hooks/useTable';
-// _mock_
-import { _userList } from '../../_mock';
+import useTable from '../../hooks/useTable';
 // components
 import Page from '../../components/Page';
-import Iconify from '../../components/Iconify';
 import Scrollbar from '../../components/Scrollbar';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
-import { TableEmptyRows, TableHeadCustom, TableNoData, TableSelectedActions } from '../../components/table';
+import { TableEmptyRows, TableHeadCustom, TableNoData } from '../../components/table';
 // sections
 import { AdminTableToolbar, AdminTableRow } from '../../sections/@dashboard/admin/list';
 import TeacherDetailsDrawer from 'src/sections/@dashboard/admin/list/TeacherDetailsDrawer';
 import { useDispatch, useSelector } from '../../redux/store';
-import { getTeachers, getResortAdminTeachers, openModal, closeModal } from '../../redux/slices/admin'
+import { getTeachers, getResortAdminTeachers, openModal, closeModal } from '../../redux/slices/admin';
 import useAuth from '../../hooks/useAuth';
 import { DialogAnimate } from '../../components/animate';
 import DeclineForm from '../../sections/@dashboard/admin/DeclineForm';
@@ -48,19 +43,21 @@ import AdminTableCard from 'src/sections/@dashboard/admin/list/AdminTableCard';
 
 const ROLE_OPTIONS = ['TEACHER', 'STUDENT'];
 
-const TABLE_HEAD = [
-  { id: 'select', label: '', width: 48 },
-  { id: 'id', label: 'Id', align: 'left' },
-  { id: 'name', label: 'Name', align: 'left' },
-  { id: 'role', label: 'Role', align: 'left' },
-  { id: 'level', label: 'Level', align: 'left' },
-  { id: 'isAuthorized', label: 'Authorized', align: 'center' },
-  { id: 'state', label: 'State', align: 'left' },
-];
-
 // ----------------------------------------------------------------------
 
 export default function AdminReview() {
+  const { t } = useTranslation();
+  const tableHead = useMemo(
+    () => [
+      { id: 'id', label: t('adminReview.table.id'), align: 'left' },
+      { id: 'name', label: t('adminReview.table.name'), align: 'left' },
+      { id: 'level', label: t('adminReview.table.level'), align: 'left' },
+      { id: 'isAuthorized', label: t('adminReview.table.authorized'), align: 'center' },
+      { id: 'state', label: t('adminReview.table.state'), align: 'left' },
+    ],
+    [t]
+  );
+
   const {
     dense,
     page,
@@ -68,13 +65,8 @@ export default function AdminReview() {
     orderBy,
     rowsPerPage,
     setPage,
-    selected,
-    setSelected,
-    onSelectRow,
-    onSelectAllRows,
     onSort,
     onChangeDense,
-    onChangePage,
     onChangeRowsPerPage,
   } = useTable({ defaultRowsPerPage: 10 });
 
@@ -129,11 +121,6 @@ export default function AdminReview() {
     dispatch(closeModal());
   };
 
-  const handleDeleteRows = (ids) => {
-    setTableData((prev) => prev.filter((row) => !ids.includes(row.id)));
-    setSelected([]);
-  };
-
   const handleEditRow = (id) => {
     navigate(PATH_DASHBOARD.user.edit(paramCase(id)));
   };
@@ -154,9 +141,9 @@ export default function AdminReview() {
   const renderTableSkeleton = () =>
     Array.from({ length: rowsPerPage }).map((_, index) => (
       <TableRow key={`skeleton-${index}`}>
-        {TABLE_HEAD.map((headCell) => (
-          <TableCell key={headCell.id} align={headCell.align} padding={headCell.id === 'select' ? 'checkbox' : 'normal'}>
-            <Skeleton width={headCell.id === 'select' ? 24 : '80%'} height={dense ? 20 : 24} />
+        {tableHead.map((headCell) => (
+          <TableCell key={headCell.id} align={headCell.align}>
+            <Skeleton width="80%" height={dense ? 20 : 24} />
           </TableCell>
         ))}
       </TableRow>
@@ -219,14 +206,14 @@ export default function AdminReview() {
   }, [filterRole, filterName, filterLevel, filterResort, isResortAdmin]);
 
   return (
-    <Page title="Admin Review: List">
+    <Page title={t('adminReview.pageTitle')}>
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <HeaderBreadcrumbs
-          heading="Teacher Review List"
+          heading={t('adminReview.heading')}
           links={[
-            { name: 'Dashboard', href: PATH_DASHBOARD.root },
-            { name: 'Admin', href: PATH_DASHBOARD.admin.root },
-            { name: 'Review' },
+            { name: t('menu.dashboard'), href: PATH_DASHBOARD.root },
+            { name: t('menu.admin'), href: PATH_DASHBOARD.admin.root },
+            { name: t('adminReview.breadcrumb.review') },
           ]}
         />
 
@@ -253,34 +240,12 @@ export default function AdminReview() {
           <Scrollbar>
             <Hidden smDown>
               <TableContainer sx={{ minWidth: 800, position: 'relative' }}>
-                {selected.length > 0 && (
-                  <TableSelectedActions
-                    dense={dense}
-                    numSelected={selected.length}
-                    rowCount={tableData.length}
-                    onSelectAllRows={(checked) =>
-                      onSelectAllRows(checked, tableData.map((row) => row.id))
-                    }
-                    actions={
-                      <Tooltip title="Delete">
-                        <IconButton color="primary" onClick={() => handleDeleteRows(selected)}>
-                          <Iconify icon={'eva:trash-2-outline'} />
-                        </IconButton>
-                      </Tooltip>
-                    }
-                  />
-                )}
                 <Table size={dense ? 'small' : 'medium'}>
                   <TableHeadCustom
                     order={order}
                     orderBy={orderBy}
-                    headLabel={TABLE_HEAD}
-                    rowCount={tableData?.length ?? 0}
-                    numSelected={selected.length}
+                    headLabel={tableHead}
                     onSort={onSort}
-                    onSelectAllRows={(checked) =>
-                      onSelectAllRows(checked, tableData.map((row) => row.id))
-                    }
                   />
 
                   <TableBody>
@@ -290,8 +255,6 @@ export default function AdminReview() {
                           <AdminTableRow
                             key={row.id}
                             row={row}
-                            selected={selected.includes(row.id)}
-                            onSelectRow={() => onSelectRow(row.id)}
                             onEditRow={() => handleEditRow(row.id)}
                             onConfirmRow={() => handleConfirmRow(row.id)}
                             onDeclineRow={() => handleDeclineOpenModal(row.email)}
@@ -320,6 +283,7 @@ export default function AdminReview() {
                     <AdminTableCard
                       key={row.id}
                       row={row}
+                      showRole={false}
                       onEditRow={() => handleEditRow(row.id)}
                       onConfirmRow={() => handleConfirmRow(row.id)}
                       onDeclineRow={() => handleDeclineOpenModal(row.email)}
@@ -343,7 +307,7 @@ export default function AdminReview() {
             />
             <FormControlLabel
               control={<Switch checked={dense} onChange={onChangeDense} />}
-              label="Dense"
+              label={t('adminReview.dense')}
               sx={{ px: 3, py: 1.5, top: 0, position: { md: 'absolute' } }}
             />
           </Box>
@@ -352,7 +316,7 @@ export default function AdminReview() {
         <TeacherDetailsDrawer open={drawerOpen} onClose={handleCloseDrawer} teacher={selectedTeacher} />
 
         <DialogAnimate open={isOpenModal} onClose={handleDeclineCloseModal}>
-          <DialogTitle>{'Seguro que queres Eliminar la reserva?'}</DialogTitle>
+          <DialogTitle>{t('adminReview.declineDialog.title')}</DialogTitle>
           <DeclineForm email={selectedEmail} onCancel={handleDeclineCloseModal} />
         </DialogAnimate>
       </Container>

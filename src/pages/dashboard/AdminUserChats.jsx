@@ -1,5 +1,6 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Navigate, useNavigate, useParams } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 // @mui
 import {
   Box,
@@ -44,10 +45,10 @@ function participantLabel(p) {
   return name || p.email || String(p.id);
 }
 
-function previewText(conv) {
+function previewText(conv, t) {
   const m = conv.messages?.length ? conv.messages[conv.messages.length - 1] : null;
   if (!m) return '—';
-  if (m.contentType === 'image') return 'Photo';
+  if (m.contentType === 'image') return t('adminUserChats.photoPreview');
   return m.body || '—';
 }
 
@@ -69,6 +70,7 @@ function lastActivityLabel(conv) {
 // ----------------------------------------------------------------------
 
 export default function AdminUserChats() {
+  const { t } = useTranslation();
   const { conversationId } = useParams();
   const navigate = useNavigate();
   const { themeStretch } = useSettings();
@@ -80,6 +82,24 @@ export default function AdminUserChats() {
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(0);
   const [loading, setLoading] = useState(true);
+
+  const pageTitle = t('menu.user chats');
+  const tableHead = useMemo(
+    () => [
+      { id: 'id', label: t('adminUserChats.table.id'), width: 100 },
+      { id: 'participants', label: t('adminUserChats.table.participants') },
+      { id: 'lastMessage', label: t('adminUserChats.table.lastMessage') },
+      { id: 'activity', label: t('adminUserChats.table.activity'), width: 160 },
+    ],
+    [t]
+  );
+  const breadcrumbLinks = useMemo(
+    () => [
+      { name: t('menu.dashboard'), href: PATH_DASHBOARD.root },
+      { name: pageTitle, href: PATH_DASHBOARD.admin.userChats },
+    ],
+    [pageTitle, t]
+  );
 
   const loadPage = useCallback(async (pageToLoad, append) => {
     setLoading(true);
@@ -93,11 +113,11 @@ export default function AdminUserChats() {
         params,
       });
       const list = res.data.conversations || [];
-      const t =
+      const totalCount =
         res.data.totalCount != null
           ? Number(res.data.totalCount)
           : Number(res.headers['x-total-count'] || 0);
-      setTotal(t);
+      setTotal(totalCount);
       if (append) {
         setRows((prev) => [...prev, ...list]);
       } else {
@@ -157,21 +177,15 @@ export default function AdminUserChats() {
 
   if (conversationId) {
     return (
-      <Page title="User chats">
+      <Page title={pageTitle}>
         <Container maxWidth={themeStretch ? false : 'xl'}>
-          <HeaderBreadcrumbs
-            heading="User chats"
-            links={[
-              { name: 'Dashboard', href: PATH_DASHBOARD.root },
-              { name: 'User chats', href: PATH_DASHBOARD.admin.userChats },
-            ]}
-          />
+          <HeaderBreadcrumbs heading={pageTitle} links={breadcrumbLinks} />
           <Button
             startIcon={<Iconify icon="eva:arrow-back-fill" />}
             onClick={() => navigate(PATH_DASHBOARD.admin.userChats)}
             sx={{ mb: 2 }}
           >
-            Back to list
+            {t('adminUserChats.backToList')}
           </Button>
           <Card sx={{ height: { xs: 'calc(100dvh - 180px)', md: 'calc(100dvh - 200px)' }, display: 'flex' }}>
             <ChatWindow />
@@ -182,16 +196,18 @@ export default function AdminUserChats() {
   }
 
   return (
-    <Page title="User chats">
+    <Page title={pageTitle}>
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <HeaderBreadcrumbs
-          heading="User chats"
-          links={[{ name: 'Dashboard', href: PATH_DASHBOARD.root }, { name: 'User chats' }]}
+          heading={pageTitle}
+          links={[{ name: t('menu.dashboard'), href: PATH_DASHBOARD.root }, { name: pageTitle }]}
         />
         <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
           {lockedResort
-            ? `User chat threads at ${formatAdminBookingResortLabel(lockedResort)}, newest first (read-only).`
-            : 'All user chat threads, newest first (read-only).'}
+            ? t('adminUserChats.descriptionResort', {
+                resort: formatAdminBookingResortLabel(lockedResort, t),
+              })
+            : t('adminUserChats.descriptionAll')}
         </Typography>
         <Card>
           <TableContainer sx={{ maxHeight: 'calc(100dvh - 220px)' }}>
@@ -199,10 +215,11 @@ export default function AdminUserChats() {
               <Table stickyHeader size="small">
                 <TableHead>
                   <TableRow>
-                    <TableCell width={100}>ID</TableCell>
-                    <TableCell>Participants</TableCell>
-                    <TableCell>Last message</TableCell>
-                    <TableCell width={160}>Activity</TableCell>
+                    {tableHead.map((headCell) => (
+                      <TableCell key={headCell.id} width={headCell.width}>
+                        {headCell.label}
+                      </TableCell>
+                    ))}
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -228,7 +245,7 @@ export default function AdminUserChats() {
                             </TableCell>
                             <TableCell>
                               <Typography variant="body2" noWrap sx={{ maxWidth: 360 }}>
-                                {previewText(conv)}
+                                {previewText(conv, t)}
                               </Typography>
                             </TableCell>
                             <TableCell>{lastActivityLabel(conv)}</TableCell>
@@ -239,7 +256,7 @@ export default function AdminUserChats() {
                     <TableRow>
                       <TableCell colSpan={4}>
                         <Box sx={{ py: 4, textAlign: 'center' }}>
-                          <Typography color="text.secondary">No conversations found.</Typography>
+                          <Typography color="text.secondary">{t('adminUserChats.empty')}</Typography>
                         </Box>
                       </TableCell>
                     </TableRow>
@@ -252,7 +269,7 @@ export default function AdminUserChats() {
         {rows.length > 0 && rows.length < total && (
           <Box sx={{ mt: 2, textAlign: 'center' }}>
             <Button variant="outlined" onClick={handleLoadMore} disabled={loading}>
-              {loading ? 'Loading…' : 'Load more'}
+              {loading ? t('adminUserChats.loading') : t('adminUserChats.loadMore')}
             </Button>
           </Box>
         )}

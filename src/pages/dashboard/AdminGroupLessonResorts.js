@@ -327,14 +327,14 @@ export default function AdminGroupLessonResorts() {
   };
 
   return (
-    <Page title="Group lessons por centro">
+    <Page title="Clases">
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <HeaderBreadcrumbs
-          heading="Clases grupales por centro"
+          heading="Clases"
           links={[
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
             { name: 'Admin', href: PATH_DASHBOARD.admin.root },
-            { name: 'Clases grupales' },
+            { name: 'Clases' },
           ]}
         />
 

@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 // @mui
 import { useTheme } from '@mui/material/styles';
 import { Avatar, Checkbox, TableRow, TableCell, Typography, MenuItem, Box, Card } from '@mui/material';
@@ -37,6 +38,7 @@ export default function AdminBookingTableCard({
     refreshBookings,
 }) {
     const theme = useTheme();
+    const { t } = useTranslation();
     
     const { imageLink, userComment, state, resort, adults, children, eventList, id, price, internalComment, type } = row;
     const teacher = row.teacher;
@@ -83,7 +85,7 @@ export default function AdminBookingTableCard({
                 <Box display='flex' justifyContent='space-between' alignItems="flex-start">
                     <Box display='flex' flexDirection='column'>
                         <Typography variant='h6' gutterBottom>
-                            Reserva #{id}
+                            {t('adminBookings.card.bookingTitle', { id })}
                         </Typography>
                         <Label
                             variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
@@ -112,7 +114,7 @@ export default function AdminBookingTableCard({
                                     }}
                                 >
                                     <Iconify icon={'eva:calendar-fill'} />
-                                    Ver clases en el calendario
+                                    {t('adminBookings.menu.viewCalendar')}
                                 </MenuItem>
                                 )}
                                 <MenuItem
@@ -122,7 +124,7 @@ export default function AdminBookingTableCard({
                                     }}
                                 >
                                     <Iconify icon={'mdi:whatsapp'} />
-                                    Contactár por Whats app
+                                    {t('adminBookings.menu.whatsapp')}
                                 </MenuItem>
                                 <MenuItem
                                     onClick={() => {
@@ -131,7 +133,7 @@ export default function AdminBookingTableCard({
                                     }}
                                 >
                                     <Iconify icon={'eva:edit-fill'} />
-                                    Editar
+                                    {t('adminBookings.menu.edit')}
                                 </MenuItem>
                                 <MenuItem
                                     onClick={() => {
@@ -141,7 +143,7 @@ export default function AdminBookingTableCard({
                                     sx={{ color: 'error.main' }}
                                 >
                                     <Iconify icon={'eva:trash-2-outline'} />
-                                    Eliminar
+                                    {t('adminBookings.menu.delete')}
                                 </MenuItem>
                             </>
                         }
@@ -150,7 +152,7 @@ export default function AdminBookingTableCard({
 
                 <Box sx={{ mt: 2 }}>
                     <Typography variant="subtitle2" gutterBottom>
-                        Cliente
+                        {t('adminBookings.card.client')}
                     </Typography>
                     <Typography variant="body2" gutterBottom>
                         {`${studentName} ${studentLastname}`}
@@ -163,10 +165,10 @@ export default function AdminBookingTableCard({
                 {!isGearAdminList && (
                 <Box sx={{ mt: 2 }}>
                     <Typography variant="subtitle2" gutterBottom>
-                        Instructor
+                        {t('adminBookings.card.instructor')}
                     </Typography>
                     <Typography variant="body2" gutterBottom>
-                        {teacher ? `${name} ${lastname}` : '— (solo equipo)'}
+                        {teacher ? `${name} ${lastname}` : t('adminBookings.row.gearOnly')}
                     </Typography>
                     <Typography variant="caption" color="text.secondary" gutterBottom>
                         {teacherId != null ? `ID: ${teacherId}` : ''}
@@ -176,13 +178,13 @@ export default function AdminBookingTableCard({
 
                 <Box sx={{ mt: 2 }}>
                     <Typography variant="subtitle2" gutterBottom>
-                        {isGearAdminList ? 'Reserva de equipo' : 'Detalles de la Reserva'}
+                        {isGearAdminList ? t('adminBookings.card.gearDetails') : t('adminBookings.card.bookingDetails')}
                     </Typography>
                     <Box display="flex" flexDirection="column" gap={1}>
                         {!isGearAdminList && (
                         <>
                         <Typography variant="body2">
-                            {`${eventList?.length || 0} clases`}
+                            {t('adminBookings.row.classesCount', { count: eventList?.length || 0 })}
                         </Typography>
                         <Typography variant="body2">
                             {getDateRange()}
@@ -194,12 +196,12 @@ export default function AdminBookingTableCard({
                         </Typography>
                         {!isGearAdminList && (
                         <Typography variant="body2">
-                            {`${adults} adultos, ${children} niños`}
+                            {t('adminBookings.card.adultsChildren', { adults, children })}
                         </Typography>
                         )}
                         {isGearAdminList && type === 'GEAR_ONLY' && (
                             <Typography variant="caption" color="text.secondary">
-                                Sin clases — solo alquiler de equipo
+                                {t('adminBookings.card.gearOnlyNote')}
                             </Typography>
                         )}
                         <Typography variant="body2" color="primary.main">

@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   TableRow,
   TableCell,
@@ -26,6 +27,7 @@ AdminBookingIntentTableRow.propTypes = {
 };
 
 export default function AdminBookingIntentTableRow({ row, onRefreshIntents }) {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const { teachers } = useSelector((state) => state.admin);
   const [assignOpen, setAssignOpen] = useState(false);
@@ -118,7 +120,7 @@ export default function AdminBookingIntentTableRow({ row, onRefreshIntents }) {
   };
 
   const handleCancelIntent = async () => {
-    if (!window.confirm('¿Cancelar esta reserva pendiente?')) return;
+    if (!window.confirm(t('adminBookings.intent.cancelConfirm'))) return;
     setSubmitting(true);
     try {
       await dispatch(
@@ -144,10 +146,10 @@ export default function AdminBookingIntentTableRow({ row, onRefreshIntents }) {
         </TableCell>
         <TableCell>
           <Typography variant="body2" color="text.secondary">
-            Sin asignar
+            {t('adminBookings.intent.unassigned')}
           </Typography>
         </TableCell>
-        <TableCell>{lines.length ? `${lines.length} clases` : '—'}</TableCell>
+        <TableCell>{lines.length ? t('adminBookings.row.classesCount', { count: lines.length }) : '—'}</TableCell>
         <TableCell>—</TableCell>
         <TableCell>
           <Typography variant="body2" noWrap>
@@ -165,23 +167,23 @@ export default function AdminBookingIntentTableRow({ row, onRefreshIntents }) {
           </Typography>
         </TableCell>
         <TableCell>
-          {[includesLaunch && 'Almuerzo', includesEquipments && 'Equipo'].filter(Boolean).join(', ') || '—'}
+          {[includesLaunch && t('adminBookings.row.lunch'), includesEquipments && t('adminBookings.row.equipmentShort')].filter(Boolean).join(', ') || '—'}
         </TableCell>
         <TableCell>{paymentStatus || '—'}</TableCell>
         <TableCell align="right">
           <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', justifyContent: 'flex-end' }}>
             <Button size="small" variant="contained" onClick={() => setAssignOpen(true)}>
-              Asignar instructor
+              {t('adminBookings.intent.assignInstructor')}
             </Button>
             <Button size="small" color="error" onClick={handleCancelIntent} disabled={submitting}>
-              Cancelar
+              {t('adminBookings.intent.cancel')}
             </Button>
           </Box>
         </TableCell>
       </TableRow>
 
       <Dialog open={assignOpen} onClose={handleCloseAssign} maxWidth="sm" fullWidth>
-        <DialogTitle>Asignar instructor</DialogTitle>
+        <DialogTitle>{t('adminBookings.intent.assignDialogTitle')}</DialogTitle>
         <DialogContent>
           <FormControl fullWidth sx={{ mt: 0.5 }}>
             <Autocomplete
@@ -200,9 +202,9 @@ export default function AdminBookingIntentTableRow({ row, onRefreshIntents }) {
                 <TextField
                   {...params}
                   margin="dense"
-                  label="Instructor"
-                  placeholder="Buscar por nombre o apellido"
-                  helperText="Escribí para filtrar instructores por nombre o apellido."
+                  label={t('adminBookings.intent.instructor')}
+                  placeholder={t('adminBookings.intent.instructorPlaceholder')}
+                  helperText={t('adminBookings.intent.instructorHelper')}
                 />
               )}
             />
@@ -231,9 +233,9 @@ export default function AdminBookingIntentTableRow({ row, onRefreshIntents }) {
                   <TextField
                     {...params}
                     margin="dense"
-                    label="Estudiante (requerido)"
-                    placeholder="Buscar estudiante"
-                    helperText="Esta pendiente no tiene estudiante: elegí uno para confirmar la reserva."
+                    label={t('adminBookings.intent.studentRequired')}
+                    placeholder={t('adminBookings.intent.studentPlaceholder')}
+                    helperText={t('adminBookings.intent.studentHelper')}
                   />
                 )}
               />
@@ -241,14 +243,14 @@ export default function AdminBookingIntentTableRow({ row, onRefreshIntents }) {
           ) : null}
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseAssign}>Cerrar</Button>
+          <Button onClick={handleCloseAssign}>{t('adminBookings.intent.close')}</Button>
           <LoadingButton
             loading={submitting}
             variant="contained"
             onClick={handleConvert}
             disabled={!selectedTeacher || (needsStudentForConvert && !selectedStudent?.id)}
           >
-            Confirmar
+            {t('adminBookings.intent.confirm')}
           </LoadingButton>
         </DialogActions>
       </Dialog>

@@ -872,12 +872,12 @@
         "admin": "Administrador",
         "broadcast lesson": "Difundir clase",
         "financial dashboard": "Panel financiero",
-        "group lessons by resort": "Clases grupales por centro",
+        "group lessons by resort": "Clases",
         "rental products": "Equipos",
         "rental providers": "Proveedores de rental",
         "resort admins": "Administradores de centros",
         "user chats": "Mensajes",
-        "user calendars": "Calendarios de usuarios",
+        "user calendars": "Agenda de profes",
         "review teachers": "Instructores",
         "review clients": "Clientes",
         "lesson bookings": "Reserva de clases",
@@ -906,6 +906,233 @@
         "contact": "Contactar soporte",
         "contactSupport247": "Contactar soporte 24/7",
         "help": "Ayuda"
+    },
+    "adminReview": {
+        "pageTitle": "Admin Revisión: Lista",
+        "heading": "Lista de revisión de instructores",
+        "breadcrumb": {
+            "review": "Revisión"
+        },
+        "dense": "Compacto",
+        "searchByNamePlaceholder": "Buscar por nombre",
+        "filters": {
+            "resort": "Resort",
+            "allResorts": "Todos los resorts"
+        },
+        "table": {
+            "id": "Id",
+            "name": "Nombre",
+            "level": "Nivel",
+            "authorized": "Autorizado",
+            "state": "Estado"
+        },
+        "menu": {
+            "viewDetails": "Ver detalles",
+            "events": "Eventos",
+            "wapp": "Wapp",
+            "edit": "Editar",
+            "decline": "Rechazar"
+        },
+        "card": {
+            "id": "Id: {{id}}",
+            "level": "Nivel: {{level}}",
+            "role": "Rol: {{role}}"
+        },
+        "declineDialog": {
+            "title": "¿Seguro que querés declinar?",
+            "success": "¡Rechazo exitoso!",
+            "yes": "Sí",
+            "no": "No"
+        },
+        "drawer": {
+            "state": "Estado",
+            "roleAndLevel": "Rol y Nivel",
+            "role": "Rol: {{role}}",
+            "level": "Nivel: {{level}}",
+            "resorts": "Resorts",
+            "sports": "Deportes",
+            "languages": "Idiomas",
+            "contact": "Contacto",
+            "email": "Email: {{email}}",
+            "phone": "Tel: {{phone}}",
+            "countryCode": "Código País: {{code}}",
+            "seeMore": "Ver más",
+            "editTeacherData": "Editar datos del instructor",
+            "profilePhoto": "Foto de perfil",
+            "changeImage": "Cambiar imagen",
+            "removeImage": "Quitar imagen",
+            "firstName": "Nombre",
+            "lastName": "Apellido",
+            "emailField": "Email",
+            "phoneField": "Teléfono",
+            "countryCodeField": "Código País",
+            "roleField": "Rol",
+            "levelField": "Nivel",
+            "sportsPlaceholder": "Seleccioná deportes",
+            "languagesPlaceholder": "Seleccioná idiomas",
+            "resortsPlaceholder": "Seleccioná resorts",
+            "resortsEnum": "Resorts Enum",
+            "resortsEnumPlaceholder": "Seleccioná resorts enum",
+            "cancel": "Cancelar",
+            "save": "Guardar",
+            "uploadImageError": "No se pudo subir la imagen: {{message}}",
+            "saveError": "No se pudo guardar los cambios"
+        }
+    },
+    "adminUserChats": {
+        "backToList": "Volver al listado",
+        "descriptionAll": "Todos los hilos de chat entre usuarios, del más reciente al más antiguo (solo lectura).",
+        "descriptionResort": "Hilos de chat entre usuarios en {{resort}}, del más reciente al más antiguo (solo lectura).",
+        "empty": "No se encontraron conversaciones.",
+        "loadMore": "Cargar más",
+        "loading": "Cargando…",
+        "photoPreview": "Foto",
+        "table": {
+            "activity": "Actividad",
+            "id": "ID",
+            "lastMessage": "Último mensaje",
+            "participants": "Participantes"
+        }
+    },
+    "adminUserCalendars": {
+        "searchTeacherLabel": "Buscar instructor por nombre",
+        "searchTeacherPlaceholder": "Escribí nombre o apellido",
+        "selectTeacherHint": "Seleccioná un instructor para ver la configuración de su calendario.",
+        "noTeachersFound": "No se encontraron instructores",
+        "typeToSearchTeachers": "Escribí para buscar instructores"
+    },
+    "adminBookings": {
+        "pageTitle": "Admin Revisión: Lista",
+        "heading": "Lista de revisión de reservas",
+        "gearPageTitle": "Admin: Reservas de equipos",
+        "gearHeading": "Reservas de equipos",
+        "dense": "Compacto",
+        "newBooking": "Nueva Reserva",
+        "showStats": "Mostrar estadísticas",
+        "tabs": {
+            "bookings": "Reservas",
+            "pendingNoInstructor": "Pendientes (sin instructor)"
+        },
+        "filters": {
+            "date": "Fecha",
+            "year": "Año",
+            "month": "Mes",
+            "allMonths": "Todos los meses",
+            "teacherId": "ID Instructor",
+            "studentId": "ID Estudiante",
+            "moreFilters": "Más filtros",
+            "searchBookingPlaceholder": "Buscar por cliente o ID de reserva…",
+            "months": {
+                "06": "Junio",
+                "07": "Julio",
+                "08": "Agosto",
+                "09": "Septiembre",
+                "10": "Octubre"
+            }
+        },
+        "table": {
+            "id": "ID",
+            "student": "Cliente",
+            "teacher": "Instructor",
+            "classes": "Clases",
+            "hours": "Horas",
+            "dates": "Fechas",
+            "resort": "Montaña",
+            "capacity": "Capacidad",
+            "price": "Precio",
+            "internalComment": "Comentario Interno",
+            "includes": "Incluye",
+            "paymentStatus": "Estado Pago",
+            "state": "Estado",
+            "center": "Centro",
+            "notes": "Notas",
+            "actions": "Acciones"
+        },
+        "menu": {
+            "viewCalendar": "Ver clases en el calendario",
+            "whatsapp": "Contactar por WhatsApp",
+            "edit": "Editar",
+            "delete": "Eliminar"
+        },
+        "row": {
+            "gearOnly": "— (solo equipo)",
+            "rental": "Rental",
+            "equipment": "Equipo",
+            "classesCount": "{{count}} clases",
+            "hoursCount": "{{count}} hs",
+            "adultsCount": "{{count}} adultos",
+            "childrenCount": "{{count}} niños",
+            "withLunch": "✓ Almuerzo",
+            "withoutLunch": "✗ Sin almuerzo",
+            "withEquipment": "✓ Equipo",
+            "withoutEquipment": "✗ Sin equipo",
+            "lunch": "Almuerzo",
+            "equipmentShort": "Equipo"
+        },
+        "card": {
+            "bookingTitle": "Reserva #{{id}}",
+            "client": "Cliente",
+            "instructor": "Instructor",
+            "gearDetails": "Reserva de equipo",
+            "bookingDetails": "Detalles de la Reserva",
+            "gearOnlyNote": "Sin clases — solo alquiler de equipo",
+            "adultsChildren": "{{adults}} adultos, {{children}} niños"
+        },
+        "intent": {
+            "unassigned": "Sin asignar",
+            "assignInstructor": "Asignar instructor",
+            "cancel": "Cancelar",
+            "cancelConfirm": "¿Cancelar esta reserva pendiente?",
+            "assignDialogTitle": "Asignar instructor",
+            "instructor": "Instructor",
+            "instructorPlaceholder": "Buscar por nombre o apellido",
+            "instructorHelper": "Escribí para filtrar instructores por nombre o apellido.",
+            "studentRequired": "Estudiante (requerido)",
+            "studentPlaceholder": "Buscar estudiante",
+            "studentHelper": "Esta pendiente no tiene estudiante: elegí uno para confirmar la reserva.",
+            "close": "Cerrar",
+            "confirm": "Confirmar"
+        },
+        "summary": {
+            "totalBookings": "Total Reservas",
+            "assignedHours": "Horas Asignadas",
+            "requiredHours": "Horas Requeridas",
+            "totalHours": "Total Horas",
+            "totalRevenue": "Ingresos Totales",
+            "totalPayments": "Pagos Totales",
+            "totalAdults": "Total Adultos",
+            "totalChildren": "Total Niños"
+        },
+        "empty": {
+            "title": "Acá vas a poder ver y gestionar las solicitudes de reserva que ocurran en tu centro de esquí"
+        },
+        "mobilePendingHint": "Pendientes sin instructor: abrí esta página en escritorio para asignar o cancelar.",
+        "declineDialog": {
+            "title": "¿Seguro que querés declinar?"
+        },
+        "editDialog": {
+            "title": "¿Seguro que querés editar esta reserva?"
+        },
+        "deleteDialog": {
+            "title": "¿Estás seguro que quieres eliminar la reserva?",
+            "body": "Esta reserva ni su información van a poder ser visibles nunca más",
+            "cancel": "Cancelar",
+            "confirm": "Eliminar"
+        },
+        "deleteTooltip": "Eliminar",
+        "whatsappGreeting": "Hola {{name}}, "
+    },
+    "adminBookingResorts": {
+        "CERRO_CATEDRAL": "Cerro Catedral",
+        "CHAPELCO": "Chapelco",
+        "CERRO_BAYO": "Cerro Bayo",
+        "CERRO_CASTOR": "Cerro Castor",
+        "PENITENTES": "Las Pendientes",
+        "LAGO_HERMOSO": "Lago Hermoso",
+        "LAS_LEÑAS": "Las Leñas",
+        "CERRO_PERITO_MORENO": "Cerro Perito Moreno",
+        "PORTILLO": "Portillo",
+        "LA_PARVA": "La Parva"
     },
     "calendar": {
         "name": "Calendario",

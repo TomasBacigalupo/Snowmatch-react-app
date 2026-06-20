@@ -24,8 +24,13 @@ export const ADMIN_BOOKING_RESORT_OPTIONS = [
  * API / enum resort id → display label (e.g. CERRO_CATEDRAL → Cerro Catedral).
  * Unknown ids fall back to title-cased words from underscores.
  */
-export function formatAdminBookingResortLabel(value) {
+export function formatAdminBookingResortLabel(value, translate) {
   if (value == null || value === '') return '—';
+  if (translate) {
+    const key = `adminBookingResorts.${value}`;
+    const translated = translate(key);
+    if (translated !== key) return translated;
+  }
   const found = ADMIN_BOOKING_RESORT_OPTIONS.find((o) => o.value === value);
   if (found) return found.label;
   return String(value)

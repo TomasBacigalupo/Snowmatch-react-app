@@ -22,11 +22,14 @@ import NavbarDocs from './NavbarDocs';
 import NavbarAccount from './NavbarAccount';
 import NavbarMenuSkeleton from './NavbarMenuSkeleton';
 import CollapseButton from './CollapseButton';
+import ResortAdminAccountPopover from '../header/ResortAdminAccountPopover';
 import useAuth from 'src/hooks/useAuth';
 import { isCerroBayoResortAdmin, isResortAdminNavLoading } from '../../../utils/resortAdminBranding';
 import { PATH_DASHBOARD } from '../../../routes/paths';
 import SvgIconStyle from '../../../components/SvgIconStyle';
 import SchoolIcon from '@mui/icons-material/School';
+import CastForEducationIcon from '@mui/icons-material/CastForEducation';
+import PeopleIcon from '@mui/icons-material/People';
 import { useSelector } from 'react-redux';
 import navConfigGuestCatedral from './NavConfigCatedral';
 // ----------------------------------------------------------------------
@@ -80,8 +83,8 @@ const ICONS = {
 };
 
 const ADMIN_NAV_ITEMS = [
-  { title: 'review teachers', path: PATH_DASHBOARD.admin.review, icon: ICONS.user },
-  { title: 'review clients', path: PATH_DASHBOARD.admin.reviewClients, icon: ICONS.user },
+  { title: 'review teachers', path: PATH_DASHBOARD.admin.review, icon: <CastForEducationIcon /> },
+  { title: 'review clients', path: PATH_DASHBOARD.admin.reviewClients, icon: <PeopleIcon /> },
   { title: 'lesson bookings', path: PATH_DASHBOARD.admin.bookings, icon: ICONS.booking },
   { title: 'equipment bookings', path: PATH_DASHBOARD.admin.bookingsEquipos, icon: ICONS.booking },
   { title: 'user chats', path: PATH_DASHBOARD.admin.userChats, icon: ICONS.chat },
@@ -96,8 +99,9 @@ const ADMIN_NAV_ITEMS = [
 
 const RESORT_ADMIN_NAV_ITEMS = [
   { title: 'dashboard', path: PATH_DASHBOARD.admin.dashboard, icon: ICONS.analytics },
-  { title: 'review teachers', path: PATH_DASHBOARD.admin.review, icon: ICONS.user },
-  { title: 'clients', path: PATH_DASHBOARD.admin.reviewClients, icon: ICONS.user },
+  { title: 'review teachers', path: PATH_DASHBOARD.admin.review, icon: <CastForEducationIcon /> },
+  { title: 'user calendars', path: PATH_DASHBOARD.admin.userCalendars, icon: ICONS.calendar },
+  { title: 'clients', path: PATH_DASHBOARD.admin.reviewClients, icon: <PeopleIcon /> },
   { title: 'lesson bookings', path: PATH_DASHBOARD.admin.bookings, icon: ICONS.booking },
   { title: 'user chats', path: PATH_DASHBOARD.admin.userChats, icon: ICONS.chat },
   { title: 'rental products', path: PATH_DASHBOARD.admin.rental, icon: ICONS.ecommerce },
@@ -190,6 +194,21 @@ export default function NavbarVertical({ isOpenSidebar, onCloseSidebar, isGuest,
       )}
 
       <Box sx={{ flexGrow: 1 }} />
+
+      {userRole === 'RESORT_ADMIN' && (!isCollapse || !isDesktop) && (
+        <Box
+          sx={{
+            px: 2.5,
+            pb: 3,
+            pt: 2,
+            display: 'flex',
+            justifyContent: 'center',
+            flexShrink: 0,
+          }}
+        >
+          <ResortAdminAccountPopover logoHeight={48} popoverAbove />
+        </Box>
+      )}
 
       {/* {!isCollapse && <NavbarDocs />} */}
     </Scrollbar>

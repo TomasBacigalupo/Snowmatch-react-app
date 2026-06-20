@@ -21,6 +21,7 @@ import { useNavigate } from 'react-router-dom';
 //
 import Searchbar from './Searchbar';
 import AccountPopover from './AccountPopover';
+import ResortAdminAccountPopover from './ResortAdminAccountPopover';
 import LanguagePopover from './LanguagePopover';
 import ContactsPopover from './ContactsPopover';
 import NotificationsPopover from './NotificationsPopover';
@@ -103,9 +104,12 @@ export default function DashboardHeader({ onOpenSidebar, isCollapse = false, ver
           <LanguagePopover />
 
           {isResortAdmin ? (
-            <Typography variant="subtitle2" noWrap sx={{ color: 'text.primary', maxWidth: 240 }}>
-              {userDisplayName || user?.email}
-            </Typography>
+            <Stack direction="row" alignItems="center" spacing={1}>
+              <Typography variant="subtitle2" noWrap sx={{ color: 'text.primary', maxWidth: 240 }}>
+                {userDisplayName || user?.email}
+              </Typography>
+              <ResortAdminAccountPopover />
+            </Stack>
           ) : (
             <>
               <NotificationsPopover />

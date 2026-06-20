@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Drawer, Box, Typography, Divider, Stack, Avatar, IconButton, Chip, TextField, Button, Autocomplete } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import Iconify from 'src/components/Iconify';
@@ -15,6 +16,7 @@ TeacherDetailsDrawer.propTypes = {
 };
 
 export default function TeacherDetailsDrawer({ open, onClose, teacher }) {
+  const { t } = useTranslation();
   const theme = useTheme();
   const dispatch = useDispatch();
 
@@ -168,7 +170,7 @@ export default function TeacherDetailsDrawer({ open, onClose, teacher }) {
           console.log('Final image URL:', imageUrl);
         } catch (uploadError) {
           console.error('Error uploading image:', uploadError);
-          setError(`No se pudo subir la imagen: ${uploadError.message}`);
+          setError(t('adminReview.drawer.uploadImageError', { message: uploadError.message }));
           setSaving(false);
           return;
         }
@@ -198,7 +200,7 @@ export default function TeacherDetailsDrawer({ open, onClose, teacher }) {
       onClose();
     } catch (e) {
       console.error('Error saving teacher:', e);
-      setError('No se pudo guardar los cambios');
+      setError(t('adminReview.drawer.saveError'));
     } finally {
       setSaving(false);
     }
@@ -254,7 +256,7 @@ export default function TeacherDetailsDrawer({ open, onClose, teacher }) {
         {!isEditing && (
           <Stack spacing={2}>
             <Box>
-              <Typography variant="subtitle2" gutterBottom>Estado</Typography>
+              <Typography variant="subtitle2" gutterBottom>{t('adminReview.drawer.state')}</Typography>
               <Chip
                 label={teacher?.state}
                 color={(teacher?.state === 'UNAVAILABLE' && 'error') || 'success'}
@@ -264,15 +266,15 @@ export default function TeacherDetailsDrawer({ open, onClose, teacher }) {
             </Box>
 
             <Box>
-              <Typography variant="subtitle2" gutterBottom>Rol y Nivel</Typography>
+              <Typography variant="subtitle2" gutterBottom>{t('adminReview.drawer.roleAndLevel')}</Typography>
               <Stack direction="row" spacing={2}>
-                <Chip label={`Role: ${teacher?.role ?? '-'}`} variant="outlined" />
-                <Chip label={`Level: ${teacher?.level ?? '-'}`} variant="outlined" />
+                <Chip label={t('adminReview.drawer.role', { role: teacher?.role ?? '-' })} variant="outlined" />
+                <Chip label={t('adminReview.drawer.level', { level: teacher?.level ?? '-' })} variant="outlined" />
               </Stack>
             </Box>
 
             <Box>
-              <Typography variant="subtitle2" gutterBottom>Resorts</Typography>
+              <Typography variant="subtitle2" gutterBottom>{t('adminReview.drawer.resorts')}</Typography>
               <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
                 {(teacher?.resortsEnum || teacher?.resorts || [])?.map((r, idx) => (
                   <Chip key={`resort-${idx}`} label={formatLabel(r?.name || r)} size="small" sx={{ mb: 1 }} />
@@ -284,7 +286,7 @@ export default function TeacherDetailsDrawer({ open, onClose, teacher }) {
             </Box>
 
             <Box>
-              <Typography variant="subtitle2" gutterBottom>Sports</Typography>
+              <Typography variant="subtitle2" gutterBottom>{t('adminReview.drawer.sports')}</Typography>
               <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
                 {(teacher?.sports || [])?.map((s, idx) => (
                   <Chip key={`sport-${idx}`} label={formatLabel(s)} size="small" sx={{ mb: 1 }} />
@@ -296,7 +298,7 @@ export default function TeacherDetailsDrawer({ open, onClose, teacher }) {
             </Box>
 
             <Box>
-              <Typography variant="subtitle2" gutterBottom>Languages</Typography>
+              <Typography variant="subtitle2" gutterBottom>{t('adminReview.drawer.languages')}</Typography>
               <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
                 {(teacher?.languages || teacher?.speaks || [])?.map((l, idx) => (
                   <Chip key={`lang-${idx}`} label={formatLabel(l)} size="small" sx={{ mb: 1 }} />
@@ -308,22 +310,22 @@ export default function TeacherDetailsDrawer({ open, onClose, teacher }) {
             </Box>
 
             <Box>
-              <Typography variant="subtitle2" gutterBottom>Contacto</Typography>
+              <Typography variant="subtitle2" gutterBottom>{t('adminReview.drawer.contact')}</Typography>
               <Stack spacing={0.5}>
                 {teacher?.email && (
-                  <Typography variant="body2">Email: {teacher.email}</Typography>
+                  <Typography variant="body2">{t('adminReview.drawer.email', { email: teacher.email })}</Typography>
                 )}
                 {teacher?.cellphone && (
-                  <Typography variant="body2">Tel: {teacher.cellphone}</Typography>
+                  <Typography variant="body2">{t('adminReview.drawer.phone', { phone: teacher.cellphone })}</Typography>
                 )}
                 {teacher?.countryCode && (
-                  <Typography variant="body2">Código País: {teacher.countryCode}</Typography>
+                  <Typography variant="body2">{t('adminReview.drawer.countryCode', { code: teacher.countryCode })}</Typography>
                 )}
               </Stack>
             </Box>
 
             <Box>
-              <Typography variant="subtitle2" gutterBottom>Ver más</Typography>
+              <Typography variant="subtitle2" gutterBottom>{t('adminReview.drawer.seeMore')}</Typography>
               <Stack direction="row" spacing={1}>
                 <IconButton onClick={() => window.open(`https://wa.me/${teacher?.countryCode || ''}${teacher?.cellphone || ''}`,'_blank')}>
                   <Iconify icon="logos:whatsapp-icon" />
@@ -340,14 +342,14 @@ export default function TeacherDetailsDrawer({ open, onClose, teacher }) {
             noValidate
           >
             <Stack spacing={2}>
-              <Typography variant="subtitle2">Editar datos del instructor</Typography>
+              <Typography variant="subtitle2">{t('adminReview.drawer.editTeacherData')}</Typography>
               {error && (
                 <Typography variant="body2" color="error">{error}</Typography>
               )}
               
               {/* Sección de imagen */}
               <Box>
-                <Typography variant="body2" sx={{ mb: 1 }}>Foto de perfil</Typography>
+                <Typography variant="body2" sx={{ mb: 1 }}>{t('adminReview.drawer.profilePhoto')}</Typography>
                 <Stack direction="row" spacing={2} alignItems="center">
                   <Avatar 
                     src={imagePreview || teacher?.imageLink} 
@@ -362,7 +364,7 @@ export default function TeacherDetailsDrawer({ open, onClose, teacher }) {
                       size="small"
                       startIcon={<Iconify icon="eva:upload-fill" />}
                     >
-                      Cambiar imagen
+                      {t('adminReview.drawer.changeImage')}
                       <input
                         type="file"
                         hidden
@@ -379,7 +381,7 @@ export default function TeacherDetailsDrawer({ open, onClose, teacher }) {
                         onClick={handleRemoveImage}
                         startIcon={<Iconify icon="eva:trash-2-outline" />}
                       >
-                        Quitar imagen
+                        {t('adminReview.drawer.removeImage')}
                       </Button>
                     )}
                   </Stack>
@@ -387,43 +389,43 @@ export default function TeacherDetailsDrawer({ open, onClose, teacher }) {
               </Box>
 
               <TextField
-                label="Nombre"
+                label={t('adminReview.drawer.firstName')}
                 value={form.name}
                 onChange={handleChange('name')}
                 fullWidth
               />
               <TextField
-                label="Apellido"
+                label={t('adminReview.drawer.lastName')}
                 value={form.lastname}
                 onChange={handleChange('lastname')}
                 fullWidth
               />
               <TextField
-                label="Email"
+                label={t('adminReview.drawer.emailField')}
                 value={form.email}
                 onChange={handleChange('email')}
                 fullWidth
               />
               <TextField
-                label="Teléfono"
+                label={t('adminReview.drawer.phoneField')}
                 value={form.cellphone}
                 onChange={handleChange('cellphone')}
                 fullWidth
               />
               <TextField
-                label="Código País"
+                label={t('adminReview.drawer.countryCodeField')}
                 value={form.countryCode}
                 onChange={handleChange('countryCode')}
                 fullWidth
               />
               <TextField
-                label="Rol"
+                label={t('adminReview.drawer.roleField')}
                 value={form.role}
                 onChange={handleChange('role')}
                 fullWidth
               />
               <TextField
-                label="Nivel"
+                label={t('adminReview.drawer.levelField')}
                 value={form.level}
                 onChange={handleChange('level')}
                 fullWidth
@@ -437,7 +439,7 @@ export default function TeacherDetailsDrawer({ open, onClose, teacher }) {
                   <Chip variant="filled" size="small" label={option} {...getTagProps({ index })} />
                 ))}
                 renderInput={(params) => (
-                  <TextField {...params} label="Sports" placeholder="Seleccioná sports" />
+                  <TextField {...params} label={t('adminReview.drawer.sports')} placeholder={t('adminReview.drawer.sportsPlaceholder')} />
                 )}
               />
               <Autocomplete
@@ -449,7 +451,7 @@ export default function TeacherDetailsDrawer({ open, onClose, teacher }) {
                   <Chip variant="filled" size="small" label={option} {...getTagProps({ index })} />
                 ))}
                 renderInput={(params) => (
-                  <TextField {...params} label="Languages" placeholder="Seleccioná idiomas" />
+                  <TextField {...params} label={t('adminReview.drawer.languages')} placeholder={t('adminReview.drawer.languagesPlaceholder')} />
                 )}
               />
               <Autocomplete
@@ -463,7 +465,7 @@ export default function TeacherDetailsDrawer({ open, onClose, teacher }) {
                   <Chip variant="filled" size="small" label={formatLabel(option)} {...getTagProps({ index })} />
                 ))}
                 renderInput={(params) => (
-                  <TextField {...params} label="Resorts" placeholder="Seleccioná resorts" />
+                  <TextField {...params} label={t('adminReview.drawer.resorts')} placeholder={t('adminReview.drawer.resortsPlaceholder')} />
                 )}
               />
               <Autocomplete
@@ -477,13 +479,13 @@ export default function TeacherDetailsDrawer({ open, onClose, teacher }) {
                   <Chip variant="filled" size="small" label={formatLabel(option)} {...getTagProps({ index })} />
                 ))}
                 renderInput={(params) => (
-                  <TextField {...params} label="Resorts Enum" placeholder="Seleccioná resorts enum" />
+                  <TextField {...params} label={t('adminReview.drawer.resortsEnum')} placeholder={t('adminReview.drawer.resortsEnumPlaceholder')} />
                 )}
               />
               <Stack direction="row" spacing={2} justifyContent="flex-end">
-                <Button type="button" variant="outlined" onClick={() => setIsEditing(false)}>Cancelar</Button>
+                <Button type="button" variant="outlined" onClick={() => setIsEditing(false)}>{t('adminReview.drawer.cancel')}</Button>
                 <LoadingButton type="submit" loading={saving} variant="contained">
-                  Guardar
+                  {t('adminReview.drawer.save')}
                 </LoadingButton>
               </Stack>
             </Stack>

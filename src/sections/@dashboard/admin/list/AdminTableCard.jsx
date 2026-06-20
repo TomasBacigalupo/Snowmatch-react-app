@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 // @mui
 import { useTheme } from '@mui/material/styles';
 import { Avatar, Checkbox, TableRow, TableCell, Typography, MenuItem, Box, Card } from '@mui/material';
@@ -20,9 +21,11 @@ AdminTableCard.propTypes = {
     onEvents: PropTypes.func,
     onContactedChange: PropTypes.func,
     onClick: PropTypes.func,
+    showRole: PropTypes.bool,
 };
 
-export default function AdminTableCard({ row, selected, onEditRow, onSelectRow, onConfirmRow, onDeclineRow, onWapp, onEvents, onContactedChange, onClick }) {
+export default function AdminTableCard({ row, selected, onEditRow, onSelectRow, onConfirmRow, onDeclineRow, onWapp, onEvents, onContactedChange, onClick, showRole = true }) {
+    const { t } = useTranslation();
     const theme = useTheme();
 
     const { name, lastname, imageLink, role, level, authorized, state, id, emailVerified, contacted } = row;
@@ -79,10 +82,12 @@ export default function AdminTableCard({ row, selected, onEditRow, onSelectRow, 
                     </Box>
 
                     <Box display="flex" alignItems="center" gap={1} onClick={(e) => e.stopPropagation()}>
-                        <Checkbox
-                            checked={!!contacted}
-                            onChange={(e) => onContactedChange?.(e.target.checked)}
-                        />
+                        {onContactedChange && (
+                            <Checkbox
+                                checked={!!contacted}
+                                onChange={(e) => onContactedChange(e.target.checked)}
+                            />
+                        )}
                         <TableMoreMenu
                             open={openMenu}
                             onOpen={handleOpenMenu}
@@ -97,7 +102,7 @@ export default function AdminTableCard({ row, selected, onEditRow, onSelectRow, 
                                     }}
                                 >
                                     <Iconify icon={'eva:calendar-fill'} />
-                                    Events
+                                    {t('adminReview.menu.events')}
                                 </MenuItem>
                                 <MenuItem
                                     onClick={(e) => {
@@ -107,7 +112,7 @@ export default function AdminTableCard({ row, selected, onEditRow, onSelectRow, 
                                     }}
                                 >
                                     <Iconify icon={'mdi:whatsapp'} />
-                                    Wapp
+                                    {t('adminReview.menu.wapp')}
                                 </MenuItem>
                                 <MenuItem
                                     onClick={(e) => {
@@ -117,7 +122,7 @@ export default function AdminTableCard({ row, selected, onEditRow, onSelectRow, 
                                     }}
                                 >
                                     <Iconify icon={'eva:edit-fill'} />
-                                    Edit
+                                    {t('adminReview.menu.edit')}
                                 </MenuItem>
                                 <MenuItem
                                     onClick={(e) => {
@@ -128,7 +133,7 @@ export default function AdminTableCard({ row, selected, onEditRow, onSelectRow, 
                                     sx={{ color: 'error.main' }}
                                 >
                                     <Iconify icon={'eva:trash-2-outline'} />
-                                    Decline
+                                    {t('adminReview.menu.decline')}
                                 </MenuItem>
                                 </>
                             }
@@ -138,17 +143,19 @@ export default function AdminTableCard({ row, selected, onEditRow, onSelectRow, 
                 <Box ml={2} display='flex'>
                     <Box flex='1'>
                         <Typography >
-                            {`Id: ${id}`}
+                            {t('adminReview.card.id', { id })}
                         </Typography>
                         <Typography >
-                            {`Level: ${level}`}
+                            {t('adminReview.card.level', { level })}
                         </Typography>
                     </Box>
-                    <Box flex='1'>
-                        <Typography >
-                            {`Role: ${role}`}
-                        </Typography>
-                    </Box>
+                    {showRole && (
+                        <Box flex='1'>
+                            <Typography >
+                                {t('adminReview.card.role', { role })}
+                            </Typography>
+                        </Box>
+                    )}
                 </Box>
             </Box>
         </Card>

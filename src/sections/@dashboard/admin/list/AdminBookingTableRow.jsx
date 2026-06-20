@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 // @mui
 import { useTheme } from '@mui/material/styles';
 import { TableRow, TableCell, Typography, MenuItem } from '@mui/material';
@@ -36,6 +37,7 @@ export default function AdminBookingTableRow({
     refreshBookings,
 }) {
     const theme = useTheme();
+    const { t } = useTranslation();
     const [openDrawer, setOpenDrawer] = useState(false);
 
     const { imageLink, userComment, state, resort, adults, children, eventList, id, price, internalComment, includesLunch, includesEquipments, paymentStatus, type } = row;
@@ -81,7 +83,7 @@ export default function AdminBookingTableRow({
             }
         });
 
-        return `${Math.round(totalHours)} hs`;
+        return t('adminBookings.row.hoursCount', { count: Math.round(totalHours) });
     };
 
     const formatPrice = (price) => {
@@ -122,7 +124,7 @@ export default function AdminBookingTableRow({
                     }}
                 >
                     <Iconify icon={'eva:calendar-fill'} />
-                    Ver clases en el calendario
+                    {t('adminBookings.menu.viewCalendar')}
                 </MenuItem>
             )}
             <MenuItem
@@ -132,7 +134,7 @@ export default function AdminBookingTableRow({
                 }}
             >
                 <Iconify icon={'mdi:whatsapp'} />
-                Contactár por Whats app
+                {t('adminBookings.menu.whatsapp')}
             </MenuItem>
             <MenuItem
                 onClick={() => {
@@ -141,7 +143,7 @@ export default function AdminBookingTableRow({
                 }}
             >
                 <Iconify icon={'eva:edit-fill'} />
-                Editar
+                {t('adminBookings.menu.edit')}
             </MenuItem>
             <MenuItem
                 onClick={() => {
@@ -151,7 +153,7 @@ export default function AdminBookingTableRow({
                 sx={{ color: 'error.main' }}
             >
                 <Iconify icon={'eva:trash-2-outline'} />
-                Eliminar
+                {t('adminBookings.menu.delete')}
             </MenuItem>
         </>
     );
@@ -198,7 +200,7 @@ export default function AdminBookingTableRow({
                         </Label>
                         {type === 'GEAR_ONLY' && (
                             <Typography variant="caption" color="text.secondary" display="block" sx={{ mt: 0.5 }}>
-                                Equipo
+                                {t('adminBookings.row.equipment')}
                             </Typography>
                         )}
                     </TableCell>
@@ -289,16 +291,16 @@ export default function AdminBookingTableRow({
 
                 <TableCell align="left">
                     <Typography variant="subtitle2" noWrap>
-                        {teacher ? `${name} ${lastname}` : '— (solo equipo)'}
+                        {teacher ? `${name} ${lastname}` : t('adminBookings.row.gearOnly')}
                     </Typography>
                     <Typography variant="caption" color="text.secondary">
-                        {teacherId != null ? `ID: ${teacherId}` : type === 'GEAR_ONLY' ? 'Rental' : ''}
+                        {teacherId != null ? `ID: ${teacherId}` : type === 'GEAR_ONLY' ? t('adminBookings.row.rental') : ''}
                     </Typography>
                 </TableCell>
 
                 <TableCell align="left">
                     <Typography variant="subtitle2">
-                        {eventList?.length || 0} clases
+                        {t('adminBookings.row.classesCount', { count: eventList?.length || 0 })}
                     </Typography>
                 </TableCell>
 
@@ -320,10 +322,10 @@ export default function AdminBookingTableRow({
 
                 <TableCell align="left">
                     <Typography variant="subtitle2">
-                        {adults} adultos
+                        {t('adminBookings.row.adultsCount', { count: adults })}
                     </Typography>
                     <Typography variant="caption" color="text.secondary">
-                        {children} niños
+                        {t('adminBookings.row.childrenCount', { count: children })}
                     </Typography>
                 </TableCell>
 
@@ -341,8 +343,8 @@ export default function AdminBookingTableRow({
 
                 <TableCell align="left">
                     <Typography variant="body2">
-                        {includesLunch ? '✓ Almuerzo' : '✗ Sin almuerzo'}
-                        {includesEquipments ? ' ✓ Equipo' : ' ✗ Sin equipo'}
+                        {includesLunch ? t('adminBookings.row.withLunch') : t('adminBookings.row.withoutLunch')}
+                        {includesEquipments ? ` ${t('adminBookings.row.withEquipment')}` : ` ${t('adminBookings.row.withoutEquipment')}`}
                     </Typography>
                 </TableCell>
 

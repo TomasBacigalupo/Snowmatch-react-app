@@ -1,6 +1,7 @@
 import { paramCase } from 'change-case';
 import { useState, useEffect, useMemo } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { ADMIN_BOOKING_RESORT_FILTER_OPTIONS } from 'src/utils/adminBookingResortOptions';
 // @mui
 import {
@@ -62,32 +63,6 @@ import GearBookingDetailsDrawer from 'src/sections/@dashboard/admin/list/GearBoo
 
 const ROLE_OPTIONS = [
   'PENDING', 'ACCEPTED', 'DECLINED'
-];
-
-const TABLE_HEAD = [
-  { id: 'id', label: 'ID', align: 'left' },
-  { id: 'student', label: 'Cliente', align: 'left' },
-  { id: 'teacher', label: 'Instructor', align: 'left' },
-  { id: 'events', label: 'Clases', align: 'left' },
-  { id: 'hours', label: 'Horas', align: 'left' },
-  { id: 'dates', label: 'Fechas', align: 'left' },
-  { id: 'resort', label: 'Montaña', align: 'left' },
-  { id: 'capacity', label: 'Capacidad', align: 'left' },
-  { id: 'price', label: 'Precio', align: 'left' },
-  { id: 'internalComment', label: 'Comentario Interno', align: 'left' },
-  { id: 'includes', label: 'Incluye', align: 'left' },
-  { id: 'paymentStatus', label: 'Estado Pago', align: 'left' },
-];
-
-/** Admin list for GEAR_ONLY / rental bookings (no lessons, no instructor). */
-const TABLE_HEAD_GEAR = [
-  { id: 'id', label: 'ID', align: 'left' },
-  { id: 'student', label: 'Cliente', align: 'left' },
-  { id: 'state', label: 'Estado', align: 'left' },
-  { id: 'resort', label: 'Centro', align: 'left' },
-  { id: 'price', label: 'Precio', align: 'left' },
-  { id: 'paymentStatus', label: 'Estado pago', align: 'left' },
-  { id: 'comments', label: 'Notas', align: 'left' },
 ];
 
 function sumBookingHours(row) {
@@ -176,6 +151,47 @@ function compareAdminBookings(rowA, rowB, orderBy, order) {
 // ----------------------------------------------------------------------
 
 export function AdminBookingsPage({ bookingListKind, pageTitle, heading }) {
+  const { t } = useTranslation();
+
+  const tableHead = useMemo(
+    () => [
+      { id: 'id', label: t('adminBookings.table.id'), align: 'left' },
+      { id: 'student', label: t('adminBookings.table.student'), align: 'left' },
+      { id: 'teacher', label: t('adminBookings.table.teacher'), align: 'left' },
+      { id: 'events', label: t('adminBookings.table.classes'), align: 'left' },
+      { id: 'hours', label: t('adminBookings.table.hours'), align: 'left' },
+      { id: 'dates', label: t('adminBookings.table.dates'), align: 'left' },
+      { id: 'resort', label: t('adminBookings.table.resort'), align: 'left' },
+      { id: 'capacity', label: t('adminBookings.table.capacity'), align: 'left' },
+      { id: 'price', label: t('adminBookings.table.price'), align: 'left' },
+      { id: 'internalComment', label: t('adminBookings.table.internalComment'), align: 'left' },
+      { id: 'includes', label: t('adminBookings.table.includes'), align: 'left' },
+      { id: 'paymentStatus', label: t('adminBookings.table.paymentStatus'), align: 'left' },
+    ],
+    [t]
+  );
+
+  const tableHeadGear = useMemo(
+    () => [
+      { id: 'id', label: t('adminBookings.table.id'), align: 'left' },
+      { id: 'student', label: t('adminBookings.table.student'), align: 'left' },
+      { id: 'state', label: t('adminBookings.table.state'), align: 'left' },
+      { id: 'resort', label: t('adminBookings.table.center'), align: 'left' },
+      { id: 'price', label: t('adminBookings.table.price'), align: 'left' },
+      { id: 'paymentStatus', label: t('adminBookings.table.paymentStatus'), align: 'left' },
+      { id: 'comments', label: t('adminBookings.table.notes'), align: 'left' },
+    ],
+    [t]
+  );
+
+  const tableHeadIntent = useMemo(
+    () => [
+      ...tableHead,
+      { id: 'actions', label: t('adminBookings.table.actions'), align: 'right' },
+    ],
+    [tableHead, t]
+  );
+
   const {
     dense,
     page,
@@ -363,7 +379,7 @@ export function AdminBookingsPage({ bookingListKind, pageTitle, heading }) {
   };
 
   const handleContactWapp = (countryCode, cellphone, name) => {
-    window.open(`https://wa.me/${countryCode}${cellphone}?text=Hola ${name}, `, '_blank')
+    window.open(`https://wa.me/${countryCode}${cellphone}?text=${encodeURIComponent(t('adminBookings.whatsappGreeting', { name }))}`, '_blank')
   }
 
   const displayBookings = useMemo(() => {
@@ -533,7 +549,7 @@ export function AdminBookingsPage({ bookingListKind, pageTitle, heading }) {
     dispatchBookings({ month: String(month).padStart(2, '0'), day, year: y });
   };
 
-  const tableHeadLabel = bookingListKind === 'gear' ? TABLE_HEAD_GEAR : TABLE_HEAD;
+  const tableHeadLabel = bookingListKind === 'gear' ? tableHeadGear : tableHead;
 
   return (
     <Page title={pageTitle}>
@@ -556,15 +572,15 @@ export function AdminBookingsPage({ bookingListKind, pageTitle, heading }) {
                   },
                 }}
               >
-                Nueva Reserva
+                {t('adminBookings.newBooking')}
               </Button>
             ) : undefined
           }
         />
         {bookingListKind === 'lesson' && (
           <Tabs value={listTab} onChange={(e, v) => setListTab(v)} sx={{ px: 2, mb: 1 }}>
-            <Tab label="Reservas" />
-            <Tab label="Pendientes (sin instructor)" />
+            <Tab label={t('adminBookings.tabs.bookings')} />
+            <Tab label={t('adminBookings.tabs.pendingNoInstructor')} />
           </Tabs>
         )}
         <AdminTableToolbar
@@ -605,7 +621,7 @@ export function AdminBookingsPage({ bookingListKind, pageTitle, heading }) {
               }
               sx={{ alignSelf: 'flex-start', px: 0, mb: statsOpen ? 1 : 0, typography: 'body2' }}
             >
-              Show stats
+              {t('adminBookings.showStats')}
             </Button>
             <Collapse in={statsOpen}>
               <BookingSummary
@@ -649,7 +665,7 @@ export function AdminBookingsPage({ bookingListKind, pageTitle, heading }) {
                       )
                     }
                     actions={
-                      <Tooltip title="Delete">
+                      <Tooltip title={t('adminBookings.deleteTooltip')}>
                         <IconButton color="primary" onClick={() => handleDeleteRows(selected)}>
                           <Iconify icon={'eva:trash-2-outline'} />
                         </IconButton>
@@ -662,7 +678,7 @@ export function AdminBookingsPage({ bookingListKind, pageTitle, heading }) {
                   <TableHeadCustom
                     order={order}
                     orderBy={orderBy}
-                    headLabel={activeListTab === 0 ? tableHeadLabel : TABLE_HEAD}
+                    headLabel={activeListTab === 0 ? tableHeadLabel : tableHeadIntent}
                     rowCount={displayRows?.length ?? 0}
                     numSelected={selected.length}
                     onSort={onSort}
@@ -718,7 +734,7 @@ export function AdminBookingsPage({ bookingListKind, pageTitle, heading }) {
                       isNotFound={
                         activeListTab === 0 ? isNotFound : !(bookingIntents && bookingIntents.length)
                       }
-                      title="Acá vas a poder ver y gestionar las solicitudes de reserva que ocurran en tu centro de esquí"
+                      title={t('adminBookings.empty.title')}
                       hideImage
                     />
                   </TableBody>
@@ -763,7 +779,7 @@ export function AdminBookingsPage({ bookingListKind, pageTitle, heading }) {
               {bookingListKind === 'lesson' && activeListTab === 1 && (
                 <Box sx={{ p: 2 }}>
                   <Typography variant="body2" color="text.secondary">
-                    Pendientes sin instructor: abrí esta página en escritorio para asignar o cancelar.
+                    {t('adminBookings.mobilePendingHint')}
                   </Typography>
                 </Box>
               )}
@@ -801,38 +817,38 @@ export function AdminBookingsPage({ bookingListKind, pageTitle, heading }) {
 
             <FormControlLabel
               control={<Switch checked={dense} onChange={onChangeDense} />}
-              label="Dense"
+              label={t('adminBookings.dense')}
               sx={{ px: 3, py: 1.5, top: 0, position: { md: 'absolute' } }}
             />
           </Box>
         </Card>
         <DialogAnimate open={isOpenModal} onClose={handleDeclineCloseModal}>
-          <DialogTitle>{'Seguro que queres declinar?'}</DialogTitle>
+          <DialogTitle>{t('adminBookings.declineDialog.title')}</DialogTitle>
           <DeclineForm
             email={selectedEmail}
             onCancel={handleDeclineCloseModal}
           ></DeclineForm>
         </DialogAnimate>
         <DialogAnimate open={isOpenEditBookingModal} onClose={handleDeclineCloseModal}>
-          <DialogTitle>{'Seguro que queres Editar esta reserva?'}</DialogTitle>
+          <DialogTitle>{t('adminBookings.editDialog.title')}</DialogTitle>
           <DeclineForm
             email={selectedEmail}
             onCancel={handleDeclineCloseModal}
           ></DeclineForm>
         </DialogAnimate>
         <DialogAnimate open={isOpenDeleteModal} onClose={handleDeleteCloseModal}>
-          <DialogTitle>{'¿Estás seguro que quieres eliminar la reserva?'}</DialogTitle>
+          <DialogTitle>{t('adminBookings.deleteDialog.title')}</DialogTitle>
           <DialogContent>
             <Typography>
-              Esta reserva ni su información van a poder ser visibles nunca más
+              {t('adminBookings.deleteDialog.body')}
             </Typography>
           </DialogContent>
           <DialogActions>
             <Button variant="outlined" onClick={handleDeleteCloseModal}>
-              Cancelar
+              {t('adminBookings.deleteDialog.cancel')}
             </Button>
             <Button variant="contained" color="error" onClick={handleConfirmDelete}>
-              Eliminar
+              {t('adminBookings.deleteDialog.confirm')}
             </Button>
           </DialogActions>
         </DialogAnimate>
@@ -842,11 +858,13 @@ export function AdminBookingsPage({ bookingListKind, pageTitle, heading }) {
 }
 
 export default function AdminReviewBookings() {
+  const { t } = useTranslation();
+
   return (
     <AdminBookingsPage
       bookingListKind="lesson"
-      pageTitle="Admin Review: List"
-      heading="Bookings Reveiw List"
+      pageTitle={t('adminBookings.pageTitle')}
+      heading={t('adminBookings.heading')}
     />
   );
 }

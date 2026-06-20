@@ -3,7 +3,6 @@ import Router from './routes';
 // theme
 import ThemeProvider from './theme';
 // components
-import Settings from './components/settings';
 import RtlLayout from './components/RtlLayout';
 import { ChartStyle } from './components/chart';
 import ScrollToTop from './components/ScrollToTop';
@@ -12,7 +11,6 @@ import NotistackProvider from './components/NotistackProvider';
 import ThemeColorPresets from './components/ThemeColorPresets';
 import ThemeLocalization from './components/ThemeLocalization';
 import MotionLazyContainer from './components/animate/MotionLazyContainer';
-import DeviceRedirect from './components/DeviceRedirect';
 import CompleteProfileModal from './components/CompleteProfileModal';
 import LegalDisclaimerModal from './components/LegalDisclaimerModal';
 import WhatsAppFloatButton from './components/WhatsAppFloatButton';

@@ -47,9 +47,8 @@ jobs:
           aws-region: ${{ env.AWS_REGION }}
 
       - name: Build
-        env:
-          CI: false
-        run: npm run build
+        # GHA sets CI=true; CRA then fails on existing lint/webpack warnings.
+        run: CI=false npm run build
 
       - name: Deploy to S3
         run: ./scripts/deploy-s3.sh

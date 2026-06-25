@@ -580,70 +580,114 @@ export function createBooking(teacherId, message, children, adults, events, tota
     };
 }
 
-export function createAdminBooking(teacherId, studentId, message, children, adults, events, totalPrice, bookingType, includesLaunch, includesEquipment, showPriceToTeacher, paymentStatus, paymentMethod, internalComment, resort) {
+export function createAdminBooking(
+    teacherId,
+    studentId,
+    message,
+    children,
+    adults,
+    events,
+    totalPrice,
+    bookingType,
+    includesLaunch,
+    includesEquipment,
+    showPriceToTeacher,
+    paymentStatus,
+    paymentMethod,
+    internalComment,
+    resort,
+    rentalFulfillment,
+    rentalDestinationType,
+    rentalDestinationDetail
+) {
     return async () => {
         dispatch(slice.actions.startLoading());
         try {
-            await axios.post(`/api/bookings/business?businessId=13`, {
-                teacher: {id: teacherId},
-                student: {id: studentId},
+            const payload = {
+                teacher: { id: teacherId },
+                student: { id: studentId },
                 userComment: message,
-                eventList: events.map(e => {
+                eventList: events.map((e) => {
                     if (e.lessonTime === 'AFTERNOON') {
                         return {
                             ...e,
                             start: dayjs(e.start),
                             end: dayjs(e.start),
-                            lessonTime: 'AFTERNOON'
-                        }
+                            lessonTime: 'AFTERNOON',
+                        };
                     }
                     if (e.lessonTime === 'AFTERNOON_2_HS') {
                         return {
                             ...e,
                             start: dayjs(e.start),
                             end: dayjs(e.start),
-                            lessonTime: 'AFTERNOON_2_HS'
-                        }
+                            lessonTime: 'AFTERNOON_2_HS',
+                        };
                     }
                     if (e.lessonTime === 'MORNING_2_HS') {
                         return {
                             ...e,
                             start: dayjs(e.start),
                             end: dayjs(e.start),
-                            lessonTime: 'MORNING_2_HS'
-                        }
+                            lessonTime: 'MORNING_2_HS',
+                        };
                     }
                     if (e.lessonTime === 'MORNING') {
                         return {
                             ...e,
-                            start:dayjs(e.start),
+                            start: dayjs(e.start),
                             end: dayjs(e.start),
-                            lessonTime: 'MORNING'
-                        }
+                            lessonTime: 'MORNING',
+                        };
                     }
                     return {
                         ...e,
                         start: dayjs(e.start),
                         end: dayjs(e.start),
-                        lessonTime: 'ALL_DAY'
-                    }
+                        lessonTime: 'ALL_DAY',
+                    };
                 }),
-                children: children,
-                adults: adults,
-                totalPrice: totalPrice,
+                children,
+                adults,
+                totalPrice,
                 price: totalPrice,
                 type: bookingType,
-                includesLaunch: includesLaunch,
-                includesEquipment: includesEquipment,
-                showPriceToTeacher: showPriceToTeacher,
-                paymentStatus: paymentStatus,
-                internalComment: internalComment,
-                resort: resort,
-                bookingPaymentMethod: paymentMethod
-            });
+                includesLaunch,
+                includesEquipment,
+                showPriceToTeacher,
+                paymentStatus,
+                internalComment,
+                resort,
+                bookingPaymentMethod: paymentMethod,
+            };
+            if (includesEquipment && rentalFulfillment) {
+                payload.rentalFulfillment = rentalFulfillment;
+                if (rentalFulfillment === 'SHIP_TO_HOTEL_OR_HOME') {
+                    payload.rentalDestinationType = rentalDestinationType;
+                    payload.rentalDestinationDetail = rentalDestinationDetail;
+                }
+            }
+            const response = await axios.post(`/api/bookings/business?businessId=13`, payload);
             dispatch(slice.actions.createBookingSuccess());
+            return response.data;
         } catch (error) {
             dispatch(slice.actions.hasError(error));
+            throw error;
+        }
+    };
+}
+
+export function createAdminBookingRentalReservation(bookingId, rentalPayload) {
+    return async () => {
+        try {
+            const response = await axios.post('/api/rental/admin/reservations/booking', {
+                bookingId,
+                ...rentalPayload,
+            });
+            return response.data;
+        } catch (error) {
+            dispatch(slice.actions.hasError(error));
+            throw error;
         }
     };
 }

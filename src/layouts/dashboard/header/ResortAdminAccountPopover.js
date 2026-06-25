@@ -22,11 +22,17 @@ import LogoutIcon from '@mui/icons-material/Logout';
 
 ResortAdminAccountPopover.propTypes = {
   logoHeight: PropTypes.number,
+  fullWidth: PropTypes.bool,
   sx: PropTypes.object,
   popoverAbove: PropTypes.bool,
 };
 
-export default function ResortAdminAccountPopover({ logoHeight = 32, sx, popoverAbove = false }) {
+export default function ResortAdminAccountPopover({
+  logoHeight = 32,
+  fullWidth = false,
+  sx,
+  popoverAbove = false,
+}) {
   const navigate = useNavigate();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
@@ -70,8 +76,9 @@ export default function ResortAdminAccountPopover({ logoHeight = 32, sx, popover
       <IconButton
         onClick={handleOpen}
         sx={{
-          p: 0.5,
-          borderRadius: 1,
+          p: fullWidth ? 0 : 0.5,
+          borderRadius: fullWidth ? 0 : 1,
+          width: fullWidth ? 1 : 'auto',
           ...(open && !isMobile && {
             bgcolor: (theme) => alpha(theme.palette.grey[500], 0.12),
           }),
@@ -82,7 +89,12 @@ export default function ResortAdminAccountPopover({ logoHeight = 32, sx, popover
           component="img"
           src="/logo/snowmatch.png"
           alt="Snowmatch Logo"
-          sx={{ height: logoHeight, width: 'auto', display: 'block' }}
+          sx={{
+            display: 'block',
+            ...(fullWidth
+              ? { width: 1, height: 'auto' }
+              : { height: logoHeight, width: 'auto' }),
+          }}
         />
       </IconButton>
 

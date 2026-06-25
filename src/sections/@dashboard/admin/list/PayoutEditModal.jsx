@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import { useState, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 // @mui
 import {
   Dialog,
@@ -21,6 +22,12 @@ import Iconify from '../../../../components/Iconify';
 import { useDispatch } from 'react-redux';
 import { editPayout } from '../../../../redux/slices/admin';
 
+function getIntlLocale(lang) {
+  if (lang?.startsWith('pt')) return 'pt-BR';
+  if (lang?.startsWith('en')) return 'en-US';
+  return 'es-AR';
+}
+
 PayoutEditModal.propTypes = {
   open: PropTypes.bool,
   onClose: PropTypes.func,
@@ -31,6 +38,8 @@ PayoutEditModal.propTypes = {
 
 export default function PayoutEditModal({ open, onClose, payout, onSave, selectedBookingId }) {
   const dispatch = useDispatch();
+  const { t, i18n } = useTranslation();
+  const intlLocale = getIntlLocale(i18n.language);
   const [amount, setAmount] = useState(payout?.amount?.toString() || '');
   const [bookingIds, setBookingIds] = useState(
     payout?.bookingIds?.join(', ') || (selectedBookingId ? selectedBookingId.toString() : '')
@@ -45,16 +54,14 @@ export default function PayoutEditModal({ open, onClose, payout, onSave, selecte
     const file = event.target.files[0];
     if (!file) return;
 
-    // Validate file type
     const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'application/pdf'];
     if (!allowedTypes.includes(file.type)) {
-      setError('Por favor selecciona un archivo válido (JPG, PNG o PDF)');
+      setError(t('adminBookings.payoutEdit.invalidFileType'));
       return;
     }
 
-    // Validate file size (max 10MB)
     if (file.size > 10 * 1024 * 1024) {
-      setError('El archivo es demasiado grande. Máximo 10MB permitido.');
+      setError(t('adminBookings.payoutEdit.fileTooLarge'));
       return;
     }
 
@@ -65,24 +72,23 @@ export default function PayoutEditModal({ open, onClose, payout, onSave, selecte
 
   const handleSave = async () => {
     if (!amount || parseFloat(amount) <= 0) {
-      setError('Por favor ingresa un monto válido');
+      setError(t('adminBookings.payoutEdit.invalidAmount'));
       return;
     }
 
     if (!bookingIds.trim()) {
-      setError('Por favor ingresa al menos un ID de reserva');
+      setError(t('adminBookings.payoutEdit.invalidBookingIds'));
       return;
     }
 
-    // Parse booking IDs
     const parsedBookingIds = bookingIds
       .split(',')
-      .map(id => id.trim())
-      .filter(id => id && !isNaN(id))
-      .map(id => parseInt(id, 10));
+      .map((id) => id.trim())
+      .filter((id) => id && !Number.isNaN(Number(id)))
+      .map((id) => parseInt(id, 10));
 
     if (parsedBookingIds.length === 0) {
-      setError('Por favor ingresa IDs de reserva válidos');
+      setError(t('adminBookings.payoutEdit.invalidBookingIds'));
       return;
     }
 
@@ -92,13 +98,10 @@ export default function PayoutEditModal({ open, onClose, payout, onSave, selecte
     try {
       let invoiceUrl = payout?.invoiceUrl || '';
 
-      // If a new file is selected, upload it first
       if (selectedFile) {
-        // Get presigned URL for upload
         const presignedResponse = await fetch(`/api/payouts/preSignedUrlPayout/${payout.id}`);
         const presignedUrl = await presignedResponse.text();
 
-        // Upload file to S3
         const uploadResponse = await fetch(presignedUrl, {
           method: 'PUT',
           body: selectedFile,
@@ -114,11 +117,10 @@ export default function PayoutEditModal({ open, onClose, payout, onSave, selecte
         invoiceUrl = presignedUrl.split('?')[0];
       }
 
-      // Update payout
       const payoutData = {
         amount: parseFloat(amount),
         bookingIds: parsedBookingIds,
-        invoiceUrl: invoiceUrl,
+        invoiceUrl,
       };
 
       await dispatch(editPayout(payout.id, payoutData));
@@ -126,38 +128,41 @@ export default function PayoutEditModal({ open, onClose, payout, onSave, selecte
       setUploading(false);
       onSave();
       handleClose();
-    } catch (error) {
+    } catch (err) {
       setUploading(false);
-      setError('Error al actualizar el payout. Por favor intenta nuevamente.');
-      console.error('Error updating payout:', error);
+      setError(t('adminBookings.payoutEdit.updateError'));
+      console.error('Error updating payout:', err);
     }
   };
 
   const handleClose = () => {
     setAmount(payout?.amount?.toString() || '');
-    setBookingIds(payout?.bookingIds?.join(', ') || (selectedBookingId ? selectedBookingId.toString() : ''));
+    setBookingIds(
+      payout?.bookingIds?.join(', ') || (selectedBookingId ? selectedBookingId.toString() : '')
+    );
     setSelectedFile(null);
     setFileName('');
     setError('');
     onClose();
   };
 
-  const formatPrice = (price) => {
-    return new Intl.NumberFormat('es-AR', {
+  const formatPrice = (price) =>
+    new Intl.NumberFormat(intlLocale, {
       style: 'currency',
-      currency: 'ARS'
+      currency: 'ARS',
     }).format(price);
-  };
 
   return (
     <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
       <DialogTitle>
         <Stack direction="row" alignItems="center" spacing={1}>
           <Iconify icon="eva:edit-fill" />
-          <Typography variant="h6">Editar Payout #{payout?.id}</Typography>
+          <Typography variant="h6">
+            {t('adminBookings.payoutEdit.title', { id: payout?.id })}
+          </Typography>
         </Stack>
       </DialogTitle>
-      
+
       <DialogContent>
         <Stack spacing={3} sx={{ mt: 1 }}>
           {error && (
@@ -168,36 +173,36 @@ export default function PayoutEditModal({ open, onClose, payout, onSave, selecte
 
           <TextField
             fullWidth
-            label="Monto"
+            label={t('adminBookings.payoutEdit.amount')}
             type="number"
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
             InputProps={{
               startAdornment: <InputAdornment position="start">$</InputAdornment>,
             }}
-            helperText="Monto actual del payout"
+            helperText={t('adminBookings.payoutEdit.amountHelper')}
           />
 
           <TextField
             fullWidth
-            label="IDs de Reservas"
+            label={t('adminBookings.payoutEdit.bookingIds')}
             value={bookingIds}
             onChange={(e) => setBookingIds(e.target.value)}
-            helperText="IDs de reservas separados por comas (ej: 45, 67, 89)"
+            helperText={t('adminBookings.payoutEdit.bookingIdsHelper')}
           />
 
           <Box>
             <Typography variant="body2" color="text.secondary" gutterBottom>
-              Comprobante de Transferencia
+              {t('adminBookings.payoutEdit.transferProof')}
             </Typography>
-            
+
             {payout?.invoiceUrl && !selectedFile && (
               <Box sx={{ mb: 2 }}>
                 <Typography variant="body2" color="text.secondary" gutterBottom>
-                  Comprobante actual:
+                  {t('adminBookings.payoutEdit.currentProof')}
                 </Typography>
                 <Chip
-                  label="Ver comprobante actual"
+                  label={t('adminBookings.payoutEdit.viewCurrentProof')}
                   onClick={() => window.open(payout.invoiceUrl, '_blank')}
                   color="primary"
                   variant="outlined"
@@ -209,7 +214,7 @@ export default function PayoutEditModal({ open, onClose, payout, onSave, selecte
             {fileName && (
               <Box sx={{ mb: 2 }}>
                 <Typography variant="body2" color="text.secondary" gutterBottom>
-                  Nuevo archivo seleccionado:
+                  {t('adminBookings.payoutEdit.newFileSelected')}
                 </Typography>
                 <Chip
                   label={fileName}
@@ -232,34 +237,38 @@ export default function PayoutEditModal({ open, onClose, payout, onSave, selecte
               disabled={uploading}
               fullWidth
             >
-              {uploading ? 'Subiendo...' : 'Seleccionar Nuevo Comprobante'}
+              {uploading
+                ? t('adminBookings.payoutEdit.uploading')
+                : t('adminBookings.payoutEdit.selectNewProof')}
             </Button>
-            
+
             <Typography variant="caption" color="text.secondary" sx={{ mt: 1, display: 'block' }}>
-              Formatos permitidos: JPG, PNG, PDF (máximo 10MB)
+              {t('adminBookings.payoutEdit.fileFormatsHint')}
             </Typography>
           </Box>
 
           {payout && (
             <Box>
               <Typography variant="body2" color="text.secondary" gutterBottom>
-                Información del Payout:
+                {t('adminBookings.payoutEdit.payoutInfo')}
               </Typography>
               <Stack spacing={1}>
                 <Typography variant="body2">
-                  <strong>ID:</strong> {payout.id}
+                  <strong>{t('adminBookings.payoutEdit.infoId')}</strong> {payout.id}
                 </Typography>
                 <Typography variant="body2">
-                  <strong>Monto actual:</strong> {formatPrice(payout.amount)}
+                  <strong>{t('adminBookings.payoutEdit.infoAmount')}</strong>{' '}
+                  {formatPrice(payout.amount)}
                 </Typography>
                 {payout.transferDate && (
                   <Typography variant="body2">
-                    <strong>Fecha de transferencia:</strong> {new Date(payout.transferDate).toLocaleDateString('es-AR')}
+                    <strong>{t('adminBookings.payoutEdit.infoTransferDate')}</strong>{' '}
+                    {new Date(payout.transferDate).toLocaleDateString(intlLocale)}
                   </Typography>
                 )}
                 {payout.status && (
                   <Typography variant="body2">
-                    <strong>Estado:</strong> {payout.status}
+                    <strong>{t('adminBookings.payoutEdit.infoStatus')}</strong> {payout.status}
                   </Typography>
                 )}
               </Stack>
@@ -270,18 +279,19 @@ export default function PayoutEditModal({ open, onClose, payout, onSave, selecte
 
       <DialogActions>
         <Button onClick={handleClose} disabled={uploading}>
-          Cancelar
+          {t('adminBookings.deleteDialog.cancel')}
         </Button>
-        <Button 
-          onClick={handleSave} 
-          variant="contained" 
+        <Button
+          onClick={handleSave}
+          variant="contained"
           disabled={!amount || !bookingIds.trim() || uploading}
         >
-          {uploading ? 'Guardando...' : 'Guardar Cambios'}
+          {uploading
+            ? t('adminBookings.payoutEdit.saving')
+            : t('adminBookings.payoutEdit.saveChanges')}
         </Button>
       </DialogActions>
 
-      {/* Hidden file input */}
       <input
         ref={fileInputRef}
         type="file"
@@ -291,4 +301,4 @@ export default function PayoutEditModal({ open, onClose, payout, onSave, selecte
       />
     </Dialog>
   );
-} 
+}

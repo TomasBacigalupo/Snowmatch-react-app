@@ -39,8 +39,7 @@ import { DialogAnimate } from '../../components/animate';
 import DeclineForm from '../../sections/@dashboard/admin/DeclineForm';
 import AdminTableCard from 'src/sections/@dashboard/admin/list/AdminTableCard';
 
-// ----------------------------------------------------------------------
-
+const SORT_BY_OPTIONS = ['priority', 'id'];
 const ROLE_OPTIONS = ['TEACHER', 'STUDENT'];
 
 // ----------------------------------------------------------------------
@@ -52,6 +51,7 @@ export default function AdminReview() {
       { id: 'id', label: t('adminReview.table.id'), align: 'left' },
       { id: 'name', label: t('adminReview.table.name'), align: 'left' },
       { id: 'level', label: t('adminReview.table.level'), align: 'left' },
+      { id: 'priority', label: t('adminReview.table.priority'), align: 'left' },
       { id: 'isAuthorized', label: t('adminReview.table.authorized'), align: 'center' },
       { id: 'state', label: t('adminReview.table.state'), align: 'left' },
     ],
@@ -83,6 +83,7 @@ export default function AdminReview() {
   const [filterRole, setFilterRole] = useState(ROLE_OPTIONS[0]);
   const [filterLevel, setFilterLevel] = useState(0);
   const [filterResort, setFilterResort] = useState('');
+  const [filterSortBy, setFilterSortBy] = useState(isResortAdmin ? 'priority' : 'id');
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [selectedTeacher, setSelectedTeacher] = useState(null);
 
@@ -110,6 +111,11 @@ export default function AdminReview() {
   const handleFilterResort = (event) => {
     if (lockedResort) return;
     setFilterResort(event.target.value);
+    setPage(0);
+  };
+
+  const handleFilterSortBy = (event) => {
+    setFilterSortBy(event.target.value);
     setPage(0);
   };
 
@@ -160,9 +166,9 @@ export default function AdminReview() {
 
   const fetchTeachers = (pageNum, size) => {
     if (isResortAdmin) {
-      dispatch(getResortAdminTeachers(pageNum, filterRole, filterName, filterLevel, size));
+      dispatch(getResortAdminTeachers(pageNum, filterRole, filterName, filterLevel, size, filterSortBy));
     } else {
-      dispatch(getTeachers(pageNum, filterRole, filterName, filterLevel, size, filterResort));
+      dispatch(getTeachers(pageNum, filterRole, filterName, filterLevel, size, filterResort, filterSortBy));
     }
   };
 
@@ -203,7 +209,7 @@ export default function AdminReview() {
   useEffect(() => {
     fetchTeachers(0, rowsPerPage);
     setPage(0);
-  }, [filterRole, filterName, filterLevel, filterResort, isResortAdmin]);
+  }, [filterRole, filterName, filterLevel, filterResort, filterSortBy, isResortAdmin]);
 
   return (
     <Page title={t('adminReview.pageTitle')}>
@@ -223,17 +229,21 @@ export default function AdminReview() {
             filterRole={filterRole}
             filterLevel={filterLevel}
             filterResort={filterResort}
+            filterSortBy={filterSortBy}
             onFilterName={handleFilterName}
             onFilterRole={handleFilterRole}
             onFilterLevel={handleFilterLevel}
             onFilterResort={handleFilterResort}
+            onFilterSortBy={handleFilterSortBy}
             optionsRole={ROLE_OPTIONS}
+            optionsSortBy={SORT_BY_OPTIONS}
             showSearchAdmin={false}
             showRole={false}
             showMonth={false}
             showTeacherId={false}
             showStudentId={false}
             showResort
+            showSortBy
             lockResort={lockedResort}
           />
 

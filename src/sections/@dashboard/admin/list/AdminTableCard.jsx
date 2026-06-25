@@ -28,7 +28,7 @@ export default function AdminTableCard({ row, selected, onEditRow, onSelectRow, 
     const { t } = useTranslation();
     const theme = useTheme();
 
-    const { name, lastname, imageLink, role, level, authorized, state, id, emailVerified, contacted } = row;
+    const { name, lastname, imageLink, role, level, authorized, state, id, emailVerified, contacted, priority } = row;
 
     const [openMenu, setOpenMenuActions] = useState(null);
 
@@ -147,6 +147,9 @@ export default function AdminTableCard({ row, selected, onEditRow, onSelectRow, 
                         </Typography>
                         <Typography >
                             {t('adminReview.card.level', { level })}
+                        </Typography>
+                        <Typography >
+                            {t('adminReview.table.priority')}: {priority ?? 0}
                         </Typography>
                     </Box>
                     {showRole && (

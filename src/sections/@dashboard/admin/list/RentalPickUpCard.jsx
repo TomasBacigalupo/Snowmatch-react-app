@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Card,
   CardContent,
@@ -24,6 +25,10 @@ RentalPickUpCard.propTypes = {
 };
 
 export default function RentalPickUpCard({ line, onMarkReadyPickup }) {
+  const { t } = useTranslation();
+  const emptyValue = t('adminBookings.drawer.emptyValue');
+  const pk = (key) => t(`adminBookings.rental.pickup.${key}`);
+
   const [selected, setSelected] = useState(false);
   const [readyForPickup, setReadyForPickup] = useState(false);
   const [marking, setMarking] = useState(false);
@@ -79,22 +84,14 @@ export default function RentalPickUpCard({ line, onMarkReadyPickup }) {
             }}
             color="primary"
             sx={{ p: 0.5 }}
-            inputProps={{ 'aria-label': 'Datos revisados' }}
+            inputProps={{ 'aria-label': pk('dataReviewedAria') }}
           />
         </Box>
 
         <Stack spacing={1.5}>
-          <Stack
-            direction="row"
-            alignItems="center"
-            spacing={1}
-            sx={{ pr: 5, gap: 1 }}
-          >
-            <Typography
-              variant="subtitle2"
-              sx={{ fontWeight: 700, flex: 1, minWidth: 0 }}
-            >
-              {line.itemName || '—'}
+          <Stack direction="row" alignItems="center" spacing={1} sx={{ pr: 5, gap: 1 }}>
+            <Typography variant="subtitle2" sx={{ fontWeight: 700, flex: 1, minWidth: 0 }}>
+              {line.itemName || emptyValue}
             </Typography>
             <Button
               size="small"
@@ -123,26 +120,26 @@ export default function RentalPickUpCard({ line, onMarkReadyPickup }) {
                 '& .MuiButton-endIcon': { ml: 0.5 },
               }}
             >
-              {medidasOpen ? 'Ocultar medidas' : 'Ver medidas'}
+              {medidasOpen ? pk('hideMeasures') : pk('viewMeasures')}
             </Button>
           </Stack>
 
           <Collapse in={medidasOpen} timeout="auto" unmountOnExit>
             <Typography variant="caption" color="text.secondary" display="block" sx={{ mb: 1 }}>
-              Participante (medidas)
+              {pk('participantMeasures')}
             </Typography>
             <Stack spacing={0.5}>
               <Typography variant="body2">
-                Altura:{' '}
-                <strong>{h != null && h !== '' ? `${h} cm` : '—'}</strong>
+                {pk('height')}{' '}
+                <strong>{h != null && h !== '' ? `${h} cm` : emptyValue}</strong>
               </Typography>
               <Typography variant="body2">
-                Peso:{' '}
-                <strong>{w != null && w !== '' ? `${w} kg` : '—'}</strong>
+                {pk('weight')}{' '}
+                <strong>{w != null && w !== '' ? `${w} kg` : emptyValue}</strong>
               </Typography>
               <Typography variant="body2">
-                Pie:{' '}
-                <strong>{foot != null && foot !== '' ? `${foot} cm` : '—'}</strong>
+                {pk('foot')}{' '}
+                <strong>{foot != null && foot !== '' ? `${foot} cm` : emptyValue}</strong>
               </Typography>
             </Stack>
           </Collapse>
@@ -180,10 +177,10 @@ export default function RentalPickUpCard({ line, onMarkReadyPickup }) {
                   }}
                 >
                   <Typography variant="caption" color="text.secondary" display="block">
-                    Longitud esquí
+                    {pk('skiLength')}
                   </Typography>
                   <Typography variant="h5" sx={{ fontWeight: 800, lineHeight: 1.2 }}>
-                    {skiLen ? skiLen.label : '—'}
+                    {skiLen ? skiLen.label : emptyValue}
                   </Typography>
                 </Box>
               </Grid>
@@ -201,10 +198,10 @@ export default function RentalPickUpCard({ line, onMarkReadyPickup }) {
                   }}
                 >
                   <Typography variant="caption" color="text.secondary" display="block">
-                    DIN (aprox.)
+                    {pk('dinApprox')}
                   </Typography>
                   <Typography variant="h5" sx={{ fontWeight: 800, lineHeight: 1.2 }}>
-                    {din != null ? din : '—'}
+                    {din != null ? din : emptyValue}
                   </Typography>
                 </Box>
               </Grid>
@@ -222,10 +219,10 @@ export default function RentalPickUpCard({ line, onMarkReadyPickup }) {
                   }}
                 >
                   <Typography variant="caption" color="text.secondary" display="block">
-                    Talla bota esquí (Mondo)
+                    {pk('bootSizeMondo')}
                   </Typography>
                   <Typography variant="h5" sx={{ fontWeight: 800, lineHeight: 1.2 }}>
-                    {foot != null && foot !== '' ? `${foot}` : '—'}
+                    {foot != null && foot !== '' ? `${foot}` : emptyValue}
                   </Typography>
                 </Box>
               </Grid>
@@ -243,10 +240,10 @@ export default function RentalPickUpCard({ line, onMarkReadyPickup }) {
                   }}
                 >
                   <Typography variant="caption" color="text.secondary" display="block">
-                    Apertura fijación / suela bota
+                    {pk('bindingSole')}
                   </Typography>
                   <Typography variant="h5" sx={{ fontWeight: 800, lineHeight: 1.2 }}>
-                    {soleMm != null ? `${soleMm} mm` : '—'}
+                    {soleMm != null ? `${soleMm} mm` : emptyValue}
                   </Typography>
                 </Box>
               </Grid>
@@ -257,7 +254,7 @@ export default function RentalPickUpCard({ line, onMarkReadyPickup }) {
         <Stack spacing={1.5} sx={{ mt: 2, pt: 2, borderTop: 1, borderColor: 'divider' }}>
           {readyForPickup && (
             <Typography variant="body2" color="success.main" fontWeight={600}>
-              Listo para retiro
+              {pk('readyForPickup')}
             </Typography>
           )}
           {selected && !readyForPickup && (
@@ -271,7 +268,7 @@ export default function RentalPickUpCard({ line, onMarkReadyPickup }) {
                 handleMarkReady();
               }}
             >
-              {marking ? 'Marcando…' : 'Mark as ready to pick up'}
+              {marking ? pk('marking') : pk('markReadyPickup')}
             </Button>
           )}
         </Stack>

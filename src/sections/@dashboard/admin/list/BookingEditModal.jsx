@@ -13,19 +13,37 @@ import {
   MenuItem,
   FormControlLabel,
   Switch,
-  Box,
-  Typography,
 } from '@mui/material';
 import { useDispatch } from 'react-redux';
 import { editAdminBooking } from 'src/redux/slices/admin';
 import { useState } from 'react';
 import { useSnackbar } from 'notistack';
+import { useTranslation } from 'react-i18next';
 
-// Resort options from ShopFilterSidebar
 const RESORT_OPTIONS = [
-  { category: "Argentina", resorts: [ 'Caviahue', 'Cerro Bayo', 'Cerro Castor', 'Cerro Catedral', 'Chapelco', 'La Hoya', 'Las Leñas', 'Las Pendientes', 'Perito Moreno', 'Lago Hermoso', 'Buenos Aires'] },
-  { category: "Chile", resorts: [ 'Portillo']}
+  {
+    category: 'Argentina',
+    resorts: [
+      'Caviahue',
+      'Cerro Bayo',
+      'Cerro Castor',
+      'Cerro Catedral',
+      'Chapelco',
+      'La Hoya',
+      'Las Leñas',
+      'Las Pendientes',
+      'Perito Moreno',
+      'Lago Hermoso',
+      'Buenos Aires',
+    ],
+  },
+  { category: 'Chile', resorts: ['Portillo'] },
 ];
+
+const PAYMENT_STATUS_VALUES = ['PAID', 'PAID_10', 'PAID_20', 'PAID_30', 'PAID_40', 'PAID_50', 'UNPAID'];
+const PAYMENT_METHOD_VALUES = ['CASH', 'TRANSFER', 'DEBIT_CARD', 'CREDIT_CARD'];
+const STATE_VALUES = ['PENDING', 'ACCEPTED', 'DECLINED'];
+const TYPE_VALUES = ['ASSIGNED', 'REFERRED'];
 
 BookingEditModal.propTypes = {
   open: PropTypes.bool,
@@ -37,8 +55,11 @@ BookingEditModal.propTypes = {
 export default function BookingEditModal({ open, onClose, booking, onSave }) {
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
+  const { t } = useTranslation();
   const [userCommentLength, setUserCommentLength] = useState(booking?.userComment?.length || 0);
-  const [internalCommentLength, setInternalCommentLength] = useState(booking?.internalComment?.length || 0);
+  const [internalCommentLength, setInternalCommentLength] = useState(
+    booking?.internalComment?.length || 0
+  );
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -61,10 +82,9 @@ export default function BookingEditModal({ open, onClose, booking, onSave }) {
       teacherId: formData.get('teacherId'),
       studentId: formData.get('studentId'),
     };
-    console.log(updatedBooking);
-    
+
     dispatch(editAdminBooking(booking.id, updatedBooking));
-    enqueueSnackbar('Reserva actualizada exitosamente', { variant: 'success' });
+    enqueueSnackbar(t('adminBookings.editModal.updateSuccess'), { variant: 'success' });
     onSave({
       ...booking,
       userComment: formData.get('userComment'),
@@ -88,46 +108,46 @@ export default function BookingEditModal({ open, onClose, booking, onSave }) {
   return (
     <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
       <form onSubmit={handleSubmit}>
-        <DialogTitle>Editar Reserva #{booking?.id}</DialogTitle>
+        <DialogTitle>{t('adminBookings.editModal.title', { id: booking?.id })}</DialogTitle>
         <DialogContent>
           <Stack spacing={3} sx={{ mt: 2 }}>
             <Stack spacing={2} direction={{ xs: 'column', md: 'row' }}>
               <TextField
                 fullWidth
-                label="Comentario del Cliente"
+                label={t('adminBookings.editModal.clientComment')}
                 name="userComment"
                 defaultValue={booking?.userComment}
                 multiline
                 rows={2}
                 inputProps={{ maxLength: 255 }}
                 onChange={(e) => setUserCommentLength(e.target.value.length)}
-                helperText={`${userCommentLength}/255 caracteres`}
+                helperText={t('adminBookings.editModal.charCount', { count: userCommentLength })}
               />
 
               <TextField
                 fullWidth
-                label="Comentario Interno"
+                label={t('adminBookings.editModal.internalComment')}
                 name="internalComment"
                 defaultValue={booking?.internalComment}
                 multiline
                 rows={2}
                 inputProps={{ maxLength: 255 }}
                 onChange={(e) => setInternalCommentLength(e.target.value.length)}
-                helperText={`${internalCommentLength}/255 caracteres`}
+                helperText={t('adminBookings.editModal.charCount', { count: internalCommentLength })}
               />
             </Stack>
 
             <Stack spacing={2} direction={{ xs: 'column', md: 'row' }}>
               <TextField
                 fullWidth
-                label="ID del Estudiante"
+                label={t('adminBookings.editModal.studentId')}
                 name="studentId"
                 defaultValue={booking?.student?.id}
               />
 
               <TextField
                 fullWidth
-                label="ID del Instructor"
+                label={t('adminBookings.editModal.teacherId')}
                 name="teacherId"
                 defaultValue={booking?.teacher?.id}
               />
@@ -135,81 +155,89 @@ export default function BookingEditModal({ open, onClose, booking, onSave }) {
 
             <Stack spacing={2} direction={{ xs: 'column', md: 'row' }}>
               <FormControl fullWidth>
-                <InputLabel>Estado de Pago</InputLabel>
+                <InputLabel>{t('adminBookings.editModal.paymentStatus')}</InputLabel>
                 <Select
                   name="paymentStatus"
-                  label="Estado de Pago"
+                  label={t('adminBookings.editModal.paymentStatus')}
                   defaultValue={booking?.paymentStatus || 'UNPAID'}
                 >
-                  <MenuItem value="PAID">Pagado</MenuItem>
-                  <MenuItem value="PAID_10">10% Pagado</MenuItem>
-                  <MenuItem value="PAID_20">20% Pagado</MenuItem>
-                  <MenuItem value="PAID_30">30% Pagado</MenuItem>
-                  <MenuItem value="PAID_40">40% Pagado</MenuItem>
-                  <MenuItem value="PAID_50">50% Pagado</MenuItem>
-                  <MenuItem value="UNPAID">No Pagado</MenuItem>
+                  {PAYMENT_STATUS_VALUES.map((value) => (
+                    <MenuItem key={value} value={value}>
+                      {t(`adminBookings.editModal.paymentStatusOptions.${value}`)}
+                    </MenuItem>
+                  ))}
                 </Select>
               </FormControl>
 
               <FormControl fullWidth>
-                <InputLabel>Método de Pago</InputLabel>
+                <InputLabel>{t('adminBookings.editModal.paymentMethod')}</InputLabel>
                 <Select
                   name="bookingPaymentMethod"
-                  label="Método de Pago"
+                  label={t('adminBookings.editModal.paymentMethod')}
                   defaultValue={booking?.bookingPaymentMethod || ''}
                 >
-                  <MenuItem value="CASH">Efectivo</MenuItem>
-                  <MenuItem value="TRANSFER">Transferencia</MenuItem>
-                  <MenuItem value="DEBIT_CARD">Tarjeta de Débito</MenuItem>
-                  <MenuItem value="CREDIT_CARD">Tarjeta de Crédito</MenuItem>
+                  {PAYMENT_METHOD_VALUES.map((value) => (
+                    <MenuItem key={value} value={value}>
+                      {t(`adminBookings.editModal.paymentMethodOptions.${value}`)}
+                    </MenuItem>
+                  ))}
                 </Select>
               </FormControl>
             </Stack>
 
             <Stack spacing={2} direction={{ xs: 'column', md: 'row' }}>
               <FormControl fullWidth>
-                <InputLabel>Estado</InputLabel>
+                <InputLabel>{t('adminBookings.editModal.state')}</InputLabel>
                 <Select
                   name="state"
-                  label="Estado"
+                  label={t('adminBookings.editModal.state')}
                   defaultValue={booking?.state || 'PENDING'}
                 >
-                  <MenuItem value="PENDING">Pendiente</MenuItem>
-                  <MenuItem value="ACCEPTED">Confirmado</MenuItem>
-                  <MenuItem value="DECLINED">Rechazado</MenuItem>
+                  {STATE_VALUES.map((value) => (
+                    <MenuItem key={value} value={value}>
+                      {t(`adminBookings.editModal.stateOptions.${value}`)}
+                    </MenuItem>
+                  ))}
                 </Select>
               </FormControl>
             </Stack>
 
             <Stack spacing={2} direction={{ xs: 'column', md: 'row' }}>
               <FormControl fullWidth>
-                <InputLabel>Tipo de Reserva</InputLabel>
+                <InputLabel>{t('adminBookings.editModal.bookingType')}</InputLabel>
                 <Select
                   name="type"
-                  label="Tipo de Reserva"
+                  label={t('adminBookings.editModal.bookingType')}
                   defaultValue={booking?.type || 'ASSIGNED'}
                 >
-                  <MenuItem value="ASSIGNED">Asignado</MenuItem>
-                  <MenuItem value="REFERRED">Referido</MenuItem>
+                  {TYPE_VALUES.map((value) => (
+                    <MenuItem key={value} value={value}>
+                      {t(`adminBookings.editModal.typeOptions.${value}`)}
+                    </MenuItem>
+                  ))}
                 </Select>
               </FormControl>
 
               <FormControl fullWidth>
-                <InputLabel>Resort</InputLabel>
+                <InputLabel>{t('adminBookings.editModal.resort')}</InputLabel>
                 <Select
                   name="resort"
-                  label="Resort"
+                  label={t('adminBookings.editModal.resort')}
                   defaultValue={booking?.resort || ''}
                 >
                   {RESORT_OPTIONS.map((country) => [
-                    <MenuItem key={`${country.category}-header`} disabled sx={{ fontWeight: 'bold', backgroundColor: 'grey.100' }}>
+                    <MenuItem
+                      key={`${country.category}-header`}
+                      disabled
+                      sx={{ fontWeight: 'bold', backgroundColor: 'grey.100' }}
+                    >
                       {country.category}
                     </MenuItem>,
-                    ...country.resorts.sort().map(resort => (
+                    ...country.resorts.sort().map((resort) => (
                       <MenuItem key={resort} value={resort} sx={{ pl: 3 }}>
                         {resort}
                       </MenuItem>
-                    ))
+                    )),
                   ]).flat()}
                 </Select>
               </FormControl>
@@ -218,7 +246,7 @@ export default function BookingEditModal({ open, onClose, booking, onSave }) {
             <Stack spacing={2} direction={{ xs: 'column', md: 'row' }}>
               <TextField
                 fullWidth
-                label="Cantidad de Adultos"
+                label={t('adminBookings.editModal.adultsCount')}
                 name="adults"
                 type="number"
                 defaultValue={booking?.adults}
@@ -227,7 +255,7 @@ export default function BookingEditModal({ open, onClose, booking, onSave }) {
 
               <TextField
                 fullWidth
-                label="Cantidad de Niños"
+                label={t('adminBookings.editModal.childrenCount')}
                 name="children"
                 type="number"
                 defaultValue={booking?.children}
@@ -238,17 +266,17 @@ export default function BookingEditModal({ open, onClose, booking, onSave }) {
             <Stack spacing={2} direction={{ xs: 'column', md: 'row' }}>
               <TextField
                 fullWidth
-                label="Precio"
+                label={t('adminBookings.editModal.price')}
                 name="price"
                 type="number"
                 defaultValue={booking?.price}
                 InputProps={{
                   startAdornment: <span style={{ marginRight: 8 }}>$</span>,
-                  inputProps: { 
-                    min: 0, 
+                  inputProps: {
+                    min: 0,
                     step: 0.01,
-                    style: { textAlign: 'right' }
-                  }
+                    style: { textAlign: 'right' },
+                  },
                 }}
                 sx={{
                   '& input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button': {
@@ -260,7 +288,11 @@ export default function BookingEditModal({ open, onClose, booking, onSave }) {
                 }}
               />
 
-              <Stack spacing={2} direction={{ xs: 'column', sm: 'row' }} sx={{ width: '100%', alignItems: { xs: 'flex-start', sm: 'center' } }}>
+              <Stack
+                spacing={2}
+                direction={{ xs: 'column', sm: 'row' }}
+                sx={{ width: '100%', alignItems: { xs: 'flex-start', sm: 'center' } }}
+              >
                 <FormControlLabel
                   control={
                     <Switch
@@ -268,17 +300,14 @@ export default function BookingEditModal({ open, onClose, booking, onSave }) {
                       defaultChecked={booking?.includesEquipments}
                     />
                   }
-                  label="Incluye Equipo"
+                  label={t('adminBookings.editModal.includesEquipment')}
                 />
 
                 <FormControlLabel
                   control={
-                    <Switch
-                      name="includesLaunch"
-                      defaultChecked={booking?.includesLaunch}
-                    />
+                    <Switch name="includesLaunch" defaultChecked={booking?.includesLaunch} />
                   }
-                  label="Incluye Almuerzo"
+                  label={t('adminBookings.editModal.includesLunch')}
                 />
 
                 <FormControlLabel
@@ -288,19 +317,19 @@ export default function BookingEditModal({ open, onClose, booking, onSave }) {
                       defaultChecked={booking?.showPriceToTeacher ?? true}
                     />
                   }
-                  label="Mostrar precio al profesor"
+                  label={t('adminBookings.editModal.showPriceToTeacher')}
                 />
               </Stack>
             </Stack>
           </Stack>
         </DialogContent>
         <DialogActions>
-          <Button onClick={onClose}>Cancelar</Button>
+          <Button onClick={onClose}>{t('adminBookings.deleteDialog.cancel')}</Button>
           <Button type="submit" variant="contained">
-            Guardar Cambios
+            {t('adminBookings.editModal.saveChanges')}
           </Button>
         </DialogActions>
       </form>
     </Dialog>
   );
-} 
+}

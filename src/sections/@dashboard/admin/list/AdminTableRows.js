@@ -24,7 +24,7 @@ export default function AdminTableRow({ row, onEditRow, onConfirmRow, onDeclineR
   const { t } = useTranslation();
   const theme = useTheme();
 
-  const { name, lastname, imageLink, level, authorized, isAuthorized, state, id } = row;
+  const { name, lastname, imageLink, level, authorized, isAuthorized, state, id, priority } = row;
   const isAuth = authorized || isAuthorized || row.isauthorized;
 
   const [openMenu, setOpenMenuActions] = useState(null);
@@ -52,6 +52,10 @@ export default function AdminTableRow({ row, onEditRow, onConfirmRow, onDeclineR
 
       <TableCell align="left" sx={{ textTransform: 'capitalize' }}>
         {level}
+      </TableCell>
+
+      <TableCell align="left">
+        {priority ?? 0}
       </TableCell>
 
       <TableCell align="center">

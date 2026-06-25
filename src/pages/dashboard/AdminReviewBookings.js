@@ -13,6 +13,8 @@ import {
   Tooltip,
   Divider,
   TableBody,
+  TableCell,
+  TableRow,
   Container,
   IconButton,
   TableContainer,
@@ -25,6 +27,7 @@ import {
   Tabs,
   Tab,
   Collapse,
+  Skeleton,
 } from '@mui/material';
 import Hidden from 'src/components/LegacyHidden';
 
@@ -245,6 +248,7 @@ export function AdminBookingsPage({ bookingListKind, pageTitle, heading }) {
   const filterStatus = 'all';
   const activeListTab = bookingListKind === 'lesson' ? listTab : 0;
   const [selectedBooking, setSelectedBooking] = useState(null);
+  const [hasLoadedBookings, setHasLoadedBookings] = useState(false);
   const handleFilterName = (filterName) => {
     setFilterName(filterName);
     setPage(0);
@@ -417,7 +421,7 @@ export function AdminBookingsPage({ bookingListKind, pageTitle, heading }) {
 
   const dispatch = useDispatch();
 
-  const { teachers: reduxTeachers, isOpenModal, isOpenEditBookingModal, isOpenDeleteModal, selectedEmail, selectedBookingId, bookings, bookingIntents } = useSelector((state) => state.admin);
+  const { teachers: reduxTeachers, isOpenModal, isOpenEditBookingModal, isOpenDeleteModal, selectedEmail, selectedBookingId, bookings, bookingIntents, isLoadingBookings } = useSelector((state) => state.admin);
 
   // When resort is active, we loaded all records and paginate client-side.
   const pagedBookings = useMemo(() => {
@@ -467,13 +471,22 @@ export function AdminBookingsPage({ bookingListKind, pageTitle, heading }) {
 
   useEffect(() => {
     setTableData(bookings ?? []);
-    console.log({ bookings })
   }, [bookings]);
+
+  useEffect(() => {
+    if (!isLoadingBookings) {
+      setHasLoadedBookings(true);
+    }
+  }, [isLoadingBookings]);
+
+  useEffect(() => {
+    setHasLoadedBookings(false);
+  }, [bookingListKind, activeListTab]);
 
   useEffect(() => {
     if (user) dispatchBookings();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page, rowsPerPage, bookingListKind]);
+  }, [user, page, rowsPerPage, bookingListKind]);
 
   useEffect(() => {
     setPage(0);
@@ -550,6 +563,25 @@ export function AdminBookingsPage({ bookingListKind, pageTitle, heading }) {
   };
 
   const tableHeadLabel = bookingListKind === 'gear' ? tableHeadGear : tableHead;
+
+  const activeTableHead = activeListTab === 0 ? tableHeadLabel : tableHeadIntent;
+  const showTableSkeleton = isLoadingBookings || (Boolean(user) && !hasLoadedBookings);
+
+  const renderTableSkeleton = () =>
+    Array.from({ length: Math.min(rowsPerPage, 10) }).map((_, index) => (
+      <TableRow key={`skeleton-${index}`}>
+        {activeTableHead.map((headCell) => (
+          <TableCell key={headCell.id} align={headCell.align}>
+            <Skeleton animation="wave" width="80%" height={dense ? 20 : 24} />
+          </TableCell>
+        ))}
+        {activeListTab === 0 && (
+          <TableCell align="right" padding="checkbox">
+            <Skeleton animation="wave" variant="circular" width={24} height={24} sx={{ ml: 'auto' }} />
+          </TableCell>
+        )}
+      </TableRow>
+    ));
 
   return (
     <Page title={pageTitle}>
@@ -693,7 +725,9 @@ export function AdminBookingsPage({ bookingListKind, pageTitle, heading }) {
                   />
 
                   <TableBody>
-                    {activeListTab === 0
+                    {showTableSkeleton
+                      ? renderTableSkeleton()
+                      : activeListTab === 0
                       ? displayRows?.map((row) => (
                           <AdminBookingTableRow
                             key={row.id}
@@ -728,11 +762,12 @@ export function AdminBookingsPage({ bookingListKind, pageTitle, heading }) {
                           />
                         ))}
 
-                    <TableEmptyRows height={denseHeight} emptyRows={0} />
+                    {!showTableSkeleton && <TableEmptyRows height={denseHeight} emptyRows={0} />}
 
                     <TableNoData
                       isNotFound={
-                        activeListTab === 0 ? isNotFound : !(bookingIntents && bookingIntents.length)
+                        !showTableSkeleton &&
+                        (activeListTab === 0 ? isNotFound : !(bookingIntents && bookingIntents.length))
                       }
                       title={t('adminBookings.empty.title')}
                       hideImage
@@ -742,7 +777,15 @@ export function AdminBookingsPage({ bookingListKind, pageTitle, heading }) {
               </TableContainer>
             </Hidden>
             <Hidden smUp>
-              {activeListTab === 0 &&
+              {showTableSkeleton
+                ? Array.from({ length: Math.min(rowsPerPage, 5) }).map((_, index) => (
+                    <Card key={`card-skeleton-${index}`} sx={{ width: '100%', my: 0.5, p: 2 }}>
+                      <Skeleton animation="wave" variant="text" width="60%" height={28} />
+                      <Skeleton animation="wave" variant="text" width="40%" />
+                      <Skeleton animation="wave" variant="text" width="50%" />
+                    </Card>
+                  ))
+                : activeListTab === 0 &&
                 displayBookings?.map((row) => (
                   <Box
                     key={row.id}

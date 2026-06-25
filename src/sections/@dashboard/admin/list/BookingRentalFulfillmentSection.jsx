@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Box,
   Typography,
@@ -34,13 +35,13 @@ function parseBookingYmd(value) {
 }
 
 /** e.g. 2026-05-05 + 2026-05-12 → "05 to 12 may" */
-function formatRentalLineDateRange(startRaw, endRaw) {
+function formatRentalLineDateRange(startRaw, endRaw, emptyValue = '—') {
   const start = parseBookingYmd(startRaw);
   const end = parseBookingYmd(endRaw);
-  if (!start && !end) return '—';
+  if (!start && !end) return emptyValue;
   if (!start || !end) {
     const fallback = [startRaw, endRaw].filter(Boolean).join(' → ');
-    return fallback || '—';
+    return fallback || emptyValue;
   }
   const day = (d) => String(d.getDate()).padStart(2, '0');
   const mon = (d) => d.toLocaleDateString('en-GB', { month: 'short' }).toLowerCase();
@@ -53,6 +54,26 @@ function formatRentalLineDateRange(startRaw, endRaw) {
   return `${day(start)} ${mon(start)} ${start.getFullYear()} to ${day(end)} ${mon(end)} ${end.getFullYear()}`;
 }
 
+function getDeliveryLabel(fulfillment, t) {
+  if (fulfillment === 'SHIP_TO_HOTEL_OR_HOME') {
+    return t('adminBookings.rental.deliveryShipToHotel');
+  }
+  if (fulfillment === 'PICKUP_IN_SHOP') {
+    return t('adminBookings.rental.deliveryPickupInShop');
+  }
+  return fulfillment;
+}
+
+function getDestinationLabel(destinationType, t) {
+  if (destinationType === 'HOTEL_OR_CABIN') {
+    return t('adminBookings.rental.destinationHotel');
+  }
+  if (destinationType === 'HOME_ADDRESS') {
+    return t('adminBookings.rental.destinationHome');
+  }
+  return destinationType;
+}
+
 BookingRentalFulfillmentSection.propTypes = {
   booking: PropTypes.object,
   open: PropTypes.bool,
@@ -60,7 +81,13 @@ BookingRentalFulfillmentSection.propTypes = {
   fetchForGearAdmin: PropTypes.bool,
 };
 
-export default function BookingRentalFulfillmentSection({ booking, open, fetchForGearAdmin = false }) {
+export default function BookingRentalFulfillmentSection({
+  booking,
+  open,
+  fetchForGearAdmin = false,
+}) {
+  const { t } = useTranslation();
+  const emptyValue = t('adminBookings.drawer.emptyValue');
   const [rentalLines, setRentalLines] = useState([]);
   const [rentalLinesLoading, setRentalLinesLoading] = useState(false);
   const [rentalLinesError, setRentalLinesError] = useState(null);
@@ -115,37 +142,29 @@ export default function BookingRentalFulfillmentSection({ booking, open, fetchFo
   return (
     <Box>
       <Typography variant="subtitle1" gutterBottom>
-        Equipo / alquiler
+        {t('adminBookings.rental.sectionTitle')}
       </Typography>
       {(booking?.rentalFulfillment || booking?.rentalDestinationDetail) && (
         <Stack spacing={1} sx={{ mb: 2 }}>
           {booking?.rentalFulfillment && (
             <Typography variant="body2" color="text.secondary">
-              Entrega:{' '}
+              {t('adminBookings.rental.delivery')}{' '}
               <Typography component="span" variant="body2" color="text.primary">
-                {booking.rentalFulfillment === 'SHIP_TO_HOTEL_OR_HOME'
-                  ? 'Envío a hotel o domicilio'
-                  : booking.rentalFulfillment === 'PICKUP_IN_SHOP'
-                  ? 'Retiro en tienda'
-                  : booking.rentalFulfillment}
+                {getDeliveryLabel(booking.rentalFulfillment, t)}
               </Typography>
             </Typography>
           )}
           {booking?.rentalDestinationType && (
             <Typography variant="body2" color="text.secondary">
-              Tipo de destino:{' '}
+              {t('adminBookings.rental.destinationType')}{' '}
               <Typography component="span" variant="body2" color="text.primary">
-                {booking.rentalDestinationType === 'HOTEL_OR_CABIN'
-                  ? 'Hotel / cabaña'
-                  : booking.rentalDestinationType === 'HOME_ADDRESS'
-                  ? 'Domicilio'
-                  : booking.rentalDestinationType}
+                {getDestinationLabel(booking.rentalDestinationType, t)}
               </Typography>
             </Typography>
           )}
           {booking?.rentalDestinationDetail && (
             <Typography variant="body2" color="text.secondary">
-              Dirección / hotel:{' '}
+              {t('adminBookings.rental.addressHotel')}{' '}
               <Typography component="span" variant="body2" color="text.primary">
                 {booking.rentalDestinationDetail}
               </Typography>
@@ -155,7 +174,7 @@ export default function BookingRentalFulfillmentSection({ booking, open, fetchFo
       )}
       {rentalLinesLoading && (
         <Typography variant="body2" color="text.secondary">
-          Cargando líneas de alquiler…
+          {t('adminBookings.rental.loadingLines')}
         </Typography>
       )}
       {rentalLinesError && (
@@ -173,41 +192,43 @@ export default function BookingRentalFulfillmentSection({ booking, open, fetchFo
             </Stack>
           )}
           <TableContainer>
-          <Table size="small">
-            <TableHead>
-              <TableRow>
-                <TableCell>Ítem</TableCell>
-                <TableCell>Fechas</TableCell>
-                <TableCell>Participante</TableCell>
-                <TableCell align="right">Altura cm</TableCell>
-                <TableCell align="right">Peso kg</TableCell>
-                <TableCell align="right">Pie cm</TableCell>
-                <TableCell>Nivel</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {rentalLines.map((row) => (
-                <TableRow key={row.id}>
-                  <TableCell>{row.itemName || '—'}</TableCell>
-                  <TableCell>{formatRentalLineDateRange(row.startDate, row.endDate)}</TableCell>
-                  <TableCell>
-                    {[row.renterFirstName, row.renterLastName].filter(Boolean).join(' ') ||
-                      '— (titular)'}
-                  </TableCell>
-                  <TableCell align="right">{row.renterHeightCm ?? '—'}</TableCell>
-                  <TableCell align="right">{row.renterWeightKg ?? '—'}</TableCell>
-                  <TableCell align="right">{row.renterFootLengthCm ?? '—'}</TableCell>
-                  <TableCell>{row.renterSkiLevel || '—'}</TableCell>
+            <Table size="small">
+              <TableHead>
+                <TableRow>
+                  <TableCell>{t('adminBookings.rental.tableItem')}</TableCell>
+                  <TableCell>{t('adminBookings.rental.tableDates')}</TableCell>
+                  <TableCell>{t('adminBookings.rental.tableParticipant')}</TableCell>
+                  <TableCell align="right">{t('adminBookings.rental.tableHeight')}</TableCell>
+                  <TableCell align="right">{t('adminBookings.rental.tableWeight')}</TableCell>
+                  <TableCell align="right">{t('adminBookings.rental.tableFoot')}</TableCell>
+                  <TableCell>{t('adminBookings.rental.tableLevel')}</TableCell>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+              </TableHead>
+              <TableBody>
+                {rentalLines.map((row) => (
+                  <TableRow key={row.id}>
+                    <TableCell>{row.itemName || emptyValue}</TableCell>
+                    <TableCell>
+                      {formatRentalLineDateRange(row.startDate, row.endDate, emptyValue)}
+                    </TableCell>
+                    <TableCell>
+                      {[row.renterFirstName, row.renterLastName].filter(Boolean).join(' ') ||
+                        t('adminBookings.rental.holderFallback')}
+                    </TableCell>
+                    <TableCell align="right">{row.renterHeightCm ?? emptyValue}</TableCell>
+                    <TableCell align="right">{row.renterWeightKg ?? emptyValue}</TableCell>
+                    <TableCell align="right">{row.renterFootLengthCm ?? emptyValue}</TableCell>
+                    <TableCell>{row.renterSkiLevel || emptyValue}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
         </>
       )}
       {!rentalLinesLoading && !rentalLinesError && rentalLines.length === 0 && (
         <Typography variant="body2" color="text.secondary">
-          Sin líneas de alquiler registradas para esta reserva.
+          {t('adminBookings.rental.noLines')}
         </Typography>
       )}
     </Box>

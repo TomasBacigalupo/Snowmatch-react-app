@@ -1,43 +1,73 @@
-import { useEffect, useState, useCallback } from 'react';
-import { Dialog, DialogContent, Select, TextField, FormControl, InputLabel, MenuItem, DialogActions, DialogTitle, Button, Box, Autocomplete, Typography, IconButton, Grid, Checkbox, FormControlLabel, Chip } from '@mui/material';
+import { useEffect, useState, useCallback, useMemo } from 'react';
+import { Dialog, DialogContent, Select, TextField, FormControl, InputLabel, MenuItem, DialogActions, DialogTitle, Button, Box, Autocomplete, Typography, IconButton, Grid, Checkbox, FormControlLabel, Chip, Stack } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { useDispatch } from 'src/redux/store';
-import { getTeachers, getFilteredTeachersForAdminBooking, createBookingSuccess, clearSuccessMessage } from 'src/redux/slices/admin';
+import { getTeachers, getFilteredTeachersForAdminBooking, getUserTeamMembers } from 'src/redux/slices/admin';
 import { useSelector } from 'react-redux';
-import { createAdminBooking, createAdminBookingIntent, setBookingSuccess, setIntentSuccess } from 'src/redux/slices/bookings';
+import { createAdminBooking, createAdminBookingIntent, setBookingSuccess, setIntentSuccess, createAdminBookingRentalReservation } from 'src/redux/slices/bookings';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { format, parseISO, addDays, isWithinInterval } from 'date-fns';
+import { format, parseISO, addDays } from 'date-fns';
 import { NumericFormat } from 'react-number-format';
 import ShopTeacherCard from 'src/sections/@dashboard/e-commerce/shop/ShopTeacherCard';
 import { PATH_DASHBOARD } from 'src/routes/paths';
 import { useSnackbar } from 'notistack';
+import { useTranslation } from 'react-i18next';
 import { ADMIN_BOOKING_RESORT_OPTIONS } from 'src/utils/adminBookingResortOptions';
+import {
+    buildRentalRenterFromClient,
+    clearRentalRenterFields,
+    pickTeamMemberForRental,
+} from 'src/utils/adminBookingRentalPrefill';
+import BookingRentalFieldsSection from './BookingRentalFieldsSection';
+import CreateStudentModal from './CreateStudentModal';
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
+
+const DEFAULT_RENTAL = {
+    itemId: '',
+    variantId: '',
+    startDate: '',
+    endDate: '',
+    unitsReserved: 1,
+    renterFirstName: '',
+    renterLastName: '',
+    renterHeightCm: '',
+    renterWeightKg: '',
+    renterFootLengthCm: '',
+    renterSkiLevel: 'INTERMEDIATE',
+    rentalFulfillment: 'PICKUP_IN_SHOP',
+    rentalDestinationType: 'HOTEL_OR_CABIN',
+    rentalDestinationDetail: '',
+};
+
+const DEFAULT_FORM_DATA = {
+    teacher: null,
+    student: null,
+    dateTimes: [{ date: '', time: 'ALL_DAY', price: '' }],
+    resort: 'CERRO_CATEDRAL',
+    children: 0,
+    adults: 0,
+    comment: '',
+    teacherSearch: '',
+    studentSearch: '',
+    bookingType: 'ASSIGNED',
+    includesLaunch: false,
+    includesEquipment: false,
+    showPriceToTeacher: true,
+    paymentStatus: 'PAID',
+    paymentMethod: 'CASH',
+    internalComment: '',
+    rental: { ...DEFAULT_RENTAL },
+};
 
 const BookingModal = ({ isOpen, onClose, refreshBookings, filterTeacherId, filterStudentId, filterMonth, page, rowsPerPage, filterResort }) => {
     const dispatch = useDispatch();
     const { enqueueSnackbar } = useSnackbar();
-    const [formData, setFormData] = useState({
-        teacher: null,
-        student: null,
-        dateTimes: [{ date: '', time: 'ALL_DAY', price: '' }],
-        resort: 'CERRO_CATEDRAL',
-        children: 0,
-        adults: 0,
-        comment: '',
-        teacherSearch: '',
-        studentSearch: '',
-        bookingType: 'ASSIGNED',
-        includesLaunch: false,
-        includesEquipment: false,
-        showPriceToTeacher: true,
-        paymentStatus: 'PAID',
-        paymentMethod: 'CASH',
-        internalComment: ''
-    });
+    const { t } = useTranslation();
+    const [formData, setFormData] = useState({ ...DEFAULT_FORM_DATA });
 
     const [dateRange, setDateRange] = useState({
         startDate: null,
@@ -46,11 +76,58 @@ const BookingModal = ({ isOpen, onClose, refreshBookings, filterTeacherId, filte
 
     const [teacherId, setTeacherId] = useState(null);
     const [studentId, setStudentId] = useState(null);
+    const [submitting, setSubmitting] = useState(false);
+    const [createStudentOpen, setCreateStudentOpen] = useState(false);
+    const [rentalPrefillSource, setRentalPrefillSource] = useState('');
 
-    const { teachers, successMessage } = useSelector((state) => state.admin);
-    const { bookSuccess, intentSuccess, isLoading, error } = useSelector((state) => state.bookings);
+    const { teachers } = useSelector((state) => state.admin);
+    const { intentSuccess, error } = useSelector((state) => state.bookings);
 
-    console.log('Current state:', { bookSuccess, teacherId, isOpen });
+    const lessonDateBounds = useMemo(() => {
+        const dates = formData.dateTimes.map((dt) => dt.date).filter(Boolean).sort();
+        return {
+            min: dates[0] || '',
+            max: dates[dates.length - 1] || '',
+        };
+    }, [formData.dateTimes]);
+
+    const resetForm = useCallback(() => {
+        setFormData({ ...DEFAULT_FORM_DATA, rental: { ...DEFAULT_RENTAL } });
+        setDateRange({ startDate: null, endDate: null });
+        setTeacherId(null);
+        setStudentId(null);
+        setRentalPrefillSource('');
+    }, []);
+
+    const applyRentalFromStudent = useCallback(async (student) => {
+        if (!student?.id) return;
+
+        let teamMember = null;
+        try {
+            const teamMembers = await dispatch(getUserTeamMembers(student.id));
+            teamMember = pickTeamMemberForRental(student, teamMembers);
+        } catch {
+            teamMember = null;
+        }
+
+        const renterPatch = buildRentalRenterFromClient(student, teamMember);
+        setFormData((prev) => ({
+            ...prev,
+            rental: {
+                ...prev.rental,
+                ...renterPatch,
+            },
+        }));
+        setRentalPrefillSource(
+            teamMember
+                ? t('adminBookings.rental.prefilledFromClientWithMember', {
+                      name: `${student.name} ${student.lastname}`.trim(),
+                  })
+                : t('adminBookings.rental.prefilledFromClient', {
+                      name: `${student.name} ${student.lastname}`.trim(),
+                  })
+        );
+    }, [dispatch, t]);
 
     useEffect(() => {
         // Only call getTeachers when studentSearch changes, not when student is selected
@@ -59,68 +136,14 @@ const BookingModal = ({ isOpen, onClose, refreshBookings, filterTeacherId, filte
         }
     }, [formData.studentSearch])
 
-    // Handle booking creation success
-    useEffect(() => {
-        console.log('useEffect bookSuccess triggered:', { bookSuccess, teacherId });
-        if (bookSuccess && teacherId) {
-            console.log('Closing modal due to successful booking');
-            enqueueSnackbar('Booking created successfully', { variant: 'success' }); 
-            
-            // Reset form and close modal
-            setFormData({
-                teacher: null,
-                student: null,
-                dateTimes: [{ date: '', time: 'ALL_DAY', price: '' }],
-                resort: 'CERRO_CATEDRAL',
-                children: 0,
-                adults: 0,
-                teacherSearch: '',
-                studentSearch: '',
-                bookingType: 'ASSIGNED',
-                includesLaunch: false,
-                includesEquipment: false,
-                showPriceToTeacher: true,
-                paymentStatus: 'PAID',
-                paymentMethod: 'CASH',
-                internalComment: ''
-            });
-
-            setDateRange({ startDate: null, endDate: null });
-            setTeacherId(null);
-            setStudentId(null);
-
-            onClose();
-        }
-    }, [bookSuccess, teacherId, dispatch, enqueueSnackbar, onClose]);
-
     useEffect(() => {
         if (intentSuccess) {
             enqueueSnackbar('Reserva pendiente guardada.', { variant: 'success' });
-            setFormData({
-                teacher: null,
-                student: null,
-                dateTimes: [{ date: '', time: 'ALL_DAY', price: '' }],
-                resort: 'CERRO_CATEDRAL',
-                children: 0,
-                adults: 0,
-                teacherSearch: '',
-                studentSearch: '',
-                bookingType: 'ASSIGNED',
-                includesLaunch: false,
-                includesEquipment: false,
-                showPriceToTeacher: true,
-                paymentStatus: 'PAID',
-                paymentMethod: 'CASH',
-                internalComment: '',
-                comment: ''
-            });
-            setDateRange({ startDate: null, endDate: null });
-            setTeacherId(null);
-            setStudentId(null);
+            resetForm();
             dispatch(setIntentSuccess(false));
             onClose();
         }
-    }, [intentSuccess, dispatch, enqueueSnackbar, onClose]);
+    }, [intentSuccess, dispatch, enqueueSnackbar, onClose, resetForm]);
 
     useEffect(() => {
         if(isOpen){
@@ -183,7 +206,12 @@ const BookingModal = ({ isOpen, onClose, refreshBookings, filterTeacherId, filte
             
             setFormData(prev => ({
                 ...prev,
-                dateTimes: dates
+                dateTimes: dates,
+                rental: {
+                    ...prev.rental,
+                    startDate: dates[0]?.date || prev.rental.startDate,
+                    endDate: dates[dates.length - 1]?.date || prev.rental.endDate,
+                },
             }));
         }
     };
@@ -214,7 +242,56 @@ const BookingModal = ({ isOpen, onClose, refreshBookings, filterTeacherId, filte
         }));
     };
 
-    const handleSubmit = () => {
+    const validateRental = () => {
+        const { rental } = formData;
+        if (!rental.itemId) {
+            return t('adminBookings.rental.validationItem');
+        }
+        if (!rental.startDate || !rental.endDate) {
+            return t('adminBookings.rental.validationDates');
+        }
+        if (!rental.renterHeightCm || !rental.renterWeightKg || !rental.renterFootLengthCm) {
+            return t('adminBookings.rental.validationMeasurements');
+        }
+        if (!rental.renterSkiLevel) {
+            return t('adminBookings.rental.validationLevel');
+        }
+        const hasFirst = Boolean(rental.renterFirstName?.trim());
+        const hasLast = Boolean(rental.renterLastName?.trim());
+        if (hasFirst !== hasLast) {
+            return t('adminBookings.rental.validationNamePair');
+        }
+        if (rental.rentalFulfillment === 'SHIP_TO_HOTEL_OR_HOME') {
+            if (!rental.rentalDestinationType || !rental.rentalDestinationDetail?.trim()) {
+                return t('adminBookings.rental.validationDestination');
+            }
+        }
+        return null;
+    };
+
+    const buildRentalPayload = () => {
+        const { rental } = formData;
+        const payload = {
+            itemId: rental.itemId,
+            startDate: rental.startDate,
+            endDate: rental.endDate,
+            unitsReserved: Number(rental.unitsReserved) || 1,
+            renterHeightCm: Number(rental.renterHeightCm),
+            renterWeightKg: Number(rental.renterWeightKg),
+            renterFootLengthCm: Number(rental.renterFootLengthCm),
+            renterSkiLevel: rental.renterSkiLevel,
+        };
+        if (rental.variantId) {
+            payload.variantId = rental.variantId;
+        }
+        if (rental.renterFirstName?.trim() && rental.renterLastName?.trim()) {
+            payload.renterFirstName = rental.renterFirstName.trim();
+            payload.renterLastName = rental.renterLastName.trim();
+        }
+        return payload;
+    };
+
+    const handleSubmit = async () => {
         const totalPrice = formData.dateTimes.reduce((acc, curr) => acc + Number(curr.price), 0);
         const events = formData.dateTimes.map((dateTime) => ({
             title: formData.bookingType === 'REFERRED' ? 'Referida' : 'Asignada',
@@ -223,27 +300,75 @@ const BookingModal = ({ isOpen, onClose, refreshBookings, filterTeacherId, filte
             lessonTime: dateTime.time,
             price: dateTime.price,
             eventType: formData.bookingType === 'REFERRED' ? 'REFERRED' : 'CLASS',
-            textColor: formData.bookingType === 'REFERRED' ? '#00FF00' : '#FF0000' 
+            textColor: formData.bookingType === 'REFERRED' ? '#00FF00' : '#FF0000',
         }));
 
-        // Confirmed booking only when both student and instructor are set.
+        if (formData.includesEquipment && studentId && teacherId) {
+            const rentalError = validateRental();
+            if (rentalError) {
+                enqueueSnackbar(rentalError, { variant: 'warning' });
+                return;
+            }
+        }
+
+        if (formData.includesEquipment && (!studentId || !teacherId)) {
+            enqueueSnackbar(t('adminBookings.rental.requiresConfirmedBooking'), { variant: 'warning' });
+            return;
+        }
+
         if (studentId && teacherId) {
-            dispatch(createAdminBooking(
-                teacherId,
-                studentId,
-                formData.comment,
-                Number(formData.children),
-                Number(formData.adults),
-                events,
-                totalPrice,
-                formData.bookingType,
-                formData.includesLaunch,
-                formData.includesEquipment,
-                formData.showPriceToTeacher,
-                formData.paymentStatus,
-                formData.paymentMethod,
-                formData.internalComment,
-                formData.resort));
+            setSubmitting(true);
+            try {
+                const { rental } = formData;
+                const created = await dispatch(
+                    createAdminBooking(
+                        teacherId,
+                        studentId,
+                        formData.comment,
+                        Number(formData.children),
+                        Number(formData.adults),
+                        events,
+                        totalPrice,
+                        formData.bookingType,
+                        formData.includesLaunch,
+                        formData.includesEquipment,
+                        formData.showPriceToTeacher,
+                        formData.paymentStatus,
+                        formData.paymentMethod,
+                        formData.internalComment,
+                        formData.resort,
+                        formData.includesEquipment ? rental.rentalFulfillment : null,
+                        formData.includesEquipment ? rental.rentalDestinationType : null,
+                        formData.includesEquipment ? rental.rentalDestinationDetail : null
+                    )
+                );
+
+                const bookingId = created?.id;
+                if (formData.includesEquipment && bookingId) {
+                    try {
+                        await dispatch(createAdminBookingRentalReservation(bookingId, buildRentalPayload()));
+                    } catch (rentalErr) {
+                        enqueueSnackbar(
+                            t('adminBookings.rental.bookingCreatedRentalFailed', { id: bookingId }),
+                            { variant: 'error' }
+                        );
+                        return;
+                    }
+                }
+
+                enqueueSnackbar(
+                    formData.includesEquipment
+                        ? t('adminBookings.rental.bookingWithRentalSuccess')
+                        : 'Booking created successfully',
+                    { variant: 'success' }
+                );
+                resetForm();
+                onClose();
+            } catch (bookingErr) {
+                enqueueSnackbar('Something went wrong. Please try again.', { variant: 'error' });
+            } finally {
+                setSubmitting(false);
+            }
             return;
         }
 
@@ -263,6 +388,13 @@ const BookingModal = ({ isOpen, onClose, refreshBookings, filterTeacherId, filte
             formData.resort,
             teacherId ?? null));
     };
+
+    const handleRentalChange = useCallback((patch) => {
+        setFormData((prev) => ({
+            ...prev,
+            rental: { ...prev.rental, ...patch },
+        }));
+    }, []);
 
     const handleTeacherInputChange = (event, newValue) => {
         dispatch(
@@ -296,6 +428,45 @@ const BookingModal = ({ isOpen, onClose, refreshBookings, filterTeacherId, filte
         return () => clearTimeout(timeoutId);
     };
 
+    const handleStudentCreated = (createdStudent) => {
+        const student = {
+            id: createdStudent.id,
+            name: createdStudent.name,
+            lastname: createdStudent.lastname,
+            email: createdStudent.email,
+            cellphone: createdStudent.cellphone,
+            studentLevel: createdStudent.studentLevel,
+        };
+        setStudentId(student.id);
+        setFormData((prevData) => ({
+            ...prevData,
+            student,
+            studentSearch: `${student.name} ${student.lastname}`.trim(),
+        }));
+        applyRentalFromStudent(student);
+        enqueueSnackbar(t('adminBookings.createStudent.success'), { variant: 'success' });
+    };
+
+    const handleStudentChange = (newValue) => {
+        setStudentId(newValue?.id ?? null);
+        if (!newValue) {
+            setRentalPrefillSource('');
+            setFormData((prevData) => ({
+                ...prevData,
+                student: null,
+                rental: clearRentalRenterFields(prevData.rental),
+            }));
+            return;
+        }
+
+        setFormData((prevData) => ({
+            ...prevData,
+            student: newValue,
+            studentSearch: `${newValue.name} ${newValue.lastname}`.trim(),
+        }));
+        applyRentalFromStudent(newValue);
+    };
+
     return (
         <Dialog 
             open={isOpen} 
@@ -314,23 +485,40 @@ const BookingModal = ({ isOpen, onClose, refreshBookings, filterTeacherId, filte
                 </Typography>
                 <Grid container spacing={2}>
                     <Grid item xs={12} md={4}>
-                        <FormControl fullWidth>
-                            <Autocomplete
-                                id="student-autocomplete"
-                                options={teachers}
-                                getOptionLabel={(option) => `${option.name} ${option.lastname}`}
-                                value={formData.student}
-                                onChange={(e, newValue) => {
-                                    setStudentId(newValue?.id ?? null);
-                                    setFormData((prevData) => ({
-                                        ...prevData,
-                                        student: newValue || null,
-                                    }));
-                                }}
-                                onInputChange={handleStudentInputChange}
-                                renderInput={(params) => <TextField {...params} />}
-                            />
-                        </FormControl>
+                        <Stack direction="row" spacing={1} alignItems="flex-start">
+                            <FormControl fullWidth>
+                                <Autocomplete
+                                    id="student-autocomplete"
+                                    options={teachers}
+                                    filterOptions={(options) => options}
+                                    getOptionLabel={(option) => `${option.name} ${option.lastname}`.trim()}
+                                    value={formData.student}
+                                    inputValue={formData.studentSearch}
+                                    onChange={(e, newValue) => handleStudentChange(newValue)}
+                                    onInputChange={(event, newValue, reason) => {
+                                        if (reason === 'input') {
+                                            handleStudentInputChange(event, newValue);
+                                        }
+                                    }}
+                                    noOptionsText={t('adminBookings.createStudent.noResults')}
+                                    renderInput={(params) => (
+                                        <TextField
+                                            {...params}
+                                            label={t('adminBookings.createStudent.searchLabel')}
+                                            placeholder={t('adminBookings.createStudent.searchPlaceholder')}
+                                        />
+                                    )}
+                                />
+                            </FormControl>
+                            <Button
+                                variant="outlined"
+                                onClick={() => setCreateStudentOpen(true)}
+                                sx={{ minWidth: 44, px: 1, mt: 0.5 }}
+                                title={t('adminBookings.createStudent.openButton')}
+                            >
+                                <PersonAddIcon />
+                            </Button>
+                        </Stack>
                     </Grid>
                     <Grid item xs={12} md={8}>
                         <LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -454,13 +642,28 @@ const BookingModal = ({ isOpen, onClose, refreshBookings, filterTeacherId, filte
                                 control={
                                     <Checkbox
                                         checked={formData.includesEquipment}
-                                        onChange={(e) => setFormData((prevData) => ({
-                                            ...prevData,
-                                            includesEquipment: e.target.checked,
-                                        }))}
+                                        onChange={(e) => {
+                                            const checked = e.target.checked;
+                                            setFormData((prevData) => ({
+                                                ...prevData,
+                                                includesEquipment: checked,
+                                                rental: checked
+                                                    ? {
+                                                        ...DEFAULT_RENTAL,
+                                                        startDate: lessonDateBounds.min,
+                                                        endDate: lessonDateBounds.max,
+                                                    }
+                                                    : { ...DEFAULT_RENTAL },
+                                            }));
+                                            if (checked && formData.student) {
+                                                applyRentalFromStudent(formData.student);
+                                            } else if (!checked) {
+                                                setRentalPrefillSource('');
+                                            }
+                                        }}
                                     />
                                 }
-                                label="Incluye Equipo"
+                                label={t('adminBookings.editModal.includesEquipment')}
                             />
                             <FormControlLabel
                                 control={
@@ -476,6 +679,18 @@ const BookingModal = ({ isOpen, onClose, refreshBookings, filterTeacherId, filte
                             />
                         </Box>
                     </Grid>
+                    {formData.includesEquipment && (
+                        <Grid item xs={12}>
+                            <BookingRentalFieldsSection
+                                rental={formData.rental}
+                                onChange={handleRentalChange}
+                                resort={formData.resort}
+                                lessonMinDate={lessonDateBounds.min}
+                                lessonMaxDate={lessonDateBounds.max}
+                                prefillHint={rentalPrefillSource}
+                            />
+                        </Grid>
+                    )}
                     <Grid item xs={12} md={6}>
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                             <IconButton 
@@ -719,14 +934,20 @@ const BookingModal = ({ isOpen, onClose, refreshBookings, filterTeacherId, filte
             </DialogContent>
             <DialogActions>
                 <Button onClick={onClose}>Cancel</Button>
-                <LoadingButton 
-                    onClick={handleSubmit} 
-                    variant="contained" 
-                    loading={isLoading}
+                <LoadingButton
+                    onClick={handleSubmit}
+                    variant="contained"
+                    loading={submitting}
                 >
                     {studentId && teacherId ? 'Create Booking' : 'Guardar pendiente'}
                 </LoadingButton>
             </DialogActions>
+            <CreateStudentModal
+                open={createStudentOpen}
+                onClose={() => setCreateStudentOpen(false)}
+                onCreated={handleStudentCreated}
+                initialName={formData.studentSearch}
+            />
         </Dialog>
     );
 };

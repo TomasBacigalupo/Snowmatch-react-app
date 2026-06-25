@@ -198,15 +198,13 @@ export default function NavbarVertical({ isOpenSidebar, onCloseSidebar, isGuest,
       {userRole === 'RESORT_ADMIN' && (!isCollapse || !isDesktop) && (
         <Box
           sx={{
-            px: 2.5,
+            width: 1,
             pb: 3,
             pt: 2,
-            display: 'flex',
-            justifyContent: 'center',
             flexShrink: 0,
           }}
         >
-          <ResortAdminAccountPopover logoHeight={48} popoverAbove />
+          <ResortAdminAccountPopover fullWidth popoverAbove />
         </Box>
       )}
 

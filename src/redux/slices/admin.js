@@ -11,6 +11,7 @@ import { dispatch } from '../store';
 
 const initialState = {
   isLoading: false,
+  isLoadingBookings: false,
   error: null,
   teachers: [],
   bookings: [],
@@ -59,9 +60,14 @@ const slice = createSlice({
       state.isLoading = true;
     },
 
+    startLoadingBookings(state) {
+      state.isLoadingBookings = true;
+    },
+
     // HAS ERROR
     hasError(state, action) {
       state.isLoading = false;
+      state.isLoadingBookings = false;
       state.error = action.payload;
     },
 
@@ -94,6 +100,7 @@ const slice = createSlice({
 
     getBookingsSuccess(state, action) {
       state.isLoading = false;
+      state.isLoadingBookings = false;
       state.bookings = action.payload;
     },
 
@@ -107,14 +114,9 @@ const slice = createSlice({
       state.bookings = state.bookings.filter(booking => booking.id !== action.payload.id);
     },
 
-    getBookingsSuccess(state, action) {
-      console.log(action.payload)
-      state.isLoading = false;
-      state.bookings = action.payload;
-    },
-
     getBookingIntentsSuccess(state, action) {
       state.isLoading = false;
+      state.isLoadingBookings = false;
       state.bookingIntents = action.payload;
     },
 
@@ -268,7 +270,7 @@ export const { openModal, closeModal, getSelectedEmail, openEditBookingModal, op
 
 // ----------------------------------------------------------------------
 
-export function getTeachers(page, role, name, level, size = 25, resort = '') {
+export function getTeachers(page, role, name, level, size = 25, resort = '', sortBy = 'id') {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
@@ -278,6 +280,7 @@ export function getTeachers(page, role, name, level, size = 25, resort = '') {
         level: level ?? '',
         name: name ?? '',
         size,
+        sortBy: sortBy ?? 'id',
         ...(resort ? { resort } : {}),
       });
       const response = await axios.get(`/api/admin/filter?${params.toString()}`);
@@ -288,7 +291,7 @@ export function getTeachers(page, role, name, level, size = 25, resort = '') {
   };
 }
 
-export function getResortAdminTeachers(page, role, name, level, size = 25) {
+export function getResortAdminTeachers(page, role, name, level, size = 25, sortBy = 'priority') {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
@@ -298,6 +301,7 @@ export function getResortAdminTeachers(page, role, name, level, size = 25) {
         level: level ?? '',
         name: name ?? '',
         size,
+        sortBy: sortBy ?? 'priority',
       });
       const response = await axios.get(`/api/resort-admin/teachers/filter?${params.toString()}`);
       dispatch(slice.actions.getTeachersSuccess(response.data));
@@ -427,7 +431,7 @@ export function broadcastLesson(body) {
 
 export function getBookings(teacherId, studentId, month, page, size = 100000, resort, day, bookingKind, year, state) {
   return async () => {
-    dispatch(slice.actions.startLoading());
+    dispatch(slice.actions.startLoadingBookings());
     try {
       const params = new URLSearchParams();
       if (page) params.append('page', page);
@@ -451,7 +455,7 @@ export function getBookings(teacherId, studentId, month, page, size = 100000, re
 
 export function getResortAdminBookings(teacherId, studentId, month, page, size = 100000, day, bookingKind, year, state) {
   return async () => {
-    dispatch(slice.actions.startLoading());
+    dispatch(slice.actions.startLoadingBookings());
     try {
       const params = new URLSearchParams();
       if (page) params.append('page', page);
@@ -474,7 +478,7 @@ export function getResortAdminBookings(teacherId, studentId, month, page, size =
 
 export function getBookingIntents(studentId, month, page, size = 100, resort, year) {
   return async () => {
-    dispatch(slice.actions.startLoading());
+    dispatch(slice.actions.startLoadingBookings());
     try {
       const params = new URLSearchParams();
       params.append('page', page ?? 0);
@@ -494,7 +498,7 @@ export function getBookingIntents(studentId, month, page, size = 100, resort, ye
 
 export function getResortAdminBookingIntents(studentId, month, page, size = 100, year) {
   return async () => {
-    dispatch(slice.actions.startLoading());
+    dispatch(slice.actions.startLoadingBookings());
     try {
       const params = new URLSearchParams();
       params.append('page', page ?? 0);
@@ -986,6 +990,30 @@ export function getResortAdminStats(year) {
     } catch (error) {
       const message = error?.response?.data || error?.message || 'Error loading resort stats';
       dispatch(slice.actions.hasResortStatsError(message));
+    }
+  };
+}
+
+function generateTempPassword() {
+  return `Sm${Math.random().toString(36).slice(2, 10)}A1!`;
+}
+
+/** Creates a STUDENT via /api/users/create without switching the admin session. */
+export function createAdminStudent({ email, name, lastname, countryCode, cellphone }) {
+  return async () => {
+    try {
+      const response = await axios.post('/api/users/create', {
+        email,
+        password: generateTempPassword(),
+        name,
+        lastname,
+        countryCode,
+        cellphone,
+        role: 'STUDENT',
+      });
+      return response.data;
+    } catch (error) {
+      throw error;
     }
   };
 }

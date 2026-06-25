@@ -40,6 +40,7 @@ AdminTableToolbar.propTypes = {
   filterTeacherId: PropTypes.string,
   filterStudentId: PropTypes.string,
   filterResort: PropTypes.string,
+  filterSortBy: PropTypes.string,
   onFilterName: PropTypes.func,
   onFilterRole: PropTypes.func,
   onFilterLevel: PropTypes.func,
@@ -48,8 +49,10 @@ AdminTableToolbar.propTypes = {
   onFilterTeacherId: PropTypes.func,
   onFilterStudentId: PropTypes.func,
   onFilterResort: PropTypes.func,
+  onFilterSortBy: PropTypes.func,
   onFilterDate: PropTypes.func,
   optionsRole: PropTypes.arrayOf(PropTypes.string),
+  optionsSortBy: PropTypes.arrayOf(PropTypes.string),
   bookings: PropTypes.bool,
   /** When true, hide instructor ID field and quick teacher chips (e.g. gear-only bookings). */
   hideInstructorFilters: PropTypes.bool,
@@ -68,6 +71,7 @@ export default function AdminTableToolbar({
   filterTeacherId,
   filterStudentId,
   filterResort,
+  filterSortBy,
   filterDate,
   onFilterName,
   onFilterRole,
@@ -77,7 +81,9 @@ export default function AdminTableToolbar({
   onFilterTeacherId,
   onFilterStudentId,
   onFilterResort,
+  onFilterSortBy,
   optionsRole,
+  optionsSortBy,
   bookings = false,
   hideInstructorFilters = false,
   hideMoreFilters = false,
@@ -91,6 +97,7 @@ export default function AdminTableToolbar({
   showStudentId = true,
   showSearchAdmin = true,
   showResort = true,
+  showSortBy = false,
   lockResort = null,
   onFilterDate = null
 }) {
@@ -197,6 +204,39 @@ export default function AdminTableToolbar({
               ))}
             </TextField>
           </>
+        )}
+
+        {showSortBy && onFilterSortBy && (
+          <TextField
+            fullWidth
+            select
+            label={t('adminReview.filters.sortBy')}
+            value={filterSortBy || 'priority'}
+            onChange={onFilterSortBy}
+            SelectProps={{
+              MenuProps: {
+                sx: { '& .MuiPaper-root': { maxHeight: 260 } },
+              },
+            }}
+            sx={{
+              maxWidth: { sm: 240 },
+            }}
+          >
+            {(optionsSortBy || ['priority', 'id']).map((option) => (
+              <MenuItem
+                key={option}
+                value={option}
+                sx={{
+                  mx: 1,
+                  my: 0.5,
+                  borderRadius: 0.75,
+                  typography: 'body2',
+                }}
+              >
+                {t(`adminReview.filters.sortByOptions.${option}`)}
+              </MenuItem>
+            ))}
+          </TextField>
         )}
 
         {showResort && (

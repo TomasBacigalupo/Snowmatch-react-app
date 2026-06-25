@@ -203,6 +203,11 @@ export default function AdminBookingTableRow({
                                 {t('adminBookings.row.equipment')}
                             </Typography>
                         )}
+                        {type !== 'GEAR_ONLY' && includesEquipments && (
+                            <Typography variant="caption" color="info.main" display="block" sx={{ mt: 0.5 }}>
+                                {t('adminBookings.rental.lessonBookingCaption', { id })}
+                            </Typography>
+                        )}
                     </TableCell>
 
                     <TableCell align="left">{resort || '—'}</TableCell>

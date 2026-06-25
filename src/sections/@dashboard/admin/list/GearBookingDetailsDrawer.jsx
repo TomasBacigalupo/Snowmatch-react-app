@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Drawer,
   Box,
@@ -27,7 +28,9 @@ GearBookingDetailsDrawer.propTypes = {
 
 export default function GearBookingDetailsDrawer({ open, onClose, booking, refreshBookings }) {
   const theme = useTheme();
+  const { t } = useTranslation();
   const [editModalOpen, setEditModalOpen] = useState(false);
+  const isLessonWithGear = booking?.type && booking.type !== 'GEAR_ONLY';
 
   const clientName =
     [booking?.student?.name, booking?.student?.lastname].filter(Boolean).join(' ').trim() ||
@@ -79,7 +82,18 @@ export default function GearBookingDetailsDrawer({ open, onClose, booking, refre
       >
         <Box sx={{ p: 3, height: '100%', overflow: 'auto' }}>
           <Stack direction="row" alignItems="center" justifyContent="space-between">
-            <Typography variant="h5">Reserva de equipos #{booking?.id}</Typography>
+            <Box>
+              <Typography variant="h5">
+                {isLessonWithGear
+                  ? t('adminBookings.rental.drawerLessonWithGearTitle', { id: booking?.id })
+                  : t('adminBookings.rental.drawerGearTitle', { id: booking?.id })}
+              </Typography>
+              {isLessonWithGear && (
+                <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
+                  {t('adminBookings.rental.lessonBookingCaption', { id: booking?.id })}
+                </Typography>
+              )}
+            </Box>
             <Stack direction="row" spacing={1}>
               <IconButton onClick={() => setEditModalOpen(true)}>
                 <Iconify icon="eva:edit-fill" />

@@ -41,6 +41,7 @@ export default function TeacherDetailsDrawer({ open, onClose, teacher }) {
     countryCode: '',
     role: '',
     level: '',
+    priority: 0,
     sports: [],
     languages: [],
     resorts: [],
@@ -62,6 +63,7 @@ export default function TeacherDetailsDrawer({ open, onClose, teacher }) {
         countryCode: teacher.countryCode || '',
         role: teacher.role || '',
         level: teacher.level ?? '',
+        priority: teacher.priority ?? 0,
         sports: teacher.sports || [],
         languages: teacher.languages || teacher.speaks || [],
         resorts: (teacher.resortsEnum || teacher.resorts || [])?.map((r) => r?.value || r?.name || r) || [],
@@ -186,6 +188,7 @@ export default function TeacherDetailsDrawer({ open, onClose, teacher }) {
         countryCode: form.countryCode?.trim?.() ?? form.countryCode,
         role: form.role,
         level: form.level,
+        priority: Number(form.priority) || 0,
         sports: form.sports || [],
         languages: form.languages || [],
         resorts: (form.resorts || []).map((r) => (typeof r === 'string' ? r : (r?.value || r?.name))).filter(Boolean),
@@ -428,6 +431,13 @@ export default function TeacherDetailsDrawer({ open, onClose, teacher }) {
                 label={t('adminReview.drawer.levelField')}
                 value={form.level}
                 onChange={handleChange('level')}
+                fullWidth
+              />
+              <TextField
+                label={t('adminReview.drawer.priorityField')}
+                type="number"
+                value={form.priority}
+                onChange={handleChange('priority')}
                 fullWidth
               />
               <Autocomplete

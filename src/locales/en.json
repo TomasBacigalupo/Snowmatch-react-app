@@ -781,6 +781,7 @@
       "countryCodeField": "Country Code",
       "roleField": "Role",
       "levelField": "Level",
+      "priorityField": "Priority",
       "sportsPlaceholder": "Select sports",
       "languagesPlaceholder": "Select languages",
       "resortsPlaceholder": "Select resorts",

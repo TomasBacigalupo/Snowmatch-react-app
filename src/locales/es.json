@@ -974,6 +974,7 @@
             "countryCodeField": "Código País",
             "roleField": "Rol",
             "levelField": "Nivel",
+            "priorityField": "Prioridad",
             "sportsPlaceholder": "Seleccioná deportes",
             "languagesPlaceholder": "Seleccioná idiomas",
             "resortsPlaceholder": "Seleccioná resorts",

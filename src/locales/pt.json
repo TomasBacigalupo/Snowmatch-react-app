@@ -1216,6 +1216,7 @@
             "countryCodeField": "Código do País",
             "roleField": "Função",
             "levelField": "Nível",
+            "priorityField": "Prioridade",
             "sportsPlaceholder": "Selecione esportes",
             "languagesPlaceholder": "Selecione idiomas",
             "resortsPlaceholder": "Selecione resorts",

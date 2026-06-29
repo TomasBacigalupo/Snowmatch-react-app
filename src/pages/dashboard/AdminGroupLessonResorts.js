@@ -29,6 +29,9 @@ import {
   Checkbox,
   FormControlLabel,
   Skeleton,
+  Tabs,
+  Tab,
+  Divider,
 } from '@mui/material';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import axios from '../../utils/axios';
@@ -63,6 +66,26 @@ const emptyForm = {
   minDays: '',
   startTime: '',
   endTime: '',
+  indexPosition: '0',
+  esFaqs: [],
+  enFaqs: [],
+  ptFaqs: [],
+};
+
+const FAQ_LANGS = [
+  { key: 'esFaqs', label: 'Español' },
+  { key: 'enFaqs', label: 'English' },
+  { key: 'ptFaqs', label: 'Português' },
+];
+
+const emptyFaq = () => ({ question: '', answer: '' });
+
+const mapFaqsFromRow = (faqs) => {
+  if (!Array.isArray(faqs)) return [];
+  return faqs.map((f) => ({
+    question: f?.question != null ? String(f.question) : '',
+    answer: f?.answer != null ? String(f.answer) : '',
+  }));
 };
 
 const timeToInput = (v) => {
@@ -98,6 +121,7 @@ export default function AdminGroupLessonResorts() {
   const [imagePreviewUrl, setImagePreviewUrl] = useState('');
   const [saving, setSaving] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState(null);
+  const [faqTab, setFaqTab] = useState(0);
 
   useEffect(() => {
     dispatch(fetchGroupLessonResortConfigs());
@@ -118,6 +142,7 @@ export default function AdminGroupLessonResorts() {
 
   const openNew = () => {
     resetImagePick();
+    setFaqTab(0);
     setForm(lockedResort ? { ...emptyForm, resort: lockedResort } : emptyForm);
     setResortLocked(Boolean(lockedResort));
     setDialogOpen(true);
@@ -125,6 +150,7 @@ export default function AdminGroupLessonResorts() {
 
   const openEdit = (row) => {
     resetImagePick();
+    setFaqTab(0);
     setForm({
       id: row.id,
       resort: row.resort,
@@ -139,6 +165,11 @@ export default function AdminGroupLessonResorts() {
       minDays: row?.minDays != null && row?.minDays !== '' ? String(row.minDays) : '',
       startTime: timeToInput(row?.startTime),
       endTime: timeToInput(row?.endTime),
+      indexPosition:
+        row?.indexPosition != null && row?.indexPosition !== '' ? String(row.indexPosition) : '0',
+      esFaqs: mapFaqsFromRow(row?.esFaqs),
+      enFaqs: mapFaqsFromRow(row?.enFaqs),
+      ptFaqs: mapFaqsFromRow(row?.ptFaqs),
     });
     setResortLocked(true);
     setDialogOpen(true);
@@ -163,6 +194,25 @@ export default function AdminGroupLessonResorts() {
   const handleClearImage = () => {
     resetImagePick();
     setForm((f) => ({ ...f, imageUrl: '' }));
+  };
+
+  const updateFaqField = (langKey, index, field, value) => {
+    setForm((f) => {
+      const next = [...(f[langKey] || [])];
+      next[index] = { ...next[index], [field]: value };
+      return { ...f, [langKey]: next };
+    });
+  };
+
+  const addFaq = (langKey) => {
+    setForm((f) => ({ ...f, [langKey]: [...(f[langKey] || []), emptyFaq()] }));
+  };
+
+  const removeFaq = (langKey, index) => {
+    setForm((f) => ({
+      ...f,
+      [langKey]: (f[langKey] || []).filter((_, i) => i !== index),
+    }));
   };
 
   const handleSave = async () => {
@@ -217,6 +267,10 @@ export default function AdminGroupLessonResorts() {
               minDays: form.minDays,
               startTime: form.startTime,
               endTime: form.endTime,
+              indexPosition: form.indexPosition,
+              esFaqs: form.esFaqs,
+              enFaqs: form.enFaqs,
+              ptFaqs: form.ptFaqs,
               useResortAdmin: isResortAdmin,
             })
           )
@@ -234,6 +288,10 @@ export default function AdminGroupLessonResorts() {
               minDays: form.minDays,
               startTime: form.startTime,
               endTime: form.endTime,
+              indexPosition: form.indexPosition,
+              esFaqs: form.esFaqs,
+              enFaqs: form.enFaqs,
+              ptFaqs: form.ptFaqs,
               useResortAdmin: isResortAdmin,
             })
           );
@@ -268,6 +326,9 @@ export default function AdminGroupLessonResorts() {
       <TableRow key={`skeleton-${index}`}>
         <TableCell>
           <Skeleton width={32} height={20} />
+        </TableCell>
+        <TableCell>
+          <Skeleton width={24} height={20} />
         </TableCell>
         <TableCell>
           <Stack spacing={0.5}>
@@ -354,6 +415,7 @@ export default function AdminGroupLessonResorts() {
               <TableHead>
                 <TableRow>
                   <TableCell>ID</TableCell>
+                  <TableCell>Orden</TableCell>
                   <TableCell>Centro</TableCell>
                   <TableCell>Título</TableCell>
                   <TableCell align="right">Precio</TableCell>
@@ -370,7 +432,7 @@ export default function AdminGroupLessonResorts() {
                   <>
                 {displayItems.length === 0 && (
                   <TableRow>
-                    <TableCell colSpan={8}>
+                    <TableCell colSpan={9}>
                       <Typography color="text.secondary" variant="body2">
                         No hay configuraciones guardadas todavía.
                       </Typography>
@@ -380,6 +442,7 @@ export default function AdminGroupLessonResorts() {
                 {displayItems.map((row) => (
                   <TableRow key={row.id}>
                     <TableCell>{row.id}</TableCell>
+                    <TableCell>{row.indexPosition ?? 0}</TableCell>
                     <TableCell>
                       <Typography variant="subtitle2">{row.resortDisplayName || row.resort}</Typography>
                       <Typography variant="caption" color="text.secondary">
@@ -447,7 +510,7 @@ export default function AdminGroupLessonResorts() {
           </TableContainer>
         </Card>
 
-        <Dialog open={dialogOpen} onClose={closeDialog} fullWidth maxWidth="sm">
+        <Dialog open={dialogOpen} onClose={closeDialog} fullWidth maxWidth="md">
           <DialogTitle>Clases grupales — oferta</DialogTitle>
           <DialogContent>
             <Stack spacing={2} sx={{ mt: 1 }}>
@@ -472,6 +535,15 @@ export default function AdminGroupLessonResorts() {
                   ))}
                 </Select>
               </FormControl>
+              <TextField
+                label="Orden de visualización"
+                type="number"
+                fullWidth
+                value={form.indexPosition}
+                onChange={(e) => setForm((f) => ({ ...f, indexPosition: e.target.value }))}
+                inputProps={{ min: 0, step: 1 }}
+                helperText="Menor número = aparece primero entre las ofertas del mismo centro"
+              />
               <TextField
                 label="Título (clase grupal)"
                 fullWidth
@@ -605,6 +677,75 @@ export default function AdminGroupLessonResorts() {
                   inputProps={{ step: 300 }}
                 />
               </Stack>
+              <Divider />
+              <Box>
+                <Typography variant="subtitle2" sx={{ mb: 1 }}>
+                  Preguntas frecuentes (por idioma)
+                </Typography>
+                <Tabs
+                  value={faqTab}
+                  onChange={(_, value) => setFaqTab(value)}
+                  variant="scrollable"
+                  scrollButtons="auto"
+                  sx={{ mb: 2, borderBottom: 1, borderColor: 'divider' }}
+                >
+                  {FAQ_LANGS.map((lang) => (
+                    <Tab
+                      key={lang.key}
+                      label={`${lang.label} (${(form[lang.key] || []).length})`}
+                    />
+                  ))}
+                </Tabs>
+                {FAQ_LANGS.map((lang, tabIndex) => {
+                  if (faqTab !== tabIndex) return null;
+                  const faqs = form[lang.key] || [];
+                  return (
+                    <Stack key={lang.key} spacing={2}>
+                      {faqs.length === 0 && (
+                        <Typography variant="body2" color="text.secondary">
+                          No hay preguntas en {lang.label}. Agregá la primera abajo.
+                        </Typography>
+                      )}
+                      {faqs.map((faq, idx) => (
+                        <Box
+                          key={`${lang.key}-${idx}`}
+                          sx={{
+                            p: 2,
+                            border: '1px solid',
+                            borderColor: 'divider',
+                            borderRadius: 1,
+                          }}
+                        >
+                          <Stack spacing={1.5}>
+                            <TextField
+                              label="Pregunta"
+                              fullWidth
+                              value={faq.question}
+                              onChange={(e) => updateFaqField(lang.key, idx, 'question', e.target.value)}
+                            />
+                            <TextField
+                              label="Respuesta"
+                              fullWidth
+                              multiline
+                              minRows={2}
+                              value={faq.answer}
+                              onChange={(e) => updateFaqField(lang.key, idx, 'answer', e.target.value)}
+                            />
+                            <Box>
+                              <Button size="small" color="error" onClick={() => removeFaq(lang.key, idx)}>
+                                Quitar pregunta
+                              </Button>
+                            </Box>
+                          </Stack>
+                        </Box>
+                      ))}
+                      <Button variant="outlined" size="small" onClick={() => addFaq(lang.key)}>
+                        Agregar pregunta ({lang.label})
+                      </Button>
+                    </Stack>
+                  );
+                })}
+              </Box>
             </Stack>
           </DialogContent>
           <DialogActions>

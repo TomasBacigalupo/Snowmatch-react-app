@@ -51,6 +51,9 @@ BookingRentalFieldsSection.propTypes = {
   lessonMinDate: PropTypes.string,
   lessonMaxDate: PropTypes.string,
   prefillHint: PropTypes.string,
+  hideFulfillment: PropTypes.bool,
+  gearOnly: PropTypes.bool,
+  sectionTitle: PropTypes.string,
 };
 
 export default function BookingRentalFieldsSection({
@@ -60,6 +63,9 @@ export default function BookingRentalFieldsSection({
   lessonMinDate,
   lessonMaxDate,
   prefillHint,
+  hideFulfillment = false,
+  gearOnly = false,
+  sectionTitle,
 }) {
   const { t, i18n } = useTranslation();
   const dispatch = useDispatch();
@@ -118,13 +124,16 @@ export default function BookingRentalFieldsSection({
         max: lessonMaxDate,
       });
     }
+    if (gearOnly) {
+      return t('adminBookings.rental.dateRangeStandaloneHint');
+    }
     return t('adminBookings.rental.dateRangeHint');
-  }, [rentalDayCount, lessonMinDate, lessonMaxDate, t]);
+  }, [rentalDayCount, lessonMinDate, lessonMaxDate, gearOnly, t]);
 
   return (
     <Box sx={{ mt: 2, p: 2, border: '1px solid', borderColor: 'divider', borderRadius: 1 }}>
       <Typography variant="subtitle1" sx={{ mb: prefillHint ? 0.5 : 2 }}>
-        {t('adminBookings.rental.createSectionTitle')}
+        {sectionTitle || t('adminBookings.rental.createSectionTitle')}
       </Typography>
       {prefillHint && (
         <Typography variant="caption" color="primary.main" sx={{ display: 'block', mb: 2 }}>
@@ -303,54 +312,58 @@ export default function BookingRentalFieldsSection({
           </FormControl>
         </Grid>
 
-        <Grid item xs={12}>
-          <Divider sx={{ my: 1 }} />
-        </Grid>
-
-        <Grid item xs={12} md={6}>
-          <FormControl fullWidth required>
-            <InputLabel id="rental-fulfillment-label">{t('adminBookings.rental.delivery')}</InputLabel>
-            <Select
-              labelId="rental-fulfillment-label"
-              label={t('adminBookings.rental.delivery')}
-              value={rental.rentalFulfillment || 'PICKUP_IN_SHOP'}
-              onChange={(e) => patch({ rentalFulfillment: e.target.value })}
-            >
-              <MenuItem value="PICKUP_IN_SHOP">{t('adminBookings.rental.deliveryPickupInShop')}</MenuItem>
-              <MenuItem value="SHIP_TO_HOTEL_OR_HOME">
-                {t('adminBookings.rental.deliveryShipToHotel')}
-              </MenuItem>
-            </Select>
-          </FormControl>
-        </Grid>
-
-        {rental.rentalFulfillment === 'SHIP_TO_HOTEL_OR_HOME' && (
+        {!hideFulfillment && (
           <>
+            <Grid item xs={12}>
+              <Divider sx={{ my: 1 }} />
+            </Grid>
+
             <Grid item xs={12} md={6}>
               <FormControl fullWidth required>
-                <InputLabel id="rental-dest-type-label">
-                  {t('adminBookings.rental.destinationType')}
-                </InputLabel>
+                <InputLabel id="rental-fulfillment-label">{t('adminBookings.rental.delivery')}</InputLabel>
                 <Select
-                  labelId="rental-dest-type-label"
-                  label={t('adminBookings.rental.destinationType')}
-                  value={rental.rentalDestinationType || 'HOTEL_OR_CABIN'}
-                  onChange={(e) => patch({ rentalDestinationType: e.target.value })}
+                  labelId="rental-fulfillment-label"
+                  label={t('adminBookings.rental.delivery')}
+                  value={rental.rentalFulfillment || 'PICKUP_IN_SHOP'}
+                  onChange={(e) => patch({ rentalFulfillment: e.target.value })}
                 >
-                  <MenuItem value="HOTEL_OR_CABIN">{t('adminBookings.rental.destinationHotel')}</MenuItem>
-                  <MenuItem value="HOME_ADDRESS">{t('adminBookings.rental.destinationHome')}</MenuItem>
+                  <MenuItem value="PICKUP_IN_SHOP">{t('adminBookings.rental.deliveryPickupInShop')}</MenuItem>
+                  <MenuItem value="SHIP_TO_HOTEL_OR_HOME">
+                    {t('adminBookings.rental.deliveryShipToHotel')}
+                  </MenuItem>
                 </Select>
               </FormControl>
             </Grid>
-            <Grid item xs={12}>
-              <TextField
-                fullWidth
-                required
-                label={t('adminBookings.rental.addressHotel')}
-                value={rental.rentalDestinationDetail || ''}
-                onChange={(e) => patch({ rentalDestinationDetail: e.target.value })}
-              />
-            </Grid>
+
+            {rental.rentalFulfillment === 'SHIP_TO_HOTEL_OR_HOME' && (
+              <>
+                <Grid item xs={12} md={6}>
+                  <FormControl fullWidth required>
+                    <InputLabel id="rental-dest-type-label">
+                      {t('adminBookings.rental.destinationType')}
+                    </InputLabel>
+                    <Select
+                      labelId="rental-dest-type-label"
+                      label={t('adminBookings.rental.destinationType')}
+                      value={rental.rentalDestinationType || 'HOTEL_OR_CABIN'}
+                      onChange={(e) => patch({ rentalDestinationType: e.target.value })}
+                    >
+                      <MenuItem value="HOTEL_OR_CABIN">{t('adminBookings.rental.destinationHotel')}</MenuItem>
+                      <MenuItem value="HOME_ADDRESS">{t('adminBookings.rental.destinationHome')}</MenuItem>
+                    </Select>
+                  </FormControl>
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    fullWidth
+                    required
+                    label={t('adminBookings.rental.addressHotel')}
+                    value={rental.rentalDestinationDetail || ''}
+                    onChange={(e) => patch({ rentalDestinationDetail: e.target.value })}
+                  />
+                </Grid>
+              </>
+            )}
           </>
         )}
       </Grid>

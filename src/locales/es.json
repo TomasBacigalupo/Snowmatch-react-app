@@ -1015,10 +1015,23 @@
         "gearHeading": "Reservas de equipos",
         "dense": "Compacto",
         "newBooking": "Nueva Reserva",
+        "newGearBooking": "Nueva reserva de equipos",
+        "gearCreateSuccess": "Reserva de equipos creada correctamente.",
+        "gearCreatePartialFailure": "Reserva #{{id}} creada, pero falló un ítem de alquiler. Revisá la reserva manualmente.",
+        "gearCreate": {
+            "validationStudent": "Seleccioná un cliente para la reserva.",
+            "paymentMethod": "Método de pago",
+            "paymentCash": "Efectivo",
+            "paymentWireTransfer": "Transferencia bancaria",
+            "addRentalLine": "Agregar ítem",
+            "removeRentalLine": "Quitar ítem",
+            "lineLabel": "Ítem {{n}}",
+            "error": "No se pudo crear la reserva de equipos. Intentá de nuevo."
+        },
         "showStats": "Mostrar estadísticas",
         "tabs": {
             "bookings": "Reservas",
-            "pendingNoInstructor": "Pendientes (sin instructor)"
+            "openBookings": "Reservas abiertas"
         },
         "filters": {
             "date": "Fecha",
@@ -1113,7 +1126,7 @@
         "empty": {
             "title": "Acá vas a poder ver y gestionar las solicitudes de reserva que ocurran en tu centro de esquí"
         },
-        "mobilePendingHint": "Pendientes sin instructor: abrí esta página en escritorio para asignar o cancelar.",
+        "mobilePendingHint": "Reservas abiertas: abrí esta página en escritorio para asignar o cancelar.",
         "declineDialog": {
             "title": "¿Seguro que querés declinar?"
         },
@@ -1283,6 +1296,7 @@
             "startDate": "Fecha de inicio",
             "endDate": "Fecha de fin",
             "dateRangeHint": "Seleccioná el período de alquiler dentro de las fechas de clases.",
+            "dateRangeStandaloneHint": "Seleccioná el período de alquiler.",
             "dateRangeBounds": "Disponible: {{min}} a {{max}} (fechas de clases)",
             "dateRangeDays": "{{count}} días de alquiler",
             "syncLessonDates": "Usar fechas de clases",

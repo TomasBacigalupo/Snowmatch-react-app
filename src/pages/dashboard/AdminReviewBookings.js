@@ -56,6 +56,7 @@ import AdminBookingTableRow from 'src/sections/@dashboard/admin/list/AdminBookin
 import AdminBookingTableCard from 'src/sections/@dashboard/admin/list/AdminBookingTableCard';
 import AdminBookingIntentTableRow from 'src/sections/@dashboard/admin/list/AdminBookingIntentTableRow';
 import BookingModal from 'src/sections/@dashboard/admin/BookingModal';
+import GearBookingModal from 'src/sections/@dashboard/admin/GearBookingModal';
 import BookingSummary from 'src/sections/@dashboard/admin/list/BookingSummary';
 import useAuth from 'src/hooks/useAuth';
 import BookingDetailsDrawer from 'src/sections/@dashboard/admin/list/BookingDetailsDrawer';
@@ -589,7 +590,7 @@ export function AdminBookingsPage({ bookingListKind, pageTitle, heading }) {
         <HeaderBreadcrumbs
           heading={heading}
           action={
-            bookingListKind === 'lesson' && !isResortAdmin ? (
+            !isResortAdmin && (bookingListKind === 'lesson' || bookingListKind === 'gear') ? (
               <Button
                 variant="contained"
                 startIcon={<Iconify icon="eva:plus-fill" />}
@@ -604,7 +605,9 @@ export function AdminBookingsPage({ bookingListKind, pageTitle, heading }) {
                   },
                 }}
               >
-                {t('adminBookings.newBooking')}
+                {bookingListKind === 'gear'
+                  ? t('adminBookings.newGearBooking')
+                  : t('adminBookings.newBooking')}
               </Button>
             ) : undefined
           }
@@ -612,7 +615,7 @@ export function AdminBookingsPage({ bookingListKind, pageTitle, heading }) {
         {bookingListKind === 'lesson' && (
           <Tabs value={listTab} onChange={(e, v) => setListTab(v)} sx={{ px: 2, mb: 1 }}>
             <Tab label={t('adminBookings.tabs.bookings')} />
-            <Tab label={t('adminBookings.tabs.pendingNoInstructor')} />
+            <Tab label={t('adminBookings.tabs.openBookings')} />
           </Tabs>
         )}
         <AdminTableToolbar
@@ -678,6 +681,14 @@ export function AdminBookingsPage({ bookingListKind, pageTitle, heading }) {
               filterMonth={filterMonth}
               page={page}
               rowsPerPage={rowsPerPage}
+              filterResort={filterResort}
+            />
+          )}
+          {bookingListKind === 'gear' && (
+            <GearBookingModal
+              isOpen={isOpen}
+              onClose={() => setIsOpen(false)}
+              refreshBookings={refreshBookings}
               filterResort={filterResort}
             />
           )}

@@ -22,6 +22,11 @@ import {
     clearRentalRenterFields,
     pickTeamMemberForRental,
 } from 'src/utils/adminBookingRentalPrefill';
+import {
+    buildRentalLinePayload,
+    validateRentalFulfillment,
+    validateRentalLine,
+} from 'src/utils/adminGearRentalForm';
 import BookingRentalFieldsSection from './BookingRentalFieldsSection';
 import CreateStudentModal from './CreateStudentModal';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
@@ -244,52 +249,12 @@ const BookingModal = ({ isOpen, onClose, refreshBookings, filterTeacherId, filte
 
     const validateRental = () => {
         const { rental } = formData;
-        if (!rental.itemId) {
-            return t('adminBookings.rental.validationItem');
-        }
-        if (!rental.startDate || !rental.endDate) {
-            return t('adminBookings.rental.validationDates');
-        }
-        if (!rental.renterHeightCm || !rental.renterWeightKg || !rental.renterFootLengthCm) {
-            return t('adminBookings.rental.validationMeasurements');
-        }
-        if (!rental.renterSkiLevel) {
-            return t('adminBookings.rental.validationLevel');
-        }
-        const hasFirst = Boolean(rental.renterFirstName?.trim());
-        const hasLast = Boolean(rental.renterLastName?.trim());
-        if (hasFirst !== hasLast) {
-            return t('adminBookings.rental.validationNamePair');
-        }
-        if (rental.rentalFulfillment === 'SHIP_TO_HOTEL_OR_HOME') {
-            if (!rental.rentalDestinationType || !rental.rentalDestinationDetail?.trim()) {
-                return t('adminBookings.rental.validationDestination');
-            }
-        }
-        return null;
+        const lineError = validateRentalLine(rental, t);
+        if (lineError) return lineError;
+        return validateRentalFulfillment(rental, t);
     };
 
-    const buildRentalPayload = () => {
-        const { rental } = formData;
-        const payload = {
-            itemId: rental.itemId,
-            startDate: rental.startDate,
-            endDate: rental.endDate,
-            unitsReserved: Number(rental.unitsReserved) || 1,
-            renterHeightCm: Number(rental.renterHeightCm),
-            renterWeightKg: Number(rental.renterWeightKg),
-            renterFootLengthCm: Number(rental.renterFootLengthCm),
-            renterSkiLevel: rental.renterSkiLevel,
-        };
-        if (rental.variantId) {
-            payload.variantId = rental.variantId;
-        }
-        if (rental.renterFirstName?.trim() && rental.renterLastName?.trim()) {
-            payload.renterFirstName = rental.renterFirstName.trim();
-            payload.renterLastName = rental.renterLastName.trim();
-        }
-        return payload;
-    };
+    const buildRentalPayload = () => buildRentalLinePayload(formData.rental);
 
     const handleSubmit = async () => {
         const totalPrice = formData.dateTimes.reduce((acc, curr) => acc + Number(curr.price), 0);

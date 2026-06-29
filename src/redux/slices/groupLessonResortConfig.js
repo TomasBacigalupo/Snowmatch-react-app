@@ -12,6 +12,16 @@ const groupLessonResortConfigApiBase = (useResortAdmin) =>
     ? '/api/resort-admin/group-lesson-resort-config'
     : '/api/admin/group-lesson-resort-config';
 
+const normalizeFaqsForApi = (faqs) => {
+  if (!Array.isArray(faqs)) return [];
+  return faqs
+    .map((f) => ({
+      question: f?.question?.trim() || '',
+      answer: f?.answer?.trim() || '',
+    }))
+    .filter((f) => f.question || f.answer);
+};
+
 export const fetchGroupLessonResortConfigs = createAsyncThunk(
   'groupLessonResortConfig/fetchAll',
   async (_, { rejectWithValue }) => {
@@ -40,6 +50,10 @@ export const createGroupLessonResortConfig = createAsyncThunk(
       minDays,
       startTime,
       endTime,
+      indexPosition,
+      esFaqs,
+      enFaqs,
+      ptFaqs,
       useResortAdmin = false,
     },
     { rejectWithValue }
@@ -70,6 +84,16 @@ export const createGroupLessonResortConfig = createAsyncThunk(
               })(),
         startTime: startTime?.trim() ? startTime.trim() : null,
         endTime: endTime?.trim() ? endTime.trim() : null,
+        indexPosition:
+          indexPosition === '' || indexPosition == null
+            ? 0
+            : (() => {
+                const n = Number(indexPosition);
+                return Number.isFinite(n) ? Math.max(0, Math.trunc(n)) : 0;
+              })(),
+        esFaqs: normalizeFaqsForApi(esFaqs),
+        enFaqs: normalizeFaqsForApi(enFaqs),
+        ptFaqs: normalizeFaqsForApi(ptFaqs),
       });
       return response.data;
     } catch (error) {
@@ -96,6 +120,10 @@ export const updateGroupLessonResortConfig = createAsyncThunk(
       minDays,
       startTime,
       endTime,
+      indexPosition,
+      esFaqs,
+      enFaqs,
+      ptFaqs,
       useResortAdmin = false,
     },
     { rejectWithValue }
@@ -125,6 +153,16 @@ export const updateGroupLessonResortConfig = createAsyncThunk(
               })(),
         startTime: startTime?.trim() ? startTime.trim() : null,
         endTime: endTime?.trim() ? endTime.trim() : null,
+        indexPosition:
+          indexPosition === '' || indexPosition == null
+            ? 0
+            : (() => {
+                const n = Number(indexPosition);
+                return Number.isFinite(n) ? Math.max(0, Math.trunc(n)) : 0;
+              })(),
+        esFaqs: normalizeFaqsForApi(esFaqs),
+        enFaqs: normalizeFaqsForApi(enFaqs),
+        ptFaqs: normalizeFaqsForApi(ptFaqs),
       });
       return response.data;
     } catch (error) {

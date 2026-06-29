@@ -822,10 +822,23 @@
     "gearHeading": "Equipment Bookings",
     "dense": "Dense",
     "newBooking": "New Booking",
+    "newGearBooking": "New equipment booking",
+    "gearCreateSuccess": "Equipment booking created successfully.",
+    "gearCreatePartialFailure": "Booking #{{id}} was created, but a rental item failed. Review the booking manually.",
+    "gearCreate": {
+      "validationStudent": "Select a customer for the booking.",
+      "paymentMethod": "Payment method",
+      "paymentCash": "Cash",
+      "paymentWireTransfer": "Wire transfer",
+      "addRentalLine": "Add item",
+      "removeRentalLine": "Remove item",
+      "lineLabel": "Item {{n}}",
+      "error": "Could not create the equipment booking. Please try again."
+    },
     "showStats": "Show stats",
     "tabs": {
       "bookings": "Bookings",
-      "pendingNoInstructor": "Pending (no instructor)"
+      "openBookings": "Open bookings"
     },
     "filters": {
       "date": "Date",
@@ -920,7 +933,7 @@
     "empty": {
       "title": "Here you can view and manage booking requests that occur at your ski resort"
     },
-    "mobilePendingHint": "Pending without instructor: open this page on desktop to assign or cancel.",
+    "mobilePendingHint": "Open bookings: open this page on desktop to assign or cancel.",
     "declineDialog": {
       "title": "Are you sure you want to decline?"
     },
@@ -1090,6 +1103,7 @@
       "startDate": "Start date",
       "endDate": "End date",
       "dateRangeHint": "Select the rental period within the lesson dates.",
+      "dateRangeStandaloneHint": "Select the rental period.",
       "dateRangeBounds": "Available: {{min}} to {{max}} (lesson dates)",
       "dateRangeDays": "{{count}} rental days",
       "syncLessonDates": "Use lesson dates",

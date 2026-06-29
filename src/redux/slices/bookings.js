@@ -692,6 +692,18 @@ export function createAdminBookingRentalReservation(bookingId, rentalPayload) {
     };
 }
 
+export function createAdminGearBooking(payload) {
+    return async () => {
+        try {
+            const response = await axios.post('/api/rental/admin/reservations/gear-booking', payload);
+            return response.data;
+        } catch (error) {
+            dispatch(slice.actions.hasError(error));
+            throw error;
+        }
+    };
+}
+
 export function createAdminBookingIntent(studentId, message, children, adults, events, totalPrice, bookingType, includesLaunch, includesEquipment, paymentStatus, paymentMethod, internalComment, resort, calendarTeacherId) {
     return async () => {
         dispatch(slice.actions.startLoading());

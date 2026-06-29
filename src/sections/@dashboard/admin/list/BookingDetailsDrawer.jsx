@@ -36,6 +36,7 @@ import enLocale from '@fullcalendar/core/locales/en-gb';
 import ptBrLocale from '@fullcalendar/core/locales/pt-br';
 import { CalendarStyle, CalendarToolbar } from '../../calendar';
 import BookingEditModal from './BookingEditModal';
+import BookingIntentEditModal from './BookingIntentEditModal';
 import PayoutEditModal from './PayoutEditModal';
 import BookingRentalFulfillmentSection from './BookingRentalFulfillmentSection';
 // hooks
@@ -90,9 +91,18 @@ BookingDetailsDrawer.propTypes = {
   onClose: PropTypes.func,
   booking: PropTypes.object,
   refreshBookings: PropTypes.func,
+  isIntent: PropTypes.bool,
+  rawIntent: PropTypes.object,
 };
 
-export default function BookingDetailsDrawer({ open, onClose, booking, refreshBookings }) {
+export default function BookingDetailsDrawer({
+  open,
+  onClose,
+  booking,
+  refreshBookings,
+  isIntent = false,
+  rawIntent,
+}) {
   const theme = useTheme();
   const dispatch = useDispatch();
   const { t, i18n } = useTranslation();
@@ -430,10 +440,10 @@ export default function BookingDetailsDrawer({ open, onClose, booking, refreshBo
   };
 
   useEffect(() => {
-    if (open && booking?.id) {
+    if (open && booking?.id && !isIntent) {
       dispatch(fetchPayouts(booking.id));
     }
-  }, [open, booking?.id, dispatch]);
+  }, [open, booking?.id, dispatch, isIntent]);
 
   useEffect(() => {
     if (file && file.type.startsWith('image/')) {
@@ -481,7 +491,9 @@ export default function BookingDetailsDrawer({ open, onClose, booking, refreshBo
         <Box sx={{ p: 3, height: '100%', overflow: 'auto', pb: { xs: 10, sm: 12 } }}>
           <Stack direction="row" alignItems="center" justifyContent="space-between">
             <Typography variant="h5">
-              {t('adminBookings.drawer.title', { id: booking?.id })}
+              {isIntent
+                ? t('adminBookings.intent.drawerTitle', { id: booking?.id })
+                : t('adminBookings.drawer.title', { id: booking?.id })}
             </Typography>
             <Stack direction="row" spacing={1}>
               <IconButton onClick={handleEditClick}>
@@ -498,17 +510,27 @@ export default function BookingDetailsDrawer({ open, onClose, booking, refreshBo
           <Stack spacing={2.5}>
             <Box>
               <Stack direction="row" spacing={1}>
-                <Label
-                  variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
-                  color={
-                    (booking?.state === 'DECLINED' && 'error') ||
-                    (booking?.state === 'PENDING' && 'warning') ||
-                    'success'
-                  }
-                  sx={{ px: 2, py: 1 }}
-                >
-                  {stateLabel}
-                </Label>
+                {isIntent ? (
+                  <Label
+                    variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
+                    color="warning"
+                    sx={{ px: 2, py: 1 }}
+                  >
+                    {t('adminBookings.intent.openStatus')}
+                  </Label>
+                ) : (
+                  <Label
+                    variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
+                    color={
+                      (booking?.state === 'DECLINED' && 'error') ||
+                      (booking?.state === 'PENDING' && 'warning') ||
+                      'success'
+                    }
+                    sx={{ px: 2, py: 1 }}
+                  >
+                    {stateLabel}
+                  </Label>
+                )}
                 <Label
                   variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
                   color={
@@ -566,12 +588,16 @@ export default function BookingDetailsDrawer({ open, onClose, booking, refreshBo
                     </Stack>
                   </Stack>
                   <Typography variant="body1">
-                    {[booking?.teacher?.name, booking?.teacher?.lastname].filter(Boolean).join(' ') ||
-                      emptyValue}
+                    {isIntent
+                      ? t('adminBookings.intent.unassigned')
+                      : [booking?.teacher?.name, booking?.teacher?.lastname].filter(Boolean).join(' ') ||
+                        emptyValue}
                   </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    {t('adminBookings.drawer.idLabel')}: {booking?.teacher?.id ?? emptyValue}
-                  </Typography>
+                  {!isIntent && (
+                    <Typography variant="body2" color="text.secondary">
+                      {t('adminBookings.drawer.idLabel')}: {booking?.teacher?.id ?? emptyValue}
+                    </Typography>
+                  )}
                   {booking?.teacher?.cellphone && (
                     <Typography variant="body2" color="text.secondary">
                       {t('adminBookings.drawer.phoneLabel')}: {booking.teacher.cellphone}
@@ -669,7 +695,7 @@ export default function BookingDetailsDrawer({ open, onClose, booking, refreshBo
               </Grid>
             </Box>
 
-            <BookingRentalFulfillmentSection booking={booking} open={open} />
+            {!isIntent && <BookingRentalFulfillmentSection booking={booking} open={open} />}
 
             <Box>
               <Typography variant="subtitle1" gutterBottom>
@@ -693,6 +719,8 @@ export default function BookingDetailsDrawer({ open, onClose, booking, refreshBo
               </Grid>
             </Box>
 
+            {!isIntent && (
+              <>
             <Divider />
 
             <Box>
@@ -890,6 +918,8 @@ export default function BookingDetailsDrawer({ open, onClose, booking, refreshBo
                 />
               )}
             </Box>
+              </>
+            )}
 
             <Divider />
 
@@ -956,12 +986,21 @@ export default function BookingDetailsDrawer({ open, onClose, booking, refreshBo
         </Box>
       </Drawer>
 
-      <BookingEditModal
-        open={editModalOpen}
-        onClose={handleEditClose}
-        booking={booking}
-        onSave={handleEditSave}
-      />
+      {isIntent ? (
+        <BookingIntentEditModal
+          open={editModalOpen}
+          onClose={handleEditClose}
+          intent={rawIntent || booking}
+          onSave={handleEditSave}
+        />
+      ) : (
+        <BookingEditModal
+          open={editModalOpen}
+          onClose={handleEditClose}
+          booking={booking}
+          onSave={handleEditSave}
+        />
+      )}
 
       <PayoutEditModal
         open={payoutEditModalOpen}

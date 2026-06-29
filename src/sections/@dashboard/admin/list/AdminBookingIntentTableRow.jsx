@@ -20,6 +20,8 @@ import { useDispatch } from 'src/redux/store';
 import { useSelector } from 'react-redux';
 import { convertBookingIntent, cancelBookingIntent, getTeachers } from 'src/redux/slices/admin';
 import axios from 'src/utils/axios';
+import BookingDetailsDrawer from './BookingDetailsDrawer';
+import { normalizeBookingIntent } from 'src/utils/normalizeBookingIntent';
 
 AdminBookingIntentTableRow.propTypes = {
   row: PropTypes.object.isRequired,
@@ -31,6 +33,7 @@ export default function AdminBookingIntentTableRow({ row, onRefreshIntents }) {
   const dispatch = useDispatch();
   const { teachers } = useSelector((state) => state.admin);
   const [assignOpen, setAssignOpen] = useState(false);
+  const [openDrawer, setOpenDrawer] = useState(false);
   const [selectedTeacher, setSelectedTeacher] = useState(null);
   const [selectedStudent, setSelectedStudent] = useState(null);
   const [studentOptions, setStudentOptions] = useState([]);
@@ -108,6 +111,7 @@ export default function AdminBookingIntentTableRow({ row, onRefreshIntents }) {
       setAssignOpen(false);
       setSelectedTeacher(null);
       setSelectedStudent(null);
+      setOpenDrawer(false);
     } finally {
       setSubmitting(false);
     }
@@ -128,14 +132,28 @@ export default function AdminBookingIntentTableRow({ row, onRefreshIntents }) {
           if (onRefreshIntents) await onRefreshIntents();
         })
       );
+      setOpenDrawer(false);
     } finally {
       setSubmitting(false);
     }
   };
 
+  const handleRowClick = (event) => {
+    if (event.target.closest('button') || event.target.closest('.MuiButton-root')) {
+      return;
+    }
+    setOpenDrawer(true);
+  };
+
+  const handleRefresh = () => {
+    if (onRefreshIntents) onRefreshIntents();
+  };
+
+  const normalizedBooking = normalizeBookingIntent(row);
+
   return (
     <>
-      <TableRow hover>
+      <TableRow hover onClick={handleRowClick} sx={{ cursor: 'pointer' }}>
         <TableCell>
           <Typography variant="subtitle2">I-{id}</Typography>
         </TableCell>
@@ -170,7 +188,7 @@ export default function AdminBookingIntentTableRow({ row, onRefreshIntents }) {
           {[includesLaunch && t('adminBookings.row.lunch'), includesEquipments && t('adminBookings.row.equipmentShort')].filter(Boolean).join(', ') || '—'}
         </TableCell>
         <TableCell>{paymentStatus || '—'}</TableCell>
-        <TableCell align="right">
+        <TableCell align="right" onClick={(e) => e.stopPropagation()}>
           <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', justifyContent: 'flex-end' }}>
             <Button size="small" variant="contained" onClick={() => setAssignOpen(true)}>
               {t('adminBookings.intent.assignInstructor')}
@@ -181,6 +199,15 @@ export default function AdminBookingIntentTableRow({ row, onRefreshIntents }) {
           </Box>
         </TableCell>
       </TableRow>
+
+      <BookingDetailsDrawer
+        open={openDrawer}
+        onClose={() => setOpenDrawer(false)}
+        booking={normalizedBooking}
+        rawIntent={row}
+        isIntent
+        refreshBookings={handleRefresh}
+      />
 
       <Dialog open={assignOpen} onClose={handleCloseAssign} maxWidth="sm" fullWidth>
         <DialogTitle>{t('adminBookings.intent.assignDialogTitle')}</DialogTitle>

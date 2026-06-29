@@ -543,6 +543,46 @@ export function cancelBookingIntent(intentId, onDone) {
   };
 }
 
+export function editAdminBookingIntent(intentId, {
+  type,
+  studentId,
+  price,
+  resort,
+  userComment,
+  children,
+  adults,
+  internalComment,
+  includesLaunch,
+  includesEquipments,
+  paymentStatus,
+  bookingPaymentMethod,
+}) {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.put(`/api/admin/booking-intents/${intentId}`, {
+        id: intentId,
+        type,
+        studentId,
+        price,
+        resort,
+        userComment,
+        children,
+        adults,
+        internalComment,
+        includesLaunch,
+        includesEquipments,
+        paymentStatus,
+        bookingPaymentMethod,
+      });
+      return response.data;
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+      throw error;
+    }
+  };
+}
+
 export function getTeacher(id) {
   return async () => {
     dispatch(slice.actions.startLoading());

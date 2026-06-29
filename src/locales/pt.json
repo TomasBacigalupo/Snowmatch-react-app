@@ -1342,6 +1342,11 @@
         },
         "intent": {
             "unassigned": "Não atribuído",
+            "openStatus": "Aberta",
+            "drawerTitle": "Reserva pendente #I-{{id}}",
+            "editModalTitle": "Editar reserva pendente #I-{{id}}",
+            "updateSuccess": "Reserva pendente atualizada com sucesso",
+            "updateError": "Não foi possível atualizar a reserva pendente",
             "assignInstructor": "Atribuir instrutor",
             "cancel": "Cancelar",
             "cancelConfirm": "Cancelar esta reserva pendente?",

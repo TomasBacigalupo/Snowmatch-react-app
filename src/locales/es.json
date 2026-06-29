@@ -1100,6 +1100,11 @@
         },
         "intent": {
             "unassigned": "Sin asignar",
+            "openStatus": "Abierta",
+            "drawerTitle": "Reserva pendiente #I-{{id}}",
+            "editModalTitle": "Editar reserva pendiente #I-{{id}}",
+            "updateSuccess": "Reserva pendiente actualizada correctamente",
+            "updateError": "No se pudo actualizar la reserva pendiente",
             "assignInstructor": "Asignar instructor",
             "cancel": "Cancelar",
             "cancelConfirm": "¿Cancelar esta reserva pendiente?",

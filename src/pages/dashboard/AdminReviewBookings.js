@@ -61,6 +61,7 @@ import BookingSummary from 'src/sections/@dashboard/admin/list/BookingSummary';
 import useAuth from 'src/hooks/useAuth';
 import BookingDetailsDrawer from 'src/sections/@dashboard/admin/list/BookingDetailsDrawer';
 import GearBookingDetailsDrawer from 'src/sections/@dashboard/admin/list/GearBookingDetailsDrawer';
+import { normalizeBookingIntent } from 'src/utils/normalizeBookingIntent';
 
 // ---------------------------------------------------------------------
 
@@ -249,6 +250,7 @@ export function AdminBookingsPage({ bookingListKind, pageTitle, heading }) {
   const filterStatus = 'all';
   const activeListTab = bookingListKind === 'lesson' ? listTab : 0;
   const [selectedBooking, setSelectedBooking] = useState(null);
+  const [selectedIntent, setSelectedIntent] = useState(null);
   const [hasLoadedBookings, setHasLoadedBookings] = useState(false);
   const handleFilterName = (filterName) => {
     setFilterName(filterName);
@@ -830,12 +832,31 @@ export function AdminBookingsPage({ bookingListKind, pageTitle, heading }) {
                     />
                   </Box>
                 ))}
-              {bookingListKind === 'lesson' && activeListTab === 1 && (
-                <Box sx={{ p: 2 }}>
-                  <Typography variant="body2" color="text.secondary">
-                    {t('adminBookings.mobilePendingHint')}
-                  </Typography>
-                </Box>
+              {bookingListKind === 'lesson' && activeListTab === 1 &&
+                !showTableSkeleton &&
+                displayRows?.map((row) => (
+                  <Card
+                    key={row.id}
+                    sx={{ width: '100%', my: 0.5, p: 2, cursor: 'pointer' }}
+                    onClick={() => setSelectedIntent(row)}
+                  >
+                    <Typography variant="subtitle1">I-{row.id}</Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      {[row.student?.name, row.student?.lastname].filter(Boolean).join(' ') ||
+                        t('adminBookings.intent.unassigned')}
+                    </Typography>
+                    <Typography variant="body2">{row.resort || '—'}</Typography>
+                  </Card>
+                ))}
+              {selectedIntent && (
+                <BookingDetailsDrawer
+                  open={Boolean(selectedIntent)}
+                  onClose={() => setSelectedIntent(null)}
+                  booking={normalizeBookingIntent(selectedIntent)}
+                  rawIntent={selectedIntent}
+                  isIntent
+                  refreshBookings={refreshBookingIntents}
+                />
               )}
               {openDrawer && selectedBooking && (
                 bookingListKind === 'gear' ? (

@@ -907,6 +907,11 @@
     },
     "intent": {
       "unassigned": "Unassigned",
+      "openStatus": "Open",
+      "drawerTitle": "Pending booking #I-{{id}}",
+      "editModalTitle": "Edit pending booking #I-{{id}}",
+      "updateSuccess": "Pending booking updated successfully",
+      "updateError": "Could not update the pending booking",
       "assignInstructor": "Assign instructor",
       "cancel": "Cancel",
       "cancelConfirm": "Cancel this pending booking?",

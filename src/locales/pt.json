@@ -1270,6 +1270,18 @@
             "lineLabel": "Item {{n}}",
             "error": "Não foi possível criar a reserva de equipamentos. Tente novamente."
         },
+        "gearEdit": {
+            "title": "Editar reserva de equipamentos #{{id}}",
+            "linesTitle": "Itens de aluguel",
+            "addLine": "Adicionar item",
+            "removeLine": "Remover item",
+            "editLines": "Editar",
+            "success": "Reserva de equipamentos atualizada com sucesso.",
+            "error": "Não foi possível atualizar a reserva. Tente novamente.",
+            "loadLinesError": "Não foi possível carregar os itens de aluguel.",
+            "calculatedTotal": "Total calculado pelos itens: {{total}}",
+            "cannotRemoveExistingLine": "Itens já salvos não podem ser removidos. Edite os dados em vez disso."
+        },
         "showStats": "Mostrar estatísticas",
         "tabs": {
             "bookings": "Reservas",

@@ -15,7 +15,7 @@ import {
 import { useTheme } from '@mui/material/styles';
 import Iconify from '../../../../components/Iconify';
 import Label from '../../../../components/Label';
-import BookingEditModal from './BookingEditModal';
+import GearBookingEditModal from './GearBookingEditModal';
 import BookingRentalFulfillmentSection from './BookingRentalFulfillmentSection';
 import { formatAdminBookingResortLabel } from 'src/utils/adminBookingResortOptions';
 
@@ -30,6 +30,7 @@ export default function GearBookingDetailsDrawer({ open, onClose, booking, refre
   const theme = useTheme();
   const { t } = useTranslation();
   const [editModalOpen, setEditModalOpen] = useState(false);
+  const [linesRefreshKey, setLinesRefreshKey] = useState(0);
   const isLessonWithGear = booking?.type && booking.type !== 'GEAR_ONLY';
 
   const clientName =
@@ -51,9 +52,9 @@ export default function GearBookingDetailsDrawer({ open, onClose, booking, refre
   const formatPrice = (price) =>
     new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(price);
 
-  const handleEditSave = (updatedBooking) => {
-    console.log('Updated booking:', updatedBooking);
+  const handleEditSave = () => {
     setEditModalOpen(false);
+    setLinesRefreshKey((k) => k + 1);
     if (refreshBookings) {
       refreshBookings();
     }
@@ -235,12 +236,18 @@ export default function GearBookingDetailsDrawer({ open, onClose, booking, refre
               </Card>
             </Stack>
 
-            <BookingRentalFulfillmentSection booking={booking} open={open} fetchForGearAdmin />
+            <BookingRentalFulfillmentSection
+              booking={booking}
+              open={open}
+              fetchForGearAdmin
+              linesRefreshKey={linesRefreshKey}
+              onEditLine={() => setEditModalOpen(true)}
+            />
           </Stack>
         </Box>
       </Drawer>
 
-      <BookingEditModal
+      <GearBookingEditModal
         open={editModalOpen}
         onClose={() => setEditModalOpen(false)}
         booking={booking}

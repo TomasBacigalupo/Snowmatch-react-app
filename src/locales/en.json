@@ -835,6 +835,18 @@
       "lineLabel": "Item {{n}}",
       "error": "Could not create the equipment booking. Please try again."
     },
+    "gearEdit": {
+      "title": "Edit equipment booking #{{id}}",
+      "linesTitle": "Rental items",
+      "addLine": "Add item",
+      "removeLine": "Remove item",
+      "editLines": "Edit",
+      "success": "Equipment booking updated successfully.",
+      "error": "Could not update the booking. Please try again.",
+      "loadLinesError": "Could not load rental items.",
+      "calculatedTotal": "Calculated total from items: {{total}}",
+      "cannotRemoveExistingLine": "Saved items cannot be removed. Edit the details instead."
+    },
     "showStats": "Show stats",
     "tabs": {
       "bookings": "Bookings",

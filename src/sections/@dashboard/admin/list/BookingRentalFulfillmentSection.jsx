@@ -6,6 +6,7 @@ import {
   Typography,
   Stack,
   Alert,
+  Button,
   Table,
   TableBody,
   TableCell,
@@ -79,12 +80,18 @@ BookingRentalFulfillmentSection.propTypes = {
   open: PropTypes.bool,
   /** When true (gear admin drawer), fetch rental lines for every open booking. */
   fetchForGearAdmin: PropTypes.bool,
+  /** Opens gear rental edit modal (admin equipos). */
+  onEditLine: PropTypes.func,
+  /** Increment to re-fetch rental lines after an edit. */
+  linesRefreshKey: PropTypes.number,
 };
 
 export default function BookingRentalFulfillmentSection({
   booking,
   open,
   fetchForGearAdmin = false,
+  onEditLine,
+  linesRefreshKey = 0,
 }) {
   const { t } = useTranslation();
   const emptyValue = t('adminBookings.drawer.emptyValue');
@@ -126,7 +133,7 @@ export default function BookingRentalFulfillmentSection({
     return () => {
       cancelled = true;
     };
-  }, [open, booking?.id, booking?.type, booking?.includesEquipments, fetchForGearAdmin]);
+  }, [open, booking?.id, booking?.type, booking?.includesEquipments, fetchForGearAdmin, linesRefreshKey]);
 
   const showSection =
     fetchForGearAdmin ||
@@ -141,9 +148,16 @@ export default function BookingRentalFulfillmentSection({
 
   return (
     <Box>
-      <Typography variant="subtitle1" gutterBottom>
-        {t('adminBookings.rental.sectionTitle')}
-      </Typography>
+      <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ mb: 1 }}>
+        <Typography variant="subtitle1">
+          {t('adminBookings.rental.sectionTitle')}
+        </Typography>
+        {onEditLine && rentalLines.length > 0 && !rentalLinesLoading && (
+          <Button size="small" onClick={onEditLine}>
+            {t('adminBookings.gearEdit.editLines')}
+          </Button>
+        )}
+      </Stack>
       {(booking?.rentalFulfillment || booking?.rentalDestinationDetail) && (
         <Stack spacing={1} sx={{ mb: 2 }}>
           {booking?.rentalFulfillment && (

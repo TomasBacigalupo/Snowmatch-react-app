@@ -753,7 +753,10 @@ export function editAdminBooking(bookingId, {
   includesEquipments,
   showPriceToTeacher,
   paymentStatus,
-  bookingPaymentMethod
+  bookingPaymentMethod,
+  rentalFulfillment,
+  rentalDestinationType,
+  rentalDestinationDetail,
 }) {
   return async () => {
       dispatch(slice.actions.startLoading());
@@ -776,7 +779,10 @@ export function editAdminBooking(bookingId, {
               includesEquipments,
               showPriceToTeacher,
               paymentStatus,
-              bookingPaymentMethod
+              bookingPaymentMethod,
+              rentalFulfillment,
+              rentalDestinationType,
+              rentalDestinationDetail,
           });
           dispatch(slice.actions.updateBookingSuccess(response.data));
           return response.data;

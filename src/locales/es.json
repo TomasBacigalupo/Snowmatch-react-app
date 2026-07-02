@@ -1028,6 +1028,18 @@
             "lineLabel": "Ítem {{n}}",
             "error": "No se pudo crear la reserva de equipos. Intentá de nuevo."
         },
+        "gearEdit": {
+            "title": "Editar reserva de equipos #{{id}}",
+            "linesTitle": "Ítems de alquiler",
+            "addLine": "Agregar ítem",
+            "removeLine": "Quitar ítem",
+            "editLines": "Editar",
+            "success": "Reserva de equipos actualizada correctamente.",
+            "error": "No se pudo actualizar la reserva. Intentá de nuevo.",
+            "loadLinesError": "No se pudieron cargar los ítems de alquiler.",
+            "calculatedTotal": "Total calculado por ítems: {{total}}",
+            "cannotRemoveExistingLine": "No se pueden quitar ítems ya guardados. Editá los datos o contactá soporte."
+        },
         "showStats": "Mostrar estadísticas",
         "tabs": {
             "bookings": "Reservas",

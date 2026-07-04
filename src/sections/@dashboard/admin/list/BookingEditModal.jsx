@@ -13,12 +13,27 @@ import {
   MenuItem,
   FormControlLabel,
   Switch,
+  Typography,
+  Box,
+  IconButton,
 } from '@mui/material';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import DeleteIcon from '@mui/icons-material/Delete';
+import AddIcon from '@mui/icons-material/Add';
 import { useDispatch } from 'react-redux';
 import { editAdminBooking } from 'src/redux/slices/admin';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSnackbar } from 'notistack';
 import { useTranslation } from 'react-i18next';
+import { format, parseISO } from 'date-fns';
+import {
+  buildEventListForApi,
+  createEmptyDateTimeRow,
+  eventListToDateTimes,
+  LESSON_TIME_VALUES,
+} from 'src/utils/adminBookingEvents';
 
 const RESORT_OPTIONS = [
   {
@@ -60,10 +75,45 @@ export default function BookingEditModal({ open, onClose, booking, onSave }) {
   const [internalCommentLength, setInternalCommentLength] = useState(
     booking?.internalComment?.length || 0
   );
+  const [dateTimes, setDateTimes] = useState(() => eventListToDateTimes(booking?.eventList));
+  const [bookingType, setBookingType] = useState(booking?.type || 'ASSIGNED');
 
-  const handleSubmit = (event) => {
+  useEffect(() => {
+    if (open && booking) {
+      setDateTimes(eventListToDateTimes(booking.eventList));
+      setBookingType(booking.type || 'ASSIGNED');
+      setUserCommentLength(booking.userComment?.length || 0);
+      setInternalCommentLength(booking.internalComment?.length || 0);
+    }
+  }, [open, booking]);
+
+  const patchDateTime = (index, fields) => {
+    setDateTimes((prev) => prev.map((row, i) => (i === index ? { ...row, ...fields } : row)));
+  };
+
+  const handleAddDateTime = () => {
+    setDateTimes((prev) => [...prev, createEmptyDateTimeRow()]);
+  };
+
+  const handleRemoveDateTime = (index) => {
+    setDateTimes((prev) => {
+      const next = prev.filter((_, i) => i !== index);
+      return next.length > 0 ? next : [createEmptyDateTimeRow()];
+    });
+  };
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
+
+    const validDateTimes = dateTimes.filter((row) => row.date);
+    if (validDateTimes.length === 0) {
+      enqueueSnackbar(t('adminBookings.editModal.datesRequired'), { variant: 'warning' });
+      return;
+    }
+
     const formData = new FormData(event.currentTarget);
+    const type = formData.get('type');
+    const eventList = buildEventListForApi(dateTimes, type);
     const updatedBooking = {
       id: booking.id,
       userComment: formData.get('userComment'),
@@ -77,32 +127,26 @@ export default function BookingEditModal({ open, onClose, booking, onSave }) {
       includesEquipments: formData.get('includesEquipments') === 'on',
       showPriceToTeacher: formData.get('showPriceToTeacher') === 'on',
       state: formData.get('state'),
-      type: formData.get('type'),
+      type,
       resort: formData.get('resort'),
       teacherId: formData.get('teacherId'),
       studentId: formData.get('studentId'),
+      eventList,
     };
 
-    dispatch(editAdminBooking(booking.id, updatedBooking));
-    enqueueSnackbar(t('adminBookings.editModal.updateSuccess'), { variant: 'success' });
-    onSave({
-      ...booking,
-      userComment: formData.get('userComment'),
-      internalComment: formData.get('internalComment'),
-      studentId: formData.get('studentId'),
-      teacherId: formData.get('teacherId'),
-      paymentStatus: formData.get('paymentStatus'),
-      bookingPaymentMethod: formData.get('bookingPaymentMethod'),
-      adults: parseInt(formData.get('adults'), 10),
-      children: parseInt(formData.get('children'), 10),
-      includesEquipments: formData.get('includesEquipments') === 'true',
-      includesLaunch: formData.get('includesLaunch') === 'true',
-      showPriceToTeacher: formData.get('showPriceToTeacher') === 'on',
-      price: parseFloat(formData.get('price')),
-      state: formData.get('state'),
-      type: formData.get('type'),
-      resort: formData.get('resort'),
-    });
+    try {
+      const saved = await dispatch(editAdminBooking(booking.id, updatedBooking));
+      enqueueSnackbar(t('adminBookings.editModal.updateSuccess'), { variant: 'success' });
+      onSave({
+        ...booking,
+        ...updatedBooking,
+        eventList: saved?.eventList ?? eventList,
+        includesEquipments: updatedBooking.includesEquipments,
+        includesLaunch: updatedBooking.includesLaunch,
+      });
+    } catch {
+      enqueueSnackbar(t('adminBookings.editModal.updateError'), { variant: 'error' });
+    }
   };
 
   return (
@@ -111,6 +155,68 @@ export default function BookingEditModal({ open, onClose, booking, onSave }) {
         <DialogTitle>{t('adminBookings.editModal.title', { id: booking?.id })}</DialogTitle>
         <DialogContent>
           <Stack spacing={3} sx={{ mt: 2 }}>
+            <Box>
+              <Typography variant="subtitle1" sx={{ mb: 1.5 }}>
+                {t('adminBookings.editModal.datesSection')}
+              </Typography>
+              <Stack spacing={2}>
+                <LocalizationProvider dateAdapter={AdapterDateFns}>
+                  {dateTimes.map((dateTime, index) => (
+                    <Stack
+                      key={dateTime.id ?? `new-${index}`}
+                      spacing={2}
+                      direction={{ xs: 'column', md: 'row' }}
+                      alignItems={{ xs: 'stretch', md: 'center' }}
+                    >
+                      <DatePicker
+                        label={t('adminBookings.editModal.dateLabel', { index: index + 1 })}
+                        value={dateTime.date ? parseISO(dateTime.date) : null}
+                        onChange={(newValue) => {
+                          patchDateTime(index, {
+                            date: newValue ? format(newValue, 'yyyy-MM-dd') : '',
+                          });
+                        }}
+                        slotProps={{ textField: { fullWidth: true } }}
+                      />
+                      <FormControl fullWidth>
+                        <InputLabel id={`edit-booking-time-${index}`}>
+                          {t('adminBookings.editModal.timeLabel')}
+                        </InputLabel>
+                        <Select
+                          labelId={`edit-booking-time-${index}`}
+                          label={t('adminBookings.editModal.timeLabel')}
+                          value={dateTime.time}
+                          onChange={(e) => patchDateTime(index, { time: e.target.value })}
+                        >
+                          {LESSON_TIME_VALUES.map((value) => (
+                            <MenuItem key={value} value={value}>
+                              {t(`adminBookings.editModal.lessonTimeOptions.${value}`)}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
+                      <IconButton
+                        color="error"
+                        onClick={() => handleRemoveDateTime(index)}
+                        aria-label={t('adminBookings.editModal.removeDate')}
+                        sx={{ alignSelf: { xs: 'flex-end', md: 'center' } }}
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                    </Stack>
+                  ))}
+                </LocalizationProvider>
+              </Stack>
+              <Button
+                startIcon={<AddIcon />}
+                onClick={handleAddDateTime}
+                sx={{ mt: 1.5 }}
+                size="small"
+              >
+                {t('adminBookings.editModal.addDate')}
+              </Button>
+            </Box>
+
             <Stack spacing={2} direction={{ xs: 'column', md: 'row' }}>
               <TextField
                 fullWidth
@@ -208,7 +314,8 @@ export default function BookingEditModal({ open, onClose, booking, onSave }) {
                 <Select
                   name="type"
                   label={t('adminBookings.editModal.bookingType')}
-                  defaultValue={booking?.type || 'ASSIGNED'}
+                  value={bookingType}
+                  onChange={(e) => setBookingType(e.target.value)}
                 >
                   {TYPE_VALUES.map((value) => (
                     <MenuItem key={value} value={value}>

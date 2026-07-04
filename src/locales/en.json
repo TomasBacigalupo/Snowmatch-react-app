@@ -1040,6 +1040,20 @@
       "showPriceToTeacher": "Show price to instructor",
       "saveChanges": "Save changes",
       "updateSuccess": "Booking updated successfully",
+      "updateError": "Could not update booking",
+      "datesSection": "Dates and times",
+      "dateLabel": "Date {{index}}",
+      "timeLabel": "Time slot",
+      "addDate": "Add date",
+      "removeDate": "Remove date",
+      "datesRequired": "Add at least one date with a time slot",
+      "lessonTimeOptions": {
+        "MORNING": "Morning",
+        "MORNING_2_HS": "Morning (2h)",
+        "AFTERNOON": "Afternoon",
+        "AFTERNOON_2_HS": "Afternoon (2h)",
+        "ALL_DAY": "Full day"
+      },
       "paymentStatusOptions": {
         "PAID": "Paid",
         "PAID_10": "10% paid",

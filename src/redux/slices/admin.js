@@ -757,6 +757,7 @@ export function editAdminBooking(bookingId, {
   rentalFulfillment,
   rentalDestinationType,
   rentalDestinationDetail,
+  eventList,
 }) {
   return async () => {
       dispatch(slice.actions.startLoading());
@@ -783,6 +784,7 @@ export function editAdminBooking(bookingId, {
               rentalFulfillment,
               rentalDestinationType,
               rentalDestinationDetail,
+              ...(eventList != null ? { eventList } : {}),
           });
           dispatch(slice.actions.updateBookingSuccess(response.data));
           return response.data;

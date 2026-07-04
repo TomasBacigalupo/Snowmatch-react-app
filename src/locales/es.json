@@ -1233,6 +1233,20 @@
             "showPriceToTeacher": "Mostrar precio al profesor",
             "saveChanges": "Guardar Cambios",
             "updateSuccess": "Reserva actualizada exitosamente",
+            "updateError": "No se pudo actualizar la reserva",
+            "datesSection": "Fechas y horarios",
+            "dateLabel": "Fecha {{index}}",
+            "timeLabel": "Horario",
+            "addDate": "Agregar fecha",
+            "removeDate": "Eliminar fecha",
+            "datesRequired": "Agregá al menos una fecha con horario",
+            "lessonTimeOptions": {
+                "MORNING": "Mañana",
+                "MORNING_2_HS": "Mañana (2hs)",
+                "AFTERNOON": "Tarde",
+                "AFTERNOON_2_HS": "Tarde (2hs)",
+                "ALL_DAY": "Día completo"
+            },
             "paymentStatusOptions": {
                 "PAID": "Pagado",
                 "PAID_10": "10% Pagado",

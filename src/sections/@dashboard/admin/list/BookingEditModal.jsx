@@ -24,14 +24,17 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import { useDispatch } from 'react-redux';
 import { editAdminBooking } from 'src/redux/slices/admin';
+import { updateEventByUserIdAndEventId } from 'src/redux/slices/calendar';
 import { useEffect, useState } from 'react';
 import { useSnackbar } from 'notistack';
 import { useTranslation } from 'react-i18next';
 import { format, parseISO } from 'date-fns';
 import {
-  buildEventListForApi,
+  buildEventListForBookingPut,
+  buildEventListForCalendarUpdate,
   createEmptyDateTimeRow,
   eventListToDateTimes,
+  isFailedThunkResult,
   LESSON_TIME_VALUES,
 } from 'src/utils/adminBookingEvents';
 
@@ -113,7 +116,9 @@ export default function BookingEditModal({ open, onClose, booking, onSave }) {
 
     const formData = new FormData(event.currentTarget);
     const type = formData.get('type');
-    const eventList = buildEventListForApi(dateTimes, type);
+    const teacherId = parseInt(formData.get('teacherId'), 10) || booking?.teacher?.id;
+    const bookingEventList = buildEventListForBookingPut(dateTimes, type, booking?.eventList);
+    const calendarEventList = buildEventListForCalendarUpdate(dateTimes, type, booking?.eventList);
     const updatedBooking = {
       id: booking.id,
       userComment: formData.get('userComment'),
@@ -131,16 +136,29 @@ export default function BookingEditModal({ open, onClose, booking, onSave }) {
       resort: formData.get('resort'),
       teacherId: formData.get('teacherId'),
       studentId: formData.get('studentId'),
-      eventList,
+      eventList: bookingEventList,
     };
 
     try {
       const saved = await dispatch(editAdminBooking(booking.id, updatedBooking));
+
+      if (teacherId) {
+        const eventUpdateResults = await Promise.all(
+          calendarEventList
+            .filter((entry) => entry.id)
+            .map((entry) => dispatch(updateEventByUserIdAndEventId(teacherId, entry.id, entry)))
+        );
+
+        if (eventUpdateResults.some(isFailedThunkResult)) {
+          throw new Error('event update failed');
+        }
+      }
+
       enqueueSnackbar(t('adminBookings.editModal.updateSuccess'), { variant: 'success' });
       onSave({
         ...booking,
         ...updatedBooking,
-        eventList: saved?.eventList ?? eventList,
+        eventList: calendarEventList.length ? calendarEventList : saved?.eventList,
         includesEquipments: updatedBooking.includesEquipments,
         includesLaunch: updatedBooking.includesLaunch,
       });

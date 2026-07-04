@@ -73,6 +73,7 @@ const CATEGORY_OPTIONS = [
   { value: 'POLES', label: 'Bastones' },
   { value: 'BOOTS', label: 'Botas' },
   { value: 'COMBO', label: 'Combo' },
+  { value: 'CLOTHES', label: 'Ropa' },
 ];
 
 const STATUS_OPTIONS = [

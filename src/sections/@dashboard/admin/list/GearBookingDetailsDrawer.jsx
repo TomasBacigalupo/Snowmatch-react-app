@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useSnackbar } from 'notistack';
 import {
   Drawer,
   Box,
@@ -19,6 +20,8 @@ import GearBookingEditModal from './GearBookingEditModal';
 import BookingRentalFulfillmentSection from './BookingRentalFulfillmentSection';
 import { formatAdminBookingResortLabel } from 'src/utils/adminBookingResortOptions';
 
+const GEAR_DETAILS_LINK_BASE = 'https://snowmatch.pro/es/gear-details';
+
 GearBookingDetailsDrawer.propTypes = {
   open: PropTypes.bool,
   onClose: PropTypes.func,
@@ -29,6 +32,7 @@ GearBookingDetailsDrawer.propTypes = {
 export default function GearBookingDetailsDrawer({ open, onClose, booking, refreshBookings }) {
   const theme = useTheme();
   const { t } = useTranslation();
+  const { enqueueSnackbar } = useSnackbar();
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [linesRefreshKey, setLinesRefreshKey] = useState(0);
   const isLessonWithGear = booking?.type && booking.type !== 'GEAR_ONLY';
@@ -41,12 +45,24 @@ export default function GearBookingDetailsDrawer({ open, onClose, booking, refre
   const rawPhone = booking?.student?.cellphone ?? booking?.cellphone ?? '';
   const phoneDisplay = rawPhone ? `${countryCode ? `${countryCode} ` : ''}${rawPhone}`.trim() : '';
 
+  const gearDetailsLink = booking?.id ? `${GEAR_DETAILS_LINK_BASE}/${booking.id}` : '';
+
   const openWhatsApp = () => {
     if (!rawPhone) return;
     const waNumber = `${countryCode}${rawPhone}`.replace(/\D/g, '');
     if (!waNumber) return;
     const message = `Hola ${clientName || 'cliente'}, te contacto desde SnowMatch sobre la reserva #${booking?.id}`;
     window.open(`https://wa.me/${waNumber}?text=${encodeURIComponent(message)}`, '_blank');
+  };
+
+  const copyGearDetailsLink = async () => {
+    if (!gearDetailsLink) return;
+    try {
+      await navigator.clipboard.writeText(gearDetailsLink);
+      enqueueSnackbar(t('adminBookings.rental.copyGearDetailsLinkSuccess'), { variant: 'success' });
+    } catch {
+      enqueueSnackbar(t('adminBookings.rental.copyGearDetailsLinkError'), { variant: 'error' });
+    }
   };
 
   const formatPrice = (price) =>
@@ -108,8 +124,13 @@ export default function GearBookingDetailsDrawer({ open, onClose, booking, refre
           <Divider sx={{ my: 2 }} />
 
           <Stack spacing={3}>
-            <Box>
-              <Stack direction="row" spacing={1}>
+            <Stack
+              direction={{ xs: 'column', sm: 'row' }}
+              spacing={1}
+              alignItems={{ xs: 'stretch', sm: 'center' }}
+              justifyContent="space-between"
+            >
+              <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
                 <Label
                   variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
                   color={
@@ -133,7 +154,16 @@ export default function GearBookingDetailsDrawer({ open, onClose, booking, refre
                   {booking?.paymentStatus || 'PENDING'}
                 </Label>
               </Stack>
-            </Box>
+              <Button
+                size="small"
+                variant="outlined"
+                startIcon={<Iconify icon="eva:copy-fill" />}
+                onClick={copyGearDetailsLink}
+                disabled={!booking?.id}
+              >
+                {t('adminBookings.rental.copyGearDetailsLink')}
+              </Button>
+            </Stack>
 
             <Stack
               direction={{ xs: 'column', sm: 'row' }}

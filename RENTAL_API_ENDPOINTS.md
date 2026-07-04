@@ -94,7 +94,7 @@ DELETE /api/admin/rental/variants/{variantId}
 
 ### Producto
 - `resortId`: Requerido
-- `category`: Requerido (SKI, SNOWBOARD, POLES, BOOTS, COMBO)
+- `category`: Requerido (SKI, SNOWBOARD, POLES, BOOTS, COMBO, CLOTHES)
 - `name`: Opcional, máximo 255 caracteres
 - `description`: Requerido, máximo 1000 caracteres
 - `imageUrl`: Requerido, URL válida, máximo 1024 caracteres

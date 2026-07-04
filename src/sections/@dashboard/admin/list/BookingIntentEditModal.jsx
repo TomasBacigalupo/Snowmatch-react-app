@@ -63,19 +63,21 @@ export default function BookingIntentEditModal({ open, onClose, intent, onSave }
   const handleSubmit = async (event) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
+    const studentIdRaw = formData.get('studentId');
+    const paymentMethodRaw = formData.get('bookingPaymentMethod');
     const updatedIntent = {
       userComment: formData.get('userComment'),
       internalComment: formData.get('internalComment'),
       paymentStatus: formData.get('paymentStatus'),
-      bookingPaymentMethod: formData.get('bookingPaymentMethod'),
+      bookingPaymentMethod: paymentMethodRaw || null,
       adults: parseInt(formData.get('adults'), 10) || 0,
       children: parseInt(formData.get('children'), 10) || 0,
       price: parseFloat(formData.get('price')) || 0,
       includesLaunch: formData.get('includesLaunch') === 'on',
       includesEquipments: formData.get('includesEquipments') === 'on',
       type: formData.get('type'),
-      resort: formData.get('resort'),
-      studentId: formData.get('studentId'),
+      resort: formData.get('resort') || null,
+      studentId: studentIdRaw ? parseInt(studentIdRaw, 10) : null,
     };
 
     try {

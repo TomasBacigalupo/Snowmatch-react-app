@@ -15,7 +15,7 @@ The Rental Management Admin Interface is a comprehensive tool for administrators
 
 ### 📊 Advanced Filtering
 - **Search by Name**: Real-time search through product names
-- **Filter by Category**: SKI, SNOWBOARD, POLES, BOOTS, COMBO
+- **Filter by Category**: SKI, SNOWBOARD, POLES, BOOTS, COMBO, CLOTHES
 - **Filter by Status**: ACTIVE, INACTIVE, OUT_OF_STOCK
 - **Filter by Resort**: Cerro Catedral, Chapelco, Las Leñas, etc.
 - **Sort Options**: Sort by name, price, date created
@@ -87,7 +87,7 @@ Comprehensive form for creating/editing products:
 {
   id: string,
   resortId: string,           // Required
-  category: string,           // Required: SKI, SNOWBOARD, POLES, BOOTS, COMBO
+  category: string,           // Required: SKI, SNOWBOARD, POLES, BOOTS, COMBO, CLOTHES
   name: string,               // Optional, max 255 chars
   description: string,        // Required, max 1000 chars
   imageUrl: string,           // Required, max 1024 chars, valid URL

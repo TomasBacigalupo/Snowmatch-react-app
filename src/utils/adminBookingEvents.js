@@ -77,6 +77,22 @@ function getOriginalEvent(dateTime, index, originalEventList, originalById) {
   return originalEventList[index];
 }
 
+function resolveEventStudents(original, studentId) {
+  if (Array.isArray(original?.students) && original.students.length > 0) {
+    return original.students.map((student) => ({
+      id: typeof student === 'object' ? student.id : student,
+    }));
+  }
+  if (studentId) return [{ id: studentId }];
+  return [];
+}
+
+function resolveEventPayed(original, booking) {
+  if (typeof original?.payed === 'boolean') return original.payed;
+  if (booking?.paymentStatus === 'PAID') return true;
+  return false;
+}
+
 /** Payload for PUT /api/admin/bookings/:id — date-only strings + lessonTime (same as create). */
 export function buildEventListForBookingPut(dateTimes, bookingType = 'ASSIGNED', originalEventList = []) {
   const originalById = new Map(
@@ -108,36 +124,44 @@ export function buildEventListForBookingPut(dateTimes, bookingType = 'ASSIGNED',
 export function buildEventListForCalendarUpdate(
   dateTimes,
   bookingType = 'ASSIGNED',
-  originalEventList = []
+  originalEventList = [],
+  booking = null
 ) {
   const originalById = new Map(
     (originalEventList || []).filter((event) => event?.id).map((event) => [event.id, event])
   );
+  const studentId = booking?.student?.id;
+  const teacherId = booking?.teacher?.id;
 
   return (dateTimes || [])
     .filter((dateTime) => dateTime.date)
     .map((dateTime, index) => {
-      const original = getOriginalEvent(dateTime, index, originalEventList, originalById);
+      const original = getOriginalEvent(dateTime, index, originalEventList, originalById) || {};
       const { start, end, allDay, lessonTime } = buildStartEndFromDateAndLessonTime(
         dateTime.date,
         dateTime.time
       );
 
       return {
-        id: dateTime.id ?? original?.id,
-        title: original?.title || (bookingType === 'REFERRED' ? 'Referida' : 'Asignada'),
+        ...original,
+        id: dateTime.id ?? original.id,
+        title: original.title || (bookingType === 'REFERRED' ? 'Referida' : 'Asignada'),
         start,
         end,
         allDay,
         lessonTime,
         price:
-          dateTime.price !== '' && dateTime.price != null ? dateTime.price : original?.price,
+          dateTime.price !== '' && dateTime.price != null ? dateTime.price : original.price,
         textColor:
-          original?.textColor || (bookingType === 'REFERRED' ? '#00FF00' : '#FF0000'),
-        type: original?.type,
-        resort: original?.resort,
-        source: original?.source,
-        maxStudents: original?.maxStudents,
+          original.textColor || (bookingType === 'REFERRED' ? '#00FF00' : '#FF0000'),
+        type: original.type || 'App class',
+        resort: original.resort ?? booking?.resort,
+        source: original.source,
+        maxStudents: original.maxStudents,
+        owner: original.owner ?? (teacherId ? { id: teacherId } : undefined),
+        students: resolveEventStudents(original, studentId),
+        state: original.state ?? 'PENDING',
+        payed: resolveEventPayed(original, booking),
       };
     });
 }

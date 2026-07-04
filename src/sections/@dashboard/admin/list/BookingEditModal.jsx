@@ -24,7 +24,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import { useDispatch } from 'react-redux';
 import { editAdminBooking } from 'src/redux/slices/admin';
-import { updateEventByUserIdAndEventId } from 'src/redux/slices/calendar';
+import { updateEvent, updateEventByUserIdAndEventId } from 'src/redux/slices/calendar';
 import { useEffect, useState } from 'react';
 import { useSnackbar } from 'notistack';
 import { useTranslation } from 'react-i18next';
@@ -118,7 +118,12 @@ export default function BookingEditModal({ open, onClose, booking, onSave }) {
     const type = formData.get('type');
     const teacherId = parseInt(formData.get('teacherId'), 10) || booking?.teacher?.id;
     const bookingEventList = buildEventListForBookingPut(dateTimes, type, booking?.eventList);
-    const calendarEventList = buildEventListForCalendarUpdate(dateTimes, type, booking?.eventList);
+    const calendarEventList = buildEventListForCalendarUpdate(
+      dateTimes,
+      type,
+      booking?.eventList,
+      booking
+    );
     const updatedBooking = {
       id: booking.id,
       userComment: formData.get('userComment'),
@@ -146,7 +151,13 @@ export default function BookingEditModal({ open, onClose, booking, onSave }) {
         const eventUpdateResults = await Promise.all(
           calendarEventList
             .filter((entry) => entry.id)
-            .map((entry) => dispatch(updateEventByUserIdAndEventId(teacherId, entry.id, entry)))
+            .map(async (entry) => {
+              const adminResult = await dispatch(
+                updateEventByUserIdAndEventId(teacherId, entry.id, entry)
+              );
+              if (!isFailedThunkResult(adminResult)) return adminResult;
+              return dispatch(updateEvent(entry.id, entry));
+            })
         );
 
         if (eventUpdateResults.some(isFailedThunkResult)) {

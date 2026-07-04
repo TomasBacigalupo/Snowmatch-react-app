@@ -23,18 +23,16 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import { useDispatch } from 'react-redux';
-import { editAdminBooking } from 'src/redux/slices/admin';
-import { updateEvent, updateEventByUserIdAndEventId } from 'src/redux/slices/calendar';
+import { editAdminBooking, updateAdminBookingEventSchedule } from 'src/redux/slices/admin';
 import { useEffect, useState } from 'react';
 import { useSnackbar } from 'notistack';
 import { useTranslation } from 'react-i18next';
 import { format, parseISO } from 'date-fns';
 import {
   buildEventListForBookingPut,
-  buildEventListForCalendarUpdate,
+  buildEventScheduleUpdates,
   createEmptyDateTimeRow,
   eventListToDateTimes,
-  isFailedThunkResult,
   LESSON_TIME_VALUES,
 } from 'src/utils/adminBookingEvents';
 
@@ -118,12 +116,7 @@ export default function BookingEditModal({ open, onClose, booking, onSave }) {
     const type = formData.get('type');
     const teacherId = parseInt(formData.get('teacherId'), 10) || booking?.teacher?.id;
     const bookingEventList = buildEventListForBookingPut(dateTimes, type, booking?.eventList);
-    const calendarEventList = buildEventListForCalendarUpdate(
-      dateTimes,
-      type,
-      booking?.eventList,
-      booking
-    );
+    const scheduleUpdates = buildEventScheduleUpdates(dateTimes);
     const updatedBooking = {
       id: booking.id,
       userComment: formData.get('userComment'),
@@ -145,31 +138,36 @@ export default function BookingEditModal({ open, onClose, booking, onSave }) {
     };
 
     try {
-      const saved = await dispatch(editAdminBooking(booking.id, updatedBooking));
+      await dispatch(editAdminBooking(booking.id, updatedBooking));
 
-      if (teacherId) {
-        const eventUpdateResults = await Promise.all(
-          calendarEventList
-            .filter((entry) => entry.id)
-            .map(async (entry) => {
-              const adminResult = await dispatch(
-                updateEventByUserIdAndEventId(teacherId, entry.id, entry)
-              );
-              if (!isFailedThunkResult(adminResult)) return adminResult;
-              return dispatch(updateEvent(entry.id, entry));
-            })
+      if (teacherId && scheduleUpdates.length > 0) {
+        await Promise.all(
+          scheduleUpdates.map((schedule) =>
+            dispatch(
+              updateAdminBookingEventSchedule(teacherId, schedule.id, {
+                start: schedule.start,
+                end: schedule.end,
+                allDay: schedule.allDay,
+              })
+            )
+          )
         );
-
-        if (eventUpdateResults.some(isFailedThunkResult)) {
-          throw new Error('event update failed');
-        }
       }
 
       enqueueSnackbar(t('adminBookings.editModal.updateSuccess'), { variant: 'success' });
       onSave({
         ...booking,
         ...updatedBooking,
-        eventList: calendarEventList.length ? calendarEventList : saved?.eventList,
+        eventList: scheduleUpdates.map((schedule) => {
+          const existing = booking?.eventList?.find((event) => event.id === schedule.id) || {};
+          return {
+            ...existing,
+            start: schedule.start,
+            end: schedule.end,
+            allDay: schedule.allDay,
+            lessonTime: schedule.lessonTime,
+          };
+        }),
         includesEquipments: updatedBooking.includesEquipments,
         includesLaunch: updatedBooking.includesLaunch,
       });

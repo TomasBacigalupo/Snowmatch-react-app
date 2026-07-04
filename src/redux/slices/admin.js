@@ -795,6 +795,52 @@ export function editAdminBooking(bookingId, {
   };
 }
 
+function addUtcOffset(dateString) {
+  const date = new Date(dateString);
+  const utcOffset = date.getTimezoneOffset() * 60000;
+  return new Date(date.getTime() - utcOffset).toISOString();
+}
+
+function extractTeacherEvents(data) {
+  if (Array.isArray(data)) return data;
+  if (Array.isArray(data?.content)) return data.content;
+  if (Array.isArray(data?.items)) return data.items;
+  return [];
+}
+
+/** Fetch full event from teacher calendar, then update schedule via /api/events/byId. */
+export function updateAdminBookingEventSchedule(teacherId, eventId, schedule) {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const listResponse = await axios.get(`/api/admin/user/${teacherId}/event?page=1&size=300`);
+      const existing = extractTeacherEvents(listResponse.data).find(
+        (event) => Number(event.id) === Number(eventId)
+      );
+
+      if (!existing) {
+        throw new Error(`Event ${eventId} not found for teacher ${teacherId}`);
+      }
+
+      const start = addUtcOffset(schedule.start);
+      const end = addUtcOffset(schedule.end);
+
+      const payload = {
+        ...existing,
+        start,
+        end,
+        allDay: schedule.allDay,
+      };
+
+      const response = await axios.put(`/api/events/byId/${eventId}`, payload);
+      return response.data;
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+      throw error;
+    }
+  };
+}
+
 export function fetchPayouts(bookingId) {
   return async () => {
     dispatch(slice.actions.startLoading());

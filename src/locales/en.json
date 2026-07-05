@@ -700,6 +700,7 @@
     "user chats": "User chats",
     "user calendars": "User calendars",
     "review teachers": "Review PROs",
+    "today": "Today",
     "lesson bookings": "Lesson bookings",
     "equipment bookings": "Equipment rentals",
     "school_teachers": "School teachers",
@@ -814,6 +815,29 @@
     "selectTeacherHint": "Select a teacher to view their calendar settings.",
     "noTeachersFound": "No teachers found",
     "typeToSearchTeachers": "Type to search teachers"
+  },
+  "adminToday": {
+    "pageTitle": "Today",
+    "heading": "Today",
+    "headingTomorrow": "Tomorrow",
+    "subtitle": "{{date}} · Cerro Catedral",
+    "breadcrumbDashboard": "Dashboard",
+    "breadcrumbAdmin": "Admin",
+    "refresh": "Refresh",
+    "viewTomorrow": "See tomorrow",
+    "viewToday": "See today",
+    "dayToday": "today",
+    "dayTomorrow": "tomorrow",
+    "loadError": "Could not load bookings. Please try again.",
+    "kpi": {
+      "lessons": "Lessons {{day}}",
+      "gear": "Gear reservations {{day}}",
+      "participants": "Total participants"
+    },
+    "lessonsSection": "Lessons {{day}}",
+    "gearSection": "Gear reservations {{day}}",
+    "lessonsEmpty": "No bookings for {{day}}.",
+    "gearEmpty": "No bookings for {{day}}."
   },
   "adminBookings": {
     "pageTitle": "Admin Review: List",

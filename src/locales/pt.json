@@ -1146,6 +1146,7 @@
         "resort admins": "Administradores de estâncias",
         "user chats": "Chats de usuários",
         "user calendars": "Calendários de usuários",
+        "today": "Hoje",
         "lesson bookings": "Reservas de aulas",
         "contactSupport247": "Contactar suporte 24/7"
     },
@@ -1249,6 +1250,29 @@
         "selectTeacherHint": "Selecione um instrutor para ver as configurações do calendário.",
         "noTeachersFound": "Nenhum instrutor encontrado",
         "typeToSearchTeachers": "Digite para buscar instrutores"
+    },
+    "adminToday": {
+        "pageTitle": "Hoje",
+        "heading": "Hoje",
+        "headingTomorrow": "Amanhã",
+        "subtitle": "{{date}} · Cerro Catedral",
+        "breadcrumbDashboard": "Dashboard",
+        "breadcrumbAdmin": "Admin",
+        "refresh": "Atualizar",
+        "viewTomorrow": "Ver amanhã",
+        "viewToday": "Ver hoje",
+        "dayToday": "hoje",
+        "dayTomorrow": "amanhã",
+        "loadError": "Não foi possível carregar as reservas. Tente novamente.",
+        "kpi": {
+            "lessons": "Aulas {{day}}",
+            "gear": "Equipamentos {{day}}",
+            "participants": "Participantes totais"
+        },
+        "lessonsSection": "Aulas {{day}}",
+        "gearSection": "Reservas de equipamentos {{day}}",
+        "lessonsEmpty": "Não há reservas para {{day}}.",
+        "gearEmpty": "Não há reservas para {{day}}."
     },
     "adminBookings": {
         "pageTitle": "Admin Revisão: Lista",

@@ -8,11 +8,13 @@ import { Avatar, Checkbox, TableRow, TableCell, Typography, MenuItem, Box, Card 
 import Label from '../../../../components/Label';
 import Iconify from '../../../../components/Iconify';
 import { TableMoreMenu } from '../../../../components/table';
+import { formatCompactBookingDateRange } from '../../../../utils/adminTodayBookings';
 // ----------------------------------------------------------------------
 
 AdminBookingTableCard.propTypes = {
     row: PropTypes.object,
     isGearAdminList: PropTypes.bool,
+    compact: PropTypes.bool,
     selected: PropTypes.bool,
     onEditRow: PropTypes.func,
     onSelectRow: PropTypes.func,
@@ -27,6 +29,7 @@ AdminBookingTableCard.propTypes = {
 export default function AdminBookingTableCard({
     row,
     isGearAdminList = false,
+    compact = false,
     selected,
     onEditRow,
     onSelectRow,
@@ -55,6 +58,7 @@ export default function AdminBookingTableCard({
 
     const getDateRange = () => {
         if (!eventList?.length) return '-';
+        if (compact) return formatCompactBookingDateRange(eventList);
         const dates = eventList.map(event => new Date(event.end));
         const start = new Date(Math.min(...dates));
         const end = new Date(Math.max(...dates));
@@ -85,7 +89,9 @@ export default function AdminBookingTableCard({
                 <Box display='flex' justifyContent='space-between' alignItems="flex-start">
                     <Box display='flex' flexDirection='column'>
                         <Typography variant='h6' gutterBottom>
-                            {t('adminBookings.card.bookingTitle', { id })}
+                            {compact
+                                ? studentName || '—'
+                                : t('adminBookings.card.bookingTitle', { id })}
                         </Typography>
                         <Label
                             variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
@@ -100,6 +106,7 @@ export default function AdminBookingTableCard({
                         </Label>
                     </Box>
 
+                    {!compact && (
                     <TableMoreMenu
                         open={openMenu}
                         onOpen={handleOpenMenu}
@@ -148,6 +155,7 @@ export default function AdminBookingTableCard({
                             </>
                         }
                     />
+                    )}
                 </Box>
 
                 <Box sx={{ mt: 2 }}>
@@ -155,11 +163,13 @@ export default function AdminBookingTableCard({
                         {t('adminBookings.card.client')}
                     </Typography>
                     <Typography variant="body2" gutterBottom>
-                        {`${studentName} ${studentLastname}`}
+                        {compact ? studentName || '—' : `${studentName} ${studentLastname}`}
                     </Typography>
+                    {!compact && (
                     <Typography variant="caption" color="text.secondary" gutterBottom>
                         ID: {studentId}
                     </Typography>
+                    )}
                 </Box>
 
                 {!isGearAdminList && (
@@ -168,11 +178,17 @@ export default function AdminBookingTableCard({
                         {t('adminBookings.card.instructor')}
                     </Typography>
                     <Typography variant="body2" gutterBottom>
-                        {teacher ? `${name} ${lastname}` : t('adminBookings.row.gearOnly')}
+                        {teacher
+                            ? compact
+                                ? name
+                                : `${name} ${lastname}`
+                            : t('adminBookings.row.gearOnly')}
                     </Typography>
+                    {!compact && (
                     <Typography variant="caption" color="text.secondary" gutterBottom>
                         {teacherId != null ? `ID: ${teacherId}` : ''}
                     </Typography>
+                    )}
                 </Box>
                 )}
 
@@ -181,7 +197,7 @@ export default function AdminBookingTableCard({
                         {isGearAdminList ? t('adminBookings.card.gearDetails') : t('adminBookings.card.bookingDetails')}
                     </Typography>
                     <Box display="flex" flexDirection="column" gap={1}>
-                        {!isGearAdminList && (
+                        {!compact && !isGearAdminList && (
                         <>
                         <Typography variant="body2">
                             {t('adminBookings.row.classesCount', { count: eventList?.length || 0 })}
@@ -191,10 +207,17 @@ export default function AdminBookingTableCard({
                         </Typography>
                         </>
                         )}
+                        {compact && !isGearAdminList && (
+                        <Typography variant="body2">
+                            {getDateRange()}
+                        </Typography>
+                        )}
+                        {!compact && (
                         <Typography variant="body2">
                             {resort}
                         </Typography>
-                        {!isGearAdminList && (
+                        )}
+                        {!compact && !isGearAdminList && (
                         <Typography variant="body2">
                             {t('adminBookings.card.adultsChildren', { adults, children })}
                         </Typography>

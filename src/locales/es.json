@@ -880,6 +880,7 @@
         "user calendars": "Agenda de profes",
         "review teachers": "Instructores",
         "review clients": "Clientes",
+        "today": "Hoy",
         "lesson bookings": "Reserva de clases",
         "equipment bookings": "Reservas de equipos",
         "school_teachers": "profesores de escuela",
@@ -1007,6 +1008,29 @@
         "selectTeacherHint": "Seleccioná un instructor para ver la configuración de su calendario.",
         "noTeachersFound": "No se encontraron instructores",
         "typeToSearchTeachers": "Escribí para buscar instructores"
+    },
+    "adminToday": {
+        "pageTitle": "Hoy",
+        "heading": "Hoy",
+        "headingTomorrow": "Mañana",
+        "subtitle": "{{date}} · Cerro Catedral",
+        "breadcrumbDashboard": "Dashboard",
+        "breadcrumbAdmin": "Admin",
+        "refresh": "Actualizar",
+        "viewTomorrow": "Ver mañana",
+        "viewToday": "Ver hoy",
+        "dayToday": "hoy",
+        "dayTomorrow": "mañana",
+        "loadError": "No se pudieron cargar las reservas. Intentá de nuevo.",
+        "kpi": {
+            "lessons": "Clases {{day}}",
+            "gear": "Equipos {{day}}",
+            "participants": "Participantes totales"
+        },
+        "lessonsSection": "Clases {{day}}",
+        "gearSection": "Reservas de equipos {{day}}",
+        "lessonsEmpty": "No hay reservas para {{day}}.",
+        "gearEmpty": "No hay reservas para {{day}}."
     },
     "adminBookings": {
         "pageTitle": "Admin Revisión: Lista",

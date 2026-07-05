@@ -83,6 +83,7 @@ const ICONS = {
 };
 
 const ADMIN_NAV_ITEMS = [
+  { title: 'today', path: PATH_DASHBOARD.admin.today, icon: ICONS.dashboard },
   { title: 'review teachers', path: PATH_DASHBOARD.admin.review, icon: <CastForEducationIcon /> },
   { title: 'review clients', path: PATH_DASHBOARD.admin.reviewClients, icon: <PeopleIcon /> },
   { title: 'lesson bookings', path: PATH_DASHBOARD.admin.bookings, icon: ICONS.booking },

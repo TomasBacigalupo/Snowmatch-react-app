@@ -35,10 +35,16 @@ export function bookingHappensOnDate(booking, targetDate) {
   });
 }
 
-export function filterTodayCerroCatedralBookings(bookings, targetDate = new Date()) {
-  return (bookings ?? []).filter(
-    (booking) => matchesCerroCatedral(booking.resort) && bookingHappensOnDate(booking, targetDate)
-  );
+export function filterTodayCerroCatedralBookings(
+  bookings,
+  targetDate = new Date(),
+  { skipEventDateCheck = false } = {}
+) {
+  return (bookings ?? []).filter((booking) => {
+    if (!matchesCerroCatedral(booking.resort)) return false;
+    if (skipEventDateCheck) return true;
+    return bookingHappensOnDate(booking, targetDate);
+  });
 }
 
 export async function fetchAdminBookingsForToday(bookingKind, targetDate = new Date()) {
@@ -55,7 +61,9 @@ export async function fetchAdminBookingsForToday(bookingKind, targetDate = new D
   params.append('bookingKind', bookingKind);
 
   const response = await axios.get(`/api/admin/bookings/filter?${params.toString()}`);
-  return filterTodayCerroCatedralBookings(response.data ?? [], targetDate);
+  // Gear-only bookings often have an empty eventList; the API already filters by day/month/year.
+  const skipEventDateCheck = bookingKind === 'gear';
+  return filterTodayCerroCatedralBookings(response.data ?? [], targetDate, { skipEventDateCheck });
 }
 
 export function countTodayParticipants(lessonBookings, gearBookings) {

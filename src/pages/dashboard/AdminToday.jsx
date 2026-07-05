@@ -311,20 +311,22 @@ export default function AdminToday() {
   const loadData = useCallback(async () => {
     setLoading(true);
     setError(null);
-    try {
-      const [lessons, gear] = await Promise.all([
-        fetchAdminBookingsForToday('lesson', selectedDate),
-        fetchAdminBookingsForToday('gear', selectedDate),
-      ]);
-      setLessonBookings(lessons);
-      setGearBookings(gear);
-    } catch (err) {
-      setError(err?.message || t('adminToday.loadError'));
-      setLessonBookings([]);
-      setGearBookings([]);
-    } finally {
-      setLoading(false);
+
+    const [lessonsResult, gearResult] = await Promise.allSettled([
+      fetchAdminBookingsForToday('lesson', selectedDate),
+      fetchAdminBookingsForToday('gear', selectedDate),
+    ]);
+
+    setLessonBookings(lessonsResult.status === 'fulfilled' ? lessonsResult.value : []);
+    setGearBookings(gearResult.status === 'fulfilled' ? gearResult.value : []);
+
+    const failures = [lessonsResult, gearResult].filter((result) => result.status === 'rejected');
+    if (failures.length) {
+      const reason = failures[0].reason;
+      setError(typeof reason === 'string' ? reason : reason?.message || t('adminToday.loadError'));
     }
+
+    setLoading(false);
   }, [selectedDate, t]);
 
   useEffect(() => {

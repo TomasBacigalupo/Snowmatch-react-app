@@ -29,6 +29,8 @@ import { getFinancialData, exportFinancialData } from '../../redux/slices/admin'
 
 // ----------------------------------------------------------------------
 
+const DEFAULT_FINANCIAL_YEAR = 2026;
+
 export default function AdminFinancialDashboard() {
   const { themeStretch } = useSettings();
   const dispatch = useDispatch();
@@ -36,6 +38,7 @@ export default function AdminFinancialDashboard() {
   
   // State for filters
   const [filters, setFilters] = useState({
+    year: DEFAULT_FINANCIAL_YEAR,
     month: new Date().getMonth() + 1, // Current month (1-12)
     resort: 'Cerro Catedral',
     instructor: '',
@@ -97,7 +100,9 @@ export default function AdminFinancialDashboard() {
         null, // page (null to avoid sending page parameter)
         1000, // size
         filters.resort || '', // resort
-        null // day (null to avoid sending day parameter)
+        null, // day (null to avoid sending day parameter)
+        null, // bookingKind
+        filters.year
       ));
       
       // Get all payouts
@@ -121,6 +126,7 @@ export default function AdminFinancialDashboard() {
 
   const handleClearFilters = () => {
     setFilters({
+      year: DEFAULT_FINANCIAL_YEAR,
       month: new Date().getMonth() + 1, // Current month
       resort: 'CERRO_CATEDRAL',
       instructor: '',
@@ -358,9 +364,9 @@ export default function AdminFinancialDashboard() {
       month: filters.month
     });
     
-    const revenueTimeSeries = generateRevenueTimeSeries(filteredBookings, filters.month);
+    const revenueTimeSeries = generateRevenueTimeSeries(filteredBookings, filters.month, filters.year);
     const paymentMethodBreakdown = generatePaymentMethodBreakdown(payments);
-    const bookingsTimeSeries = generateBookingsTimeSeries(filteredBookings, filters.month);
+    const bookingsTimeSeries = generateBookingsTimeSeries(filteredBookings, filters.month, filters.year);
     
     console.log('Generated chart data:', {
       revenueTimeSeries: revenueTimeSeries.length,
@@ -382,17 +388,16 @@ export default function AdminFinancialDashboard() {
   };
 
   // Helper functions for chart data generation
-  const generateRevenueTimeSeries = (bookings, month) => {
-    console.log('generateRevenueTimeSeries called with:', { bookings: bookings.length, month });
-    if (!month) return [];
+  const generateRevenueTimeSeries = (bookings, month, year) => {
+    console.log('generateRevenueTimeSeries called with:', { bookings: bookings.length, month, year });
+    if (!month || !year) return [];
 
-    const currentYear = new Date().getFullYear();
     // month is 1-12, but Date constructor expects 0-11, so subtract 1
-    const daysInMonth = new Date(currentYear, month - 1, 0).getDate();
+    const daysInMonth = new Date(year, month - 1, 0).getDate();
     const days = [];
 
     for (let day = 1; day <= daysInMonth; day++) {
-      const dateStr = `${currentYear}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
+      const dateStr = `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
       const dayBookings = bookings.filter(booking => {
         const bookingDate = getBookingDateString(booking);
         return bookingDate === dateStr;
@@ -433,17 +438,16 @@ export default function AdminFinancialDashboard() {
     }));
   };
 
-  const generateBookingsTimeSeries = (bookings, month) => {
-    console.log('generateBookingsTimeSeries called with:', { bookings: bookings.length, month });
-    if (!month) return [];
+  const generateBookingsTimeSeries = (bookings, month, year) => {
+    console.log('generateBookingsTimeSeries called with:', { bookings: bookings.length, month, year });
+    if (!month || !year) return [];
 
-    const currentYear = new Date().getFullYear();
     // month is 1-12, but Date constructor expects 0-11, so subtract 1
-    const daysInMonth = new Date(currentYear, month - 1, 0).getDate();
+    const daysInMonth = new Date(year, month - 1, 0).getDate();
     const days = [];
 
     for (let day = 1; day <= daysInMonth; day++) {
-      const dateStr = `${currentYear}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
+      const dateStr = `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
       const dayBookings = bookings.filter(booking => {
         const bookingDate = getBookingDateString(booking);
         return bookingDate === dateStr;

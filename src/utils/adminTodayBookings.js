@@ -35,13 +35,29 @@ export function bookingHappensOnDate(booking, targetDate) {
   });
 }
 
+export function normalizeAdminBookingListResponse(data) {
+  if (Array.isArray(data)) return data;
+  if (Array.isArray(data?.content)) return data.content;
+  if (Array.isArray(data?.data)) return data.data;
+  return [];
+}
+
+export function getBookingResort(booking) {
+  return (
+    booking?.resort ??
+    booking?.student?.resortsEnum?.[0] ??
+    booking?.student?.resorts?.[0] ??
+    null
+  );
+}
+
 export function filterTodayCerroCatedralBookings(
   bookings,
   targetDate = new Date(),
   { skipEventDateCheck = false } = {}
 ) {
-  return (bookings ?? []).filter((booking) => {
-    if (!matchesCerroCatedral(booking.resort)) return false;
+  return normalizeAdminBookingListResponse(bookings).filter((booking) => {
+    if (!matchesCerroCatedral(getBookingResort(booking))) return false;
     if (skipEventDateCheck) return true;
     return bookingHappensOnDate(booking, targetDate);
   });
@@ -61,9 +77,14 @@ export async function fetchAdminBookingsForToday(bookingKind, targetDate = new D
   params.append('bookingKind', bookingKind);
 
   const response = await axios.get(`/api/admin/bookings/filter?${params.toString()}`);
-  // Gear-only bookings often have an empty eventList; the API already filters by day/month/year.
-  const skipEventDateCheck = bookingKind === 'gear';
-  return filterTodayCerroCatedralBookings(response.data ?? [], targetDate, { skipEventDateCheck });
+  const bookings = normalizeAdminBookingListResponse(response.data);
+
+  // Gear / GEAR_ONLY bookings often have an empty eventList. The API already scopes by day/month/year.
+  if (bookingKind === 'gear') {
+    return bookings.filter((booking) => matchesCerroCatedral(getBookingResort(booking)));
+  }
+
+  return filterTodayCerroCatedralBookings(bookings, targetDate);
 }
 
 export function countTodayParticipants(lessonBookings, gearBookings) {

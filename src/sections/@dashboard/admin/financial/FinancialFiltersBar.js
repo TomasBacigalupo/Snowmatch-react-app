@@ -18,6 +18,9 @@ import axios from '../../../../utils/axios';
 
 // ----------------------------------------------------------------------
 
+const DEFAULT_FINANCIAL_YEAR = 2026;
+const YEAR_OPTIONS = Array.from({ length: 8 }, (_, i) => DEFAULT_FINANCIAL_YEAR - i);
+
 const RESORT_OPTIONS = [
   'Cerro Catedral',
   'Chapelco',
@@ -119,6 +122,13 @@ export default function FinancialFiltersBar({
     });
   };
 
+  const handleYearChange = (event) => {
+    onFiltersChange({
+      ...filters,
+      year: parseInt(event.target.value),
+    });
+  };
+
   const handleInstructorChange = (event, newValue) => {
     handleFilterChange('instructor', newValue ? newValue.id : '');
   };
@@ -136,6 +146,36 @@ export default function FinancialFiltersBar({
           direction={{ xs: 'column', md: 'row' }}
           sx={{ alignItems: 'stretch' }}
         >
+          {/* Year Selector */}
+          <TextField
+            fullWidth
+            select
+            label="Año"
+            value={filters.year ?? DEFAULT_FINANCIAL_YEAR}
+            onChange={handleYearChange}
+            SelectProps={{
+              MenuProps: {
+                sx: { '& .MuiPaper-root': { maxHeight: 260 } },
+              },
+            }}
+            sx={{ minWidth: { md: 120 } }}
+          >
+            {YEAR_OPTIONS.map((year) => (
+              <MenuItem
+                key={year}
+                value={year}
+                sx={{
+                  mx: 1,
+                  my: 0.5,
+                  borderRadius: 0.75,
+                  typography: 'body2',
+                }}
+              >
+                {year}
+              </MenuItem>
+            ))}
+          </TextField>
+
           {/* Month Selector */}
           <TextField
             fullWidth
@@ -292,6 +332,15 @@ export default function FinancialFiltersBar({
         {/* Active Filters Display */}
         <Box>
           <Stack direction="row" spacing={1} sx={{ flexWrap: 'wrap', gap: 1 }}>
+            {filters.year !== DEFAULT_FINANCIAL_YEAR && (
+              <Chip
+                label={`Año: ${filters.year}`}
+                onDelete={() => handleFilterChange('year', DEFAULT_FINANCIAL_YEAR)}
+                color="primary"
+                variant="outlined"
+              />
+            )}
+
             {filters.month !== new Date().getMonth() + 1 && (
               <Chip
                 label={`Mes: ${MONTH_OPTIONS.find(o => o.value === filters.month)?.label}`}

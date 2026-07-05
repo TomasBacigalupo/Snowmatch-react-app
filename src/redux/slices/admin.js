@@ -808,11 +808,75 @@ function extractTeacherEvents(data) {
   return [];
 }
 
+function toIdRef(entity) {
+  if (entity == null) return undefined;
+  if (typeof entity === 'object' && entity.id != null) return { id: entity.id };
+  if (typeof entity === 'number' || typeof entity === 'string') return { id: entity };
+  return undefined;
+}
+
+function toIdList(list) {
+  if (!Array.isArray(list)) return [];
+  return list.map(toIdRef).filter(Boolean);
+}
+
+function buildSanitizedEventPutPayload(existing, start, end, allDay) {
+  const payload = {
+    id: existing.id,
+    title: existing.title,
+    description: existing.description,
+    start,
+    end,
+    allDay,
+    price: existing.price,
+    textColor: existing.textColor,
+    type: existing.type,
+    eventType: existing.eventType,
+    resort: existing.resort,
+    source: existing.source,
+    maxStudents: existing.maxStudents,
+    broadcast: existing.broadcast,
+    state: existing.state ?? 'ACCEPTED',
+    payed: existing.payed ?? false,
+    students: toIdList(existing.students),
+    assignedUsers: toIdList(existing.assignedUsers),
+    clients: toIdList(existing.clients),
+    owner: toIdRef(existing.owner),
+    businessOwner: toIdRef(existing.businessOwner),
+  };
+
+  return Object.fromEntries(
+    Object.entries(payload).filter(([, value]) => value !== undefined && value !== null)
+  );
+}
+
+async function putEventSchedule(eventId, payload) {
+  const response = await axios.put(`/api/events/byId/${eventId}`, payload);
+  return response.data;
+}
+
 /** Fetch full event from teacher calendar, then update schedule via /api/events/byId. */
 export function updateAdminBookingEventSchedule(teacherId, eventId, schedule) {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
+      const start = addUtcOffset(schedule.start);
+      const end = addUtcOffset(schedule.end);
+      const allDay = schedule.allDay;
+
+      const attempts = [
+        () => putEventSchedule(eventId, { start, end }),
+        () => putEventSchedule(eventId, { start, end, allDay }),
+      ];
+
+      for (const attempt of attempts) {
+        try {
+          return await attempt();
+        } catch {
+          // Try the next payload shape.
+        }
+      }
+
       const listResponse = await axios.get(`/api/admin/user/${teacherId}/event?page=1&size=300`);
       const existing = extractTeacherEvents(listResponse.data).find(
         (event) => Number(event.id) === Number(eventId)
@@ -822,18 +886,10 @@ export function updateAdminBookingEventSchedule(teacherId, eventId, schedule) {
         throw new Error(`Event ${eventId} not found for teacher ${teacherId}`);
       }
 
-      const start = addUtcOffset(schedule.start);
-      const end = addUtcOffset(schedule.end);
-
-      const payload = {
-        ...existing,
-        start,
-        end,
-        allDay: schedule.allDay,
-      };
-
-      const response = await axios.put(`/api/events/byId/${eventId}`, payload);
-      return response.data;
+      return putEventSchedule(
+        eventId,
+        buildSanitizedEventPutPayload(existing, start, end, allDay)
+      );
     } catch (error) {
       dispatch(slice.actions.hasError(error));
       throw error;

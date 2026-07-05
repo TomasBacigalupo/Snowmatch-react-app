@@ -29,7 +29,6 @@ import { useSnackbar } from 'notistack';
 import { useTranslation } from 'react-i18next';
 import { format, parseISO } from 'date-fns';
 import {
-  buildEventListForBookingPut,
   buildEventScheduleUpdates,
   createEmptyDateTimeRow,
   eventListToDateTimes,
@@ -115,7 +114,6 @@ export default function BookingEditModal({ open, onClose, booking, onSave }) {
     const formData = new FormData(event.currentTarget);
     const type = formData.get('type');
     const teacherId = parseInt(formData.get('teacherId'), 10) || booking?.teacher?.id;
-    const bookingEventList = buildEventListForBookingPut(dateTimes, type, booking?.eventList);
     const scheduleUpdates = buildEventScheduleUpdates(dateTimes);
     const updatedBooking = {
       id: booking.id,
@@ -134,7 +132,6 @@ export default function BookingEditModal({ open, onClose, booking, onSave }) {
       resort: formData.get('resort'),
       teacherId: formData.get('teacherId'),
       studentId: formData.get('studentId'),
-      eventList: bookingEventList,
     };
 
     try {

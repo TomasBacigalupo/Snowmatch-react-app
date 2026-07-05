@@ -820,62 +820,58 @@ function toIdList(list) {
   return list.map(toIdRef).filter(Boolean);
 }
 
-function buildSanitizedEventPutPayload(existing, start, end, allDay) {
-  const payload = {
-    id: existing.id,
-    title: existing.title,
-    description: existing.description,
-    start,
-    end,
-    allDay,
-    price: existing.price,
-    textColor: existing.textColor,
-    type: existing.type,
-    eventType: existing.eventType,
-    resort: existing.resort,
-    source: existing.source,
-    maxStudents: existing.maxStudents,
-    broadcast: existing.broadcast,
-    state: existing.state ?? 'ACCEPTED',
-    payed: existing.payed ?? false,
-    students: toIdList(existing.students),
-    assignedUsers: toIdList(existing.assignedUsers),
-    clients: toIdList(existing.clients),
-    owner: toIdRef(existing.owner),
-    businessOwner: toIdRef(existing.businessOwner),
-  };
-
-  return Object.fromEntries(
-    Object.entries(payload).filter(([, value]) => value !== undefined && value !== null)
-  );
+function normalizeEventType(type, source) {
+  if (source === 'APP' && type === 'App Class') return 'App class';
+  return type;
 }
 
-async function putEventSchedule(eventId, payload) {
-  const response = await axios.put(`/api/events/byId/${eventId}`, payload);
+/** Same shape as admin CalendarForm → updateEventByUserIdAndEventId. */
+function buildCalendarAdminEventPayload(existing, schedule, studentId) {
+  const students = toIdList(existing.students);
+  const resolvedStudents =
+    students.length > 0 ? students : studentId ? [{ id: studentId }] : [];
+
+  return {
+    id: existing.id,
+    title: existing.title,
+    description: existing.description ?? '',
+    textColor: existing.textColor,
+    start: schedule.start,
+    end: schedule.end,
+    type: normalizeEventType(existing.type, existing.source),
+    price: existing.price,
+    resort: existing.resort,
+    students: resolvedStudents,
+    state: existing.state ?? 'ACCEPTED',
+    payed: existing.payed ?? false,
+  };
+}
+
+async function putAdminUserEvent(teacherId, eventId, payload) {
+  const start = addUtcOffset(payload.start);
+  const end = addUtcOffset(payload.end);
+  const response = await axios.put(`/api/admin/user/${teacherId}/event/${eventId}`, {
+    ...payload,
+    start,
+    end,
+  });
   return response.data;
 }
 
-/** Fetch full event from teacher calendar, then update schedule via /api/events/byId. */
-export function updateAdminBookingEventSchedule(teacherId, eventId, schedule) {
+async function putEventByIdSchedule(eventId, start, end) {
+  const response = await axios.put(`/api/events/byId/${eventId}`, { start, end });
+  return response.data;
+}
+
+/** Reschedule booking class events using the admin calendar update path. */
+export function updateAdminBookingEventSchedule(teacherId, eventId, schedule, options = {}) {
+  const { studentId } = options;
+
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      const start = addUtcOffset(schedule.start);
-      const end = addUtcOffset(schedule.end);
-      const allDay = schedule.allDay;
-
-      const attempts = [
-        () => putEventSchedule(eventId, { start, end }),
-        () => putEventSchedule(eventId, { start, end, allDay }),
-      ];
-
-      for (const attempt of attempts) {
-        try {
-          return await attempt();
-        } catch {
-          // Try the next payload shape.
-        }
-      }
+      const utcStart = addUtcOffset(schedule.start);
+      const utcEnd = addUtcOffset(schedule.end);
 
       const listResponse = await axios.get(`/api/admin/user/${teacherId}/event?page=1&size=300`);
       const existing = extractTeacherEvents(listResponse.data).find(
@@ -886,10 +882,13 @@ export function updateAdminBookingEventSchedule(teacherId, eventId, schedule) {
         throw new Error(`Event ${eventId} not found for teacher ${teacherId}`);
       }
 
-      return putEventSchedule(
-        eventId,
-        buildSanitizedEventPutPayload(existing, start, end, allDay)
-      );
+      const payload = buildCalendarAdminEventPayload(existing, schedule, studentId);
+
+      try {
+        return await putAdminUserEvent(teacherId, eventId, payload);
+      } catch {
+        return putEventByIdSchedule(eventId, utcStart, utcEnd);
+      }
     } catch (error) {
       dispatch(slice.actions.hasError(error));
       throw error;

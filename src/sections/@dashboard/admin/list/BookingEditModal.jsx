@@ -114,6 +114,7 @@ export default function BookingEditModal({ open, onClose, booking, onSave }) {
     const formData = new FormData(event.currentTarget);
     const type = formData.get('type');
     const teacherId = parseInt(formData.get('teacherId'), 10) || booking?.teacher?.id;
+    const studentId = parseInt(formData.get('studentId'), 10) || booking?.student?.id;
     const scheduleUpdates = buildEventScheduleUpdates(dateTimes);
     const updatedBooking = {
       id: booking.id,
@@ -141,11 +142,16 @@ export default function BookingEditModal({ open, onClose, booking, onSave }) {
         await Promise.all(
           scheduleUpdates.map((schedule) =>
             dispatch(
-              updateAdminBookingEventSchedule(teacherId, schedule.id, {
-                start: schedule.start,
-                end: schedule.end,
-                allDay: schedule.allDay,
-              })
+              updateAdminBookingEventSchedule(
+                teacherId,
+                schedule.id,
+                {
+                  start: schedule.start,
+                  end: schedule.end,
+                  allDay: schedule.allDay,
+                },
+                { studentId }
+              )
             )
           )
         );

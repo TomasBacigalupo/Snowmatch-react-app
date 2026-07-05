@@ -737,6 +737,33 @@
     "lessonsEmpty": "No bookings for {{day}}.",
     "gearEmpty": "No bookings for {{day}}."
   },
+  "adminUserChats": {
+    "backToList": "Back to list",
+    "descriptionAll": "All user chat threads, newest first (read-only).",
+    "descriptionAllWithCreate": "All user chat threads, newest first. Use New conversation to create a booking and open a chat between a student and a teacher.",
+    "descriptionResort": "User chat threads at {{resort}}, newest first (read-only).",
+    "newConversation": "New conversation",
+    "createSuccess": "Conversation created. Opening chat…",
+    "requiresStudentAndTeacher": "Select both a student and a teacher to create a conversation.",
+    "conversationNotFound": "Booking was created but the conversation could not be opened. Try finding it in the list.",
+    "empty": "No conversations found.",
+    "loadMore": "Load more",
+    "loading": "Loading…",
+    "photoPreview": "Photo",
+    "table": {
+      "activity": "Activity",
+      "id": "ID",
+      "lastMessage": "Last message",
+      "participants": "Participants"
+    },
+    "bookings": {
+      "title": "Shared bookings",
+      "instructor": "Instructor",
+      "student": "Student",
+      "empty": "No bookings between these users.",
+      "participantsLoading": "Loading participants…"
+    }
+  },
   "adminBookings": {
     "table": {
       "id": "ID",

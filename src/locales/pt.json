@@ -1172,6 +1172,33 @@
         "lessonsEmpty": "Não há reservas para {{day}}.",
         "gearEmpty": "Não há reservas para {{day}}."
     },
+    "adminUserChats": {
+        "backToList": "Voltar à lista",
+        "descriptionAll": "Todos os chats de usuários, os mais recentes primeiro (somente leitura).",
+        "descriptionAllWithCreate": "Todos os chats de usuários, os mais recentes primeiro. Use Nova conversa para criar uma reserva e abrir um chat entre um aluno e um instrutor.",
+        "descriptionResort": "Chats de usuários em {{resort}}, os mais recentes primeiro (somente leitura).",
+        "newConversation": "Nova conversa",
+        "createSuccess": "Conversa criada. Abrindo chat…",
+        "requiresStudentAndTeacher": "Selecione um aluno e um instrutor para criar uma conversa.",
+        "conversationNotFound": "A reserva foi criada, mas não foi possível abrir a conversa. Procure-a na lista.",
+        "empty": "Nenhuma conversa encontrada.",
+        "loadMore": "Carregar mais",
+        "loading": "Carregando…",
+        "photoPreview": "Foto",
+        "table": {
+            "activity": "Atividade",
+            "id": "ID",
+            "lastMessage": "Última mensagem",
+            "participants": "Participantes"
+        },
+        "bookings": {
+            "title": "Reservas compartilhadas",
+            "instructor": "Instrutor",
+            "student": "Aluno",
+            "empty": "Não há reservas entre estes usuários.",
+            "participantsLoading": "Carregando participantes…"
+        }
+    },
     "adminBookings": {
         "table": {
             "id": "ID",

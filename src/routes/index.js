@@ -487,6 +487,7 @@ export default function Router() {
               path: 'admin',
               children: [
                 { element: <Navigate to="/dashboard/admin/review" replace />, index: true },
+                { path: 'today', element: <RoleBasedGuard accessibleRoles={['ADMIN']}><AdminToday /></RoleBasedGuard> },
                 { path: 'review', element: <AdminReview /> },
                 { path: 'clients', element: <AdminReviewClients /> },
                 {
@@ -689,6 +690,7 @@ const AdminUserChats = Loadable(lazy(() => import('../pages/dashboard/AdminUserC
 const AdminBroadcastLesson = Loadable(lazy(() => import('../pages/dashboard/AdminBroadcastLesson')));
 const AdminFinancialDashboard = Loadable(lazy(() => import('../pages/dashboard/AdminFinancialDashboard')));
 const AdminResortDashboard = Loadable(lazy(() => import('../pages/dashboard/AdminResortDashboard')));
+const AdminToday = Loadable(lazy(() => import('../pages/dashboard/AdminToday')));
 const AdminRental = Loadable(lazy(() => import('../pages/dashboard/AdminRental')));
 const AdminGroupLessonResorts = Loadable(lazy(() => import('../pages/dashboard/AdminGroupLessonResorts')));
 const AdminResortAdmins = Loadable(lazy(() => import('../pages/dashboard/AdminResortAdmins')));

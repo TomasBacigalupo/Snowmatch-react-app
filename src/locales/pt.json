@@ -1146,7 +1146,82 @@
         "resort admins": "Administradores de estâncias",
         "user chats": "Chats de usuários",
         "user calendars": "Calendários de usuários",
+        "today": "Hoje",
         "lesson bookings": "Reservas de aulas"
+    },
+    "adminToday": {
+        "pageTitle": "Hoje",
+        "heading": "Hoje",
+        "headingTomorrow": "Amanhã",
+        "subtitle": "{{date}} · Cerro Catedral",
+        "breadcrumbDashboard": "Dashboard",
+        "breadcrumbAdmin": "Admin",
+        "refresh": "Atualizar",
+        "viewTomorrow": "Ver amanhã",
+        "viewToday": "Ver hoje",
+        "dayToday": "hoje",
+        "dayTomorrow": "amanhã",
+        "loadError": "Não foi possível carregar as reservas. Tente novamente.",
+        "kpi": {
+            "lessons": "Aulas {{day}}",
+            "gear": "Equipamentos {{day}}",
+            "participants": "Participantes totais"
+        },
+        "lessonsSection": "Aulas {{day}}",
+        "gearSection": "Reservas de equipamentos {{day}}",
+        "lessonsEmpty": "Não há reservas para {{day}}.",
+        "gearEmpty": "Não há reservas para {{day}}."
+    },
+    "adminBookings": {
+        "table": {
+            "id": "ID",
+            "student": "Cliente",
+            "teacher": "Instrutor",
+            "classes": "Aulas",
+            "hours": "Horas",
+            "dates": "Datas",
+            "resort": "Montanha",
+            "capacity": "Capacidade",
+            "price": "Preço",
+            "internalComment": "Comentário interno",
+            "includes": "Inclui",
+            "paymentStatus": "Status do pagamento",
+            "state": "Estado",
+            "center": "Centro",
+            "notes": "Notas",
+            "actions": "Ações"
+        },
+        "row": {
+            "gearOnly": "— (somente equipamento)",
+            "rental": "Aluguel",
+            "equipment": "Equipamento",
+            "classesCount": "{{count}} aulas",
+            "hoursCount": "{{count}} h",
+            "adultsCount": "{{count}} adultos",
+            "childrenCount": "{{count}} crianças",
+            "withLunch": "✓ Almoço",
+            "withoutLunch": "✗ Sem almoço",
+            "withEquipment": "✓ Equipamento",
+            "withoutEquipment": "✗ Sem equipamento",
+            "lunch": "Almoço",
+            "equipmentShort": "Equipamento"
+        },
+        "menu": {
+            "viewCalendar": "Ver aulas no calendário",
+            "whatsapp": "Contatar via WhatsApp",
+            "edit": "Editar",
+            "delete": "Excluir"
+        },
+        "card": {
+            "bookingTitle": "Reserva #{{id}}",
+            "client": "Cliente",
+            "instructor": "Instrutor",
+            "gearDetails": "Reserva de equipamento",
+            "bookingDetails": "Detalhes da reserva",
+            "gearOnlyNote": "Sem aulas — apenas aluguel de equipamento",
+            "adultsChildren": "{{adults}} adultos, {{children}} crianças"
+        },
+        "whatsappGreeting": "Olá {{name}}, "
     },
     "calendar": {
         "openLessonDetails": "Ver detalhes completos da aula",

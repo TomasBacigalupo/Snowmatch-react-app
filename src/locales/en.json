@@ -700,6 +700,7 @@
     "user chats": "User chats",
     "user calendars": "User calendars",
     "review teachers": "Review PROs",
+    "today": "Today",
     "lesson bookings": "Lesson bookings",
     "equipment bookings": "Equipment rentals",
     "school_teachers": "School teachers",
@@ -712,6 +713,80 @@
     "videoCoach": "VideoCoach",
     "contact": "Contact support",
     "help": "Help"
+  },
+  "adminToday": {
+    "pageTitle": "Today",
+    "heading": "Today",
+    "headingTomorrow": "Tomorrow",
+    "subtitle": "{{date}} · Cerro Catedral",
+    "breadcrumbDashboard": "Dashboard",
+    "breadcrumbAdmin": "Admin",
+    "refresh": "Refresh",
+    "viewTomorrow": "See tomorrow",
+    "viewToday": "See today",
+    "dayToday": "today",
+    "dayTomorrow": "tomorrow",
+    "loadError": "Could not load bookings. Please try again.",
+    "kpi": {
+      "lessons": "Lessons {{day}}",
+      "gear": "Gear reservations {{day}}",
+      "participants": "Total participants"
+    },
+    "lessonsSection": "Lessons {{day}}",
+    "gearSection": "Gear reservations {{day}}",
+    "lessonsEmpty": "No bookings for {{day}}.",
+    "gearEmpty": "No bookings for {{day}}."
+  },
+  "adminBookings": {
+    "table": {
+      "id": "ID",
+      "student": "Customer",
+      "teacher": "Instructor",
+      "classes": "Classes",
+      "hours": "Hours",
+      "dates": "Dates",
+      "resort": "Resort",
+      "capacity": "Capacity",
+      "price": "Price",
+      "internalComment": "Internal Comment",
+      "includes": "Includes",
+      "paymentStatus": "Payment Status",
+      "state": "Status",
+      "center": "Center",
+      "notes": "Notes",
+      "actions": "Actions"
+    },
+    "row": {
+      "gearOnly": "— (gear only)",
+      "rental": "Rental",
+      "equipment": "Equipment",
+      "classesCount": "{{count}} classes",
+      "hoursCount": "{{count}} hrs",
+      "adultsCount": "{{count}} adults",
+      "childrenCount": "{{count}} children",
+      "withLunch": "✓ Lunch",
+      "withoutLunch": "✗ No lunch",
+      "withEquipment": "✓ Equipment",
+      "withoutEquipment": "✗ No equipment",
+      "lunch": "Lunch",
+      "equipmentShort": "Equipment"
+    },
+    "menu": {
+      "viewCalendar": "View classes on calendar",
+      "whatsapp": "Contact via WhatsApp",
+      "edit": "Edit",
+      "delete": "Delete"
+    },
+    "card": {
+      "bookingTitle": "Booking #{{id}}",
+      "client": "Customer",
+      "instructor": "Instructor",
+      "gearDetails": "Equipment booking",
+      "bookingDetails": "Booking details",
+      "gearOnlyNote": "No classes — equipment rental only",
+      "adultsChildren": "{{adults}} adults, {{children}} children"
+    },
+    "whatsappGreeting": "Hello {{name}}, "
   },
   "calendar": {
     "name": "Calendar",

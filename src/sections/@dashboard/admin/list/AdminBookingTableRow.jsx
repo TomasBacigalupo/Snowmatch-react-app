@@ -1,20 +1,24 @@
 import PropTypes from 'prop-types';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 // @mui
 import { useTheme } from '@mui/material/styles';
-import { TableRow, TableCell, Typography, MenuItem } from '@mui/material';
+import { TableRow, TableCell, Typography, MenuItem, Tooltip } from '@mui/material';
 // components
 import Label from '../../../../components/Label';
 import Iconify from '../../../../components/Iconify';
 import { TableMoreMenu } from '../../../../components/table';
 import BookingDetailsDrawer from './BookingDetailsDrawer';
 import GearBookingDetailsDrawer from './GearBookingDetailsDrawer';
+import { formatAdminBookingResortLabel } from '../../../../utils/adminBookingResortOptions';
+import { formatCompactBookingDateRange } from '../../../../utils/adminTodayBookings';
 
 // ----------------------------------------------------------------------
 
 AdminBookingTableRow.propTypes = {
     row: PropTypes.object,
     isGearAdminList: PropTypes.bool,
+    compact: PropTypes.bool,
     onEditRow: PropTypes.func,
     onConfirmRow: PropTypes.func,
     onDeclineRow: PropTypes.func,
@@ -27,6 +31,7 @@ AdminBookingTableRow.propTypes = {
 export default function AdminBookingTableRow({
     row,
     isGearAdminList = false,
+    compact = false,
     onEditRow,
     onConfirmRow,
     onDeclineRow,
@@ -36,6 +41,7 @@ export default function AdminBookingTableRow({
     refreshBookings,
 }) {
     const theme = useTheme();
+    const { t } = useTranslation();
     const [openDrawer, setOpenDrawer] = useState(false);
 
     const { imageLink, userComment, state, resort, adults, children, eventList, id, price, internalComment, includesLunch, includesEquipments, paymentStatus, type } = row;
@@ -53,6 +59,7 @@ export default function AdminBookingTableRow({
 
     const getDateRange = () => {
         if (!eventList?.length) return '-';
+        if (compact) return formatCompactBookingDateRange(eventList);
         const dates = eventList.map(event => new Date(event.end));
         const start = new Date(Math.min(...dates));
         const end = new Date(Math.max(...dates));
@@ -81,7 +88,7 @@ export default function AdminBookingTableRow({
             }
         });
 
-        return `${Math.round(totalHours)} hs`;
+        return t('adminBookings.row.hoursCount', { count: Math.round(totalHours) });
     };
 
     const formatPrice = (price) => {
@@ -89,6 +96,17 @@ export default function AdminBookingTableRow({
             style: 'currency',
             currency: 'ARS'
         }).format(price);
+    };
+
+    const getResortLabel = (resortValue) => {
+        if (resortValue === 'CERRO_CATEDRAL') return 'Catedral';
+        return formatAdminBookingResortLabel(resortValue, t);
+    };
+
+    const truncateComment = (comment, maxLength = 20) => {
+        if (!comment) return '-';
+        if (comment.length <= maxLength) return comment;
+        return `${comment.slice(0, maxLength)}…`;
     };
 
     const [openMenu, setOpenMenuActions] = useState(null);
@@ -122,7 +140,7 @@ export default function AdminBookingTableRow({
                     }}
                 >
                     <Iconify icon={'eva:calendar-fill'} />
-                    Ver clases en el calendario
+                    {t('adminBookings.menu.viewCalendar')}
                 </MenuItem>
             )}
             <MenuItem
@@ -132,7 +150,7 @@ export default function AdminBookingTableRow({
                 }}
             >
                 <Iconify icon={'mdi:whatsapp'} />
-                Contactár por Whats app
+                {t('adminBookings.menu.whatsapp')}
             </MenuItem>
             <MenuItem
                 onClick={() => {
@@ -141,7 +159,7 @@ export default function AdminBookingTableRow({
                 }}
             >
                 <Iconify icon={'eva:edit-fill'} />
-                Editar
+                {t('adminBookings.menu.edit')}
             </MenuItem>
             <MenuItem
                 onClick={() => {
@@ -151,7 +169,7 @@ export default function AdminBookingTableRow({
                 sx={{ color: 'error.main' }}
             >
                 <Iconify icon={'eva:trash-2-outline'} />
-                Eliminar
+                {t('adminBookings.menu.delete')}
             </MenuItem>
         </>
     );
@@ -169,19 +187,23 @@ export default function AdminBookingTableRow({
                         },
                     }}
                 >
+                    {!compact && (
                     <TableCell align="left">
                         <Typography variant="subtitle2" noWrap>
                             {id}
                         </Typography>
                     </TableCell>
+                    )}
 
                     <TableCell align="left">
                         <Typography variant="subtitle2" noWrap>
-                            {`${studentName || ''} ${studentLastname || ''}`.trim() || '—'}
+                            {studentName || '—'}
                         </Typography>
-                        <Typography variant="caption" color="text.secondary">
-                            ID: {studentId ?? '—'}
-                        </Typography>
+                        {!compact && (
+                            <Typography variant="caption" color="text.secondary">
+                                ID: {studentId ?? '—'}
+                            </Typography>
+                        )}
                     </TableCell>
 
                     <TableCell align="left">
@@ -196,14 +218,19 @@ export default function AdminBookingTableRow({
                         >
                             {state || '—'}
                         </Label>
-                        {type === 'GEAR_ONLY' && (
+                        {!compact && type === 'GEAR_ONLY' && (
                             <Typography variant="caption" color="text.secondary" display="block" sx={{ mt: 0.5 }}>
-                                Equipo
+                                {t('adminBookings.row.equipment')}
+                            </Typography>
+                        )}
+                        {!compact && type !== 'GEAR_ONLY' && includesEquipments && (
+                            <Typography variant="caption" color="info.main" display="block" sx={{ mt: 0.5 }}>
+                                {t('adminBookings.rental.lessonBookingCaption', { id })}
                             </Typography>
                         )}
                     </TableCell>
 
-                    <TableCell align="left">{resort || '—'}</TableCell>
+                    {!compact && <TableCell align="left">{getResortLabel(resort)}</TableCell>}
 
                     <TableCell align="left">
                         <Typography variant="subtitle2" color="primary.main">
@@ -231,14 +258,16 @@ export default function AdminBookingTableRow({
                         </Typography>
                     </TableCell>
 
-                    <TableCell align="right" onClick={(e) => e.stopPropagation()}>
-                        <TableMoreMenu
-                            open={openMenu}
-                            onOpen={handleOpenMenu}
-                            onClose={handleCloseMenu}
-                            actions={rowMenuActions}
-                        />
-                    </TableCell>
+                    {!compact && (
+                        <TableCell align="right" onClick={(e) => e.stopPropagation()}>
+                            <TableMoreMenu
+                                open={openMenu}
+                                onOpen={handleOpenMenu}
+                                onClose={handleCloseMenu}
+                                actions={rowMenuActions}
+                            />
+                        </TableCell>
+                    )}
                 </TableRow>
 
                 {isGearAdminList ? (
@@ -272,35 +301,47 @@ export default function AdminBookingTableRow({
                     }
                 }}
             >
+                {!compact && (
                 <TableCell align="left">
                     <Typography variant="subtitle2" noWrap>
                         {id}
                     </Typography>
                 </TableCell>
+                )}
 
                 <TableCell align="left">
                     <Typography variant="subtitle2" noWrap>
-                        {`${studentName} ${studentLastname}`}
+                        {compact ? studentName || '—' : `${studentName} ${studentLastname}`}
                     </Typography>
-                    <Typography variant="caption" color="text.secondary">
-                        ID: {studentId}
-                    </Typography>
+                    {!compact && (
+                        <Typography variant="caption" color="text.secondary">
+                            ID: {studentId}
+                        </Typography>
+                    )}
                 </TableCell>
 
                 <TableCell align="left">
                     <Typography variant="subtitle2" noWrap>
-                        {teacher ? `${name} ${lastname}` : '— (solo equipo)'}
+                        {teacher
+                            ? compact
+                                ? name
+                                : `${name} ${lastname}`
+                            : t('adminBookings.row.gearOnly')}
                     </Typography>
-                    <Typography variant="caption" color="text.secondary">
-                        {teacherId != null ? `ID: ${teacherId}` : type === 'GEAR_ONLY' ? 'Rental' : ''}
-                    </Typography>
+                    {!compact && (
+                        <Typography variant="caption" color="text.secondary">
+                            {teacherId != null ? `ID: ${teacherId}` : type === 'GEAR_ONLY' ? t('adminBookings.row.rental') : ''}
+                        </Typography>
+                    )}
                 </TableCell>
 
-                <TableCell align="left">
-                    <Typography variant="subtitle2">
-                        {eventList?.length || 0} clases
-                    </Typography>
-                </TableCell>
+                {!compact && (
+                    <TableCell align="left">
+                        <Typography variant="subtitle2">
+                            {eventList?.length || 0}
+                        </Typography>
+                    </TableCell>
+                )}
 
                 <TableCell align="left">
                     <Typography variant="subtitle2">
@@ -314,18 +355,22 @@ export default function AdminBookingTableRow({
                     </Typography>
                 </TableCell>
 
-                <TableCell align="left">
-                    {resort}
-                </TableCell>
+                {!compact && (
+                    <TableCell align="left">
+                        {getResortLabel(resort)}
+                    </TableCell>
+                )}
 
-                <TableCell align="left">
-                    <Typography variant="subtitle2">
-                        {adults} adultos
-                    </Typography>
-                    <Typography variant="caption" color="text.secondary">
-                        {children} niños
-                    </Typography>
-                </TableCell>
+                {!compact && (
+                    <TableCell align="left">
+                        <Typography variant="subtitle2">
+                            {t('adminBookings.row.adultsCount', { count: adults })}
+                        </Typography>
+                        <Typography variant="caption" color="text.secondary">
+                            {t('adminBookings.row.childrenCount', { count: children })}
+                        </Typography>
+                    </TableCell>
+                )}
 
                 <TableCell align="left">
                     <Typography variant="subtitle2" color="primary.main">
@@ -334,17 +379,27 @@ export default function AdminBookingTableRow({
                 </TableCell>
 
                 <TableCell align="left">
-                    <Typography variant="body2" noWrap>
-                        {internalComment || '-'}
-                    </Typography>
+                    {internalComment && internalComment.length > 20 ? (
+                        <Tooltip title={internalComment} arrow>
+                            <Typography variant="body2" noWrap sx={{ cursor: 'help' }}>
+                                {truncateComment(internalComment)}
+                            </Typography>
+                        </Tooltip>
+                    ) : (
+                        <Typography variant="body2" noWrap>
+                            {truncateComment(internalComment)}
+                        </Typography>
+                    )}
                 </TableCell>
 
-                <TableCell align="left">
-                    <Typography variant="body2">
-                        {includesLunch ? '✓ Almuerzo' : '✗ Sin almuerzo'}
-                        {includesEquipments ? ' ✓ Equipo' : ' ✗ Sin equipo'}
-                    </Typography>
-                </TableCell>
+                {!compact && (
+                    <TableCell align="left">
+                        <Typography variant="body2">
+                            {includesLunch ? t('adminBookings.row.withLunch') : t('adminBookings.row.withoutLunch')}
+                            {includesEquipments ? ` ${t('adminBookings.row.withEquipment')}` : ` ${t('adminBookings.row.withoutEquipment')}`}
+                        </Typography>
+                    </TableCell>
+                )}
 
                 <TableCell align="left">
                     <Label
@@ -360,14 +415,16 @@ export default function AdminBookingTableRow({
                     </Label>
                 </TableCell>
 
-                <TableCell align="right" onClick={(e) => e.stopPropagation()}>
-                    <TableMoreMenu
-                        open={openMenu}
-                        onOpen={handleOpenMenu}
-                        onClose={handleCloseMenu}
-                        actions={rowMenuActions}
-                    />
-                </TableCell>
+                {!compact && (
+                    <TableCell align="right" onClick={(e) => e.stopPropagation()}>
+                        <TableMoreMenu
+                            open={openMenu}
+                            onOpen={handleOpenMenu}
+                            onClose={handleCloseMenu}
+                            actions={rowMenuActions}
+                        />
+                    </TableCell>
+                )}
             </TableRow>
 
             {isGearAdminList ? (

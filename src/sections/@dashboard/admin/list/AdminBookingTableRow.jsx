@@ -19,6 +19,7 @@ AdminBookingTableRow.propTypes = {
     row: PropTypes.object,
     isGearAdminList: PropTypes.bool,
     compact: PropTypes.bool,
+    showPrice: PropTypes.bool,
     onEditRow: PropTypes.func,
     onConfirmRow: PropTypes.func,
     onDeclineRow: PropTypes.func,
@@ -32,6 +33,7 @@ export default function AdminBookingTableRow({
     row,
     isGearAdminList = false,
     compact = false,
+    showPrice = true,
     onEditRow,
     onConfirmRow,
     onDeclineRow,
@@ -232,11 +234,13 @@ export default function AdminBookingTableRow({
 
                     {!compact && <TableCell align="left">{getResortLabel(resort)}</TableCell>}
 
+                    {showPrice && (
                     <TableCell align="left">
                         <Typography variant="subtitle2" color="primary.main">
                             {formatPrice(price)}
                         </Typography>
                     </TableCell>
+                    )}
 
                     <TableCell align="left">
                         <Label
@@ -372,11 +376,13 @@ export default function AdminBookingTableRow({
                     </TableCell>
                 )}
 
+                {showPrice && (
                 <TableCell align="left">
                     <Typography variant="subtitle2" color="primary.main">
                         {formatPrice(price)}
                     </Typography>
                 </TableCell>
+                )}
 
                 <TableCell align="left">
                     {internalComment && internalComment.length > 20 ? (

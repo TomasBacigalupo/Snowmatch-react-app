@@ -734,8 +734,11 @@
     },
     "lessonsSection": "Lessons {{day}}",
     "gearSection": "Gear reservations {{day}}",
-    "lessonsEmpty": "No bookings for {{day}}.",
-    "gearEmpty": "No bookings for {{day}}."
+        "lessonsEmpty": "No bookings for {{day}}.",
+        "gearEmpty": "No bookings for {{day}}.",
+        "showPrices": "Show prices",
+        "hidePrices": "Hide prices",
+        "togglePrices": "Toggle lesson prices"
   },
   "adminUserChats": {
     "backToList": "Back to list",

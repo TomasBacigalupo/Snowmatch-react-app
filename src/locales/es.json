@@ -928,7 +928,10 @@
         "lessonsSection": "Clases {{day}}",
         "gearSection": "Reservas de equipos {{day}}",
         "lessonsEmpty": "No hay reservas para {{day}}.",
-        "gearEmpty": "No hay reservas para {{day}}."
+        "gearEmpty": "No hay reservas para {{day}}.",
+        "showPrices": "Mostrar precios",
+        "hidePrices": "Ocultar precios",
+        "togglePrices": "Mostrar u ocultar precios de clases"
     },
     "adminUserChats": {
         "backToList": "Volver al listado",

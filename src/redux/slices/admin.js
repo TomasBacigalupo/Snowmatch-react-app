@@ -831,32 +831,20 @@ function buildCalendarAdminEventPayload(existing, schedule, studentId) {
   const resolvedStudents =
     students.length > 0 ? students : studentId ? [{ id: studentId }] : [];
 
-  const payload = {
-    ...existing,
+  return {
+    id: existing.id,
+    title: existing.title,
+    description: existing.description ?? '',
+    textColor: existing.textColor,
     start: schedule.start,
     end: schedule.end,
     type: normalizeEventType(existing.type, existing.source),
+    price: existing.price,
+    resort: existing.resort,
     students: resolvedStudents,
     state: existing.state ?? 'ACCEPTED',
     payed: existing.payed ?? false,
-    assignedUsers: existing.assignedUsers ?? [],
-    clients: existing.clients ?? [],
   };
-
-  if (existing.owner != null) {
-    payload.owner = toIdRef(existing.owner);
-  }
-
-  if (existing.businessOwner != null) {
-    payload.businessOwner = toIdRef(existing.businessOwner);
-  }
-
-  delete payload.lessonTime;
-  delete payload.allDay;
-  delete payload.source;
-  delete payload.eventType;
-
-  return payload;
 }
 
 /** Reschedule booking class events using the admin calendar update path. */

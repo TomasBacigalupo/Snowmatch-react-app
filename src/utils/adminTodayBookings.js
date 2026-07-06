@@ -79,9 +79,10 @@ export async function fetchAdminBookingsForToday(bookingKind, targetDate = new D
   const response = await axios.get(`/api/admin/bookings/filter?${params.toString()}`);
   const bookings = normalizeAdminBookingListResponse(response.data);
 
-  // Gear / GEAR_ONLY bookings often have an empty eventList. The API already scopes by day/month/year.
+  // Gear / GEAR_ONLY bookings often have an empty eventList. Trust the API date/kind filter
+  // (same as /admin/bookings/equipos) instead of re-filtering client-side.
   if (bookingKind === 'gear') {
-    return bookings.filter((booking) => matchesCerroCatedral(getBookingResort(booking)));
+    return bookings;
   }
 
   return filterTodayCerroCatedralBookings(bookings, targetDate);

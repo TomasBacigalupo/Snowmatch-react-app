@@ -150,7 +150,12 @@ function getOriginalEvent(dateTime, index, originalEventList, originalById) {
   return originalEventList[index];
 }
 
-/** Payload for PUT /api/admin/bookings/:id — date-only strings + lessonTime (same as create). */
+function formatBackendDateTime(dateStr) {
+  // yyyy-MM-dd — JavaTimeModule parses date-only LocalDateTime at midnight.
+  return dateStr;
+}
+
+/** Payload for PUT admin bookings / booking-intents — local date + lessonTime (same as create). */
 export function buildEventListForBookingPut(dateTimes, bookingType = 'ASSIGNED', originalEventList = []) {
   const originalById = new Map(
     (originalEventList || []).filter((event) => event?.id).map((event) => [event.id, event])
@@ -161,12 +166,13 @@ export function buildEventListForBookingPut(dateTimes, bookingType = 'ASSIGNED',
     .map((dateTime, index) => {
       const original = getOriginalEvent(dateTime, index, originalEventList, originalById);
       const lessonTime = normalizeLessonTime(dateTime.time);
+      const start = formatBackendDateTime(dateTime.date);
 
       return {
         ...(dateTime.id ? { id: dateTime.id } : {}),
         title: original?.title || (bookingType === 'REFERRED' ? 'Referida' : 'Asignada'),
-        start: dateTime.date,
-        end: dateTime.date,
+        start,
+        end: start,
         lessonTime,
         price:
           dateTime.price !== '' && dateTime.price != null ? dateTime.price : original?.price,

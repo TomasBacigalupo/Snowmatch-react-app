@@ -30,7 +30,6 @@ import { useTranslation } from 'react-i18next';
 import { format, parseISO } from 'date-fns';
 import {
   buildEventListForBookingPut,
-  buildStartEndFromDateAndLessonTime,
   createEmptyDateTimeRow,
   eventListToDateTimes,
   LESSON_TIME_VALUES,
@@ -139,28 +138,9 @@ export default function BookingIntentEditModal({ open, onClose, intent, onSave }
     };
 
     try {
-      await dispatch(editAdminBookingIntent(intent.id, updatedIntent));
+      const savedIntent = await dispatch(editAdminBookingIntent(intent.id, updatedIntent));
       enqueueSnackbar(t('adminBookings.intent.updateSuccess'), { variant: 'success' });
-      const updatedLines = validDateTimes.map((dateTime, index) => {
-        const schedule = buildStartEndFromDateAndLessonTime(dateTime.date, dateTime.time);
-        const original = originalEventList[index] || {};
-        return {
-          ...intent.lines?.[index],
-          id: dateTime.id ?? intent.lines?.[index]?.id ?? null,
-          startAt: schedule.start,
-          endAt: schedule.end,
-          allDay: schedule.allDay,
-          title: original.title,
-          textColor: original.textColor,
-          price: original.price,
-        };
-      });
-      onSave({
-        ...intent,
-        ...updatedIntent,
-        lines: updatedLines,
-        includesLaunch: updatedIntent.includesLaunch,
-      });
+      onSave(savedIntent || { ...intent, ...updatedIntent });
     } catch {
       enqueueSnackbar(t('adminBookings.intent.updateError'), { variant: 'error' });
     }

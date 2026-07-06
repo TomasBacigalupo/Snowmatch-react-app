@@ -327,18 +327,15 @@ export default function AdminToday() {
   const [lessonBookings, setLessonBookings] = useState([]);
   const [gearBookings, setGearBookings] = useState([]);
   const [bookingIntents, setBookingIntents] = useState([]);
-  const [viewDay, setViewDay] = useState('today');
+  const [dayOffset, setDayOffset] = useState(0);
   const [showLessonPrices, setShowLessonPrices] = useState(true);
 
   const selectedDate = useMemo(() => {
     const date = new Date();
-    if (viewDay === 'tomorrow') {
-      date.setDate(date.getDate() + 1);
-    }
+    date.setHours(0, 0, 0, 0);
+    date.setDate(date.getDate() + dayOffset);
     return date;
-  }, [viewDay]);
-
-  const dayLabel = viewDay === 'tomorrow' ? t('adminToday.dayTomorrow') : t('adminToday.dayToday');
+  }, [dayOffset]);
 
   const formattedDate = useMemo(
     () =>
@@ -346,10 +343,26 @@ export default function AdminToday() {
         weekday: 'long',
         day: 'numeric',
         month: 'long',
-        year: 'numeric',
+        ...(dayOffset >= 2 ? {} : { year: 'numeric' }),
       }),
-    [selectedDate, i18n.language]
+    [selectedDate, i18n.language, dayOffset]
   );
+
+  const dayLabel = useMemo(() => {
+    if (dayOffset === 0) return t('adminToday.dayToday');
+    if (dayOffset === 1) return t('adminToday.dayTomorrow');
+    return selectedDate.toLocaleDateString(i18n.language || 'es-AR', {
+      weekday: 'long',
+      day: 'numeric',
+      month: 'long',
+    });
+  }, [dayOffset, selectedDate, i18n.language, t]);
+
+  const pageHeading = useMemo(() => {
+    if (dayOffset === 0) return t('adminToday.heading');
+    if (dayOffset === 1) return t('adminToday.headingTomorrow');
+    return formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1);
+  }, [dayOffset, formattedDate, t]);
 
   const tableHeadIntent = useMemo(
     () => [
@@ -479,8 +492,6 @@ export default function AdminToday() {
   }
 
   const participantCount = countTodayParticipants(lessonBookings, gearBookings);
-  const pageHeading =
-    viewDay === 'tomorrow' ? t('adminToday.headingTomorrow') : t('adminToday.heading');
 
   return (
     <Page title={pageHeading}>
@@ -493,21 +504,31 @@ export default function AdminToday() {
             { name: pageHeading },
           ]}
           action={
-            <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
-              {viewDay === 'today' ? (
-                <Button
-                  variant="contained"
-                  startIcon={<Iconify icon="eva:arrow-forward-fill" />}
-                  onClick={() => setViewDay('tomorrow')}
+            <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap alignItems="center">
+              <Tooltip title={t('adminToday.prevDay')}>
+                <span>
+                  <IconButton
+                    onClick={() => setDayOffset((offset) => Math.max(0, offset - 1))}
+                    disabled={loading || dayOffset === 0}
+                    aria-label={t('adminToday.prevDay')}
+                  >
+                    <Iconify icon="eva:arrow-back-fill" />
+                  </IconButton>
+                </span>
+              </Tooltip>
+              <Tooltip title={t('adminToday.nextDay')}>
+                <IconButton
+                  onClick={() => setDayOffset((offset) => offset + 1)}
                   disabled={loading}
+                  aria-label={t('adminToday.nextDay')}
                 >
-                  {t('adminToday.viewTomorrow')}
-                </Button>
-              ) : (
+                  <Iconify icon="eva:arrow-forward-fill" />
+                </IconButton>
+              </Tooltip>
+              {dayOffset > 0 && (
                 <Button
-                  variant="contained"
-                  startIcon={<Iconify icon="eva:arrow-back-fill" />}
-                  onClick={() => setViewDay('today')}
+                  variant="outlined"
+                  onClick={() => setDayOffset(0)}
                   disabled={loading}
                 >
                   {t('adminToday.viewToday')}

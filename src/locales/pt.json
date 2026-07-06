@@ -1261,6 +1261,8 @@
         "refresh": "Atualizar",
         "viewTomorrow": "Ver amanhã",
         "viewToday": "Ver hoje",
+        "prevDay": "Dia anterior",
+        "nextDay": "Próximo dia",
         "dayToday": "hoje",
         "dayTomorrow": "amanhã",
         "loadError": "Não foi possível carregar as reservas. Tente novamente.",

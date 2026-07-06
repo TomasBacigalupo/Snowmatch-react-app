@@ -826,6 +826,8 @@
     "refresh": "Refresh",
     "viewTomorrow": "See tomorrow",
     "viewToday": "See today",
+    "prevDay": "Previous day",
+    "nextDay": "Next day",
     "dayToday": "today",
     "dayTomorrow": "tomorrow",
     "loadError": "Could not load bookings. Please try again.",

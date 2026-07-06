@@ -6,13 +6,29 @@ const LESSON_SLOTS = {
   AFTERNOON_2_HS: { start: [14, 0], end: [16, 0], allDay: false },
 };
 
+const CLOCK_SLOT_MATCHES = [
+  { lessonTime: 'ALL_DAY', start: [9, 0], end: [17, 0] },
+  { lessonTime: 'ALL_DAY', start: [10, 0], end: [17, 0] },
+  { lessonTime: 'MORNING', start: [9, 0], end: [13, 0] },
+  { lessonTime: 'MORNING', start: [10, 0], end: [13, 0] },
+  { lessonTime: 'MORNING_2_HS', start: [10, 0], end: [12, 0] },
+  { lessonTime: 'AFTERNOON', start: [13, 0], end: [17, 0] },
+  { lessonTime: 'AFTERNOON', start: [14, 0], end: [17, 0] },
+  { lessonTime: 'AFTERNOON_2_HS', start: [14, 0], end: [16, 0] },
+];
+
 export const LESSON_TIME_VALUES = ['MORNING', 'MORNING_2_HS', 'AFTERNOON', 'AFTERNOON_2_HS', 'ALL_DAY'];
 
-export function normalizeLessonTime(lessonTime) {
-  if (!lessonTime) return 'ALL_DAY';
-  if (lessonTime === 'MORNING_2HS') return 'MORNING_2_HS';
-  if (lessonTime === 'AFTERNOON_2HS') return 'AFTERNOON_2_HS';
-  return lessonTime;
+export function normalizeLessonTime(lessonTime, fallback = 'ALL_DAY') {
+  if (!lessonTime) return fallback;
+
+  const value = String(lessonTime).toUpperCase();
+  if (value === 'MORNING_2HS' || value === 'MORNING_2_HS') return 'MORNING_2_HS';
+  if (value === 'AFTERNOON_2HS' || value === 'AFTERNOON_2_HS') return 'AFTERNOON_2_HS';
+  if (value === 'FULL_DAY' || value === 'ALL_DAY') return 'ALL_DAY';
+  if (LESSON_TIME_VALUES.includes(value)) return value;
+
+  return fallback;
 }
 
 function formatLocalDateTime(dateStr, hour, minute = 0) {
@@ -21,24 +37,81 @@ function formatLocalDateTime(dateStr, hour, minute = 0) {
   return `${year}-${pad(month)}-${pad(day)}T${pad(hour)}:${pad(minute)}`;
 }
 
+function parseWallClockTime(value) {
+  if (!value) return null;
+
+  const str = String(value).trim();
+  if (/^\d{4}-\d{2}-\d{2}$/.test(str)) {
+    return null;
+  }
+
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return null;
+
+  // UTC / offset datetimes: interpret in the user's local timezone.
+  if (/Z$|[+-]\d{2}:\d{2}$/.test(str)) {
+    return {
+      hour: date.getHours(),
+      minute: date.getMinutes(),
+    };
+  }
+
+  const timeMatch = str.match(/T(\d{2}):(\d{2})(?::(\d{2}))?/);
+  if (timeMatch) {
+    return {
+      hour: parseInt(timeMatch[1], 10),
+      minute: parseInt(timeMatch[2], 10),
+    };
+  }
+
+  return {
+    hour: date.getHours(),
+    minute: date.getMinutes(),
+  };
+}
+
+function timesMatch(left, right) {
+  return left.hour === right[0] && left.minute === right[1];
+}
+
+function inferLessonTimeFromClock(start, end) {
+  for (const slot of CLOCK_SLOT_MATCHES) {
+    if (timesMatch(start, slot.start) && timesMatch(end, slot.end)) {
+      return slot.lessonTime;
+    }
+  }
+
+  const durationMinutes = (end.hour * 60 + end.minute) - (start.hour * 60 + start.minute);
+  if (durationMinutes <= 0) return null;
+
+  const durationHours = durationMinutes / 60;
+
+  if (durationHours <= 2.5) {
+    return start.hour < 12 ? 'MORNING_2_HS' : 'AFTERNOON_2_HS';
+  }
+  if (durationHours <= 4.5) {
+    return start.hour < 12 ? 'MORNING' : 'AFTERNOON';
+  }
+  if (durationHours >= 6) {
+    return 'ALL_DAY';
+  }
+
+  return null;
+}
+
 export function inferLessonTimeFromEvent(event) {
-  if (event?.lessonTime) return normalizeLessonTime(event.lessonTime);
+  const fromLessonTime = normalizeLessonTime(event?.lessonTime, null);
+  if (fromLessonTime) return fromLessonTime;
+
+  const start = parseWallClockTime(event?.start);
+  const end = parseWallClockTime(event?.end);
+
+  if (start && end) {
+    const fromClock = inferLessonTimeFromClock(start, end);
+    if (fromClock) return fromClock;
+  }
+
   if (event?.allDay) return 'ALL_DAY';
-
-  const start = new Date(event?.start);
-  const end = new Date(event?.end);
-  if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime())) return 'ALL_DAY';
-
-  const sh = start.getHours();
-  const sm = start.getMinutes();
-  const eh = end.getHours();
-  const em = end.getMinutes();
-
-  if (sh === 9 && sm === 0 && eh === 17 && em === 0) return 'ALL_DAY';
-  if (sh === 9 && sm === 0 && eh === 13 && em === 0) return 'MORNING';
-  if (sh === 10 && sm === 0 && eh === 12 && em === 0) return 'MORNING_2_HS';
-  if (sh === 13 && sm === 0 && eh === 17 && em === 0) return 'AFTERNOON';
-  if (sh === 14 && sm === 0 && eh === 16 && em === 0) return 'AFTERNOON_2_HS';
 
   return 'ALL_DAY';
 }

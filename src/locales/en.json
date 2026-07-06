@@ -832,8 +832,11 @@
     "kpi": {
       "lessons": "Lessons {{day}}",
       "gear": "Gear reservations {{day}}",
-      "participants": "Total participants"
+      "participants": "Total participants",
+      "unassigned": "Unassigned {{day}}"
     },
+    "intentsSection": "Unassigned bookings {{day}}",
+    "intentsEmpty": "No unassigned bookings for {{day}}.",
     "lessonsSection": "Lessons {{day}}",
     "gearSection": "Gear reservations {{day}}",
     "lessonsEmpty": "No bookings for {{day}}.",

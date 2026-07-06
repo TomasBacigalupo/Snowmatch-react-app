@@ -5,9 +5,13 @@ export function normalizeBookingIntent(intent) {
   if (!intent) return null;
 
   const eventList = (intent.lines || []).map((line) => ({
+    id: line.id,
     start: line.startAt,
     end: line.endAt || line.startAt,
     lessonTime: line.lessonTime,
+    price: line.price,
+    title: line.title,
+    textColor: line.textColor,
   }));
 
   return {

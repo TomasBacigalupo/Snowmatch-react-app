@@ -26,6 +26,7 @@ AdminBookingTableRow.propTypes = {
     onEvents: PropTypes.func,
     onDeleteRow: PropTypes.func,
     refreshBookings: PropTypes.func,
+    onOpenDetails: PropTypes.func,
 };
 
 export default function AdminBookingTableRow({
@@ -39,6 +40,7 @@ export default function AdminBookingTableRow({
     onEvents,
     onDeleteRow,
     refreshBookings,
+    onOpenDetails,
 }) {
     const theme = useTheme();
     const { t } = useTranslation();
@@ -123,6 +125,10 @@ export default function AdminBookingTableRow({
     const handleRowClick = (event) => {
         // Prevent click if clicking on menu
         if (event.target.closest('.MuiIconButton-root')) {
+            return;
+        }
+        if (onOpenDetails) {
+            onOpenDetails(id);
             return;
         }
         setOpenDrawer(true);
@@ -270,7 +276,7 @@ export default function AdminBookingTableRow({
                     )}
                 </TableRow>
 
-                {isGearAdminList ? (
+                {!onOpenDetails && (isGearAdminList ? (
                     <GearBookingDetailsDrawer
                         open={openDrawer}
                         onClose={() => setOpenDrawer(false)}
@@ -284,7 +290,7 @@ export default function AdminBookingTableRow({
                         booking={row}
                         refreshBookings={refreshBookings}
                     />
-                )}
+                ))}
             </>
         );
     }
@@ -427,7 +433,7 @@ export default function AdminBookingTableRow({
                 )}
             </TableRow>
 
-            {isGearAdminList ? (
+            {!onOpenDetails && (isGearAdminList ? (
                 <GearBookingDetailsDrawer
                     open={openDrawer}
                     onClose={() => setOpenDrawer(false)}
@@ -441,7 +447,7 @@ export default function AdminBookingTableRow({
                     booking={row}
                     refreshBookings={refreshBookings}
                 />
-            )}
+            ))}
         </>
     );
 }

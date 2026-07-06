@@ -88,6 +88,53 @@ export async function fetchAdminBookingsForToday(bookingKind, targetDate = new D
   return filterTodayCerroCatedralBookings(bookings, targetDate);
 }
 
+export function getIntentResort(intent) {
+  return intent?.resort ?? intent?.groupLessonResort ?? null;
+}
+
+export function bookingIntentHappensOnDate(intent, targetDate) {
+  if (!Array.isArray(intent?.lines) || !intent.lines.length) return false;
+
+  const dayStart = new Date(targetDate);
+  dayStart.setHours(0, 0, 0, 0);
+  const dayEnd = new Date(targetDate);
+  dayEnd.setHours(23, 59, 59, 999);
+
+  return intent.lines.some((line) => {
+    const start = new Date(line.startAt);
+    const end = new Date(line.endAt || line.startAt);
+    if (isSameCalendarDay(start, targetDate)) return true;
+    return start <= dayEnd && end >= dayStart;
+  });
+}
+
+export function filterTodayCerroCatedralBookingIntents(
+  intents,
+  targetDate = new Date()
+) {
+  return normalizeAdminBookingListResponse(intents).filter((intent) => {
+    if (intent.state && intent.state !== 'OPEN') return false;
+    if (!matchesCerroCatedral(getIntentResort(intent))) return false;
+    return bookingIntentHappensOnDate(intent, targetDate);
+  });
+}
+
+export async function fetchAdminBookingIntentsForToday(targetDate = new Date()) {
+  const month = targetDate.getMonth() + 1;
+  const year = targetDate.getFullYear();
+
+  const params = new URLSearchParams();
+  params.append('page', '0');
+  params.append('size', '500');
+  params.append('state', 'OPEN');
+  params.append('month', String(month));
+  params.append('year', String(year));
+  params.append('resort', CERRO_CATEDRAL_VALUE);
+
+  const response = await axios.get(`/api/admin/booking-intents/filter?${params.toString()}`);
+  return filterTodayCerroCatedralBookingIntents(response.data, targetDate);
+}
+
 export function countTodayParticipants(lessonBookings, gearBookings) {
   const lessonParticipants = (lessonBookings ?? []).reduce(
     (sum, row) => sum + (row.adults ?? 0) + (row.children ?? 0),

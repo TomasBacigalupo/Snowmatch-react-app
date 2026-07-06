@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import {
   Alert,
@@ -31,19 +31,30 @@ import useAuth from '../../hooks/useAuth';
 import { PATH_DASHBOARD } from '../../routes/paths';
 import AdminBookingTableRow from '../../sections/@dashboard/admin/list/AdminBookingTableRow';
 import AdminBookingTableCard from '../../sections/@dashboard/admin/list/AdminBookingTableCard';
+import AdminBookingIntentTableRow from '../../sections/@dashboard/admin/list/AdminBookingIntentTableRow';
+import BookingDetailsDrawer from '../../sections/@dashboard/admin/list/BookingDetailsDrawer';
+import GearBookingDetailsDrawer from '../../sections/@dashboard/admin/list/GearBookingDetailsDrawer';
 import {
   countTodayParticipants,
   fetchAdminBookingsForToday,
+  fetchAdminBookingIntentsForToday,
 } from '../../utils/adminTodayBookings';
 import { fNumber } from '../../utils/formatNumber';
 
 const SKELETON_ROWS = 10;
 const SKELETON_CARDS = 5;
 
-function TodayKPICards({ loading, lessonCount, gearCount, participantCount, dayLabel, t }) {
+function TodayKPICards({ loading, lessonCount, gearCount, participantCount, unassignedCount, dayLabel, t }) {
   const theme = useTheme();
 
   const cards = [
+    {
+      key: 'unassigned',
+      label: t('adminToday.kpi.unassigned', { day: dayLabel }),
+      value: unassignedCount,
+      icon: 'eva:alert-circle-fill',
+      color: theme.palette.error.main,
+    },
     {
       key: 'lessons',
       label: t('adminToday.kpi.lessons', { day: dayLabel }),
@@ -108,6 +119,56 @@ function TodayKPICards({ loading, lessonCount, gearCount, participantCount, dayL
   );
 }
 
+function TodayBookingIntentsSection({ title, emptyMessage, loading, intents, tableHead, onRefreshIntents, t }) {
+  const showSkeleton = loading;
+
+  const renderTableSkeleton = () =>
+    Array.from({ length: SKELETON_ROWS }).map((_, index) => (
+      <TableRow key={`intent-skeleton-${index}`}>
+        {tableHead.map((headCell) => (
+          <TableCell key={headCell.id} align={headCell.align}>
+            <Skeleton animation="wave" width="80%" height={24} />
+          </TableCell>
+        ))}
+      </TableRow>
+    ));
+
+  return (
+    <Card sx={{ mt: 3 }}>
+      <Box sx={{ px: 3, pt: 3, pb: 2 }}>
+        <Typography variant="h6">{title}</Typography>
+        {!loading && intents.length === 0 && (
+          <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+            {emptyMessage}
+          </Typography>
+        )}
+      </Box>
+
+      <Scrollbar>
+        <TableContainer sx={{ minWidth: 1200 }}>
+          <Table size="medium">
+            <TableHeadCustom headLabel={tableHead} appendTrailingActionsLabel={false} />
+            <TableBody>
+              {showSkeleton
+                ? renderTableSkeleton()
+                : intents.map((row) => (
+                    <AdminBookingIntentTableRow
+                      key={row.id}
+                      row={row}
+                      onRefreshIntents={onRefreshIntents}
+                    />
+                  ))}
+              {!showSkeleton && intents.length === 0 && (
+                <TableNoData isNotFound={intents.length === 0} title={emptyMessage} hideImage />
+              )}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Scrollbar>
+    </Card>
+  );
+}
+
 function TodayBookingsSection({
   title,
   emptyMessage,
@@ -118,6 +179,7 @@ function TodayBookingsSection({
   showPrices = true,
   showPriceToggle = false,
   onToggleShowPrices,
+  onOpenDetails,
   t,
 }) {
   const showSkeleton = loading;
@@ -205,6 +267,7 @@ function TodayBookingsSection({
                         isGearAdminList={isGearAdminList}
                         compact
                         showPrice={showPrices}
+                        onOpenDetails={onOpenDetails}
                         {...rowActionProps}
                         onWapp={() =>
                           handleContactWapp(
@@ -235,6 +298,7 @@ function TodayBookingsSection({
                   isGearAdminList={isGearAdminList}
                   compact
                   showPrice={showPrices}
+                  onOpenDetails={onOpenDetails}
                   {...rowActionProps}
                   onWapp={() =>
                     handleContactWapp(
@@ -255,11 +319,14 @@ export default function AdminToday() {
   const { themeStretch } = useSettings();
   const { isAdmin, isInitialized } = useAuth();
   const { t, i18n } = useTranslation();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const detailsId = searchParams.get('details');
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [lessonBookings, setLessonBookings] = useState([]);
   const [gearBookings, setGearBookings] = useState([]);
+  const [bookingIntents, setBookingIntents] = useState([]);
   const [viewDay, setViewDay] = useState('today');
   const [showLessonPrices, setShowLessonPrices] = useState(true);
 
@@ -282,6 +349,25 @@ export default function AdminToday() {
         year: 'numeric',
       }),
     [selectedDate, i18n.language]
+  );
+
+  const tableHeadIntent = useMemo(
+    () => [
+      { id: 'id', label: t('adminBookings.table.id'), align: 'left' },
+      { id: 'student', label: t('adminBookings.table.student'), align: 'left' },
+      { id: 'teacher', label: t('adminBookings.table.teacher'), align: 'left' },
+      { id: 'events', label: t('adminBookings.table.classes'), align: 'left' },
+      { id: 'hours', label: t('adminBookings.table.hours'), align: 'left' },
+      { id: 'dates', label: t('adminBookings.table.dates'), align: 'left' },
+      { id: 'resort', label: t('adminBookings.table.resort'), align: 'left' },
+      { id: 'capacity', label: t('adminBookings.table.capacity'), align: 'left' },
+      { id: 'price', label: t('adminBookings.table.price'), align: 'left' },
+      { id: 'internalComment', label: t('adminBookings.table.internalComment'), align: 'left' },
+      { id: 'includes', label: t('adminBookings.table.includes'), align: 'left' },
+      { id: 'paymentStatus', label: t('adminBookings.table.paymentStatus'), align: 'left' },
+      { id: 'actions', label: t('adminBookings.table.actions'), align: 'right' },
+    ],
+    [t]
   );
 
   const tableHead = useMemo(
@@ -308,19 +394,68 @@ export default function AdminToday() {
     [t]
   );
 
+  const selectedBooking = useMemo(() => {
+    if (!detailsId) return null;
+    return (
+      [...lessonBookings, ...gearBookings].find(
+        (booking) => String(booking.id) === String(detailsId)
+      ) || null
+    );
+  }, [detailsId, lessonBookings, gearBookings]);
+
+  const selectedBookingIsGear = useMemo(() => {
+    if (!selectedBooking) return false;
+    return gearBookings.some((booking) => String(booking.id) === String(detailsId));
+  }, [selectedBooking, gearBookings, detailsId]);
+
+  const handleOpenDetails = useCallback(
+    (bookingId) => {
+      setSearchParams(
+        (prev) => {
+          const next = new URLSearchParams(prev);
+          next.set('details', String(bookingId));
+          return next;
+        },
+        { replace: false }
+      );
+    },
+    [setSearchParams]
+  );
+
+  const handleCloseDetails = useCallback(() => {
+    setSearchParams(
+      (prev) => {
+        const next = new URLSearchParams(prev);
+        next.delete('details');
+        return next;
+      },
+      { replace: true }
+    );
+  }, [setSearchParams]);
+
+  useEffect(() => {
+    if (detailsId && !loading && !selectedBooking) {
+      handleCloseDetails();
+    }
+  }, [detailsId, loading, selectedBooking, handleCloseDetails]);
+
   const loadData = useCallback(async () => {
     setLoading(true);
     setError(null);
 
-    const [lessonsResult, gearResult] = await Promise.allSettled([
+    const [lessonsResult, gearResult, intentsResult] = await Promise.allSettled([
       fetchAdminBookingsForToday('lesson', selectedDate),
       fetchAdminBookingsForToday('gear', selectedDate),
+      fetchAdminBookingIntentsForToday(selectedDate),
     ]);
 
     setLessonBookings(lessonsResult.status === 'fulfilled' ? lessonsResult.value : []);
     setGearBookings(gearResult.status === 'fulfilled' ? gearResult.value : []);
+    setBookingIntents(intentsResult.status === 'fulfilled' ? intentsResult.value : []);
 
-    const failures = [lessonsResult, gearResult].filter((result) => result.status === 'rejected');
+    const failures = [lessonsResult, gearResult, intentsResult].filter(
+      (result) => result.status === 'rejected'
+    );
     if (failures.length) {
       const reason = failures[0].reason;
       setError(typeof reason === 'string' ? reason : reason?.message || t('adminToday.loadError'));
@@ -405,7 +540,18 @@ export default function AdminToday() {
           lessonCount={lessonBookings.length}
           gearCount={gearBookings.length}
           participantCount={participantCount}
+          unassignedCount={bookingIntents.length}
           dayLabel={dayLabel}
+          t={t}
+        />
+
+        <TodayBookingIntentsSection
+          title={t('adminToday.intentsSection', { day: dayLabel })}
+          emptyMessage={t('adminToday.intentsEmpty', { day: dayLabel })}
+          loading={loading}
+          intents={bookingIntents}
+          tableHead={tableHeadIntent}
+          onRefreshIntents={loadData}
           t={t}
         />
 
@@ -419,6 +565,7 @@ export default function AdminToday() {
           showPrices={showLessonPrices}
           showPriceToggle
           onToggleShowPrices={() => setShowLessonPrices((prev) => !prev)}
+          onOpenDetails={handleOpenDetails}
           t={t}
         />
 
@@ -429,8 +576,26 @@ export default function AdminToday() {
           bookings={gearBookings}
           isGearAdminList
           tableHead={tableHeadGear}
+          onOpenDetails={handleOpenDetails}
           t={t}
         />
+
+        {selectedBooking &&
+          (selectedBookingIsGear ? (
+            <GearBookingDetailsDrawer
+              open
+              onClose={handleCloseDetails}
+              booking={selectedBooking}
+              refreshBookings={loadData}
+            />
+          ) : (
+            <BookingDetailsDrawer
+              open
+              onClose={handleCloseDetails}
+              booking={selectedBooking}
+              refreshBookings={loadData}
+            />
+          ))}
       </Container>
     </Page>
   );

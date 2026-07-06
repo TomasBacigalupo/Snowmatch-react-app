@@ -24,6 +24,7 @@ AdminBookingTableCard.propTypes = {
     onWapp: PropTypes.func,
     onEvents: PropTypes.func,
     refreshBookings: PropTypes.func,
+    onOpenDetails: PropTypes.func,
 };
 
 export default function AdminBookingTableCard({
@@ -39,6 +40,7 @@ export default function AdminBookingTableCard({
     onEvents,
     onDeleteRow,
     refreshBookings,
+    onOpenDetails,
 }) {
     const theme = useTheme();
     const { t } = useTranslation();
@@ -82,8 +84,28 @@ export default function AdminBookingTableCard({
         setOpenMenuActions(null);
     };
 
+    const handleCardClick = (event) => {
+        if (!onOpenDetails) return;
+        if (event.target.closest('.MuiIconButton-root') || event.target.closest('.MuiMenu-root')) {
+            return;
+        }
+        onOpenDetails(id);
+    };
+
     return (
-        <Card sx={{ width: '100%', my: 0.5 }}>
+        <Card
+            sx={{
+                width: '100%',
+                my: 0.5,
+                ...(onOpenDetails && {
+                    cursor: 'pointer',
+                    '&:hover': {
+                        backgroundColor: theme.palette.action.hover,
+                    },
+                }),
+            }}
+            onClick={handleCardClick}
+        >
             
             <Box display='flex' padding={2} flexDirection='column'>
                 <Box display='flex' justifyContent='space-between' alignItems="flex-start">

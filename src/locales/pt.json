@@ -1267,8 +1267,11 @@
         "kpi": {
             "lessons": "Aulas {{day}}",
             "gear": "Equipamentos {{day}}",
-            "participants": "Participantes totais"
+            "participants": "Participantes totais",
+            "unassigned": "Sem atribuição {{day}}"
         },
+        "intentsSection": "Reservas sem atribuição {{day}}",
+        "intentsEmpty": "Não há reservas sem atribuição para {{day}}.",
         "lessonsSection": "Aulas {{day}}",
         "gearSection": "Reservas de equipamentos {{day}}",
         "lessonsEmpty": "Não há reservas para {{day}}.",

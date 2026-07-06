@@ -556,6 +556,7 @@ export function editAdminBookingIntent(intentId, {
   includesEquipments,
   paymentStatus,
   bookingPaymentMethod,
+  eventList,
 }) {
   return async () => {
     dispatch(slice.actions.startLoading());
@@ -574,6 +575,7 @@ export function editAdminBookingIntent(intentId, {
         includesEquipments,
         paymentStatus,
         bookingPaymentMethod,
+        ...(eventList != null ? { eventList } : {}),
       });
       return response.data;
     } catch (error) {

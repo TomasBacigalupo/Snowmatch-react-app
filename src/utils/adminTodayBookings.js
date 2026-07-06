@@ -35,10 +35,32 @@ export function bookingHappensOnDate(booking, targetDate) {
   });
 }
 
-export function filterTodayCerroCatedralBookings(bookings, targetDate = new Date()) {
-  return (bookings ?? []).filter(
-    (booking) => matchesCerroCatedral(booking.resort) && bookingHappensOnDate(booking, targetDate)
+export function normalizeAdminBookingListResponse(data) {
+  if (Array.isArray(data)) return data;
+  if (Array.isArray(data?.content)) return data.content;
+  if (Array.isArray(data?.data)) return data.data;
+  return [];
+}
+
+export function getBookingResort(booking) {
+  return (
+    booking?.resort ??
+    booking?.student?.resortsEnum?.[0] ??
+    booking?.student?.resorts?.[0] ??
+    null
   );
+}
+
+export function filterTodayCerroCatedralBookings(
+  bookings,
+  targetDate = new Date(),
+  { skipEventDateCheck = false } = {}
+) {
+  return normalizeAdminBookingListResponse(bookings).filter((booking) => {
+    if (!matchesCerroCatedral(getBookingResort(booking))) return false;
+    if (skipEventDateCheck) return true;
+    return bookingHappensOnDate(booking, targetDate);
+  });
 }
 
 export async function fetchAdminBookingsForToday(bookingKind, targetDate = new Date()) {
@@ -55,7 +77,15 @@ export async function fetchAdminBookingsForToday(bookingKind, targetDate = new D
   params.append('bookingKind', bookingKind);
 
   const response = await axios.get(`/api/admin/bookings/filter?${params.toString()}`);
-  return filterTodayCerroCatedralBookings(response.data ?? [], targetDate);
+  const bookings = normalizeAdminBookingListResponse(response.data);
+
+  // Gear / GEAR_ONLY bookings often have an empty eventList. Trust the API date/kind filter
+  // (same as /admin/bookings/equipos) instead of re-filtering client-side.
+  if (bookingKind === 'gear') {
+    return bookings;
+  }
+
+  return filterTodayCerroCatedralBookings(bookings, targetDate);
 }
 
 export function countTodayParticipants(lessonBookings, gearBookings) {

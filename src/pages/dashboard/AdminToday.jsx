@@ -8,16 +8,19 @@ import {
   Card,
   Container,
   Skeleton,
+  IconButton,
   Stack,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableRow,
+  Tooltip,
   Typography,
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import Page from '../../components/Page';
+import LoadingScreen from '../../components/LoadingScreen';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
 import Iconify from '../../components/Iconify';
 import Scrollbar from '../../components/Scrollbar';
@@ -112,14 +115,20 @@ function TodayBookingsSection({
   bookings,
   isGearAdminList,
   tableHead,
+  showPrices = true,
+  showPriceToggle = false,
+  onToggleShowPrices,
   t,
 }) {
   const showSkeleton = loading;
+  const visibleTableHead = showPrices
+    ? tableHead
+    : tableHead.filter((headCell) => headCell.id !== 'price');
 
   const renderTableSkeleton = () =>
     Array.from({ length: SKELETON_ROWS }).map((_, index) => (
       <TableRow key={`skeleton-${index}`}>
-        {tableHead.map((headCell) => (
+        {visibleTableHead.map((headCell) => (
           <TableCell key={headCell.id} align={headCell.align}>
             <Skeleton animation="wave" width="80%" height={24} />
           </TableCell>
@@ -156,7 +165,24 @@ function TodayBookingsSection({
   return (
     <Card sx={{ mt: 3 }}>
       <Box sx={{ px: 3, pt: 3, pb: 2 }}>
-        <Typography variant="h6">{title}</Typography>
+        <Stack direction="row" alignItems="center" spacing={0.5}>
+          <Typography variant="h6">{title}</Typography>
+          {showPriceToggle && (
+            <Tooltip
+              title={
+                showPrices ? t('adminToday.hidePrices') : t('adminToday.showPrices')
+              }
+            >
+              <IconButton size="small" onClick={onToggleShowPrices} aria-label={t('adminToday.togglePrices')}>
+                <Iconify
+                  icon={showPrices ? 'eva:eye-fill' : 'eva:eye-off-fill'}
+                  width={20}
+                  height={20}
+                />
+              </IconButton>
+            </Tooltip>
+          )}
+        </Stack>
         {!loading && bookings.length === 0 && (
           <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
             {emptyMessage}
@@ -168,7 +194,7 @@ function TodayBookingsSection({
         <Scrollbar>
           <TableContainer sx={{ minWidth: 640 }}>
             <Table size="medium">
-              <TableHeadCustom headLabel={tableHead} appendTrailingActionsLabel={false} />
+              <TableHeadCustom headLabel={visibleTableHead} appendTrailingActionsLabel={false} />
               <TableBody>
                 {showSkeleton
                   ? renderTableSkeleton()
@@ -178,6 +204,7 @@ function TodayBookingsSection({
                         row={row}
                         isGearAdminList={isGearAdminList}
                         compact
+                        showPrice={showPrices}
                         {...rowActionProps}
                         onWapp={() =>
                           handleContactWapp(
@@ -207,6 +234,7 @@ function TodayBookingsSection({
                   row={row}
                   isGearAdminList={isGearAdminList}
                   compact
+                  showPrice={showPrices}
                   {...rowActionProps}
                   onWapp={() =>
                     handleContactWapp(
@@ -225,7 +253,7 @@ function TodayBookingsSection({
 
 export default function AdminToday() {
   const { themeStretch } = useSettings();
-  const { isAdmin } = useAuth();
+  const { isAdmin, isInitialized } = useAuth();
   const { t, i18n } = useTranslation();
 
   const [loading, setLoading] = useState(true);
@@ -233,6 +261,7 @@ export default function AdminToday() {
   const [lessonBookings, setLessonBookings] = useState([]);
   const [gearBookings, setGearBookings] = useState([]);
   const [viewDay, setViewDay] = useState('today');
+  const [showLessonPrices, setShowLessonPrices] = useState(true);
 
   const selectedDate = useMemo(() => {
     const date = new Date();
@@ -282,20 +311,22 @@ export default function AdminToday() {
   const loadData = useCallback(async () => {
     setLoading(true);
     setError(null);
-    try {
-      const [lessons, gear] = await Promise.all([
-        fetchAdminBookingsForToday('lesson', selectedDate),
-        fetchAdminBookingsForToday('gear', selectedDate),
-      ]);
-      setLessonBookings(lessons);
-      setGearBookings(gear);
-    } catch (err) {
-      setError(err?.message || t('adminToday.loadError'));
-      setLessonBookings([]);
-      setGearBookings([]);
-    } finally {
-      setLoading(false);
+
+    const [lessonsResult, gearResult] = await Promise.allSettled([
+      fetchAdminBookingsForToday('lesson', selectedDate),
+      fetchAdminBookingsForToday('gear', selectedDate),
+    ]);
+
+    setLessonBookings(lessonsResult.status === 'fulfilled' ? lessonsResult.value : []);
+    setGearBookings(gearResult.status === 'fulfilled' ? gearResult.value : []);
+
+    const failures = [lessonsResult, gearResult].filter((result) => result.status === 'rejected');
+    if (failures.length) {
+      const reason = failures[0].reason;
+      setError(typeof reason === 'string' ? reason : reason?.message || t('adminToday.loadError'));
     }
+
+    setLoading(false);
   }, [selectedDate, t]);
 
   useEffect(() => {
@@ -303,6 +334,10 @@ export default function AdminToday() {
       loadData();
     }
   }, [isAdmin, loadData]);
+
+  if (!isInitialized) {
+    return <LoadingScreen isDashboard />;
+  }
 
   if (!isAdmin) {
     return <Navigate to="/access-denied" replace />;
@@ -381,6 +416,9 @@ export default function AdminToday() {
           bookings={lessonBookings}
           isGearAdminList={false}
           tableHead={tableHead}
+          showPrices={showLessonPrices}
+          showPriceToggle
+          onToggleShowPrices={() => setShowLessonPrices((prev) => !prev)}
           t={t}
         />
 

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import {
@@ -23,7 +23,6 @@ import Page from '../../components/Page';
 import LoadingScreen from '../../components/LoadingScreen';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
 import Iconify from '../../components/Iconify';
-import Scrollbar from '../../components/Scrollbar';
 import Hidden from '../../components/LegacyHidden';
 import { TableHeadCustom, TableNoData } from '../../components/table';
 import useSettings from '../../hooks/useSettings';
@@ -34,6 +33,7 @@ import AdminBookingTableCard from '../../sections/@dashboard/admin/list/AdminBoo
 import {
   countTodayParticipants,
   fetchAdminBookingsForToday,
+  fetchAdminGearBookingsForToday,
 } from '../../utils/adminTodayBookings';
 import { fNumber } from '../../utils/formatNumber';
 
@@ -191,37 +191,35 @@ function TodayBookingsSection({
       </Box>
 
       <Hidden smDown>
-        <Scrollbar>
-          <TableContainer sx={{ minWidth: 640 }}>
-            <Table size="medium">
-              <TableHeadCustom headLabel={visibleTableHead} appendTrailingActionsLabel={false} />
-              <TableBody>
-                {showSkeleton
-                  ? renderTableSkeleton()
-                  : bookings.map((row) => (
-                      <AdminBookingTableRow
-                        key={row.id}
-                        row={row}
-                        isGearAdminList={isGearAdminList}
-                        compact
-                        showPrice={showPrices}
-                        {...rowActionProps}
-                        onWapp={() =>
-                          handleContactWapp(
-                            row.student?.countryCode || row.countryCode,
-                            row.student?.cellphone || row.cellphone,
-                            row.student?.name || row.name
-                          )
-                        }
-                      />
-                    ))}
-                {!showSkeleton && bookings.length === 0 && (
-                  <TableNoData isNotFound={bookings.length === 0} title={emptyMessage} hideImage />
-                )}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </Scrollbar>
+        <TableContainer sx={{ minWidth: 640, overflowX: 'auto' }}>
+          <Table size="medium">
+            <TableHeadCustom headLabel={visibleTableHead} appendTrailingActionsLabel={false} />
+            <TableBody>
+              {showSkeleton
+                ? renderTableSkeleton()
+                : bookings.map((row) => (
+                    <AdminBookingTableRow
+                      key={row.id}
+                      row={row}
+                      isGearAdminList={isGearAdminList}
+                      compact
+                      showPrice={showPrices}
+                      {...rowActionProps}
+                      onWapp={() =>
+                        handleContactWapp(
+                          row.student?.countryCode || row.countryCode,
+                          row.student?.cellphone || row.cellphone,
+                          row.student?.name || row.name
+                        )
+                      }
+                    />
+                  ))}
+              {!showSkeleton && bookings.length === 0 && (
+                <TableNoData isNotFound={bookings.length === 0} title={emptyMessage} hideImage />
+              )}
+            </TableBody>
+          </Table>
+        </TableContainer>
       </Hidden>
 
       <Hidden smUp>
@@ -262,13 +260,12 @@ export default function AdminToday() {
   const [gearBookings, setGearBookings] = useState([]);
   const [viewDay, setViewDay] = useState('today');
   const [showLessonPrices, setShowLessonPrices] = useState(true);
+  const loadRequestIdRef = useRef(0);
 
   const selectedDate = useMemo(() => {
-    const date = new Date();
-    if (viewDay === 'tomorrow') {
-      date.setDate(date.getDate() + 1);
-    }
-    return date;
+    const now = new Date();
+    const dayOffset = viewDay === 'tomorrow' ? 1 : 0;
+    return new Date(now.getFullYear(), now.getMonth(), now.getDate() + dayOffset);
   }, [viewDay]);
 
   const dayLabel = viewDay === 'tomorrow' ? t('adminToday.dayTomorrow') : t('adminToday.dayToday');
@@ -309,25 +306,34 @@ export default function AdminToday() {
   );
 
   const loadData = useCallback(async () => {
+    const requestId = ++loadRequestIdRef.current;
     setLoading(true);
     setError(null);
 
     const [lessonsResult, gearResult] = await Promise.allSettled([
       fetchAdminBookingsForToday('lesson', selectedDate),
-      fetchAdminBookingsForToday('gear', selectedDate),
+      fetchAdminGearBookingsForToday(selectedDate),
     ]);
 
+    if (requestId !== loadRequestIdRef.current) return;
+
     setLessonBookings(lessonsResult.status === 'fulfilled' ? lessonsResult.value : []);
-    setGearBookings(gearResult.status === 'fulfilled' ? gearResult.value : []);
+    setGearBookings(
+      gearResult.status === 'fulfilled' && Array.isArray(gearResult.value) ? gearResult.value : []
+    );
 
     const failures = [lessonsResult, gearResult].filter((result) => result.status === 'rejected');
     if (failures.length) {
       const reason = failures[0].reason;
-      setError(typeof reason === 'string' ? reason : reason?.message || t('adminToday.loadError'));
+      setError(
+        typeof reason === 'string'
+          ? reason
+          : reason?.message || i18n.t('adminToday.loadError')
+      );
     }
 
     setLoading(false);
-  }, [selectedDate, t]);
+  }, [selectedDate, i18n]);
 
   useEffect(() => {
     if (isAdmin) {

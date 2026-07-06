@@ -37,8 +37,19 @@ export function bookingHappensOnDate(booking, targetDate) {
 
 export function normalizeAdminBookingListResponse(data) {
   if (Array.isArray(data)) return data;
+  if (typeof data === 'string') {
+    try {
+      const parsed = JSON.parse(data);
+      if (Array.isArray(parsed)) return parsed;
+      if (Array.isArray(parsed?.content)) return parsed.content;
+      if (Array.isArray(parsed?.data)) return parsed.data;
+    } catch {
+      // ignore parse errors
+    }
+  }
   if (Array.isArray(data?.content)) return data.content;
   if (Array.isArray(data?.data)) return data.data;
+  if (Array.isArray(data?.bookings)) return data.bookings;
   return [];
 }
 
@@ -63,7 +74,7 @@ export function filterTodayCerroCatedralBookings(
   });
 }
 
-export async function fetchAdminBookingsForToday(bookingKind, targetDate = new Date()) {
+export function buildAdminBookingsFilterParams(bookingKind, targetDate = new Date()) {
   const month = String(targetDate.getMonth() + 1).padStart(2, '0');
   const day = targetDate.getDate();
   const year = targetDate.getFullYear();
@@ -76,6 +87,11 @@ export async function fetchAdminBookingsForToday(bookingKind, targetDate = new D
   params.append('year', String(year));
   params.append('bookingKind', bookingKind);
 
+  return params;
+}
+
+export async function fetchAdminBookingsForToday(bookingKind, targetDate = new Date()) {
+  const params = buildAdminBookingsFilterParams(bookingKind, targetDate);
   const response = await axios.get(`/api/admin/bookings/filter?${params.toString()}`);
   const bookings = normalizeAdminBookingListResponse(response.data);
 
@@ -86,6 +102,13 @@ export async function fetchAdminBookingsForToday(bookingKind, targetDate = new D
   }
 
   return filterTodayCerroCatedralBookings(bookings, targetDate);
+}
+
+/** Gear-only fetch: return API rows as-is (no client-side date/event filtering). */
+export async function fetchAdminGearBookingsForToday(targetDate = new Date()) {
+  const params = buildAdminBookingsFilterParams('gear', targetDate);
+  const response = await axios.get(`/api/admin/bookings/filter?${params.toString()}`);
+  return normalizeAdminBookingListResponse(response.data);
 }
 
 export function countTodayParticipants(lessonBookings, gearBookings) {

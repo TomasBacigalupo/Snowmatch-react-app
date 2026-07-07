@@ -109,6 +109,13 @@ const slice = createSlice({
       state.bookings = state.bookings.map(booking => booking.id === action.payload.id ? action.payload : booking);
     },
 
+    updateBookingInvoiceCreated(state, action) {
+      const { bookingId, invoiceCreated } = action.payload || {};
+      state.bookings = (state.bookings || []).map((booking) =>
+        booking?.id === bookingId ? { ...booking, invoiceCreated } : booking
+      );
+    },
+
     deleteBookingSuccess(state, action) {
       state.isLoading = false;
       state.bookings = state.bookings.filter(booking => booking.id !== action.payload.id);
@@ -738,6 +745,26 @@ export function createBlog(blogData) {
   }; 
 }
 
+export function setBookingInvoiceCreated(bookingId, invoiceCreated) {
+  return async () => {
+    try {
+      const response = await axios.put(
+        `/api/admin/bookings/${bookingId}/invoice-created?invoiceCreated=${invoiceCreated}`
+      );
+      dispatch(
+        slice.actions.updateBookingInvoiceCreated({
+          bookingId,
+          invoiceCreated: response?.data?.invoiceCreated ?? invoiceCreated,
+        })
+      );
+      return response.data;
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+      throw error;
+    }
+  };
+}
+
 export function editAdminBooking(bookingId, {
   type,
   teacherId,
@@ -754,6 +781,7 @@ export function editAdminBooking(bookingId, {
   includesLaunch,
   includesEquipments,
   showPriceToTeacher,
+  invoiceCreated,
   paymentStatus,
   bookingPaymentMethod,
   rentalFulfillment,
@@ -781,6 +809,7 @@ export function editAdminBooking(bookingId, {
               includesLaunch,
               includesEquipments,
               showPriceToTeacher,
+              invoiceCreated,
               paymentStatus,
               bookingPaymentMethod,
               rentalFulfillment,

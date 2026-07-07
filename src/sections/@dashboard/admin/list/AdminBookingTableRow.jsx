@@ -1,9 +1,10 @@
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useDispatch } from 'react-redux';
 // @mui
 import { useTheme } from '@mui/material/styles';
-import { TableRow, TableCell, Typography, MenuItem, Tooltip } from '@mui/material';
+import { TableRow, TableCell, Typography, MenuItem, Tooltip, Checkbox } from '@mui/material';
 // components
 import Label from '../../../../components/Label';
 import Iconify from '../../../../components/Iconify';
@@ -12,6 +13,7 @@ import BookingDetailsDrawer from './BookingDetailsDrawer';
 import GearBookingDetailsDrawer from './GearBookingDetailsDrawer';
 import { formatAdminBookingResortLabel } from '../../../../utils/adminBookingResortOptions';
 import { formatCompactBookingDateRange } from '../../../../utils/adminTodayBookings';
+import { setBookingInvoiceCreated } from '../../../../redux/slices/admin';
 
 // ----------------------------------------------------------------------
 
@@ -44,9 +46,10 @@ export default function AdminBookingTableRow({
 }) {
     const theme = useTheme();
     const { t } = useTranslation();
+    const dispatch = useDispatch();
     const [openDrawer, setOpenDrawer] = useState(false);
 
-    const { imageLink, userComment, state, resort, adults, children, eventList, id, price, internalComment, includesLunch, includesEquipments, paymentStatus, type } = row;
+    const { imageLink, userComment, state, resort, adults, children, eventList, id, price, internalComment, includesLunch, includesEquipments, paymentStatus, invoiceCreated, type } = row;
     const teacher = row.teacher;
     const { name, lastname, id: teacherId, role, level } = teacher || {};
     const { name: studentName, lastname: studentLastname, id: studentId } = row.student || {};
@@ -120,6 +123,10 @@ export default function AdminBookingTableRow({
 
     const handleCloseMenu = () => {
         setOpenMenuActions(null);
+    };
+
+    const handleInvoiceCreatedChange = (checked) => {
+        dispatch(setBookingInvoiceCreated(id, checked));
     };
 
     const handleRowClick = (event) => {
@@ -256,6 +263,14 @@ export default function AdminBookingTableRow({
                         >
                             {paymentStatus || 'PENDING'}
                         </Label>
+                    </TableCell>
+
+                    <TableCell align="center" onClick={(e) => e.stopPropagation()}>
+                        <Checkbox
+                            checked={!!invoiceCreated}
+                            onChange={(e) => handleInvoiceCreatedChange(e.target.checked)}
+                            inputProps={{ 'aria-label': t('adminBookings.table.invoiceCreated') }}
+                        />
                     </TableCell>
 
                     <TableCell align="left" sx={{ maxWidth: 280 }}>
@@ -419,6 +434,14 @@ export default function AdminBookingTableRow({
                     >
                         {paymentStatus || 'PENDING'}
                     </Label>
+                </TableCell>
+
+                <TableCell align="center" onClick={(e) => e.stopPropagation()}>
+                    <Checkbox
+                        checked={!!invoiceCreated}
+                        onChange={(e) => handleInvoiceCreatedChange(e.target.checked)}
+                        inputProps={{ 'aria-label': t('adminBookings.table.invoiceCreated') }}
+                    />
                 </TableCell>
 
                 {!compact && (

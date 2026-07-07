@@ -22,6 +22,8 @@ import {
   TextField,
   InputAdornment,
   Tooltip,
+  Checkbox,
+  FormControlLabel,
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 // components
@@ -46,7 +48,7 @@ import { formatAdminBookingResortLabel } from 'src/utils/adminBookingResortOptio
 // redux
 import { useDispatch } from 'react-redux';
 import { createPayout } from '../../../../redux/slices/bookings';
-import { fetchPayouts } from 'src/redux/slices/admin';
+import { fetchPayouts, setBookingInvoiceCreated } from 'src/redux/slices/admin';
 
 function getIntlLocale(lang) {
   if (lang?.startsWith('pt')) return 'pt-BR';
@@ -128,8 +130,14 @@ export default function BookingDetailsDrawer({
   const [calendarView, setCalendarView] = useState('dayGridMonth');
   const [classEventDialogOpen, setClassEventDialogOpen] = useState(false);
   const [selectedClassEvent, setSelectedClassEvent] = useState(null);
+  const [invoiceCreated, setInvoiceCreated] = useState(false);
+  const [updatingInvoiceCreated, setUpdatingInvoiceCreated] = useState(false);
 
   const emptyValue = t('adminBookings.drawer.emptyValue');
+
+  useEffect(() => {
+    setInvoiceCreated(!!booking?.invoiceCreated);
+  }, [booking?.id, booking?.invoiceCreated]);
 
   const translateEnum = (group, value, fallback) => {
     if (!value) return fallback;
@@ -151,6 +159,21 @@ export default function BookingDetailsDrawer({
     setEditModalOpen(false);
     if (refreshBookings) {
       refreshBookings();
+    }
+  };
+
+  const handleInvoiceCreatedChange = async (checked) => {
+    if (!booking?.id || isIntent) return;
+    const previousValue = invoiceCreated;
+    setInvoiceCreated(checked);
+    setUpdatingInvoiceCreated(true);
+    try {
+      await dispatch(setBookingInvoiceCreated(booking.id, checked));
+      refreshBookings?.();
+    } catch {
+      setInvoiceCreated(previousValue);
+    } finally {
+      setUpdatingInvoiceCreated(false);
     }
   };
 
@@ -724,9 +747,21 @@ export default function BookingDetailsDrawer({
             <Divider />
 
             <Box>
-              <Typography variant="subtitle1" gutterBottom>
-                {t('adminBookings.drawer.invoiceSection')}
-              </Typography>
+              <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ mb: 1 }}>
+                <Typography variant="subtitle1">
+                  {t('adminBookings.drawer.invoiceSection')}
+                </Typography>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={invoiceCreated}
+                      disabled={updatingInvoiceCreated}
+                      onChange={(e) => handleInvoiceCreatedChange(e.target.checked)}
+                    />
+                  }
+                  label={t('adminBookings.drawer.invoiceCreated')}
+                />
+              </Stack>
 
               {uploadSuccess && (
                 <Alert severity="success" sx={{ mb: 2 }}>

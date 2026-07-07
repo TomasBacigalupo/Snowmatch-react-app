@@ -130,6 +130,7 @@ export default function BookingEditModal({ open, onClose, booking, onSave }) {
       includesLaunch: formData.get('includesLaunch') === 'on',
       includesEquipments: formData.get('includesEquipments') === 'on',
       showPriceToTeacher: formData.get('showPriceToTeacher') === 'on',
+      invoiceCreated: formData.get('invoiceCreated') === 'on',
       state: formData.get('state'),
       type,
       resort: formData.get('resort'),
@@ -458,6 +459,16 @@ export default function BookingEditModal({ open, onClose, booking, onSave }) {
                     />
                   }
                   label={t('adminBookings.editModal.showPriceToTeacher')}
+                />
+
+                <FormControlLabel
+                  control={
+                    <Switch
+                      name="invoiceCreated"
+                      defaultChecked={booking?.invoiceCreated ?? false}
+                    />
+                  }
+                  label={t('adminBookings.editModal.invoiceCreated')}
                 />
               </Stack>
             </Stack>

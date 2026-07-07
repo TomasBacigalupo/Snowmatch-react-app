@@ -172,6 +172,7 @@ export function AdminBookingsPage({ bookingListKind, pageTitle, heading }) {
       { id: 'internalComment', label: t('adminBookings.table.internalComment'), align: 'left' },
       { id: 'includes', label: t('adminBookings.table.includes'), align: 'left' },
       { id: 'paymentStatus', label: t('adminBookings.table.paymentStatus'), align: 'left' },
+      { id: 'invoiceCreated', label: t('adminBookings.table.invoiceCreated'), align: 'center' },
     ],
     [t]
   );
@@ -184,6 +185,7 @@ export function AdminBookingsPage({ bookingListKind, pageTitle, heading }) {
       { id: 'resort', label: t('adminBookings.table.center'), align: 'left' },
       { id: 'price', label: t('adminBookings.table.price'), align: 'left' },
       { id: 'paymentStatus', label: t('adminBookings.table.paymentStatus'), align: 'left' },
+      { id: 'invoiceCreated', label: t('adminBookings.table.invoiceCreated'), align: 'center' },
       { id: 'comments', label: t('adminBookings.table.notes'), align: 'left' },
     ],
     [t]
@@ -863,14 +865,14 @@ export function AdminBookingsPage({ bookingListKind, pageTitle, heading }) {
                   <GearBookingDetailsDrawer
                     open={openDrawer}
                     onClose={() => setOpenDrawer(false)}
-                    booking={selectedBooking}
+                    booking={displayBookings?.find((b) => b.id === selectedBooking?.id) ?? selectedBooking}
                     refreshBookings={refreshBookings}
                   />
                 ) : (
                   <BookingDetailsDrawer
                     open={openDrawer}
                     onClose={() => setOpenDrawer(false)}
-                    booking={selectedBooking}
+                    booking={displayBookings?.find((b) => b.id === selectedBooking?.id) ?? selectedBooking}
                     refreshBookings={refreshBookings}
                   />
                 )

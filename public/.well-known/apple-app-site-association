@@ -3,9 +3,13 @@
     "apps": [],
     "details": [
       {
-        "appID": "APPLE_TEAM_ID.pro.snowmatch",
+        "appID": "DTF4NR87GG.pro.snowmatch",
         "paths": [
-          "/match/teacher/*"
+          "/match/teacher/*",
+          "/es/profile/*",
+          "/en/profile/*",
+          "/pt/profile/*",
+          "/fr/profile/*"
         ]
       }
     ]

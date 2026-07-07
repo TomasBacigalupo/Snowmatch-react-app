@@ -566,15 +566,17 @@ export default function AdminToday() {
           t={t}
         />
 
-        <TodayBookingIntentsSection
-          title={t('adminToday.intentsSection', { day: dayLabel })}
-          emptyMessage={t('adminToday.intentsEmpty', { day: dayLabel })}
-          loading={loading}
-          intents={bookingIntents}
-          tableHead={tableHeadIntent}
-          onRefreshIntents={loadData}
-          t={t}
-        />
+        {(loading || bookingIntents.length > 0) && (
+          <TodayBookingIntentsSection
+            title={t('adminToday.intentsSection', { day: dayLabel })}
+            emptyMessage={t('adminToday.intentsEmpty', { day: dayLabel })}
+            loading={loading}
+            intents={bookingIntents}
+            tableHead={tableHeadIntent}
+            onRefreshIntents={loadData}
+            t={t}
+          />
+        )}
 
         <TodayBookingsSection
           title={t('adminToday.lessonsSection', { day: dayLabel })}

@@ -32,22 +32,32 @@ import interactionPlugin from '@fullcalendar/interaction';
 import esLocale from '@fullcalendar/core/locales/es';
 import BookingEditModal from './BookingEditModal';
 import PayoutEditModal from './PayoutEditModal';
+import ReassignTeacherDrawer from './ReassignTeacherDrawer';
 import BookingRentalFulfillmentSection from './BookingRentalFulfillmentSection';
 // redux
 import { useDispatch } from 'react-redux';
 import { createPayout } from '../../../../redux/slices/bookings';
 import { fetchPayouts } from 'src/redux/slices/admin';
+import useAuth from '../../../../hooks/useAuth';
 
 BookingDetailsDrawer.propTypes = {
   open: PropTypes.bool,
   onClose: PropTypes.func,
   booking: PropTypes.object,
   refreshBookings: PropTypes.func,
+  onBookingUpdated: PropTypes.func,
 };
 
-export default function BookingDetailsDrawer({ open, onClose, booking, refreshBookings }) {
+export default function BookingDetailsDrawer({
+  open,
+  onClose,
+  booking,
+  refreshBookings,
+  onBookingUpdated,
+}) {
   const theme = useTheme();
   const dispatch = useDispatch();
+  const { isResortAdmin } = useAuth();
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [uploadingInvoice, setUploadingInvoice] = useState(false);
   const [uploadSuccess, setUploadSuccess] = useState(false);
@@ -57,6 +67,7 @@ export default function BookingDetailsDrawer({ open, onClose, booking, refreshBo
   const [payoutAmount, setPayoutAmount] = useState('');
   const [payoutEditModalOpen, setPayoutEditModalOpen] = useState(false);
   const [selectedPayout, setSelectedPayout] = useState(null);
+  const [reassignDrawerOpen, setReassignDrawerOpen] = useState(false);
   const fileInputRef = useRef(null);
   const payoutFileInputRef = useRef(null);
   const [file, setFile] = useState(null);
@@ -214,6 +225,25 @@ export default function BookingDetailsDrawer({ open, onClose, booking, refreshBo
   const handlePayoutEditSave = () => {
     dispatch(fetchPayouts(booking.id));
   };
+
+  const handleReassignSuccess = (updatedBooking) => {
+    const mergedBooking = {
+      ...booking,
+      ...updatedBooking,
+      eventList: updatedBooking?.eventList?.length ? updatedBooking.eventList : booking?.eventList,
+    };
+    if (onBookingUpdated) {
+      onBookingUpdated(mergedBooking);
+    }
+    if (refreshBookings) {
+      refreshBookings();
+    }
+  };
+
+  const canReassignTeacher =
+    !isResortAdmin &&
+    booking?.teacher?.id &&
+    booking?.type !== 'GEAR_ONLY';
 
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString('es-AR', {
@@ -373,16 +403,17 @@ export default function BookingDetailsDrawer({ open, onClose, booking, refreshBo
                       Instructor
                     </Typography>
                     <Stack direction="row" spacing={1}>
-                      {/* <Button
-                        size="small"
-                        variant="outlined"
-                        startIcon={<Iconify icon="eva:upload-fill" />}
-                        onClick={handleUploadClick}
-                        disabled={uploadingInvoice}
-                        sx={{ minWidth: 'auto' }}
-                      >
-                        {uploadingInvoice ? 'Subiendo...' : 'Cargar Factura'}
-                      </Button> */}
+                      {canReassignTeacher && (
+                        <Button
+                          size="small"
+                          variant="outlined"
+                          startIcon={<Iconify icon="eva:people-fill" />}
+                          onClick={() => setReassignDrawerOpen(true)}
+                          sx={{ minWidth: 'auto' }}
+                        >
+                          Reasignar instructor
+                        </Button>
+                      )}
                       {booking?.teacher?.cellphone && (
                         <Button
                           size="small"
@@ -735,6 +766,13 @@ export default function BookingDetailsDrawer({ open, onClose, booking, refreshBo
         onClose={handleEditClose}
         booking={booking}
         onSave={handleEditSave}
+      />
+
+      <ReassignTeacherDrawer
+        open={reassignDrawerOpen}
+        onClose={() => setReassignDrawerOpen(false)}
+        booking={booking}
+        onSuccess={handleReassignSuccess}
       />
 
       <PayoutEditModal

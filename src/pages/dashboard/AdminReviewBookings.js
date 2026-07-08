@@ -776,6 +776,7 @@ export function AdminBookingsPage({ bookingListKind, pageTitle, heading }) {
                     onClose={() => setOpenDrawer(false)}
                     booking={selectedBooking}
                     refreshBookings={refreshBookings}
+                    onBookingUpdated={setSelectedBooking}
                   />
                 )
               )}

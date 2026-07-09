@@ -912,6 +912,22 @@ export function updateAdminBookingEventSchedule(teacherId, eventId, schedule, op
   };
 }
 
+export function reassignBookingTeacher(bookingId, teacherId) {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.post(`api/admin/bookings/${bookingId}/reassign`, {
+        teacherId,
+      });
+      dispatch(slice.actions.updateBookingSuccess(response.data));
+      return response.data;
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+      throw error;
+    }
+  };
+}
+
 export function fetchPayouts(bookingId) {
   return async () => {
     dispatch(slice.actions.startLoading());

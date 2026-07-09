@@ -617,6 +617,7 @@ export default function AdminToday() {
               onClose={handleCloseDetails}
               booking={selectedBooking}
               refreshBookings={loadData}
+              onBookingUpdated={setSelectedBooking}
             />
           ))}
       </Container>

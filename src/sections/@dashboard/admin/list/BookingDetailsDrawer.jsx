@@ -40,6 +40,7 @@ import { CalendarStyle, CalendarToolbar } from '../../calendar';
 import BookingEditModal from './BookingEditModal';
 import BookingIntentEditModal from './BookingIntentEditModal';
 import PayoutEditModal from './PayoutEditModal';
+import ReassignTeacherDrawer from './ReassignTeacherDrawer';
 import BookingRentalFulfillmentSection from './BookingRentalFulfillmentSection';
 // hooks
 import useResponsive from 'src/hooks/useResponsive';
@@ -49,6 +50,7 @@ import { formatAdminBookingResortLabel } from 'src/utils/adminBookingResortOptio
 import { useDispatch } from 'react-redux';
 import { createPayout } from '../../../../redux/slices/bookings';
 import { fetchPayouts, setBookingInvoiceCreated } from 'src/redux/slices/admin';
+import useAuth from '../../../../hooks/useAuth';
 
 function getIntlLocale(lang) {
   if (lang?.startsWith('pt')) return 'pt-BR';
@@ -95,6 +97,7 @@ BookingDetailsDrawer.propTypes = {
   refreshBookings: PropTypes.func,
   isIntent: PropTypes.bool,
   rawIntent: PropTypes.object,
+  onBookingUpdated: PropTypes.func,
 };
 
 export default function BookingDetailsDrawer({
@@ -104,10 +107,12 @@ export default function BookingDetailsDrawer({
   refreshBookings,
   isIntent = false,
   rawIntent,
+  onBookingUpdated,
 }) {
   const theme = useTheme();
   const dispatch = useDispatch();
   const { t, i18n } = useTranslation();
+  const { isResortAdmin } = useAuth();
   const isDesktop = useResponsive('up', 'sm');
   const intlLocale = getIntlLocale(i18n.language);
   const calendarLocale = getCalendarLocale(i18n.language);
@@ -121,6 +126,7 @@ export default function BookingDetailsDrawer({
   const [payoutAmount, setPayoutAmount] = useState('');
   const [payoutEditModalOpen, setPayoutEditModalOpen] = useState(false);
   const [selectedPayout, setSelectedPayout] = useState(null);
+  const [reassignDrawerOpen, setReassignDrawerOpen] = useState(false);
   const fileInputRef = useRef(null);
   const payoutFileInputRef = useRef(null);
   const calendarRef = useRef(null);
@@ -279,6 +285,26 @@ export default function BookingDetailsDrawer({
   const handlePayoutEditSave = () => {
     dispatch(fetchPayouts(booking.id));
   };
+
+  const handleReassignSuccess = (updatedBooking) => {
+    const mergedBooking = {
+      ...booking,
+      ...updatedBooking,
+      eventList: updatedBooking?.eventList?.length ? updatedBooking.eventList : booking?.eventList,
+    };
+    if (onBookingUpdated) {
+      onBookingUpdated(mergedBooking);
+    }
+    if (refreshBookings) {
+      refreshBookings();
+    }
+  };
+
+  const canReassignTeacher =
+    !isResortAdmin &&
+    !isIntent &&
+    booking?.teacher?.id &&
+    booking?.type !== 'GEAR_ONLY';
 
   const handleCalendarToday = () => {
     const calendarEl = calendarRef.current;
@@ -603,6 +629,17 @@ export default function BookingDetailsDrawer({
                       {t('adminBookings.table.teacher')}
                     </Typography>
                     <Stack direction="row" spacing={1}>
+                      {canReassignTeacher && (
+                        <Button
+                          size="small"
+                          variant="outlined"
+                          startIcon={<Iconify icon="eva:people-fill" />}
+                          onClick={() => setReassignDrawerOpen(true)}
+                          sx={{ minWidth: 'auto' }}
+                        >
+                          Reasignar instructor
+                        </Button>
+                      )}
                       {booking?.teacher?.cellphone &&
                         renderWhatsAppAction(
                           booking.teacher.cellphone,
@@ -1036,6 +1073,13 @@ export default function BookingDetailsDrawer({
           onSave={handleEditSave}
         />
       )}
+
+      <ReassignTeacherDrawer
+        open={reassignDrawerOpen}
+        onClose={() => setReassignDrawerOpen(false)}
+        booking={booking}
+        onSuccess={handleReassignSuccess}
+      />
 
       <PayoutEditModal
         open={payoutEditModalOpen}

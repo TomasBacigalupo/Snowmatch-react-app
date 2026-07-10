@@ -46,6 +46,10 @@ import BookingRentalFulfillmentSection from './BookingRentalFulfillmentSection';
 import useResponsive from 'src/hooks/useResponsive';
 // utils
 import { formatAdminBookingResortLabel } from 'src/utils/adminBookingResortOptions';
+import {
+  getBookingRosterClients,
+  getBookingRosterStudents,
+} from 'src/utils/adminBookingParticipants';
 // redux
 import { useDispatch } from 'react-redux';
 import { createPayout } from '../../../../redux/slices/bookings';
@@ -437,6 +441,14 @@ export default function BookingDetailsDrawer({
   const studentLabel =
     [booking?.student?.name, booking?.student?.lastname].filter(Boolean).join(' ') || emptyValue;
 
+  const rosterClients = useMemo(() => getBookingRosterClients(booking), [booking]);
+  const rosterStudents = useMemo(() => getBookingRosterStudents(booking), [booking]);
+  const hasBookingStudent = Boolean(
+    booking?.student &&
+      ([booking.student.name, booking.student.lastname].filter(Boolean).join(' ').trim() ||
+        booking.student.id)
+  );
+
   const handleClassEventOpen = (event, sessionIndex) => {
     setSelectedClassEvent({ ...event, sessionIndex });
     setClassEventDialogOpen(true);
@@ -608,17 +620,94 @@ export default function BookingDetailsDrawer({
                         `${booking.student.name} ${booking.student.lastname}`
                       )}
                   </Stack>
-                  <Typography variant="body1">
-                    {[booking?.student?.name, booking?.student?.lastname].filter(Boolean).join(' ') ||
-                      emptyValue}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    {t('adminBookings.drawer.idLabel')}: {booking?.student?.id ?? emptyValue}
-                  </Typography>
-                  {booking?.student?.cellphone && (
-                    <Typography variant="body2" color="text.secondary">
-                      {t('adminBookings.drawer.phoneLabel')}: {booking.student.cellphone}
-                    </Typography>
+                  {hasBookingStudent ? (
+                    <>
+                      <Typography variant="body1">
+                        {[booking?.student?.name, booking?.student?.lastname]
+                          .filter(Boolean)
+                          .join(' ') || emptyValue}
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        {t('adminBookings.drawer.idLabel')}: {booking?.student?.id ?? emptyValue}
+                      </Typography>
+                      {booking?.student?.cellphone && (
+                        <Typography variant="body2" color="text.secondary">
+                          {t('adminBookings.drawer.phoneLabel')}: {booking.student.cellphone}
+                        </Typography>
+                      )}
+                    </>
+                  ) : rosterStudents.length > 0 ? (
+                    <Stack spacing={1.25}>
+                      {rosterStudents.map((student) => {
+                        const name =
+                          [student?.name, student?.lastname].filter(Boolean).join(' ') ||
+                          emptyValue;
+                        return (
+                          <Box key={`roster-student-${student.id}`}>
+                            <Stack
+                              direction="row"
+                              alignItems="center"
+                              justifyContent="space-between"
+                              spacing={1}
+                            >
+                              <Typography variant="body1">{name}</Typography>
+                              {student?.cellphone && renderWhatsAppAction(student.cellphone, name)}
+                            </Stack>
+                            <Typography variant="body2" color="text.secondary">
+                              {t('adminBookings.drawer.idLabel')}: {student?.id ?? emptyValue}
+                            </Typography>
+                            {student?.cellphone && (
+                              <Typography variant="body2" color="text.secondary">
+                                {t('adminBookings.drawer.phoneLabel')}: {student.cellphone}
+                              </Typography>
+                            )}
+                          </Box>
+                        );
+                      })}
+                    </Stack>
+                  ) : (
+                    <Typography variant="body1">{emptyValue}</Typography>
+                  )}
+
+                  {rosterClients.length > 0 && (
+                    <Box sx={{ mt: 2 }}>
+                      <Typography variant="subtitle2" gutterBottom>
+                        {t('adminBookings.drawer.clients')}
+                      </Typography>
+                      <Stack spacing={1.25}>
+                        {rosterClients.map((client) => {
+                          const name =
+                            [client?.name, client?.lastname].filter(Boolean).join(' ') ||
+                            emptyValue;
+                          return (
+                            <Box key={`roster-client-${client.id}`}>
+                              <Stack
+                                direction="row"
+                                alignItems="center"
+                                justifyContent="space-between"
+                                spacing={1}
+                              >
+                                <Typography variant="body1">{name}</Typography>
+                                {client?.cellphone && renderWhatsAppAction(client.cellphone, name)}
+                              </Stack>
+                              <Typography variant="body2" color="text.secondary">
+                                {t('adminBookings.drawer.idLabel')}: {client?.id ?? emptyValue}
+                              </Typography>
+                              {client?.cellphone && (
+                                <Typography variant="body2" color="text.secondary">
+                                  {t('adminBookings.drawer.phoneLabel')}: {client.cellphone}
+                                </Typography>
+                              )}
+                              {client?.level && (
+                                <Typography variant="body2" color="text.secondary">
+                                  {t('adminBookings.drawer.levelLabel')}: {client.level}
+                                </Typography>
+                              )}
+                            </Box>
+                          );
+                        })}
+                      </Stack>
+                    </Box>
                   )}
                 </Box>
               </Grid>
@@ -1135,6 +1224,28 @@ export default function BookingDetailsDrawer({
                 </Typography>
                 <Typography variant="body1">{studentLabel}</Typography>
               </Box>
+              {(() => {
+                const eventClients = Array.isArray(selectedClassEvent?.clients)
+                  ? selectedClassEvent.clients
+                  : selectedClassEvent?.clients
+                    ? Object.values(selectedClassEvent.clients)
+                    : [];
+                if (!eventClients.length) return null;
+                return (
+                  <Box>
+                    <Typography variant="caption" color="text.secondary" display="block">
+                      {t('adminBookings.drawer.clients')}
+                    </Typography>
+                    <Stack spacing={0.5} sx={{ mt: 0.5 }}>
+                      {eventClients.map((client) => (
+                        <Typography key={`event-client-${client.id}`} variant="body1">
+                          {[client?.name, client?.lastname].filter(Boolean).join(' ') || emptyValue}
+                        </Typography>
+                      ))}
+                    </Stack>
+                  </Box>
+                );
+              })()}
               <Box>
                 <Typography variant="caption" color="text.secondary" display="block">
                   {t('adminBookings.table.resort')}

@@ -1434,6 +1434,8 @@
             "title": "Detalhes da reserva #{{id}}",
             "phoneLabel": "Tel",
             "idLabel": "ID",
+            "levelLabel": "Nível",
+            "clients": "Clientes na aula",
             "emptyValue": "—",
             "sectionTitle": "Detalhes da reserva",
             "classType": "Tipo de aula",

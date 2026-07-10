@@ -9,6 +9,7 @@ import Label from '../../../../components/Label';
 import Iconify from '../../../../components/Iconify';
 import { TableMoreMenu } from '../../../../components/table';
 import { formatCompactBookingDateRange } from '../../../../utils/adminTodayBookings';
+import { getBookingCustomerLabel } from '../../../../utils/adminBookingParticipants';
 // ----------------------------------------------------------------------
 
 AdminBookingTableCard.propTypes = {
@@ -48,7 +49,8 @@ export default function AdminBookingTableCard({
     const { imageLink, userComment, state, resort, adults, children, eventList, id, price, internalComment, type } = row;
     const teacher = row.teacher;
     const { name, lastname, id: teacherId } = teacher || {};
-    const { name: studentName, lastname: studentLastname, id: studentId } = row.student || {};
+    const { id: studentId } = row.student || {};
+    const customerLabel = getBookingCustomerLabel(row);
 
     const formatDate = (dateString) => {
         return new Date(dateString).toLocaleDateString('es-AR', {
@@ -185,9 +187,9 @@ export default function AdminBookingTableCard({
                         {t('adminBookings.card.client')}
                     </Typography>
                     <Typography variant="body2" gutterBottom>
-                        {compact ? studentName || '—' : `${studentName} ${studentLastname}`}
+                        {customerLabel}
                     </Typography>
-                    {!compact && (
+                    {!compact && studentId != null && (
                     <Typography variant="caption" color="text.secondary" gutterBottom>
                         ID: {studentId}
                     </Typography>

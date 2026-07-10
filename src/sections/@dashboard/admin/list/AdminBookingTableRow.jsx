@@ -13,6 +13,7 @@ import BookingDetailsDrawer from './BookingDetailsDrawer';
 import GearBookingDetailsDrawer from './GearBookingDetailsDrawer';
 import { formatAdminBookingResortLabel } from '../../../../utils/adminBookingResortOptions';
 import { formatCompactBookingDateRange } from '../../../../utils/adminTodayBookings';
+import { getBookingCustomerLabel } from '../../../../utils/adminBookingParticipants';
 import { setBookingInvoiceCreated } from '../../../../redux/slices/admin';
 
 // ----------------------------------------------------------------------
@@ -52,7 +53,8 @@ export default function AdminBookingTableRow({
     const { imageLink, userComment, state, resort, adults, children, eventList, id, price, internalComment, includesLunch, includesEquipments, paymentStatus, invoiceCreated, type } = row;
     const teacher = row.teacher;
     const { name, lastname, id: teacherId, role, level } = teacher || {};
-    const { name: studentName, lastname: studentLastname, id: studentId } = row.student || {};
+    const { id: studentId } = row.student || {};
+    const customerLabel = getBookingCustomerLabel(row);
 
     const formatDate = (dateString) => {
         return new Date(dateString).toLocaleDateString('es-AR', {
@@ -210,7 +212,7 @@ export default function AdminBookingTableRow({
 
                     <TableCell align="left">
                         <Typography variant="subtitle2" noWrap>
-                            {studentName || '—'}
+                            {customerLabel}
                         </Typography>
                         {!compact && (
                             <Typography variant="caption" color="text.secondary">
@@ -332,9 +334,9 @@ export default function AdminBookingTableRow({
 
                 <TableCell align="left">
                     <Typography variant="subtitle2" noWrap>
-                        {compact ? studentName || '—' : `${studentName} ${studentLastname}`}
+                        {customerLabel}
                     </Typography>
-                    {!compact && (
+                    {!compact && studentId != null && (
                         <Typography variant="caption" color="text.secondary">
                             ID: {studentId}
                         </Typography>

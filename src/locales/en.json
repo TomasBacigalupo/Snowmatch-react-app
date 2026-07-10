@@ -999,6 +999,8 @@
       "title": "Booking details #{{id}}",
       "phoneLabel": "Tel",
       "idLabel": "ID",
+      "levelLabel": "Level",
+      "clients": "Clients in lesson",
       "emptyValue": "—",
       "sectionTitle": "Booking details",
       "classType": "Class type",

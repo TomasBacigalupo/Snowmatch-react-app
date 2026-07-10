@@ -3,6 +3,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { ADMIN_BOOKING_RESORT_FILTER_OPTIONS } from 'src/utils/adminBookingResortOptions';
+import { bookingMatchesCustomerSearch } from 'src/utils/adminBookingParticipants';
 // @mui
 import {
   Box,
@@ -404,12 +405,7 @@ export function AdminBookingsPage({ bookingListKind, pageTitle, heading }) {
       }
     }
     if (filterName?.trim()) {
-      const q = filterName.toLowerCase().trim();
-      rows = rows.filter((row) => {
-        const s = row.student;
-        const full = `${s?.name || ''} ${s?.lastname || ''}`.toLowerCase();
-        return full.includes(q) || String(row.id).includes(q);
-      });
+      rows = rows.filter((row) => bookingMatchesCustomerSearch(row, filterName));
     }
     const stabilized = rows.map((el, index) => [el, index]);
     stabilized.sort((a, b) => {

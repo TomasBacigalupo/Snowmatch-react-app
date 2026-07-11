@@ -1284,7 +1284,8 @@
         "lessonsSection": "Aulas {{day}}",
         "gearSection": "Reservas de equipamentos {{day}}",
         "lessonsEmpty": "Não há reservas para {{day}}.",
-        "gearEmpty": "Não há reservas para {{day}}."
+        "gearEmpty": "Não há reservas para {{day}}.",
+        "teacherBookingsCount": "{{count}} aulas"
     },
     "adminBookings": {
         "pageTitle": "Admin Revisão: Lista",

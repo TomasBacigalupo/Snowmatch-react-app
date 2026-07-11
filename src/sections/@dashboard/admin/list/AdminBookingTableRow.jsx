@@ -24,6 +24,7 @@ AdminBookingTableRow.propTypes = {
     isGearAdminList: PropTypes.bool,
     compact: PropTypes.bool,
     showPrice: PropTypes.bool,
+    groupedChild: PropTypes.bool,
     onEditRow: PropTypes.func,
     onConfirmRow: PropTypes.func,
     onDeclineRow: PropTypes.func,
@@ -40,6 +41,7 @@ export default function AdminBookingTableRow({
     isGearAdminList = false,
     compact = false,
     showPrice = true,
+    groupedChild = false,
     onEditRow,
     onConfirmRow,
     onDeclineRow,
@@ -164,6 +166,32 @@ export default function AdminBookingTableRow({
 
     const notesCombined = [internalComment, userComment].filter(Boolean).join(' — ') || '-';
 
+    const rowSx = {
+        cursor: 'pointer',
+        ...(groupedChild
+            ? {
+                  backgroundColor:
+                      theme.palette.mode === 'light'
+                          ? theme.palette.grey[100]
+                          : theme.palette.grey[900],
+                  borderLeft: `3px solid ${theme.palette.grey[400]}`,
+                  '& > td:first-of-type': {
+                      pl: 3,
+                  },
+                  '&:hover': {
+                      backgroundColor:
+                          theme.palette.mode === 'light'
+                              ? theme.palette.grey[200]
+                              : theme.palette.grey[800],
+                  },
+              }
+            : {
+                  '&:hover': {
+                      backgroundColor: theme.palette.action.hover,
+                  },
+              }),
+    };
+
     const rowMenuActions = (
         <>
             {!isGearAdminList && eventList?.length > 0 && (
@@ -211,16 +239,7 @@ export default function AdminBookingTableRow({
     if (isGearAdminList) {
         return (
             <>
-                <TableRow
-                    hover
-                    onClick={handleRowClick}
-                    sx={{
-                        cursor: 'pointer',
-                        '&:hover': {
-                            backgroundColor: theme.palette.action.hover,
-                        },
-                    }}
-                >
+                <TableRow hover onClick={handleRowClick} sx={rowSx}>
                     {!compact && (
                     <TableCell align="left">
                         <Typography variant="subtitle2" noWrap>
@@ -343,16 +362,7 @@ export default function AdminBookingTableRow({
 
     return (
         <>
-            <TableRow
-                hover
-                onClick={handleRowClick}
-                sx={{
-                    cursor: 'pointer',
-                    '&:hover': {
-                        backgroundColor: theme.palette.action.hover,
-                    }
-                }}
-            >
+            <TableRow hover onClick={handleRowClick} sx={rowSx}>
                 {!compact && (
                 <TableCell align="left">
                     <Typography variant="subtitle2" noWrap>

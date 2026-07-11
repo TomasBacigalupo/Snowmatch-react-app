@@ -108,9 +108,9 @@ const slice = createSlice({
     // UPDATE EVENT
     updateEventSuccess(state, action) {
       const event = action.payload;
-      const updateEvents = state.events.map((_event, i) => {
-        if (_event.id === event.id) {
-          return event
+      const updateEvents = state.events.map((_event) => {
+        if (String(_event.id) === String(event.id)) {
+          return { ..._event, ...event };
         }
         return _event;
       });
@@ -213,8 +213,8 @@ const slice = createSlice({
     selectEvent(state, action) {
       const eventId = action.payload;
       state.selectedEventId = eventId;
+      state.selectedRange = null;
       state.isOpenModal = true;
-      state.selectedEventId = eventId;
     },
 
     // SELECT RANGE
@@ -487,22 +487,37 @@ export function updateEventByUserIdAndEventId(userId, eventId, updatedEvent) {
     //dispatch(slice.actions.startLoading());
     try {
       const response = await axios.put(`/api/admin/user/${userId}/event/${eventId}`, { ...updatedEvent, start, end });
-      dispatch(slice.actions.updateEventSuccess({ ...updatedEvent, id: eventId }));
+      dispatch(slice.actions.updateEventSuccess({
+        ...updatedEvent,
+        id: eventId,
+        start: updatedEvent.start,
+        end: updatedEvent.end,
+      }));
       return response;
     } catch (error) {
       //dispatch(slice.actions.hasError(error));
-      return error;
+      throw error;
     }
   };
 }
 
 export function createEventByUserId(userId, event) {
+  const start = addUtcOffset(event.start);
+  const end = addUtcOffset(event.end);
 
   return async () => {
     //dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.post(`/api/admin/user/${userId}/event`, event);
-      dispatch(slice.actions.createEventSuccess(event));
+      const response = await axios.post(`/api/admin/user/${userId}/event`, {
+        ...event,
+        start,
+        end,
+      });
+      dispatch(slice.actions.createEventSuccess({
+        ...event,
+        start: dayjs(event.start),
+        end: dayjs(event.end),
+      }));
       return response;
     } catch (error) {
       //dispatch(slice.actions.hasError(error));

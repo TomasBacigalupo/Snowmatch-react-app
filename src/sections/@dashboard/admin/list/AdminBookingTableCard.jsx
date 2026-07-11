@@ -17,6 +17,7 @@ AdminBookingTableCard.propTypes = {
     isGearAdminList: PropTypes.bool,
     compact: PropTypes.bool,
     showPrice: PropTypes.bool,
+    groupedChild: PropTypes.bool,
     selected: PropTypes.bool,
     onEditRow: PropTypes.func,
     onSelectRow: PropTypes.func,
@@ -34,6 +35,7 @@ export default function AdminBookingTableCard({
     isGearAdminList = false,
     compact = false,
     showPrice = true,
+    groupedChild = false,
     selected,
     onEditRow,
     onSelectRow,
@@ -101,10 +103,22 @@ export default function AdminBookingTableCard({
             sx={{
                 width: '100%',
                 my: 0.5,
+                ...(groupedChild && {
+                    backgroundColor:
+                        theme.palette.mode === 'light'
+                            ? theme.palette.grey[100]
+                            : theme.palette.grey[900],
+                    borderLeft: `3px solid ${theme.palette.grey[400]}`,
+                    boxShadow: 'none',
+                }),
                 ...(onOpenDetails && {
                     cursor: 'pointer',
                     '&:hover': {
-                        backgroundColor: theme.palette.action.hover,
+                        backgroundColor: groupedChild
+                            ? theme.palette.mode === 'light'
+                                ? theme.palette.grey[200]
+                                : theme.palette.grey[800]
+                            : theme.palette.action.hover,
                     },
                 }),
             }}

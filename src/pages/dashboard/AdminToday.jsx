@@ -6,6 +6,8 @@ import {
   Box,
   Button,
   Card,
+  Chip,
+  Collapse,
   Container,
   Skeleton,
   IconButton,
@@ -43,6 +45,48 @@ import { fNumber } from '../../utils/formatNumber';
 
 const SKELETON_ROWS = 10;
 const SKELETON_CARDS = 5;
+
+function getTeacherDisplayName(teacher, unassignedLabel) {
+  if (!teacher) return unassignedLabel;
+  const fullName = `${teacher.name || ''} ${teacher.lastname || ''}`.trim();
+  return fullName || unassignedLabel;
+}
+
+function getBookingEarliestStart(booking) {
+  if (!Array.isArray(booking?.eventList) || !booking.eventList.length) return Number.POSITIVE_INFINITY;
+  return Math.min(...booking.eventList.map((event) => new Date(event.start).getTime()));
+}
+
+function groupBookingsByTeacher(bookings, unassignedLabel) {
+  const groupsMap = new Map();
+
+  bookings.forEach((booking) => {
+    const teacher = booking?.teacher || null;
+    const teacherKey = teacher?.id != null ? String(teacher.id) : 'unassigned';
+    if (!groupsMap.has(teacherKey)) {
+      groupsMap.set(teacherKey, {
+        teacherKey,
+        teacher,
+        teacherName: getTeacherDisplayName(teacher, unassignedLabel),
+        bookings: [],
+      });
+    }
+    groupsMap.get(teacherKey).bookings.push(booking);
+  });
+
+  return Array.from(groupsMap.values())
+    .map((group) => ({
+      ...group,
+      bookings: [...group.bookings].sort(
+        (a, b) => getBookingEarliestStart(a) - getBookingEarliestStart(b)
+      ),
+    }))
+    .sort((a, b) => {
+      if (a.teacherKey === 'unassigned') return 1;
+      if (b.teacherKey === 'unassigned') return -1;
+      return a.teacherName.localeCompare(b.teacherName, undefined, { sensitivity: 'base' });
+    });
+}
 
 function TodayKPICards({ loading, lessonCount, gearCount, participantCount, unassignedCount, dayLabel, t }) {
   const theme = useTheme();
@@ -181,12 +225,28 @@ function TodayBookingsSection({
   onToggleShowPrices,
   onOpenDetails,
   onBookingUpdated,
+  groupByTeacher = false,
   t,
 }) {
+  const theme = useTheme();
+  const [expandedTeachers, setExpandedTeachers] = useState({});
   const showSkeleton = loading;
   const visibleTableHead = showPrices
     ? tableHead
     : tableHead.filter((headCell) => headCell.id !== 'price');
+  const columnCount = visibleTableHead.length;
+
+  const teacherGroups = useMemo(() => {
+    if (!groupByTeacher) return null;
+    return groupBookingsByTeacher(bookings, t('adminBookings.intent.unassigned'));
+  }, [bookings, groupByTeacher, t]);
+
+  const toggleTeacherExpanded = (teacherKey) => {
+    setExpandedTeachers((prev) => ({
+      ...prev,
+      [teacherKey]: !prev[teacherKey],
+    }));
+  };
 
   const renderTableSkeleton = () =>
     Array.from({ length: SKELETON_ROWS }).map((_, index) => (
@@ -225,6 +285,152 @@ function TodayBookingsSection({
     onEvents: noop,
   };
 
+  const renderBookingRow = (row, { groupedChild = false } = {}) => (
+    <AdminBookingTableRow
+      key={row.id}
+      row={row}
+      isGearAdminList={isGearAdminList}
+      compact
+      showPrice={showPrices}
+      groupedChild={groupedChild}
+      onOpenDetails={onOpenDetails}
+      onBookingUpdated={onBookingUpdated}
+      {...rowActionProps}
+      onWapp={() =>
+        handleContactWapp(
+          row.student?.countryCode || row.countryCode,
+          row.student?.cellphone || row.cellphone,
+          row.student?.name || row.name
+        )
+      }
+    />
+  );
+
+  const renderBookingCard = (row, { groupedChild = false } = {}) => (
+    <AdminBookingTableCard
+      key={row.id}
+      row={row}
+      isGearAdminList={isGearAdminList}
+      compact
+      showPrice={showPrices}
+      groupedChild={groupedChild}
+      onOpenDetails={onOpenDetails}
+      onBookingUpdated={onBookingUpdated}
+      {...rowActionProps}
+      onWapp={() =>
+        handleContactWapp(
+          row.student?.countryCode || row.countryCode,
+          row.student?.cellphone || row.cellphone,
+          row.student?.name || row.name
+        )
+      }
+    />
+  );
+
+  const renderGroupedTableRows = () =>
+    teacherGroups.flatMap((group) => {
+      if (group.bookings.length === 1) {
+        return [renderBookingRow(group.bookings[0])];
+      }
+
+      const isExpanded = Boolean(expandedTeachers[group.teacherKey]);
+      const headerRow = (
+        <TableRow
+          key={`teacher-group-${group.teacherKey}`}
+          hover
+          onClick={() => toggleTeacherExpanded(group.teacherKey)}
+          sx={{
+            cursor: 'pointer',
+            backgroundColor:
+              theme.palette.mode === 'light'
+                ? theme.palette.grey[200]
+                : theme.palette.grey[800],
+            '& > td': {
+              borderBottom: isExpanded ? 'none' : undefined,
+              py: 1.5,
+            },
+            '&:hover': {
+              backgroundColor:
+                theme.palette.mode === 'light'
+                  ? theme.palette.grey[300]
+                  : theme.palette.grey[700],
+            },
+          }}
+        >
+          <TableCell colSpan={columnCount}>
+            <Stack direction="row" alignItems="center" spacing={1}>
+              <Iconify
+                icon={isExpanded ? 'eva:arrow-ios-downward-fill' : 'eva:arrow-ios-forward-fill'}
+                width={20}
+                height={20}
+              />
+              <Typography variant="subtitle2">{group.teacherName}</Typography>
+              <Chip
+                size="small"
+                label={t('adminToday.teacherBookingsCount', { count: group.bookings.length })}
+                color="default"
+                variant="filled"
+              />
+            </Stack>
+          </TableCell>
+        </TableRow>
+      );
+
+      if (!isExpanded) return [headerRow];
+
+      return [
+        headerRow,
+        ...group.bookings.map((row) => renderBookingRow(row, { groupedChild: true })),
+      ];
+    });
+
+  const renderGroupedCards = () =>
+    teacherGroups.map((group) => {
+      if (group.bookings.length === 1) {
+        return renderBookingCard(group.bookings[0]);
+      }
+
+      const isExpanded = Boolean(expandedTeachers[group.teacherKey]);
+
+      return (
+        <Box key={`teacher-group-card-${group.teacherKey}`} sx={{ mb: 2 }}>
+          <Card
+            onClick={() => toggleTeacherExpanded(group.teacherKey)}
+            sx={{
+              p: 2,
+              cursor: 'pointer',
+              backgroundColor:
+                theme.palette.mode === 'light'
+                  ? theme.palette.grey[200]
+                  : theme.palette.grey[800],
+            }}
+          >
+            <Stack direction="row" alignItems="center" spacing={1}>
+              <Iconify
+                icon={isExpanded ? 'eva:arrow-ios-downward-fill' : 'eva:arrow-ios-forward-fill'}
+                width={20}
+                height={20}
+              />
+              <Typography variant="subtitle2" sx={{ flexGrow: 1 }}>
+                {group.teacherName}
+              </Typography>
+              <Chip
+                size="small"
+                label={t('adminToday.teacherBookingsCount', { count: group.bookings.length })}
+                color="default"
+                variant="filled"
+              />
+            </Stack>
+          </Card>
+          <Collapse in={isExpanded} timeout="auto" unmountOnExit>
+            <Box sx={{ mt: 1, pl: 1.5, borderLeft: `2px solid ${theme.palette.divider}` }}>
+              {group.bookings.map((row) => renderBookingCard(row, { groupedChild: true }))}
+            </Box>
+          </Collapse>
+        </Box>
+      );
+    });
+
   return (
     <Card sx={{ mt: 3 }}>
       <Box sx={{ px: 3, pt: 3, pb: 2 }}>
@@ -261,25 +467,9 @@ function TodayBookingsSection({
               <TableBody>
                 {showSkeleton
                   ? renderTableSkeleton()
-                  : bookings.map((row) => (
-                      <AdminBookingTableRow
-                        key={row.id}
-                        row={row}
-                        isGearAdminList={isGearAdminList}
-                        compact
-                        showPrice={showPrices}
-                        onOpenDetails={onOpenDetails}
-                        onBookingUpdated={onBookingUpdated}
-                        {...rowActionProps}
-                        onWapp={() =>
-                          handleContactWapp(
-                            row.student?.countryCode || row.countryCode,
-                            row.student?.cellphone || row.cellphone,
-                            row.student?.name || row.name
-                          )
-                        }
-                      />
-                    ))}
+                  : groupByTeacher
+                    ? renderGroupedTableRows()
+                    : bookings.map((row) => renderBookingRow(row))}
                 {!showSkeleton && bookings.length === 0 && (
                   <TableNoData isNotFound={bookings.length === 0} title={emptyMessage} hideImage />
                 )}
@@ -293,25 +483,9 @@ function TodayBookingsSection({
         <Box sx={{ px: 2, pb: 2 }}>
           {showSkeleton
             ? renderCardSkeleton()
-            : bookings.map((row) => (
-                <AdminBookingTableCard
-                  key={row.id}
-                  row={row}
-                  isGearAdminList={isGearAdminList}
-                  compact
-                  showPrice={showPrices}
-                  onOpenDetails={onOpenDetails}
-                  onBookingUpdated={onBookingUpdated}
-                  {...rowActionProps}
-                  onWapp={() =>
-                    handleContactWapp(
-                      row.student?.countryCode || row.countryCode,
-                      row.student?.cellphone || row.cellphone,
-                      row.student?.name || row.name
-                    )
-                  }
-                />
-              ))}
+            : groupByTeacher
+              ? renderGroupedCards()
+              : bookings.map((row) => renderBookingCard(row))}
         </Box>
       </Hidden>
     </Card>
@@ -606,6 +780,7 @@ export default function AdminToday() {
           onToggleShowPrices={() => setShowLessonPrices((prev) => !prev)}
           onOpenDetails={handleOpenDetails}
           onBookingUpdated={handleBookingUpdated}
+          groupByTeacher
           t={t}
         />
 

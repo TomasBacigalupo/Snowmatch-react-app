@@ -66,22 +66,38 @@ const COLOR_OPTIONS = [
   '#7A0C2E', // theme.palette.error.darker
 ];
 
+const toFormDate = (value, fallback = new Date()) => {
+  if (!value) return fallback;
+  if (value instanceof Date) return Number.isNaN(value.getTime()) ? fallback : value;
+  if (typeof value?.toDate === 'function') {
+    const asDate = value.toDate();
+    return Number.isNaN(asDate.getTime()) ? fallback : asDate;
+  }
+  const parsed = new Date(value);
+  return Number.isNaN(parsed.getTime()) ? fallback : parsed;
+};
+
 const getInitialValues = (event, range) => {
-  console.log("event", event)
-  console.log("range", range)
   const _event = {
     type: 'Own client class',
     title: '',
     description: '',
     textColor: '#1890FF',
-    start: range ? dayjs(range.start).hour(9) : new Date(),
-    end: range ? dayjs(range.end).subtract(1, 'day').hour(18) : new Date(),
+    start: range ? dayjs(range.start).hour(9).toDate() : new Date(),
+    end: range ? dayjs(range.end).subtract(1, 'day').hour(18).toDate() : new Date(),
     price: event?.price ?? 0,
     assignedStudents: normalizePeople(event?.students),
   };
 
   if (event || range) {
-    return merge({}, _event, event);
+    const merged = merge({}, _event, event);
+    return {
+      ...merged,
+      title: merged.title || '',
+      description: merged.description || '',
+      start: toFormDate(merged.start, _event.start),
+      end: toFormDate(merged.end, _event.end),
+    };
   }
 
   return _event;
@@ -125,8 +141,10 @@ export default function CalendarForm({ event, range, onCancel, clients, members,
   const EventSchema = Yup.object().shape({
     title: Yup.string().max(255).min(3).required('Title is required'),
     type: Yup.string().max(255).required('Title is required'),
-    description: Yup.string().max(5000).required('Description is required'),
-    price: Yup.number().min(0).max(1000000).required('Description is required'),
+    description: Yup.string().max(5000).nullable(),
+    price: Yup.number().min(0).max(1000000).nullable(),
+    start: Yup.date().required('Start date is required'),
+    end: Yup.date().required('End date is required'),
   });
 
   const methods = useForm({
@@ -145,9 +163,15 @@ export default function CalendarForm({ event, range, onCancel, clients, members,
   } = methods;
 
   const onSubmit = async (data) => {
-    console.log(data)
-
     try {
+      const start = toFormDate(data.start);
+      const end = toFormDate(data.end);
+
+      if (isBefore(end, start)) {
+        setError('end', { type: 'validate', message: 'End date must be later than start date' });
+        return;
+      }
+
       let newEvent
       switch (data.type) {
         case 'Break':
@@ -155,24 +179,23 @@ export default function CalendarForm({ event, range, onCancel, clients, members,
         case 'Illness':
           newEvent = {
             title: data.title,
-            description: data.description,
+            description: data.description || '',
             textColor: data.textColor,
-            start: data.start,
-            end: data.end,
+            start,
+            end,
             type: data.type,
             price: 0,
           };
           break
         default:
           newEvent = {
-            ...event,
             title: data.title,
-            description: data.description,
+            description: data.description || '',
             textColor: data.textColor,
-            start: data.start,
-            end: data.end,
+            start,
+            end,
             type: data.type,
-            price: data.price === null ? undefined : data.price,
+            price: data.price === null || data.price === undefined ? undefined : data.price,
             assignedUsers: assignedUsers,
             clients: selectedClients,
             id: event.id
@@ -186,11 +209,19 @@ export default function CalendarForm({ event, range, onCancel, clients, members,
         if (classType === 'teacher') {
           if (isAdmin) {
             func = updateEventByUserIdAndEventId(targetUserId || event.owner?.id, event.id, {
-              ...newEvent,
+              id: event.id,
+              title: newEvent.title,
+              description: newEvent.description,
+              textColor: newEvent.textColor,
+              start: newEvent.start,
+              end: newEvent.end,
+              type: newEvent.type,
+              price: newEvent.price,
+              clients: selectedClients?.map((c) => ({ id: c.id })),
               students: assignedStudents?.map((u) => ({ id: u.id })),
               state: state,
               payed: data.payed,
-              resort: data.resort
+              resort: data.resort || event.resort,
             });
             snackbar = 'Update success!'
           } else {
@@ -218,9 +249,11 @@ export default function CalendarForm({ event, range, onCancel, clients, members,
         }
       }
 
-      const response = dispatch(func);
+      if (!func) return;
 
-      if (response.messages) {
+      const response = await dispatch(func);
+
+      if (response?.messages) {
         for (const entry of response.messages.entry) {
           setError(entry.key, {
             type: "server",
@@ -235,6 +268,7 @@ export default function CalendarForm({ event, range, onCancel, clients, members,
       }
     } catch (error) {
       console.error(error);
+      enqueueSnackbar('Update failed', { variant: 'error' });
     }
   };
 
@@ -506,10 +540,13 @@ export default function CalendarForm({ event, range, onCancel, clients, members,
         <Controller
           name="start"
           control={control}
-          render={({ field }) => (
+          render={({ field: { value, onChange, ref, ...field } }) => (
             <MobileDateTimePicker
-              disabled={!canEditDates}
               {...field}
+              inputRef={ref}
+              disabled={!canEditDates}
+              value={value ? toFormDate(value) : null}
+              onChange={(nextValue) => onChange(nextValue ? toFormDate(nextValue) : null)}
               label={translate('calendar.form.startDate')}
               inputFormat="dd/MM/yyyy hh:mm a"
               renderInput={(params) => <TextField {...params} fullWidth />}
@@ -520,10 +557,13 @@ export default function CalendarForm({ event, range, onCancel, clients, members,
         <Controller
           name="end"
           control={control}
-          render={({ field }) => (
+          render={({ field: { value, onChange, ref, ...field } }) => (
             <MobileDateTimePicker
-              disabled={!canEditDates}
               {...field}
+              inputRef={ref}
+              disabled={!canEditDates}
+              value={value ? toFormDate(value) : null}
+              onChange={(nextValue) => onChange(nextValue ? toFormDate(nextValue) : null)}
               label={translate('calendar.form.endDate')}
               inputFormat="dd/MM/yyyy hh:mm a"
               renderInput={(params) => (
@@ -562,7 +602,7 @@ export default function CalendarForm({ event, range, onCancel, clients, members,
           {translate('calendar.form.cancel')}
         </Button>
 
-        <LoadingButton disabled={disabled} type="submit" variant="contained" loading={isSubmitting} sx={{ ':hover': { color: '#3399FF' } }}>
+        <LoadingButton disabled={disabled || isDateError} type="submit" variant="contained" loading={isSubmitting} sx={{ ':hover': { color: '#3399FF' } }}>
           {isCreating ? translate('calendar.form.add') : translate('calendar.form.edit')}
         </LoadingButton>
       </DialogActions>

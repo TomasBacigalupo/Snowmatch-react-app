@@ -1297,6 +1297,7 @@
             "includesLunch": "Incluye Almuerzo",
             "showPriceToTeacher": "Mostrar precio al profesor",
             "invoiceCreated": "Factura creada",
+            "needTeacherInvoice": "El profesor debe subir factura",
             "saveChanges": "Guardar Cambios",
             "updateSuccess": "Reserva actualizada exitosamente",
             "updateError": "No se pudo actualizar la reserva",

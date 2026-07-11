@@ -1104,6 +1104,7 @@
       "includesLunch": "Includes lunch",
       "showPriceToTeacher": "Show price to instructor",
       "invoiceCreated": "Invoice created",
+      "needTeacherInvoice": "Teacher must upload invoice",
       "saveChanges": "Save changes",
       "updateSuccess": "Booking updated successfully",
       "updateError": "Could not update booking",

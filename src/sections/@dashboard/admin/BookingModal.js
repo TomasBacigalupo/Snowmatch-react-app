@@ -63,6 +63,7 @@ const DEFAULT_FORM_DATA = {
     includesLaunch: false,
     includesEquipment: false,
     showPriceToTeacher: true,
+    needTeacherInvoice: false,
     paymentStatus: 'PAID',
     paymentMethod: 'CASH',
     internalComment: '',
@@ -308,6 +309,7 @@ const BookingModal = ({ isOpen, onClose, refreshBookings, filterTeacherId, filte
                         formData.includesLaunch,
                         formData.includesEquipment,
                         formData.showPriceToTeacher,
+                        formData.needTeacherInvoice,
                         formData.paymentStatus,
                         formData.paymentMethod,
                         formData.internalComment,
@@ -718,7 +720,19 @@ const BookingModal = ({ isOpen, onClose, refreshBookings, filterTeacherId, filte
                                         }))}
                                     />
                                 }
-                                label="Mostrar precio al profesor"
+                                label={t('adminBookings.editModal.showPriceToTeacher')}
+                            />
+                            <FormControlLabel
+                                control={
+                                    <Checkbox
+                                        checked={formData.needTeacherInvoice}
+                                        onChange={(e) => setFormData((prevData) => ({
+                                            ...prevData,
+                                            needTeacherInvoice: e.target.checked,
+                                        }))}
+                                    />
+                                }
+                                label={t('adminBookings.editModal.needTeacherInvoice')}
                             />
                         </Box>
                     </Grid>

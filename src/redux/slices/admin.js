@@ -522,12 +522,15 @@ export function getResortAdminBookingIntents(studentId, month, page, size = 100,
   };
 }
 
-export function convertBookingIntent(intentId, teacherId, onDone, studentUserId) {
+export function convertBookingIntent(intentId, teacherId, onDone, studentUserId, targetEventId) {
   return async () => {
     try {
       const body = { teacherId };
       if (studentUserId != null && studentUserId !== '') {
         body.studentUserId = Number(studentUserId);
+      }
+      if (targetEventId != null && targetEventId !== '') {
+        body.targetEventId = Number(targetEventId);
       }
       await axios.post(`/api/admin/booking-intents/${intentId}/convert`, body);
       if (onDone) await onDone();
@@ -714,6 +717,18 @@ export function getBooking(bookingId) {
   };
 }
 
+/** Roster a platform student onto this booking's teacher calendar event and create a participant booking. */
+export function rosterStudentOntoBooking(bookingId, userId, eventId) {
+  return async () => {
+    const body = { userId: Number(userId) };
+    if (eventId != null && eventId !== '') {
+      body.eventId = Number(eventId);
+    }
+    const response = await axios.post(`/api/admin/bookings/${bookingId}/roster/students`, body);
+    return response.data;
+  };
+}
+
 export function deleteBooking(bookingId) {
   return async () => {
     dispatch(slice.actions.startLoading());
@@ -788,6 +803,10 @@ export function editAdminBooking(bookingId, {
   rentalDestinationType,
   rentalDestinationDetail,
   eventList,
+  groupLesson,
+  groupLessonResort,
+  groupLessonConfigId,
+  clientLevel,
 }) {
   return async () => {
       dispatch(slice.actions.startLoading());
@@ -816,6 +835,10 @@ export function editAdminBooking(bookingId, {
               rentalDestinationType,
               rentalDestinationDetail,
               ...(eventList != null ? { eventList } : {}),
+              ...(groupLesson != null ? { groupLesson } : {}),
+              ...(groupLessonResort != null ? { groupLessonResort } : {}),
+              ...(groupLessonConfigId != null ? { groupLessonConfigId } : {}),
+              ...(clientLevel != null && clientLevel !== '' ? { clientLevel } : {}),
           });
           dispatch(slice.actions.updateBookingSuccess(response.data));
           return response.data;

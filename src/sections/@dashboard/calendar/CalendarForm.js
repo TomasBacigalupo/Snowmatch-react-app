@@ -36,6 +36,26 @@ import ClientDetailsModal from './ClientsDetailsModal';
 
 // ----------------------------------------------------------------------
 
+const normalizePeople = (people) => {
+  if (Array.isArray(people)) return people.filter(Boolean);
+  if (people && typeof people === 'object') return Object.values(people).filter(Boolean);
+  return [];
+};
+
+const mergePeopleOptions = (options = [], selected = []) => {
+  const byId = new Map();
+  [...options, ...selected].forEach((person) => {
+    if (!person || person.id == null) return;
+    if (!byId.has(person.id)) byId.set(person.id, person);
+  });
+  return Array.from(byId.values());
+};
+
+const personLabel = (person) => {
+  if (!person) return '';
+  return [person.name, person.lastname, person.level].filter(Boolean).join(' ');
+};
+
 const COLOR_OPTIONS = [
   '#00AB55', // theme.palette.primary.main,
   '#1890FF', // theme.palette.info.main,
@@ -57,7 +77,7 @@ const getInitialValues = (event, range) => {
     start: range ? dayjs(range.start).hour(9) : new Date(),
     end: range ? dayjs(range.end).subtract(1, 'day').hour(18) : new Date(),
     price: event?.price ?? 0,
-    assignedStudents: event?.students ?? [],
+    assignedStudents: normalizePeople(event?.students),
   };
 
   if (event || range) {
@@ -74,23 +94,30 @@ CalendarForm.propTypes = {
   range: PropTypes.object,
   onCancel: PropTypes.func,
   disabled: PropTypes.bool,
+  ownerUserId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 };
 
-export default function CalendarForm({ event, range, onCancel, clients, members, disabled = false }) {
+export default function CalendarForm({ event, range, onCancel, clients, members, disabled = false, ownerUserId }) {
   const { enqueueSnackbar } = useSnackbar();
   const { translate } = useLocales()
-  const [selectedClients, setSelectedClients] = useState([...event?.clients || []])
-  const [assignedUsers, setAssignedUsers] = useState([...event?.assignedUsers || []])
-  const [assignedStudents, setAssignedStudents] = useState([...event?.students || []])
+  const [selectedClients, setSelectedClients] = useState(normalizePeople(event?.clients))
+  const [assignedUsers, setAssignedUsers] = useState(normalizePeople(event?.assignedUsers))
+  const [assignedStudents, setAssignedStudents] = useState(normalizePeople(event?.students))
   const [state, setState] = useState(event?.state || 'PENDING')
 
   const [classType, setClassType] = useState('teacher');
   const user = useAuth()
   const { id } = useParams()
+  const targetUserId = ownerUserId || id || event?.owner?.id;
   const isCreating = !event?.id;
+  const isAdmin = user?.user?.role === 'ADMIN';
+  const canEditDates = isAdmin && !disabled;
   const { teachers } = useSelector((state) => state.admin)
   const [showClientDetails, setShowClientDetails] = useState(false)
   const [currentClient, setCurrentClient] = useState(null)
+
+  const clientOptions = mergePeopleOptions(clients, selectedClients);
+  const studentOptions = mergePeopleOptions(teachers, assignedStudents);
 
 
   const dispatch = useDispatch();
@@ -157,8 +184,8 @@ export default function CalendarForm({ event, range, onCancel, clients, members,
       var snackbar;
       if (event.id) {
         if (classType === 'teacher') {
-          if (user?.user?.role === 'ADMIN') {
-            func = updateEventByUserIdAndEventId(event.owner.id, event.id, {
+          if (isAdmin) {
+            func = updateEventByUserIdAndEventId(targetUserId || event.owner?.id, event.id, {
               ...newEvent,
               students: assignedStudents?.map((u) => ({ id: u.id })),
               state: state,
@@ -177,8 +204,8 @@ export default function CalendarForm({ event, range, onCancel, clients, members,
         }
       }
       else {
-        if (user?.user?.role === 'ADMIN') {
-          dispatch(createEventByUserId(id, newEvent));
+        if (isAdmin) {
+          func = createEventByUserId(targetUserId, newEvent);
           snackbar = 'Create success!'
         } else {
           if (classType === 'teacher') {
@@ -310,33 +337,35 @@ export default function CalendarForm({ event, range, onCancel, clients, members,
           name="clientId"
           label={translate('calendar.form.client')}
           value={selectedClients}
-          options={[...clients].sort((a, b) => a?.name?.localeCompare(b?.name))}
-          getOptionLabel={(c) => `${c?.name} ${c?.lastname} ${c.level}`}
+          options={[...clientOptions].sort((a, b) => (a?.name || '').localeCompare(b?.name || ''))}
+          getOptionLabel={personLabel}
+          isOptionEqualToValue={(option, value) => String(option?.id) === String(value?.id)}
           onChange={(event, value) => {
             setSelectedClients([...value])
           }}
           renderTags={(tagValue, getTagProps) => (
             tagValue.map((option, index) => (
               <Chip
+                {...getTagProps({ index })}
+                key={option?.id ?? index}
                 variant='outlined'
                 onClick={() => {
-                  console.log("option", option) 
                   handleClientDetails(option)}}
-                label={`${option.name} ${option.lastname} ${option?.level?.slice(0, 3)}`}
+                label={`${option.name || ''} ${option.lastname || ''} ${option?.level ? option.level.slice(0, 3) : ''}`.trim()}
                 sx={{ borderColor: getClientColor(option) }}
               />
             )))}
           renderOption={(props, client) => (
             <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 }, backgroundColor: getClientColor(client) }} {...props}>
-              <Avatar sx={{ marginRight: '10px' }}>{`${client?.name[0]}${client?.lastname[0]}`}</Avatar>
-              {`${client.name} ${client.lastname}`}
+              <Avatar sx={{ marginRight: '10px' }}>{`${client?.name?.[0] || ''}${client?.lastname?.[0] || ''}`}</Avatar>
+              {personLabel(client)}
             </Box>
           )}
 
           renderInput={(params) => (
             <RHFTextField {...params}
               disabled={disabled}
-              name="clientid" label="Client" />
+              name="clientid" label={translate('calendar.form.client')} />
           )}
         />
         {classType === 'school' && <Autocomplete
@@ -348,6 +377,7 @@ export default function CalendarForm({ event, range, onCancel, clients, members,
           value={assignedUsers}
           options={[...members]?.sort((a, b) => a?.name?.localeCompare(b?.name)) ?? []}
           getOptionLabel={(m) => `${m?.name} ${m?.lastname}`}
+          isOptionEqualToValue={(option, value) => String(option?.id) === String(value?.id)}
           onChange={(event, value) => {
             setAssignedUsers([...value])
           }}
@@ -366,19 +396,30 @@ export default function CalendarForm({ event, range, onCancel, clients, members,
 
         />}
 
-        {classType === 'school' && <Autocomplete
+        {(classType === 'school' || isAdmin) && <Autocomplete
           name="assignedStudents" label={translate('calendar.form.assignedStudents')}
           multiple
           value={assignedStudents}
-          options={teachers}
-          getOptionLabel={(m) => `${m?.name} ${m?.lastname} ${m.level}`}
+          options={[...studentOptions].sort((a, b) => (a?.name || '').localeCompare(b?.name || ''))}
+          getOptionLabel={personLabel}
+          isOptionEqualToValue={(option, value) => String(option?.id) === String(value?.id)}
           onChange={(event, value) => {
             setAssignedStudents([...value])
           }}
+          renderTags={(tagValue, getTagProps) => (
+            tagValue.map((option, index) => (
+              <Chip
+                {...getTagProps({ index })}
+                key={option?.id ?? index}
+                variant="outlined"
+                label={personLabel(option)}
+              />
+            ))
+          )}
           renderOption={(props, student) => (
             <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-              <Avatar sx={{ marginRight: '10px' }}>{`${student?.name[0]}${student?.lastname ? student?.lastname[0] : ''}`}</Avatar>
-              {`${student?.name} ${student?.lastname} ${student.level}`}
+              <Avatar sx={{ marginRight: '10px' }}>{`${student?.name?.[0] || ''}${student?.lastname ? student?.lastname[0] : ''}`}</Avatar>
+              {personLabel(student)}
             </Box>
           )}
           renderInput={(params) => (
@@ -386,11 +427,8 @@ export default function CalendarForm({ event, range, onCancel, clients, members,
               disabled={disabled}
               name="assignedStudents" label={translate('calendar.form.assignedStudents')} />
           )}
-          disabled={classType === 'teacher'}
-          onInputChange={(event, value, reason) => {
-            console.log("value", value)
-            console.log("reason", reason)
-            console.log("event", event)
+          disabled={disabled}
+          onInputChange={(event, value) => {
             dispatch(getTeachers(0, "STUDENT", value, 0))
           }}
         />}
@@ -403,16 +441,17 @@ export default function CalendarForm({ event, range, onCancel, clients, members,
             </option>
           ))}
         </RHFSelect>}
-        {event?.students?.length > 0 && user?.user?.role !== 'ADMIN' && <Autocomplete
+        {!isAdmin && event?.students?.length > 0 && <Autocomplete
           name="assignedStudentsId" label={translate('calendar.form.assignedStudents')}
           multiple
-          value={event?.students}
-          options={teachers}
-          getOptionLabel={(m) => `${m?.name} ${m?.lastname}`}
+          value={normalizePeople(event?.students)}
+          options={studentOptions}
+          getOptionLabel={personLabel}
+          isOptionEqualToValue={(option, value) => String(option?.id) === String(value?.id)}
           renderOption={(props, student) => (
             <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-              <Avatar sx={{ marginRight: '10px' }}>{`${student?.name[0]}${student?.lastname[0]}`}</Avatar>
-              {`${student?.name} ${student?.lastname}`}
+              <Avatar sx={{ marginRight: '10px' }}>{`${student?.name?.[0] || ''}${student?.lastname?.[0] || ''}`}</Avatar>
+              {personLabel(student)}
             </Box>
           )}
           renderInput={(params) => (
@@ -469,7 +508,7 @@ export default function CalendarForm({ event, range, onCancel, clients, members,
           control={control}
           render={({ field }) => (
             <MobileDateTimePicker
-              disabled={true}
+              disabled={!canEditDates}
               {...field}
               label={translate('calendar.form.startDate')}
               inputFormat="dd/MM/yyyy hh:mm a"
@@ -483,7 +522,7 @@ export default function CalendarForm({ event, range, onCancel, clients, members,
           control={control}
           render={({ field }) => (
             <MobileDateTimePicker
-              disabled={true}
+              disabled={!canEditDates}
               {...field}
               label={translate('calendar.form.endDate')}
               inputFormat="dd/MM/yyyy hh:mm a"

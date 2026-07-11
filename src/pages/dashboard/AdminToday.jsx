@@ -180,6 +180,7 @@ function TodayBookingsSection({
   showPriceToggle = false,
   onToggleShowPrices,
   onOpenDetails,
+  onBookingUpdated,
   t,
 }) {
   const showSkeleton = loading;
@@ -268,6 +269,7 @@ function TodayBookingsSection({
                         compact
                         showPrice={showPrices}
                         onOpenDetails={onOpenDetails}
+                        onBookingUpdated={onBookingUpdated}
                         {...rowActionProps}
                         onWapp={() =>
                           handleContactWapp(
@@ -299,6 +301,7 @@ function TodayBookingsSection({
                   compact
                   showPrice={showPrices}
                   onOpenDetails={onOpenDetails}
+                  onBookingUpdated={onBookingUpdated}
                   {...rowActionProps}
                   onWapp={() =>
                     handleContactWapp(
@@ -392,6 +395,7 @@ export default function AdminToday() {
       { id: 'price', label: t('adminBookings.table.price'), align: 'left' },
       { id: 'internalComment', label: t('adminBookings.table.internalComment'), align: 'left' },
       { id: 'paymentStatus', label: t('adminBookings.table.paymentStatus'), align: 'left' },
+      { id: 'invoiceCreated', label: t('adminBookings.table.invoiceCreated'), align: 'center' },
     ],
     [t]
   );
@@ -402,6 +406,7 @@ export default function AdminToday() {
       { id: 'state', label: t('adminBookings.table.state'), align: 'left' },
       { id: 'price', label: t('adminBookings.table.price'), align: 'left' },
       { id: 'paymentStatus', label: t('adminBookings.table.paymentStatus'), align: 'left' },
+      { id: 'invoiceCreated', label: t('adminBookings.table.invoiceCreated'), align: 'center' },
       { id: 'comments', label: t('adminBookings.table.notes'), align: 'left' },
     ],
     [t]
@@ -445,6 +450,17 @@ export default function AdminToday() {
       { replace: true }
     );
   }, [setSearchParams]);
+
+  const handleBookingUpdated = useCallback((updatedBooking) => {
+    if (!updatedBooking?.id) return;
+    const bookingId = String(updatedBooking.id);
+    setLessonBookings((prev) =>
+      prev.map((booking) => (String(booking.id) === bookingId ? { ...booking, ...updatedBooking } : booking))
+    );
+    setGearBookings((prev) =>
+      prev.map((booking) => (String(booking.id) === bookingId ? { ...booking, ...updatedBooking } : booking))
+    );
+  }, []);
 
   useEffect(() => {
     if (detailsId && !loading && !selectedBooking) {
@@ -589,6 +605,7 @@ export default function AdminToday() {
           showPriceToggle
           onToggleShowPrices={() => setShowLessonPrices((prev) => !prev)}
           onOpenDetails={handleOpenDetails}
+          onBookingUpdated={handleBookingUpdated}
           t={t}
         />
 
@@ -600,6 +617,7 @@ export default function AdminToday() {
           isGearAdminList
           tableHead={tableHeadGear}
           onOpenDetails={handleOpenDetails}
+          onBookingUpdated={handleBookingUpdated}
           t={t}
         />
 
@@ -610,6 +628,7 @@ export default function AdminToday() {
               onClose={handleCloseDetails}
               booking={selectedBooking}
               refreshBookings={loadData}
+              onBookingUpdated={handleBookingUpdated}
             />
           ) : (
             <BookingDetailsDrawer
@@ -617,7 +636,7 @@ export default function AdminToday() {
               onClose={handleCloseDetails}
               booking={selectedBooking}
               refreshBookings={loadData}
-              onBookingUpdated={setSelectedBooking}
+              onBookingUpdated={handleBookingUpdated}
             />
           ))}
       </Container>

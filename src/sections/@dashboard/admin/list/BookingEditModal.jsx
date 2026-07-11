@@ -35,6 +35,10 @@ import {
   eventListToDateTimes,
   LESSON_TIME_VALUES,
 } from 'src/utils/adminBookingEvents';
+import {
+  getBookingRosterClients,
+  isGroupLessonBooking,
+} from 'src/utils/adminBookingParticipants';
 
 const RESORT_OPTIONS = [
   {
@@ -60,6 +64,13 @@ const PAYMENT_STATUS_VALUES = ['PAID', 'PAID_10', 'PAID_20', 'PAID_30', 'PAID_40
 const PAYMENT_METHOD_VALUES = ['CASH', 'TRANSFER', 'DEBIT_CARD', 'CREDIT_CARD'];
 const STATE_VALUES = ['PENDING', 'ACCEPTED', 'DECLINED'];
 const TYPE_VALUES = ['ASSIGNED', 'REFERRED'];
+const CLIENT_LEVEL_VALUES = ['NEVER_EVER', 'BEGINNER', 'INTERMEDIATE', 'ADVANCED', 'EXPERT'];
+
+function resolveEditableClient(booking) {
+  if (booking?.client?.id != null) return booking.client;
+  const roster = getBookingRosterClients(booking);
+  return roster[0] || null;
+}
 
 BookingEditModal.propTypes = {
   open: PropTypes.bool,
@@ -78,6 +89,9 @@ export default function BookingEditModal({ open, onClose, booking, onSave }) {
   );
   const [dateTimes, setDateTimes] = useState(() => eventListToDateTimes(booking?.eventList));
   const [bookingType, setBookingType] = useState(booking?.type || 'ASSIGNED');
+  const [isGroupLesson, setIsGroupLesson] = useState(() => isGroupLessonBooking(booking));
+  const [clientLevel, setClientLevel] = useState(() => resolveEditableClient(booking)?.level || '');
+  const editableClient = resolveEditableClient(booking);
 
   useEffect(() => {
     if (open && booking) {
@@ -85,6 +99,8 @@ export default function BookingEditModal({ open, onClose, booking, onSave }) {
       setBookingType(booking.type || 'ASSIGNED');
       setUserCommentLength(booking.userComment?.length || 0);
       setInternalCommentLength(booking.internalComment?.length || 0);
+      setIsGroupLesson(isGroupLessonBooking(booking));
+      setClientLevel(resolveEditableClient(booking)?.level || '');
     }
   }, [open, booking]);
 
@@ -116,6 +132,10 @@ export default function BookingEditModal({ open, onClose, booking, onSave }) {
     const type = formData.get('type');
     const teacherId = parseInt(formData.get('teacherId'), 10) || booking?.teacher?.id;
     const studentId = parseInt(formData.get('studentId'), 10) || booking?.student?.id;
+    const resort = formData.get('resort') || booking?.resort || '';
+    const resolvedGroupLessonResort = isGroupLesson
+      ? booking?.groupLessonResort || resort || booking?.resort || null
+      : null;
     const scheduleUpdates = buildEventScheduleUpdates(dateTimes);
     const eventList = buildEventListForBookingPut(dateTimes, type, booking?.eventList);
     const updatedBooking = {
@@ -133,14 +153,26 @@ export default function BookingEditModal({ open, onClose, booking, onSave }) {
       invoiceCreated: formData.get('invoiceCreated') === 'on',
       state: formData.get('state'),
       type,
-      resort: formData.get('resort'),
+      resort,
       teacherId: formData.get('teacherId'),
       studentId: formData.get('studentId'),
       eventList,
+      groupLesson: isGroupLesson,
+      ...(isGroupLesson
+        ? {
+            ...(resolvedGroupLessonResort ? { groupLessonResort: resolvedGroupLessonResort } : {}),
+            ...(booking?.groupLessonConfigId != null
+              ? { groupLessonConfigId: booking.groupLessonConfigId }
+              : {}),
+          }
+        : {}),
+      ...(editableClient?.id != null && clientLevel
+        ? { clientId: editableClient.id, clientLevel }
+        : {}),
     };
 
     try {
-      await dispatch(editAdminBooking(booking.id, updatedBooking));
+      const saved = await dispatch(editAdminBooking(booking.id, updatedBooking));
 
       if (teacherId && scheduleUpdates.length > 0) {
         await Promise.all(
@@ -162,21 +194,44 @@ export default function BookingEditModal({ open, onClose, booking, onSave }) {
       }
 
       enqueueSnackbar(t('adminBookings.editModal.updateSuccess'), { variant: 'success' });
+      const nextEventList = (scheduleUpdates.length > 0
+        ? scheduleUpdates.map((schedule) => {
+            const existing = booking?.eventList?.find((event) => event.id === schedule.id) || {};
+            return {
+              ...existing,
+              start: schedule.start,
+              end: schedule.end,
+              allDay: schedule.allDay,
+              lessonTime: schedule.lessonTime,
+            };
+          })
+        : booking?.eventList || []
+      ).map((event) => {
+        if (!editableClient?.id || !clientLevel || !Array.isArray(event?.clients)) return event;
+        return {
+          ...event,
+          clients: event.clients.map((c) =>
+            c?.id === editableClient.id ? { ...c, level: clientLevel } : c
+          ),
+        };
+      });
+
       onSave({
         ...booking,
         ...updatedBooking,
-        eventList: scheduleUpdates.map((schedule) => {
-          const existing = booking?.eventList?.find((event) => event.id === schedule.id) || {};
-          return {
-            ...existing,
-            start: schedule.start,
-            end: schedule.end,
-            allDay: schedule.allDay,
-            lessonTime: schedule.lessonTime,
-          };
-        }),
+        ...(saved && typeof saved === 'object' ? saved : {}),
+        groupLessonResort: isGroupLesson
+          ? saved?.groupLessonResort || resolvedGroupLessonResort
+          : null,
+        groupLessonConfigId: isGroupLesson
+          ? saved?.groupLessonConfigId ?? booking?.groupLessonConfigId ?? null
+          : null,
+        eventList: nextEventList,
         includesEquipments: updatedBooking.includesEquipments,
         includesLaunch: updatedBooking.includesLaunch,
+        ...(editableClient?.id != null && clientLevel
+          ? { client: { ...editableClient, level: clientLevel } }
+          : {}),
       });
     } catch {
       enqueueSnackbar(t('adminBookings.editModal.updateError'), { variant: 'error' });
@@ -382,6 +437,38 @@ export default function BookingEditModal({ open, onClose, booking, onSave }) {
                   ]).flat()}
                 </Select>
               </FormControl>
+            </Stack>
+
+            <Stack spacing={2} direction={{ xs: 'column', md: 'row' }} alignItems={{ md: 'center' }}>
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={isGroupLesson}
+                    onChange={(e) => setIsGroupLesson(e.target.checked)}
+                  />
+                }
+                label={t('adminBookings.editModal.groupLesson')}
+              />
+
+              {editableClient ? (
+                <FormControl fullWidth>
+                  <InputLabel>{t('adminBookings.editModal.clientLevel')}</InputLabel>
+                  <Select
+                    label={t('adminBookings.editModal.clientLevel')}
+                    value={clientLevel || ''}
+                    onChange={(e) => setClientLevel(e.target.value)}
+                  >
+                    <MenuItem value="">
+                      <em>{t('adminBookings.editModal.clientLevelNone')}</em>
+                    </MenuItem>
+                    {CLIENT_LEVEL_VALUES.map((value) => (
+                      <MenuItem key={value} value={value}>
+                        {t(`adminBookings.editModal.clientLevelOptions.${value}`)}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              ) : null}
             </Stack>
 
             <Stack spacing={2} direction={{ xs: 'column', md: 'row' }}>

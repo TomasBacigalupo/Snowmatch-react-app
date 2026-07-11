@@ -7,6 +7,7 @@ import {
   Button,
   Card,
   Container,
+  Grid,
   Table,
   TableBody,
   TableCell,
@@ -29,6 +30,7 @@ import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
 import Iconify from '../../components/Iconify';
 import Scrollbar from '../../components/Scrollbar';
 import { ChatWindow } from '../../sections/@dashboard/chat';
+import AdminUserChatBookingsPanel from '../../sections/@dashboard/admin/AdminUserChatBookingsPanel';
 import useAuth from '../../hooks/useAuth';
 import LoadingScreen from '../../components/LoadingScreen';
 import { formatAdminBookingResortLabel } from '../../utils/adminBookingResortOptions';
@@ -187,9 +189,16 @@ export default function AdminUserChats() {
           >
             {t('adminUserChats.backToList')}
           </Button>
-          <Card sx={{ height: { xs: 'calc(100dvh - 180px)', md: 'calc(100dvh - 200px)' }, display: 'flex' }}>
-            <ChatWindow />
-          </Card>
+          <Grid container spacing={2} sx={{ alignItems: 'stretch' }}>
+            <Grid item xs={12} md={4} lg={3}>
+              <AdminUserChatBookingsPanel conversationId={conversationId} />
+            </Grid>
+            <Grid item xs={12} md={8} lg={9}>
+              <Card sx={{ height: { xs: 'calc(100dvh - 480px)', md: 'calc(100dvh - 200px)' }, display: 'flex' }}>
+                <ChatWindow />
+              </Card>
+            </Grid>
+          </Grid>
         </Container>
       </Page>
     );

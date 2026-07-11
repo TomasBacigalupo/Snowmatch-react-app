@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   Stack,
   TextField,
@@ -13,28 +14,23 @@ import {
 } from '@mui/material';
 // components
 import Iconify from '../../../../components/Iconify';
+// redux
+import { getTeachers } from '../../../../redux/slices/admin';
 // utils
-import axios from '../../../../utils/axios';
+import {
+  ADMIN_BOOKING_RESORT_FILTER_OPTIONS,
+  formatAdminBookingResortLabel,
+} from '../../../../utils/adminBookingResortOptions';
 
 // ----------------------------------------------------------------------
 
-const RESORT_OPTIONS = [
-  'Cerro Catedral',
-  'Chapelco',
-  'Cerro Bayo',
-  'Cerro Castor',
-  'Las Pendientes',
-  'Lago Hermoso',
-  'Las Leñas',
-  'Perito Moreno',
-];
+const YEAR_OPTIONS = Array.from({ length: 8 }, (_, i) => new Date().getFullYear() - i);
 
 const BOOKING_STATUS_OPTIONS = [
   { value: 'all', label: 'All Status' },
-  { value: 'pending', label: 'Pending' },
-  { value: 'confirmed', label: 'Confirmed' },
-  { value: 'cancelled', label: 'Cancelled' },
-  { value: 'completed', label: 'Completed' },
+  { value: 'PENDING', label: 'Pending' },
+  { value: 'ACCEPTED', label: 'Accepted' },
+  { value: 'DECLINED', label: 'Declined' },
 ];
 
 const PAYOUT_STATUS_OPTIONS = [
@@ -46,11 +42,21 @@ const PAYOUT_STATUS_OPTIONS = [
 
 const PAYMENT_METHOD_OPTIONS = [
   { value: 'all', label: 'All Methods' },
-  { value: 'stripe', label: 'Stripe' },
-  { value: 'cash', label: 'Cash' },
-  { value: 'transfer', label: 'Transfer' },
-  { value: 'other', label: 'Other' },
+  { value: 'CASH', label: 'Cash' },
+  { value: 'TRANSFER', label: 'Transfer' },
+  { value: 'DEBIT_CARD', label: 'Debit Card' },
+  { value: 'CREDIT_CARD', label: 'Credit Card' },
 ];
+
+const RESORT_OPTIONS = [
+  { value: 'all', label: 'All Resorts' },
+  ...ADMIN_BOOKING_RESORT_FILTER_OPTIONS,
+];
+
+const getInstructorLabel = (option) => {
+  if (!option) return '';
+  return `${option.name || ''} ${option.lastname || ''}`.trim() || String(option.id ?? '');
+};
 
 FinancialFiltersBar.propTypes = {
   filters: PropTypes.object.isRequired,
@@ -67,9 +73,9 @@ export default function FinancialFiltersBar({
   onExportCSV,
   loading = false,
 }) {
-  const [instructors, setInstructors] = useState([]);
-  const [instructorSearch, setInstructorSearch] = useState('');
-  const [loadingInstructors, setLoadingInstructors] = useState(false);
+  const dispatch = useDispatch();
+  const { teachers, isLoading } = useSelector((state) => state.admin);
+  const [selectedInstructor, setSelectedInstructor] = useState(null);
 
   const MONTH_OPTIONS = [
     { value: 1, label: 'Enero' },
@@ -86,24 +92,11 @@ export default function FinancialFiltersBar({
     { value: 12, label: 'Diciembre' },
   ];
 
-  // Load instructors for autocomplete
   useEffect(() => {
-    if (instructorSearch.length >= 2) {
-      loadInstructors();
+    if (!filters.instructor) {
+      setSelectedInstructor(null);
     }
-  }, [instructorSearch]);
-
-  const loadInstructors = async () => {
-    setLoadingInstructors(true);
-    try {
-      const response = await axios.get(`/api/admin/teachers/search?name=${instructorSearch}`);
-      setInstructors(response.data);
-    } catch (error) {
-      console.error('Error loading instructors:', error);
-    } finally {
-      setLoadingInstructors(false);
-    }
-  };
+  }, [filters.instructor]);
 
   const handleFilterChange = (field, value) => {
     onFiltersChange({
@@ -115,17 +108,29 @@ export default function FinancialFiltersBar({
   const handleMonthChange = (event) => {
     onFiltersChange({
       ...filters,
-      month: parseInt(event.target.value),
+      month: parseInt(event.target.value, 10),
+    });
+  };
+
+  const handleYearChange = (event) => {
+    onFiltersChange({
+      ...filters,
+      year: parseInt(event.target.value, 10),
     });
   };
 
   const handleInstructorChange = (event, newValue) => {
+    setSelectedInstructor(newValue);
     handleFilterChange('instructor', newValue ? newValue.id : '');
   };
 
-  const handleInstructorInputChange = (event, newInputValue) => {
-    setInstructorSearch(newInputValue);
+  const handleInstructorInputChange = (event, newInputValue, reason) => {
+    if (reason === 'input' && newInputValue.length >= 2) {
+      dispatch(getTeachers(0, 'TEACHER', newInputValue, 0));
+    }
   };
+
+  const instructorOptions = teachers || [];
 
   return (
     <Stack spacing={3}>
@@ -136,6 +141,36 @@ export default function FinancialFiltersBar({
           direction={{ xs: 'column', md: 'row' }}
           sx={{ alignItems: 'stretch' }}
         >
+          {/* Year Selector */}
+          <TextField
+            fullWidth
+            select
+            label="Año"
+            value={filters.year}
+            onChange={handleYearChange}
+            SelectProps={{
+              MenuProps: {
+                sx: { '& .MuiPaper-root': { maxHeight: 260 } },
+              },
+            }}
+            sx={{ minWidth: { md: 140 } }}
+          >
+            {YEAR_OPTIONS.map((year) => (
+              <MenuItem
+                key={year}
+                value={year}
+                sx={{
+                  mx: 1,
+                  my: 0.5,
+                  borderRadius: 0.75,
+                  typography: 'body2',
+                }}
+              >
+                {year}
+              </MenuItem>
+            ))}
+          </TextField>
+
           {/* Month Selector */}
           <TextField
             fullWidth
@@ -176,8 +211,8 @@ export default function FinancialFiltersBar({
             sx={{ minWidth: { md: 200 } }}
           >
             {RESORT_OPTIONS.map((option) => (
-              <MenuItem key={option} value={option}>
-                {option}
+              <MenuItem key={option.value} value={option.value}>
+                {option.label}
               </MenuItem>
             ))}
           </TextField>
@@ -185,21 +220,24 @@ export default function FinancialFiltersBar({
           {/* Instructor Autocomplete */}
           <Autocomplete
             fullWidth
-            options={instructors}
-            getOptionLabel={(option) => option.name || ''}
-            value={instructors.find(i => i.id === filters.instructor) || null}
+            options={instructorOptions}
+            getOptionLabel={getInstructorLabel}
+            isOptionEqualToValue={(option, value) => option?.id === value?.id}
+            value={selectedInstructor}
             onChange={handleInstructorChange}
             onInputChange={handleInstructorInputChange}
-            loading={loadingInstructors}
+            loading={isLoading}
+            filterOptions={(x) => x}
             renderInput={(params) => (
               <TextField
                 {...params}
                 label="Instructor"
+                placeholder="Buscar por nombre o apellido"
                 InputProps={{
                   ...params.InputProps,
                   endAdornment: (
                     <>
-                      {loadingInstructors ? <CircularProgress color="inherit" size={20} /> : null}
+                      {isLoading ? <CircularProgress color="inherit" size={20} /> : null}
                       {params.InputProps.endAdornment}
                     </>
                   ),
@@ -292,6 +330,15 @@ export default function FinancialFiltersBar({
         {/* Active Filters Display */}
         <Box>
           <Stack direction="row" spacing={1} sx={{ flexWrap: 'wrap', gap: 1 }}>
+            {filters.year !== new Date().getFullYear() && (
+              <Chip
+                label={`Año: ${filters.year}`}
+                onDelete={() => handleFilterChange('year', new Date().getFullYear())}
+                color="primary"
+                variant="outlined"
+              />
+            )}
+
             {filters.month !== new Date().getMonth() + 1 && (
               <Chip
                 label={`Mes: ${MONTH_OPTIONS.find(o => o.value === filters.month)?.label}`}
@@ -301,10 +348,10 @@ export default function FinancialFiltersBar({
               />
             )}
             
-            {filters.resort !== 'Cerro Catedral' && (
+            {filters.resort && filters.resort !== 'all' && (
               <Chip
-                label={`Resort: ${filters.resort}`}
-                onDelete={() => handleFilterChange('resort', 'Cerro Catedral')}
+                label={`Resort: ${formatAdminBookingResortLabel(filters.resort)}`}
+                onDelete={() => handleFilterChange('resort', 'all')}
                 color="primary"
                 variant="outlined"
               />
@@ -312,8 +359,11 @@ export default function FinancialFiltersBar({
             
             {filters.instructor && (
               <Chip
-                label={`Instructor: ${instructors.find(i => i.id === filters.instructor)?.name || filters.instructor}`}
-                onDelete={() => handleFilterChange('instructor', '')}
+                label={`Instructor: ${getInstructorLabel(selectedInstructor) || filters.instructor}`}
+                onDelete={() => {
+                  setSelectedInstructor(null);
+                  handleFilterChange('instructor', '');
+                }}
                 color="primary"
                 variant="outlined"
               />
@@ -349,4 +399,4 @@ export default function FinancialFiltersBar({
         </Box>
       </Stack>
   );
-} 
+}

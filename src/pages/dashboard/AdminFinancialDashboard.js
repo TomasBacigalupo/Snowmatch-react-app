@@ -6,7 +6,6 @@ import {
   Card,
   Container,
   Grid,
-  Stack,
   Typography,
   Alert,
   Snackbar,
@@ -24,89 +23,107 @@ import FinancialKPICards from '../../sections/@dashboard/admin/financial/Financi
 import FinancialCharts from '../../sections/@dashboard/admin/financial/FinancialCharts';
 import PayoutsTable from '../../sections/@dashboard/admin/financial/PayoutsTable';
 import BookingsTable from '../../sections/@dashboard/admin/financial/BookingsTable';
-// redux
-import { getFinancialData, exportFinancialData } from '../../redux/slices/admin';
+// utils
+import {
+  ADMIN_BOOKING_RESORT_FILTER_OPTIONS,
+  formatAdminBookingResortLabel,
+} from '../../utils/adminBookingResortOptions';
 
 // ----------------------------------------------------------------------
+
+const DEFAULT_FILTERS = {
+  year: new Date().getFullYear(),
+  month: new Date().getMonth() + 1,
+  resort: 'CERRO_CATEDRAL',
+  instructor: '',
+  bookingStatus: 'all',
+  payoutStatus: 'all',
+  paymentMethod: 'all',
+};
+
+const emptyFinancialData = {
+  bookings: [],
+  payouts: [],
+  payments: [],
+  kpis: {
+    totalBookings: 0,
+    totalRevenue: 0,
+    pendingPayouts: 0,
+    completedPayouts: 0,
+    bookingsWithPayout: 0,
+    bookingsWithoutPayout: 0,
+    bookingsWithInvoice: 0,
+  },
+  charts: {
+    revenueTimeSeries: [],
+    paymentMethodBreakdown: [],
+    bookingsTimeSeries: [],
+  },
+};
+
+const normalizePaymentMethod = (booking) => {
+  const raw = booking.bookingPaymentMethod || booking.paymentMethod || '';
+  return String(raw).toUpperCase() || 'OTHER';
+};
+
+const bookingMatchesResort = (bookingResort, filterResort) => {
+  if (!filterResort || filterResort === 'all') return true;
+  if (!bookingResort) return false;
+  if (bookingResort === filterResort) return true;
+  const label = ADMIN_BOOKING_RESORT_FILTER_OPTIONS.find((o) => o.value === filterResort)?.label;
+  return Boolean(label && bookingResort === label);
+};
 
 export default function AdminFinancialDashboard() {
   const { themeStretch } = useSettings();
   const dispatch = useDispatch();
   const { bookings, payouts } = useSelector((state) => state.admin);
   
-  // State for filters
-  const [filters, setFilters] = useState({
-    month: new Date().getMonth() + 1, // Current month (1-12)
-    resort: 'Cerro Catedral',
-    instructor: '',
-    bookingStatus: 'all',
-    payoutStatus: 'all',
-    paymentMethod: 'all',
-  });
-
-  // State for data
-  const [financialData, setFinancialData] = useState({
-    bookings: [],
-    payouts: [],
-    payments: [],
-    kpis: {
-      totalBookings: 0,
-      totalRevenue: 0,
-      pendingPayouts: 0,
-      completedPayouts: 0,
-      bookingsWithPayout: 0,
-      bookingsWithoutPayout: 0,
-      bookingsWithInvoice: 0,
-    },
-    charts: {
-      revenueTimeSeries: [],
-      paymentMethodBreakdown: [],
-      bookingsTimeSeries: [],
-    },
-  });
-
+  const [filters, setFilters] = useState(DEFAULT_FILTERS);
+  const [financialData, setFinancialData] = useState(emptyFinancialData);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [successMessage, setSuccessMessage] = useState('');
 
-  // Load data when filters change
   useEffect(() => {
     loadFinancialData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filters]);
 
-  // Update financial data when bookings or payouts change in Redux
   useEffect(() => {
     if ((bookings && bookings.length > 0) || (payouts && payouts.length > 0)) {
-      const processedData = processBookingsToFinancialData(bookings || [], payouts || [], filters);
-      setFinancialData(processedData);
+      setFinancialData(processBookingsToFinancialData(bookings || [], payouts || [], filters));
+    } else if (!loading) {
+      setFinancialData(processBookingsToFinancialData([], payouts || [], filters));
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bookings, payouts, filters]);
 
   const loadFinancialData = async () => {
     setLoading(true);
     setError(null);
     try {
-      // Use real API call to get bookings data
       const { getBookings, getAllPayouts } = await import('../../redux/slices/admin');
-      
-      // Get bookings with filters (no page parameter)
-      await dispatch(getBookings(
-        filters.instructor || '', // teacherId
-        '', // studentId (empty for all)
-        filters.month, // month
-        null, // page (null to avoid sending page parameter)
-        1000, // size
-        filters.resort || '', // resort
-        null // day (null to avoid sending day parameter)
-      ));
-      
-      // Get all payouts
+      const resortParam = filters.resort && filters.resort !== 'all' ? filters.resort : '';
+      const stateParam =
+        filters.bookingStatus && filters.bookingStatus !== 'all' ? filters.bookingStatus : null;
+
+      await dispatch(
+        getBookings(
+          filters.instructor || '',
+          '',
+          filters.month,
+          null,
+          1000,
+          resortParam,
+          null,
+          null,
+          filters.year,
+          stateParam
+        )
+      );
+
       await dispatch(getAllPayouts(0, 1000));
-      
-      // Process bookings to create financial data
-      const processedData = processBookingsToFinancialData(bookings || [], payouts || [], filters);
-      setFinancialData(processedData);
-      
     } catch (err) {
       setError('Error loading financial data');
       console.error('Error loading financial data:', err);
@@ -120,26 +137,19 @@ export default function AdminFinancialDashboard() {
   };
 
   const handleClearFilters = () => {
-    setFilters({
-      month: new Date().getMonth() + 1, // Current month
-      resort: 'CERRO_CATEDRAL',
-      instructor: '',
-      bookingStatus: 'all',
-      payoutStatus: 'all',
-      paymentMethod: 'all',
-    });
+    setFilters({ ...DEFAULT_FILTERS });
   };
 
   const handleExportCSV = async () => {
     try {
-      // Create CSV export with real data
       const csvContent = [
         'Booking ID,Student ID,Teacher ID,Resort,Status,Payment Status,Payment Method,Total Charged,Has Payout,Invoice URL,Created At',
-        ...financialData.bookings.map(booking => 
-          `${booking.bookingId},${booking.studentId},${booking.teacherId},${booking.resort},${booking.status},${booking.paymentStatus},${booking.paymentMethod},${booking.totalCharged},${booking.hasPayout},${booking.invoiceUrl || ''},${booking.createdAt}`
-        ).join('\n')
+        ...financialData.bookings.map(
+          (booking) =>
+            `${booking.bookingId},${booking.studentId},${booking.teacherId},${booking.resort},${booking.status},${booking.paymentStatus},${booking.paymentMethod},${booking.totalCharged},${booking.hasPayout},${booking.invoiceUrl || ''},${booking.createdAt}`
+        ),
       ].join('\n');
-      
+
       const blob = new Blob([csvContent], { type: 'text/csv' });
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
@@ -149,7 +159,7 @@ export default function AdminFinancialDashboard() {
       link.click();
       link.remove();
       window.URL.revokeObjectURL(url);
-      
+
       setSuccessMessage('Data exported successfully');
     } catch (err) {
       setError('Error exporting data');
@@ -166,95 +176,65 @@ export default function AdminFinancialDashboard() {
       const { markPayoutAsPaid } = await import('../../redux/slices/admin');
       await dispatch(markPayoutAsPaid(payoutId));
       setSuccessMessage('Payout marked as paid successfully');
-    } catch (error) {
+    } catch (markError) {
       setError('Error marking payout as paid');
-      console.error('Error marking payout as paid:', error);
+      console.error('Error marking payout as paid:', markError);
     }
   };
 
-  // Helper function to safely get date string from booking using eventList
   const getBookingDateString = (booking) => {
     try {
       if (!booking.eventList || !Array.isArray(booking.eventList) || booking.eventList.length === 0) {
-        console.log('No eventList for booking:', booking.id);
         return null;
       }
-      
-      // Find the earliest event.end date
+
       const earliestEvent = booking.eventList.reduce((earliest, event) => {
         if (!event.end) return earliest;
         const eventDate = new Date(event.end);
-        if (isNaN(eventDate.getTime())) return earliest;
-        
+        if (Number.isNaN(eventDate.getTime())) return earliest;
         if (!earliest) return event;
-        
         const earliestDate = new Date(earliest.end);
         return eventDate < earliestDate ? event : earliest;
       }, null);
-      
-      if (!earliestEvent || !earliestEvent.end) {
-        console.log('No valid event.end for booking:', booking.id);
-        return null;
-      }
-      
+
+      if (!earliestEvent?.end) return null;
+
       const date = new Date(earliestEvent.end);
-      if (isNaN(date.getTime())) {
-        console.log('Invalid event.end date for booking:', booking.id, earliestEvent.end);
-        return null;
-      }
-      
-      const dateStr = date.toISOString().split('T')[0];
-      console.log('Booking date string from eventList:', booking.id, dateStr);
-      return dateStr;
-    } catch (error) {
-      console.warn('Invalid booking eventList date:', booking.id, error);
+      if (Number.isNaN(date.getTime())) return null;
+
+      return date.toISOString().split('T')[0];
+    } catch (dateError) {
+      console.warn('Invalid booking eventList date:', booking.id, dateError);
       return null;
     }
   };
 
-  // Function to process real bookings data to financial dashboard format
-  const processBookingsToFinancialData = (bookings, payouts, filters) => {
-    if (!bookings || !Array.isArray(bookings)) {
-      return {
-        bookings: [],
-        payouts: [],
-        payments: [],
-        kpis: {
-          totalBookings: 0,
-          totalRevenue: 0,
-          pendingPayouts: 0,
-          completedPayouts: 0,
-          bookingsWithPayout: 0,
-          bookingsWithoutPayout: 0,
-          bookingsWithInvoice: 0,
-        },
-        charts: {
-          revenueTimeSeries: [],
-          paymentMethodBreakdown: [],
-          bookingsTimeSeries: [],
-        },
-      };
+  const processBookingsToFinancialData = (bookingsList, payoutsList, activeFilters) => {
+    if (!bookingsList || !Array.isArray(bookingsList)) {
+      return emptyFinancialData;
     }
 
-    // Filter bookings based on filters
-    let filteredBookings = bookings.filter(booking => {
-      // Month filter - bookings are already filtered by month from API
-      // Additional client-side filtering can be added here if needed
-
-      // Resort filter
-      if (filters.resort && filters.resort !== 'all' && booking.resort !== filters.resort) {
+    const filteredBookings = bookingsList.filter((booking) => {
+      if (!bookingMatchesResort(booking.resort, activeFilters.resort)) {
         return false;
       }
 
-      // Instructor filter
-      if (filters.instructor && booking.teacher?.id !== filters.instructor) {
+      if (
+        activeFilters.instructor &&
+        String(booking.teacher?.id ?? '') !== String(activeFilters.instructor)
+      ) {
         return false;
       }
 
-      // Booking status filter
-      if (filters.bookingStatus && filters.bookingStatus !== 'all') {
-        const bookingStatus = booking.state?.toLowerCase() || 'pending';
-        if (bookingStatus !== filters.bookingStatus) {
+      if (activeFilters.bookingStatus && activeFilters.bookingStatus !== 'all') {
+        const bookingStatus = String(booking.state || '').toUpperCase();
+        if (bookingStatus !== activeFilters.bookingStatus) {
+          return false;
+        }
+      }
+
+      if (activeFilters.paymentMethod && activeFilters.paymentMethod !== 'all') {
+        if (normalizePaymentMethod(booking) !== activeFilters.paymentMethod) {
           return false;
         }
       }
@@ -262,43 +242,39 @@ export default function AdminFinancialDashboard() {
       return true;
     });
 
-    // Process bookings for table
-    const processedBookings = filteredBookings.map(booking => ({
+    const processedBookings = filteredBookings.map((booking) => ({
       id: booking.id,
       bookingId: `BK${booking.id.toString().padStart(3, '0')}`,
       createdAt: booking.createdAt,
       studentId: booking.student?.id || 'N/A',
       teacherId: booking.teacher?.id || 'N/A',
-      resort: booking.resort || 'N/A',
-      status: booking.state?.toLowerCase() || 'pending',
-      paymentStatus: booking.paymentStatus?.toLowerCase() || 'pending',
-      paymentMethod: booking.paymentMethod?.toLowerCase() || 'other',
+      resort: formatAdminBookingResortLabel(booking.resort) || booking.resort || 'N/A',
+      status: booking.state || 'PENDING',
+      paymentStatus: booking.paymentStatus || 'PENDING',
+      paymentMethod: normalizePaymentMethod(booking),
       hasPayout: booking.payouts && booking.payouts.length > 0,
       invoiceUrl: booking.teacherInvoiceUrl || null,
       totalCharged: booking.price || 0,
     }));
 
-        // Process payouts from real API data
     const allPayouts = [];
-    (payouts || []).forEach(payout => {
+    (payoutsList || []).forEach((payout) => {
       if (payout.bookings && payout.bookings.length > 0) {
-        // Create one payout entry for each booking in the set
-        Array.from(payout.bookings).forEach(booking => {
+        Array.from(payout.bookings).forEach((booking) => {
           allPayouts.push({
             id: payout.id,
             payoutId: `PT${payout.id.toString().padStart(3, '0')}`,
             bookingId: `BK${booking.id.toString().padStart(3, '0')}`,
             teacherName: payout.user?.name || payout.user?.firstName || 'N/A',
-            amount: (payout.amount || 0) / payout.bookings.length, // Split amount among bookings
-            currency: 'ARS', // Default currency
-            status: 'pending', // Default status since it's not in the DTO
+            amount: (payout.amount || 0) / payout.bookings.length,
+            currency: 'ARS',
+            status: 'pending',
             scheduledAt: payout.createdAt,
-            paidAt: null, // Not in the DTO, assuming pending
+            paidAt: null,
             invoiceUrl: payout.invoiceUrl || null,
           });
         });
       } else {
-        // If no bookings, create a single payout entry
         allPayouts.push({
           id: payout.id,
           payoutId: `PT${payout.id.toString().padStart(3, '0')}`,
@@ -314,59 +290,32 @@ export default function AdminFinancialDashboard() {
       }
     });
 
-    // Filter payouts based on payout status filter
-    // Note: PayOutDto doesn't have status field, so all payouts are considered pending
-    const filteredPayouts = allPayouts.filter(payout => {
-      if (filters.payoutStatus && filters.payoutStatus !== 'all') {
-        // Since PayOutDto doesn't have status, we'll show all payouts as pending
-        return filters.payoutStatus === 'pending';
+    const filteredPayouts = allPayouts.filter((payout) => {
+      if (activeFilters.payoutStatus && activeFilters.payoutStatus !== 'all') {
+        return activeFilters.payoutStatus === 'pending';
       }
       return true;
     });
 
-    // Process payments
-    const payments = filteredBookings.map(booking => ({
+    const payments = filteredBookings.map((booking) => ({
       id: booking.id,
       bookingId: `BK${booking.id.toString().padStart(3, '0')}`,
       amount: booking.price || 0,
       currency: 'ARS',
-      method: booking.paymentMethod?.toLowerCase() || 'other',
-      status: booking.paymentStatus?.toLowerCase() || 'pending',
+      method: normalizePaymentMethod(booking),
+      status: booking.paymentStatus || 'PENDING',
       createdAt: booking.createdAt,
     }));
 
-    // Calculate KPIs
     const kpis = {
       totalBookings: filteredBookings.length,
-      totalRevenue: filteredBookings.reduce((sum, booking) => {
-        return sum + (booking.price || 0);
-      }, 0),
-      pendingPayouts: filteredPayouts
-        .reduce((sum, payout) => sum + payout.amount, 0), // All payouts are pending
-      completedPayouts: 0, // No completed payouts since PayOutDto doesn't have status
+      totalRevenue: filteredBookings.reduce((sum, booking) => sum + (booking.price || 0), 0),
+      pendingPayouts: filteredPayouts.reduce((sum, payout) => sum + payout.amount, 0),
+      completedPayouts: 0,
       bookingsWithPayout: filteredPayouts.length,
-      bookingsWithoutPayout: filteredBookings.length - filteredPayouts.length,
-      bookingsWithInvoice: filteredBookings.filter(booking => 
-        booking.teacherInvoiceUrl
-      ).length,
+      bookingsWithoutPayout: Math.max(filteredBookings.length - filteredPayouts.length, 0),
+      bookingsWithInvoice: filteredBookings.filter((booking) => booking.teacherInvoiceUrl).length,
     };
-
-    // Generate chart data
-    console.log('Generating charts with:', {
-      filteredBookings: filteredBookings.length,
-      payments: payments.length,
-      month: filters.month
-    });
-    
-    const revenueTimeSeries = generateRevenueTimeSeries(filteredBookings, filters.month);
-    const paymentMethodBreakdown = generatePaymentMethodBreakdown(payments);
-    const bookingsTimeSeries = generateBookingsTimeSeries(filteredBookings, filters.month);
-    
-    console.log('Generated chart data:', {
-      revenueTimeSeries: revenueTimeSeries.length,
-      paymentMethodBreakdown: paymentMethodBreakdown.length,
-      bookingsTimeSeries: bookingsTimeSeries.length
-    });
 
     return {
       bookings: processedBookings,
@@ -374,33 +323,32 @@ export default function AdminFinancialDashboard() {
       payments,
       kpis,
       charts: {
-        revenueTimeSeries,
-        paymentMethodBreakdown,
-        bookingsTimeSeries,
+        revenueTimeSeries: generateRevenueTimeSeries(
+          filteredBookings,
+          activeFilters.month,
+          activeFilters.year
+        ),
+        paymentMethodBreakdown: generatePaymentMethodBreakdown(payments),
+        bookingsTimeSeries: generateBookingsTimeSeries(
+          filteredBookings,
+          activeFilters.month,
+          activeFilters.year
+        ),
       },
     };
   };
 
-  // Helper functions for chart data generation
-  const generateRevenueTimeSeries = (bookings, month) => {
-    console.log('generateRevenueTimeSeries called with:', { bookings: bookings.length, month });
-    if (!month) return [];
+  const generateRevenueTimeSeries = (bookingsList, month, year) => {
+    if (!month || !year) return [];
 
-    const currentYear = new Date().getFullYear();
-    // month is 1-12, but Date constructor expects 0-11, so subtract 1
-    const daysInMonth = new Date(currentYear, month - 1, 0).getDate();
+    // month is 1-12; Date(year, month, 0) = last day of that month
+    const daysInMonth = new Date(year, month, 0).getDate();
     const days = [];
 
-    for (let day = 1; day <= daysInMonth; day++) {
-      const dateStr = `${currentYear}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
-      const dayBookings = bookings.filter(booking => {
-        const bookingDate = getBookingDateString(booking);
-        return bookingDate === dateStr;
-      });
-
-      const revenue = dayBookings.reduce((sum, booking) => {
-        return sum + (booking.price || 0);
-      }, 0);
+    for (let day = 1; day <= daysInMonth; day += 1) {
+      const dateStr = `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
+      const dayBookings = bookingsList.filter((booking) => getBookingDateString(booking) === dateStr);
+      const revenue = dayBookings.reduce((sum, booking) => sum + (booking.price || 0), 0);
 
       days.push({
         date: dateStr,
@@ -409,20 +357,20 @@ export default function AdminFinancialDashboard() {
       });
     }
 
-    console.log('Revenue time series generated:', days.length, 'days');
     return days;
   };
 
   const generatePaymentMethodBreakdown = (payments) => {
     const methodMap = {
-      stripe: 'Stripe',
-      cash: 'Cash',
-      transfer: 'Transfer',
-      other: 'Other',
+      CASH: 'Cash',
+      TRANSFER: 'Transfer',
+      DEBIT_CARD: 'Debit Card',
+      CREDIT_CARD: 'Credit Card',
+      OTHER: 'Other',
     };
 
     const breakdown = {};
-    payments.forEach(payment => {
+    payments.forEach((payment) => {
       const method = methodMap[payment.method] || 'Other';
       breakdown[method] = (breakdown[method] || 0) + payment.amount;
     });
@@ -433,21 +381,15 @@ export default function AdminFinancialDashboard() {
     }));
   };
 
-  const generateBookingsTimeSeries = (bookings, month) => {
-    console.log('generateBookingsTimeSeries called with:', { bookings: bookings.length, month });
-    if (!month) return [];
+  const generateBookingsTimeSeries = (bookingsList, month, year) => {
+    if (!month || !year) return [];
 
-    const currentYear = new Date().getFullYear();
-    // month is 1-12, but Date constructor expects 0-11, so subtract 1
-    const daysInMonth = new Date(currentYear, month - 1, 0).getDate();
+    const daysInMonth = new Date(year, month, 0).getDate();
     const days = [];
 
-    for (let day = 1; day <= daysInMonth; day++) {
-      const dateStr = `${currentYear}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
-      const dayBookings = bookings.filter(booking => {
-        const bookingDate = getBookingDateString(booking);
-        return bookingDate === dateStr;
-      });
+    for (let day = 1; day <= daysInMonth; day += 1) {
+      const dateStr = `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
+      const dayBookings = bookingsList.filter((booking) => getBookingDateString(booking) === dateStr);
 
       days.push({
         date: dateStr,
@@ -455,7 +397,6 @@ export default function AdminFinancialDashboard() {
       });
     }
 
-    console.log('Bookings time series generated:', days.length, 'days');
     return days;
   };
 
@@ -471,7 +412,6 @@ export default function AdminFinancialDashboard() {
           ]}
         />
 
-        {/* Filters Bar */}
         <Card sx={{ mb: 3, p: 3 }}>
           <FinancialFiltersBar
             filters={filters}
@@ -482,19 +422,16 @@ export default function AdminFinancialDashboard() {
           />
         </Card>
 
-        {/* KPI Cards */}
         <Box sx={{ mb: 3 }}>
           <FinancialKPICards kpis={financialData.kpis} loading={loading} />
         </Box>
 
-        {/* Charts */}
         <Grid container spacing={3} sx={{ mb: 3 }}>
           <Grid item xs={12} lg={8}>
             <Card sx={{ p: 3 }}>
               <Typography variant="h6" sx={{ mb: 2 }}>
                 Revenue Time Series
               </Typography>
-              {console.log('Rendering RevenueChart with data:', financialData.charts.revenueTimeSeries)}
               <FinancialCharts.RevenueChart data={financialData.charts.revenueTimeSeries} />
             </Card>
           </Grid>
@@ -503,7 +440,6 @@ export default function AdminFinancialDashboard() {
               <Typography variant="h6" sx={{ mb: 2 }}>
                 Payment Methods Breakdown
               </Typography>
-              {console.log('Rendering PaymentMethodChart with data:', financialData.charts.paymentMethodBreakdown)}
               <FinancialCharts.PaymentMethodChart data={financialData.charts.paymentMethodBreakdown} />
             </Card>
           </Grid>
@@ -512,21 +448,19 @@ export default function AdminFinancialDashboard() {
               <Typography variant="h6" sx={{ mb: 2 }}>
                 Bookings Time Series
               </Typography>
-              {console.log('Rendering BookingsChart with data:', financialData.charts.bookingsTimeSeries)}
               <FinancialCharts.BookingsChart data={financialData.charts.bookingsTimeSeries} />
             </Card>
           </Grid>
         </Grid>
 
-        {/* Tables */}
         <Grid container spacing={3}>
           <Grid item xs={12} lg={6}>
             <Card sx={{ p: 3 }}>
               <Typography variant="h6" sx={{ mb: 2 }}>
                 Payouts
               </Typography>
-              <PayoutsTable 
-                payouts={financialData.payouts} 
+              <PayoutsTable
+                payouts={financialData.payouts}
                 loading={loading}
                 onRefresh={loadFinancialData}
                 onMarkAsPaid={handleMarkAsPaid}
@@ -538,8 +472,8 @@ export default function AdminFinancialDashboard() {
               <Typography variant="h6" sx={{ mb: 2 }}>
                 Bookings
               </Typography>
-              <BookingsTable 
-                bookings={financialData.bookings} 
+              <BookingsTable
+                bookings={financialData.bookings}
                 loading={loading}
                 onRefresh={loadFinancialData}
               />
@@ -547,22 +481,13 @@ export default function AdminFinancialDashboard() {
           </Grid>
         </Grid>
 
-        {/* Snackbars for notifications */}
-        <Snackbar
-          open={!!successMessage}
-          autoHideDuration={6000}
-          onClose={handleCloseSnackbar}
-        >
+        <Snackbar open={!!successMessage} autoHideDuration={6000} onClose={handleCloseSnackbar}>
           <Alert onClose={handleCloseSnackbar} severity="success">
             {successMessage}
           </Alert>
         </Snackbar>
 
-        <Snackbar
-          open={!!error}
-          autoHideDuration={6000}
-          onClose={handleCloseSnackbar}
-        >
+        <Snackbar open={!!error} autoHideDuration={6000} onClose={handleCloseSnackbar}>
           <Alert onClose={handleCloseSnackbar} severity="error">
             {error}
           </Alert>
@@ -570,4 +495,4 @@ export default function AdminFinancialDashboard() {
       </Container>
     </Page>
   );
-} 
+}

@@ -5,6 +5,7 @@ import { useDispatch } from 'src/redux/store';
 import { getTeachers, getFilteredTeachersForAdminBooking, getUserTeamMembers } from 'src/redux/slices/admin';
 import { useSelector } from 'react-redux';
 import { createAdminBooking, createAdminBookingIntent, setBookingSuccess, setIntentSuccess, createAdminBookingRentalReservation } from 'src/redux/slices/bookings';
+import { fetchGroupLessonResortConfigs } from 'src/redux/slices/groupLessonResortConfig';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -65,6 +66,7 @@ const DEFAULT_FORM_DATA = {
     paymentStatus: 'PAID',
     paymentMethod: 'CASH',
     internalComment: '',
+    groupLessonOffer: null,
     rental: { ...DEFAULT_RENTAL },
 };
 
@@ -87,6 +89,7 @@ const BookingModal = ({ isOpen, onClose, refreshBookings, filterTeacherId, filte
 
     const { teachers } = useSelector((state) => state.admin);
     const { intentSuccess, error } = useSelector((state) => state.bookings);
+    const groupLessonOffers = useSelector((state) => state.groupLessonResortConfig?.items || []);
 
     const lessonDateBounds = useMemo(() => {
         const dates = formData.dateTimes.map((dt) => dt.date).filter(Boolean).sort();
@@ -96,8 +99,14 @@ const BookingModal = ({ isOpen, onClose, refreshBookings, filterTeacherId, filte
         };
     }, [formData.dateTimes]);
 
+    const offersForResort = useMemo(() => {
+        const resort = formData.resort;
+        if (!resort) return groupLessonOffers;
+        return groupLessonOffers.filter((offer) => offer?.resort === resort);
+    }, [groupLessonOffers, formData.resort]);
+
     const resetForm = useCallback(() => {
-        setFormData({ ...DEFAULT_FORM_DATA, rental: { ...DEFAULT_RENTAL } });
+        setFormData({ ...DEFAULT_FORM_DATA, rental: { ...DEFAULT_RENTAL }, groupLessonOffer: null });
         setDateRange({ startDate: null, endDate: null });
         setTeacherId(null);
         setStudentId(null);
@@ -154,6 +163,7 @@ const BookingModal = ({ isOpen, onClose, refreshBookings, filterTeacherId, filte
         if(isOpen){
             dispatch(setBookingSuccess(false));
             dispatch(setIntentSuccess(false));
+            dispatch(fetchGroupLessonResortConfigs());
         }
     },[isOpen, dispatch])
 
@@ -304,7 +314,9 @@ const BookingModal = ({ isOpen, onClose, refreshBookings, filterTeacherId, filte
                         formData.resort,
                         formData.includesEquipment ? rental.rentalFulfillment : null,
                         formData.includesEquipment ? rental.rentalDestinationType : null,
-                        formData.includesEquipment ? rental.rentalDestinationDetail : null
+                        formData.includesEquipment ? rental.rentalDestinationDetail : null,
+                        formData.groupLessonOffer?.id ?? null,
+                        formData.groupLessonOffer?.resort ?? null
                     )
                 );
 
@@ -351,7 +363,40 @@ const BookingModal = ({ isOpen, onClose, refreshBookings, filterTeacherId, filte
             formData.paymentMethod,
             formData.internalComment,
             formData.resort,
-            teacherId ?? null));
+            teacherId ?? null,
+            formData.groupLessonOffer?.id ?? null,
+            formData.groupLessonOffer?.resort ?? null));
+    };
+
+    const handleGroupLessonOfferChange = (offer) => {
+        const shouldDefaultGrupalTeacher = Boolean(offer) && !teacherId;
+        if (shouldDefaultGrupalTeacher) {
+            setTeacherId(1117);
+        }
+        setFormData((prev) => {
+            const next = {
+                ...prev,
+                groupLessonOffer: offer,
+            };
+            if (offer?.resort) {
+                next.resort = offer.resort;
+            }
+            if (offer?.price != null && Number.isFinite(Number(offer.price))) {
+                const price = String(offer.price);
+                next.dateTimes = prev.dateTimes.map((dt) => ({
+                    ...dt,
+                    price: dt.price || price,
+                }));
+            }
+            if (offer?.includesGear) {
+                next.includesEquipment = true;
+            }
+            // Match typical admin group-class flow: default calendar teacher to Grupal when none selected.
+            if (shouldDefaultGrupalTeacher && !prev.teacher) {
+                next.teacher = { id: 1117, name: 'Grupal', lastname: '' };
+            }
+            return next;
+        });
     };
 
     const handleRentalChange = useCallback((patch) => {
@@ -521,6 +566,10 @@ const BookingModal = ({ isOpen, onClose, refreshBookings, filterTeacherId, filte
                                 onChange={(e) => setFormData((prevData) => ({
                                     ...prevData,
                                     resort: e.target.value,
+                                    groupLessonOffer:
+                                        prevData.groupLessonOffer?.resort === e.target.value
+                                            ? prevData.groupLessonOffer
+                                            : null,
                                 }))}
                             >
                                 {ADMIN_BOOKING_RESORT_OPTIONS.map((opt) => (
@@ -530,6 +579,35 @@ const BookingModal = ({ isOpen, onClose, refreshBookings, filterTeacherId, filte
                                 ))}
                             </Select>
                         </FormControl>
+                    </Grid>
+                    <Grid item xs={12} md={6}>
+                        <Autocomplete
+                            options={offersForResort}
+                            value={formData.groupLessonOffer}
+                            onChange={(e, newValue) => handleGroupLessonOfferChange(newValue)}
+                            getOptionLabel={(option) => {
+                                if (!option) return '';
+                                const title = option.title || option.resortDisplayName || option.resort || '';
+                                const price =
+                                    option.price != null
+                                        ? ` · ${option.currency || 'ARS'} ${option.price}`
+                                        : '';
+                                return `${title}${price}`.trim();
+                            }}
+                            isOptionEqualToValue={(option, value) => option?.id === value?.id}
+                            renderInput={(params) => (
+                                <TextField
+                                    {...params}
+                                    label={t('adminBookings.createModal.groupLessonProduct', {
+                                        defaultValue: 'Group lesson product (optional)',
+                                    })}
+                                    helperText={t('adminBookings.createModal.groupLessonProductHelper', {
+                                        defaultValue:
+                                            'Same published offers students book in the app. Links this booking to that product.',
+                                    })}
+                                />
+                            )}
+                        />
                     </Grid>
                     <Grid item xs={12} md={6}>
                         <FormControl fullWidth>

@@ -16,6 +16,7 @@ AdminBookingTableCard.propTypes = {
     row: PropTypes.object,
     isGearAdminList: PropTypes.bool,
     compact: PropTypes.bool,
+    showPrice: PropTypes.bool,
     selected: PropTypes.bool,
     onEditRow: PropTypes.func,
     onSelectRow: PropTypes.func,
@@ -32,6 +33,7 @@ export default function AdminBookingTableCard({
     row,
     isGearAdminList = false,
     compact = false,
+    showPrice = true,
     selected,
     onEditRow,
     onSelectRow,
@@ -114,7 +116,7 @@ export default function AdminBookingTableCard({
                     <Box display='flex' flexDirection='column'>
                         <Typography variant='h6' gutterBottom>
                             {compact
-                                ? studentName || '—'
+                                ? customerLabel || '—'
                                 : t('adminBookings.card.bookingTitle', { id })}
                         </Typography>
                         <Label
@@ -251,9 +253,11 @@ export default function AdminBookingTableCard({
                                 {t('adminBookings.card.gearOnlyNote')}
                             </Typography>
                         )}
-                        <Typography variant="body2" color="primary.main">
-                            {formatPrice(price)}
-                        </Typography>
+                        {showPrice && (
+                            <Typography variant="body2" color="primary.main">
+                                {formatPrice(price)}
+                            </Typography>
+                        )}
                         {(internalComment || userComment) && (
                             <Typography variant="body2" color="text.secondary">
                                 {[internalComment, userComment].filter(Boolean).join(' — ')}

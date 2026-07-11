@@ -30,7 +30,9 @@ const initialState = {
     },
     selectedTeacher: null,
     isOpenFireModal: false,
-    isOpenHireModal: false
+    isOpenHireModal: false,
+    /** When set, hire/fire use admin business member APIs for this id. */
+    managedBusinessId: null,
 };
 
 const slice = createSlice({
@@ -139,6 +141,10 @@ const slice = createSlice({
             state.selectedTeacher = teacherId;
             state.isOpenModal = true;
         },
+
+        setManagedBusinessId(state, action) {
+            state.managedBusinessId = action.payload;
+        },
     },
 });
 
@@ -157,8 +163,9 @@ export const {
     openFireModal,
     closeFireModal,
     openHireModal,
-    closeHireeModal,
-    selectTeacher
+    closeHireModal,
+    selectTeacher,
+    setManagedBusinessId,
 } = slice.actions;
 
 // ----------------------------------------------------------------------
@@ -257,7 +264,7 @@ export function getBusinessPending() {
             const response = await axios.get('/api/business/requests');
             const teachers = response.data;
 
-            dispatch(slice.actions.getTeachersSuccess(teachers));
+            dispatch(slice.actions.getPendingSuccess(teachers));
         } catch (error) {
             dispatch(slice.actions.hasError(error));
         }
@@ -266,36 +273,86 @@ export function getBusinessPending() {
 
 // ----------------------------------------------------------------------
 
-export function fireTeacher(teacher) {
+export function getAdminBusinessMembers(businessId) {
     return async () => {
-        dispatch(slice.actions.startLoadingModal());
+        dispatch(slice.actions.startLoading());
         try {
-            const resp = await axios.put(`/api/business/fire/` + teacher?.id)
-            dispatch(slice.actions.closeFireModal())
-            dispatch(slice.actions.hasSuccess("business.fire_success"))
+            const response = await axios.get(`/api/admin/business/${businessId}/members`);
+            dispatch(slice.actions.getMembersSuccess(response.data));
         } catch (error) {
-            dispatch(slice.actions.hasError(error))
-            dispatch(slice.actions.closeFireModal())
-
+            dispatch(slice.actions.hasError(error));
         }
-    }
+    };
+}
+
+export function getAdminBusinessPending(businessId) {
+    return async () => {
+        dispatch(slice.actions.startLoading());
+        try {
+            const response = await axios.get(`/api/admin/business/${businessId}/requests`);
+            dispatch(slice.actions.getPendingSuccess(response.data));
+        } catch (error) {
+            dispatch(slice.actions.hasError(error));
+        }
+    };
+}
+
+// ----------------------------------------------------------------------
+
+function reloadManagedBusinessLists(dispatch, getState) {
+    const businessId = getState().business.managedBusinessId;
+    if (businessId == null) return;
+    dispatch(getAdminBusinessMembers(businessId));
+    dispatch(getAdminBusinessPending(businessId));
+}
+
+export function fireTeacher(teacher) {
+    return async (dispatch, getState) => {
+        dispatch(slice.actions.startLoadingModal());
+        const businessId = getState().business.managedBusinessId;
+        try {
+            if (businessId != null) {
+                await axios.delete(`/api/admin/business/${businessId}/members/${teacher?.id}`);
+                dispatch(slice.actions.closeFireModal());
+                dispatch(slice.actions.hasSuccess('business.fire_success'));
+                reloadManagedBusinessLists(dispatch, getState);
+            } else {
+                await axios.delete(`/api/business/members/${teacher?.id}`);
+                dispatch(slice.actions.closeFireModal());
+                dispatch(slice.actions.hasSuccess('business.fire_success'));
+                dispatch(getBusinessMembers());
+            }
+        } catch (error) {
+            dispatch(slice.actions.hasError(error));
+            dispatch(slice.actions.closeFireModal());
+        }
+    };
 }
 
 // ----------------------------------------------------------------------
 
 export function hireTeacher(teacher) {
-    return async () => {
+    return async (dispatch, getState) => {
         dispatch(slice.actions.startLoadingModal());
+        const businessId = getState().business.managedBusinessId;
         try {
-            const resp = await axios.post(`/api/business/members/` + teacher?.id)
-            dispatch(slice.actions.closeHireModal())
-            dispatch(slice.actions.hasSuccess("business.hire_success"))
+            if (businessId != null) {
+                await axios.post(`/api/admin/business/${businessId}/members/${teacher?.id}`);
+                dispatch(slice.actions.closeHireModal());
+                dispatch(slice.actions.hasSuccess('business.hire_success'));
+                reloadManagedBusinessLists(dispatch, getState);
+            } else {
+                await axios.post(`/api/business/members/${teacher?.id}`);
+                dispatch(slice.actions.closeHireModal());
+                dispatch(slice.actions.hasSuccess('business.hire_success'));
+                dispatch(getBusinessPending());
+                dispatch(getBusinessMembers());
+            }
         } catch (error) {
-            dispatch(slice.actions.hasError(error))
-            dispatch(slice.actions.closeHireModal())
-
+            dispatch(slice.actions.hasError(error));
+            dispatch(slice.actions.closeHireModal());
         }
-    }
+    };
 }
 
 

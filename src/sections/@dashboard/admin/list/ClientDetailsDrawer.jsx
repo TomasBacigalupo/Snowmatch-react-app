@@ -14,10 +14,21 @@ import { useState } from 'react';
 import { useSnackbar } from 'notistack';
 import Label from 'src/components/Label';
 import { useTheme } from '@mui/material/styles';
+import useLocales from 'src/hooks/useLocales';
+
+const STUDENT_LEVEL_FALLBACKS = {
+  FIRST_TIME: 'First time',
+  NEVER_EVER: 'Never ever',
+  BEGINNER: 'Beginner',
+  INTERMEDIATE: 'Intermediate',
+  ADVANCED: 'Advanced',
+  EXPERT: 'Expert',
+};
 
 export default function ClientDetailsDrawer({ open, onClose, client }) {
   const dispatch = useDispatch();
   const theme = useTheme();
+  const { translate } = useLocales();
   const { teacher, bookings } = useSelector((state) => state.admin);
   const { enqueueSnackbar } = useSnackbar();
   const [teamMembers, setTeamMembers] = useState([]);
@@ -25,6 +36,14 @@ export default function ClientDetailsDrawer({ open, onClose, client }) {
   const handleCopyToClipboard = (text) => {
     navigator.clipboard.writeText(text);
     enqueueSnackbar('Copied to clipboard!', { variant: 'success' });
+  };
+
+  const formatStudentLevel = (level) => {
+    if (!level) return '-';
+    const translationKey = `school.clients.form.${level}`;
+    const translated = translate(translationKey);
+    if (translated && translated !== translationKey) return translated;
+    return STUDENT_LEVEL_FALLBACKS[level] || level;
   };
 
   useEffect(() => {
@@ -130,6 +149,13 @@ export default function ClientDetailsDrawer({ open, onClose, client }) {
           <Box>
             <Typography variant="subtitle2" color="text.secondary">Phone</Typography>
             <Typography variant="body1">{teacher.cellphone}</Typography>
+          </Box>
+
+          <Box>
+            <Typography variant="subtitle2" color="text.secondary">Student Level</Typography>
+            <Typography variant="body1">
+              {formatStudentLevel(teacher.studentLevel || client?.studentLevel)}
+            </Typography>
           </Box>
 
           <Box>

@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
+import { useSnackbar } from 'notistack';
 // @mui
 import { useTheme } from '@mui/material/styles';
 import { TableRow, TableCell, Typography, MenuItem, Tooltip, Checkbox } from '@mui/material';
@@ -22,6 +23,7 @@ AdminBookingTableRow.propTypes = {
     row: PropTypes.object,
     isGearAdminList: PropTypes.bool,
     compact: PropTypes.bool,
+    showPrice: PropTypes.bool,
     onEditRow: PropTypes.func,
     onConfirmRow: PropTypes.func,
     onDeclineRow: PropTypes.func,
@@ -30,12 +32,14 @@ AdminBookingTableRow.propTypes = {
     onDeleteRow: PropTypes.func,
     refreshBookings: PropTypes.func,
     onOpenDetails: PropTypes.func,
+    onBookingUpdated: PropTypes.func,
 };
 
 export default function AdminBookingTableRow({
     row,
     isGearAdminList = false,
     compact = false,
+    showPrice = true,
     onEditRow,
     onConfirmRow,
     onDeclineRow,
@@ -44,10 +48,12 @@ export default function AdminBookingTableRow({
     onDeleteRow,
     refreshBookings,
     onOpenDetails,
+    onBookingUpdated,
 }) {
     const theme = useTheme();
     const { t } = useTranslation();
     const dispatch = useDispatch();
+    const { enqueueSnackbar } = useSnackbar();
     const [openDrawer, setOpenDrawer] = useState(false);
 
     const { imageLink, userComment, state, resort, adults, children, eventList, id, price, internalComment, includesLunch, includesEquipments, paymentStatus, invoiceCreated, type } = row;
@@ -127,8 +133,21 @@ export default function AdminBookingTableRow({
         setOpenMenuActions(null);
     };
 
-    const handleInvoiceCreatedChange = (checked) => {
-        dispatch(setBookingInvoiceCreated(id, checked));
+    const handleInvoiceCreatedChange = async (checked) => {
+        try {
+            await dispatch(setBookingInvoiceCreated(id, checked));
+            onBookingUpdated?.({ ...row, invoiceCreated: checked });
+            enqueueSnackbar(
+                t(
+                    checked
+                        ? 'adminBookings.drawer.invoiceMarkedCreated'
+                        : 'adminBookings.drawer.invoiceMarkedPending'
+                ),
+                { variant: 'success' }
+            );
+        } catch {
+            enqueueSnackbar(t('adminBookings.drawer.invoiceUpdateError'), { variant: 'error' });
+        }
     };
 
     const handleRowClick = (event) => {
@@ -247,11 +266,13 @@ export default function AdminBookingTableRow({
 
                     {!compact && <TableCell align="left">{getResortLabel(resort)}</TableCell>}
 
-                    <TableCell align="left">
-                        <Typography variant="subtitle2" color="primary.main">
-                            {formatPrice(price)}
-                        </Typography>
-                    </TableCell>
+                    {showPrice && (
+                        <TableCell align="left">
+                            <Typography variant="subtitle2" color="primary.main">
+                                {formatPrice(price)}
+                            </Typography>
+                        </TableCell>
+                    )}
 
                     <TableCell align="left">
                         <Label
@@ -275,10 +296,18 @@ export default function AdminBookingTableRow({
                         />
                     </TableCell>
 
-                    <TableCell align="left" sx={{ maxWidth: 280 }}>
-                        <Typography variant="body2" noWrap title={notesCombined}>
-                            {notesCombined}
-                        </Typography>
+                    <TableCell align="left" sx={{ maxWidth: 200 }}>
+                        {notesCombined !== '-' && notesCombined.length > 20 ? (
+                            <Tooltip title={notesCombined} arrow>
+                                <Typography variant="body2" noWrap sx={{ cursor: 'help' }}>
+                                    {truncateComment(notesCombined)}
+                                </Typography>
+                            </Tooltip>
+                        ) : (
+                            <Typography variant="body2" noWrap>
+                                {truncateComment(notesCombined)}
+                            </Typography>
+                        )}
                     </TableCell>
 
                     {!compact && (
@@ -395,11 +424,13 @@ export default function AdminBookingTableRow({
                     </TableCell>
                 )}
 
-                <TableCell align="left">
-                    <Typography variant="subtitle2" color="primary.main">
-                        {formatPrice(price)}
-                    </Typography>
-                </TableCell>
+                {showPrice && (
+                    <TableCell align="left">
+                        <Typography variant="subtitle2" color="primary.main">
+                            {formatPrice(price)}
+                        </Typography>
+                    </TableCell>
+                )}
 
                 <TableCell align="left">
                     {internalComment && internalComment.length > 20 ? (

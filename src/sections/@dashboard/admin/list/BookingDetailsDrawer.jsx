@@ -24,6 +24,8 @@ import {
   Tooltip,
   Checkbox,
   FormControlLabel,
+  Autocomplete,
+  CircularProgress,
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 // components
@@ -49,12 +51,16 @@ import { formatAdminBookingResortLabel } from 'src/utils/adminBookingResortOptio
 import {
   getBookingRosterClients,
   getBookingRosterStudents,
+  isGroupLessonBooking,
+  getGroupLessonOfferLabel,
 } from 'src/utils/adminBookingParticipants';
 // redux
 import { useDispatch } from 'react-redux';
+import { useSnackbar } from 'notistack';
 import { createPayout } from '../../../../redux/slices/bookings';
-import { fetchPayouts, setBookingInvoiceCreated } from 'src/redux/slices/admin';
+import { fetchPayouts, setBookingInvoiceCreated, rosterStudentOntoBooking } from 'src/redux/slices/admin';
 import useAuth from '../../../../hooks/useAuth';
+import axios from '../../../../utils/axios';
 
 function getIntlLocale(lang) {
   if (lang?.startsWith('pt')) return 'pt-BR';
@@ -102,6 +108,7 @@ BookingDetailsDrawer.propTypes = {
   isIntent: PropTypes.bool,
   rawIntent: PropTypes.object,
   onBookingUpdated: PropTypes.func,
+  onAssignStudent: PropTypes.func,
 };
 
 export default function BookingDetailsDrawer({
@@ -112,9 +119,11 @@ export default function BookingDetailsDrawer({
   isIntent = false,
   rawIntent,
   onBookingUpdated,
+  onAssignStudent,
 }) {
   const theme = useTheme();
   const dispatch = useDispatch();
+  const { enqueueSnackbar } = useSnackbar();
   const { t, i18n } = useTranslation();
   const { isResortAdmin } = useAuth();
   const isDesktop = useResponsive('up', 'sm');
@@ -142,6 +151,10 @@ export default function BookingDetailsDrawer({
   const [selectedClassEvent, setSelectedClassEvent] = useState(null);
   const [invoiceCreated, setInvoiceCreated] = useState(false);
   const [updatingInvoiceCreated, setUpdatingInvoiceCreated] = useState(false);
+  const [rosterDialogOpen, setRosterDialogOpen] = useState(false);
+  const [rosterStudentOptions, setRosterStudentOptions] = useState([]);
+  const [selectedRosterStudent, setSelectedRosterStudent] = useState(null);
+  const [rosterSubmitting, setRosterSubmitting] = useState(false);
 
   const emptyValue = t('adminBookings.drawer.emptyValue');
 
@@ -167,6 +180,9 @@ export default function BookingDetailsDrawer({
   const handleEditSave = (updatedBooking) => {
     console.log('Updated booking:', updatedBooking);
     setEditModalOpen(false);
+    if (onBookingUpdated && updatedBooking) {
+      onBookingUpdated(updatedBooking);
+    }
     if (refreshBookings) {
       refreshBookings();
     }
@@ -179,9 +195,19 @@ export default function BookingDetailsDrawer({
     setUpdatingInvoiceCreated(true);
     try {
       await dispatch(setBookingInvoiceCreated(booking.id, checked));
+      onBookingUpdated?.({ ...booking, invoiceCreated: checked });
+      enqueueSnackbar(
+        t(
+          checked
+            ? 'adminBookings.drawer.invoiceMarkedCreated'
+            : 'adminBookings.drawer.invoiceMarkedPending'
+        ),
+        { variant: 'success' }
+      );
       refreshBookings?.();
     } catch {
       setInvoiceCreated(previousValue);
+      enqueueSnackbar(t('adminBookings.drawer.invoiceUpdateError'), { variant: 'error' });
     } finally {
       setUpdatingInvoiceCreated(false);
     }
@@ -434,20 +460,70 @@ export default function BookingDetailsDrawer({
 
   const resortLabel = formatAdminBookingResortLabel(booking?.resort, t);
 
-  const teacherLabel =
-    [booking?.teacher?.name, booking?.teacher?.lastname].filter(Boolean).join(' ') ||
-    t('adminBookings.drawer.instructorFallback');
+  const hasBookingTeacher = booking?.teacher?.id != null;
+  const teacherLabel = hasBookingTeacher
+    ? [booking?.teacher?.name, booking?.teacher?.lastname].filter(Boolean).join(' ') ||
+      t('adminBookings.drawer.instructorFallback')
+    : isIntent
+      ? t('adminBookings.intent.unassigned')
+      : t('adminBookings.drawer.instructorFallback');
 
   const studentLabel =
     [booking?.student?.name, booking?.student?.lastname].filter(Boolean).join(' ') || emptyValue;
 
   const rosterClients = useMemo(() => getBookingRosterClients(booking), [booking]);
   const rosterStudents = useMemo(() => getBookingRosterStudents(booking), [booking]);
+  const groupLesson = isGroupLessonBooking(booking);
+  const groupLessonLabel = getGroupLessonOfferLabel(booking);
   const hasBookingStudent = Boolean(
     booking?.student &&
       ([booking.student.name, booking.student.lastname].filter(Boolean).join(' ').trim() ||
         booking.student.id)
   );
+  const canAssignStudent =
+    typeof onAssignStudent === 'function' && hasBookingTeacher && !hasBookingStudent;
+  const canRosterStudentOntoClass =
+    !isIntent && hasBookingTeacher && Array.isArray(booking?.eventList) && booking.eventList.length > 0;
+
+  const handleOpenRosterDialog = () => {
+    setSelectedRosterStudent(null);
+    setRosterStudentOptions([]);
+    setRosterDialogOpen(true);
+  };
+
+  const handleCloseRosterDialog = () => {
+    if (rosterSubmitting) return;
+    setRosterDialogOpen(false);
+    setSelectedRosterStudent(null);
+    setRosterStudentOptions([]);
+  };
+
+  const handleConfirmRosterStudent = async () => {
+    if (!booking?.id || !selectedRosterStudent?.id) return;
+    setRosterSubmitting(true);
+    try {
+      const updated = await dispatch(
+        rosterStudentOntoBooking(booking.id, selectedRosterStudent.id)
+      );
+      enqueueSnackbar(t('adminBookings.drawer.addStudentSuccess'), { variant: 'success' });
+      setRosterDialogOpen(false);
+      setSelectedRosterStudent(null);
+      if (updated && onBookingUpdated) {
+        onBookingUpdated(updated);
+      }
+      if (refreshBookings) {
+        await refreshBookings();
+      }
+    } catch (error) {
+      const message =
+        (typeof error === 'string' && error) ||
+        error?.message ||
+        t('adminBookings.drawer.addStudentError');
+      enqueueSnackbar(message, { variant: 'error' });
+    } finally {
+      setRosterSubmitting(false);
+    }
+  };
 
   const handleClassEventOpen = (event, sessionIndex) => {
     setSelectedClassEvent({ ...event, sessionIndex });
@@ -614,11 +690,35 @@ export default function BookingDetailsDrawer({
                     <Typography variant="subtitle1" gutterBottom>
                       {t('adminBookings.table.student')}
                     </Typography>
-                    {booking?.student?.cellphone &&
-                      renderWhatsAppAction(
-                        booking.student.cellphone,
-                        `${booking.student.name} ${booking.student.lastname}`
+                    <Stack direction="row" spacing={1} alignItems="center">
+                      {canRosterStudentOntoClass && (
+                        <Button
+                          size="small"
+                          variant="outlined"
+                          startIcon={<Iconify icon="eva:person-add-fill" />}
+                          onClick={handleOpenRosterDialog}
+                          sx={{ minWidth: 'auto' }}
+                        >
+                          {t('adminBookings.drawer.addStudentToClass')}
+                        </Button>
                       )}
+                      {canAssignStudent && (
+                        <Button
+                          size="small"
+                          variant="outlined"
+                          startIcon={<Iconify icon="eva:person-add-fill" />}
+                          onClick={onAssignStudent}
+                          sx={{ minWidth: 'auto' }}
+                        >
+                          {t('adminBookings.intent.assignStudent')}
+                        </Button>
+                      )}
+                      {booking?.student?.cellphone &&
+                        renderWhatsAppAction(
+                          booking.student.cellphone,
+                          `${booking.student.name} ${booking.student.lastname}`
+                        )}
+                    </Stack>
                   </Stack>
                   {hasBookingStudent ? (
                     <>
@@ -636,36 +736,52 @@ export default function BookingDetailsDrawer({
                         </Typography>
                       )}
                     </>
-                  ) : rosterStudents.length > 0 ? (
-                    <Stack spacing={1.25}>
-                      {rosterStudents.map((student) => {
-                        const name =
-                          [student?.name, student?.lastname].filter(Boolean).join(' ') ||
-                          emptyValue;
-                        return (
-                          <Box key={`roster-student-${student.id}`}>
-                            <Stack
-                              direction="row"
-                              alignItems="center"
-                              justifyContent="space-between"
-                              spacing={1}
-                            >
-                              <Typography variant="body1">{name}</Typography>
-                              {student?.cellphone && renderWhatsAppAction(student.cellphone, name)}
-                            </Stack>
-                            <Typography variant="body2" color="text.secondary">
-                              {t('adminBookings.drawer.idLabel')}: {student?.id ?? emptyValue}
-                            </Typography>
-                            {student?.cellphone && (
+                  ) : null}
+                  {rosterStudents.length > 0 && (
+                    <Box sx={{ mt: hasBookingStudent ? 2 : 0 }}>
+                      {hasBookingStudent && (
+                        <Typography variant="subtitle2" gutterBottom>
+                          {t('adminBookings.drawer.rosterParticipants')}
+                        </Typography>
+                      )}
+                      <Stack spacing={1.25}>
+                        {rosterStudents.map((student) => {
+                          if (
+                            hasBookingStudent &&
+                            booking?.student?.id != null &&
+                            student?.id === booking.student.id
+                          ) {
+                            return null;
+                          }
+                          const name =
+                            [student?.name, student?.lastname].filter(Boolean).join(' ') ||
+                            emptyValue;
+                          return (
+                            <Box key={`roster-student-${student.id}`}>
+                              <Stack
+                                direction="row"
+                                alignItems="center"
+                                justifyContent="space-between"
+                                spacing={1}
+                              >
+                                <Typography variant="body1">{name}</Typography>
+                                {student?.cellphone && renderWhatsAppAction(student.cellphone, name)}
+                              </Stack>
                               <Typography variant="body2" color="text.secondary">
-                                {t('adminBookings.drawer.phoneLabel')}: {student.cellphone}
+                                {t('adminBookings.drawer.idLabel')}: {student?.id ?? emptyValue}
                               </Typography>
-                            )}
-                          </Box>
-                        );
-                      })}
-                    </Stack>
-                  ) : (
+                              {student?.cellphone && (
+                                <Typography variant="body2" color="text.secondary">
+                                  {t('adminBookings.drawer.phoneLabel')}: {student.cellphone}
+                                </Typography>
+                              )}
+                            </Box>
+                          );
+                        })}
+                      </Stack>
+                    </Box>
+                  )}
+                  {!hasBookingStudent && rosterStudents.length === 0 && (
                     <Typography variant="body1">{emptyValue}</Typography>
                   )}
 
@@ -736,13 +852,8 @@ export default function BookingDetailsDrawer({
                         )}
                     </Stack>
                   </Stack>
-                  <Typography variant="body1">
-                    {isIntent
-                      ? t('adminBookings.intent.unassigned')
-                      : [booking?.teacher?.name, booking?.teacher?.lastname].filter(Boolean).join(' ') ||
-                        emptyValue}
-                  </Typography>
-                  {!isIntent && (
+                  <Typography variant="body1">{teacherLabel}</Typography>
+                  {hasBookingTeacher && (
                     <Typography variant="body2" color="text.secondary">
                       {t('adminBookings.drawer.idLabel')}: {booking?.teacher?.id ?? emptyValue}
                     </Typography>
@@ -782,6 +893,12 @@ export default function BookingDetailsDrawer({
                   >
                     {bookingTypeLabel}
                   </Label>
+                  {groupLesson ? (
+                    <Typography variant="caption" color="primary.main" display="block" sx={{ mt: 0.5 }}>
+                      {t('adminBookings.intent.groupLessonBadge')}
+                      {groupLessonLabel ? ` · ${groupLessonLabel}` : ''}
+                    </Typography>
+                  ) : null}
                 </Grid>
                 <Grid item xs={12} sm={6} md={3}>
                   <Typography variant="body2" color="text.secondary">
@@ -1169,6 +1286,58 @@ export default function BookingDetailsDrawer({
         booking={booking}
         onSuccess={handleReassignSuccess}
       />
+
+      <Dialog open={rosterDialogOpen} onClose={handleCloseRosterDialog} maxWidth="sm" fullWidth>
+        <DialogTitle>{t('adminBookings.drawer.addStudentDialogTitle')}</DialogTitle>
+        <DialogContent>
+          <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+            {t('adminBookings.drawer.addStudentHelper')}
+          </Typography>
+          <Autocomplete
+            options={rosterStudentOptions}
+            value={selectedRosterStudent}
+            onChange={(e, newValue) => setSelectedRosterStudent(newValue)}
+            onInputChange={async (e, newInputValue) => {
+              try {
+                const res = await axios.get(
+                  `/api/admin/filter?page=1&role=STUDENT&level=0&name=${encodeURIComponent(
+                    newInputValue || ''
+                  )}`
+                );
+                setRosterStudentOptions(Array.isArray(res.data) ? res.data : []);
+              } catch {
+                setRosterStudentOptions([]);
+              }
+            }}
+            getOptionLabel={(option) =>
+              `${option?.name || ''} ${option?.lastname || ''}`.trim() ||
+              String(option?.id ?? '')
+            }
+            isOptionEqualToValue={(option, value) => option?.id === value?.id}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                margin="dense"
+                label={t('adminBookings.table.student')}
+                placeholder={t('adminBookings.drawer.addStudentPlaceholder')}
+              />
+            )}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseRosterDialog} disabled={rosterSubmitting}>
+            {t('adminBookings.intent.close')}
+          </Button>
+          <Button
+            variant="contained"
+            onClick={handleConfirmRosterStudent}
+            disabled={!selectedRosterStudent?.id || rosterSubmitting}
+            startIcon={rosterSubmitting ? <CircularProgress size={16} color="inherit" /> : null}
+          >
+            {t('adminBookings.drawer.addStudentConfirm')}
+          </Button>
+        </DialogActions>
+      </Dialog>
 
       <PayoutEditModal
         open={payoutEditModalOpen}

@@ -77,6 +77,27 @@ export function getBookingCustomerLabel(booking, emptyValue = '—') {
   return emptyValue;
 }
 
+/** True when this booking/intent is tied to a published group-lesson offer. */
+export function isGroupLessonBooking(booking) {
+  return (
+    booking?.groupLessonConfigId != null ||
+    (typeof booking?.groupLessonResort === 'string' && booking.groupLessonResort.trim() !== '')
+  );
+}
+
+/** Short label for group-lesson offer metadata on admin lists/drawers. */
+export function getGroupLessonOfferLabel(booking, emptyValue = '') {
+  if (!isGroupLessonBooking(booking)) return emptyValue;
+  const parts = [];
+  if (booking.groupLessonConfigId != null) {
+    parts.push(`GL#${booking.groupLessonConfigId}`);
+  }
+  if (booking.groupLessonResort) {
+    parts.push(booking.groupLessonResort);
+  }
+  return parts.join(' · ') || emptyValue;
+}
+
 export function bookingMatchesCustomerSearch(booking, query) {
   const q = String(query || '')
     .toLowerCase()

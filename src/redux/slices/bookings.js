@@ -598,7 +598,9 @@ export function createAdminBooking(
     resort,
     rentalFulfillment,
     rentalDestinationType,
-    rentalDestinationDetail
+    rentalDestinationDetail,
+    groupLessonConfigId,
+    groupLessonResort
 ) {
     return async () => {
         dispatch(slice.actions.startLoading());
@@ -660,6 +662,12 @@ export function createAdminBooking(
                 resort,
                 bookingPaymentMethod: paymentMethod,
             };
+            if (groupLessonConfigId != null && groupLessonConfigId !== '') {
+                payload.groupLessonConfigId = Number(groupLessonConfigId);
+            }
+            if (groupLessonResort) {
+                payload.groupLessonResort = groupLessonResort;
+            }
             if (includesEquipment && rentalFulfillment) {
                 payload.rentalFulfillment = rentalFulfillment;
                 if (rentalFulfillment === 'SHIP_TO_HOTEL_OR_HOME') {
@@ -716,7 +724,7 @@ export function updateAdminBookingRentalReservation(reservationId, rentalPayload
     };
 }
 
-export function createAdminBookingIntent(studentId, message, children, adults, events, totalPrice, bookingType, includesLaunch, includesEquipment, paymentStatus, paymentMethod, internalComment, resort, calendarTeacherId) {
+export function createAdminBookingIntent(studentId, message, children, adults, events, totalPrice, bookingType, includesLaunch, includesEquipment, paymentStatus, paymentMethod, internalComment, resort, calendarTeacherId, groupLessonConfigId, groupLessonResort) {
     return async () => {
         dispatch(slice.actions.startLoading());
         try {
@@ -778,6 +786,12 @@ export function createAdminBookingIntent(studentId, message, children, adults, e
             }
             if (calendarTeacherId != null && calendarTeacherId !== '') {
                 payload.teacher = { id: Number(calendarTeacherId) };
+            }
+            if (groupLessonConfigId != null && groupLessonConfigId !== '') {
+                payload.groupLessonConfigId = Number(groupLessonConfigId);
+            }
+            if (groupLessonResort) {
+                payload.groupLessonResort = groupLessonResort;
             }
             await axios.post(`/api/admin/booking-intents?businessId=13`, payload);
             dispatch(slice.actions.createIntentSuccess());

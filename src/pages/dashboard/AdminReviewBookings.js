@@ -194,10 +194,21 @@ export function AdminBookingsPage({ bookingListKind, pageTitle, heading }) {
 
   const tableHeadIntent = useMemo(
     () => [
-      ...tableHead,
+      { id: 'id', label: t('adminBookings.table.id'), align: 'left' },
+      { id: 'student', label: t('adminBookings.table.student'), align: 'left' },
+      { id: 'teacher', label: t('adminBookings.table.teacher'), align: 'left' },
+      { id: 'events', label: t('adminBookings.table.classes'), align: 'left' },
+      { id: 'hours', label: t('adminBookings.table.hours'), align: 'left' },
+      { id: 'dates', label: t('adminBookings.table.dates'), align: 'left' },
+      { id: 'resort', label: t('adminBookings.table.resort'), align: 'left' },
+      { id: 'capacity', label: t('adminBookings.table.capacity'), align: 'left' },
+      { id: 'price', label: t('adminBookings.table.price'), align: 'left' },
+      { id: 'internalComment', label: t('adminBookings.table.internalComment'), align: 'left' },
+      { id: 'includes', label: t('adminBookings.table.includes'), align: 'left' },
+      { id: 'paymentStatus', label: t('adminBookings.table.paymentStatus'), align: 'left' },
       { id: 'actions', label: t('adminBookings.table.actions'), align: 'right' },
     ],
-    [tableHead, t]
+    [t]
   );
 
   const {
@@ -725,6 +736,7 @@ export function AdminBookingsPage({ bookingListKind, pageTitle, heading }) {
                     rowCount={displayRows?.length ?? 0}
                     numSelected={selected.length}
                     onSort={onSort}
+                    appendTrailingActionsLabel={activeListTab === 0}
                     onSelectAllRows={(checked) =>
                       activeListTab === 0
                         ? onSelectAllRows(

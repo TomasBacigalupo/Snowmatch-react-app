@@ -257,6 +257,9 @@ ClientNewEditForm.propTypes = {
     
                             <RHFSelect name="level" label={translate("school.clients.form.level")} placeholder="Level">
                               <option value="" />
+                                <option key="NEVER_EVER" value="NEVER_EVER">
+                                  {translate("school.clients.form.NEVER_EVER")}
+                                </option>
                                 <option key="BEGINNER" value="BEGINNER">
                                   {translate("school.clients.form.BEGINNER")}
                                 </option>

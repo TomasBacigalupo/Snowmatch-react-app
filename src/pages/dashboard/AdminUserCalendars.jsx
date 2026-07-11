@@ -12,12 +12,9 @@ import {
   Card,
   Container,
   DialogTitle,
-  DialogContent,
   Typography,
-  Box,
   Autocomplete,
   TextField,
-  Stack,
 } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
@@ -25,20 +22,29 @@ import {
   getEventsByUserId,
   getResortAdminEventsByUserId,
   getDayPricesByUserId,
+  openModal,
+  closeModal,
+  selectEvent,
+  selectRange,
 } from '../../redux/slices/calendar';
 import { getTeachers, getResortAdminTeachers, getTeacher } from '../../redux/slices/admin';
+import { getClients } from '../../redux/slices/clients';
+import { getBusinessMembers } from '../../redux/slices/business';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // hooks
 import useSettings from '../../hooks/useSettings';
 import useResponsive from '../../hooks/useResponsive';
+import useLocales from '../../hooks/useLocales';
 // components
 import Page from '../../components/Page';
+import Iconify from '../../components/Iconify';
 import { DialogAnimate } from '../../components/animate';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
 import useAuth from '../../hooks/useAuth';
+import HoverButton from '../../components/HoverButton';
 // sections
-import { CalendarStyle, CalendarToolbar } from '../../sections/@dashboard/calendar';
+import { CalendarForm, CalendarStyle, CalendarToolbar } from '../../sections/@dashboard/calendar';
 
 // ----------------------------------------------------------------------
 
@@ -47,13 +53,17 @@ const getTeacherLabel = (teacher) => {
   return `${teacher.name || ''} ${teacher.lastname || ''}`.trim();
 };
 
-const formatEventDate = (date) => {
-  if (!date) return '-';
-  return dayjs(date).format('DD/MM/YYYY HH:mm');
+const selectedEventSelector = (state) => {
+  const { events, selectedEventId } = state.calendar;
+  if (selectedEventId) {
+    return events.find((_event) => String(_event.id) === String(selectedEventId));
+  }
+  return null;
 };
 
 export default function AdminUserCalendars() {
   const { t } = useTranslation();
+  const { translate } = useLocales();
   const { themeStretch } = useSettings();
   const pageTitle = t('menu.user calendars');
   const { isResortAdmin } = useAuth();
@@ -68,12 +78,15 @@ export default function AdminUserCalendars() {
   const [view, setView] = useState(isDesktop ? 'dayGridMonth' : 'listWeek');
   const [teacherSearch, setTeacherSearch] = useState('');
   const [selectedTeacher, setSelectedTeacher] = useState(null);
-  const [eventDialogOpen, setEventDialogOpen] = useState(false);
-  const [selectedEvent, setSelectedEvent] = useState(null);
   const [visibleRange, setVisibleRange] = useState(null);
 
-  const { events, dayPrices, isLoading } = useSelector((state) => state.calendar);
+  const selectedEvent = useSelector(selectedEventSelector);
+  const { events, dayPrices, isLoading, isOpenModal, selectedRange } = useSelector(
+    (state) => state.calendar
+  );
   const { teachers, teacher } = useSelector((state) => state.admin);
+  const { clients } = useSelector((state) => state.clients);
+  const { members } = useSelector((state) => state.business);
 
   const dayPricesByDate = useMemo(() => {
     const map = {};
@@ -103,6 +116,11 @@ export default function AdminUserCalendars() {
     }, 400);
     return () => clearTimeout(timer);
   }, [teacherSearch, dispatch, isResortAdmin]);
+
+  useEffect(() => {
+    dispatch(getClients());
+    dispatch(getBusinessMembers());
+  }, [dispatch]);
 
   useEffect(() => {
     if (userId) {
@@ -190,15 +208,31 @@ export default function AdminUserCalendars() {
     }
   };
 
-  const handleSelectEvent = (arg) => {
-    const event = events.find((item) => String(item.id) === String(arg.event.id));
-    setSelectedEvent(event || arg.event);
-    setEventDialogOpen(true);
+  const handleSelectRange = (arg) => {
+    const calendarEl = calendarRef.current;
+    if (calendarEl) {
+      calendarEl.getApi().unselect();
+    }
+    dispatch(selectRange(arg.start, arg.end));
   };
 
-  const handleCloseEventDialog = () => {
-    setEventDialogOpen(false);
-    setSelectedEvent(null);
+  const handleSelectEvent = (arg) => {
+    dispatch(selectEvent(arg.event.id));
+  };
+
+  const handleAddEvent = () => {
+    dispatch(openModal());
+  };
+
+  const handleCloseModal = () => {
+    dispatch(closeModal());
+    if (userId) {
+      if (isResortAdmin) {
+        dispatch(getResortAdminEventsByUserId(userId));
+      } else {
+        dispatch(getEventsByUserId(userId));
+      }
+    }
   };
 
   const handleDatesSet = useCallback((dateInfo) => {
@@ -241,6 +275,17 @@ export default function AdminUserCalendars() {
             { name: t('menu.admin'), href: PATH_DASHBOARD.admin.root },
             { name: pageTitle },
           ]}
+          action={
+            userId ? (
+              <HoverButton
+                variant="contained"
+                startIcon={<Iconify icon="eva:plus-fill" width={20} height={20} />}
+                onClick={handleAddEvent}
+              >
+                {translate('calendar.newEvent')}
+              </HoverButton>
+            ) : null
+          }
         />
 
         <Card sx={{ p: 3, mb: 3 }}>
@@ -287,7 +332,7 @@ export default function AdminUserCalendars() {
                 weekends
                 editable={false}
                 droppable={false}
-                selectable={false}
+                selectable
                 events={events}
                 ref={calendarRef}
                 rerenderDelay={10}
@@ -297,6 +342,7 @@ export default function AdminUserCalendars() {
                 eventDisplay="block"
                 headerToolbar={false}
                 allDayMaintainDuration
+                select={handleSelectRange}
                 eventClick={handleSelectEvent}
                 datesSet={handleDatesSet}
                 dayCellContent={dayCellContent}
@@ -313,44 +359,19 @@ export default function AdminUserCalendars() {
           </Typography>
         )}
 
-        <DialogAnimate open={eventDialogOpen} onClose={handleCloseEventDialog}>
-          <DialogTitle>Event Details</DialogTitle>
-          <DialogContent>
-            {selectedEvent ? (
-              <Stack spacing={1.5} sx={{ pt: 1, pb: 2 }}>
-                <Typography variant="subtitle1">{selectedEvent.title || 'Untitled event'}</Typography>
-                <Typography variant="body2">
-                  <strong>Type:</strong> {selectedEvent.eventType || selectedEvent.type || '-'}
-                </Typography>
-                <Typography variant="body2">
-                  <strong>Start:</strong> {formatEventDate(selectedEvent.start)}
-                </Typography>
-                <Typography variant="body2">
-                  <strong>End:</strong> {formatEventDate(selectedEvent.end)}
-                </Typography>
-                {selectedEvent.price != null && (
-                  <Typography variant="body2">
-                    <strong>Price:</strong> {selectedEvent.price}{' '}
-                    {selectedEvent.currency || ''}
-                  </Typography>
-                )}
-                {selectedEvent.state && (
-                  <Typography variant="body2">
-                    <strong>State:</strong> {selectedEvent.state}
-                  </Typography>
-                )}
-                {selectedEvent.description && (
-                  <Typography variant="body2">
-                    <strong>Description:</strong> {selectedEvent.description}
-                  </Typography>
-                )}
-              </Stack>
-            ) : (
-              <Typography variant="body2" sx={{ py: 2 }}>
-                No event selected.
-              </Typography>
-            )}
-          </DialogContent>
+        <DialogAnimate open={isOpenModal} onClose={handleCloseModal}>
+          <DialogTitle>
+            {selectedEvent ? translate('calendar.editEvent') : translate('calendar.addEvent')}
+          </DialogTitle>
+          <CalendarForm
+            key={selectedEvent?.id || `new-${selectedRange?.start || 'empty'}`}
+            event={selectedEvent || {}}
+            range={selectedRange}
+            onCancel={handleCloseModal}
+            clients={clients || []}
+            members={members || []}
+            ownerUserId={userId}
+          />
         </DialogAnimate>
       </Container>
     </Page>

@@ -1242,6 +1242,13 @@
             "id": "ID",
             "lastMessage": "Última mensagem",
             "participants": "Participantes"
+        },
+        "bookings": {
+            "title": "Reservas compartilhadas",
+            "instructor": "Instrutor",
+            "student": "Aluno",
+            "empty": "Não há reservas entre estes usuários.",
+            "participantsLoading": "Carregando participantes…"
         }
     },
     "adminUserCalendars": {
@@ -1382,6 +1389,10 @@
             "gearOnlyNote": "Sem aulas — apenas aluguel de equipamento",
             "adultsChildren": "{{adults}} adultos, {{children}} crianças"
         },
+        "createModal": {
+            "groupLessonProduct": "Produto de aula em grupo (opcional)",
+            "groupLessonProductHelper": "As mesmas ofertas publicadas que os alunos reservam no app. Vincula esta reserva a esse produto."
+        },
         "intent": {
             "unassigned": "Não atribuído",
             "openStatus": "Aberta",
@@ -1390,17 +1401,25 @@
             "updateSuccess": "Reserva pendente atualizada com sucesso",
             "updateError": "Não foi possível atualizar a reserva pendente",
             "assignInstructor": "Atribuir instrutor",
+            "assignStudent": "Atribuir estudante",
             "cancel": "Cancelar",
             "cancelConfirm": "Cancelar esta reserva pendente?",
             "assignDialogTitle": "Atribuir instrutor",
+            "assignStudentDialogTitle": "Atribuir estudante",
             "instructor": "Instrutor",
             "instructorPlaceholder": "Buscar por nome ou sobrenome",
             "instructorHelper": "Digite para filtrar instrutores por nome.",
             "studentRequired": "Estudante (obrigatório)",
             "studentPlaceholder": "Buscar estudante",
             "studentHelper": "Esta pendência não tem estudante: escolha um para confirmar a reserva.",
+            "studentAssignHelper": "Escolha um estudante para confirmar a reserva com o instrutor já atribuído.",
             "close": "Fechar",
-            "confirm": "Confirmar"
+            "confirm": "Confirmar",
+            "groupSlot": "Reserva do instrutor nesse dia (opcional)",
+            "groupSlotPlaceholder": "Criar novo horário ou escolher um existente",
+            "groupSlotHelper": "Coloque este cliente em qualquer reserva do instrutor no dia da reserva. Deixe vazio para criar ou unir por horário.",
+            "groupSlotNone": "Criar novo / unir por horário",
+            "groupLessonBadge": "Aula em grupo"
         },
         "summary": {
             "totalBookings": "Total de Reservas",
@@ -1446,6 +1465,9 @@
             "internalComment": "Comentário interno:",
             "invoiceSection": "Fatura do instrutor",
             "invoiceCreated": "Fatura criada",
+            "invoiceMarkedCreated": "Marcado como fatura criada",
+            "invoiceMarkedPending": "Marcado como fatura pendente",
+            "invoiceUpdateError": "Não foi possível atualizar o status da fatura",
             "invoiceUploadedSuccess": "Fatura carregada com sucesso",
             "invoiceLoaded": "Fatura do instrutor",
             "invoiceLoadedDesc": "Fatura carregada para esta reserva",
@@ -1486,7 +1508,16 @@
             "pdfPreviewUnavailable": "Visualização de PDF não disponível",
             "previewAlt": "Visualização",
             "uploadInvoice": "Carregar fatura",
-            "saveChanges": "Salvar alterações"
+            "saveChanges": "Salvar alterações",
+            "addStudentToClass": "Adicionar aluno",
+            "addStudentDialogTitle": "Adicionar aluno a esta aula",
+            "addStudentHelper": "Cria uma nova reserva e adiciona o aluno ao evento do instrutor (igual ao roster no app).",
+            "addStudentPlaceholder": "Buscar aluno por nome",
+            "addStudentConfirm": "Adicionar e criar reserva",
+            "addStudentSuccess": "Aluno adicionado e reserva criada",
+            "addStudentError": "Não foi possível adicionar o aluno a esta aula",
+            "addStudentNoEvents": "Esta reserva não tem horários para adicionar alunos",
+            "rosterParticipants": "Alunos na aula"
         },
         "editModal": {
             "title": "Editar reserva #{{id}}",
@@ -1546,6 +1577,16 @@
             "typeOptions": {
                 "ASSIGNED": "Atribuído",
                 "REFERRED": "Indicado"
+            },
+            "groupLesson": "Aula em grupo",
+            "clientLevel": "Nível do cliente",
+            "clientLevelNone": "Sem nível",
+            "clientLevelOptions": {
+                "NEVER_EVER": "Nunca esquiou",
+                "BEGINNER": "Iniciante",
+                "INTERMEDIATE": "Intermediário",
+                "ADVANCED": "Avançado",
+                "EXPERT": "Especialista"
             }
         },
         "payoutEdit": {
@@ -1590,6 +1631,7 @@
             "searchPlaceholder": "Buscar por nome ou email",
             "noResults": "Nenhum cliente encontrado",
             "success": "Cliente criado e selecionado",
+            "successCreated": "Cliente criado",
             "validationName": "O nome deve ter pelo menos 3 caracteres",
             "validationEmail": "O email é obrigatório",
             "validationPhone": "O telefone é obrigatório",
@@ -1717,6 +1759,10 @@
             "startDate": "Desde",
             "endDate": "Até",
             "description": "Descrição",
+            "assignedTeachers": "Professores atribuídos",
+            "assignedStudents": "Alunos atribuídos",
+            "teacher": "Professor",
+            "school": "Escola",
             "client": "Cliente",
             "type": "Motivo",
             "title": "Título",
@@ -1732,6 +1778,7 @@
                 "createANewClient": "Adicionar Cliente",
                 "editClient": "Editar Cliente",
                 "level": "Nivel",
+                "NEVER_EVER": "Nunca esquiou",
                 "BEGINNER": "Principiante",
                 "INTERMEDIATE": "Intermedio",
                 "ADVANCED": "Avançado",

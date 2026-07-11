@@ -175,7 +175,7 @@ export default function GearBookingEditModal({ open, onClose, booking, onSave })
       await dispatch(editAdminBooking(booking.id, bookingPayload));
 
       enqueueSnackbar(t('adminBookings.gearEdit.success'), { variant: 'success' });
-      onSave?.();
+      onSave?.({ ...booking, ...bookingPayload });
       onClose();
     } catch {
       enqueueSnackbar(t('adminBookings.gearEdit.error'), { variant: 'error' });

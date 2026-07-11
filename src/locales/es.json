@@ -1000,6 +1000,13 @@
             "id": "ID",
             "lastMessage": "Último mensaje",
             "participants": "Participantes"
+        },
+        "bookings": {
+            "title": "Reservas compartidas",
+            "instructor": "Instructor",
+            "student": "Alumno",
+            "empty": "No hay reservas entre estos usuarios.",
+            "participantsLoading": "Cargando participantes…"
         }
     },
     "adminUserCalendars": {
@@ -1140,6 +1147,10 @@
             "gearOnlyNote": "Sin clases — solo alquiler de equipo",
             "adultsChildren": "{{adults}} adultos, {{children}} niños"
         },
+        "createModal": {
+            "groupLessonProduct": "Producto de clase grupal (opcional)",
+            "groupLessonProductHelper": "Las mismas ofertas publicadas que reservan los alumnos en la app. Vincula esta reserva a ese producto."
+        },
         "intent": {
             "unassigned": "Sin asignar",
             "openStatus": "Abierta",
@@ -1148,17 +1159,25 @@
             "updateSuccess": "Reserva pendiente actualizada correctamente",
             "updateError": "No se pudo actualizar la reserva pendiente",
             "assignInstructor": "Asignar instructor",
+            "assignStudent": "Asignar estudiante",
             "cancel": "Cancelar",
             "cancelConfirm": "¿Cancelar esta reserva pendiente?",
             "assignDialogTitle": "Asignar instructor",
+            "assignStudentDialogTitle": "Asignar estudiante",
             "instructor": "Instructor",
             "instructorPlaceholder": "Buscar por nombre o apellido",
             "instructorHelper": "Escribí para filtrar instructores por nombre o apellido.",
             "studentRequired": "Estudiante (requerido)",
             "studentPlaceholder": "Buscar estudiante",
             "studentHelper": "Esta pendiente no tiene estudiante: elegí uno para confirmar la reserva.",
+            "studentAssignHelper": "Elegí un estudiante para confirmar la reserva con el instructor ya asignado.",
             "close": "Cerrar",
-            "confirm": "Confirmar"
+            "confirm": "Confirmar",
+            "groupSlot": "Reserva del instructor ese día (opcional)",
+            "groupSlotPlaceholder": "Crear nuevo slot o elegir uno existente",
+            "groupSlotHelper": "Asigná este cliente a cualquiera de las reservas del instructor en el día de la reserva. Dejá vacío para crear o unir por horario.",
+            "groupSlotNone": "Crear nuevo / unir por horario",
+            "groupLessonBadge": "Clase grupal"
         },
         "summary": {
             "totalBookings": "Total Reservas",
@@ -1204,6 +1223,9 @@
             "internalComment": "Comentario Interno:",
             "invoiceSection": "Factura del Instructor",
             "invoiceCreated": "Factura creada",
+            "invoiceMarkedCreated": "Marcado como factura creada",
+            "invoiceMarkedPending": "Marcado como factura pendiente",
+            "invoiceUpdateError": "No se pudo actualizar el estado de la factura",
             "invoiceUploadedSuccess": "Factura cargada exitosamente",
             "invoiceLoaded": "Factura del Instructor",
             "invoiceLoadedDesc": "Factura cargada para esta reserva",
@@ -1244,7 +1266,16 @@
             "pdfPreviewUnavailable": "Vista previa no disponible para PDF",
             "previewAlt": "Vista previa",
             "uploadInvoice": "Cargar Factura",
-            "saveChanges": "Guardar Cambios"
+            "saveChanges": "Guardar Cambios",
+            "addStudentToClass": "Agregar alumno",
+            "addStudentDialogTitle": "Agregar alumno a esta clase",
+            "addStudentHelper": "Crea una reserva nueva y agrega al alumno al evento del instructor (igual que roster desde la app).",
+            "addStudentPlaceholder": "Buscar alumno por nombre",
+            "addStudentConfirm": "Agregar y crear reserva",
+            "addStudentSuccess": "Alumno agregado y reserva creada",
+            "addStudentError": "No se pudo agregar el alumno a esta clase",
+            "addStudentNoEvents": "Esta reserva no tiene horarios para agregar alumnos",
+            "rosterParticipants": "Alumnos en la clase"
         },
         "editModal": {
             "title": "Editar Reserva #{{id}}",
@@ -1304,6 +1335,16 @@
             "typeOptions": {
                 "ASSIGNED": "Asignado",
                 "REFERRED": "Referido"
+            },
+            "groupLesson": "Clase grupal",
+            "clientLevel": "Nivel del cliente",
+            "clientLevelNone": "Sin nivel",
+            "clientLevelOptions": {
+                "NEVER_EVER": "Nunca esquió",
+                "BEGINNER": "Principiante",
+                "INTERMEDIATE": "Intermedio",
+                "ADVANCED": "Avanzado",
+                "EXPERT": "Experto"
             }
         },
         "payoutEdit": {
@@ -1348,6 +1389,7 @@
             "searchPlaceholder": "Buscar por nombre o email",
             "noResults": "No se encontraron clientes",
             "success": "Cliente creado y seleccionado",
+            "successCreated": "Cliente creado",
             "validationName": "El nombre debe tener al menos 3 caracteres",
             "validationEmail": "El email es obligatorio",
             "validationPhone": "El teléfono es obligatorio",
@@ -1506,6 +1548,7 @@
                 "createANewClient": "Agregar Cliente",
                 "editClient": "Editar Cliente",
                 "level": "Nivel",
+                "NEVER_EVER": "Nunca esquió",
                 "BEGINNER": "Principiante",
                 "INTERMEDIATE": "Intermedio",
                 "ADVANCED": "Avanzado",

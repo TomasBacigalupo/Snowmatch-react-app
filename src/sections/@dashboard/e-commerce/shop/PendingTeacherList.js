@@ -9,7 +9,7 @@ import PendingTeacherCard from './PendingTeacherCard';
 import MemberTeacherCard from './MemberTeacherCard';
 import { useDispatch, useSelector } from 'react-redux';
 import useLocales from 'src/hooks/useLocales';
-import { closeFireModal, fireTeacher, hireTeacher } from 'src/redux/slices/business';
+import { closeFireModal, fireTeacher, hireTeacher, closeHireModal } from 'src/redux/slices/business';
 import { DialogAnimate } from 'src/components/animate';
 import { LoadingButton } from '@mui/lab';
 import HoverButton from 'src/components/HoverButton';
@@ -40,7 +40,7 @@ export default function PendingTeacherList({ teachers, loading, isPending = fals
   };
 
   const handleCloseHireModal = () => {
-    dispatch(closeFireModal());
+    dispatch(closeHireModal());
   };
 
   const handleHireTeacher = () => {

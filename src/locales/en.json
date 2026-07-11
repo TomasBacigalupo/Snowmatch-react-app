@@ -807,6 +807,13 @@
       "id": "ID",
       "lastMessage": "Last message",
       "participants": "Participants"
+    },
+    "bookings": {
+      "title": "Shared bookings",
+      "instructor": "Instructor",
+      "student": "Student",
+      "empty": "No bookings between these users.",
+      "participantsLoading": "Loading participants…"
     }
   },
   "adminUserCalendars": {
@@ -947,6 +954,10 @@
       "gearOnlyNote": "No classes — equipment rental only",
       "adultsChildren": "{{adults}} adults, {{children}} children"
     },
+    "createModal": {
+      "groupLessonProduct": "Group lesson product (optional)",
+      "groupLessonProductHelper": "Same published offers students book in the app. Links this booking to that product."
+    },
     "intent": {
       "unassigned": "Unassigned",
       "openStatus": "Open",
@@ -955,17 +966,25 @@
       "updateSuccess": "Pending booking updated successfully",
       "updateError": "Could not update the pending booking",
       "assignInstructor": "Assign instructor",
+      "assignStudent": "Assign student",
       "cancel": "Cancel",
       "cancelConfirm": "Cancel this pending booking?",
       "assignDialogTitle": "Assign instructor",
+      "assignStudentDialogTitle": "Assign student",
       "instructor": "Instructor",
       "instructorPlaceholder": "Search by first or last name",
       "instructorHelper": "Type to filter instructors by name.",
       "studentRequired": "Student (required)",
       "studentPlaceholder": "Search student",
       "studentHelper": "This pending booking has no student: choose one to confirm the booking.",
+      "studentAssignHelper": "Choose a student to confirm the booking with the already assigned instructor.",
       "close": "Close",
-      "confirm": "Confirm"
+      "confirm": "Confirm",
+      "groupSlot": "Teacher reservation that day (optional)",
+      "groupSlotPlaceholder": "Create new slot or pick an existing one",
+      "groupSlotHelper": "Roster this client onto any of the instructor's reservations on the booking day. Leave empty to create or auto-merge by time.",
+      "groupSlotNone": "Create new / auto-match by time",
+      "groupLessonBadge": "Group lesson"
     },
     "summary": {
       "totalBookings": "Total Bookings",
@@ -1011,6 +1030,9 @@
       "internalComment": "Internal comment:",
       "invoiceSection": "Instructor invoice",
       "invoiceCreated": "Invoice created",
+      "invoiceMarkedCreated": "Marked as invoice created",
+      "invoiceMarkedPending": "Marked as invoice pending",
+      "invoiceUpdateError": "Could not update invoice status",
       "invoiceUploadedSuccess": "Invoice uploaded successfully",
       "invoiceLoaded": "Instructor invoice",
       "invoiceLoadedDesc": "Invoice uploaded for this booking",
@@ -1051,7 +1073,16 @@
       "pdfPreviewUnavailable": "PDF preview not available",
       "previewAlt": "Preview",
       "uploadInvoice": "Upload invoice",
-      "saveChanges": "Save changes"
+      "saveChanges": "Save changes",
+      "addStudentToClass": "Add student",
+      "addStudentDialogTitle": "Add student to this class",
+      "addStudentHelper": "Creates a new booking and adds the student to the instructor’s calendar event (same as rostering from the app).",
+      "addStudentPlaceholder": "Search student by name",
+      "addStudentConfirm": "Add and create booking",
+      "addStudentSuccess": "Student added and booking created",
+      "addStudentError": "Could not add student to this class",
+      "addStudentNoEvents": "This booking has no class times to roster onto",
+      "rosterParticipants": "Students in class"
     },
     "editModal": {
       "title": "Edit booking #{{id}}",
@@ -1111,6 +1142,16 @@
       "typeOptions": {
         "ASSIGNED": "Assigned",
         "REFERRED": "Referred"
+      },
+      "groupLesson": "Group lesson",
+      "clientLevel": "Client level",
+      "clientLevelNone": "No level",
+      "clientLevelOptions": {
+        "NEVER_EVER": "Never ever",
+        "BEGINNER": "Beginner",
+        "INTERMEDIATE": "Intermediate",
+        "ADVANCED": "Advanced",
+        "EXPERT": "Expert"
       }
     },
     "payoutEdit": {
@@ -1155,6 +1196,7 @@
       "searchPlaceholder": "Search by name or email",
       "noResults": "No customers found",
       "success": "Customer created and selected",
+      "successCreated": "Customer created",
       "validationName": "Name must be at least 3 characters",
       "validationEmail": "Email is required",
       "validationPhone": "Phone is required",
@@ -1281,6 +1323,7 @@
     "addEvent": "Add Event",
     "form": {
       "assignedTeachers": "Assigned teachers",
+      "assignedStudents": "Assigned students",
       "teacher": "Teacher",
       "school": "School",
       "startDate": "Start Date",
@@ -1307,6 +1350,7 @@
         "createANewClient": "Create a new Client",
         "editClient": "Edit Client",
         "level": "Level",
+        "NEVER_EVER": "Never ever",
         "BEGINNER": "Beginner",
         "INTERMEDIATE": "Intermediate",
         "ADVANCED": "Advanced",

@@ -1,6 +1,7 @@
 import { paramCase } from 'change-case';
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useSnackbar } from 'notistack';
 // @mui
 import {
   Box,
@@ -24,11 +25,13 @@ import useTabs from '../../hooks/useTabs';
 import useSettings from '../../hooks/useSettings';
 import useTable, { getComparator } from '../../hooks/useTable';
 import useAuth from '../../hooks/useAuth';
+import useLocales from '../../hooks/useLocales';
 // components
 import Page from '../../components/Page';
 import Iconify from '../../components/Iconify';
 import Scrollbar from '../../components/Scrollbar';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
+import HoverButton from '../../components/HoverButton';
 import { TableEmptyRows, TableHeadCustom, TableNoData, TableSelectedActions } from '../../components/table';
 // sections
 import { AdminTableToolbar } from '../../sections/@dashboard/admin/list';
@@ -39,6 +42,7 @@ import DeclineForm from '../../sections/@dashboard/admin/DeclineForm';
 import AdminTableCard from 'src/sections/@dashboard/admin/list/AdminTableCard';
 import AdminTableRowClients from 'src/sections/@dashboard/admin/list/AdminTableRowClients';
 import ClientDetailsDrawer from 'src/sections/@dashboard/admin/list/ClientDetailsDrawer';
+import CreateStudentModal from 'src/sections/@dashboard/admin/CreateStudentModal';
 
 // ----------------------------------------------------------------------
 
@@ -77,6 +81,8 @@ export default function AdminReviewClients() {
   const { themeStretch } = useSettings();
   const navigate = useNavigate();
   const { isResortAdmin } = useAuth();
+  const { translate } = useLocales();
+  const { enqueueSnackbar } = useSnackbar();
   const tableHead = isResortAdmin ? RESORT_ADMIN_TABLE_HEAD : TABLE_HEAD;
 
   const [tableData, setTableData] = useState([]);
@@ -90,6 +96,7 @@ export default function AdminReviewClients() {
 
   const [selectedClient, setSelectedClient] = useState(null);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [createClientOpen, setCreateClientOpen] = useState(false);
 
   const handleFilterName = (value) => {
     setFilterNameInput(value);
@@ -176,6 +183,11 @@ export default function AdminReviewClients() {
     setSelectedClient(null);
   };
 
+  const handleClientCreated = () => {
+    enqueueSnackbar(translate('adminBookings.createStudent.successCreated'), { variant: 'success' });
+    fetchClients(page, rowsPerPage);
+  };
+
   useEffect(() => {
     if (isResortAdmin) {
       setTableData(teachers ?? []);
@@ -210,6 +222,15 @@ export default function AdminReviewClients() {
             { name: isResortAdmin ? 'Resort Admin' : 'Admin', href: PATH_DASHBOARD.admin.root },
             { name: 'Clients' },
           ]}
+          action={
+            <HoverButton
+              variant="contained"
+              startIcon={<Iconify icon="eva:plus-fill" />}
+              onClick={() => setCreateClientOpen(true)}
+            >
+              {translate('adminBookings.createStudent.openButton')}
+            </HoverButton>
+          }
         />
 
         <Card>
@@ -348,6 +369,12 @@ export default function AdminReviewClients() {
           open={isDrawerOpen}
           onClose={handleCloseDrawer}
           client={selectedClient}
+        />
+
+        <CreateStudentModal
+          open={createClientOpen}
+          onClose={() => setCreateClientOpen(false)}
+          onCreated={handleClientCreated}
         />
       </Container>
     </Page>

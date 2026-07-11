@@ -27,9 +27,16 @@ GearBookingDetailsDrawer.propTypes = {
   onClose: PropTypes.func,
   booking: PropTypes.object,
   refreshBookings: PropTypes.func,
+  onBookingUpdated: PropTypes.func,
 };
 
-export default function GearBookingDetailsDrawer({ open, onClose, booking, refreshBookings }) {
+export default function GearBookingDetailsDrawer({
+  open,
+  onClose,
+  booking,
+  refreshBookings,
+  onBookingUpdated,
+}) {
   const theme = useTheme();
   const { t } = useTranslation();
   const { enqueueSnackbar } = useSnackbar();
@@ -68,9 +75,12 @@ export default function GearBookingDetailsDrawer({ open, onClose, booking, refre
   const formatPrice = (price) =>
     new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(price);
 
-  const handleEditSave = () => {
+  const handleEditSave = (updatedBooking) => {
     setEditModalOpen(false);
     setLinesRefreshKey((k) => k + 1);
+    if (onBookingUpdated && updatedBooking) {
+      onBookingUpdated({ ...booking, ...updatedBooking });
+    }
     if (refreshBookings) {
       refreshBookings();
     }

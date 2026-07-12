@@ -1150,7 +1150,7 @@
         },
         "createModal": {
             "groupLessonProduct": "Producto de clase grupal (opcional)",
-            "groupLessonProductHelper": "Las mismas ofertas publicadas que reservan los alumnos en la app. Vincula esta reserva a ese producto."
+            "groupLessonProductHelper": "Crea una reserva pendiente de asignar instructor (sin instructor hasta convertirla)."
         },
         "intent": {
             "unassigned": "Sin asignar",

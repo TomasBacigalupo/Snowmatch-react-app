@@ -93,7 +93,7 @@ const getInitialValues = (event, range) => {
     const merged = merge({}, _event, event);
     return {
       ...merged,
-      title: merged.title || '',
+      title: merged.title || (merged.id ? 'Event' : ''),
       description: merged.description || '',
       start: toFormDate(merged.start, _event.start),
       end: toFormDate(merged.end, _event.end),
@@ -238,12 +238,10 @@ export default function CalendarForm({ event, range, onCancel, clients, members,
         if (isAdmin) {
           func = createEventByUserId(targetUserId, newEvent);
           snackbar = 'Create success!'
-        } else {
-          if (classType === 'teacher') {
-            func = createEvent(newEvent);
-            snackbar = 'Create success!'
-          }
-        } if (classType === 'school') {
+        } else if (classType === 'teacher') {
+          func = createEvent(newEvent);
+          snackbar = 'Create success!'
+        } else if (classType === 'school') {
           func = createBusinessEvent(newEvent);
           snackbar = 'Create success!'
         }
@@ -273,24 +271,22 @@ export default function CalendarForm({ event, range, onCancel, clients, members,
   };
 
   const handleDelete = async () => {
-    console.log("deleting")
-    console.log(event)
     if (!event?.id) return;
     try {
-      onCancel();
       if (user?.user?.role === 'ADMIN') {
-        dispatch(adminDeleteEvent(event?.id));
-        enqueueSnackbar('Delete success!');
+        await dispatch(adminDeleteEvent(event.id));
       } else if (classType === 'teacher') {
-        dispatch(deleteEvent(event?.id));
-        enqueueSnackbar('Delete success!');
+        await dispatch(deleteEvent(event.id));
       } else if (classType === 'school') {
-        dispatch(deleteBusinessEvent(event?.id));
-        enqueueSnackbar('Delete success!');
+        await dispatch(deleteBusinessEvent(event.id));
+      } else {
+        return;
       }
-
+      enqueueSnackbar('Delete success!');
+      onCancel();
     } catch (error) {
       console.error(error);
+      enqueueSnackbar('Delete failed', { variant: 'error' });
     }
   };
 
@@ -591,7 +587,7 @@ export default function CalendarForm({ event, range, onCancel, clients, members,
       <DialogActions>
         {!isCreating && (
           <Tooltip title="Delete Event">
-            <IconButton onClick={handleDelete} disabled={disabled && classType === 'school'}>
+            <IconButton onClick={handleDelete} disabled={disabled}>
               <Iconify icon="eva:trash-2-outline" width={20} height={20} />
             </IconButton>
           </Tooltip>

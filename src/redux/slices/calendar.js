@@ -591,6 +591,7 @@ export function adminDeleteEvent(eventId) {
       dispatch(slice.actions.deleteEventSuccess({ eventId }));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
+      throw error;
     }
   };
 }

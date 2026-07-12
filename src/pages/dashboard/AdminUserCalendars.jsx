@@ -26,6 +26,7 @@ import {
   closeModal,
   selectEvent,
   selectRange,
+  updateEventByUserIdAndEventId,
 } from '../../redux/slices/calendar';
 import { getTeachers, getResortAdminTeachers, getTeacher } from '../../redux/slices/admin';
 import { getClients } from '../../redux/slices/clients';
@@ -43,6 +44,7 @@ import { DialogAnimate } from '../../components/animate';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
 import useAuth from '../../hooks/useAuth';
 import HoverButton from '../../components/HoverButton';
+import { useSnackbar } from 'notistack';
 // sections
 import { CalendarForm, CalendarStyle, CalendarToolbar } from '../../sections/@dashboard/calendar';
 
@@ -61,12 +63,30 @@ const selectedEventSelector = (state) => {
   return null;
 };
 
+const buildAdminSchedulePayload = (existing, start, end) => ({
+  id: existing.id,
+  title: existing.title || 'Event',
+  description: existing.description ?? '',
+  textColor: existing.textColor,
+  start,
+  end,
+  type: existing.type,
+  price: existing.price,
+  resort: existing.resort,
+  state: existing.state ?? 'PENDING',
+  payed: existing.payed ?? false,
+  clients: (existing.clients || []).map((c) => ({ id: c.id })).filter((c) => c.id != null),
+  students: (existing.students || []).map((s) => ({ id: s.id })).filter((s) => s.id != null),
+});
+
 export default function AdminUserCalendars() {
   const { t } = useTranslation();
   const { translate } = useLocales();
+  const { enqueueSnackbar } = useSnackbar();
   const { themeStretch } = useSettings();
   const pageTitle = t('menu.user calendars');
-  const { isResortAdmin } = useAuth();
+  const { isResortAdmin, isAdmin } = useAuth();
+  const canEditCalendar = Boolean(isAdmin) && !isResortAdmin;
   const dispatch = useDispatch();
   const isDesktop = useResponsive('up', 'sm');
   const calendarRef = useRef(null);
@@ -220,6 +240,29 @@ export default function AdminUserCalendars() {
     dispatch(selectEvent(arg.event.id));
   };
 
+  const handleScheduleChange = async ({ event }) => {
+    if (!canEditCalendar || !userId) return;
+    const existing = events.find((e) => String(e.id) === String(event.id));
+    if (!existing) {
+      enqueueSnackbar('Event not found', { variant: 'error' });
+      return;
+    }
+    try {
+      await dispatch(
+        updateEventByUserIdAndEventId(
+          userId,
+          event.id,
+          buildAdminSchedulePayload(existing, event.start, event.end)
+        )
+      );
+      enqueueSnackbar('Schedule updated');
+    } catch (error) {
+      console.error(error);
+      enqueueSnackbar('Failed to update schedule', { variant: 'error' });
+      dispatch(getEventsByUserId(userId));
+    }
+  };
+
   const handleAddEvent = () => {
     dispatch(openModal());
   };
@@ -276,7 +319,7 @@ export default function AdminUserCalendars() {
             { name: pageTitle },
           ]}
           action={
-            userId ? (
+            userId && canEditCalendar ? (
               <HoverButton
                 variant="contained"
                 startIcon={<Iconify icon="eva:plus-fill" width={20} height={20} />}
@@ -330,9 +373,9 @@ export default function AdminUserCalendars() {
               />
               <FullCalendar
                 weekends
-                editable={false}
-                droppable={false}
-                selectable
+                editable={canEditCalendar}
+                droppable={canEditCalendar}
+                selectable={canEditCalendar}
                 events={events}
                 ref={calendarRef}
                 rerenderDelay={10}
@@ -342,7 +385,10 @@ export default function AdminUserCalendars() {
                 eventDisplay="block"
                 headerToolbar={false}
                 allDayMaintainDuration
-                select={handleSelectRange}
+                eventResizableFromStart={canEditCalendar}
+                select={canEditCalendar ? handleSelectRange : undefined}
+                eventDrop={canEditCalendar ? handleScheduleChange : undefined}
+                eventResize={canEditCalendar ? handleScheduleChange : undefined}
                 eventClick={handleSelectEvent}
                 datesSet={handleDatesSet}
                 dayCellContent={dayCellContent}
@@ -371,6 +417,7 @@ export default function AdminUserCalendars() {
             clients={clients || []}
             members={members || []}
             ownerUserId={userId}
+            disabled={!canEditCalendar}
           />
         </DialogAnimate>
       </Container>

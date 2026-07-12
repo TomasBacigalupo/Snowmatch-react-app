@@ -1392,7 +1392,7 @@
         },
         "createModal": {
             "groupLessonProduct": "Produto de aula em grupo (opcional)",
-            "groupLessonProductHelper": "As mesmas ofertas publicadas que os alunos reservam no app. Vincula esta reserva a esse produto."
+            "groupLessonProductHelper": "Cria uma reserva pendente de atribuição de instrutor (sem instrutor até converter)."
         },
         "intent": {
             "unassigned": "Não atribuído",

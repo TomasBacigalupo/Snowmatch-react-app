@@ -279,20 +279,24 @@ const BookingModal = ({ isOpen, onClose, refreshBookings, filterTeacherId, filte
             textColor: formData.bookingType === 'REFERRED' ? '#00FF00' : '#FF0000',
         }));
 
-        if (formData.includesEquipment && studentId && teacherId) {
-            const rentalError = validateRental();
-            if (rentalError) {
-                enqueueSnackbar(rentalError, { variant: 'warning' });
+        const isGroupLessonProduct = Boolean(formData.groupLessonOffer?.id);
+
+        // Rental reservations only attach to confirmed bookings (not group-lesson intents).
+        if (formData.includesEquipment && !isGroupLessonProduct) {
+            if (studentId && teacherId) {
+                const rentalError = validateRental();
+                if (rentalError) {
+                    enqueueSnackbar(rentalError, { variant: 'warning' });
+                    return;
+                }
+            } else {
+                enqueueSnackbar(t('adminBookings.rental.requiresConfirmedBooking'), { variant: 'warning' });
                 return;
             }
         }
 
-        if (formData.includesEquipment && (!studentId || !teacherId)) {
-            enqueueSnackbar(t('adminBookings.rental.requiresConfirmedBooking'), { variant: 'warning' });
-            return;
-        }
-
-        if (studentId && teacherId) {
+        // Group lesson products are always open booking intents (pending instructor assignment).
+        if (studentId && teacherId && !isGroupLessonProduct) {
             setSubmitting(true);
             try {
                 const { rental } = formData;
@@ -317,8 +321,8 @@ const BookingModal = ({ isOpen, onClose, refreshBookings, filterTeacherId, filte
                         formData.includesEquipment ? rental.rentalFulfillment : null,
                         formData.includesEquipment ? rental.rentalDestinationType : null,
                         formData.includesEquipment ? rental.rentalDestinationDetail : null,
-                        formData.groupLessonOffer?.id ?? null,
-                        formData.groupLessonOffer?.resort ?? null
+                        null,
+                        null
                     )
                 );
 
@@ -365,21 +369,25 @@ const BookingModal = ({ isOpen, onClose, refreshBookings, filterTeacherId, filte
             formData.paymentMethod,
             formData.internalComment,
             formData.resort,
-            teacherId ?? null,
+            isGroupLessonProduct ? null : (teacherId ?? null),
             formData.groupLessonOffer?.id ?? null,
             formData.groupLessonOffer?.resort ?? null));
     };
 
     const handleGroupLessonOfferChange = (offer) => {
-        const shouldDefaultGrupalTeacher = Boolean(offer) && !teacherId;
-        if (shouldDefaultGrupalTeacher) {
-            setTeacherId(1117);
+        // Group class products stay unassigned until an instructor is chosen on convert.
+        if (offer) {
+            setTeacherId(null);
         }
         setFormData((prev) => {
             const next = {
                 ...prev,
                 groupLessonOffer: offer,
             };
+            if (offer) {
+                next.teacher = null;
+                next.teacherSearch = '';
+            }
             if (offer?.resort) {
                 next.resort = offer.resort;
             }
@@ -392,10 +400,6 @@ const BookingModal = ({ isOpen, onClose, refreshBookings, filterTeacherId, filte
             }
             if (offer?.includesGear) {
                 next.includesEquipment = true;
-            }
-            // Match typical admin group-class flow: default calendar teacher to Grupal when none selected.
-            if (shouldDefaultGrupalTeacher && !prev.teacher) {
-                next.teacher = { id: 1117, name: 'Grupal', lastname: '' };
             }
             return next;
         });

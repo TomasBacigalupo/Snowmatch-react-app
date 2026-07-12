@@ -957,7 +957,7 @@
     },
     "createModal": {
       "groupLessonProduct": "Group lesson product (optional)",
-      "groupLessonProductHelper": "Same published offers students book in the app. Links this booking to that product."
+      "groupLessonProductHelper": "Creates a pending booking awaiting instructor assignment (no instructor until converted)."
     },
     "intent": {
       "unassigned": "Unassigned",

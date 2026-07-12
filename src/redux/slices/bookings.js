@@ -786,10 +786,12 @@ export function createAdminBookingIntent(studentId, message, children, adults, e
             if (studentId != null && studentId !== '') {
                 payload.student = { id: Number(studentId) };
             }
-            if (calendarTeacherId != null && calendarTeacherId !== '') {
+            // Group lesson intents stay unassigned until convert; do not attach a calendar teacher.
+            const hasGroupLessonProduct = groupLessonConfigId != null && groupLessonConfigId !== '';
+            if (!hasGroupLessonProduct && calendarTeacherId != null && calendarTeacherId !== '') {
                 payload.teacher = { id: Number(calendarTeacherId) };
             }
-            if (groupLessonConfigId != null && groupLessonConfigId !== '') {
+            if (hasGroupLessonProduct) {
                 payload.groupLessonConfigId = Number(groupLessonConfigId);
             }
             if (groupLessonResort) {

@@ -510,6 +510,7 @@ export default function Router() {
                 { path: 'school-member-lessons', element: <AdminSchoolMemberLessons /> },
                 { path: 'school-members', element: <AdminSchoolMembers /> },
                 { path: 'user-calendars', element: <AdminUserCalendars /> },
+                { path: 'pricing', element: <AdminPricing /> },
                 { path: ':id/confirm', element: <AdminConfirm /> },
                 { path: ':id/events', element: <AdminUserEvents /> },
               ],
@@ -701,6 +702,7 @@ const AdminSchoolMembers = Loadable(lazy(() => import('../pages/dashboard/AdminS
 const AdminConfirm = Loadable(lazy(() => import('../pages/dashboard/AdminConfirm')));
 const AdminUserEvents = Loadable(lazy(() => import('../pages/dashboard/AdminUserEvents')));
 const AdminUserCalendars = Loadable(lazy(() => import('../pages/dashboard/AdminUserCalendars')));
+const AdminPricing = Loadable(lazy(() => import('../pages/dashboard/AdminPricing')));
 
 
 // APP

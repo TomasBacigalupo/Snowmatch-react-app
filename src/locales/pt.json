@@ -1147,6 +1147,7 @@
         "school member lessons": "Horas dos professores da escola",
         "user chats": "Chats de usuários",
         "user calendars": "Calendários de usuários",
+        "pricing": "Preços",
         "today": "Hoje",
         "lesson bookings": "Reservas de aulas",
         "contactSupport247": "Contactar suporte 24/7"
@@ -1318,7 +1319,15 @@
         "searchTeacherPlaceholder": "Digite nome ou sobrenome",
         "selectTeacherHint": "Selecione um instrutor para ver as configurações do calendário.",
         "noTeachersFound": "Nenhum instrutor encontrado",
-        "typeToSearchTeachers": "Digite para buscar instrutores"
+        "typeToSearchTeachers": "Digite para buscar instrutores",
+        "quickSelectLabel": "Seleção rápida",
+        "statsEvents": "Eventos únicos",
+        "statsHours": "Horas totais",
+        "statsFrom": "De",
+        "statsTo": "Até",
+        "quincenaMonth": "Mês",
+        "quincenaFirst": "1ª quinzena",
+        "quincenaSecond": "2ª quinzena"
     },
     "adminToday": {
         "pageTitle": "Hoje",

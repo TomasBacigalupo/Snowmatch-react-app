@@ -98,6 +98,7 @@ const ADMIN_NAV_ITEMS = [
   { title: 'school member lessons', path: PATH_DASHBOARD.admin.schoolMemberLessons, icon: ICONS.analytics },
   { title: 'school members', path: PATH_DASHBOARD.admin.schoolMembers, icon: ICONS.user },
   { title: 'user calendars', path: PATH_DASHBOARD.admin.userCalendars, icon: ICONS.calendar },
+  { title: 'pricing', path: PATH_DASHBOARD.admin.pricing, icon: ICONS.invoice },
 ];
 
 const RESORT_ADMIN_NAV_ITEMS = [
@@ -109,6 +110,7 @@ const RESORT_ADMIN_NAV_ITEMS = [
   { title: 'user chats', path: PATH_DASHBOARD.admin.userChats, icon: ICONS.chat },
   { title: 'rental products', path: PATH_DASHBOARD.admin.rental, icon: ICONS.ecommerce },
   { title: 'group lessons by resort', path: PATH_DASHBOARD.admin.groupLessonResorts, icon: ICONS.calendar },
+  { title: 'pricing', path: PATH_DASHBOARD.admin.pricing, icon: ICONS.invoice },
 ];
 
 NavbarVertical.propTypes = {

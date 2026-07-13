@@ -22,13 +22,15 @@ AdminTableCard.propTypes = {
     onContactedChange: PropTypes.func,
     onClick: PropTypes.func,
     showRole: PropTypes.bool,
+    showStudentClientIcon: PropTypes.bool,
 };
 
-export default function AdminTableCard({ row, selected, onEditRow, onSelectRow, onConfirmRow, onDeclineRow, onWapp, onEvents, onContactedChange, onClick, showRole = true }) {
+export default function AdminTableCard({ row, selected, onEditRow, onSelectRow, onConfirmRow, onDeclineRow, onWapp, onEvents, onContactedChange, onClick, showRole = true, showStudentClientIcon = false }) {
     const { t } = useTranslation();
     const theme = useTheme();
 
     const { name, lastname, imageLink, role, level, authorized, state, id, emailVerified, contacted, priority } = row;
+    const isStudent = String(role || '').toUpperCase() === 'STUDENT';
 
     const [openMenu, setOpenMenuActions] = useState(null);
 
@@ -53,6 +55,17 @@ export default function AdminTableCard({ row, selected, onEditRow, onSelectRow, 
                 <Box display='flex' justifyContent='space-between'>
                     <Box display='flex' flexDirection='column'>
                         <Box display='flex' alignItems='center'>
+                            {showStudentClientIcon && (
+                                <Iconify
+                                    icon={isStudent ? 'mdi:school' : 'mdi:account'}
+                                    sx={{
+                                        mr: 1,
+                                        width: 22,
+                                        height: 22,
+                                        color: isStudent ? 'info.main' : 'text.secondary',
+                                    }}
+                                />
+                            )}
                             <Typography variant='h4'>
                                 {`${name} ${lastname}`}
                             </Typography>

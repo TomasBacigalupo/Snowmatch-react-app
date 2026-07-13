@@ -337,6 +337,8 @@ export default function AdminReviewClients() {
                       : (contacted) => dispatch(setClientContacted(row.id, contacted))
                   }
                   onClick={() => handleRowClick(row)}
+                  showRole={false}
+                  showStudentClientIcon
                 />
               ))}
             </Hidden>

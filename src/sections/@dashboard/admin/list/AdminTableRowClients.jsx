@@ -1,10 +1,8 @@
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 // @mui
-import { useTheme } from '@mui/material/styles';
-import { Avatar, Checkbox, TableRow, TableCell, Typography, MenuItem } from '@mui/material';
+import { Box, Checkbox, TableRow, TableCell, Typography, MenuItem, Tooltip, Stack } from '@mui/material';
 // components
-import Label from '../../../../components/Label';
 import Iconify from '../../../../components/Iconify';
 import { TableMoreMenu } from '../../../../components/table';
 
@@ -23,9 +21,8 @@ AdminTableRowClients.propTypes = {
 };
 
 export default function AdminTableRowClients({ row, selected, onEditRow, onSelectRow, onConfirmRow, onDeclineRow, onWapp, onEvents, onContactedChange, onClick }) {
-  const theme = useTheme();
-
-  const { name, lastname, email, state, id, cellphone, proCheckCredits, contacted } = row;
+  const { name, lastname, email, id, cellphone, proCheckCredits, contacted, role } = row;
+  const isStudent = String(role || '').toUpperCase() === 'STUDENT';
 
   const [openMenu, setOpenMenuActions] = useState(null);
 
@@ -49,11 +46,25 @@ export default function AdminTableRowClients({ row, selected, onEditRow, onSelec
       {id}
       </TableCell>
 
-      <TableCell sx={{ display: 'flex', alignItems: 'center' }}>
-        <Avatar alt={name} src={"imageLink"} sx={{ mr: 2 }} />
-        <Typography variant="subtitle2" noWrap>
-          {name + " " + lastname}
-        </Typography>
+      <TableCell>
+        <Stack direction="row" alignItems="center" spacing={1}>
+          <Tooltip title={isStudent ? 'Student' : 'Client'}>
+            <Box component="span" sx={{ display: 'inline-flex' }}>
+              <Iconify
+                icon={isStudent ? 'mdi:school' : 'mdi:account'}
+                sx={{
+                  width: 20,
+                  height: 20,
+                  flexShrink: 0,
+                  color: isStudent ? 'info.main' : 'text.secondary',
+                }}
+              />
+            </Box>
+          </Tooltip>
+          <Typography variant="subtitle2" noWrap>
+            {name + " " + lastname}
+          </Typography>
+        </Stack>
       </TableCell>
       <TableCell align="left">
         {cellphone}

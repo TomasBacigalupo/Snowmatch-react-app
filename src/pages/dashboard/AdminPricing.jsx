@@ -71,12 +71,6 @@ const OTHER_PRODUCTS = [
 ];
 
 // Alquiler de equipos — precios "desde", por día.
-const RENTAL_EQUIPMENT = [
-  { label: 'Ski Bronze', price: 35000 },
-  { label: 'Ski Plata', price: 55000 },
-  { label: 'Ski Oro', price: 70000 },
-];
-
 const RENTAL_COMBOS = [
   { label: 'Combo Bronze', price: 50000 },
   { label: 'Combo Plata', price: 78000 },
@@ -101,9 +95,9 @@ const INSTRUCTOR_RATES = [
   { level: 0, assigned: 19000, referred: 25500 },
   { level: 1, assigned: 28000, referred: 34500 },
   { level: 2, assigned: 38000, referred: 44500 },
-  { level: 3, assigned: 58000, referred: 58000 },
-  { level: 4, assigned: 58000, referred: 58000 },
-  { level: 5, assigned: 58000, referred: 58000 },
+  { level: 3, assigned: 45000, referred: 45000 },
+  { level: 4, assigned: 45000, referred: 45000 },
+  { level: 5, assigned: 45000, referred: 45000 },
 ];
 
 // ----------------------------------------------------------------------
@@ -307,15 +301,7 @@ export default function AdminPricing() {
           <Chip label="desde / por día" size="small" color="warning" variant="outlined" sx={{ ml: 1 }} />
         </Typography>
         <Grid container spacing={3} sx={{ mb: 4 }}>
-          <Grid item xs={12} md={4}>
-            <Card>
-              <CardHeader title="Equipos" avatar={<Iconify icon="mdi:ski" width={28} height={28} />} />
-              <Box sx={{ p: 2, pt: 1 }}>
-                <PriceTable rows={RENTAL_EQUIPMENT} unitLabel="desde / día" />
-              </Box>
-            </Card>
-          </Grid>
-          <Grid item xs={12} md={4}>
+          <Grid item xs={12} md={6}>
             <Card>
               <CardHeader
                 title="Combos completos"
@@ -326,7 +312,7 @@ export default function AdminPricing() {
               </Box>
             </Card>
           </Grid>
-          <Grid item xs={12} md={4}>
+          <Grid item xs={12} md={6}>
             <Card>
               <CardHeader
                 title="Indumentaria"

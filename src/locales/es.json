@@ -878,6 +878,7 @@
         "resort admins": "Administradores de centros",
         "user chats": "Mensajes",
         "user calendars": "Agenda de profes",
+        "pricing": "Precios",
         "review teachers": "Instructores",
         "review clients": "Clientes",
         "today": "Hoy",
@@ -1014,7 +1015,15 @@
         "searchTeacherPlaceholder": "Escribí nombre o apellido",
         "selectTeacherHint": "Seleccioná un instructor para ver la configuración de su calendario.",
         "noTeachersFound": "No se encontraron instructores",
-        "typeToSearchTeachers": "Escribí para buscar instructores"
+        "typeToSearchTeachers": "Escribí para buscar instructores",
+        "quickSelectLabel": "Selección rápida",
+        "statsEvents": "Eventos únicos",
+        "statsHours": "Horas totales",
+        "statsFrom": "Desde",
+        "statsTo": "Hasta",
+        "quincenaMonth": "Mes",
+        "quincenaFirst": "1ª quincena",
+        "quincenaSecond": "2ª quincena"
     },
     "adminToday": {
         "pageTitle": "Hoy",

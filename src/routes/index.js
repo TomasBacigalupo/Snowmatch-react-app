@@ -508,6 +508,7 @@ export default function Router() {
                 { path: 'group-lesson-resorts', element: <AdminGroupLessonResorts /> },
                 { path: 'resort-admins', element: <AdminResortAdmins /> },
                 { path: 'user-calendars', element: <AdminUserCalendars /> },
+                { path: 'pricing', element: <AdminPricing /> },
                 { path: ':id/confirm', element: <AdminConfirm /> },
                 { path: ':id/events', element: <AdminUserEvents /> },
               ],
@@ -697,6 +698,7 @@ const AdminResortAdmins = Loadable(lazy(() => import('../pages/dashboard/AdminRe
 const AdminConfirm = Loadable(lazy(() => import('../pages/dashboard/AdminConfirm')));
 const AdminUserEvents = Loadable(lazy(() => import('../pages/dashboard/AdminUserEvents')));
 const AdminUserCalendars = Loadable(lazy(() => import('../pages/dashboard/AdminUserCalendars')));
+const AdminPricing = Loadable(lazy(() => import('../pages/dashboard/AdminPricing')));
 
 
 // APP

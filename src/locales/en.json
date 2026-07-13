@@ -699,6 +699,7 @@
     "resort admins": "Resort admins",
     "user chats": "User chats",
     "user calendars": "User calendars",
+    "pricing": "Pricing",
     "review teachers": "Review PROs",
     "today": "Today",
     "lesson bookings": "Lesson bookings",
@@ -821,7 +822,15 @@
     "searchTeacherPlaceholder": "Type name or lastname",
     "selectTeacherHint": "Select a teacher to view their calendar settings.",
     "noTeachersFound": "No teachers found",
-    "typeToSearchTeachers": "Type to search teachers"
+    "typeToSearchTeachers": "Type to search teachers",
+    "quickSelectLabel": "Quick select",
+    "statsEvents": "Unique events",
+    "statsHours": "Total hours",
+    "statsFrom": "From",
+    "statsTo": "To",
+    "quincenaMonth": "Month",
+    "quincenaFirst": "1st half",
+    "quincenaSecond": "2nd half"
   },
   "adminToday": {
     "pageTitle": "Today",

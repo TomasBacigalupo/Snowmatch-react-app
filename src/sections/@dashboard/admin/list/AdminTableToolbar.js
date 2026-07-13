@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Stack, InputAdornment, TextField, MenuItem, Chip, Collapse, Button } from '@mui/material';
 import { ADMIN_BOOKING_RESORT_FILTER_OPTIONS } from 'src/utils/adminBookingResortOptions';
+import { TEACHER_QUICK_CHIPS } from 'src/utils/teacherQuickChips';
 // components
 import Iconify from '../../../../components/Iconify';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
@@ -10,21 +11,6 @@ import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 
 // ----------------------------------------------------------------------
-
-const TEACHER_CHIPS = [
-  { name: 'Thiago', value: 850 },
-  { name: 'Agos', value: 897 },
-  { name: 'Charly', value: 912 },
-  { name: 'Fifu', value: 918 },
-  { name: 'Gonzalo', value: 903 },
-  { name: 'Sebas', value: 904 },
-  { name: 'Tadeo', value: 944 },
-  { name: 'Lola', value: 977 },
-  { name: 'Popi', value: 592 },
-  { name: 'Maite', value: 653 },
-  { name: 'Oriana', value: 974 },
-  { name: 'Marta', value: 902 },
-];
 
 const MONTH_OPTION_VALUES = ['06', '07', '08', '09', '10'];
 
@@ -437,7 +423,7 @@ export default function AdminTableToolbar({
                     alignItems: 'center',
                   }}
                 >
-                  {TEACHER_CHIPS.map((teacher) => (
+                  {TEACHER_QUICK_CHIPS.map((teacher) => (
                     <Chip
                       key={teacher.value}
                       label={teacher.name}

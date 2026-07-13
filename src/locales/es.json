@@ -939,7 +939,15 @@
             "email": "Email",
             "level": "Nivel",
             "assignedHours": "Horas asignadas",
-            "requiredHours": "Horas requeridas"
+            "requiredHours": "Horas requeridas",
+            "total": "Total"
+        },
+        "totalRow": "Total",
+        "filters": {
+            "title": "Filtros",
+            "level": "Nivel",
+            "allLevels": "Todos",
+            "search": "Buscar por nombre o email"
         },
         "drawer": {
             "subtitle": "Agenda del instructor",

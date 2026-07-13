@@ -746,7 +746,15 @@
       "email": "Email",
       "level": "Level",
       "assignedHours": "Assigned hours",
-      "requiredHours": "Required hours"
+      "requiredHours": "Required hours",
+      "total": "Total"
+    },
+    "totalRow": "Total",
+    "filters": {
+      "title": "Filters",
+      "level": "Level",
+      "allLevels": "All",
+      "search": "Search by name or email"
     },
     "drawer": {
       "subtitle": "Instructor schedule",

@@ -94,8 +94,9 @@ const BookingModal = ({ isOpen, onClose, refreshBookings, filterTeacherId, filte
     const groupLessonOffers = useSelector((state) => state.groupLessonResortConfig?.items || []);
 
     const resolvedStudentId = formData.student?.id ?? studentId;
+    const resolvedTeacherId = formData.teacher?.id ?? teacherId;
     const isGroupLessonProduct = Boolean(formData.groupLessonOffer?.id);
-    const willCreateConfirmedBooking = Boolean(resolvedStudentId && teacherId && !isGroupLessonProduct);
+    const willCreateConfirmedBooking = Boolean(resolvedStudentId && resolvedTeacherId && !isGroupLessonProduct);
 
     const studentAutocompleteOptions = useMemo(() => {
         const selected = formData.student;
@@ -286,6 +287,7 @@ const BookingModal = ({ isOpen, onClose, refreshBookings, filterTeacherId, filte
         }));
 
         const selectedStudentId = formData.student?.id ?? studentId;
+        const selectedTeacherId = formData.teacher?.id ?? teacherId;
 
         // Typed a name but did not pick a client from the dropdown — do not silently save an intent.
         if (!selectedStudentId && formData.studentSearch?.trim()) {
@@ -300,7 +302,7 @@ const BookingModal = ({ isOpen, onClose, refreshBookings, filterTeacherId, filte
 
         // Rental reservations only attach to confirmed bookings (not group-lesson intents).
         if (formData.includesEquipment && !isGroupLessonProduct) {
-            if (selectedStudentId && teacherId) {
+            if (selectedStudentId && selectedTeacherId) {
                 const rentalError = validateRental();
                 if (rentalError) {
                     enqueueSnackbar(rentalError, { variant: 'warning' });
@@ -313,13 +315,13 @@ const BookingModal = ({ isOpen, onClose, refreshBookings, filterTeacherId, filte
         }
 
         // Client + instructor (non-group) → confirmed booking. Anything else → pending intent.
-        if (selectedStudentId && teacherId && !isGroupLessonProduct) {
+        if (selectedStudentId && selectedTeacherId && !isGroupLessonProduct) {
             setSubmitting(true);
             try {
                 const { rental } = formData;
                 const created = await dispatch(
                     createAdminBooking(
-                        teacherId,
+                        selectedTeacherId,
                         selectedStudentId,
                         formData.comment,
                         Number(formData.children),
@@ -386,7 +388,7 @@ const BookingModal = ({ isOpen, onClose, refreshBookings, filterTeacherId, filte
             formData.paymentMethod,
             formData.internalComment,
             formData.resort,
-            isGroupLessonProduct ? null : (teacherId ?? null),
+            isGroupLessonProduct ? null : (selectedTeacherId ?? null),
             formData.groupLessonOffer?.id ?? null,
             formData.groupLessonOffer?.resort ?? null));
     };

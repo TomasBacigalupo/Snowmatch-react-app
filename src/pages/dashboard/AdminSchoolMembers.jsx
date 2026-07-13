@@ -130,8 +130,8 @@ export default function AdminSchoolMembers() {
   const [openFilter, setOpenFilter] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
-  const { members, pending, sortBy, filters, isLoading, isLoadingModal } = useSelector((state) => state.business);
-  const { teachers: teacherSearchResults } = useSelector((state) => state.admin);
+  const { members, pending, sortBy, filters, isLoading } = useSelector((state) => state.business);
+  const { teachers: teacherSearchResults, isLoading: isSearchingTeachers } = useSelector((state) => state.admin);
   const safeFilters = filters || DEFAULT_FILTERS;
   const isPending = tab === 'pending';
   const sourceTeachers = isPending ? pending : members;
@@ -191,9 +191,14 @@ export default function AdminSchoolMembers() {
     };
   }, [dispatch, isAdmin]);
 
+  // Subscribe to form changes instead of depending on watch()'s new object every render,
+  // which re-dispatched filterTeachers in a loop and made the add-teacher modal blink.
   useEffect(() => {
-    dispatch(filterTeachers(values));
-  }, [dispatch, values]);
+    const subscription = watch((formValues) => {
+      dispatch(filterTeachers(formValues));
+    });
+    return () => subscription.unsubscribe();
+  }, [dispatch, watch]);
 
   useEffect(() => {
     if (!addDialogOpen) return undefined;
@@ -383,10 +388,15 @@ export default function AdminSchoolMembers() {
               options={addableTeachers}
               value={selectedTeacher}
               onChange={(_, value) => setSelectedTeacher(value)}
-              onInputChange={(_, value) => setTeacherSearch(value)}
+              onInputChange={(_, value, reason) => {
+                if (reason === 'input' || reason === 'clear') {
+                  setTeacherSearch(value);
+                }
+              }}
               getOptionLabel={getTeacherLabel}
               isOptionEqualToValue={(option, value) => option.id === value.id}
-              loading={isLoading || isLoadingModal}
+              loading={isSearchingTeachers}
+              filterOptions={(options) => options}
               renderInput={(params) => (
                 <TextField
                   {...params}

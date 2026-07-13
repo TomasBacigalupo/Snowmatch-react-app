@@ -520,7 +520,7 @@ export default function AdminToday() {
         weekday: 'long',
         day: 'numeric',
         month: 'long',
-        ...(dayOffset >= 2 ? {} : { year: 'numeric' }),
+        ...(Math.abs(dayOffset) >= 2 ? {} : { year: 'numeric' }),
       }),
     [selectedDate, i18n.language, dayOffset]
   );
@@ -528,6 +528,7 @@ export default function AdminToday() {
   const dayLabel = useMemo(() => {
     if (dayOffset === 0) return t('adminToday.dayToday');
     if (dayOffset === 1) return t('adminToday.dayTomorrow');
+    if (dayOffset === -1) return t('adminToday.dayYesterday');
     return selectedDate.toLocaleDateString(i18n.language || 'es-AR', {
       weekday: 'long',
       day: 'numeric',
@@ -538,6 +539,7 @@ export default function AdminToday() {
   const pageHeading = useMemo(() => {
     if (dayOffset === 0) return t('adminToday.heading');
     if (dayOffset === 1) return t('adminToday.headingTomorrow');
+    if (dayOffset === -1) return t('adminToday.headingYesterday');
     return formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1);
   }, [dayOffset, formattedDate, t]);
 
@@ -696,15 +698,13 @@ export default function AdminToday() {
           action={
             <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap alignItems="center">
               <Tooltip title={t('adminToday.prevDay')}>
-                <span>
-                  <IconButton
-                    onClick={() => setDayOffset((offset) => Math.max(0, offset - 1))}
-                    disabled={loading || dayOffset === 0}
-                    aria-label={t('adminToday.prevDay')}
-                  >
-                    <Iconify icon="eva:arrow-back-fill" />
-                  </IconButton>
-                </span>
+                <IconButton
+                  onClick={() => setDayOffset((offset) => offset - 1)}
+                  disabled={loading}
+                  aria-label={t('adminToday.prevDay')}
+                >
+                  <Iconify icon="eva:arrow-back-fill" />
+                </IconButton>
               </Tooltip>
               <Tooltip title={t('adminToday.nextDay')}>
                 <IconButton
@@ -715,7 +715,7 @@ export default function AdminToday() {
                   <Iconify icon="eva:arrow-forward-fill" />
                 </IconButton>
               </Tooltip>
-              {dayOffset > 0 && (
+              {dayOffset !== 0 && (
                 <Button
                   variant="outlined"
                   onClick={() => setDayOffset(0)}

@@ -1333,6 +1333,7 @@
         "pageTitle": "Hoje",
         "heading": "Hoje",
         "headingTomorrow": "Amanhã",
+        "headingYesterday": "Ontem",
         "subtitle": "{{date}} · Cerro Catedral",
         "breadcrumbDashboard": "Dashboard",
         "breadcrumbAdmin": "Admin",
@@ -1343,6 +1344,7 @@
         "nextDay": "Próximo dia",
         "dayToday": "hoje",
         "dayTomorrow": "amanhã",
+        "dayYesterday": "ontem",
         "loadError": "Não foi possível carregar as reservas. Tente novamente.",
         "kpi": {
             "lessons": "Aulas {{day}}",

@@ -898,6 +898,7 @@
     "pageTitle": "Today",
     "heading": "Today",
     "headingTomorrow": "Tomorrow",
+    "headingYesterday": "Yesterday",
     "subtitle": "{{date}} · Cerro Catedral",
     "breadcrumbDashboard": "Dashboard",
     "breadcrumbAdmin": "Admin",
@@ -908,6 +909,7 @@
     "nextDay": "Next day",
     "dayToday": "today",
     "dayTomorrow": "tomorrow",
+    "dayYesterday": "yesterday",
     "loadError": "Could not load bookings. Please try again.",
     "kpi": {
       "lessons": "Lessons {{day}}",

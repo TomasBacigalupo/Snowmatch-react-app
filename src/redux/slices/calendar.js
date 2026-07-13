@@ -203,10 +203,7 @@ const slice = createSlice({
     // DELETE EVENT
     deleteEventSuccess(state, action) {
       const { eventId } = action.payload;
-      const deleteEvent = state.events.filter((event) => {
-        return event.id !== eventId
-      });
-      state.events = deleteEvent;
+      state.events = state.events.filter((event) => String(event.id) !== String(eventId));
     },
 
     // SELECT EVENT
@@ -579,6 +576,7 @@ export function deleteEventByUserId(userId, eventId) {
       dispatch(slice.actions.deleteEventSuccess({ eventId }));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
+      throw error;
     }
   };
 }

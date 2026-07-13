@@ -507,6 +507,8 @@ export default function Router() {
                 { path: 'rental-providers', element: <AdminRentalProviders /> },
                 { path: 'group-lesson-resorts', element: <AdminGroupLessonResorts /> },
                 { path: 'resort-admins', element: <AdminResortAdmins /> },
+                { path: 'school-member-lessons', element: <AdminSchoolMemberLessons /> },
+                { path: 'school-members', element: <AdminSchoolMembers /> },
                 { path: 'user-calendars', element: <AdminUserCalendars /> },
                 { path: ':id/confirm', element: <AdminConfirm /> },
                 { path: ':id/events', element: <AdminUserEvents /> },
@@ -694,6 +696,8 @@ const AdminToday = Loadable(lazy(() => import('../pages/dashboard/AdminToday')))
 const AdminRental = Loadable(lazy(() => import('../pages/dashboard/AdminRental')));
 const AdminGroupLessonResorts = Loadable(lazy(() => import('../pages/dashboard/AdminGroupLessonResorts')));
 const AdminResortAdmins = Loadable(lazy(() => import('../pages/dashboard/AdminResortAdmins')));
+const AdminSchoolMemberLessons = Loadable(lazy(() => import('../pages/dashboard/AdminSchoolMemberLessons')));
+const AdminSchoolMembers = Loadable(lazy(() => import('../pages/dashboard/AdminSchoolMembers')));
 const AdminConfirm = Loadable(lazy(() => import('../pages/dashboard/AdminConfirm')));
 const AdminUserEvents = Loadable(lazy(() => import('../pages/dashboard/AdminUserEvents')));
 const AdminUserCalendars = Loadable(lazy(() => import('../pages/dashboard/AdminUserCalendars')));

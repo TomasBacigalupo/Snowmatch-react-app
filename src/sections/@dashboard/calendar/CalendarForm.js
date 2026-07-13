@@ -8,10 +8,11 @@ import { useForm, Controller, useWatch } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { Box, Stack, Button, Tooltip, TextField, IconButton, DialogActions, ToggleButton, ToggleButtonGroup, DialogContent, DialogTitle, Typography } from '@mui/material';
+import { DialogAnimate } from '../../../components/animate';
 import { LoadingButton, MobileDateTimePicker } from '@mui/lab';
 // redux
 import { useDispatch } from '../../../redux/store';
-import { createEvent, updateEvent, deleteEvent, createBusinessEvent, updateBusinessEvent, deleteSchoolEvent, updateEventByUserIdAndEventId, createEventByUserId, adminDeleteEvent ,deleteBusinessEvent } from '../../../redux/slices/calendar';
+import { createEvent, updateEvent, deleteEvent, createBusinessEvent, updateBusinessEvent, deleteSchoolEvent, updateEventByUserIdAndEventId, createEventByUserId, adminDeleteEvent, deleteEventByUserId, deleteBusinessEvent } from '../../../redux/slices/calendar';
 // components
 import Iconify from '../../../components/Iconify';
 import { ColorSinglePicker } from '../../../components/color-utils';
@@ -131,6 +132,7 @@ export default function CalendarForm({ event, range, onCancel, clients, members,
   const { teachers } = useSelector((state) => state.admin)
   const [showClientDetails, setShowClientDetails] = useState(false)
   const [currentClient, setCurrentClient] = useState(null)
+  const [isOpenDeleteModal, setIsOpenDeleteModal] = useState(false)
 
   const clientOptions = mergePeopleOptions(clients, selectedClients);
   const studentOptions = mergePeopleOptions(teachers, assignedStudents);
@@ -270,11 +272,23 @@ export default function CalendarForm({ event, range, onCancel, clients, members,
     }
   };
 
-  const handleDelete = async () => {
+  const handleOpenDeleteModal = () => {
+    setIsOpenDeleteModal(true);
+  };
+
+  const handleCloseDeleteModal = () => {
+    setIsOpenDeleteModal(false);
+  };
+
+  const handleConfirmDelete = async () => {
     if (!event?.id) return;
     try {
-      if (user?.user?.role === 'ADMIN') {
-        await dispatch(adminDeleteEvent(event.id));
+      if (isAdmin) {
+        if (targetUserId) {
+          await dispatch(deleteEventByUserId(targetUserId, event.id));
+        } else {
+          await dispatch(adminDeleteEvent(event.id));
+        }
       } else if (classType === 'teacher') {
         await dispatch(deleteEvent(event.id));
       } else if (classType === 'school') {
@@ -282,11 +296,12 @@ export default function CalendarForm({ event, range, onCancel, clients, members,
       } else {
         return;
       }
-      enqueueSnackbar('Delete success!');
+      handleCloseDeleteModal();
+      enqueueSnackbar(translate('calendar.deleteDialog.success'));
       onCancel();
     } catch (error) {
       console.error(error);
-      enqueueSnackbar('Delete failed', { variant: 'error' });
+      enqueueSnackbar(translate('calendar.deleteDialog.error'), { variant: 'error' });
     }
   };
 
@@ -584,10 +599,24 @@ export default function CalendarForm({ event, range, onCancel, clients, members,
         {/* <RHFCheckbox name='payed' label='Payed' disabled={user.user.role !== 'ADMIN'} /> */}
       </Stack>
       <ClientDetailsModal showClientDetails={showClientDetails} setShowClientDetails={setShowClientDetails} currentClient={currentClient} />
+      <DialogAnimate open={isOpenDeleteModal} onClose={handleCloseDeleteModal}>
+        <DialogTitle>{translate('calendar.deleteDialog.title')}</DialogTitle>
+        <DialogContent>
+          <Typography>{translate('calendar.deleteDialog.body')}</Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button variant="outlined" onClick={handleCloseDeleteModal}>
+            {translate('calendar.deleteDialog.cancel')}
+          </Button>
+          <Button variant="contained" color="error" onClick={handleConfirmDelete}>
+            {translate('calendar.deleteDialog.confirm')}
+          </Button>
+        </DialogActions>
+      </DialogAnimate>
       <DialogActions>
         {!isCreating && (
-          <Tooltip title="Delete Event">
-            <IconButton onClick={handleDelete} disabled={disabled}>
+          <Tooltip title={translate('calendar.deleteDialog.tooltip')}>
+            <IconButton onClick={handleOpenDeleteModal} disabled={disabled}>
               <Iconify icon="eva:trash-2-outline" width={20} height={20} />
             </IconButton>
           </Tooltip>

@@ -2,7 +2,7 @@ import { useEffect, useState, useCallback, useMemo } from 'react';
 import { Dialog, DialogContent, Select, TextField, FormControl, InputLabel, MenuItem, DialogActions, DialogTitle, Button, Box, Autocomplete, Typography, IconButton, Grid, Checkbox, FormControlLabel, Chip, Stack } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { useDispatch } from 'src/redux/store';
-import { getTeachers, getFilteredTeachersForAdminBooking, getUserTeamMembers } from 'src/redux/slices/admin';
+import { getFilteredTeachersForAdminBooking, getUserTeamMembers, searchStudentsForAdminBooking } from 'src/redux/slices/admin';
 import { useSelector } from 'react-redux';
 import { createAdminBooking, createAdminBookingIntent, setBookingSuccess, setIntentSuccess, createAdminBookingRentalReservation } from 'src/redux/slices/bookings';
 import { fetchGroupLessonResortConfigs } from 'src/redux/slices/groupLessonResortConfig';
@@ -84,6 +84,7 @@ const BookingModal = ({ isOpen, onClose, refreshBookings, filterTeacherId, filte
 
     const [teacherId, setTeacherId] = useState(null);
     const [studentId, setStudentId] = useState(null);
+    const [studentOptions, setStudentOptions] = useState([]);
     const [submitting, setSubmitting] = useState(false);
     const [createStudentOpen, setCreateStudentOpen] = useState(false);
     const [rentalPrefillSource, setRentalPrefillSource] = useState('');
@@ -91,6 +92,17 @@ const BookingModal = ({ isOpen, onClose, refreshBookings, filterTeacherId, filte
     const { teachers } = useSelector((state) => state.admin);
     const { intentSuccess, error } = useSelector((state) => state.bookings);
     const groupLessonOffers = useSelector((state) => state.groupLessonResortConfig?.items || []);
+
+    const resolvedStudentId = formData.student?.id ?? studentId;
+    const isGroupLessonProduct = Boolean(formData.groupLessonOffer?.id);
+    const willCreateConfirmedBooking = Boolean(resolvedStudentId && teacherId && !isGroupLessonProduct);
+
+    const studentAutocompleteOptions = useMemo(() => {
+        const selected = formData.student;
+        if (!selected?.id) return studentOptions;
+        if (studentOptions.some((s) => s?.id === selected.id)) return studentOptions;
+        return [selected, ...studentOptions];
+    }, [formData.student, studentOptions]);
 
     const lessonDateBounds = useMemo(() => {
         const dates = formData.dateTimes.map((dt) => dt.date).filter(Boolean).sort();
@@ -111,6 +123,7 @@ const BookingModal = ({ isOpen, onClose, refreshBookings, filterTeacherId, filte
         setDateRange({ startDate: null, endDate: null });
         setTeacherId(null);
         setStudentId(null);
+        setStudentOptions([]);
         setRentalPrefillSource('');
     }, []);
 
@@ -143,13 +156,6 @@ const BookingModal = ({ isOpen, onClose, refreshBookings, filterTeacherId, filte
                   })
         );
     }, [dispatch, t]);
-
-    useEffect(() => {
-        // Only call getTeachers when studentSearch changes, not when student is selected
-        if (formData.studentSearch) {
-            dispatch(getTeachers(0, "STUDENT", formData.studentSearch, 0))
-        }
-    }, [formData.studentSearch])
 
     useEffect(() => {
         if (intentSuccess) {
@@ -279,11 +285,22 @@ const BookingModal = ({ isOpen, onClose, refreshBookings, filterTeacherId, filte
             textColor: formData.bookingType === 'REFERRED' ? '#00FF00' : '#FF0000',
         }));
 
-        const isGroupLessonProduct = Boolean(formData.groupLessonOffer?.id);
+        const selectedStudentId = formData.student?.id ?? studentId;
+
+        // Typed a name but did not pick a client from the dropdown — do not silently save an intent.
+        if (!selectedStudentId && formData.studentSearch?.trim()) {
+            enqueueSnackbar(
+                t('adminBookings.createModal.selectClientFromList', {
+                    defaultValue: 'Select a client from the list (typing a name is not enough).',
+                }),
+                { variant: 'warning' }
+            );
+            return;
+        }
 
         // Rental reservations only attach to confirmed bookings (not group-lesson intents).
         if (formData.includesEquipment && !isGroupLessonProduct) {
-            if (studentId && teacherId) {
+            if (selectedStudentId && teacherId) {
                 const rentalError = validateRental();
                 if (rentalError) {
                     enqueueSnackbar(rentalError, { variant: 'warning' });
@@ -295,15 +312,15 @@ const BookingModal = ({ isOpen, onClose, refreshBookings, filterTeacherId, filte
             }
         }
 
-        // Group lesson products are always open booking intents (pending instructor assignment).
-        if (studentId && teacherId && !isGroupLessonProduct) {
+        // Client + instructor (non-group) → confirmed booking. Anything else → pending intent.
+        if (selectedStudentId && teacherId && !isGroupLessonProduct) {
             setSubmitting(true);
             try {
                 const { rental } = formData;
                 const created = await dispatch(
                     createAdminBooking(
                         teacherId,
-                        studentId,
+                        selectedStudentId,
                         formData.comment,
                         Number(formData.children),
                         Number(formData.adults),
@@ -356,7 +373,7 @@ const BookingModal = ({ isOpen, onClose, refreshBookings, filterTeacherId, filte
         }
 
         dispatch(createAdminBookingIntent(
-            studentId ?? null,
+            selectedStudentId ?? null,
             formData.comment,
             Number(formData.children),
             Number(formData.adults),
@@ -423,23 +440,36 @@ const BookingModal = ({ isOpen, onClose, refreshBookings, filterTeacherId, filte
     };
 
     const debouncedStudentSearch = useCallback(
-        (value) => {
-            dispatch(getTeachers(0, "STUDENT", value, 0));
+        async (value) => {
+            try {
+                const results = await dispatch(searchStudentsForAdminBooking(value));
+                setStudentOptions(Array.isArray(results) ? results : []);
+            } catch {
+                setStudentOptions([]);
+            }
         },
         [dispatch]
     );
 
     const handleStudentInputChange = (event, newValue) => {
-        // Update the form data immediately for UI responsiveness
+        const selected = formData.student;
+        const selectedLabel = selected
+            ? `${selected.name || ''} ${selected.lastname || ''}`.trim()
+            : '';
+        const clearingSelection = Boolean(selected && newValue !== selectedLabel);
+
+        if (clearingSelection) {
+            setStudentId(null);
+        }
         setFormData((prevData) => ({
             ...prevData,
             studentSearch: newValue,
+            ...(clearingSelection ? { student: null } : {}),
         }));
-        
-        // Debounce the API call
+
         const timeoutId = setTimeout(() => {
             debouncedStudentSearch(newValue);
-        }, 500); // 500ms delay
+        }, 500);
 
         return () => clearTimeout(timeoutId);
     };
@@ -454,6 +484,7 @@ const BookingModal = ({ isOpen, onClose, refreshBookings, filterTeacherId, filte
             studentLevel: createdStudent.studentLevel,
         };
         setStudentId(student.id);
+        setStudentOptions((prev) => (prev.some((s) => s?.id === student.id) ? prev : [student, ...prev]));
         setFormData((prevData) => ({
             ...prevData,
             student,
@@ -470,6 +501,7 @@ const BookingModal = ({ isOpen, onClose, refreshBookings, filterTeacherId, filte
             setFormData((prevData) => ({
                 ...prevData,
                 student: null,
+                studentSearch: '',
                 rental: clearRentalRenterFields(prevData.rental),
             }));
             return;
@@ -505,14 +537,17 @@ const BookingModal = ({ isOpen, onClose, refreshBookings, filterTeacherId, filte
                             <FormControl fullWidth>
                                 <Autocomplete
                                     id="student-autocomplete"
-                                    options={teachers}
+                                    options={studentAutocompleteOptions}
                                     filterOptions={(options) => options}
-                                    getOptionLabel={(option) => `${option.name} ${option.lastname}`.trim()}
+                                    getOptionLabel={(option) =>
+                                        option ? `${option.name || ''} ${option.lastname || ''}`.trim() : ''
+                                    }
+                                    isOptionEqualToValue={(option, value) => option?.id === value?.id}
                                     value={formData.student}
                                     inputValue={formData.studentSearch}
                                     onChange={(e, newValue) => handleStudentChange(newValue)}
                                     onInputChange={(event, newValue, reason) => {
-                                        if (reason === 'input') {
+                                        if (reason === 'input' || reason === 'clear') {
                                             handleStudentInputChange(event, newValue);
                                         }
                                     }}
@@ -1000,7 +1035,7 @@ const BookingModal = ({ isOpen, onClose, refreshBookings, filterTeacherId, filte
                     variant="contained"
                     loading={submitting}
                 >
-                    {studentId && teacherId ? 'Create Booking' : 'Guardar pendiente'}
+                    {willCreateConfirmedBooking ? 'Create Booking' : 'Guardar pendiente'}
                 </LoadingButton>
             </DialogActions>
             <CreateStudentModal

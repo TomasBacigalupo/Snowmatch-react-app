@@ -49,6 +49,8 @@ const initialState = {
   },
   resortStats: null,
   isLoadingResortStats: false,
+  memberLessonStats: [],
+  isLoadingMemberLessonStats: false,
 };
 
 const slice = createSlice({
@@ -68,6 +70,7 @@ const slice = createSlice({
     hasError(state, action) {
       state.isLoading = false;
       state.isLoadingBookings = false;
+      state.isLoadingMemberLessonStats = false;
       state.error = action.payload;
     },
 
@@ -266,6 +269,16 @@ const slice = createSlice({
       state.isLoadingResortStats = false;
       state.error = action.payload;
     },
+
+    startLoadingMemberLessonStats(state) {
+      state.isLoadingMemberLessonStats = true;
+      state.error = null;
+    },
+
+    getMemberLessonStatsSuccess(state, action) {
+      state.isLoadingMemberLessonStats = false;
+      state.memberLessonStats = action.payload;
+    },
   }
 });
 
@@ -295,6 +308,22 @@ export function getTeachers(page, role, name, level, size = 25, resort = '', sor
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }
+  };
+}
+
+/** Student search for admin booking modal — does not overwrite the teacher list in redux. */
+export function searchStudentsForAdminBooking(name, size = 25) {
+  return async () => {
+    const params = new URLSearchParams({
+      page: 0,
+      role: 'STUDENT',
+      level: 0,
+      name: name ?? '',
+      size,
+      sortBy: 'id',
+    });
+    const response = await axios.get(`/api/admin/filter?${params.toString()}`);
+    return response.data || [];
   };
 }
 
@@ -1135,6 +1164,23 @@ export function getResortAdmins(page = 1) {
     try {
       const response = await axios.get(`/api/admin/resort-admins?page=${page}`);
       dispatch(slice.actions.getResortAdminsSuccess(response.data));
+      return response.data;
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+      throw error;
+    }
+  };
+}
+
+export function getSchoolMemberLessonStats(from, to, businessId = 13) {
+  return async () => {
+    dispatch(slice.actions.startLoadingMemberLessonStats());
+    try {
+      const params = new URLSearchParams({ from, to });
+      const response = await axios.get(
+        `/api/admin/business/${businessId}/lesson-stats/members?${params.toString()}`
+      );
+      dispatch(slice.actions.getMemberLessonStatsSuccess(response.data));
       return response.data;
     } catch (error) {
       dispatch(slice.actions.hasError(error));

@@ -351,6 +351,7 @@ export function hireTeacher(teacher) {
         } catch (error) {
             dispatch(slice.actions.hasError(error));
             dispatch(slice.actions.closeHireModal());
+            throw error;
         }
     };
 }

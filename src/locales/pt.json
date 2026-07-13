@@ -1144,11 +1144,73 @@
         "rental products": "Produtos de aluguel",
         "rental providers": "Fornecedores de aluguel",
         "resort admins": "Administradores de estâncias",
+        "school member lessons": "Horas dos professores da escola",
         "user chats": "Chats de usuários",
         "user calendars": "Calendários de usuários",
         "today": "Hoje",
         "lesson bookings": "Reservas de aulas",
         "contactSupport247": "Contactar suporte 24/7"
+    },
+    "adminSchoolMemberLessons": {
+        "title": "Horas dos professores da escola",
+        "heading": "Estatísticas de aulas por professor",
+        "breadcrumbDashboard": "Dashboard",
+        "breadcrumbAdmin": "Admin",
+        "breadcrumbPage": "Horas dos professores da escola",
+        "dateRangeHint": "Horas atribuídas e requeridas dos professores da escola no intervalo selecionado.",
+        "startDate": "Data início",
+        "endDate": "Data fim",
+        "quickFilters": "Filtros rápidos",
+        "firstHalf": "Dias 1–15",
+        "secondHalf": "Dias 16–fim",
+        "fullSeason": "Temporada completa",
+        "chartTitle": "Total de horas de aula",
+        "chartSubtitle": "Atribuídas {{assigned}} h · Requeridas {{required}} h",
+        "chartCategory": "Datas selecionadas",
+        "months": {
+            "jun": "Jun",
+            "jul": "Jul",
+            "aug": "Ago",
+            "sep": "Set",
+            "oct": "Out"
+        },
+        "empty": "Nenhum professor da escola encontrado para este intervalo.",
+        "columns": {
+            "name": "Nome",
+            "email": "Email",
+            "level": "Nível",
+            "assignedHours": "Horas atribuídas",
+            "requiredHours": "Horas requeridas"
+        },
+        "drawer": {
+            "subtitle": "Agenda do instrutor",
+            "level": "Nível {{level}}",
+            "noEvents": "Sem eventos agendados"
+        }
+    },
+    "adminSchoolMembers": {
+        "title": "Professores da escola",
+        "heading": "Gerenciar professores da escola",
+        "breadcrumbDashboard": "Dashboard",
+        "breadcrumbAdmin": "Admin",
+        "breadcrumbPage": "Professores da escola",
+        "teachersFound": "professores encontrados",
+        "searchPlaceholder": "Buscar por nome ou email",
+        "tabs": {
+            "members": "Professores atuais",
+            "pending": "Solicitações pendentes"
+        },
+        "addMember": {
+            "button": "Adicionar professor",
+            "title": "Adicionar professor à escola",
+            "description": "Busque um usuário com papel TEACHER e adicione-o à escola.",
+            "searchLabel": "Professor",
+            "searchPlaceholder": "Buscar por nome ou email",
+            "noTeachers": "Nenhum professor encontrado",
+            "cancel": "Cancelar",
+            "confirm": "Adicionar à escola",
+            "success": "Professor adicionado à escola"
+        }
     },
     "adminReview": {
         "pageTitle": "Admin Revisão: Lista",
@@ -1771,6 +1833,15 @@
             "price": "preço",
             "cancel": "Cancelar",
             "add": "Criar"
+        },
+        "deleteDialog": {
+            "title": "Excluir este evento?",
+            "body": "Este evento será removido permanentemente do calendário do professor.",
+            "cancel": "Cancelar",
+            "confirm": "Excluir",
+            "tooltip": "Excluir evento",
+            "success": "Evento excluído com sucesso",
+            "error": "Não foi possível excluir o evento"
         }
     },
     "school": {

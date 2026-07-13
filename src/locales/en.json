@@ -697,6 +697,7 @@
     "rental products": "Rental products",
     "rental providers": "Rental providers",
     "resort admins": "Resort admins",
+    "school member lessons": "School member lessons",
     "user chats": "User chats",
     "user calendars": "User calendars",
     "review teachers": "Review PROs",
@@ -714,6 +715,67 @@
     "contact": "Contact support",
     "contactSupport247": "Contact support 24/7",
     "help": "Help"
+  },
+  "adminSchoolMemberLessons": {
+    "title": "School Member Lessons",
+    "heading": "School member lesson stats",
+    "breadcrumbDashboard": "Dashboard",
+    "breadcrumbAdmin": "Admin",
+    "breadcrumbPage": "School member lessons",
+    "dateRangeHint": "Assigned and required lesson hours for school members in the selected range.",
+    "startDate": "Start date",
+    "endDate": "End date",
+    "quickFilters": "Quick filters",
+    "firstHalf": "Days 1–15",
+    "secondHalf": "Days 16–end",
+    "fullSeason": "Full season",
+    "chartTitle": "Total lesson hours",
+    "chartSubtitle": "Assigned {{assigned}} h · Required {{required}} h",
+    "chartCategory": "Selected dates",
+    "months": {
+      "jun": "Jun",
+      "jul": "Jul",
+      "aug": "Aug",
+      "sep": "Sep",
+      "oct": "Oct"
+    },
+    "empty": "No school members found for this range.",
+    "columns": {
+      "name": "Name",
+      "email": "Email",
+      "level": "Level",
+      "assignedHours": "Assigned hours",
+      "requiredHours": "Required hours"
+    },
+    "drawer": {
+      "subtitle": "Instructor schedule",
+      "level": "Level {{level}}",
+      "noEvents": "No scheduled events"
+    }
+  },
+  "adminSchoolMembers": {
+    "title": "School Members",
+    "heading": "Manage school members",
+    "breadcrumbDashboard": "Dashboard",
+    "breadcrumbAdmin": "Admin",
+    "breadcrumbPage": "School members",
+    "teachersFound": "teachers found",
+    "searchPlaceholder": "Search by name or email",
+    "tabs": {
+      "members": "Current members",
+      "pending": "Pending requests"
+    },
+    "addMember": {
+      "button": "Add member",
+      "title": "Add school member",
+      "description": "Search for a platform user with role TEACHER and add them to the school.",
+      "searchLabel": "Teacher",
+      "searchPlaceholder": "Search by name or email",
+      "noTeachers": "No teachers found",
+      "cancel": "Cancel",
+      "confirm": "Add to school",
+      "success": "Teacher added to the school"
+    }
   },
   "adminReview": {
     "pageTitle": "Admin Review: List",
@@ -1338,6 +1400,15 @@
       "cancel": "Cancel",
       "add": "Add",
       "edit": "Edit"
+    },
+    "deleteDialog": {
+      "title": "Delete this event?",
+      "body": "This event will be permanently removed from the teacher's calendar.",
+      "cancel": "Cancel",
+      "confirm": "Delete",
+      "tooltip": "Delete event",
+      "success": "Event deleted successfully",
+      "error": "Failed to delete event"
     }
   },
   "event": {

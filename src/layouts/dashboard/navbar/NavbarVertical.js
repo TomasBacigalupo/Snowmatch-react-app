@@ -95,6 +95,8 @@ const ADMIN_NAV_ITEMS = [
   { title: 'rental providers', path: PATH_DASHBOARD.admin.rentalProviders, icon: ICONS.ecommerce },
   { title: 'group lessons by resort', path: PATH_DASHBOARD.admin.groupLessonResorts, icon: ICONS.calendar },
   { title: 'resort admins', path: PATH_DASHBOARD.admin.resortAdmins, icon: ICONS.user },
+  { title: 'school member lessons', path: PATH_DASHBOARD.admin.schoolMemberLessons, icon: ICONS.analytics },
+  { title: 'school members', path: PATH_DASHBOARD.admin.schoolMembers, icon: ICONS.user },
   { title: 'user calendars', path: PATH_DASHBOARD.admin.userCalendars, icon: ICONS.calendar },
 ];
 

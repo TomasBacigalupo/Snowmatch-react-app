@@ -192,6 +192,8 @@ export const PATH_DASHBOARD = {
     confirm: (id) => path(ROOTS_DASHBOARD, `/admin/${id}/confirm`),
     events: (id) => path(ROOTS_DASHBOARD, `/admin/${id}/events`),
     userCalendars: path(ROOTS_DASHBOARD, '/admin/user-calendars'),
+    schoolMemberLessons: path(ROOTS_DASHBOARD, '/admin/school-member-lessons'),
+    schoolMembers: path(ROOTS_DASHBOARD, '/admin/school-members'),
   }
 };
 

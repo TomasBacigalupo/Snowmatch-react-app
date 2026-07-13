@@ -229,7 +229,7 @@ export function AdminBookingsPage({ bookingListKind, pageTitle, heading }) {
     onChangeDense,
     onChangePage,
     onChangeRowsPerPage,
-  } = useTable();
+  } = useTable({ defaultOrderBy: 'id', defaultOrder: 'desc' });
 
   const { user, isResortAdmin } = useAuth();
   const lockedResort = isResortAdmin ? user?.managedResort : null;
@@ -502,7 +502,7 @@ export function AdminBookingsPage({ bookingListKind, pageTitle, heading }) {
 
   useEffect(() => {
     setPage(0);
-    setOrderBy(bookingListKind === 'gear' ? 'id' : 'student');
+    setOrderBy('id');
   }, [bookingListKind, setOrderBy, setPage]);
 
   useEffect(() => {

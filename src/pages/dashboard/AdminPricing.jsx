@@ -46,11 +46,18 @@ const PRIVATE_CLASSES_ASSIGNED = [
   { label: '6 horas (día completo)', price: 550000 },
 ];
 
-// Clases para niños (precio total por clase).
-const KIDS_CLASSES = [
+// Clases para niños — con equipos (precio total por clase).
+const KIDS_CLASSES_WITH_GEAR = [
   { label: '2 horas', price: 180000 },
   { label: '3 horas', price: 200000 },
-  { label: '6 horas (día completo)', price: 340000 },
+  { label: '6 horas (día completo)', price: 370000, note: 'incluye almuerzo' },
+];
+
+// Clases para niños — sin equipos (precio total por clase).
+const KIDS_CLASSES_NO_GEAR = [
+  { label: '2 horas', price: 150000 },
+  { label: '3 horas', price: 170000 },
+  { label: '6 horas (día completo)', price: 330000, note: 'incluye almuerzo' },
 ];
 
 // Otros productos de clases.
@@ -207,11 +214,19 @@ export default function AdminPricing() {
             <Card>
               <CardHeader
                 title="Clase para niños"
-                subheader="Precio total por clase · incluye alquileres estandar"
+                subheader="1 nene → nivel 1 · desde 2 nenes puede salir un nivel 2"
                 avatar={<Iconify icon="mdi:human-child" width={28} height={28} />}
               />
               <Box sx={{ p: 2, pt: 1 }}>
-                <PriceTable rows={KIDS_CLASSES} />
+                <Typography variant="overline" sx={{ color: 'text.secondary', pl: 1 }}>
+                  Con equipos
+                </Typography>
+                <PriceTable rows={KIDS_CLASSES_WITH_GEAR} />
+                <Divider sx={{ my: 1.5 }} />
+                <Typography variant="overline" sx={{ color: 'text.secondary', pl: 1 }}>
+                  Sin equipos
+                </Typography>
+                <PriceTable rows={KIDS_CLASSES_NO_GEAR} />
               </Box>
             </Card>
           </Grid>

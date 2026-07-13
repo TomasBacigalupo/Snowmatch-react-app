@@ -213,7 +213,7 @@ export default function AdminPricing() {
             <Card>
               <CardHeader
                 title="Clase para niños"
-                subheader="Precio total por clase"
+                subheader="Precio total por clase · incluye alquileres estandar"
                 avatar={<Iconify icon="mdi:human-child" width={28} height={28} />}
               />
               <Box sx={{ p: 2, pt: 1 }}>

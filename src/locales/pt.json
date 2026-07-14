@@ -1181,7 +1181,15 @@
             "email": "Email",
             "level": "Nível",
             "assignedHours": "Horas atribuídas",
-            "requiredHours": "Horas requeridas"
+            "requiredHours": "Horas requeridas",
+            "total": "Total"
+        },
+        "totalRow": "Total",
+        "filters": {
+            "title": "Filtros",
+            "level": "Nível",
+            "allLevels": "Todos",
+            "search": "Buscar por nome ou email"
         },
         "drawer": {
             "subtitle": "Agenda do instrutor",

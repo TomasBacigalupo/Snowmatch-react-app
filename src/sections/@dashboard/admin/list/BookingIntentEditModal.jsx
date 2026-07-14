@@ -35,6 +35,7 @@ import {
   LESSON_TIME_VALUES,
 } from 'src/utils/adminBookingEvents';
 import { normalizeBookingIntent } from 'src/utils/normalizeBookingIntent';
+import AdminAgencySelect from '../AdminAgencySelect';
 
 const RESORT_OPTIONS = [
   {
@@ -81,6 +82,7 @@ export default function BookingIntentEditModal({ open, onClose, intent, onSave }
   );
   const [dateTimes, setDateTimes] = useState(() => eventListToDateTimes(intentLinesToEventList(intent)));
   const [bookingType, setBookingType] = useState(intent?.type || 'ASSIGNED');
+  const [agencyId, setAgencyId] = useState(() => intent?.agencyId ?? intent?.agency?.id ?? null);
 
   useEffect(() => {
     if (open && intent) {
@@ -88,6 +90,7 @@ export default function BookingIntentEditModal({ open, onClose, intent, onSave }
       setBookingType(intent.type || 'ASSIGNED');
       setUserCommentLength(intent.userComment?.length || 0);
       setInternalCommentLength(intent.internalComment?.length || 0);
+      setAgencyId(intent?.agencyId ?? intent?.agency?.id ?? null);
     }
   }, [open, intent]);
 
@@ -135,6 +138,7 @@ export default function BookingIntentEditModal({ open, onClose, intent, onSave }
       resort: formData.get('resort') || null,
       studentId: studentIdRaw ? parseInt(studentIdRaw, 10) : null,
       eventList,
+      agencyId: agencyId ?? 0,
     };
 
     try {
@@ -246,6 +250,8 @@ export default function BookingIntentEditModal({ open, onClose, intent, onSave }
               name="studentId"
               defaultValue={intent?.student?.id}
             />
+
+            <AdminAgencySelect value={agencyId} onChange={setAgencyId} />
 
             <Stack spacing={2} direction={{ xs: 'column', md: 'row' }}>
               <FormControl fullWidth>

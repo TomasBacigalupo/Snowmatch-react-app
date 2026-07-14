@@ -58,7 +58,7 @@ export default function AdminBookingTableRow({
     const { enqueueSnackbar } = useSnackbar();
     const [openDrawer, setOpenDrawer] = useState(false);
 
-    const { imageLink, userComment, state, resort, adults, children, eventList, id, price, internalComment, includesLunch, includesEquipments, paymentStatus, invoiceCreated, type } = row;
+    const { imageLink, userComment, state, resort, adults, children, eventList, id, price, internalComment, includesLunch, includesEquipments, paymentStatus, invoiceCreated, type, agency, agencyId } = row;
     const teacher = row.teacher;
     const { name, lastname, id: teacherId, role, level } = teacher || {};
     const { id: studentId } = row.student || {};
@@ -420,6 +420,14 @@ export default function AdminBookingTableRow({
                 {!compact && (
                     <TableCell align="left">
                         {getResortLabel(resort)}
+                    </TableCell>
+                )}
+
+                {!compact && (
+                    <TableCell align="left">
+                        <Typography variant="subtitle2" noWrap>
+                            {agency?.name || '—'}
+                        </Typography>
                     </TableCell>
                 )}
 

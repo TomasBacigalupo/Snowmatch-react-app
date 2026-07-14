@@ -30,6 +30,7 @@ import {
 } from 'src/utils/adminGearRentalForm';
 import BookingRentalFieldsSection from './BookingRentalFieldsSection';
 import CreateStudentModal from './CreateStudentModal';
+import AdminAgencySelect from './AdminAgencySelect';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 
 const DEFAULT_RENTAL = {
@@ -68,6 +69,7 @@ const DEFAULT_FORM_DATA = {
     paymentMethod: 'CASH',
     internalComment: '',
     groupLessonOffer: null,
+    agencyId: null,
     rental: { ...DEFAULT_RENTAL },
 };
 
@@ -341,7 +343,8 @@ const BookingModal = ({ isOpen, onClose, refreshBookings, filterTeacherId, filte
                         formData.includesEquipment ? rental.rentalDestinationType : null,
                         formData.includesEquipment ? rental.rentalDestinationDetail : null,
                         null,
-                        null
+                        null,
+                        formData.agencyId
                     )
                 );
 
@@ -390,7 +393,8 @@ const BookingModal = ({ isOpen, onClose, refreshBookings, filterTeacherId, filte
             formData.resort,
             isGroupLessonProduct ? null : (selectedTeacherId ?? null),
             formData.groupLessonOffer?.id ?? null,
-            formData.groupLessonOffer?.resort ?? null));
+            formData.groupLessonOffer?.resort ?? null,
+            formData.agencyId));
     };
 
     const handleGroupLessonOfferChange = (offer) => {
@@ -709,6 +713,12 @@ const BookingModal = ({ isOpen, onClose, refreshBookings, filterTeacherId, filte
                                 <MenuItem value="CREDIT_CARD">Tarjeta de Crédito</MenuItem>
                             </Select>
                         </FormControl>
+                    </Grid>
+                    <Grid item xs={12} md={6}>
+                        <AdminAgencySelect
+                            value={formData.agencyId}
+                            onChange={(agencyId) => setFormData((prevData) => ({ ...prevData, agencyId }))}
+                        />
                     </Grid>
                     <Grid item xs={12} md={6}>
                         <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>

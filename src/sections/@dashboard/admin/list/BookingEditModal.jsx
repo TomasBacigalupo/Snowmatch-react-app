@@ -39,6 +39,7 @@ import {
   getBookingRosterClients,
   isGroupLessonBooking,
 } from 'src/utils/adminBookingParticipants';
+import AdminAgencySelect from '../AdminAgencySelect';
 
 const RESORT_OPTIONS = [
   {
@@ -91,6 +92,7 @@ export default function BookingEditModal({ open, onClose, booking, onSave }) {
   const [bookingType, setBookingType] = useState(booking?.type || 'ASSIGNED');
   const [isGroupLesson, setIsGroupLesson] = useState(() => isGroupLessonBooking(booking));
   const [clientLevel, setClientLevel] = useState(() => resolveEditableClient(booking)?.level || '');
+  const [agencyId, setAgencyId] = useState(() => booking?.agencyId ?? booking?.agency?.id ?? null);
   const editableClient = resolveEditableClient(booking);
 
   useEffect(() => {
@@ -101,6 +103,7 @@ export default function BookingEditModal({ open, onClose, booking, onSave }) {
       setInternalCommentLength(booking.internalComment?.length || 0);
       setIsGroupLesson(isGroupLessonBooking(booking));
       setClientLevel(resolveEditableClient(booking)?.level || '');
+      setAgencyId(booking?.agencyId ?? booking?.agency?.id ?? null);
     }
   }, [open, booking]);
 
@@ -170,6 +173,7 @@ export default function BookingEditModal({ open, onClose, booking, onSave }) {
       ...(editableClient?.id != null && clientLevel
         ? { clientId: editableClient.id, clientLevel }
         : {}),
+      agencyId: agencyId ?? 0,
     };
 
     try {
@@ -471,6 +475,8 @@ export default function BookingEditModal({ open, onClose, booking, onSave }) {
                 </FormControl>
               ) : null}
             </Stack>
+
+            <AdminAgencySelect value={agencyId} onChange={setAgencyId} />
 
             <Stack spacing={2} direction={{ xs: 'column', md: 'row' }}>
               <TextField

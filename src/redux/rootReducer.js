@@ -21,6 +21,7 @@ import videoReducer from './slices/video';
 import video from './slices/video';
 import rentalReducer from './slices/rental';
 import groupLessonResortConfigReducer from './slices/groupLessonResortConfig';
+import agencyReducer from './slices/agency';
 
 
 // ----------------------------------------------------------------------
@@ -58,6 +59,7 @@ const rootReducer = combineReducers({
   video: videoReducer,
   rental: rentalReducer,
   groupLessonResortConfig: groupLessonResortConfigReducer,
+  agency: agencyReducer,
 });
 
 export { rootPersistConfig, rootReducer };

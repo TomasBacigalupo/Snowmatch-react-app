@@ -378,6 +378,12 @@ export default function AdminBookingIntentTableRow({ row, onRefreshIntents }) {
         <TableCell align="left">{getResortLabel(resort || row.groupLessonResort)}</TableCell>
 
         <TableCell align="left">
+          <Typography variant="subtitle2" noWrap>
+            {row.agency?.name || '—'}
+          </Typography>
+        </TableCell>
+
+        <TableCell align="left">
           <Typography variant="subtitle2">
             {t('adminBookings.row.adultsCount', { count: adults || 0 })}
           </Typography>

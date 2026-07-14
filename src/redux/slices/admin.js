@@ -596,6 +596,7 @@ export function editAdminBookingIntent(intentId, {
   paymentStatus,
   bookingPaymentMethod,
   eventList,
+  agencyId,
 }) {
   return async () => {
     dispatch(slice.actions.startLoading());
@@ -615,6 +616,7 @@ export function editAdminBookingIntent(intentId, {
         paymentStatus,
         bookingPaymentMethod,
         ...(eventList != null ? { eventList } : {}),
+        ...(agencyId != null ? { agencyId: agencyId === '' ? 0 : agencyId } : {}),
       });
       return response.data;
     } catch (error) {
@@ -837,6 +839,7 @@ export function editAdminBooking(bookingId, {
   groupLessonResort,
   groupLessonConfigId,
   clientLevel,
+  agencyId,
 }) {
   return async () => {
       dispatch(slice.actions.startLoading());
@@ -870,6 +873,7 @@ export function editAdminBooking(bookingId, {
               ...(groupLessonResort != null ? { groupLessonResort } : {}),
               ...(groupLessonConfigId != null ? { groupLessonConfigId } : {}),
               ...(clientLevel != null && clientLevel !== '' ? { clientLevel } : {}),
+              ...(agencyId != null ? { agencyId: agencyId === '' ? 0 : agencyId } : {}),
           });
           dispatch(slice.actions.updateBookingSuccess(response.data));
           return response.data;

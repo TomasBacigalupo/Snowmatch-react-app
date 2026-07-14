@@ -601,7 +601,8 @@ export function createAdminBooking(
     rentalDestinationType,
     rentalDestinationDetail,
     groupLessonConfigId,
-    groupLessonResort
+    groupLessonResort,
+    agencyId
 ) {
     return async () => {
         dispatch(slice.actions.startLoading());
@@ -670,6 +671,9 @@ export function createAdminBooking(
             if (groupLessonResort) {
                 payload.groupLessonResort = groupLessonResort;
             }
+            if (agencyId != null && agencyId !== '') {
+                payload.agencyId = Number(agencyId);
+            }
             if (includesEquipment && rentalFulfillment) {
                 payload.rentalFulfillment = rentalFulfillment;
                 if (rentalFulfillment === 'SHIP_TO_HOTEL_OR_HOME') {
@@ -726,7 +730,7 @@ export function updateAdminBookingRentalReservation(reservationId, rentalPayload
     };
 }
 
-export function createAdminBookingIntent(studentId, message, children, adults, events, totalPrice, bookingType, includesLaunch, includesEquipment, paymentStatus, paymentMethod, internalComment, resort, calendarTeacherId, groupLessonConfigId, groupLessonResort) {
+export function createAdminBookingIntent(studentId, message, children, adults, events, totalPrice, bookingType, includesLaunch, includesEquipment, paymentStatus, paymentMethod, internalComment, resort, calendarTeacherId, groupLessonConfigId, groupLessonResort, agencyId) {
     return async () => {
         dispatch(slice.actions.startLoading());
         try {
@@ -796,6 +800,9 @@ export function createAdminBookingIntent(studentId, message, children, adults, e
             }
             if (groupLessonResort) {
                 payload.groupLessonResort = groupLessonResort;
+            }
+            if (agencyId != null && agencyId !== '') {
+                payload.agencyId = Number(agencyId);
             }
             await axios.post(`/api/admin/booking-intents?businessId=13`, payload);
             dispatch(slice.actions.createIntentSuccess());

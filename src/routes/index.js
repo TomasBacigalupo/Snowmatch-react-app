@@ -53,6 +53,7 @@ const Loadable = (Component) => (props) => {
 
 const AdminRentalProviders = Loadable(lazy(() => import('../pages/dashboard/AdminRentalProviders')));
 const AdminAgencies = Loadable(lazy(() => import('../pages/dashboard/AdminAgencies')));
+const AdminAgencyDetail = Loadable(lazy(() => import('../pages/dashboard/AdminAgencyDetail')));
 
 export default function Router() {
   const isMobile = false;
@@ -507,6 +508,7 @@ export default function Router() {
                 { path: 'rental', element: <AdminRental /> },
                 { path: 'rental-providers', element: <AdminRentalProviders /> },
                 { path: 'agencies', element: <AdminAgencies /> },
+                { path: 'agencies/:id', element: <AdminAgencyDetail /> },
                 { path: 'group-lesson-resorts', element: <AdminGroupLessonResorts /> },
                 { path: 'resort-admins', element: <AdminResortAdmins /> },
                 { path: 'school-member-lessons', element: <AdminSchoolMemberLessons /> },

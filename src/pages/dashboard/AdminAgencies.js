@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-  Box,
   Button,
   Card,
   Container,
@@ -44,6 +44,7 @@ const emptyForm = () => ({
 
 export default function AdminAgencies() {
   const { themeStretch } = useSettings();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const { agencies, agenciesLoading, agenciesError } = useSelector((s) => s.agency);
 
@@ -183,14 +184,27 @@ export default function AdminAgencies() {
                   </TableRow>
                 ) : (
                   rows.map((row) => (
-                    <TableRow key={row.id} hover>
+                    <TableRow
+                      key={row.id}
+                      hover
+                      sx={{ cursor: 'pointer' }}
+                      onClick={() => navigate(PATH_DASHBOARD.admin.agency(row.id))}
+                    >
                       <TableCell>
                         <Typography variant="subtitle2">{row.name}</Typography>
                       </TableCell>
                       <TableCell>{row.phone || '—'}</TableCell>
                       <TableCell>{row.email || '—'}</TableCell>
-                      <TableCell align="right">
+                      <TableCell align="right" onClick={(e) => e.stopPropagation()}>
                         <Stack direction="row" spacing={0.5} justifyContent="flex-end">
+                          <Tooltip title="Ver reservas">
+                            <IconButton
+                              size="small"
+                              onClick={() => navigate(PATH_DASHBOARD.admin.agency(row.id))}
+                            >
+                              <Iconify icon="eva:eye-outline" />
+                            </IconButton>
+                          </Tooltip>
                           <Tooltip title="Editar">
                             <IconButton size="small" onClick={() => openEdit(row)}>
                               <Iconify icon="eva:edit-fill" />

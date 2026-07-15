@@ -185,6 +185,7 @@ export const PATH_DASHBOARD = {
     rental: path(ROOTS_DASHBOARD, '/admin/rental'),
     rentalProviders: path(ROOTS_DASHBOARD, '/admin/rental-providers'),
     agencies: path(ROOTS_DASHBOARD, '/admin/agencies'),
+    agency: (id) => path(ROOTS_DASHBOARD, `/admin/agencies/${id}`),
     groupLessonResorts: path(ROOTS_DASHBOARD, '/admin/group-lesson-resorts'),
     broadcastLesson: path(ROOTS_DASHBOARD, '/admin/broadcast'),
     userChats: path(ROOTS_DASHBOARD, '/admin/user-chats'),

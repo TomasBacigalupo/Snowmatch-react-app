@@ -3,7 +3,9 @@ import axios from '../../utils/axios';
 
 const initialState = {
   agencies: [],
+  agency: null,
   agenciesLoading: false,
+  agencyLoading: false,
   agenciesError: null,
 };
 
@@ -13,6 +15,16 @@ export const getAgencies = createAsyncThunk('agency/getAgencies', async (_, { re
     return response.data;
   } catch (error) {
     const msg = error?.message || error || 'Error fetching agencies';
+    return rejectWithValue(msg);
+  }
+});
+
+export const getAgency = createAsyncThunk('agency/getAgency', async (id, { rejectWithValue }) => {
+  try {
+    const response = await axios.get(`/api/admin/agencies/${id}`);
+    return response.data;
+  } catch (error) {
+    const msg = error?.message || error || 'Error fetching agency';
     return rejectWithValue(msg);
   }
 });
@@ -57,6 +69,9 @@ const slice = createSlice({
     clearAgenciesError(state) {
       state.agenciesError = null;
     },
+    clearAgency(state) {
+      state.agency = null;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -72,6 +87,19 @@ const slice = createSlice({
         state.agenciesLoading = false;
         state.agenciesError = action.payload;
       })
+      .addCase(getAgency.pending, (state) => {
+        state.agencyLoading = true;
+        state.agenciesError = null;
+      })
+      .addCase(getAgency.fulfilled, (state, action) => {
+        state.agencyLoading = false;
+        state.agency = action.payload || null;
+      })
+      .addCase(getAgency.rejected, (state, action) => {
+        state.agencyLoading = false;
+        state.agency = null;
+        state.agenciesError = action.payload;
+      })
       .addCase(createAgency.fulfilled, (state, action) => {
         if (action.payload) {
           state.agencies = [...state.agencies, action.payload].sort((a, b) =>
@@ -84,10 +112,16 @@ const slice = createSlice({
           state.agencies = state.agencies
             .map((row) => (row.id === action.payload.id ? action.payload : row))
             .sort((a, b) => (a.name || '').localeCompare(b.name || ''));
+          if (state.agency?.id === action.payload.id) {
+            state.agency = action.payload;
+          }
         }
       })
       .addCase(deleteAgency.fulfilled, (state, action) => {
         state.agencies = state.agencies.filter((row) => row.id !== action.payload);
+        if (state.agency?.id === action.payload) {
+          state.agency = null;
+        }
       })
       .addCase(createAgency.rejected, (state, action) => {
         state.agenciesError = action.payload;
@@ -101,5 +135,5 @@ const slice = createSlice({
   },
 });
 
-export const { clearAgenciesError } = slice.actions;
+export const { clearAgenciesError, clearAgency } = slice.actions;
 export default slice.reducer;

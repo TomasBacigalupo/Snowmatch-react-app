@@ -602,7 +602,8 @@ export function createAdminBooking(
     rentalDestinationDetail,
     groupLessonConfigId,
     groupLessonResort,
-    agencyId
+    agencyId,
+    currency
 ) {
     return async () => {
         dispatch(slice.actions.startLoading());
@@ -664,6 +665,7 @@ export function createAdminBooking(
                 internalComment,
                 resort,
                 bookingPaymentMethod: paymentMethod,
+                currency: currency || 'ARS',
             };
             if (groupLessonConfigId != null && groupLessonConfigId !== '') {
                 payload.groupLessonConfigId = Number(groupLessonConfigId);
@@ -730,7 +732,7 @@ export function updateAdminBookingRentalReservation(reservationId, rentalPayload
     };
 }
 
-export function createAdminBookingIntent(studentId, message, children, adults, events, totalPrice, bookingType, includesLaunch, includesEquipment, paymentStatus, paymentMethod, internalComment, resort, calendarTeacherId, groupLessonConfigId, groupLessonResort, agencyId) {
+export function createAdminBookingIntent(studentId, message, children, adults, events, totalPrice, bookingType, includesLaunch, includesEquipment, paymentStatus, paymentMethod, internalComment, resort, calendarTeacherId, groupLessonConfigId, groupLessonResort, agencyId, currency) {
     return async () => {
         dispatch(slice.actions.startLoading());
         try {
@@ -785,7 +787,8 @@ export function createAdminBookingIntent(studentId, message, children, adults, e
                 paymentStatus,
                 internalComment,
                 resort,
-                bookingPaymentMethod: paymentMethod
+                bookingPaymentMethod: paymentMethod,
+                currency: currency || 'ARS',
             };
             if (studentId != null && studentId !== '') {
                 payload.student = { id: Number(studentId) };

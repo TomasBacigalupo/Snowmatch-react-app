@@ -1616,6 +1616,7 @@
             "adultsCount": "Quantidade de adultos",
             "childrenCount": "Quantidade de crianças",
             "price": "Preço",
+            "currency": "Moeda",
             "includesEquipment": "Inclui equipamento",
             "includesLunch": "Inclui almoço",
             "showPriceToTeacher": "Mostrar preço ao instrutor",

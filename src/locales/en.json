@@ -1181,6 +1181,7 @@
       "adultsCount": "Number of adults",
       "childrenCount": "Number of children",
       "price": "Price",
+      "currency": "Currency",
       "includesEquipment": "Includes equipment",
       "includesLunch": "Includes lunch",
       "showPriceToTeacher": "Show price to instructor",

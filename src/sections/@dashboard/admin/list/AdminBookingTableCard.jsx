@@ -50,7 +50,7 @@ export default function AdminBookingTableCard({
     const theme = useTheme();
     const { t } = useTranslation();
     
-    const { imageLink, userComment, state, resort, adults, children, eventList, id, price, internalComment, type } = row;
+    const { imageLink, userComment, state, resort, adults, children, eventList, id, price, currency, internalComment, type } = row;
     const teacher = row.teacher;
     const { name, lastname, id: teacherId } = teacher || {};
     const { id: studentId } = row.student || {};
@@ -76,7 +76,7 @@ export default function AdminBookingTableCard({
     const formatPrice = (price) => {
         return new Intl.NumberFormat('es-AR', {
             style: 'currency',
-            currency: 'ARS'
+            currency: currency || 'ARS'
         }).format(price);
     };
 

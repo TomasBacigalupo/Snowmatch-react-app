@@ -139,6 +139,7 @@ export default function BookingIntentEditModal({ open, onClose, intent, onSave }
       studentId: studentIdRaw ? parseInt(studentIdRaw, 10) : null,
       eventList,
       agencyId: agencyId ?? 0,
+      currency: formData.get('currency') || intent?.currency || 'ARS',
     };
 
     try {
@@ -371,6 +372,19 @@ export default function BookingIntentEditModal({ open, onClose, intent, onSave }
                   },
                 }}
               />
+
+              <FormControl fullWidth>
+                <InputLabel>{t('adminBookings.editModal.currency')}</InputLabel>
+                <Select
+                  name="currency"
+                  label={t('adminBookings.editModal.currency')}
+                  defaultValue={intent?.currency || 'ARS'}
+                >
+                  <MenuItem value="ARS">ARS</MenuItem>
+                  <MenuItem value="USD">USD</MenuItem>
+                  <MenuItem value="BRL">BRL</MenuItem>
+                </Select>
+              </FormControl>
 
               <Stack
                 spacing={2}

@@ -67,6 +67,7 @@ const DEFAULT_FORM_DATA = {
     needTeacherInvoice: false,
     paymentStatus: 'PAID',
     paymentMethod: 'CASH',
+    currency: 'ARS',
     internalComment: '',
     groupLessonOffer: null,
     agencyId: null,
@@ -344,7 +345,8 @@ const BookingModal = ({ isOpen, onClose, refreshBookings, filterTeacherId, filte
                         formData.includesEquipment ? rental.rentalDestinationDetail : null,
                         null,
                         null,
-                        formData.agencyId
+                        formData.agencyId,
+                        formData.currency
                     )
                 );
 
@@ -394,7 +396,8 @@ const BookingModal = ({ isOpen, onClose, refreshBookings, filterTeacherId, filte
             isGroupLessonProduct ? null : (selectedTeacherId ?? null),
             formData.groupLessonOffer?.id ?? null,
             formData.groupLessonOffer?.resort ?? null,
-            formData.agencyId));
+            formData.agencyId,
+            formData.currency));
     };
 
     const handleGroupLessonOfferChange = (offer) => {
@@ -420,6 +423,9 @@ const BookingModal = ({ isOpen, onClose, refreshBookings, filterTeacherId, filte
                     ...dt,
                     price: dt.price || price,
                 }));
+            }
+            if (offer?.currency) {
+                next.currency = offer.currency;
             }
             if (offer?.includesGear) {
                 next.includesEquipment = true;
@@ -719,6 +725,27 @@ const BookingModal = ({ isOpen, onClose, refreshBookings, filterTeacherId, filte
                             value={formData.agencyId}
                             onChange={(agencyId) => setFormData((prevData) => ({ ...prevData, agencyId }))}
                         />
+                    </Grid>
+                    <Grid item xs={12} md={6}>
+                        <FormControl fullWidth>
+                            <InputLabel id="currency-label">
+                                {t('adminBookings.editModal.currency', { defaultValue: 'Currency' })}
+                            </InputLabel>
+                            <Select
+                                labelId="currency-label"
+                                id="currency-select"
+                                label={t('adminBookings.editModal.currency', { defaultValue: 'Currency' })}
+                                value={formData.currency}
+                                onChange={(e) => setFormData((prevData) => ({
+                                    ...prevData,
+                                    currency: e.target.value,
+                                }))}
+                            >
+                                <MenuItem value="ARS">ARS</MenuItem>
+                                <MenuItem value="USD">USD</MenuItem>
+                                <MenuItem value="BRL">BRL</MenuItem>
+                            </Select>
+                        </FormControl>
                     </Grid>
                     <Grid item xs={12} md={6}>
                         <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>

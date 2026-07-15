@@ -384,7 +384,7 @@ export default function BookingDetailsDrawer({
   const formatPrice = (price) =>
     new Intl.NumberFormat(intlLocale, {
       style: 'currency',
-      currency: 'ARS',
+      currency: booking?.currency || 'ARS',
     }).format(price);
 
   const formatEventTime = (dateString) =>

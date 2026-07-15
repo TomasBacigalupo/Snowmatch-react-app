@@ -174,6 +174,7 @@ export default function BookingEditModal({ open, onClose, booking, onSave }) {
         ? { clientId: editableClient.id, clientLevel }
         : {}),
       agencyId: agencyId ?? 0,
+      currency: formData.get('currency') || booking?.currency || 'ARS',
     };
 
     try {
@@ -522,6 +523,19 @@ export default function BookingEditModal({ open, onClose, booking, onSave }) {
                   },
                 }}
               />
+
+              <FormControl fullWidth>
+                <InputLabel>{t('adminBookings.editModal.currency')}</InputLabel>
+                <Select
+                  name="currency"
+                  label={t('adminBookings.editModal.currency')}
+                  defaultValue={booking?.currency || 'ARS'}
+                >
+                  <MenuItem value="ARS">ARS</MenuItem>
+                  <MenuItem value="USD">USD</MenuItem>
+                  <MenuItem value="BRL">BRL</MenuItem>
+                </Select>
+              </FormControl>
 
               <Stack
                 spacing={2}

@@ -230,7 +230,7 @@ export default function AdminBookingIntentTableRow({ row, onRefreshIntents }) {
   };
 
   const formatPrice = (p) =>
-    new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(p || 0);
+    new Intl.NumberFormat('es-AR', { style: 'currency', currency: row?.currency || 'ARS' }).format(p || 0);
 
   const getResortLabel = (resortValue) => {
     if (resortValue === 'CERRO_CATEDRAL') return 'Catedral';

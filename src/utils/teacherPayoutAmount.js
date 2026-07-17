@@ -33,23 +33,31 @@ export function calcBookingTeacherHours(booking) {
   return booking.eventList.reduce((hours, event) => hours + calcEventHours(event), 0);
 }
 
-export function calcBookingPayWithHourPrice(booking, hourPrice) {
-  const rate = parseFloat(hourPrice);
+export function calcBookingPayWithHourPrice(booking, hourPrices) {
+  const isReferred = booking?.type === 'REFERRED';
+  const rawPrice = isReferred ? hourPrices?.referred : hourPrices?.assigned;
+  const rate = parseFloat(rawPrice);
   if (!rate || rate <= 0) {
     return 0;
   }
   return calcBookingTeacherHours(booking) * rate;
 }
 
-export function calcTeacherPayTotalWithHourPrice(bookings, hourPrice) {
+export function calcTeacherPayTotalWithHourPrice(bookings, hourPrices) {
   if (!bookings?.length) {
     return 0;
   }
 
   return bookings.reduce(
-    (total, booking) => total + calcBookingPayWithHourPrice(booking, hourPrice),
+    (total, booking) => total + calcBookingPayWithHourPrice(booking, hourPrices),
     0
   );
+}
+
+export function hasHourPricesConfigured(hourPrices) {
+  const assigned = parseFloat(hourPrices?.assigned);
+  const referred = parseFloat(hourPrices?.referred);
+  return (assigned > 0) || (referred > 0);
 }
 
 export function calcBookingTeacherPay(booking) {

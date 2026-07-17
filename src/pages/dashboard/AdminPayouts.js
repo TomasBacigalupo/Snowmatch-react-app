@@ -38,6 +38,7 @@ import {
   calcBookingPayWithHourPrice,
   calcBookingTeacherHours,
   calcTeacherPayTotalWithHourPrice,
+  hasHourPricesConfigured,
 } from '../../utils/teacherPayoutAmount';
 import { fDate } from '../../utils/formatTime';
 
@@ -81,7 +82,8 @@ export default function AdminPayouts() {
   const fileInputRef = useRef(null);
   const [selectedTeacher, setSelectedTeacher] = useState(null);
   const [selectedBookingIds, setSelectedBookingIds] = useState([]);
-  const [hourPrice, setHourPrice] = useState('');
+  const [assignedHourPrice, setAssignedHourPrice] = useState('');
+  const [referredHourPrice, setReferredHourPrice] = useState('');
   const [amount, setAmount] = useState('');
   const [note, setNote] = useState('');
   const [file, setFile] = useState(null);
@@ -105,9 +107,14 @@ export default function AdminPayouts() {
     [teacherBookings, selectedBookingIds]
   );
 
+  const hourPrices = useMemo(
+    () => ({ assigned: assignedHourPrice, referred: referredHourPrice }),
+    [assignedHourPrice, referredHourPrice]
+  );
+
   const totalToPay = useMemo(
-    () => calcTeacherPayTotalWithHourPrice(selectedBookings, hourPrice),
-    [selectedBookings, hourPrice]
+    () => calcTeacherPayTotalWithHourPrice(selectedBookings, hourPrices),
+    [selectedBookings, hourPrices]
   );
 
   const loadPayouts = useCallback(() => {
@@ -122,7 +129,8 @@ export default function AdminPayouts() {
   const handleTeacherChange = (_, teacher) => {
     setSelectedTeacher(teacher);
     setSelectedBookingIds([]);
-    setHourPrice('');
+    setAssignedHourPrice('');
+    setReferredHourPrice('');
     setAmount('');
     setNote('');
     setFile(null);
@@ -252,7 +260,7 @@ export default function AdminPayouts() {
     }
   };
 
-  const parsedHourPrice = parseFloat(hourPrice);
+  const hourPricesConfigured = hasHourPricesConfigured(hourPrices);
 
   return (
     <Page title={t('adminPayouts.title')}>
@@ -288,15 +296,27 @@ export default function AdminPayouts() {
 
               {selectedTeacher && (
                 <>
-                  <TextField
-                    label={t('adminPayouts.hourPriceLabel')}
-                    type="number"
-                    value={hourPrice}
-                    onChange={(e) => setHourPrice(e.target.value)}
-                    sx={{ maxWidth: 320 }}
-                    inputProps={{ min: 0, step: '0.01' }}
-                    helperText={t('adminPayouts.hourPriceHelper')}
-                  />
+                  <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
+                    <TextField
+                      label={t('adminPayouts.assignedHourPriceLabel')}
+                      type="number"
+                      value={assignedHourPrice}
+                      onChange={(e) => setAssignedHourPrice(e.target.value)}
+                      fullWidth
+                      inputProps={{ min: 0, step: '0.01' }}
+                    />
+                    <TextField
+                      label={t('adminPayouts.referredHourPriceLabel')}
+                      type="number"
+                      value={referredHourPrice}
+                      onChange={(e) => setReferredHourPrice(e.target.value)}
+                      fullWidth
+                      inputProps={{ min: 0, step: '0.01' }}
+                    />
+                  </Stack>
+                  <Typography variant="caption" color="text.secondary">
+                    {t('adminPayouts.hourPriceHelper')}
+                  </Typography>
 
                   <TableContainer>
                     <Table size="small">
@@ -347,7 +367,7 @@ export default function AdminPayouts() {
                           teacherBookings.map((booking) => {
                             const hasPayout = paidBookingIds.has(booking.id);
                             const hours = calcBookingTeacherHours(booking);
-                            const owed = calcBookingPayWithHourPrice(booking, hourPrice);
+                            const owed = calcBookingPayWithHourPrice(booking, hourPrices);
                             return (
                               <TableRow
                                 key={booking.id}
@@ -368,7 +388,7 @@ export default function AdminPayouts() {
                                 <TableCell align="right">{formatArs(booking.price)}</TableCell>
                                 <TableCell align="right">{hours ? `${Math.round(hours)}h` : '—'}</TableCell>
                                 <TableCell align="right">
-                                  {parsedHourPrice > 0 ? formatArs(owed) : '—'}
+                                  {hourPricesConfigured ? formatArs(owed) : '—'}
                                 </TableCell>
                                 <TableCell>
                                   {hasPayout
@@ -392,7 +412,7 @@ export default function AdminPayouts() {
                   >
                     <Typography variant="subtitle1">
                       {t('adminPayouts.totalToPay')}:{' '}
-                      {parsedHourPrice > 0 ? formatArs(totalToPay) : '—'}
+                      {hourPricesConfigured ? formatArs(totalToPay) : '—'}
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
                       {t('adminPayouts.selectedCount', { count: selectedBookings.length })}

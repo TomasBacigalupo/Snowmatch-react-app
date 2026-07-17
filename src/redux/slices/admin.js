@@ -235,6 +235,13 @@ const slice = createSlice({
       state.payouts = action.payload;
     },
 
+    createPayoutSuccess(state, action) {
+      state.isLoading = false;
+      if (action.payload?.id) {
+        state.payouts = [action.payload, ...(state.payouts || [])];
+      }
+    },
+
     broadcastLessonSuccess(state, action) {
       state.isLoading = false;
       state.error = null;
@@ -1159,6 +1166,51 @@ export function getAllPayouts(page = 0, pageSize = 1000) {
     try {
       const response = await axios.get(`/api/payouts/?page=${page}&pageSize=${pageSize}`);
       dispatch(slice.actions.getAllPayoutsSuccess(response.data));
+      return response.data;
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+      throw error;
+    }
+  };
+}
+
+export function createMultiBookingPayout({ teacherId, bookingIds, amount, note, file }) {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      let invoiceUrl = null;
+
+      if (file && bookingIds?.length) {
+        const presignedResponse = await axios.get(
+          `/api/payouts/preSignedUrlPayout/${bookingIds[0]}`
+        );
+        const presignedUrl = presignedResponse.data;
+
+        const uploadResponse = await fetch(presignedUrl, {
+          method: 'PUT',
+          body: file,
+          headers: {
+            'Content-Type': file.type,
+          },
+        });
+
+        if (!uploadResponse.ok) {
+          throw new Error('Failed to upload payout receipt to S3');
+        }
+
+        invoiceUrl = presignedUrl?.split('?')[0];
+      }
+
+      const payoutDto = {
+        userId: teacherId,
+        bookingIds,
+        amount,
+        note: note || null,
+        ...(invoiceUrl ? { invoiceUrl } : {}),
+      };
+
+      const response = await axios.post('/api/payouts/', payoutDto);
+      dispatch(slice.actions.createPayoutSuccess(response.data));
       return response.data;
     } catch (error) {
       dispatch(slice.actions.hasError(error));

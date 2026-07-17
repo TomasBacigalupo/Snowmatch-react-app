@@ -91,6 +91,7 @@ const ADMIN_NAV_ITEMS = [
   { title: 'user chats', path: PATH_DASHBOARD.admin.userChats, icon: ICONS.chat },
   { title: 'broadcast lesson', path: PATH_DASHBOARD.admin.broadcastLesson, icon: ICONS.mail },
   { title: 'financial dashboard', path: PATH_DASHBOARD.admin.financial, icon: ICONS.banking },
+  { title: 'payouts', path: PATH_DASHBOARD.admin.payouts, icon: ICONS.invoice },
   { title: 'rental products', path: PATH_DASHBOARD.admin.rental, icon: ICONS.ecommerce },
   { title: 'rental providers', path: PATH_DASHBOARD.admin.rentalProviders, icon: ICONS.ecommerce },
   { title: 'agencies', path: PATH_DASHBOARD.admin.agencies, icon: ICONS.user },

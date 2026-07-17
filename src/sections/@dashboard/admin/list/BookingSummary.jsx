@@ -6,6 +6,7 @@ import { Box, Card, Grid, Typography, Stack, IconButton } from '@mui/material';
 import { alpha, useTheme } from '@mui/material/styles';
 // components
 import Iconify from '../../../../components/Iconify';
+import { calcTeacherPayTotal } from '../../../../utils/teacherPayoutAmount';
 
 // ----------------------------------------------------------------------
 
@@ -57,59 +58,7 @@ export default function BookingSummary({ bookings, isGearBookings = false }) {
         }, 0);
     };
 
-    const calculateTeacherPayments = () => {
-        if (!bookings?.length) return 0;
-        
-        return bookings.reduce((total, booking) => {
-            if (!booking.teacher?.level || !booking.eventList?.length) return total;
-            
-            const teacherLevel = booking.teacher.level;
-            let hourlyRate = 0;
-            
-            // Definir tarifa por nivel
-            switch (teacherLevel) {
-                case 1:
-                    if(booking.type === 'REFERRED'){
-                        hourlyRate = 30000;
-                    } else {
-                        hourlyRate = 23500;
-                    }
-                    break;
-                case 2:
-                    if(booking.type === 'REFERRED'){
-                        hourlyRate = 38500;
-                    } else {
-                        hourlyRate = 32000;
-                    }
-                    break;
-                case 3:
-                case 4:
-                case 5:
-                    if(booking.type === 'REFERRED'){
-                        hourlyRate = 56000;
-                    } else {
-                        hourlyRate = 49500;
-                    }
-                    
-                    break;
-                default:
-                    hourlyRate = 16000; // Default para niveles no especificados
-            }
-            
-            // Calcular horas totales del teacher en esta reserva
-            const teacherHours = booking.eventList.reduce((hours, event) => {
-                const start = new Date(event.start);
-                const end = new Date(event.end);
-                const eventHours = (end - start) / (1000 * 60 * 60);
-                if (eventHours == 4) {
-                    return hours + 3;
-                }
-                return hours + Math.min(eventHours, 6);
-            }, 0);
-            
-            return total + (teacherHours * hourlyRate);
-        }, 0);
-    };
+    const calculateTeacherPayments = () => calcTeacherPayTotal(bookings);
 
     const stats = {
         total: bookings?.length || 0,

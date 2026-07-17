@@ -10,6 +10,7 @@ import {
   Checkbox,
   CircularProgress,
   Container,
+  MenuItem,
   Stack,
   Table,
   TableBody,
@@ -21,6 +22,9 @@ import {
   Typography,
   Snackbar,
 } from '@mui/material';
+import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LoadingButton } from '@mui/lab';
 import Page from '../../components/Page';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
@@ -43,6 +47,55 @@ import {
 import { fDate } from '../../utils/formatTime';
 
 const ALLOWED_RECEIPT_TYPES = ['image/jpeg', 'image/png', 'image/jpg', 'application/pdf'];
+
+const PAYOUT_STATUS_FILTERS = [
+  { value: 'all', labelKey: 'adminPayouts.payoutFilterAll' },
+  { value: 'done', labelKey: 'adminPayouts.payoutFilterDone' },
+  { value: 'undone', labelKey: 'adminPayouts.payoutFilterUndone' },
+];
+
+function getDefaultMonthRange() {
+  const now = new Date();
+  return [
+    new Date(now.getFullYear(), now.getMonth(), 1),
+    new Date(now.getFullYear(), now.getMonth() + 1, 0),
+  ];
+}
+
+function startOfDay(date) {
+  const d = new Date(date);
+  d.setHours(0, 0, 0, 0);
+  return d;
+}
+
+function endOfDay(date) {
+  const d = new Date(date);
+  d.setHours(23, 59, 59, 999);
+  return d;
+}
+
+function getBookingLessonDate(booking) {
+  const firstEvent = booking?.eventList?.[0];
+  if (!firstEvent?.start) {
+    return null;
+  }
+  const date = new Date(firstEvent.start);
+  return Number.isNaN(date.getTime()) ? null : date;
+}
+
+function bookingInDateRange(booking, rangeStart, rangeEnd) {
+  const lessonDate = getBookingLessonDate(booking);
+  if (!lessonDate) {
+    return false;
+  }
+  if (rangeStart && lessonDate < startOfDay(rangeStart)) {
+    return false;
+  }
+  if (rangeEnd && lessonDate > endOfDay(rangeEnd)) {
+    return false;
+  }
+  return true;
+}
 
 function formatArs(amount) {
   return new Intl.NumberFormat('es-AR', {
@@ -92,6 +145,8 @@ export default function AdminPayouts() {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [drawerBooking, setDrawerBooking] = useState(null);
   const [loadingDrawerBooking, setLoadingDrawerBooking] = useState(false);
+  const [dateRange, setDateRange] = useState(() => getDefaultMonthRange());
+  const [payoutStatusFilter, setPayoutStatusFilter] = useState('all');
 
   const paidBookingIds = useMemo(() => bookingIdsWithPayout(payouts), [payouts]);
 
@@ -102,9 +157,28 @@ export default function AdminPayouts() {
     return (bookings || []).filter((booking) => booking.teacher?.id === selectedTeacher.id);
   }, [bookings, selectedTeacher]);
 
+  const filteredTeacherBookings = useMemo(() => {
+    const [rangeStart, rangeEnd] = dateRange || [];
+
+    return teacherBookings.filter((booking) => {
+      if (!bookingInDateRange(booking, rangeStart, rangeEnd)) {
+        return false;
+      }
+
+      const hasPayout = paidBookingIds.has(booking.id);
+      if (payoutStatusFilter === 'done') {
+        return hasPayout;
+      }
+      if (payoutStatusFilter === 'undone') {
+        return !hasPayout;
+      }
+      return true;
+    });
+  }, [teacherBookings, dateRange, payoutStatusFilter, paidBookingIds]);
+
   const selectedBookings = useMemo(
-    () => teacherBookings.filter((booking) => selectedBookingIds.includes(booking.id)),
-    [teacherBookings, selectedBookingIds]
+    () => filteredTeacherBookings.filter((booking) => selectedBookingIds.includes(booking.id)),
+    [filteredTeacherBookings, selectedBookingIds]
   );
 
   const hourPrices = useMemo(
@@ -156,11 +230,17 @@ export default function AdminPayouts() {
 
   const toggleAll = (event) => {
     event.stopPropagation();
-    if (selectedBookingIds.length === teacherBookings.length) {
+    if (selectedBookingIds.length === filteredTeacherBookings.length) {
       setSelectedBookingIds([]);
       return;
     }
-    setSelectedBookingIds(teacherBookings.map((booking) => booking.id));
+    setSelectedBookingIds(filteredTeacherBookings.map((booking) => booking.id));
+  };
+
+  const handleClearFilters = () => {
+    setDateRange(getDefaultMonthRange());
+    setPayoutStatusFilter('all');
+    setSelectedBookingIds([]);
   };
 
   const handleBookingRowClick = async (booking) => {
@@ -296,6 +376,48 @@ export default function AdminPayouts() {
 
               {selectedTeacher && (
                 <>
+                  <Stack
+                    direction={{ xs: 'column', md: 'row' }}
+                    spacing={2}
+                    alignItems={{ md: 'flex-start' }}
+                  >
+                    <LocalizationProvider dateAdapter={AdapterDateFns}>
+                      <DateRangePicker
+                        localeText={{
+                          start: t('adminPayouts.startDate'),
+                          end: t('adminPayouts.endDate'),
+                        }}
+                        value={dateRange}
+                        onChange={(newValue) => setDateRange(newValue)}
+                        slotProps={{
+                          textField: {
+                            size: 'small',
+                          },
+                        }}
+                        sx={{ flex: 1, minWidth: 280 }}
+                      />
+                    </LocalizationProvider>
+
+                    <TextField
+                      select
+                      label={t('adminPayouts.payoutFilterLabel')}
+                      value={payoutStatusFilter}
+                      onChange={(e) => setPayoutStatusFilter(e.target.value)}
+                      size="small"
+                      sx={{ minWidth: 200 }}
+                    >
+                      {PAYOUT_STATUS_FILTERS.map((option) => (
+                        <MenuItem key={option.value} value={option.value}>
+                          {t(option.labelKey)}
+                        </MenuItem>
+                      ))}
+                    </TextField>
+
+                    <Button variant="outlined" onClick={handleClearFilters} sx={{ mt: { xs: 0, md: 0.5 } }}>
+                      {t('adminPayouts.clearFilters')}
+                    </Button>
+                  </Stack>
+
                   <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
                     <TextField
                       label={t('adminPayouts.assignedHourPriceLabel')}
@@ -326,11 +448,11 @@ export default function AdminPayouts() {
                             <Checkbox
                               indeterminate={
                                 selectedBookingIds.length > 0 &&
-                                selectedBookingIds.length < teacherBookings.length
+                                selectedBookingIds.length < filteredTeacherBookings.length
                               }
                               checked={
-                                teacherBookings.length > 0 &&
-                                selectedBookingIds.length === teacherBookings.length
+                                filteredTeacherBookings.length > 0 &&
+                                selectedBookingIds.length === filteredTeacherBookings.length
                               }
                               onChange={toggleAll}
                               onClick={(e) => e.stopPropagation()}
@@ -363,8 +485,16 @@ export default function AdminPayouts() {
                               </Typography>
                             </TableCell>
                           </TableRow>
+                        ) : filteredTeacherBookings.length === 0 ? (
+                          <TableRow>
+                            <TableCell colSpan={9}>
+                              <Typography variant="body2" color="text.secondary">
+                                {t('adminPayouts.noBookingsFiltered')}
+                              </Typography>
+                            </TableCell>
+                          </TableRow>
                         ) : (
-                          teacherBookings.map((booking) => {
+                          filteredTeacherBookings.map((booking) => {
                             const hasPayout = paidBookingIds.has(booking.id);
                             const hours = calcBookingTeacherHours(booking);
                             const owed = calcBookingPayWithHourPrice(booking, hourPrices);

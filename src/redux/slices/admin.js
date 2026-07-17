@@ -745,16 +745,15 @@ export function getTeacherDocuments(id) {
   };
 }
 
-export function getBooking(bookingId) {
+export function fetchAdminBookingById(bookingId) {
   return async () => {
-      dispatch(slice.actions.startLoading());
-      try {
-          const response = await axios.get(`/api/bookings/{bookingId}`);
-          const bookings = response.data
-          dispatch(slice.actions.getBookingSuccess(bookings));
-      } catch (error) {
-          dispatch(slice.actions.hasError(error));
-      }
+    try {
+      const response = await axios.get(`/api/admin/bookings/${bookingId}`);
+      return response.data;
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+      throw error;
+    }
   };
 }
 

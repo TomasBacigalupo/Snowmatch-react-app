@@ -8,6 +8,7 @@ import {
   Button,
   Card,
   Checkbox,
+  CircularProgress,
   Container,
   Stack,
   Table,
@@ -25,13 +26,19 @@ import Page from '../../components/Page';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
 import useSettings from '../../hooks/useSettings';
 import { PATH_DASHBOARD } from '../../routes/paths';
+import BookingDetailsDrawer from '../../sections/@dashboard/admin/list/BookingDetailsDrawer';
 import {
   createMultiBookingPayout,
+  fetchAdminBookingById,
   getAllPayouts,
   getBookings,
   getTeachers,
 } from '../../redux/slices/admin';
-import { calcBookingTeacherPay, calcTeacherPayTotal } from '../../utils/teacherPayoutAmount';
+import {
+  calcBookingPayWithHourPrice,
+  calcBookingTeacherHours,
+  calcTeacherPayTotalWithHourPrice,
+} from '../../utils/teacherPayoutAmount';
 import { fDate } from '../../utils/formatTime';
 
 const ALLOWED_RECEIPT_TYPES = ['image/jpeg', 'image/png', 'image/jpg', 'application/pdf'];
@@ -74,11 +81,15 @@ export default function AdminPayouts() {
   const fileInputRef = useRef(null);
   const [selectedTeacher, setSelectedTeacher] = useState(null);
   const [selectedBookingIds, setSelectedBookingIds] = useState([]);
+  const [hourPrice, setHourPrice] = useState('');
   const [amount, setAmount] = useState('');
   const [note, setNote] = useState('');
   const [file, setFile] = useState(null);
   const [submitting, setSubmitting] = useState(false);
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [drawerBooking, setDrawerBooking] = useState(null);
+  const [loadingDrawerBooking, setLoadingDrawerBooking] = useState(false);
 
   const paidBookingIds = useMemo(() => bookingIdsWithPayout(payouts), [payouts]);
 
@@ -95,8 +106,8 @@ export default function AdminPayouts() {
   );
 
   const totalToPay = useMemo(
-    () => calcTeacherPayTotal(selectedBookings),
-    [selectedBookings]
+    () => calcTeacherPayTotalWithHourPrice(selectedBookings, hourPrice),
+    [selectedBookings, hourPrice]
   );
 
   const loadPayouts = useCallback(() => {
@@ -111,9 +122,12 @@ export default function AdminPayouts() {
   const handleTeacherChange = (_, teacher) => {
     setSelectedTeacher(teacher);
     setSelectedBookingIds([]);
+    setHourPrice('');
     setAmount('');
     setNote('');
     setFile(null);
+    setDrawerOpen(false);
+    setDrawerBooking(null);
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
@@ -123,7 +137,8 @@ export default function AdminPayouts() {
     }
   };
 
-  const toggleBooking = (bookingId) => {
+  const toggleBooking = (bookingId, event) => {
+    event.stopPropagation();
     setSelectedBookingIds((prev) =>
       prev.includes(bookingId)
         ? prev.filter((id) => id !== bookingId)
@@ -131,12 +146,45 @@ export default function AdminPayouts() {
     );
   };
 
-  const toggleAll = () => {
+  const toggleAll = (event) => {
+    event.stopPropagation();
     if (selectedBookingIds.length === teacherBookings.length) {
       setSelectedBookingIds([]);
       return;
     }
     setSelectedBookingIds(teacherBookings.map((booking) => booking.id));
+  };
+
+  const handleBookingRowClick = async (booking) => {
+    if (loadingDrawerBooking) {
+      return;
+    }
+    setLoadingDrawerBooking(true);
+    try {
+      const fullBooking = await dispatch(fetchAdminBookingById(booking.id));
+      setDrawerBooking(fullBooking);
+      setDrawerOpen(true);
+    } catch (error) {
+      setSnackbar({
+        open: true,
+        message: error?.message || t('adminPayouts.bookingLoadError'),
+        severity: 'error',
+      });
+    } finally {
+      setLoadingDrawerBooking(false);
+    }
+  };
+
+  const handleDrawerClose = () => {
+    setDrawerOpen(false);
+    setDrawerBooking(null);
+  };
+
+  const refreshBookings = () => {
+    if (selectedTeacher?.id) {
+      dispatch(getBookings(selectedTeacher.id));
+    }
+    loadPayouts();
   };
 
   const handleFileChange = (event) => {
@@ -192,8 +240,7 @@ export default function AdminPayouts() {
       if (fileInputRef.current) {
         fileInputRef.current.value = '';
       }
-      loadPayouts();
-      dispatch(getBookings(selectedTeacher.id));
+      refreshBookings();
     } catch (error) {
       setSnackbar({
         open: true,
@@ -204,6 +251,8 @@ export default function AdminPayouts() {
       setSubmitting(false);
     }
   };
+
+  const parsedHourPrice = parseFloat(hourPrice);
 
   return (
     <Page title={t('adminPayouts.title')}>
@@ -239,6 +288,16 @@ export default function AdminPayouts() {
 
               {selectedTeacher && (
                 <>
+                  <TextField
+                    label={t('adminPayouts.hourPriceLabel')}
+                    type="number"
+                    value={hourPrice}
+                    onChange={(e) => setHourPrice(e.target.value)}
+                    sx={{ maxWidth: 320 }}
+                    inputProps={{ min: 0, step: '0.01' }}
+                    helperText={t('adminPayouts.hourPriceHelper')}
+                  />
+
                   <TableContainer>
                     <Table size="small">
                       <TableHead>
@@ -254,6 +313,7 @@ export default function AdminPayouts() {
                                 selectedBookingIds.length === teacherBookings.length
                               }
                               onChange={toggleAll}
+                              onClick={(e) => e.stopPropagation()}
                             />
                           </TableCell>
                           <TableCell>{t('adminPayouts.colId')}</TableCell>
@@ -261,6 +321,7 @@ export default function AdminPayouts() {
                           <TableCell>{t('adminPayouts.colType')}</TableCell>
                           <TableCell>{t('adminPayouts.colResort')}</TableCell>
                           <TableCell align="right">{t('adminPayouts.colPrice')}</TableCell>
+                          <TableCell align="right">{t('adminPayouts.colHours')}</TableCell>
                           <TableCell align="right">{t('adminPayouts.colOwed')}</TableCell>
                           <TableCell>{t('adminPayouts.colStatus')}</TableCell>
                         </TableRow>
@@ -268,7 +329,7 @@ export default function AdminPayouts() {
                       <TableBody>
                         {isLoadingBookings ? (
                           <TableRow>
-                            <TableCell colSpan={8}>
+                            <TableCell colSpan={9}>
                               <Typography variant="body2" color="text.secondary">
                                 {t('adminPayouts.loadingBookings')}
                               </Typography>
@@ -276,7 +337,7 @@ export default function AdminPayouts() {
                           </TableRow>
                         ) : teacherBookings.length === 0 ? (
                           <TableRow>
-                            <TableCell colSpan={8}>
+                            <TableCell colSpan={9}>
                               <Typography variant="body2" color="text.secondary">
                                 {t('adminPayouts.noBookings')}
                               </Typography>
@@ -285,12 +346,19 @@ export default function AdminPayouts() {
                         ) : (
                           teacherBookings.map((booking) => {
                             const hasPayout = paidBookingIds.has(booking.id);
+                            const hours = calcBookingTeacherHours(booking);
+                            const owed = calcBookingPayWithHourPrice(booking, hourPrice);
                             return (
-                              <TableRow key={booking.id} hover>
-                                <TableCell padding="checkbox">
+                              <TableRow
+                                key={booking.id}
+                                hover
+                                sx={{ cursor: 'pointer' }}
+                                onClick={() => handleBookingRowClick(booking)}
+                              >
+                                <TableCell padding="checkbox" onClick={(e) => e.stopPropagation()}>
                                   <Checkbox
                                     checked={selectedBookingIds.includes(booking.id)}
-                                    onChange={() => toggleBooking(booking.id)}
+                                    onChange={(e) => toggleBooking(booking.id, e)}
                                   />
                                 </TableCell>
                                 <TableCell>{booking.id}</TableCell>
@@ -298,8 +366,9 @@ export default function AdminPayouts() {
                                 <TableCell>{booking.type || '—'}</TableCell>
                                 <TableCell>{booking.resort || '—'}</TableCell>
                                 <TableCell align="right">{formatArs(booking.price)}</TableCell>
+                                <TableCell align="right">{hours ? `${Math.round(hours)}h` : '—'}</TableCell>
                                 <TableCell align="right">
-                                  {formatArs(calcBookingTeacherPay(booking))}
+                                  {parsedHourPrice > 0 ? formatArs(owed) : '—'}
                                 </TableCell>
                                 <TableCell>
                                   {hasPayout
@@ -322,7 +391,8 @@ export default function AdminPayouts() {
                     }}
                   >
                     <Typography variant="subtitle1">
-                      {t('adminPayouts.totalToPay')}: {formatArs(totalToPay)}
+                      {t('adminPayouts.totalToPay')}:{' '}
+                      {parsedHourPrice > 0 ? formatArs(totalToPay) : '—'}
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
                       {t('adminPayouts.selectedCount', { count: selectedBookings.length })}
@@ -377,6 +447,32 @@ export default function AdminPayouts() {
             </Stack>
           </Card>
         </Stack>
+
+        {loadingDrawerBooking && (
+          <Box
+            sx={{
+              position: 'fixed',
+              inset: 0,
+              zIndex: (theme) => theme.zIndex.drawer + 2,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              bgcolor: 'rgba(0,0,0,0.2)',
+            }}
+          >
+            <CircularProgress />
+          </Box>
+        )}
+
+        {drawerOpen && drawerBooking && (
+          <BookingDetailsDrawer
+            open={drawerOpen}
+            onClose={handleDrawerClose}
+            booking={drawerBooking}
+            refreshBookings={refreshBookings}
+            onBookingUpdated={setDrawerBooking}
+          />
+        )}
 
         <Snackbar
           open={snackbar.open}

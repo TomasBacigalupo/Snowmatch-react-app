@@ -25,12 +25,82 @@ function getHourlyRate(teacherLevel, bookingType) {
   }
 }
 
+function normalizeDateTime(value) {
+  if (!value) {
+    return null;
+  }
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) {
+    return String(value);
+  }
+  return date.toISOString();
+}
+
+function getEventKey(event) {
+  const start = normalizeDateTime(event?.start);
+  const end = normalizeDateTime(event?.end);
+  if (start && end) {
+    return `range:${start}|${end}`;
+  }
+  if (event?.id != null) {
+    return `id:${event.id}`;
+  }
+  return null;
+}
+
 export function calcBookingTeacherHours(booking) {
   if (!booking?.eventList?.length) {
     return 0;
   }
 
   return booking.eventList.reduce((hours, event) => hours + calcEventHours(event), 0);
+}
+
+/** Unique events across bookings (shared events counted once). */
+export function collectUniqueEvents(bookings) {
+  const byKey = new Map();
+
+  (bookings || []).forEach((booking) => {
+    (booking?.eventList || []).forEach((event) => {
+      const key = getEventKey(event);
+      if (!key) {
+        return;
+      }
+      const existing = byKey.get(key);
+      if (existing) {
+        // Prefer REFERRED when the same event is on mixed booking types
+        if (booking?.type === 'REFERRED') {
+          existing.isReferred = true;
+        }
+        return;
+      }
+      byKey.set(key, {
+        event,
+        hours: calcEventHours(event),
+        isReferred: booking?.type === 'REFERRED',
+      });
+    });
+  });
+
+  return [...byKey.values()];
+}
+
+export function calcUniqueTeacherHours(bookings) {
+  return collectUniqueEvents(bookings).reduce((total, item) => total + item.hours, 0);
+}
+
+export function calcUniqueHoursByType(bookings) {
+  return collectUniqueEvents(bookings).reduce(
+    (acc, item) => {
+      if (item.isReferred) {
+        acc.referred += item.hours;
+      } else {
+        acc.assigned += item.hours;
+      }
+      return acc;
+    },
+    { assigned: 0, referred: 0 }
+  );
 }
 
 export function calcBookingPayWithHourPrice(booking, hourPrices) {
@@ -48,10 +118,16 @@ export function calcTeacherPayTotalWithHourPrice(bookings, hourPrices) {
     return 0;
   }
 
-  return bookings.reduce(
-    (total, booking) => total + calcBookingPayWithHourPrice(booking, hourPrices),
-    0
-  );
+  const assignedRate = parseFloat(hourPrices?.assigned);
+  const referredRate = parseFloat(hourPrices?.referred);
+
+  return collectUniqueEvents(bookings).reduce((total, item) => {
+    const rate = item.isReferred ? referredRate : assignedRate;
+    if (!rate || rate <= 0) {
+      return total;
+    }
+    return total + item.hours * rate;
+  }, 0);
 }
 
 export function hasHourPricesConfigured(hourPrices) {

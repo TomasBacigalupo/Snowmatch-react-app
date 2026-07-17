@@ -8,6 +8,7 @@ import {
   Button,
   Card,
   Checkbox,
+  Chip,
   CircularProgress,
   Container,
   MenuItem,
@@ -42,6 +43,8 @@ import {
   calcBookingPayWithHourPrice,
   calcBookingTeacherHours,
   calcTeacherPayTotalWithHourPrice,
+  calcUniqueHoursByType,
+  calcUniqueTeacherHours,
   hasHourPricesConfigured,
 } from '../../utils/teacherPayoutAmount';
 import { fDate } from '../../utils/formatTime';
@@ -52,6 +55,13 @@ const PAYOUT_STATUS_FILTERS = [
   { value: 'all', labelKey: 'adminPayouts.payoutFilterAll' },
   { value: 'done', labelKey: 'adminPayouts.payoutFilterDone' },
   { value: 'undone', labelKey: 'adminPayouts.payoutFilterUndone' },
+];
+
+const LEVEL_HOUR_PRICE_PRESETS = [
+  { level: 0, assigned: 19000, referred: 25500 },
+  { level: 1, assigned: 28000, referred: 34500 },
+  { level: 2, assigned: 38000, referred: 44500 },
+  { level: '3+', assigned: 40000, referred: 44500 },
 ];
 
 function getDefaultMonthRange() {
@@ -189,6 +199,16 @@ export default function AdminPayouts() {
   const totalToPay = useMemo(
     () => calcTeacherPayTotalWithHourPrice(selectedBookings, hourPrices),
     [selectedBookings, hourPrices]
+  );
+
+  const uniqueSelectedHours = useMemo(
+    () => calcUniqueTeacherHours(selectedBookings),
+    [selectedBookings]
+  );
+
+  const uniqueHoursByType = useMemo(
+    () => calcUniqueHoursByType(selectedBookings),
+    [selectedBookings]
   );
 
   const loadPayouts = useCallback(() => {
@@ -418,6 +438,36 @@ export default function AdminPayouts() {
                     </Button>
                   </Stack>
 
+                  <Stack spacing={1.5}>
+                    <Typography variant="subtitle2" color="text.secondary">
+                      {t('adminPayouts.levelPricePresets')}
+                    </Typography>
+                    <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
+                      {LEVEL_HOUR_PRICE_PRESETS.map((preset) => {
+                        const selected =
+                          String(assignedHourPrice) === String(preset.assigned) &&
+                          String(referredHourPrice) === String(preset.referred);
+                        return (
+                          <Chip
+                            key={String(preset.level)}
+                            clickable
+                            color={selected ? 'primary' : 'default'}
+                            variant={selected ? 'filled' : 'outlined'}
+                            label={t('adminPayouts.levelPricePresetChip', {
+                              level: preset.level,
+                              assigned: formatArs(preset.assigned),
+                              referred: formatArs(preset.referred),
+                            })}
+                            onClick={() => {
+                              setAssignedHourPrice(String(preset.assigned));
+                              setReferredHourPrice(String(preset.referred));
+                            }}
+                          />
+                        );
+                      })}
+                    </Stack>
+                  </Stack>
+
                   <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
                     <TextField
                       label={t('adminPayouts.assignedHourPriceLabel')}
@@ -546,7 +596,35 @@ export default function AdminPayouts() {
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
                       {t('adminPayouts.selectedCount', { count: selectedBookings.length })}
+                      {' · '}
+                      {t('adminPayouts.uniqueHours', {
+                        hours: Math.round(uniqueSelectedHours),
+                      })}
                     </Typography>
+                  </Box>
+
+                  <Box
+                    sx={{
+                      p: 2,
+                      borderRadius: 1,
+                      bgcolor: 'background.neutral',
+                    }}
+                  >
+                    <Typography variant="subtitle2" sx={{ mb: 1 }}>
+                      {t('adminPayouts.hoursSummaryTitle')}
+                    </Typography>
+                    <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
+                      <Typography variant="body2">
+                        {t('adminPayouts.assignedHoursSummary', {
+                          hours: Math.round(uniqueHoursByType.assigned),
+                        })}
+                      </Typography>
+                      <Typography variant="body2">
+                        {t('adminPayouts.referredHoursSummary', {
+                          hours: Math.round(uniqueHoursByType.referred),
+                        })}
+                      </Typography>
+                    </Stack>
                   </Box>
 
                   <Stack direction={{ xs: 'column', md: 'row' }} spacing={2}>

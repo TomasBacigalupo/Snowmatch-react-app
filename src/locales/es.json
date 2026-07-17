@@ -1173,6 +1173,10 @@
         "invalidAmount": "Ingresá un monto válido.",
         "invalidFileType": "Solo se permiten archivos JPG, PNG o PDF.",
         "success": "Pago registrado correctamente.",
+        "successBatch": "{{count}} pago(s) registrado(s) correctamente.",
+        "setHourPrices": "Definí los precios por hora asignada y referida antes de registrar pagos.",
+        "noPayoutsToCreate": "No hay reservas pendientes con monto a pagar seleccionadas.",
+        "perBookingPayoutHint": "Se crea un pago por cada reserva seleccionada con su monto correspondiente. La misma nota se aplica a los {{count}} pago(s).",
         "error": "No se pudo registrar el pago."
     },
     "adminBookings": {

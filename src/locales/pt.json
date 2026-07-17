@@ -1415,6 +1415,10 @@
         "invalidAmount": "Informe um valor válido.",
         "invalidFileType": "Apenas arquivos JPG, PNG ou PDF são permitidos.",
         "success": "Pagamento registrado com sucesso.",
+        "successBatch": "{{count}} pagamento(s) registrado(s) com sucesso.",
+        "setHourPrices": "Defina os preços por hora atribuída e referida antes de registrar pagamentos.",
+        "noPayoutsToCreate": "Nenhuma reserva pendente com valor a pagar foi selecionada.",
+        "perBookingPayoutHint": "Cria um pagamento por reserva selecionada com o valor correspondente. A mesma nota vale para os {{count}} pagamento(s).",
         "error": "Não foi possível registrar o pagamento."
     },
     "adminBookings": {

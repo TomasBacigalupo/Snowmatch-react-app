@@ -147,7 +147,6 @@ export default function AdminPayouts() {
   const [selectedBookingIds, setSelectedBookingIds] = useState([]);
   const [assignedHourPrice, setAssignedHourPrice] = useState('');
   const [referredHourPrice, setReferredHourPrice] = useState('');
-  const [amount, setAmount] = useState('');
   const [note, setNote] = useState('');
   const [file, setFile] = useState(null);
   const [submitting, setSubmitting] = useState(false);
@@ -225,7 +224,6 @@ export default function AdminPayouts() {
     setSelectedBookingIds([]);
     setAssignedHourPrice('');
     setReferredHourPrice('');
-    setAmount('');
     setNote('');
     setFile(null);
     setDrawerOpen(false);
@@ -322,27 +320,41 @@ export default function AdminPayouts() {
       setSnackbar({ open: true, message: t('adminPayouts.selectBookings'), severity: 'warning' });
       return;
     }
-    const parsedAmount = parseFloat(amount);
-    if (!parsedAmount || parsedAmount <= 0) {
-      setSnackbar({ open: true, message: t('adminPayouts.invalidAmount'), severity: 'warning' });
+    if (!hourPricesConfigured) {
+      setSnackbar({ open: true, message: t('adminPayouts.setHourPrices'), severity: 'warning' });
+      return;
+    }
+
+    const payoutsToCreate = selectedBookings
+      .filter((booking) => !paidBookingIds.has(booking.id))
+      .map((booking) => ({
+        bookingId: booking.id,
+        amount: calcBookingPayWithHourPrice(booking, hourPrices),
+      }))
+      .filter((payout) => payout.amount > 0);
+
+    if (!payoutsToCreate.length) {
+      setSnackbar({ open: true, message: t('adminPayouts.noPayoutsToCreate'), severity: 'warning' });
       return;
     }
 
     setSubmitting(true);
     try {
-      await dispatch(
+      const created = await dispatch(
         createMultiBookingPayout({
           teacherId: selectedTeacher.id,
-          bookingIds: selectedBookingIds,
-          amount: parsedAmount,
+          payouts: payoutsToCreate,
           note: note.trim() || null,
           file,
         })
       );
 
-      setSnackbar({ open: true, message: t('adminPayouts.success'), severity: 'success' });
+      setSnackbar({
+        open: true,
+        message: t('adminPayouts.successBatch', { count: created?.length || payoutsToCreate.length }),
+        severity: 'success',
+      });
       setSelectedBookingIds([]);
-      setAmount('');
       setNote('');
       setFile(null);
       if (fileInputRef.current) {
@@ -552,7 +564,15 @@ export default function AdminPayouts() {
                               <TableRow
                                 key={booking.id}
                                 hover
-                                sx={{ cursor: 'pointer' }}
+                                sx={{
+                                  cursor: 'pointer',
+                                  ...(hasPayout && {
+                                    bgcolor: 'rgba(129, 199, 132, 0.22)',
+                                    '&:hover': {
+                                      bgcolor: 'rgba(129, 199, 132, 0.35)',
+                                    },
+                                  }),
+                                }}
                                 onClick={() => handleBookingRowClick(booking)}
                               >
                                 <TableCell padding="checkbox" onClick={(e) => e.stopPropagation()}>
@@ -627,24 +647,20 @@ export default function AdminPayouts() {
                     </Stack>
                   </Box>
 
-                  <Stack direction={{ xs: 'column', md: 'row' }} spacing={2}>
-                    <TextField
-                      label={t('adminPayouts.amountLabel')}
-                      type="number"
-                      value={amount}
-                      onChange={(e) => setAmount(e.target.value)}
-                      fullWidth
-                      inputProps={{ min: 0, step: '0.01' }}
-                    />
-                    <TextField
-                      label={t('adminPayouts.noteLabel')}
-                      value={note}
-                      onChange={(e) => setNote(e.target.value)}
-                      fullWidth
-                      multiline
-                      minRows={1}
-                    />
-                  </Stack>
+                  <TextField
+                    label={t('adminPayouts.noteLabel')}
+                    value={note}
+                    onChange={(e) => setNote(e.target.value)}
+                    fullWidth
+                    multiline
+                    minRows={2}
+                  />
+
+                  <Typography variant="body2" color="text.secondary">
+                    {t('adminPayouts.perBookingPayoutHint', {
+                      count: selectedBookings.filter((b) => !paidBookingIds.has(b.id)).length,
+                    })}
+                  </Typography>
 
                   <Stack direction="row" spacing={2} alignItems="center">
                     <Button variant="outlined" component="label">
@@ -666,7 +682,7 @@ export default function AdminPayouts() {
                     variant="contained"
                     loading={submitting || isLoading}
                     onClick={handleSubmit}
-                    disabled={!selectedBookingIds.length}
+                    disabled={!selectedBookingIds.length || !hourPricesConfigured}
                   >
                     {t('adminPayouts.submit')}
                   </LoadingButton>

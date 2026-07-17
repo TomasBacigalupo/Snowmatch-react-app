@@ -980,6 +980,10 @@
     "invalidAmount": "Enter a valid payout amount.",
     "invalidFileType": "Only JPG, PNG, or PDF files are allowed.",
     "success": "Payout registered successfully.",
+    "successBatch": "{{count}} payout(s) registered successfully.",
+    "setHourPrices": "Set assigned and referred hour prices before registering payouts.",
+    "noPayoutsToCreate": "No pending bookings with a payable amount were selected.",
+    "perBookingPayoutHint": "Creates one payout per selected booking using each row's owed amount. Same note applies to all {{count}} payout(s).",
     "error": "Could not register payout."
   },
   "adminBookings": {

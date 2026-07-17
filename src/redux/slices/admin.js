@@ -242,6 +242,14 @@ const slice = createSlice({
       }
     },
 
+    createPayoutsBatchSuccess(state, action) {
+      state.isLoading = false;
+      const created = Array.isArray(action.payload) ? action.payload : [];
+      if (created.length) {
+        state.payouts = [...created, ...(state.payouts || [])];
+      }
+    },
+
     broadcastLessonSuccess(state, action) {
       state.isLoading = false;
       state.error = null;
@@ -1173,15 +1181,15 @@ export function getAllPayouts(page = 0, pageSize = 1000) {
   };
 }
 
-export function createMultiBookingPayout({ teacherId, bookingIds, amount, note, file }) {
+export function createMultiBookingPayout({ teacherId, payouts, note, file }) {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
       let invoiceUrl = null;
 
-      if (file && bookingIds?.length) {
+      if (file && payouts?.length) {
         const presignedResponse = await axios.get(
-          `/api/payouts/preSignedUrlPayout/${bookingIds[0]}`
+          `/api/payouts/preSignedUrlPayout/${payouts[0].bookingId}`
         );
         const presignedUrl = presignedResponse.data;
 
@@ -1200,17 +1208,25 @@ export function createMultiBookingPayout({ teacherId, bookingIds, amount, note, 
         invoiceUrl = presignedUrl?.split('?')[0];
       }
 
-      const payoutDto = {
-        userId: teacherId,
-        bookingIds,
-        amount,
-        note: note || null,
-        ...(invoiceUrl ? { invoiceUrl } : {}),
-      };
+      const created = [];
+      for (const payout of payouts) {
+        const payoutDto = {
+          userId: teacherId,
+          bookingIds: [payout.bookingId],
+          amount: payout.amount,
+          note: note || null,
+          ...(invoiceUrl ? { invoiceUrl } : {}),
+        };
 
-      const response = await axios.post('/api/payouts/', payoutDto);
-      dispatch(slice.actions.createPayoutSuccess(response.data));
-      return response.data;
+        const response = await axios.post('/api/payouts/', payoutDto);
+        created.push(response.data);
+      }
+
+      if (created.length) {
+        dispatch(slice.actions.createPayoutsBatchSuccess(created));
+      }
+
+      return created;
     } catch (error) {
       dispatch(slice.actions.hasError(error));
       throw error;

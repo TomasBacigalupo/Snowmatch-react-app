@@ -47,6 +47,15 @@ const initialState = {
       bookingsTimeSeries: [],
     },
   },
+  financialSummary: {
+    paidBookingsTotal: 0,
+    paidBookingsCount: 0,
+    completedPayoutsTotal: 0,
+    completedPayoutsCount: 0,
+    pendingAssignedHours: 0,
+    pendingReferredHours: 0,
+    hoursByLevel: [],
+  },
   resortStats: null,
   isLoadingResortStats: false,
   memberLessonStats: [],
@@ -216,6 +225,11 @@ const slice = createSlice({
     getFinancialDataSuccess(state, action) {
       state.isLoading = false;
       state.financialData = action.payload;
+    },
+
+    getFinancialSummarySuccess(state, action) {
+      state.isLoading = false;
+      state.financialSummary = action.payload;
     },
 
         // MARK PAYOUT AS PAID
@@ -1042,6 +1056,36 @@ export function editPayout(payoutId, payoutData) {
 }
 
 // Financial Dashboard Actions
+export function getFinancialSummary({ from, to, resort }) {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const params = new URLSearchParams();
+      if (from) params.append('from', from);
+      if (to) params.append('to', to);
+      if (resort) params.append('resort', resort);
+
+      const response = await axios.get(`/api/admin/financial/summary?${params.toString()}`);
+      const data = response.data || {};
+      const financialSummary = {
+        paidBookingsTotal: data.paidBookingsTotal || 0,
+        paidBookingsCount: data.paidBookingsCount || 0,
+        completedPayoutsTotal: data.completedPayoutsTotal || 0,
+        completedPayoutsCount: data.completedPayoutsCount || 0,
+        pendingAssignedHours: data.pendingAssignedHours || 0,
+        pendingReferredHours: data.pendingReferredHours || 0,
+        hoursByLevel: Array.isArray(data.hoursByLevel) ? data.hoursByLevel : [],
+      };
+
+      dispatch(slice.actions.getFinancialSummarySuccess(financialSummary));
+      return { payload: financialSummary };
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+      throw error;
+    }
+  };
+}
+
 export function getFinancialData(filters) {
   return async () => {
     dispatch(slice.actions.startLoading());

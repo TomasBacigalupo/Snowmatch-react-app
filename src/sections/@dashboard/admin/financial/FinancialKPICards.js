@@ -1,76 +1,31 @@
 import PropTypes from 'prop-types';
+import { useTranslation } from 'react-i18next';
 import { useTheme } from '@mui/material/styles';
-import {
-  Card,
-  Stack,
-  Typography,
-  Box,
-  Skeleton,
-  Tooltip,
-} from '@mui/material';
-// components
+import { Card, Stack, Typography, Box, Skeleton, Tooltip } from '@mui/material';
 import Iconify from '../../../../components/Iconify';
-// utils
-import { fNumber, fCurrency } from '../../../../utils/formatNumber';
-
-// ----------------------------------------------------------------------
+import { fCurrency } from '../../../../utils/formatNumber';
 
 const KPI_CARDS = [
   {
-    title: 'Total Reservas',
-    icon: 'eva:file-text-fill',
-    color: 'primary',
-    key: 'totalBookings',
-    format: 'number',
-    tooltip: 'Total number of bookings in the selected period',
-  },
-  {
-    title: 'Ingresos Cobrados',
+    titleKey: 'adminFinancial.kpiPaidBookings',
+    tooltipKey: 'adminFinancial.kpiPaidBookingsTooltip',
     icon: 'eva:trending-up-fill',
     color: 'success',
-    key: 'totalRevenue',
-    format: 'currency',
-    tooltip: 'Total revenue collected from successful payments',
+    key: 'paidBookingsTotal',
   },
   {
-    title: 'Pagos Pendientes',
-    icon: 'eva:clock-fill',
-    color: 'warning',
-    key: 'pendingPayouts',
-    format: 'currency',
-    tooltip: 'Total amount pending to be paid to instructors',
-  },
-  {
-    title: 'Payouts Realizados',
+    titleKey: 'adminFinancial.kpiCompletedPayouts',
+    tooltipKey: 'adminFinancial.kpiCompletedPayoutsTooltip',
     icon: 'eva:checkmark-circle-fill',
     color: 'info',
-    key: 'completedPayouts',
-    format: 'currency',
-    tooltip: 'Total amount already paid to instructors',
+    key: 'completedPayoutsTotal',
   },
   {
-    title: 'Con Payout',
-    icon: 'eva:people-fill',
-    color: 'success',
-    key: 'bookingsWithPayout',
-    format: 'number',
-    tooltip: 'Number of bookings that have associated payouts',
-  },
-  {
-    title: 'Sin Payout',
-    icon: 'eva:person-fill',
+    titleKey: 'adminFinancial.kpiPendingPayouts',
+    tooltipKey: 'adminFinancial.kpiPendingPayoutsTooltip',
+    icon: 'eva:clock-fill',
     color: 'warning',
-    key: 'bookingsWithoutPayout',
-    format: 'number',
-    tooltip: 'Number of bookings without associated payouts',
-  },
-  {
-    title: 'Con Factura',
-    icon: 'eva:file-add-fill',
-    color: 'secondary',
-    key: 'bookingsWithInvoice',
-    format: 'number',
-    tooltip: 'Number of bookings with teacher invoices uploaded',
+    key: 'pendingPayoutsTotal',
   },
 ];
 
@@ -81,36 +36,22 @@ FinancialKPICards.propTypes = {
 
 export default function FinancialKPICards({ kpis, loading = false }) {
   const theme = useTheme();
-
-  const formatValue = (value, format) => {
-    if (loading) return <Skeleton width={60} />;
-    
-    if (format === 'currency') {
-      return fCurrency(value);
-    }
-    return fNumber(value);
-  };
+  const { t } = useTranslation();
 
   const getCardColor = (color) => {
     const colorMap = {
       primary: theme.palette.primary.main,
       success: theme.palette.success.main,
       warning: theme.palette.warning.main,
-      error: theme.palette.error.main,
       info: theme.palette.info.main,
-      secondary: theme.palette.secondary.main,
     };
     return colorMap[color] || theme.palette.primary.main;
   };
 
   return (
-    <Stack
-      direction={{ xs: 'column', sm: 'row' }}
-      spacing={3}
-      sx={{ flexWrap: 'wrap' }}
-    >
+    <Stack direction={{ xs: 'column', sm: 'row' }} spacing={3} sx={{ flexWrap: 'wrap' }}>
       {KPI_CARDS.map((card) => (
-        <Tooltip key={card.key} title={card.tooltip} arrow>
+        <Tooltip key={card.key} title={t(card.tooltipKey)} arrow>
           <Card
             sx={{
               p: 3,
@@ -119,12 +60,6 @@ export default function FinancialKPICards({ kpis, loading = false }) {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
-              cursor: 'pointer',
-              transition: 'all 0.3s ease',
-              '&:hover': {
-                transform: 'translateY(-2px)',
-                boxShadow: theme.customShadows?.z20,
-              },
             }}
           >
             <Box sx={{ flexGrow: 1 }}>
@@ -140,30 +75,21 @@ export default function FinancialKPICards({ kpis, loading = false }) {
               >
                 <Iconify
                   icon={card.icon}
-                  sx={{
-                    width: 20,
-                    height: 20,
-                    color: getCardColor(card.color),
-                  }}
+                  sx={{ width: 20, height: 20, color: getCardColor(card.color) }}
                 />
-                {card.title}
+                {t(card.titleKey)}
               </Typography>
-              
               <Typography
                 variant="h4"
-                sx={{
-                  color: getCardColor(card.color),
-                  fontWeight: 'bold',
-                }}
+                sx={{ color: getCardColor(card.color), fontWeight: 'bold' }}
               >
-                {formatValue(kpis[card.key], card.format)}
+                {loading ? <Skeleton width={80} /> : fCurrency(kpis[card.key] || 0)}
               </Typography>
             </Box>
-
             <Box
               sx={{
-                width: 60,
-                height: 60,
+                width: 56,
+                height: 56,
                 borderRadius: '50%',
                 backgroundColor: `${getCardColor(card.color)}15`,
                 display: 'flex',
@@ -173,11 +99,7 @@ export default function FinancialKPICards({ kpis, loading = false }) {
             >
               <Iconify
                 icon={card.icon}
-                sx={{
-                  width: 30,
-                  height: 30,
-                  color: getCardColor(card.color),
-                }}
+                sx={{ width: 28, height: 28, color: getCardColor(card.color) }}
               />
             </Box>
           </Card>
@@ -185,4 +107,4 @@ export default function FinancialKPICards({ kpis, loading = false }) {
       ))}
     </Stack>
   );
-} 
+}

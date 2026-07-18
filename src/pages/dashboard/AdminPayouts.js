@@ -47,6 +47,11 @@ import {
   calcUniqueTeacherHours,
   hasHourPricesConfigured,
 } from '../../utils/teacherPayoutAmount';
+import {
+  LEVEL_HOUR_PRICE_PRESETS,
+  bookingInDateRange,
+  getDefaultMonthRange,
+} from '../../utils/teacherHourPricePresets';
 import { fDate } from '../../utils/formatTime';
 
 const ALLOWED_RECEIPT_TYPES = ['image/jpeg', 'image/png', 'image/jpg', 'application/pdf'];
@@ -56,56 +61,6 @@ const PAYOUT_STATUS_FILTERS = [
   { value: 'done', labelKey: 'adminPayouts.payoutFilterDone' },
   { value: 'undone', labelKey: 'adminPayouts.payoutFilterUndone' },
 ];
-
-const LEVEL_HOUR_PRICE_PRESETS = [
-  { level: 0, assigned: 19000, referred: 25500 },
-  { level: 1, assigned: 28000, referred: 34500 },
-  { level: 2, assigned: 38000, referred: 44500 },
-  { level: '3+', assigned: 40000, referred: 44500 },
-];
-
-function getDefaultMonthRange() {
-  const now = new Date();
-  return [
-    new Date(now.getFullYear(), now.getMonth(), 1),
-    new Date(now.getFullYear(), now.getMonth() + 1, 0),
-  ];
-}
-
-function startOfDay(date) {
-  const d = new Date(date);
-  d.setHours(0, 0, 0, 0);
-  return d;
-}
-
-function endOfDay(date) {
-  const d = new Date(date);
-  d.setHours(23, 59, 59, 999);
-  return d;
-}
-
-function getBookingLessonDate(booking) {
-  const firstEvent = booking?.eventList?.[0];
-  if (!firstEvent?.start) {
-    return null;
-  }
-  const date = new Date(firstEvent.start);
-  return Number.isNaN(date.getTime()) ? null : date;
-}
-
-function bookingInDateRange(booking, rangeStart, rangeEnd) {
-  const lessonDate = getBookingLessonDate(booking);
-  if (!lessonDate) {
-    return false;
-  }
-  if (rangeStart && lessonDate < startOfDay(rangeStart)) {
-    return false;
-  }
-  if (rangeEnd && lessonDate > endOfDay(rangeEnd)) {
-    return false;
-  }
-  return true;
-}
 
 function formatArs(amount) {
   return new Intl.NumberFormat('es-AR', {

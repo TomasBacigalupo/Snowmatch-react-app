@@ -260,13 +260,28 @@ export default function BookingDetailsDrawer({
     setPayoutModalOpen(true);
   };
 
+  const refreshBookingPayouts = async () => {
+    if (!booking?.id || isIntent) {
+      return;
+    }
+    try {
+      const payouts = await dispatch(fetchPayouts(booking.id));
+      if (onBookingUpdated) {
+        onBookingUpdated({
+          ...booking,
+          payouts: Array.isArray(payouts) ? payouts : [],
+        });
+      }
+    } catch (error) {
+      // Redux already stores the error.
+    }
+  };
+
   const handlePayoutModalClose = () => {
     setPayoutModalOpen(false);
     setPayoutAmount('');
     setFile(null);
-    if (booking?.id) {
-      dispatch(fetchPayouts(booking.id));
-    }
+    refreshBookingPayouts();
     if (payoutFileInputRef.current) {
       payoutFileInputRef.current.value = '';
     }
@@ -313,7 +328,7 @@ export default function BookingDetailsDrawer({
   };
 
   const handlePayoutEditSave = () => {
-    dispatch(fetchPayouts(booking.id));
+    refreshBookingPayouts();
   };
 
   const handleReassignSuccess = (updatedBooking) => {
@@ -577,9 +592,32 @@ export default function BookingDetailsDrawer({
   };
 
   useEffect(() => {
-    if (open && booking?.id && !isIntent) {
-      dispatch(fetchPayouts(booking.id));
+    if (!open || !booking?.id || isIntent) {
+      return undefined;
     }
+
+    let cancelled = false;
+
+    (async () => {
+      try {
+        const payouts = await dispatch(fetchPayouts(booking.id));
+        if (cancelled || !onBookingUpdated) {
+          return;
+        }
+        onBookingUpdated({
+          ...booking,
+          payouts: Array.isArray(payouts) ? payouts : [],
+        });
+      } catch (error) {
+        // Redux already stores the error; keep drawer usable without payouts.
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+    // Only refetch when the drawer opens for a booking; avoid loops from onBookingUpdated merges.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, booking?.id, dispatch, isIntent]);
 
   useEffect(() => {

@@ -36,6 +36,8 @@ import AdminBookingTableCard from '../../sections/@dashboard/admin/list/AdminBoo
 import AdminBookingIntentTableRow from '../../sections/@dashboard/admin/list/AdminBookingIntentTableRow';
 import BookingDetailsDrawer from '../../sections/@dashboard/admin/list/BookingDetailsDrawer';
 import GearBookingDetailsDrawer from '../../sections/@dashboard/admin/list/GearBookingDetailsDrawer';
+import BookingModal from '../../sections/@dashboard/admin/BookingModal';
+import GearBookingModal from '../../sections/@dashboard/admin/GearBookingModal';
 import {
   countTodayParticipants,
   fetchAdminBookingsForToday,
@@ -226,6 +228,8 @@ function TodayBookingsSection({
   onOpenDetails,
   onBookingUpdated,
   groupByTeacher = false,
+  createButtonLabel,
+  onCreateBooking,
   t,
 }) {
   const theme = useTheme();
@@ -434,22 +438,34 @@ function TodayBookingsSection({
   return (
     <Card sx={{ mt: 3 }}>
       <Box sx={{ px: 3, pt: 3, pb: 2 }}>
-        <Stack direction="row" alignItems="center" spacing={0.5}>
-          <Typography variant="h6">{title}</Typography>
-          {showPriceToggle && (
-            <Tooltip
-              title={
-                showPrices ? t('adminToday.hidePrices') : t('adminToday.showPrices')
-              }
+        <Stack direction="row" alignItems="center" justifyContent="space-between" spacing={1} flexWrap="wrap" useFlexGap>
+          <Stack direction="row" alignItems="center" spacing={0.5}>
+            <Typography variant="h6">{title}</Typography>
+            {showPriceToggle && (
+              <Tooltip
+                title={
+                  showPrices ? t('adminToday.hidePrices') : t('adminToday.showPrices')
+                }
+              >
+                <IconButton size="small" onClick={onToggleShowPrices} aria-label={t('adminToday.togglePrices')}>
+                  <Iconify
+                    icon={showPrices ? 'eva:eye-fill' : 'eva:eye-off-fill'}
+                    width={20}
+                    height={20}
+                  />
+                </IconButton>
+              </Tooltip>
+            )}
+          </Stack>
+          {createButtonLabel && onCreateBooking && (
+            <Button
+              variant="contained"
+              size="small"
+              startIcon={<Iconify icon="eva:plus-fill" />}
+              onClick={onCreateBooking}
             >
-              <IconButton size="small" onClick={onToggleShowPrices} aria-label={t('adminToday.togglePrices')}>
-                <Iconify
-                  icon={showPrices ? 'eva:eye-fill' : 'eva:eye-off-fill'}
-                  width={20}
-                  height={20}
-                />
-              </IconButton>
-            </Tooltip>
+              {createButtonLabel}
+            </Button>
           )}
         </Stack>
         {!loading && bookings.length === 0 && (
@@ -506,6 +522,8 @@ export default function AdminToday() {
   const [bookingIntents, setBookingIntents] = useState([]);
   const [dayOffset, setDayOffset] = useState(0);
   const [showLessonPrices, setShowLessonPrices] = useState(true);
+  const [isLessonCreateOpen, setIsLessonCreateOpen] = useState(false);
+  const [isGearCreateOpen, setIsGearCreateOpen] = useState(false);
 
   const selectedDate = useMemo(() => {
     const date = new Date();
@@ -781,6 +799,8 @@ export default function AdminToday() {
           onOpenDetails={handleOpenDetails}
           onBookingUpdated={handleBookingUpdated}
           groupByTeacher
+          createButtonLabel={t('adminBookings.newBooking')}
+          onCreateBooking={() => setIsLessonCreateOpen(true)}
           t={t}
         />
 
@@ -793,7 +813,23 @@ export default function AdminToday() {
           tableHead={tableHeadGear}
           onOpenDetails={handleOpenDetails}
           onBookingUpdated={handleBookingUpdated}
+          createButtonLabel={t('adminBookings.newGearBooking')}
+          onCreateBooking={() => setIsGearCreateOpen(true)}
           t={t}
+        />
+
+        <BookingModal
+          isOpen={isLessonCreateOpen}
+          onClose={() => {
+            setIsLessonCreateOpen(false);
+            loadData();
+          }}
+        />
+
+        <GearBookingModal
+          isOpen={isGearCreateOpen}
+          onClose={() => setIsGearCreateOpen(false)}
+          refreshBookings={loadData}
         />
 
         {selectedBooking &&

@@ -126,7 +126,7 @@ export default function GearBookingEditModal({ open, onClose, booking, onSave })
     }
 
     for (let i = 0; i < lines.length; i += 1) {
-      const lineError = validateRentalLine(lines[i], t);
+      const lineError = validateRentalLine(lines[i], t, { requireMeasurements: !isGearOnly });
       if (lineError) {
         enqueueSnackbar(
           lines.length > 1

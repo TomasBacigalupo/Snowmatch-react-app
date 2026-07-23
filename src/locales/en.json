@@ -1154,7 +1154,9 @@
       "totalRevenue": "Total Revenue",
       "totalPayments": "Total Payments",
       "totalAdults": "Total Adults",
-      "totalChildren": "Total Children"
+      "totalChildren": "Total Children",
+      "levelLabel": "N{{level}}",
+      "levelPaymentSettingsHint": "Each booking uses the rate for that teacher’s level (assigned or referred by booking type). Edit rates per level to recalculate Total Payments."
     },
     "empty": {
       "title": "Here you can view and manage booking requests that occur at your ski resort"

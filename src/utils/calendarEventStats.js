@@ -19,6 +19,26 @@ export const isBlockedEvent = (event) => {
   );
 };
 
+const normalizeDateTime = (value) => {
+  if (!value) return null;
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return String(value);
+  return date.toISOString();
+};
+
+/** Stable key so the same shared event on multiple bookings is counted once. */
+export const getEventKey = (event) => {
+  const start = normalizeDateTime(event?.start);
+  const end = normalizeDateTime(event?.end);
+  if (start && end) {
+    return `range:${start}|${end}`;
+  }
+  if (event?.id != null) {
+    return `id:${event.id}`;
+  }
+  return null;
+};
+
 export const getUniqueEventCount = (events) => {
   if (!events?.length) return 0;
   const ids = new Set();
@@ -45,4 +65,38 @@ export const getEventHours = (event) => {
 export const getTotalEventHours = (events) => {
   if (!events?.length) return 0;
   return events.reduce((total, event) => total + getEventHours(event), 0);
+};
+
+/**
+ * Sum hours across bookings counting each shared event once.
+ * Skips blocked events. Optional filters: bookingType, eventType.
+ */
+export const getUniqueHoursFromBookings = (bookings, { bookingType, eventType } = {}) => {
+  if (!bookings?.length) return 0;
+
+  const seen = new Set();
+  let total = 0;
+
+  bookings.forEach((booking) => {
+    if (bookingType && booking?.type !== bookingType) return;
+
+    (booking?.eventList || []).forEach((event) => {
+      if (isBlockedEvent(event)) return;
+      if (eventType && event?.eventType !== eventType) return;
+
+      const hours = getEventHours(event);
+      if (!hours) return;
+
+      const key = getEventKey(event);
+      if (!key) {
+        total += hours;
+        return;
+      }
+      if (seen.has(key)) return;
+      seen.add(key);
+      total += hours;
+    });
+  });
+
+  return total;
 };

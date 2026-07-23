@@ -11,6 +11,32 @@ export const DEFAULT_TEACHER_HOUR_PRICES = {
   referred: String(LEVEL_HOUR_PRICE_PRESETS[0].referred),
 };
 
+/** Editable rates keyed by level preset (`0`, `1`, `2`, `3+`). */
+export function buildDefaultLevelHourPrices() {
+  return LEVEL_HOUR_PRICE_PRESETS.reduce((acc, preset) => {
+    acc[String(preset.level)] = {
+      assigned: String(preset.assigned),
+      referred: String(preset.referred),
+    };
+    return acc;
+  }, {});
+}
+
+/** Map a booking teacher.level to a preset key. Levels >= 3 use `3+`. */
+export function getTeacherLevelPriceKey(teacherLevel) {
+  const level = Number(teacherLevel);
+  if (!Number.isFinite(level) || level < 0) {
+    return null;
+  }
+  if (level >= 3) {
+    return '3+';
+  }
+  if (level === 0 || level === 1 || level === 2) {
+    return String(level);
+  }
+  return null;
+}
+
 export function getDefaultMonthRange() {
   const now = new Date();
   return [

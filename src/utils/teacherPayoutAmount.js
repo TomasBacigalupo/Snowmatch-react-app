@@ -1,3 +1,5 @@
+import { getTeacherLevelPriceKey } from './teacherHourPricePresets';
+
 function calcEventHours(event) {
   const start = new Date(event.start);
   const end = new Date(event.end);
@@ -128,6 +130,26 @@ export function calcTeacherPayTotalWithHourPrice(bookings, hourPrices) {
     }
     return total + item.hours * rate;
   }, 0);
+}
+
+/** Pay each booking with rates for that booking's teacher.level. */
+export function calcBookingPayWithLevelPrices(booking, levelPrices) {
+  const key = getTeacherLevelPriceKey(booking?.teacher?.level);
+  if (!key || !levelPrices?.[key]) {
+    return 0;
+  }
+  return calcBookingPayWithHourPrice(booking, levelPrices[key]);
+}
+
+export function calcTeacherPayTotalWithLevelPrices(bookings, levelPrices) {
+  if (!bookings?.length) {
+    return 0;
+  }
+
+  return bookings.reduce(
+    (total, booking) => total + calcBookingPayWithLevelPrices(booking, levelPrices),
+    0
+  );
 }
 
 export function hasHourPricesConfigured(hourPrices) {

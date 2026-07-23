@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   Autocomplete,
   Box,
@@ -38,6 +38,7 @@ import {
   buildAdminGearBookingPayload,
   buildRentalLinePayload,
   DEFAULT_RENTAL_LINE,
+  estimateLinesTotal,
   validateRentalFulfillment,
   validateRentalLine,
 } from 'src/utils/adminGearRentalForm';
@@ -49,6 +50,7 @@ const DEFAULT_BOOKING_META = {
   paymentStatus: 'PAID',
   paymentMethod: 'CASH',
   internalComment: '',
+  price: '',
   rentalFulfillment: 'PICKUP_IN_SHOP',
   rentalDestinationType: 'HOTEL_OR_CABIN',
   rentalDestinationDetail: '',
@@ -63,6 +65,7 @@ export default function GearBookingModal({ isOpen, onClose, refreshBookings, fil
   const { enqueueSnackbar } = useSnackbar();
   const { t } = useTranslation();
   const { teachers } = useSelector((state) => state.admin);
+  const { items } = useSelector((state) => state.rental);
 
   const [student, setStudent] = useState(null);
   const [studentSearch, setStudentSearch] = useState('');
@@ -72,6 +75,9 @@ export default function GearBookingModal({ isOpen, onClose, refreshBookings, fil
   const [linePrefillHints, setLinePrefillHints] = useState(['']);
   const [submitting, setSubmitting] = useState(false);
   const [createStudentOpen, setCreateStudentOpen] = useState(false);
+  const priceManuallyEdited = useRef(false);
+
+  const estimatedTotal = useMemo(() => estimateLinesTotal(lines, items), [lines, items]);
 
   const resetForm = useCallback(() => {
     setStudent(null);
@@ -83,6 +89,7 @@ export default function GearBookingModal({ isOpen, onClose, refreshBookings, fil
     });
     setLines([createEmptyLine()]);
     setLinePrefillHints(['']);
+    priceManuallyEdited.current = false;
   }, [filterResort]);
 
   useEffect(() => {
@@ -92,6 +99,14 @@ export default function GearBookingModal({ isOpen, onClose, refreshBookings, fil
   }, [isOpen, resetForm]);
 
   useEffect(() => {
+    if (priceManuallyEdited.current) return;
+    setBookingMeta((prev) => ({
+      ...prev,
+      price: estimatedTotal > 0 ? estimatedTotal : '',
+    }));
+  }, [estimatedTotal]);
+
+  useEffect(() => {
     if (studentSearch) {
       dispatch(getTeachers(0, 'STUDENT', studentSearch, 0));
     }
@@ -99,6 +114,11 @@ export default function GearBookingModal({ isOpen, onClose, refreshBookings, fil
 
   const patchBookingMeta = (fields) => {
     setBookingMeta((prev) => ({ ...prev, ...fields }));
+  };
+
+  const handlePriceChange = (value) => {
+    priceManuallyEdited.current = true;
+    patchBookingMeta({ price: value });
   };
 
   const patchLine = (index, fields) => {
@@ -184,10 +204,14 @@ export default function GearBookingModal({ isOpen, onClose, refreshBookings, fil
       }))
     );
     setLinePrefillHints((prev) => prev.map(() => ''));
+    priceManuallyEdited.current = false;
     if (student) {
       applyRentalFromStudent(student);
     }
   };
+
+  const formatPrice = (value) =>
+    new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(value || 0);
 
   const handleSubmit = async () => {
     if (!studentId) {
@@ -202,7 +226,7 @@ export default function GearBookingModal({ isOpen, onClose, refreshBookings, fil
     }
 
     for (let i = 0; i < lines.length; i += 1) {
-      const lineError = validateRentalLine(lines[i], t);
+      const lineError = validateRentalLine(lines[i], t, { requireMeasurements: false });
       if (lineError) {
         enqueueSnackbar(
           lines.length > 1
@@ -239,13 +263,16 @@ export default function GearBookingModal({ isOpen, onClose, refreshBookings, fil
         }
       }
 
-      await dispatch(
-        editAdminBooking(bookingId, {
-          paymentStatus: bookingMeta.paymentStatus,
-          internalComment: bookingMeta.internalComment?.trim() || undefined,
-          bookingPaymentMethod: bookingMeta.paymentMethod,
-        })
-      );
+      const bookingUpdate = {
+        paymentStatus: bookingMeta.paymentStatus,
+        internalComment: bookingMeta.internalComment?.trim() || undefined,
+        bookingPaymentMethod: bookingMeta.paymentMethod,
+      };
+      if (bookingMeta.price != null && bookingMeta.price !== '') {
+        bookingUpdate.price = Number(bookingMeta.price);
+      }
+
+      await dispatch(editAdminBooking(bookingId, bookingUpdate));
 
       enqueueSnackbar(t('adminBookings.gearCreateSuccess'), { variant: 'success' });
       resetForm();
@@ -360,6 +387,25 @@ export default function GearBookingModal({ isOpen, onClose, refreshBookings, fil
                   </MenuItem>
                 </Select>
               </FormControl>
+            </Grid>
+
+            <Grid item xs={12} md={6}>
+              <TextField
+                fullWidth
+                type="number"
+                label={t('adminBookings.editModal.price')}
+                value={bookingMeta.price}
+                onChange={(e) => handlePriceChange(e.target.value)}
+                helperText={
+                  estimatedTotal > 0
+                    ? t('adminBookings.gearEdit.calculatedTotal', { total: formatPrice(estimatedTotal) })
+                    : undefined
+                }
+                InputProps={{
+                  startAdornment: <span style={{ marginRight: 8 }}>$</span>,
+                  inputProps: { min: 0, step: 0.01 },
+                }}
+              />
             </Grid>
 
             <Grid item xs={12}>

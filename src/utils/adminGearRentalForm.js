@@ -12,14 +12,17 @@ export const DEFAULT_RENTAL_LINE = {
   renterSkiLevel: 'INTERMEDIATE',
 };
 
-export function validateRentalLine(rental, t) {
+export function validateRentalLine(rental, t, { requireMeasurements = true } = {}) {
   if (!rental.itemId) {
     return t('adminBookings.rental.validationItem');
   }
   if (!rental.startDate || !rental.endDate) {
     return t('adminBookings.rental.validationDates');
   }
-  if (!rental.renterHeightCm || !rental.renterWeightKg || !rental.renterFootLengthCm) {
+  if (
+    requireMeasurements &&
+    (!rental.renterHeightCm || !rental.renterWeightKg || !rental.renterFootLengthCm)
+  ) {
     return t('adminBookings.rental.validationMeasurements');
   }
   if (!rental.renterSkiLevel) {
@@ -42,17 +45,26 @@ export function validateRentalFulfillment(rental, t) {
   return null;
 }
 
+function optionalPositiveNumber(value) {
+  if (value === '' || value == null) return undefined;
+  const num = Number(value);
+  return Number.isFinite(num) ? num : undefined;
+}
+
 export function buildRentalLinePayload(rental) {
   const payload = {
     itemId: rental.itemId,
     startDate: rental.startDate,
     endDate: rental.endDate,
     unitsReserved: Number(rental.unitsReserved) || 1,
-    renterHeightCm: Number(rental.renterHeightCm),
-    renterWeightKg: Number(rental.renterWeightKg),
-    renterFootLengthCm: Number(rental.renterFootLengthCm),
     renterSkiLevel: rental.renterSkiLevel,
   };
+  const height = optionalPositiveNumber(rental.renterHeightCm);
+  const weight = optionalPositiveNumber(rental.renterWeightKg);
+  const foot = optionalPositiveNumber(rental.renterFootLengthCm);
+  if (height != null) payload.renterHeightCm = height;
+  if (weight != null) payload.renterWeightKg = weight;
+  if (foot != null) payload.renterFootLengthCm = foot;
   if (rental.variantId) {
     payload.variantId = rental.variantId;
   }

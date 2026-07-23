@@ -1589,7 +1589,9 @@
             "totalRevenue": "Receita Total",
             "totalPayments": "Pagamentos Totais",
             "totalAdults": "Total de Adultos",
-            "totalChildren": "Total de Crianças"
+            "totalChildren": "Total de Crianças",
+            "levelLabel": "N{{level}}",
+            "levelPaymentSettingsHint": "Cada reserva usa a tarifa do nível do professor (atribuída ou referida conforme o tipo). Edite as tarifas por nível para recalcular Pagamentos Totais."
         },
         "empty": {
             "title": "Aqui você pode ver e gerenciar solicitações de reserva que ocorrem no seu centro de esqui"

@@ -261,7 +261,7 @@ export default function BookingRentalFieldsSection({
         <Grid item xs={12} md={3}>
           <TextField
             fullWidth
-            required
+            required={!gearOnly}
             type="number"
             label={t('adminBookings.rental.tableHeight')}
             value={rental.renterHeightCm}
@@ -273,7 +273,7 @@ export default function BookingRentalFieldsSection({
         <Grid item xs={12} md={3}>
           <TextField
             fullWidth
-            required
+            required={!gearOnly}
             type="number"
             label={t('adminBookings.rental.tableWeight')}
             value={rental.renterWeightKg}
@@ -285,7 +285,7 @@ export default function BookingRentalFieldsSection({
         <Grid item xs={12} md={3}>
           <TextField
             fullWidth
-            required
+            required={!gearOnly}
             type="number"
             label={t('adminBookings.rental.tableFoot')}
             value={rental.renterFootLengthCm}

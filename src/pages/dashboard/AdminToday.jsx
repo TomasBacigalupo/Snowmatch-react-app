@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Navigate, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { differenceInCalendarDays, startOfDay } from 'date-fns';
 import {
   Alert,
   Box,
@@ -21,6 +22,9 @@ import {
   Typography,
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import Page from '../../components/Page';
 import LoadingScreen from '../../components/LoadingScreen';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
@@ -526,11 +530,15 @@ export default function AdminToday() {
   const [isGearCreateOpen, setIsGearCreateOpen] = useState(false);
 
   const selectedDate = useMemo(() => {
-    const date = new Date();
-    date.setHours(0, 0, 0, 0);
+    const date = startOfDay(new Date());
     date.setDate(date.getDate() + dayOffset);
     return date;
   }, [dayOffset]);
+
+  const handleSelectedDateChange = useCallback((newValue) => {
+    if (!newValue || Number.isNaN(newValue.getTime())) return;
+    setDayOffset(differenceInCalendarDays(startOfDay(newValue), startOfDay(new Date())));
+  }, []);
 
   const formattedDate = useMemo(
     () =>
@@ -724,6 +732,20 @@ export default function AdminToday() {
                   <Iconify icon="eva:arrow-back-fill" />
                 </IconButton>
               </Tooltip>
+              <LocalizationProvider dateAdapter={AdapterDateFns}>
+                <DatePicker
+                  label={t('adminToday.selectDate')}
+                  value={selectedDate}
+                  onChange={handleSelectedDateChange}
+                  disabled={loading}
+                  slotProps={{
+                    textField: {
+                      size: 'small',
+                      sx: { width: { xs: 160, sm: 180 } },
+                    },
+                  }}
+                />
+              </LocalizationProvider>
               <Tooltip title={t('adminToday.nextDay')}>
                 <IconButton
                   onClick={() => setDayOffset((offset) => offset + 1)}

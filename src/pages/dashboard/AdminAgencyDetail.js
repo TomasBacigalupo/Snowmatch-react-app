@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 import {
   Box,
   Button,
@@ -38,6 +39,14 @@ import GearBookingDetailsDrawer from '../../sections/@dashboard/admin/list/GearB
 import { fCurrency, fNumber } from '../../utils/formatNumber';
 import { formatAdminBookingResortLabel } from '../../utils/adminBookingResortOptions';
 import { getBookingCustomerLabel } from '../../utils/adminBookingParticipants';
+
+function getPaymentStatusColor(paymentStatus) {
+  if (paymentStatus === 'PENDING') return 'warning';
+  if (paymentStatus === 'UNPAID') return 'error';
+  if (paymentStatus === 'PAID') return 'success';
+  if (paymentStatus?.startsWith('PAID_')) return 'info';
+  return 'error';
+}
 
 const MONTH_OPTIONS = [
   { value: '', label: 'Todos' },
@@ -126,6 +135,7 @@ function KpiCard({ title, value, icon, color }) {
 export default function AdminAgencyDetail() {
   const { themeStretch } = useSettings();
   const theme = useTheme();
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { id } = useParams();
@@ -469,13 +479,14 @@ export default function AdminAgencyDetail() {
                         <TableCell>Instructor</TableCell>
                         <TableCell>Centro</TableCell>
                         <TableCell>Estado</TableCell>
+                        <TableCell>Pago</TableCell>
                         <TableCell align="right">Precio</TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
                       {isLoadingBookings && filteredBookings.length === 0 ? (
                         <TableRow>
-                          <TableCell colSpan={7}>
+                          <TableCell colSpan={8}>
                             <Typography variant="body2" color="text.secondary">
                               Cargando reservas…
                             </Typography>
@@ -483,7 +494,7 @@ export default function AdminAgencyDetail() {
                         </TableRow>
                       ) : filteredBookings.length === 0 ? (
                         <TableRow>
-                          <TableCell colSpan={7}>
+                          <TableCell colSpan={8}>
                             <Typography variant="body2" color="text.secondary">
                               No hay reservas para esta agencia con los filtros seleccionados.
                             </Typography>
@@ -495,6 +506,7 @@ export default function AdminAgencyDetail() {
                           const teacherName = teacher
                             ? `${teacher.name || ''} ${teacher.lastname || ''}`.trim()
                             : '—';
+                          const paymentStatus = row.paymentStatus || 'PENDING';
                           return (
                             <TableRow
                               key={row.id}
@@ -521,6 +533,16 @@ export default function AdminAgencyDetail() {
                                   }
                                 >
                                   {row.state || '—'}
+                                </Label>
+                              </TableCell>
+                              <TableCell>
+                                <Label
+                                  variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
+                                  color={getPaymentStatusColor(paymentStatus)}
+                                >
+                                  {t(`adminBookings.enums.paymentStatus.${paymentStatus}`, {
+                                    defaultValue: paymentStatus,
+                                  })}
                                 </Label>
                               </TableCell>
                               <TableCell align="right">

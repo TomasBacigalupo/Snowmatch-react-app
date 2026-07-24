@@ -50,7 +50,7 @@ export default function AdminBookingTableCard({
     const theme = useTheme();
     const { t } = useTranslation();
     
-    const { imageLink, userComment, state, resort, adults, children, eventList, id, price, currency, internalComment, type } = row;
+    const { imageLink, userComment, state, resort, adults, children, eventList, id, price, currency, internalComment, type, paymentStatus } = row;
     const teacher = row.teacher;
     const { name, lastname, id: teacherId } = teacher || {};
     const { id: studentId } = row.student || {};
@@ -133,17 +133,33 @@ export default function AdminBookingTableCard({
                                 ? customerLabel || '—'
                                 : t('adminBookings.card.bookingTitle', { id })}
                         </Typography>
-                        <Label
-                            variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
-                            color={
-                                (state === 'DECLINED' && 'error') ||
-                                (state === 'PENDING' && 'warning') ||
-                                'success'
-                            }
-                            sx={{ textTransform: 'capitalize', mb: 1 }}
-                        >
-                            {state}
-                        </Label>
+                        <Box display="flex" flexWrap="wrap" gap={0.75} sx={{ mb: 1 }}>
+                            <Label
+                                variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
+                                color={
+                                    (state === 'DECLINED' && 'error') ||
+                                    (state === 'PENDING' && 'warning') ||
+                                    'success'
+                                }
+                                sx={{ textTransform: 'capitalize' }}
+                            >
+                                {state}
+                            </Label>
+                            <Label
+                                variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
+                                color={
+                                    (paymentStatus === 'PENDING' && 'warning') ||
+                                    (paymentStatus === 'UNPAID' && 'error') ||
+                                    (paymentStatus === 'PAID' && 'success') ||
+                                    (paymentStatus?.startsWith('PAID_') && 'info') ||
+                                    'error'
+                                }
+                            >
+                                {t(`adminBookings.enums.paymentStatus.${paymentStatus || 'PENDING'}`, {
+                                    defaultValue: paymentStatus || 'PENDING',
+                                })}
+                            </Label>
+                        </Box>
                     </Box>
 
                     {!compact && (

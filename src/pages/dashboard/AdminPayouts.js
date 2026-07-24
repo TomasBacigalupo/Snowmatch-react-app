@@ -23,12 +23,14 @@ import {
   Typography,
   Snackbar,
 } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LoadingButton } from '@mui/lab';
 import Page from '../../components/Page';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
+import Label from '../../components/Label';
 import useSettings from '../../hooks/useSettings';
 import { PATH_DASHBOARD } from '../../routes/paths';
 import BookingDetailsDrawer from '../../sections/@dashboard/admin/list/BookingDetailsDrawer';
@@ -50,9 +52,20 @@ import {
 import {
   LEVEL_HOUR_PRICE_PRESETS,
   bookingInDateRange,
+  getBookingLessonDate,
   getDefaultMonthRange,
 } from '../../utils/teacherHourPricePresets';
 import { fDate } from '../../utils/formatTime';
+
+const TABLE_COL_COUNT = 11;
+
+function getPaymentStatusColor(paymentStatus) {
+  if (paymentStatus === 'PENDING') return 'warning';
+  if (paymentStatus === 'UNPAID') return 'error';
+  if (paymentStatus === 'PAID') return 'success';
+  if (paymentStatus?.startsWith('PAID_')) return 'info';
+  return 'error';
+}
 
 const ALLOWED_RECEIPT_TYPES = ['image/jpeg', 'image/png', 'image/jpg', 'application/pdf'];
 
@@ -91,6 +104,7 @@ function bookingIdsWithPayout(payouts) {
 
 export default function AdminPayouts() {
   const { themeStretch } = useSettings();
+  const theme = useTheme();
   const dispatch = useDispatch();
   const { t } = useTranslation();
   const { teachers, bookings, payouts, isLoadingBookings, isLoading } = useSelector(
@@ -124,20 +138,26 @@ export default function AdminPayouts() {
   const filteredTeacherBookings = useMemo(() => {
     const [rangeStart, rangeEnd] = dateRange || [];
 
-    return teacherBookings.filter((booking) => {
-      if (!bookingInDateRange(booking, rangeStart, rangeEnd)) {
-        return false;
-      }
+    return teacherBookings
+      .filter((booking) => {
+        if (!bookingInDateRange(booking, rangeStart, rangeEnd)) {
+          return false;
+        }
 
-      const hasPayout = paidBookingIds.has(booking.id);
-      if (payoutStatusFilter === 'done') {
-        return hasPayout;
-      }
-      if (payoutStatusFilter === 'undone') {
-        return !hasPayout;
-      }
-      return true;
-    });
+        const hasPayout = paidBookingIds.has(booking.id);
+        if (payoutStatusFilter === 'done') {
+          return hasPayout;
+        }
+        if (payoutStatusFilter === 'undone') {
+          return !hasPayout;
+        }
+        return true;
+      })
+      .sort((a, b) => {
+        const dateA = getBookingLessonDate(a)?.getTime() ?? Number.POSITIVE_INFINITY;
+        const dateB = getBookingLessonDate(b)?.getTime() ?? Number.POSITIVE_INFINITY;
+        return dateA - dateB;
+      });
   }, [teacherBookings, dateRange, payoutStatusFilter, paidBookingIds]);
 
   const selectedBookings = useMemo(
@@ -477,18 +497,20 @@ export default function AdminPayouts() {
                           </TableCell>
                           <TableCell>{t('adminPayouts.colId')}</TableCell>
                           <TableCell>{t('adminPayouts.colDate')}</TableCell>
+                          <TableCell>{t('adminPayouts.colAgency')}</TableCell>
                           <TableCell>{t('adminPayouts.colType')}</TableCell>
                           <TableCell>{t('adminPayouts.colResort')}</TableCell>
                           <TableCell align="right">{t('adminPayouts.colPrice')}</TableCell>
                           <TableCell align="right">{t('adminPayouts.colHours')}</TableCell>
                           <TableCell align="right">{t('adminPayouts.colOwed')}</TableCell>
+                          <TableCell>{t('adminPayouts.colPaymentStatus')}</TableCell>
                           <TableCell>{t('adminPayouts.colStatus')}</TableCell>
                         </TableRow>
                       </TableHead>
                       <TableBody>
                         {isLoadingBookings ? (
                           <TableRow>
-                            <TableCell colSpan={9}>
+                            <TableCell colSpan={TABLE_COL_COUNT}>
                               <Typography variant="body2" color="text.secondary">
                                 {t('adminPayouts.loadingBookings')}
                               </Typography>
@@ -496,7 +518,7 @@ export default function AdminPayouts() {
                           </TableRow>
                         ) : teacherBookings.length === 0 ? (
                           <TableRow>
-                            <TableCell colSpan={9}>
+                            <TableCell colSpan={TABLE_COL_COUNT}>
                               <Typography variant="body2" color="text.secondary">
                                 {t('adminPayouts.noBookings')}
                               </Typography>
@@ -504,7 +526,7 @@ export default function AdminPayouts() {
                           </TableRow>
                         ) : filteredTeacherBookings.length === 0 ? (
                           <TableRow>
-                            <TableCell colSpan={9}>
+                            <TableCell colSpan={TABLE_COL_COUNT}>
                               <Typography variant="body2" color="text.secondary">
                                 {t('adminPayouts.noBookingsFiltered')}
                               </Typography>
@@ -515,6 +537,7 @@ export default function AdminPayouts() {
                             const hasPayout = paidBookingIds.has(booking.id);
                             const hours = calcBookingTeacherHours(booking);
                             const owed = calcBookingPayWithHourPrice(booking, hourPrices);
+                            const paymentStatus = booking.paymentStatus || 'PENDING';
                             return (
                               <TableRow
                                 key={booking.id}
@@ -538,12 +561,24 @@ export default function AdminPayouts() {
                                 </TableCell>
                                 <TableCell>{booking.id}</TableCell>
                                 <TableCell>{getBookingDateLabel(booking)}</TableCell>
+                                <TableCell>{booking.agency?.name || '—'}</TableCell>
                                 <TableCell>{booking.type || '—'}</TableCell>
                                 <TableCell>{booking.resort || '—'}</TableCell>
                                 <TableCell align="right">{formatArs(booking.price)}</TableCell>
                                 <TableCell align="right">{hours ? `${Math.round(hours)}h` : '—'}</TableCell>
                                 <TableCell align="right">
                                   {hourPricesConfigured ? formatArs(owed) : '—'}
+                                </TableCell>
+                                <TableCell>
+                                  <Label
+                                    variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
+                                    color={getPaymentStatusColor(paymentStatus)}
+                                    sx={{ textTransform: 'capitalize' }}
+                                  >
+                                    {t(`adminBookings.enums.paymentStatus.${paymentStatus}`, {
+                                      defaultValue: paymentStatus,
+                                    })}
+                                  </Label>
                                 </TableCell>
                                 <TableCell>
                                   {hasPayout

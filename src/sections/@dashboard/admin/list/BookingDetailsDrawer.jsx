@@ -402,6 +402,18 @@ export default function BookingDetailsDrawer({
       currency: booking?.currency || 'ARS',
     }).format(price);
 
+  const formatSuggestedTeacherPayout = () => {
+    if (booking?.suggestedTeacherPayoutAmount == null) return null;
+    const currency =
+      booking?.suggestedTeacherPayoutCurrency || booking?.currency || 'ARS';
+    return new Intl.NumberFormat(intlLocale, {
+      style: 'currency',
+      currency,
+    }).format(booking.suggestedTeacherPayoutAmount);
+  };
+
+  const suggestedTeacherPayoutLabel = formatSuggestedTeacherPayout();
+
   const formatEventTime = (dateString) =>
     new Date(dateString).toLocaleTimeString(intlLocale, {
       hour: '2-digit',
@@ -946,6 +958,16 @@ export default function BookingDetailsDrawer({
                     {formatPrice(booking?.price)}
                   </Typography>
                 </Grid>
+                {suggestedTeacherPayoutLabel ? (
+                  <Grid item xs={12} sm={6} md={3}>
+                    <Typography variant="body2" color="text.secondary">
+                      {t('adminBookings.drawer.suggestedTeacherPayout')}
+                    </Typography>
+                    <Typography variant="body1" color="primary.main">
+                      {suggestedTeacherPayoutLabel}
+                    </Typography>
+                  </Grid>
+                ) : null}
                 <Grid item xs={12} sm={6} md={3}>
                   <Typography variant="body2" color="text.secondary">
                     {t('adminBookings.drawer.paymentMethod')}

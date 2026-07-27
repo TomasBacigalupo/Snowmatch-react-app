@@ -140,6 +140,13 @@ export default function BookingIntentEditModal({ open, onClose, intent, onSave }
       eventList,
       agencyId: agencyId ?? 0,
       currency: formData.get('currency') || intent?.currency || 'ARS',
+      suggestedTeacherPayoutAmount: (() => {
+        const raw = formData.get('suggestedTeacherPayoutAmount');
+        if (raw === '' || raw == null) return null;
+        const parsed = Number(raw);
+        return Number.isNaN(parsed) ? null : parsed;
+      })(),
+      suggestedTeacherPayoutCurrency: formData.get('suggestedTeacherPayoutCurrency') || null,
     };
 
     try {
@@ -380,6 +387,38 @@ export default function BookingIntentEditModal({ open, onClose, intent, onSave }
                   label={t('adminBookings.editModal.currency')}
                   defaultValue={intent?.currency || 'ARS'}
                 >
+                  <MenuItem value="ARS">ARS</MenuItem>
+                  <MenuItem value="USD">USD</MenuItem>
+                  <MenuItem value="BRL">BRL</MenuItem>
+                </Select>
+              </FormControl>
+
+              <TextField
+                fullWidth
+                label={t('adminBookings.editModal.suggestedTeacherPayoutAmount')}
+                name="suggestedTeacherPayoutAmount"
+                type="number"
+                defaultValue={intent?.suggestedTeacherPayoutAmount ?? ''}
+                InputProps={{
+                  inputProps: {
+                    min: 0,
+                    step: 0.01,
+                    style: { textAlign: 'right' },
+                  },
+                }}
+              />
+
+              <FormControl fullWidth>
+                <InputLabel>{t('adminBookings.editModal.suggestedTeacherPayoutCurrency')}</InputLabel>
+                <Select
+                  name="suggestedTeacherPayoutCurrency"
+                  label={t('adminBookings.editModal.suggestedTeacherPayoutCurrency')}
+                  defaultValue={intent?.suggestedTeacherPayoutCurrency || ''}
+                  displayEmpty
+                >
+                  <MenuItem value="">
+                    <em>{t('adminBookings.editModal.suggestedTeacherPayoutCurrencyUnset')}</em>
+                  </MenuItem>
                   <MenuItem value="ARS">ARS</MenuItem>
                   <MenuItem value="USD">USD</MenuItem>
                   <MenuItem value="BRL">BRL</MenuItem>

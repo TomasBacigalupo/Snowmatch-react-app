@@ -68,6 +68,8 @@ const DEFAULT_FORM_DATA = {
     paymentStatus: 'PAID',
     paymentMethod: 'CASH',
     currency: 'ARS',
+    suggestedTeacherPayoutAmount: '',
+    suggestedTeacherPayoutCurrency: '',
     internalComment: '',
     groupLessonOffer: null,
     agencyId: null,
@@ -346,7 +348,9 @@ const BookingModal = ({ isOpen, onClose, refreshBookings, filterTeacherId, filte
                         null,
                         null,
                         formData.agencyId,
-                        formData.currency
+                        formData.currency,
+                        formData.suggestedTeacherPayoutAmount,
+                        formData.suggestedTeacherPayoutCurrency
                     )
                 );
 
@@ -397,7 +401,9 @@ const BookingModal = ({ isOpen, onClose, refreshBookings, filterTeacherId, filte
             formData.groupLessonOffer?.id ?? null,
             formData.groupLessonOffer?.resort ?? null,
             formData.agencyId,
-            formData.currency));
+            formData.currency,
+            formData.suggestedTeacherPayoutAmount,
+            formData.suggestedTeacherPayoutCurrency));
     };
 
     const handleGroupLessonOfferChange = (offer) => {
@@ -741,6 +747,47 @@ const BookingModal = ({ isOpen, onClose, refreshBookings, filterTeacherId, filte
                                     currency: e.target.value,
                                 }))}
                             >
+                                <MenuItem value="ARS">ARS</MenuItem>
+                                <MenuItem value="USD">USD</MenuItem>
+                                <MenuItem value="BRL">BRL</MenuItem>
+                            </Select>
+                        </FormControl>
+                    </Grid>
+                    <Grid item xs={12} md={6}>
+                        <NumericFormat
+                            customInput={TextField}
+                            fullWidth
+                            label={t('adminBookings.editModal.suggestedTeacherPayoutAmount')}
+                            value={formData.suggestedTeacherPayoutAmount}
+                            onValueChange={(values) => setFormData((prevData) => ({
+                                ...prevData,
+                                suggestedTeacherPayoutAmount: values.value,
+                            }))}
+                            thousandSeparator="."
+                            decimalSeparator=","
+                            allowNegative={false}
+                            decimalScale={2}
+                        />
+                    </Grid>
+                    <Grid item xs={12} md={6}>
+                        <FormControl fullWidth>
+                            <InputLabel id="suggested-payout-currency-label">
+                                {t('adminBookings.editModal.suggestedTeacherPayoutCurrency')}
+                            </InputLabel>
+                            <Select
+                                labelId="suggested-payout-currency-label"
+                                id="suggested-payout-currency-select"
+                                label={t('adminBookings.editModal.suggestedTeacherPayoutCurrency')}
+                                value={formData.suggestedTeacherPayoutCurrency}
+                                onChange={(e) => setFormData((prevData) => ({
+                                    ...prevData,
+                                    suggestedTeacherPayoutCurrency: e.target.value,
+                                }))}
+                                displayEmpty
+                            >
+                                <MenuItem value="">
+                                    <em>{t('adminBookings.editModal.suggestedTeacherPayoutCurrencyUnset')}</em>
+                                </MenuItem>
                                 <MenuItem value="ARS">ARS</MenuItem>
                                 <MenuItem value="USD">USD</MenuItem>
                                 <MenuItem value="BRL">BRL</MenuItem>

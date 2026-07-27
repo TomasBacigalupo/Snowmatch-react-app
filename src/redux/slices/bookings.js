@@ -7,6 +7,16 @@ import { dispatch } from '../store';
 import { start } from 'nprogress';
 import dayjs from 'dayjs';
 
+function appendSuggestedTeacherPayout(payload, amount, currency) {
+    const parsed = amount === '' || amount == null ? null : Number(amount);
+    if (parsed != null && !Number.isNaN(parsed)) {
+        payload.suggestedTeacherPayoutAmount = parsed;
+        if (currency) {
+            payload.suggestedTeacherPayoutCurrency = currency;
+        }
+    }
+}
+
 // ----------------------------------------------------------------------
 
 const initialState = {
@@ -603,7 +613,9 @@ export function createAdminBooking(
     groupLessonConfigId,
     groupLessonResort,
     agencyId,
-    currency
+    currency,
+    suggestedTeacherPayoutAmount,
+    suggestedTeacherPayoutCurrency
 ) {
     return async () => {
         dispatch(slice.actions.startLoading());
@@ -676,6 +688,7 @@ export function createAdminBooking(
             if (agencyId != null && agencyId !== '') {
                 payload.agencyId = Number(agencyId);
             }
+            appendSuggestedTeacherPayout(payload, suggestedTeacherPayoutAmount, suggestedTeacherPayoutCurrency);
             if (includesEquipment && rentalFulfillment) {
                 payload.rentalFulfillment = rentalFulfillment;
                 if (rentalFulfillment === 'SHIP_TO_HOTEL_OR_HOME') {
@@ -732,7 +745,7 @@ export function updateAdminBookingRentalReservation(reservationId, rentalPayload
     };
 }
 
-export function createAdminBookingIntent(studentId, message, children, adults, events, totalPrice, bookingType, includesLaunch, includesEquipment, paymentStatus, paymentMethod, internalComment, resort, calendarTeacherId, groupLessonConfigId, groupLessonResort, agencyId, currency) {
+export function createAdminBookingIntent(studentId, message, children, adults, events, totalPrice, bookingType, includesLaunch, includesEquipment, paymentStatus, paymentMethod, internalComment, resort, calendarTeacherId, groupLessonConfigId, groupLessonResort, agencyId, currency, suggestedTeacherPayoutAmount, suggestedTeacherPayoutCurrency) {
     return async () => {
         dispatch(slice.actions.startLoading());
         try {
@@ -807,6 +820,7 @@ export function createAdminBookingIntent(studentId, message, children, adults, e
             if (agencyId != null && agencyId !== '') {
                 payload.agencyId = Number(agencyId);
             }
+            appendSuggestedTeacherPayout(payload, suggestedTeacherPayoutAmount, suggestedTeacherPayoutCurrency);
             await axios.post(`/api/admin/booking-intents?businessId=13`, payload);
             dispatch(slice.actions.createIntentSuccess());
         } catch (error) {

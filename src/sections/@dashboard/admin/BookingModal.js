@@ -11,6 +11,7 @@ import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import DeleteIcon from '@mui/icons-material/Delete';
+import AddIcon from '@mui/icons-material/Add';
 import { format, parseISO, addDays } from 'date-fns';
 import { NumericFormat } from 'react-number-format';
 import ShopTeacherCard from 'src/sections/@dashboard/e-commerce/shop/ShopTeacherCard';
@@ -63,13 +64,13 @@ const DEFAULT_FORM_DATA = {
     bookingType: 'ASSIGNED',
     includesLaunch: false,
     includesEquipment: false,
-    showPriceToTeacher: true,
+    showPriceToTeacher: false,
     needTeacherInvoice: false,
     paymentStatus: 'PAID',
     paymentMethod: 'CASH',
     currency: 'ARS',
     suggestedTeacherPayoutAmount: '',
-    suggestedTeacherPayoutCurrency: '',
+    suggestedTeacherPayoutCurrency: 'ARS',
     internalComment: '',
     groupLessonOffer: null,
     agencyId: null,
@@ -733,27 +734,6 @@ const BookingModal = ({ isOpen, onClose, refreshBookings, filterTeacherId, filte
                         />
                     </Grid>
                     <Grid item xs={12} md={6}>
-                        <FormControl fullWidth>
-                            <InputLabel id="currency-label">
-                                {t('adminBookings.editModal.currency', { defaultValue: 'Currency' })}
-                            </InputLabel>
-                            <Select
-                                labelId="currency-label"
-                                id="currency-select"
-                                label={t('adminBookings.editModal.currency', { defaultValue: 'Currency' })}
-                                value={formData.currency}
-                                onChange={(e) => setFormData((prevData) => ({
-                                    ...prevData,
-                                    currency: e.target.value,
-                                }))}
-                            >
-                                <MenuItem value="ARS">ARS</MenuItem>
-                                <MenuItem value="USD">USD</MenuItem>
-                                <MenuItem value="BRL">BRL</MenuItem>
-                            </Select>
-                        </FormControl>
-                    </Grid>
-                    <Grid item xs={12} md={6}>
                         <NumericFormat
                             customInput={TextField}
                             fullWidth
@@ -794,8 +774,8 @@ const BookingModal = ({ isOpen, onClose, refreshBookings, filterTeacherId, filte
                             </Select>
                         </FormControl>
                     </Grid>
-                    <Grid item xs={12} md={6}>
-                        <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+                    <Grid item xs={12}>
+                        <Box sx={{ display: 'flex', gap: 2, alignItems: 'center', flexWrap: 'wrap' }}>
                             <FormControlLabel
                                 control={
                                     <Checkbox
@@ -954,6 +934,26 @@ const BookingModal = ({ isOpen, onClose, refreshBookings, filterTeacherId, filte
                 />
 
                 <Typography variant="h6" sx={{ mt: 3, mb: 2 }}>Selected Dates</Typography>
+
+                <FormControl fullWidth sx={{ mb: 2 }}>
+                    <InputLabel id="currency-label">
+                        {t('adminBookings.editModal.currency', { defaultValue: 'Currency' })}
+                    </InputLabel>
+                    <Select
+                        labelId="currency-label"
+                        id="currency-select"
+                        label={t('adminBookings.editModal.currency', { defaultValue: 'Currency' })}
+                        value={formData.currency}
+                        onChange={(e) => setFormData((prevData) => ({
+                            ...prevData,
+                            currency: e.target.value,
+                        }))}
+                    >
+                        <MenuItem value="ARS">ARS</MenuItem>
+                        <MenuItem value="USD">USD</MenuItem>
+                        <MenuItem value="BRL">BRL</MenuItem>
+                    </Select>
+                </FormControl>
                 {formData.dateTimes.map((dateTime, index) => (
                     <Box key={index} sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
                         <LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -1007,6 +1007,15 @@ const BookingModal = ({ isOpen, onClose, refreshBookings, filterTeacherId, filte
                         </IconButton>
                     </Box>
                 ))}
+
+                <Button
+                    startIcon={<AddIcon />}
+                    onClick={handleAddDateTime}
+                    sx={{ mb: 2 }}
+                    size="small"
+                >
+                    {t('adminBookings.editModal.addDate')}
+                </Button>
 
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mt: 3, mb: 2 }}>
                     <Typography variant="h6">Teacher</Typography>

@@ -84,23 +84,65 @@ const ICONS = {
 
 const ADMIN_NAV_ITEMS = [
   { title: 'today', path: PATH_DASHBOARD.admin.today, icon: ICONS.dashboard },
-  { title: 'review teachers', path: PATH_DASHBOARD.admin.review, icon: <CastForEducationIcon /> },
-  { title: 'review clients', path: PATH_DASHBOARD.admin.reviewClients, icon: <PeopleIcon /> },
-  { title: 'lesson bookings', path: PATH_DASHBOARD.admin.bookings, icon: ICONS.booking },
-  { title: 'equipment bookings', path: PATH_DASHBOARD.admin.bookingsEquipos, icon: ICONS.booking },
-  { title: 'user chats', path: PATH_DASHBOARD.admin.userChats, icon: ICONS.chat },
+  {
+    title: 'usuarios',
+    path: PATH_DASHBOARD.admin.review,
+    icon: ICONS.user,
+    children: [
+      { title: 'review teachers', path: PATH_DASHBOARD.admin.review },
+      { title: 'review clients', path: PATH_DASHBOARD.admin.reviewClients },
+      { title: 'user chats', path: PATH_DASHBOARD.admin.userChats },
+    ],
+  },
+  {
+    title: 'reservas',
+    path: PATH_DASHBOARD.admin.bookings,
+    icon: ICONS.booking,
+    children: [
+      { title: 'lesson bookings', path: PATH_DASHBOARD.admin.bookings },
+      { title: 'equipment bookings', path: PATH_DASHBOARD.admin.bookingsEquipos },
+    ],
+  },
+  {
+    title: 'productos',
+    path: PATH_DASHBOARD.admin.rental,
+    icon: ICONS.ecommerce,
+    children: [
+      { title: 'rental products', path: PATH_DASHBOARD.admin.rental },
+      { title: 'group lessons by resort', path: PATH_DASHBOARD.admin.groupLessonResorts },
+    ],
+  },
+  {
+    title: 'proveedores',
+    path: PATH_DASHBOARD.admin.agencies,
+    icon: ICONS.user,
+    children: [
+      { title: 'agencies', path: PATH_DASHBOARD.admin.agencies },
+      { title: 'rental providers', path: PATH_DASHBOARD.admin.rentalProviders },
+    ],
+  },
+  {
+    title: 'escuela',
+    path: PATH_DASHBOARD.admin.schoolMembers,
+    icon: <SchoolIcon />,
+    children: [
+      { title: 'school member lessons', path: PATH_DASHBOARD.admin.schoolMemberLessons },
+      { title: 'school members', path: PATH_DASHBOARD.admin.schoolMembers },
+      { title: 'user calendars', path: PATH_DASHBOARD.admin.userCalendars },
+    ],
+  },
   { title: 'broadcast lesson', path: PATH_DASHBOARD.admin.broadcastLesson, icon: ICONS.mail },
-  { title: 'financial dashboard', path: PATH_DASHBOARD.admin.financial, icon: ICONS.banking },
-  { title: 'payouts', path: PATH_DASHBOARD.admin.payouts, icon: ICONS.invoice },
-  { title: 'rental products', path: PATH_DASHBOARD.admin.rental, icon: ICONS.ecommerce },
-  { title: 'rental providers', path: PATH_DASHBOARD.admin.rentalProviders, icon: ICONS.ecommerce },
-  { title: 'agencies', path: PATH_DASHBOARD.admin.agencies, icon: ICONS.user },
-  { title: 'group lessons by resort', path: PATH_DASHBOARD.admin.groupLessonResorts, icon: ICONS.calendar },
+  {
+    title: 'finanzas',
+    path: PATH_DASHBOARD.admin.financial,
+    icon: ICONS.banking,
+    children: [
+      { title: 'payouts', path: PATH_DASHBOARD.admin.payouts },
+      { title: 'pricing', path: PATH_DASHBOARD.admin.pricing },
+      { title: 'financial dashboard', path: PATH_DASHBOARD.admin.financial },
+    ],
+  },
   { title: 'resort admins', path: PATH_DASHBOARD.admin.resortAdmins, icon: ICONS.user },
-  { title: 'school member lessons', path: PATH_DASHBOARD.admin.schoolMemberLessons, icon: ICONS.analytics },
-  { title: 'school members', path: PATH_DASHBOARD.admin.schoolMembers, icon: ICONS.user },
-  { title: 'user calendars', path: PATH_DASHBOARD.admin.userCalendars, icon: ICONS.calendar },
-  { title: 'pricing', path: PATH_DASHBOARD.admin.pricing, icon: ICONS.invoice },
 ];
 
 const RESORT_ADMIN_NAV_ITEMS = [

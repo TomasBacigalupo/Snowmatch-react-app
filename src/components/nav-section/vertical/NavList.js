@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 // @mui
 import { List, Collapse } from '@mui/material';
@@ -14,12 +14,26 @@ NavListRoot.propTypes = {
   list: PropTypes.object,
 };
 
+function isListActive(list, pathname) {
+  if (getActive(list.path, pathname)) {
+    return true;
+  }
+
+  return (list.children || []).some((child) => isListActive(child, pathname));
+}
+
 export function NavListRoot({ list, isCollapse }) {
   const { pathname } = useLocation();
 
-  const active = getActive(list.path, pathname);
+  const active = isListActive(list, pathname);
 
   const [open, setOpen] = useState(active);
+
+  useEffect(() => {
+    if (active) {
+      setOpen(true);
+    }
+  }, [active]);
 
   const hasChildren = list.children;
 

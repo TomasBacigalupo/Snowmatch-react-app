@@ -261,6 +261,18 @@ export default function BookingEditModal({ open, onClose, booking, onSave }) {
               <Typography variant="subtitle1" sx={{ mb: 1.5 }}>
                 {t('adminBookings.editModal.datesSection')}
               </Typography>
+              <FormControl fullWidth sx={{ mb: 2 }}>
+                <InputLabel>{t('adminBookings.editModal.currency')}</InputLabel>
+                <Select
+                  name="currency"
+                  label={t('adminBookings.editModal.currency')}
+                  defaultValue={booking?.currency || 'ARS'}
+                >
+                  <MenuItem value="ARS">ARS</MenuItem>
+                  <MenuItem value="USD">USD</MenuItem>
+                  <MenuItem value="BRL">BRL</MenuItem>
+                </Select>
+              </FormControl>
               <Stack spacing={2}>
                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                   {dateTimes.map((dateTime, index) => (
@@ -530,20 +542,9 @@ export default function BookingEditModal({ open, onClose, booking, onSave }) {
                   },
                 }}
               />
+            </Stack>
 
-              <FormControl fullWidth>
-                <InputLabel>{t('adminBookings.editModal.currency')}</InputLabel>
-                <Select
-                  name="currency"
-                  label={t('adminBookings.editModal.currency')}
-                  defaultValue={booking?.currency || 'ARS'}
-                >
-                  <MenuItem value="ARS">ARS</MenuItem>
-                  <MenuItem value="USD">USD</MenuItem>
-                  <MenuItem value="BRL">BRL</MenuItem>
-                </Select>
-              </FormControl>
-
+            <Stack spacing={2} direction={{ xs: 'column', md: 'row' }}>
               <TextField
                 fullWidth
                 label={t('adminBookings.editModal.suggestedTeacherPayoutAmount')}
@@ -564,7 +565,7 @@ export default function BookingEditModal({ open, onClose, booking, onSave }) {
                 <Select
                   name="suggestedTeacherPayoutCurrency"
                   label={t('adminBookings.editModal.suggestedTeacherPayoutCurrency')}
-                  defaultValue={booking?.suggestedTeacherPayoutCurrency || ''}
+                  defaultValue={booking?.suggestedTeacherPayoutCurrency || 'ARS'}
                   displayEmpty
                 >
                   <MenuItem value="">
@@ -575,59 +576,60 @@ export default function BookingEditModal({ open, onClose, booking, onSave }) {
                   <MenuItem value="BRL">BRL</MenuItem>
                 </Select>
               </FormControl>
+            </Stack>
 
-              <Stack
-                spacing={2}
-                direction={{ xs: 'column', sm: 'row' }}
-                sx={{ width: '100%', alignItems: { xs: 'flex-start', sm: 'center' } }}
-              >
-                <FormControlLabel
-                  control={
-                    <Switch
-                      name="includesEquipments"
-                      defaultChecked={booking?.includesEquipments}
-                    />
-                  }
-                  label={t('adminBookings.editModal.includesEquipment')}
-                />
+            <Stack
+              spacing={2}
+              direction={{ xs: 'column', sm: 'row' }}
+              flexWrap="wrap"
+              sx={{ width: '100%', alignItems: { xs: 'flex-start', sm: 'center' } }}
+            >
+              <FormControlLabel
+                control={
+                  <Switch
+                    name="includesEquipments"
+                    defaultChecked={booking?.includesEquipments}
+                  />
+                }
+                label={t('adminBookings.editModal.includesEquipment')}
+              />
 
-                <FormControlLabel
-                  control={
-                    <Switch name="includesLaunch" defaultChecked={booking?.includesLaunch} />
-                  }
-                  label={t('adminBookings.editModal.includesLunch')}
-                />
+              <FormControlLabel
+                control={
+                  <Switch name="includesLaunch" defaultChecked={booking?.includesLaunch} />
+                }
+                label={t('adminBookings.editModal.includesLunch')}
+              />
 
-                <FormControlLabel
-                  control={
-                    <Switch
-                      name="showPriceToTeacher"
-                      defaultChecked={booking?.showPriceToTeacher ?? true}
-                    />
-                  }
-                  label={t('adminBookings.editModal.showPriceToTeacher')}
-                />
+              <FormControlLabel
+                control={
+                  <Switch
+                    name="showPriceToTeacher"
+                    defaultChecked={booking?.showPriceToTeacher ?? false}
+                  />
+                }
+                label={t('adminBookings.editModal.showPriceToTeacher')}
+              />
 
-                <FormControlLabel
-                  control={
-                    <Switch
-                      name="invoiceCreated"
-                      defaultChecked={booking?.invoiceCreated ?? false}
-                    />
-                  }
-                  label={t('adminBookings.editModal.invoiceCreated')}
-                />
+              <FormControlLabel
+                control={
+                  <Switch
+                    name="invoiceCreated"
+                    defaultChecked={booking?.invoiceCreated ?? false}
+                  />
+                }
+                label={t('adminBookings.editModal.invoiceCreated')}
+              />
 
-                <FormControlLabel
-                  control={
-                    <Switch
-                      name="needTeacherInvoice"
-                      defaultChecked={booking?.needTeacherInvoice ?? false}
-                    />
-                  }
-                  label={t('adminBookings.editModal.needTeacherInvoice')}
-                />
-              </Stack>
+              <FormControlLabel
+                control={
+                  <Switch
+                    name="needTeacherInvoice"
+                    defaultChecked={booking?.needTeacherInvoice ?? false}
+                  />
+                }
+                label={t('adminBookings.editModal.needTeacherInvoice')}
+              />
             </Stack>
           </Stack>
         </DialogContent>

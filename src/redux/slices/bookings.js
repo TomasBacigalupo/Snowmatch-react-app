@@ -1130,7 +1130,15 @@ export function uploadInvoice(bookingId, file, teacherId, totalAmount, hours) {
         try {
             // Step 1: Get presigned URL
             const presignedResponse = await axios.get(`/api/bookings/preSignedUrlInvoice/${bookingId}`);
-            const presignedUrl = presignedResponse.data;
+            const data = presignedResponse.data;
+            const presignedUrl =
+                typeof data === 'string'
+                    ? data
+                    : data?.presignedUrl || data?.url || '';
+
+            if (!presignedUrl) {
+                throw new Error('No presigned URL');
+            }
 
             // Step 2: Upload file to S3 using presigned URL
             const uploadResponse = await fetch(presignedUrl, {
@@ -1147,7 +1155,7 @@ export function uploadInvoice(bookingId, file, teacherId, totalAmount, hours) {
 
             // Step 3: Update Redux state with invoice information
             const invoiceData = {
-                url: presignedUrl.split('?')[0],
+                url: data?.imageUrl || presignedUrl.split('?')[0],
             };
             
             dispatch(slice.actions.updateBookingWithInvoice({ 
@@ -1161,6 +1169,26 @@ export function uploadInvoice(bookingId, file, teacherId, totalAmount, hours) {
             throw error;
         }
     };
+}
+
+export async function openTeacherInvoice(bookingId, fallbackUrl) {
+    try {
+        const res = await axios.get(`/api/bookings/teacherInvoiceUrl/${bookingId}`);
+        const data = res.data;
+        const url =
+            typeof data === 'string'
+                ? data
+                : data?.presignedUrl || data?.url || '';
+        if (url) {
+            window.open(url, '_blank');
+            return;
+        }
+    } catch (e) {
+        // fall through
+    }
+    if (fallbackUrl) {
+        window.open(fallbackUrl, '_blank');
+    }
 }
 
 export function createPayout(bookingId, file, teacherId, amount) {

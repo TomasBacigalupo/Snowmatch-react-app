@@ -1,5 +1,7 @@
 import axios from './axios';
 import { ADMIN_BOOKING_RESORT_FILTER_OPTIONS } from './adminBookingResortOptions';
+import { buildDefaultLevelHourPrices } from './teacherHourPricePresets';
+import { calcBookingPayWithLevelPrices } from './teacherPayoutAmount';
 
 const CERRO_CATEDRAL_VALUE = 'CERRO_CATEDRAL';
 const CERRO_CATEDRAL_LABEL =
@@ -143,6 +145,117 @@ export function countTodayParticipants(lessonBookings, gearBookings) {
   const gearParticipants = (gearBookings ?? []).length;
   return lessonParticipants + gearParticipants;
 }
+
+function getBookingDayCount(booking) {
+  const days = booking?.eventList?.length;
+  return days > 0 ? days : 1;
+}
+
+function getBookingCurrency(booking) {
+  return booking?.currency || 'ARS';
+}
+
+function getSuggestedTeacherPayoutCurrency(booking) {
+  const currency = (booking?.suggestedTeacherPayoutCurrency || 'ARS').toUpperCase();
+  return currency === 'USD' ? 'USD' : 'ARS';
+}
+
+function getBookingDayTeacherShare(booking, levelPrices) {
+  const days = getBookingDayCount(booking);
+  const suggested = booking?.suggestedTeacherPayoutAmount;
+  if (suggested != null && suggested !== '' && !Number.isNaN(Number(suggested))) {
+    return {
+      amount: Number(suggested) / days,
+      currency: getSuggestedTeacherPayoutCurrency(booking),
+    };
+  }
+  return {
+    amount: calcBookingPayWithLevelPrices(booking, levelPrices) / days,
+    currency: 'ARS',
+  };
+}
+
+function emptyGananciasBucket() {
+  return { dayGross: 0, dayTeacher: 0 };
+}
+
+function sortGananciasCurrencies(a, b) {
+  if (a.currency === 'ARS') return -1;
+  if (b.currency === 'ARS') return 1;
+  return a.currency.localeCompare(b.currency);
+}
+
+/** Day-share revenue net of 30% tax and teacher pay, split by currency. */
+export function calcAdminTodayGanancias(lessonBookings, gearBookings) {
+  const bookings = [...(lessonBookings ?? []), ...(gearBookings ?? [])];
+  const levelPrices = buildDefaultLevelHourPrices();
+  const byCurrencyMap = new Map();
+
+  const ensureBucket = (currency) => {
+    const key = currency || 'ARS';
+    if (!byCurrencyMap.has(key)) {
+      byCurrencyMap.set(key, emptyGananciasBucket());
+    }
+    return byCurrencyMap.get(key);
+  };
+
+  bookings.forEach((booking) => {
+    const days = getBookingDayCount(booking);
+    const priceCurrency = getBookingCurrency(booking);
+    const priceBucket = ensureBucket(priceCurrency);
+    priceBucket.dayGross += (booking?.price || 0) / days;
+
+    const teacherShare = getBookingDayTeacherShare(booking, levelPrices);
+    const teacherBucket = ensureBucket(teacherShare.currency);
+    teacherBucket.dayTeacher += teacherShare.amount;
+  });
+
+  const byCurrency = [...byCurrencyMap.entries()]
+    .map(([currency, bucket]) => {
+      const dayTax = bucket.dayGross * 0.3;
+      const net = bucket.dayGross * 0.7 - bucket.dayTeacher;
+      return {
+        currency,
+        dayGross: bucket.dayGross,
+        dayTax,
+        dayTeacher: bucket.dayTeacher,
+        net,
+      };
+    })
+    .filter((row) => row.dayGross !== 0 || row.dayTeacher !== 0 || row.net !== 0)
+    .sort(sortGananciasCurrencies);
+
+  return { byCurrency };
+}
+
+const DEFAULT_USD_TO_ARS_RATE = 1550;
+
+/** Merge all currency rows into a single ARS total using the USD exchange rate. */
+export function consolidateGananciasInArs(byCurrency, usdToArsRate = DEFAULT_USD_TO_ARS_RATE) {
+  const rate = Number(usdToArsRate) > 0 ? Number(usdToArsRate) : DEFAULT_USD_TO_ARS_RATE;
+
+  let dayGross = 0;
+  let dayTeacher = 0;
+
+  (byCurrency || []).forEach((row) => {
+    const multiplier = row.currency === 'USD' ? rate : 1;
+    dayGross += row.dayGross * multiplier;
+    dayTeacher += row.dayTeacher * multiplier;
+  });
+
+  const dayTax = dayGross * 0.3;
+  const net = dayGross * 0.7 - dayTeacher;
+
+  return {
+    currency: 'ARS',
+    dayGross,
+    dayTax,
+    dayTeacher,
+    net,
+  };
+}
+
+export { DEFAULT_USD_TO_ARS_RATE };
 
 export function getBusyTeacherIds(lessonBookings) {
   const busyIds = new Set();

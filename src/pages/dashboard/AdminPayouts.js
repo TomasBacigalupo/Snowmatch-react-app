@@ -57,7 +57,7 @@ import {
 } from '../../utils/teacherHourPricePresets';
 import { fDate } from '../../utils/formatTime';
 
-const TABLE_COL_COUNT = 11;
+const TABLE_COL_COUNT = 12;
 
 function getPaymentStatusColor(paymentStatus) {
   if (paymentStatus === 'PENDING') return 'warning';
@@ -80,6 +80,33 @@ function formatArs(amount) {
     style: 'currency',
     currency: 'ARS',
   }).format(amount || 0);
+}
+
+function formatSuggestedTeacherPayout(booking) {
+  if (booking?.suggestedTeacherPayoutAmount == null) {
+    return null;
+  }
+  const currency =
+    booking?.suggestedTeacherPayoutCurrency || booking?.currency || 'ARS';
+  try {
+    return new Intl.NumberFormat('es-AR', {
+      style: 'currency',
+      currency,
+    }).format(booking.suggestedTeacherPayoutAmount);
+  } catch {
+    return `${booking.suggestedTeacherPayoutAmount} ${currency}`;
+  }
+}
+
+function formatCurrencyAmount(amount, currency = 'ARS') {
+  try {
+    return new Intl.NumberFormat('es-AR', {
+      style: 'currency',
+      currency,
+    }).format(amount || 0);
+  } catch {
+    return `${amount || 0} ${currency}`;
+  }
 }
 
 function getBookingDateLabel(booking) {
@@ -174,6 +201,22 @@ export default function AdminPayouts() {
     () => calcTeacherPayTotalWithHourPrice(selectedBookings, hourPrices),
     [selectedBookings, hourPrices]
   );
+
+  const totalSuggestedByCurrency = useMemo(() => {
+    const totals = {};
+    selectedBookings.forEach((booking) => {
+      const amount = booking?.suggestedTeacherPayoutAmount;
+      if (amount == null || Number.isNaN(Number(amount))) {
+        return;
+      }
+      const currency =
+        booking?.suggestedTeacherPayoutCurrency || booking?.currency || 'ARS';
+      totals[currency] = (totals[currency] || 0) + Number(amount);
+    });
+    return Object.entries(totals)
+      .filter(([, total]) => total > 0)
+      .map(([currency, total]) => ({ currency, total }));
+  }, [selectedBookings]);
 
   const uniqueSelectedHours = useMemo(
     () => calcUniqueTeacherHours(selectedBookings),
@@ -503,6 +546,7 @@ export default function AdminPayouts() {
                           <TableCell align="right">{t('adminPayouts.colPrice')}</TableCell>
                           <TableCell align="right">{t('adminPayouts.colHours')}</TableCell>
                           <TableCell align="right">{t('adminPayouts.colOwed')}</TableCell>
+                          <TableCell align="right">{t('adminPayouts.colSuggested')}</TableCell>
                           <TableCell>{t('adminPayouts.colPaymentStatus')}</TableCell>
                           <TableCell>{t('adminPayouts.colStatus')}</TableCell>
                         </TableRow>
@@ -569,6 +613,9 @@ export default function AdminPayouts() {
                                 <TableCell align="right">
                                   {hourPricesConfigured ? formatArs(owed) : '—'}
                                 </TableCell>
+                                <TableCell align="right">
+                                  {formatSuggestedTeacherPayout(booking) || '—'}
+                                </TableCell>
                                 <TableCell>
                                   <Label
                                     variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
@@ -604,6 +651,13 @@ export default function AdminPayouts() {
                       {t('adminPayouts.totalToPay')}:{' '}
                       {hourPricesConfigured ? formatArs(totalToPay) : '—'}
                     </Typography>
+                    {totalSuggestedByCurrency.length > 0 &&
+                      totalSuggestedByCurrency.map(({ currency, total }) => (
+                        <Typography key={currency} variant="subtitle1">
+                          {t('adminPayouts.totalSuggestedToPay')}:{' '}
+                          {formatCurrencyAmount(total, currency)}
+                        </Typography>
+                      ))}
                     <Typography variant="body2" color="text.secondary">
                       {t('adminPayouts.selectedCount', { count: selectedBookings.length })}
                       {' · '}

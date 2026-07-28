@@ -1128,7 +1128,18 @@
             "lessons": "Clases {{day}}",
             "gear": "Equipos {{day}}",
             "participants": "Participantes totales",
-            "unassigned": "Sin asignar {{day}}"
+            "unassigned": "Sin asignar {{day}}",
+            "net": "Neto"
+        },
+        "ganancias": {
+            "title": "Ganancias {{day}}",
+            "currency": "Moneda",
+            "total": "Total",
+            "teacher": "Pago profesores",
+            "tax": "Impuestos (30%)",
+            "net": "Neto",
+            "usdRate": "USD → ARS",
+            "consolidatedArs": "Total ARS"
         },
         "intentsSection": "Reservas sin asignar {{day}}",
         "intentsEmpty": "No hay reservas sin asignar para {{day}}.",
@@ -1153,6 +1164,7 @@
         "colResort": "Centro",
         "colPrice": "Precio",
         "colOwed": "A pagar",
+        "colSuggested": "Sugerido",
         "colHours": "Horas",
         "colPaymentStatus": "Pago cliente",
         "assignedHourPriceLabel": "Precio hora asignada",
@@ -1175,6 +1187,7 @@
         "loadingBookings": "Cargando reservas…",
         "noBookings": "No hay reservas para este instructor.",
         "totalToPay": "Total a pagar",
+        "totalSuggestedToPay": "Total a pagar sugerido",
         "selectedCount": "{{count}} reserva(s) seleccionada(s)",
         "uniqueHours": "{{hours}}h (eventos compartidos se cuentan una vez)",
         "hoursSummaryTitle": "Horas a pagar (eventos compartidos se cuentan una vez)",

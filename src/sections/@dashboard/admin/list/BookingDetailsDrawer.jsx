@@ -57,7 +57,7 @@ import {
 // redux
 import { useDispatch } from 'react-redux';
 import { useSnackbar } from 'notistack';
-import { createPayout } from '../../../../redux/slices/bookings';
+import { createPayout, openTeacherInvoice } from '../../../../redux/slices/bookings';
 import { fetchPayouts, setBookingInvoiceCreated, rosterStudentOntoBooking } from 'src/redux/slices/admin';
 import useAuth from '../../../../hooks/useAuth';
 import axios from '../../../../utils/axios';
@@ -1097,7 +1097,7 @@ export default function BookingDetailsDrawer({
                       <Button
                         variant="contained"
                         startIcon={<Iconify icon="eva:eye-fill" />}
-                        onClick={() => window.open(booking.teacherInvoiceUrl, '_blank')}
+                        onClick={() => openTeacherInvoice(booking.id, booking.teacherInvoiceUrl)}
                       >
                         {t('adminBookings.drawer.viewInvoice')}
                       </Button>

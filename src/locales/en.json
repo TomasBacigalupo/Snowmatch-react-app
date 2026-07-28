@@ -936,7 +936,18 @@
       "lessons": "Lessons {{day}}",
       "gear": "Gear reservations {{day}}",
       "participants": "Total participants",
-      "unassigned": "Unassigned {{day}}"
+      "unassigned": "Unassigned {{day}}",
+      "net": "Net"
+    },
+    "ganancias": {
+      "title": "Earnings {{day}}",
+      "currency": "Currency",
+      "total": "Total",
+      "teacher": "Teacher pay",
+      "tax": "Tax (30%)",
+      "net": "Net",
+      "usdRate": "USD → ARS",
+      "consolidatedArs": "Total ARS"
     },
     "intentsSection": "Unassigned bookings {{day}}",
     "intentsEmpty": "No unassigned bookings for {{day}}.",
@@ -961,6 +972,7 @@
     "colResort": "Resort",
     "colPrice": "Price",
     "colOwed": "Owed",
+    "colSuggested": "Suggested",
     "colHours": "Hours",
     "colPaymentStatus": "Payment status",
     "assignedHourPriceLabel": "Assigned hour price",
@@ -983,6 +995,7 @@
     "loadingBookings": "Loading bookings…",
     "noBookings": "No bookings for this instructor.",
     "totalToPay": "Total to pay",
+    "totalSuggestedToPay": "Total suggested to pay",
     "selectedCount": "{{count}} booking(s) selected",
     "uniqueHours": "{{hours}}h (shared events counted once)",
     "hoursSummaryTitle": "Hours to pay (shared events counted once)",

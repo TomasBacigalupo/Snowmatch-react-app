@@ -18,7 +18,9 @@ import {
   TableBody,
   TableCell,
   TableContainer,
+  TableHead,
   TableRow,
+  TextField,
   Tooltip,
   Typography,
 } from '@mui/material';
@@ -46,7 +48,10 @@ import GearBookingDetailsDrawer from '../../sections/@dashboard/admin/list/GearB
 import BookingModal from '../../sections/@dashboard/admin/BookingModal';
 import GearBookingModal from '../../sections/@dashboard/admin/GearBookingModal';
 import {
+  calcAdminTodayGanancias,
+  consolidateGananciasInArs,
   countTodayParticipants,
+  DEFAULT_USD_TO_ARS_RATE,
   fetchAdminBookingsForToday,
   fetchAdminBookingIntentsForToday,
   filterAvailableSchoolMembers,
@@ -178,7 +183,119 @@ function TodayAvailableTeachersSection({
   );
 }
 
-function TodayKPICards({ loading, lessonCount, gearCount, participantCount, unassignedCount, dayLabel, t }) {
+function formatGananciasAmount(value, currency = 'ARS') {
+  try {
+    return new Intl.NumberFormat('es-AR', {
+      style: 'currency',
+      currency,
+      maximumFractionDigits: 0,
+    }).format(value || 0);
+  } catch {
+    return `${currency} ${Math.round(value || 0)}`;
+  }
+}
+
+function TodayGananciasSection({ loading, gananciasByCurrency, usdToArsRate, onUsdToArsRateChange, dayLabel, t }) {
+  const rows = gananciasByCurrency?.length
+    ? gananciasByCurrency
+    : [{ currency: 'ARS', dayGross: 0, dayTeacher: 0, dayTax: 0, net: 0 }];
+
+  const hasUsd = rows.some((row) => row.currency === 'USD');
+  const consolidatedArs = useMemo(
+    () => consolidateGananciasInArs(rows, usdToArsRate),
+    [rows, usdToArsRate]
+  );
+
+  const renderAmountCell = (value, currency, emphasize = false) => {
+    if (loading) {
+      return <Skeleton width={80} sx={{ ml: 'auto' }} />;
+    }
+    const formatted = formatGananciasAmount(value, currency);
+    if (emphasize) {
+      return (
+        <Typography variant="subtitle2" color="success.main">
+          {formatted}
+        </Typography>
+      );
+    }
+    return formatted;
+  };
+
+  const renderRow = (
+    row,
+    { emphasizeNet = false, boldLabel = false, label, formatCurrency = row.currency } = {}
+  ) => (
+    <TableRow key={label || row.currency}>
+      <TableCell>
+        <Typography variant="subtitle2" sx={{ fontWeight: boldLabel ? 700 : 500 }}>
+          {label || row.currency}
+        </Typography>
+      </TableCell>
+      <TableCell align="right">{renderAmountCell(row.dayGross, formatCurrency)}</TableCell>
+      <TableCell align="right">{renderAmountCell(row.dayTeacher, formatCurrency)}</TableCell>
+      <TableCell align="right">{renderAmountCell(row.dayTax, formatCurrency)}</TableCell>
+      <TableCell align="right">{renderAmountCell(row.net, formatCurrency, emphasizeNet)}</TableCell>
+    </TableRow>
+  );
+
+  return (
+    <Card sx={{ mt: 3, mb: 3, p: 3 }}>
+      <Stack
+        direction={{ xs: 'column', sm: 'row' }}
+        spacing={2}
+        alignItems={{ xs: 'stretch', sm: 'center' }}
+        justifyContent="space-between"
+        sx={{ mb: 2 }}
+      >
+        <Typography variant="h6">
+          {t('adminToday.ganancias.title', { day: dayLabel })}
+        </Typography>
+        <TextField
+          label={t('adminToday.ganancias.usdRate')}
+          type="number"
+          size="small"
+          value={usdToArsRate}
+          onChange={(event) => onUsdToArsRateChange(event.target.value)}
+          inputProps={{ min: 0, step: 1 }}
+          sx={{ width: { xs: '100%', sm: 220 } }}
+        />
+      </Stack>
+      <TableContainer>
+        <Table size="small">
+          <TableHead>
+            <TableRow>
+              <TableCell>{t('adminToday.ganancias.currency')}</TableCell>
+              <TableCell align="right">{t('adminToday.ganancias.total')}</TableCell>
+              <TableCell align="right">{t('adminToday.ganancias.teacher')}</TableCell>
+              <TableCell align="right">{t('adminToday.ganancias.tax')}</TableCell>
+              <TableCell align="right">{t('adminToday.ganancias.net')}</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {rows.map((row) => renderRow(row))}
+            {hasUsd &&
+              renderRow(consolidatedArs, {
+                emphasizeNet: true,
+                boldLabel: true,
+                label: t('adminToday.ganancias.consolidatedArs'),
+                formatCurrency: 'ARS',
+              })}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </Card>
+  );
+}
+
+function TodayKPICards({
+  loading,
+  lessonCount,
+  gearCount,
+  participantCount,
+  unassignedCount,
+  dayLabel,
+  t,
+}) {
   const theme = useTheme();
 
   const cards = [
@@ -604,6 +721,7 @@ export default function AdminToday() {
   const schoolMembers = useSelector((state) => state.business.members) || [];
   const [searchParams, setSearchParams] = useSearchParams();
   const detailsId = searchParams.get('details');
+  const showGanancias = searchParams.get('ganancias') === 'true';
 
   const [loading, setLoading] = useState(true);
   const [membersLoading, setMembersLoading] = useState(true);
@@ -613,6 +731,7 @@ export default function AdminToday() {
   const [bookingIntents, setBookingIntents] = useState([]);
   const [dayOffset, setDayOffset] = useState(0);
   const [showLessonPrices, setShowLessonPrices] = useState(true);
+  const [usdToArsRate, setUsdToArsRate] = useState(String(DEFAULT_USD_TO_ARS_RATE));
   const [isLessonCreateOpen, setIsLessonCreateOpen] = useState(false);
   const [isGearCreateOpen, setIsGearCreateOpen] = useState(false);
 
@@ -799,6 +918,13 @@ export default function AdminToday() {
     [schoolMembers, lessonBookings]
   );
 
+  const participantCount = countTodayParticipants(lessonBookings, gearBookings);
+
+  const ganancias = useMemo(
+    () => (showGanancias ? calcAdminTodayGanancias(lessonBookings, gearBookings) : null),
+    [showGanancias, lessonBookings, gearBookings]
+  );
+
   if (!isInitialized) {
     return <LoadingScreen isDashboard />;
   }
@@ -806,8 +932,6 @@ export default function AdminToday() {
   if (!isAdmin) {
     return <Navigate to="/access-denied" replace />;
   }
-
-  const participantCount = countTodayParticipants(lessonBookings, gearBookings);
 
   return (
     <Page title={pageHeading}>
@@ -901,6 +1025,17 @@ export default function AdminToday() {
           dayLabel={dayLabel}
           t={t}
         />
+
+        {showGanancias && (
+          <TodayGananciasSection
+            loading={loading}
+            gananciasByCurrency={ganancias?.byCurrency}
+            usdToArsRate={usdToArsRate}
+            onUsdToArsRateChange={setUsdToArsRate}
+            dayLabel={dayLabel}
+            t={t}
+          />
+        )}
 
         {(loading || bookingIntents.length > 0) && (
           <TodayBookingIntentsSection

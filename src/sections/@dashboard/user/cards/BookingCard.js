@@ -14,7 +14,7 @@ import ConfirmDeclineModal from "../modals/ConfirmDeclineModal";
 import React from 'react';
 import Drawer from '@mui/material/Drawer';
 import { Grid, IconButton } from '@mui/material';
-import { acceptAndPay } from 'src/redux/slices/bookings';
+import { acceptAndPay, openTeacherInvoice } from 'src/redux/slices/bookings';
 import ProductDetailsReviewForm from '../../e-commerce/teacher-details/ProductDetailsReviewForm';
 import ProductDetailsReviewFormMobile from '../../e-commerce/teacher-details/ProductDetailsReviewFormMobile';
 import { fCurrency } from 'src/utils/formatNumber';
@@ -545,7 +545,7 @@ export default function BookingCard({ booking, showInfo = true }) {
                                     </Typography>
                                     <Button
                                         variant="outlined"
-                                        onClick={() => window.open(booking.teacherInvoiceUrl, '_blank')}
+                                        onClick={() => openTeacherInvoice(booking.id, booking.teacherInvoiceUrl)}
                                         startIcon={<Iconify icon={'material-symbols:visibility'} />}
                                     >
                                         Ver Factura

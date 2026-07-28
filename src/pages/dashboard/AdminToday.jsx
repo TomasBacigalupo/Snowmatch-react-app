@@ -11,6 +11,7 @@ import {
   Chip,
   Collapse,
   Container,
+  InputAdornment,
   Skeleton,
   IconButton,
   Stack,
@@ -19,6 +20,7 @@ import {
   TableCell,
   TableContainer,
   TableRow,
+  TextField,
   Tooltip,
   Typography,
 } from '@mui/material';
@@ -49,7 +51,10 @@ import {
   countTodayParticipants,
   fetchAdminBookingsForToday,
   fetchAdminBookingIntentsForToday,
+  fetchTeachersAvailableOnDay,
   filterAvailableSchoolMembers,
+  formatAvailabilityWindowLabel,
+  mergeAvailableTeachers,
 } from '../../utils/adminTodayBookings';
 import { fNumber } from '../../utils/formatNumber';
 
@@ -57,6 +62,8 @@ const SKELETON_ROWS = 10;
 const SKELETON_CARDS = 5;
 const SCHOOL_BUSINESS_ID = 13;
 const AVAILABLE_TEACHER_SKELETONS = 6;
+const AVAILABLE_TEACHERS_PREVIEW_COUNT = 12;
+const AVAILABLE_TEACHERS_SEARCH_THRESHOLD = 8;
 
 function getTeacherDisplayName(teacher, unassignedLabel) {
   if (!teacher) return unassignedLabel;
@@ -107,13 +114,61 @@ function getAvailableTeacherLabel(member) {
   return fullName;
 }
 
+function getAvailableTeacherSourceLabels(member, t) {
+  const labels = [];
+  if (member?.sources?.includes('school')) {
+    labels.push(t('adminToday.sourceSchool'));
+  }
+  if (member?.sources?.includes('day')) {
+    labels.push(formatAvailabilityWindowLabel(member, t));
+  }
+  return labels;
+}
+
 function TodayAvailableTeachersSection({
   loading,
   members,
-  availableMembers,
+  availableTeachers,
+  dayAvailableError,
   dayLabel,
   t,
 }) {
+  const [searchQuery, setSearchQuery] = useState('');
+  const [showAll, setShowAll] = useState(false);
+
+  useEffect(() => {
+    setSearchQuery('');
+    setShowAll(false);
+  }, [dayLabel]);
+
+  const handleSearchChange = useCallback((event) => {
+    setSearchQuery(event.target.value);
+    setShowAll(false);
+  }, []);
+
+  const handleToggleShowAll = useCallback(() => {
+    setShowAll((prev) => !prev);
+  }, []);
+
+  const filteredTeachers = useMemo(() => {
+    const query = searchQuery.trim().toLowerCase();
+    if (!query) return availableTeachers;
+    return availableTeachers.filter((teacher) =>
+      getAvailableTeacherLabel(teacher).toLowerCase().includes(query)
+    );
+  }, [availableTeachers, searchQuery]);
+
+  const visibleTeachers = useMemo(
+    () =>
+      showAll
+        ? filteredTeachers
+        : filteredTeachers.slice(0, AVAILABLE_TEACHERS_PREVIEW_COUNT),
+    [filteredTeachers, showAll]
+  );
+
+  const hasHiddenTeachers =
+    !showAll && filteredTeachers.length > AVAILABLE_TEACHERS_PREVIEW_COUNT;
+
   const emptyMessage =
     members.length === 0
       ? t('adminToday.availableTeachersNoneMembers')
@@ -136,10 +191,34 @@ function TodayAvailableTeachersSection({
             size="small"
             color="success"
             variant="outlined"
-            label={t('adminToday.availableTeachersCount', { count: availableMembers.length })}
+            label={t('adminToday.availableTeachersCount', { count: availableTeachers.length })}
           />
         )}
       </Stack>
+
+      {dayAvailableError && (
+        <Alert severity="warning" sx={{ mb: 2 }}>
+          {dayAvailableError}
+        </Alert>
+      )}
+
+      {!loading && availableTeachers.length > AVAILABLE_TEACHERS_SEARCH_THRESHOLD && (
+        <TextField
+          fullWidth
+          size="small"
+          value={searchQuery}
+          onChange={handleSearchChange}
+          placeholder={t('adminToday.availableTeachersSearchPlaceholder')}
+          sx={{ mb: 2 }}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <Iconify icon="eva:search-fill" width={20} />
+              </InputAdornment>
+            ),
+          }}
+        />
+      )}
 
       {loading ? (
         <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
@@ -153,26 +232,66 @@ function TodayAvailableTeachersSection({
             />
           ))}
         </Stack>
-      ) : availableMembers.length === 0 ? (
+      ) : availableTeachers.length === 0 ? (
         <Typography variant="body2" color="text.secondary">
           {emptyMessage}
         </Typography>
+      ) : filteredTeachers.length === 0 ? (
+        <Typography variant="body2" color="text.secondary">
+          {t('adminToday.availableTeachersSearchEmpty')}
+        </Typography>
       ) : (
-        <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
-          {availableMembers.map((member) => (
-            <Chip
-              key={member.id}
-              avatar={
-                <Avatar alt={getAvailableTeacherLabel(member)} src={member.imageLink || undefined}>
-                  {(member.name || member.email || '?').charAt(0).toUpperCase()}
-                </Avatar>
-              }
-              label={getAvailableTeacherLabel(member)}
-              variant="outlined"
-              sx={{ maxWidth: '100%' }}
-            />
-          ))}
-        </Stack>
+        <>
+          <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
+            {visibleTeachers.map((member) => {
+              const sourceLabels = getAvailableTeacherSourceLabels(member, t);
+              return (
+                <Chip
+                  key={member.id}
+                  avatar={
+                    <Avatar alt={getAvailableTeacherLabel(member)} src={member.imageLink || undefined}>
+                      {(member.name || member.email || '?').charAt(0).toUpperCase()}
+                    </Avatar>
+                  }
+                  label={
+                    <Box sx={{ py: 0.25 }}>
+                      <Typography variant="body2" component="span" sx={{ display: 'block' }}>
+                        {getAvailableTeacherLabel(member)}
+                      </Typography>
+                      {sourceLabels.length > 0 && (
+                        <Stack direction="row" spacing={0.5} flexWrap="wrap" useFlexGap sx={{ mt: 0.25 }}>
+                          {sourceLabels.map((label) => (
+                            <Chip
+                              key={`${member.id}-${label}`}
+                              size="small"
+                              variant="outlined"
+                              label={label}
+                              sx={{ height: 20, fontSize: '0.7rem' }}
+                            />
+                          ))}
+                        </Stack>
+                      )}
+                    </Box>
+                  }
+                  variant="outlined"
+                  sx={{ maxWidth: '100%', height: 'auto', py: 0.5, alignItems: 'flex-start' }}
+                />
+              );
+            })}
+          </Stack>
+
+          {hasHiddenTeachers && (
+            <Button variant="text" size="small" onClick={handleToggleShowAll} sx={{ mt: 1.5 }}>
+              {t('adminToday.availableTeachersShowAll', { count: filteredTeachers.length })}
+            </Button>
+          )}
+
+          {showAll && filteredTeachers.length > AVAILABLE_TEACHERS_PREVIEW_COUNT && (
+            <Button variant="text" size="small" onClick={handleToggleShowAll} sx={{ mt: 1.5 }}>
+              {t('adminToday.availableTeachersShowLess')}
+            </Button>
+          )}
+        </>
       )}
     </Card>
   );
@@ -607,6 +726,9 @@ export default function AdminToday() {
 
   const [loading, setLoading] = useState(true);
   const [membersLoading, setMembersLoading] = useState(true);
+  const [dayAvailableLoading, setDayAvailableLoading] = useState(true);
+  const [dayAvailableError, setDayAvailableError] = useState(null);
+  const [dayAvailableTeachers, setDayAvailableTeachers] = useState([]);
   const [error, setError] = useState(null);
   const [lessonBookings, setLessonBookings] = useState([]);
   const [gearBookings, setGearBookings] = useState([]);
@@ -760,17 +882,36 @@ export default function AdminToday() {
   const loadData = useCallback(async () => {
     setLoading(true);
     setMembersLoading(true);
+    setDayAvailableLoading(true);
+    setDayAvailableError(null);
     setError(null);
 
     const membersPromise = Promise.resolve(dispatch(getAdminBusinessMembers(SCHOOL_BUSINESS_ID))).finally(() => {
       setMembersLoading(false);
     });
 
+    const dayAvailablePromise = fetchTeachersAvailableOnDay(selectedDate)
+      .then((teachers) => {
+        setDayAvailableTeachers(teachers);
+      })
+      .catch((reason) => {
+        setDayAvailableTeachers([]);
+        setDayAvailableError(
+          typeof reason === 'string'
+            ? reason
+            : reason?.message || t('adminToday.availableTeachersLoadError')
+        );
+      })
+      .finally(() => {
+        setDayAvailableLoading(false);
+      });
+
     const [lessonsResult, gearResult, intentsResult] = await Promise.allSettled([
       fetchAdminBookingsForToday('lesson', selectedDate),
       fetchAdminBookingsForToday('gear', selectedDate),
       fetchAdminBookingIntentsForToday(selectedDate),
       membersPromise,
+      dayAvailablePromise,
     ]);
 
     setLessonBookings(lessonsResult.status === 'fulfilled' ? lessonsResult.value : []);
@@ -794,9 +935,14 @@ export default function AdminToday() {
     }
   }, [isAdmin, loadData]);
 
-  const availableMembers = useMemo(
+  const schoolAvailableMembers = useMemo(
     () => filterAvailableSchoolMembers(schoolMembers, lessonBookings),
     [schoolMembers, lessonBookings]
+  );
+
+  const availableTeachers = useMemo(
+    () => mergeAvailableTeachers(schoolAvailableMembers, dayAvailableTeachers),
+    [schoolAvailableMembers, dayAvailableTeachers]
   );
 
   if (!isInitialized) {
@@ -885,9 +1031,10 @@ export default function AdminToday() {
         )}
 
         <TodayAvailableTeachersSection
-          loading={loading || membersLoading}
+          loading={loading || membersLoading || dayAvailableLoading}
           members={schoolMembers}
-          availableMembers={availableMembers}
+          availableTeachers={availableTeachers}
+          dayAvailableError={dayAvailableError}
           dayLabel={dayLabel}
           t={t}
         />

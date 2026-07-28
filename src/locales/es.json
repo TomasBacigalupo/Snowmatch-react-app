@@ -1151,7 +1151,17 @@
         "availableTeachersSection": "Profesores disponibles {{day}}",
         "availableTeachersCount": "{{count}} disponibles",
         "availableTeachersEmpty": "Todos los miembros de la escuela tienen clases {{day}}.",
-        "availableTeachersNoneMembers": "No se encontraron miembros de la escuela."
+        "availableTeachersNoneMembers": "No se encontraron miembros de la escuela.",
+        "availableTeachersLoadError": "No se pudieron cargar los profesores que se marcaron disponibles. Los miembros de la escuela siguen visibles.",
+        "availableTeachersSearchPlaceholder": "Buscar por nombre",
+        "availableTeachersSearchEmpty": "Ningún profesor coincide con la búsqueda.",
+        "availableTeachersShowAll": "Ver todos ({{count}})",
+        "availableTeachersShowLess": "Ver menos",
+        "sourceSchool": "Escuela",
+        "sourceAvailable": "Disponible",
+        "timeWindowAllDay": "Todo el día",
+        "timeWindowMorning": "Mañana",
+        "timeWindowAfternoon": "Tarde"
     },
     "adminPayouts": {
         "title": "Pagos",

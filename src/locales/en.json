@@ -959,7 +959,17 @@
     "availableTeachersSection": "Available teachers {{day}}",
     "availableTeachersCount": "{{count}} available",
     "availableTeachersEmpty": "All school members have lessons {{day}}.",
-    "availableTeachersNoneMembers": "No school members found."
+    "availableTeachersNoneMembers": "No school members found.",
+    "availableTeachersLoadError": "Could not load teachers who marked themselves available. School members are still shown.",
+    "availableTeachersSearchPlaceholder": "Search by name",
+    "availableTeachersSearchEmpty": "No teachers match your search.",
+    "availableTeachersShowAll": "Show all ({{count}})",
+    "availableTeachersShowLess": "Show less",
+    "sourceSchool": "School",
+    "sourceAvailable": "Available",
+    "timeWindowAllDay": "All day",
+    "timeWindowMorning": "Morning",
+    "timeWindowAfternoon": "Afternoon"
   },
   "adminPayouts": {
     "title": "Payouts",

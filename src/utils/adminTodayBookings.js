@@ -280,6 +280,83 @@ export function filterAvailableSchoolMembers(members, lessonBookings) {
     );
 }
 
+function formatDateParam(targetDate) {
+  const y = targetDate.getFullYear();
+  const m = padDayMonth(targetDate.getMonth() + 1);
+  const d = padDayMonth(targetDate.getDate());
+  return `${y}-${m}-${d}`;
+}
+
+function normalizeAdminTeacherAvailabilityListResponse(data) {
+  if (Array.isArray(data)) return data;
+  if (Array.isArray(data?.data)) return data.data;
+  return [];
+}
+
+export async function fetchTeachersAvailableOnDay(targetDate = new Date()) {
+  const dateParam = formatDateParam(targetDate);
+  const response = await axios.get(
+    `/api/admin/teacher-availability?date=${encodeURIComponent(dateParam)}`
+  );
+  return normalizeAdminTeacherAvailabilityListResponse(response.data);
+}
+
+export function mergeAvailableTeachers(schoolAvailableMembers, dayAvailableTeachers) {
+  const byId = new Map();
+
+  (schoolAvailableMembers ?? []).forEach((member) => {
+    if (member?.id == null) return;
+    byId.set(String(member.id), {
+      ...member,
+      sources: ['school'],
+    });
+  });
+
+  (dayAvailableTeachers ?? []).forEach((teacher) => {
+    if (teacher?.id == null) return;
+    const id = String(teacher.id);
+    const existing = byId.get(id);
+    if (existing) {
+      byId.set(id, {
+        ...existing,
+        sources: [...new Set([...(existing.sources ?? []), 'day'])],
+        timeWindow: teacher.timeWindow ?? existing.timeWindow,
+        startTime: teacher.startTime ?? existing.startTime,
+        endTime: teacher.endTime ?? existing.endTime,
+      });
+      return;
+    }
+    byId.set(id, {
+      id: teacher.id,
+      name: teacher.name,
+      lastname: teacher.lastname,
+      lastName: teacher.lastname,
+      level: teacher.level,
+      imageLink: teacher.imageLink,
+      email: teacher.email,
+      sources: ['day'],
+      timeWindow: teacher.timeWindow,
+      startTime: teacher.startTime,
+      endTime: teacher.endTime,
+    });
+  });
+
+  return Array.from(byId.values()).sort((a, b) =>
+    getMemberDisplayName(a).localeCompare(getMemberDisplayName(b), undefined, { sensitivity: 'base' })
+  );
+}
+
+export function formatAvailabilityWindowLabel(entry, t) {
+  const timeWindow = entry?.timeWindow;
+  if (timeWindow === 'ALL_DAY') return t('adminToday.timeWindowAllDay');
+  if (timeWindow === 'MORNING') return t('adminToday.timeWindowMorning');
+  if (timeWindow === 'AFTERNOON') return t('adminToday.timeWindowAfternoon');
+  if (timeWindow === 'CUSTOM' && entry?.startTime && entry?.endTime) {
+    return `${entry.startTime}–${entry.endTime}`;
+  }
+  return t('adminToday.sourceAvailable');
+}
+
 function padDayMonth(value) {
   return String(value).padStart(2, '0');
 }

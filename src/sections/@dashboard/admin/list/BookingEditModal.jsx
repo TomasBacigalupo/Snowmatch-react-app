@@ -73,6 +73,13 @@ function resolveEditableClient(booking) {
   return roster[0] || null;
 }
 
+/** Positive entity id from form/API, or null when empty / invalid (avoids sending 0). */
+function parseOptionalEntityId(raw) {
+  if (raw == null || raw === '') return null;
+  const parsed = parseInt(raw, 10);
+  return Number.isNaN(parsed) || parsed <= 0 ? null : parsed;
+}
+
 BookingEditModal.propTypes = {
   open: PropTypes.bool,
   onClose: PropTypes.func,
@@ -133,8 +140,11 @@ export default function BookingEditModal({ open, onClose, booking, onSave }) {
 
     const formData = new FormData(event.currentTarget);
     const type = formData.get('type');
-    const teacherId = parseInt(formData.get('teacherId'), 10) || booking?.teacher?.id;
-    const studentId = parseInt(formData.get('studentId'), 10) || booking?.student?.id;
+    const teacherId =
+      parseOptionalEntityId(formData.get('teacherId')) || booking?.teacher?.id || null;
+    const studentId = parseOptionalEntityId(formData.get('studentId'));
+    const clientId =
+      parseOptionalEntityId(formData.get('clientId')) || editableClient?.id || null;
     const resort = formData.get('resort') || booking?.resort || '';
     const resolvedGroupLessonResort = isGroupLesson
       ? booking?.groupLessonResort || resort || booking?.resort || null
@@ -158,8 +168,15 @@ export default function BookingEditModal({ open, onClose, booking, onSave }) {
       state: formData.get('state'),
       type,
       resort,
-      teacherId: formData.get('teacherId'),
-      studentId: formData.get('studentId'),
+      ...(teacherId != null ? { teacherId } : {}),
+      // Omit empty studentId — client-only bookings must not send "" / 0
+      ...(studentId != null ? { studentId } : {}),
+      ...(clientId != null
+        ? {
+            clientId,
+            ...(clientLevel ? { clientLevel } : {}),
+          }
+        : {}),
       eventList,
       groupLesson: isGroupLesson,
       ...(isGroupLesson
@@ -169,9 +186,6 @@ export default function BookingEditModal({ open, onClose, booking, onSave }) {
               ? { groupLessonConfigId: booking.groupLessonConfigId }
               : {}),
           }
-        : {}),
-      ...(editableClient?.id != null && clientLevel
-        ? { clientId: editableClient.id, clientLevel }
         : {}),
       agencyId: agencyId ?? 0,
       currency: formData.get('currency') || booking?.currency || 'ARS',
@@ -220,11 +234,11 @@ export default function BookingEditModal({ open, onClose, booking, onSave }) {
           })
         : booking?.eventList || []
       ).map((event) => {
-        if (!editableClient?.id || !clientLevel || !Array.isArray(event?.clients)) return event;
+        if (!clientId || !clientLevel || !Array.isArray(event?.clients)) return event;
         return {
           ...event,
           clients: event.clients.map((c) =>
-            c?.id === editableClient.id ? { ...c, level: clientLevel } : c
+            c?.id === clientId ? { ...c, level: clientLevel } : c
           ),
         };
       });
@@ -242,8 +256,14 @@ export default function BookingEditModal({ open, onClose, booking, onSave }) {
         eventList: nextEventList,
         includesEquipments: updatedBooking.includesEquipments,
         includesLaunch: updatedBooking.includesLaunch,
-        ...(editableClient?.id != null && clientLevel
-          ? { client: { ...editableClient, level: clientLevel } }
+        ...(clientId != null
+          ? {
+              client: {
+                ...(editableClient || {}),
+                id: clientId,
+                ...(clientLevel ? { level: clientLevel } : {}),
+              },
+            }
           : {}),
       });
     } catch {
@@ -362,14 +382,23 @@ export default function BookingEditModal({ open, onClose, booking, onSave }) {
                 fullWidth
                 label={t('adminBookings.editModal.studentId')}
                 name="studentId"
-                defaultValue={booking?.student?.id}
+                defaultValue={booking?.student?.id ?? ''}
+                helperText={t('adminBookings.editModal.studentIdOptionalHint')}
+              />
+
+              <TextField
+                fullWidth
+                label={t('adminBookings.editModal.clientId')}
+                name="clientId"
+                defaultValue={editableClient?.id ?? ''}
+                helperText={t('adminBookings.editModal.clientIdHint')}
               />
 
               <TextField
                 fullWidth
                 label={t('adminBookings.editModal.teacherId')}
                 name="teacherId"
-                defaultValue={booking?.teacher?.id}
+                defaultValue={booking?.teacher?.id ?? ''}
               />
             </Stack>
 
@@ -475,25 +504,23 @@ export default function BookingEditModal({ open, onClose, booking, onSave }) {
                 label={t('adminBookings.editModal.groupLesson')}
               />
 
-              {editableClient ? (
-                <FormControl fullWidth>
-                  <InputLabel>{t('adminBookings.editModal.clientLevel')}</InputLabel>
-                  <Select
-                    label={t('adminBookings.editModal.clientLevel')}
-                    value={clientLevel || ''}
-                    onChange={(e) => setClientLevel(e.target.value)}
-                  >
-                    <MenuItem value="">
-                      <em>{t('adminBookings.editModal.clientLevelNone')}</em>
+              <FormControl fullWidth>
+                <InputLabel>{t('adminBookings.editModal.clientLevel')}</InputLabel>
+                <Select
+                  label={t('adminBookings.editModal.clientLevel')}
+                  value={clientLevel || ''}
+                  onChange={(e) => setClientLevel(e.target.value)}
+                >
+                  <MenuItem value="">
+                    <em>{t('adminBookings.editModal.clientLevelNone')}</em>
+                  </MenuItem>
+                  {CLIENT_LEVEL_VALUES.map((value) => (
+                    <MenuItem key={value} value={value}>
+                      {t(`adminBookings.editModal.clientLevelOptions.${value}`)}
                     </MenuItem>
-                    {CLIENT_LEVEL_VALUES.map((value) => (
-                      <MenuItem key={value} value={value}>
-                        {t(`adminBookings.editModal.clientLevelOptions.${value}`)}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              ) : null}
+                  ))}
+                </Select>
+              </FormControl>
             </Stack>
 
             <AdminAgencySelect value={agencyId} onChange={setAgencyId} />

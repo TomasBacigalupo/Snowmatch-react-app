@@ -882,12 +882,22 @@ export function editAdminBooking(bookingId, {
   return async () => {
       dispatch(slice.actions.startLoading());
       try {
+          const toPositiveId = (value) => {
+              if (value == null || value === '') return null;
+              const parsed = Number(value);
+              return Number.isFinite(parsed) && parsed > 0 ? parsed : null;
+          };
+          const resolvedTeacherId = toPositiveId(teacherId);
+          const resolvedStudentId = toPositiveId(studentId);
+          const resolvedClientId = toPositiveId(clientId);
+
           const response = await axios.put(`api/admin/bookings/${bookingId}`, {
               id: bookingId,
               type,
-              teacherId,
-              studentId,
-              clientId,
+              ...(resolvedTeacherId != null ? { teacherId: resolvedTeacherId } : {}),
+              // Omit empty studentId so client-only bookings do not map to User id 0
+              ...(resolvedStudentId != null ? { studentId: resolvedStudentId } : {}),
+              ...(resolvedClientId != null ? { clientId: resolvedClientId } : {}),
               price,
               resort,
               state,

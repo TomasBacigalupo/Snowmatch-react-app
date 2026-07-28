@@ -50,6 +50,7 @@ export default function AdminReview() {
     () => [
       { id: 'id', label: t('adminReview.table.id'), align: 'left' },
       { id: 'name', label: t('adminReview.table.name'), align: 'left' },
+      { id: 'resort', label: t('adminReview.table.resort'), align: 'left' },
       { id: 'level', label: t('adminReview.table.level'), align: 'left' },
       { id: 'priority', label: t('adminReview.table.priority'), align: 'left' },
       { id: 'isAuthorized', label: t('adminReview.table.authorized'), align: 'center' },
@@ -294,6 +295,7 @@ export default function AdminReview() {
                       key={row.id}
                       row={row}
                       showRole={false}
+                      showResort
                       onEditRow={() => handleEditRow(row.id)}
                       onConfirmRow={() => handleConfirmRow(row.id)}
                       onDeclineRow={() => handleDeclineOpenModal(row.email)}

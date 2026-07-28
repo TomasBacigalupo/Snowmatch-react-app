@@ -1008,6 +1008,7 @@
         "table": {
             "id": "Id",
             "name": "Nombre",
+            "resort": "Resort",
             "level": "Nivel",
             "priority": "Prioridad",
             "authorized": "Autorizado",
@@ -1022,6 +1023,7 @@
         },
         "card": {
             "id": "Id: {{id}}",
+            "resort": "Resort: {{resort}}",
             "level": "Nivel: {{level}}",
             "role": "Rol: {{role}}"
         },
@@ -1134,7 +1136,11 @@
         "gearSection": "Reservas de equipos {{day}}",
         "lessonsEmpty": "No hay reservas para {{day}}.",
         "gearEmpty": "No hay reservas para {{day}}.",
-        "teacherBookingsCount": "{{count}} clases"
+        "teacherBookingsCount": "{{count}} clases",
+        "availableTeachersSection": "Profesores disponibles {{day}}",
+        "availableTeachersCount": "{{count}} disponibles",
+        "availableTeachersEmpty": "Todos los miembros de la escuela tienen clases {{day}}.",
+        "availableTeachersNoneMembers": "No se encontraron miembros de la escuela."
     },
     "adminPayouts": {
         "title": "Pagos",

@@ -144,6 +144,29 @@ export function countTodayParticipants(lessonBookings, gearBookings) {
   return lessonParticipants + gearParticipants;
 }
 
+export function getBusyTeacherIds(lessonBookings) {
+  const busyIds = new Set();
+  (lessonBookings ?? []).forEach((booking) => {
+    const teacherId = booking?.teacher?.id;
+    if (teacherId != null) busyIds.add(String(teacherId));
+  });
+  return busyIds;
+}
+
+function getMemberDisplayName(member) {
+  return `${member?.name || ''} ${member?.lastname || member?.lastName || ''}`.trim();
+}
+
+export function filterAvailableSchoolMembers(members, lessonBookings) {
+  const busyIds = getBusyTeacherIds(lessonBookings);
+  return (members ?? [])
+    .filter((member) => member?.id != null && !busyIds.has(String(member.id)))
+    .slice()
+    .sort((a, b) =>
+      getMemberDisplayName(a).localeCompare(getMemberDisplayName(b), undefined, { sensitivity: 'base' })
+    );
+}
+
 function padDayMonth(value) {
   return String(value).padStart(2, '0');
 }

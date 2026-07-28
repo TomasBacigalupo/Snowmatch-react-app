@@ -8,8 +8,18 @@ import { Avatar, TableRow, TableCell, Typography, MenuItem } from '@mui/material
 import Label from '../../../../components/Label';
 import Iconify from '../../../../components/Iconify';
 import { TableMoreMenu } from '../../../../components/table';
+import { formatAdminBookingResortLabel } from '../../../../utils/adminBookingResortOptions';
 
 // ----------------------------------------------------------------------
+
+function formatTeacherResorts(row, t) {
+  const resorts = row?.resortsEnum || row?.resorts || [];
+  if (!Array.isArray(resorts) || !resorts.length) return '—';
+  return resorts
+    .map((r) => formatAdminBookingResortLabel(r?.value || r?.name || r, t))
+    .filter(Boolean)
+    .join(', ');
+}
 
 AdminTableRow.propTypes = {
   row: PropTypes.object,
@@ -48,6 +58,10 @@ export default function AdminTableRow({ row, onEditRow, onConfirmRow, onDeclineR
         <Typography variant="subtitle2" noWrap>
           {name + " " + lastname}
         </Typography>
+      </TableCell>
+
+      <TableCell align="left">
+        {formatTeacherResorts(row, t)}
       </TableCell>
 
       <TableCell align="left" sx={{ textTransform: 'capitalize' }}>

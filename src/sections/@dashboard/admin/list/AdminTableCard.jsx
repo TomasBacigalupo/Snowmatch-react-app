@@ -8,8 +8,18 @@ import { Avatar, Checkbox, TableRow, TableCell, Typography, MenuItem, Box, Card 
 import Label from '../../../../components/Label';
 import Iconify from '../../../../components/Iconify';
 import { TableMoreMenu } from '../../../../components/table';
+import { formatAdminBookingResortLabel } from '../../../../utils/adminBookingResortOptions';
 
 // ----------------------------------------------------------------------
+
+function formatTeacherResorts(row, t) {
+    const resorts = row?.resortsEnum || row?.resorts || [];
+    if (!Array.isArray(resorts) || !resorts.length) return '—';
+    return resorts
+        .map((r) => formatAdminBookingResortLabel(r?.value || r?.name || r, t))
+        .filter(Boolean)
+        .join(', ');
+}
 
 AdminTableCard.propTypes = {
     row: PropTypes.object,
@@ -22,10 +32,11 @@ AdminTableCard.propTypes = {
     onContactedChange: PropTypes.func,
     onClick: PropTypes.func,
     showRole: PropTypes.bool,
+    showResort: PropTypes.bool,
     showStudentClientIcon: PropTypes.bool,
 };
 
-export default function AdminTableCard({ row, selected, onEditRow, onSelectRow, onConfirmRow, onDeclineRow, onWapp, onEvents, onContactedChange, onClick, showRole = true, showStudentClientIcon = false }) {
+export default function AdminTableCard({ row, selected, onEditRow, onSelectRow, onConfirmRow, onDeclineRow, onWapp, onEvents, onContactedChange, onClick, showRole = true, showResort = false, showStudentClientIcon = false }) {
     const { t } = useTranslation();
     const theme = useTheme();
 
@@ -158,6 +169,11 @@ export default function AdminTableCard({ row, selected, onEditRow, onSelectRow, 
                         <Typography >
                             {t('adminReview.card.id', { id })}
                         </Typography>
+                        {showResort && (
+                            <Typography >
+                                {t('adminReview.card.resort', { resort: formatTeacherResorts(row, t) })}
+                            </Typography>
+                        )}
                         <Typography >
                             {t('adminReview.card.level', { level })}
                         </Typography>

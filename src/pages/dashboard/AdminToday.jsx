@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { differenceInCalendarDays, startOfDay } from 'date-fns';
 import {
   Alert,
+  Avatar,
   Box,
   Button,
   Card,
@@ -35,6 +36,8 @@ import { TableHeadCustom, TableNoData } from '../../components/table';
 import useSettings from '../../hooks/useSettings';
 import useAuth from '../../hooks/useAuth';
 import { PATH_DASHBOARD } from '../../routes/paths';
+import { useDispatch, useSelector } from '../../redux/store';
+import { getAdminBusinessMembers } from '../../redux/slices/business';
 import AdminBookingTableRow from '../../sections/@dashboard/admin/list/AdminBookingTableRow';
 import AdminBookingTableCard from '../../sections/@dashboard/admin/list/AdminBookingTableCard';
 import AdminBookingIntentTableRow from '../../sections/@dashboard/admin/list/AdminBookingIntentTableRow';
@@ -46,11 +49,14 @@ import {
   countTodayParticipants,
   fetchAdminBookingsForToday,
   fetchAdminBookingIntentsForToday,
+  filterAvailableSchoolMembers,
 } from '../../utils/adminTodayBookings';
 import { fNumber } from '../../utils/formatNumber';
 
 const SKELETON_ROWS = 10;
 const SKELETON_CARDS = 5;
+const SCHOOL_BUSINESS_ID = 13;
+const AVAILABLE_TEACHER_SKELETONS = 6;
 
 function getTeacherDisplayName(teacher, unassignedLabel) {
   if (!teacher) return unassignedLabel;
@@ -92,6 +98,84 @@ function groupBookingsByTeacher(bookings, unassignedLabel) {
       if (b.teacherKey === 'unassigned') return -1;
       return a.teacherName.localeCompare(b.teacherName, undefined, { sensitivity: 'base' });
     });
+}
+
+function getAvailableTeacherLabel(member) {
+  const fullName = `${member?.name || ''} ${member?.lastname || member?.lastName || ''}`.trim();
+  if (!fullName) return member?.email || '—';
+  if (member?.level != null && member.level !== '') return `${fullName} · L${member.level}`;
+  return fullName;
+}
+
+function TodayAvailableTeachersSection({
+  loading,
+  members,
+  availableMembers,
+  dayLabel,
+  t,
+}) {
+  const emptyMessage =
+    members.length === 0
+      ? t('adminToday.availableTeachersNoneMembers')
+      : t('adminToday.availableTeachersEmpty', { day: dayLabel });
+
+  return (
+    <Card sx={{ mb: 3, p: 3 }}>
+      <Stack
+        direction={{ xs: 'column', sm: 'row' }}
+        spacing={1}
+        alignItems={{ xs: 'flex-start', sm: 'center' }}
+        justifyContent="space-between"
+        sx={{ mb: 2 }}
+      >
+        <Typography variant="h6">
+          {t('adminToday.availableTeachersSection', { day: dayLabel })}
+        </Typography>
+        {!loading && (
+          <Chip
+            size="small"
+            color="success"
+            variant="outlined"
+            label={t('adminToday.availableTeachersCount', { count: availableMembers.length })}
+          />
+        )}
+      </Stack>
+
+      {loading ? (
+        <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
+          {Array.from({ length: AVAILABLE_TEACHER_SKELETONS }).map((_, index) => (
+            <Skeleton
+              key={`available-teacher-skeleton-${index}`}
+              variant="rounded"
+              width={140}
+              height={32}
+              sx={{ borderRadius: 2 }}
+            />
+          ))}
+        </Stack>
+      ) : availableMembers.length === 0 ? (
+        <Typography variant="body2" color="text.secondary">
+          {emptyMessage}
+        </Typography>
+      ) : (
+        <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
+          {availableMembers.map((member) => (
+            <Chip
+              key={member.id}
+              avatar={
+                <Avatar alt={getAvailableTeacherLabel(member)} src={member.imageLink || undefined}>
+                  {(member.name || member.email || '?').charAt(0).toUpperCase()}
+                </Avatar>
+              }
+              label={getAvailableTeacherLabel(member)}
+              variant="outlined"
+              sx={{ maxWidth: '100%' }}
+            />
+          ))}
+        </Stack>
+      )}
+    </Card>
+  );
 }
 
 function TodayKPICards({ loading, lessonCount, gearCount, participantCount, unassignedCount, dayLabel, t }) {
@@ -516,10 +600,13 @@ export default function AdminToday() {
   const { themeStretch } = useSettings();
   const { isAdmin, isInitialized } = useAuth();
   const { t, i18n } = useTranslation();
+  const dispatch = useDispatch();
+  const schoolMembers = useSelector((state) => state.business.members) || [];
   const [searchParams, setSearchParams] = useSearchParams();
   const detailsId = searchParams.get('details');
 
   const [loading, setLoading] = useState(true);
+  const [membersLoading, setMembersLoading] = useState(true);
   const [error, setError] = useState(null);
   const [lessonBookings, setLessonBookings] = useState([]);
   const [gearBookings, setGearBookings] = useState([]);
@@ -672,12 +759,18 @@ export default function AdminToday() {
 
   const loadData = useCallback(async () => {
     setLoading(true);
+    setMembersLoading(true);
     setError(null);
+
+    const membersPromise = Promise.resolve(dispatch(getAdminBusinessMembers(SCHOOL_BUSINESS_ID))).finally(() => {
+      setMembersLoading(false);
+    });
 
     const [lessonsResult, gearResult, intentsResult] = await Promise.allSettled([
       fetchAdminBookingsForToday('lesson', selectedDate),
       fetchAdminBookingsForToday('gear', selectedDate),
       fetchAdminBookingIntentsForToday(selectedDate),
+      membersPromise,
     ]);
 
     setLessonBookings(lessonsResult.status === 'fulfilled' ? lessonsResult.value : []);
@@ -693,13 +786,18 @@ export default function AdminToday() {
     }
 
     setLoading(false);
-  }, [selectedDate, t]);
+  }, [dispatch, selectedDate, t]);
 
   useEffect(() => {
     if (isAdmin) {
       loadData();
     }
   }, [isAdmin, loadData]);
+
+  const availableMembers = useMemo(
+    () => filterAvailableSchoolMembers(schoolMembers, lessonBookings),
+    [schoolMembers, lessonBookings]
+  );
 
   if (!isInitialized) {
     return <LoadingScreen isDashboard />;
@@ -785,6 +883,14 @@ export default function AdminToday() {
             {error}
           </Alert>
         )}
+
+        <TodayAvailableTeachersSection
+          loading={loading || membersLoading}
+          members={schoolMembers}
+          availableMembers={availableMembers}
+          dayLabel={dayLabel}
+          t={t}
+        />
 
         <TodayKPICards
           loading={loading}

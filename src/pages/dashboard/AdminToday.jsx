@@ -122,10 +122,10 @@ function getAvailableTeacherLabel(member) {
 function getAvailableTeacherSourceLabels(member, t) {
   const labels = [];
   if (member?.sources?.includes('school')) {
-    labels.push(t('adminToday.sourceSchool'));
+    labels.push({ key: 'school', label: t('adminToday.sourceSchool') });
   }
   if (member?.sources?.includes('day')) {
-    labels.push(formatAvailabilityWindowLabel(member, t));
+    labels.push({ key: 'day', label: formatAvailabilityWindowLabel(member, t) });
   }
   return labels;
 }
@@ -277,11 +277,13 @@ function TodayAvailableTeachersSection({
                       </Typography>
                       {sourceLabels.length > 0 && (
                         <Stack direction="row" spacing={0.5} flexWrap="wrap" useFlexGap sx={{ mt: 0.25 }}>
-                          {sourceLabels.map((label) => (
+                          {sourceLabels.map(({ key, label }) => (
                             <Chip
-                              key={`${member.id}-${label}`}
+                              key={`${member.id}-${key}-${label}`}
                               size="small"
                               variant="outlined"
+                              // Soft info tint so School is identifiable without a heavy filled chip
+                              color={key === 'school' ? 'info' : 'default'}
                               label={label}
                               sx={{ height: 20, fontSize: '0.7rem' }}
                             />

@@ -350,9 +350,15 @@ export function mergeAvailableTeachers(schoolAvailableMembers, dayAvailableTeach
     });
   });
 
-  return Array.from(byId.values()).sort((a, b) =>
-    getMemberDisplayName(a).localeCompare(getMemberDisplayName(b), undefined, { sensitivity: 'base' })
-  );
+  // School members first so admins can spot them quickly; then alphabetical within each group
+  return Array.from(byId.values()).sort((a, b) => {
+    const aIsSchool = a.sources?.includes('school') ? 0 : 1;
+    const bIsSchool = b.sources?.includes('school') ? 0 : 1;
+    if (aIsSchool !== bIsSchool) return aIsSchool - bIsSchool;
+    return getMemberDisplayName(a).localeCompare(getMemberDisplayName(b), undefined, {
+      sensitivity: 'base',
+    });
+  });
 }
 
 export function formatAvailabilityWindowLabel(entry, t) {

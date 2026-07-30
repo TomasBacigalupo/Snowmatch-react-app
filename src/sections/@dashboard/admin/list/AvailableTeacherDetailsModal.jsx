@@ -29,10 +29,10 @@ function getWhatsAppNumber(teacher) {
 function getSourceLabels(teacher, t) {
   const labels = [];
   if (teacher?.sources?.includes('school')) {
-    labels.push(t('adminToday.sourceSchool'));
+    labels.push({ key: 'school', label: t('adminToday.sourceSchool') });
   }
   if (teacher?.sources?.includes('day')) {
-    labels.push(formatAvailabilityWindowLabel(teacher, t));
+    labels.push({ key: 'day', label: formatAvailabilityWindowLabel(teacher, t) });
   }
   return labels;
 }
@@ -109,8 +109,15 @@ export default function AvailableTeacherDetailsModal({ open, onClose, teacher })
                   {t('adminToday.teacherModal.availability')}
                 </Typography>
                 <Stack direction="row" spacing={0.5} flexWrap="wrap" useFlexGap>
-                  {sourceLabels.map((label) => (
-                    <Chip key={label} size="small" variant="outlined" label={label} />
+                  {sourceLabels.map(({ key, label }) => (
+                    <Chip
+                      key={`${key}-${label}`}
+                      size="small"
+                      variant="outlined"
+                      // Soft info tint so School is identifiable without a heavy filled chip
+                      color={key === 'school' ? 'info' : 'default'}
+                      label={label}
+                    />
                   ))}
                 </Stack>
               </Box>

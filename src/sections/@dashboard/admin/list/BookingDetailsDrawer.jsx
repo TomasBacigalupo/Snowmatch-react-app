@@ -331,7 +331,8 @@ export default function BookingDetailsDrawer({
     refreshBookingPayouts();
   };
 
-  const handleReassignSuccess = (updatedBooking) => {
+  const handleReassignSuccess = (result) => {
+    const updatedBooking = result?.originalBooking || result;
     const mergedBooking = {
       ...booking,
       ...updatedBooking,

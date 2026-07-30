@@ -118,7 +118,18 @@ const slice = createSlice({
 
     updateBookingSuccess(state, action) {
       state.isLoading = false;
-      state.bookings = state.bookings.map(booking => booking.id === action.payload.id ? action.payload : booking);
+      const updated = action.payload;
+      if (!updated?.id) {
+        return;
+      }
+      const exists = (state.bookings || []).some((booking) => booking.id === updated.id);
+      if (exists) {
+        state.bookings = state.bookings.map((booking) =>
+          booking.id === updated.id ? updated : booking
+        );
+      } else {
+        state.bookings = [updated, ...(state.bookings || [])];
+      }
     },
 
     updateBookingInvoiceCreated(state, action) {
@@ -1021,14 +1032,49 @@ export function updateAdminBookingEventSchedule(teacherId, eventId, schedule, op
   };
 }
 
-export function reassignBookingTeacher(bookingId, teacherId) {
+export function reassignBookingTeacher(bookingId, teacherId, money = null) {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.post(`api/admin/bookings/${bookingId}/reassign`, {
-        teacherId,
-      });
+      const payload = { teacherId };
+      if (money && money.price != null && money.currency) {
+        payload.price = Number(money.price);
+        payload.currency = money.currency;
+        if (money.suggestedTeacherPayoutAmount !== '' && money.suggestedTeacherPayoutAmount != null) {
+          const parsed = Number(money.suggestedTeacherPayoutAmount);
+          if (!Number.isNaN(parsed)) {
+            payload.suggestedTeacherPayoutAmount = parsed;
+            if (money.suggestedTeacherPayoutCurrency) {
+              payload.suggestedTeacherPayoutCurrency = money.suggestedTeacherPayoutCurrency;
+            }
+          }
+        } else {
+          payload.suggestedTeacherPayoutAmount = null;
+          payload.suggestedTeacherPayoutCurrency = null;
+        }
+      }
+      const response = await axios.post(`api/admin/bookings/${bookingId}/reassign`, payload);
       dispatch(slice.actions.updateBookingSuccess(response.data));
+      return response.data;
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+      throw error;
+    }
+  };
+}
+
+export function splitReassignBookingTeacher(bookingId, payload) {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.post(`api/admin/bookings/${bookingId}/split-reassign`, payload);
+      const { originalBooking, newBooking } = response.data || {};
+      if (originalBooking) {
+        dispatch(slice.actions.updateBookingSuccess(originalBooking));
+      }
+      if (newBooking) {
+        dispatch(slice.actions.updateBookingSuccess(newBooking));
+      }
       return response.data;
     } catch (error) {
       dispatch(slice.actions.hasError(error));

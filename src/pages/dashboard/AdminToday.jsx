@@ -46,6 +46,7 @@ import AdminBookingTableCard from '../../sections/@dashboard/admin/list/AdminBoo
 import AdminBookingIntentTableRow from '../../sections/@dashboard/admin/list/AdminBookingIntentTableRow';
 import BookingDetailsDrawer from '../../sections/@dashboard/admin/list/BookingDetailsDrawer';
 import GearBookingDetailsDrawer from '../../sections/@dashboard/admin/list/GearBookingDetailsDrawer';
+import AvailableTeacherDetailsModal from '../../sections/@dashboard/admin/list/AvailableTeacherDetailsModal';
 import BookingModal from '../../sections/@dashboard/admin/BookingModal';
 import GearBookingModal from '../../sections/@dashboard/admin/GearBookingModal';
 import {
@@ -139,10 +140,12 @@ function TodayAvailableTeachersSection({
 }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [showAll, setShowAll] = useState(false);
+  const [selectedTeacher, setSelectedTeacher] = useState(null);
 
   useEffect(() => {
     setSearchQuery('');
     setShowAll(false);
+    setSelectedTeacher(null);
   }, [dayLabel]);
 
   const handleSearchChange = useCallback((event) => {
@@ -152,6 +155,14 @@ function TodayAvailableTeachersSection({
 
   const handleToggleShowAll = useCallback(() => {
     setShowAll((prev) => !prev);
+  }, []);
+
+  const handleOpenTeacher = useCallback((teacher) => {
+    setSelectedTeacher(teacher);
+  }, []);
+
+  const handleCloseTeacher = useCallback(() => {
+    setSelectedTeacher(null);
   }, []);
 
   const filteredTeachers = useMemo(() => {
@@ -252,6 +263,8 @@ function TodayAvailableTeachersSection({
               return (
                 <Chip
                   key={member.id}
+                  clickable
+                  onClick={() => handleOpenTeacher(member)}
                   avatar={
                     <Avatar alt={getAvailableTeacherLabel(member)} src={member.imageLink || undefined}>
                       {(member.name || member.email || '?').charAt(0).toUpperCase()}
@@ -278,7 +291,13 @@ function TodayAvailableTeachersSection({
                     </Box>
                   }
                   variant="outlined"
-                  sx={{ maxWidth: '100%', height: 'auto', py: 0.5, alignItems: 'flex-start' }}
+                  sx={{
+                    maxWidth: '100%',
+                    height: 'auto',
+                    py: 0.5,
+                    alignItems: 'flex-start',
+                    cursor: 'pointer',
+                  }}
                 />
               );
             })}
@@ -297,6 +316,12 @@ function TodayAvailableTeachersSection({
           )}
         </>
       )}
+
+      <AvailableTeacherDetailsModal
+        open={Boolean(selectedTeacher)}
+        onClose={handleCloseTeacher}
+        teacher={selectedTeacher}
+      />
     </Card>
   );
 }

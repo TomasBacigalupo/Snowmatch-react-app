@@ -1406,7 +1406,22 @@
         "sourceAvailable": "Disponível",
         "timeWindowAllDay": "Dia inteiro",
         "timeWindowMorning": "Manhã",
-        "timeWindowAfternoon": "Tarde"
+        "timeWindowAfternoon": "Tarde",
+        "teacherModal": {
+            "roleAndLevel": "Função e nível",
+            "role": "Função: {{role}}",
+            "level": "Nível: {{level}}",
+            "availability": "Disponibilidade",
+            "sports": "Esportes",
+            "languages": "Idiomas",
+            "contact": "Contato",
+            "email": "Email: {{email}}",
+            "phone": "Tel: {{phone}}",
+            "noPhone": "Sem telefone cadastrado",
+            "close": "Fechar",
+            "whatsapp": "WhatsApp",
+            "whatsappGreeting": "Olá {{name}}, "
+        }
     },
     "adminPayouts": {
         "title": "Pagamentos",

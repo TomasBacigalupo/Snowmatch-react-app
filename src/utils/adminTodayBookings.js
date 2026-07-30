@@ -323,6 +323,10 @@ export function mergeAvailableTeachers(schoolAvailableMembers, dayAvailableTeach
         timeWindow: teacher.timeWindow ?? existing.timeWindow,
         startTime: teacher.startTime ?? existing.startTime,
         endTime: teacher.endTime ?? existing.endTime,
+        cellphone: existing.cellphone ?? teacher.cellphone,
+        countryCode: existing.countryCode ?? teacher.countryCode,
+        sports: existing.sports ?? teacher.sports,
+        languages: existing.languages ?? teacher.languages ?? teacher.speaks,
       });
       return;
     }
@@ -334,6 +338,11 @@ export function mergeAvailableTeachers(schoolAvailableMembers, dayAvailableTeach
       level: teacher.level,
       imageLink: teacher.imageLink,
       email: teacher.email,
+      cellphone: teacher.cellphone,
+      countryCode: teacher.countryCode,
+      role: teacher.role,
+      sports: teacher.sports,
+      languages: teacher.languages ?? teacher.speaks,
       sources: ['day'],
       timeWindow: teacher.timeWindow,
       startTime: teacher.startTime,

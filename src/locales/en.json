@@ -969,7 +969,22 @@
     "sourceAvailable": "Available",
     "timeWindowAllDay": "All day",
     "timeWindowMorning": "Morning",
-    "timeWindowAfternoon": "Afternoon"
+    "timeWindowAfternoon": "Afternoon",
+    "teacherModal": {
+      "roleAndLevel": "Role and level",
+      "role": "Role: {{role}}",
+      "level": "Level: {{level}}",
+      "availability": "Availability",
+      "sports": "Sports",
+      "languages": "Languages",
+      "contact": "Contact",
+      "email": "Email: {{email}}",
+      "phone": "Phone: {{phone}}",
+      "noPhone": "No phone number on file",
+      "close": "Close",
+      "whatsapp": "WhatsApp",
+      "whatsappGreeting": "Hello {{name}}, "
+    }
   },
   "adminPayouts": {
     "title": "Payouts",

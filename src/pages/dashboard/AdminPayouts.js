@@ -42,6 +42,7 @@ import {
   getTeachers,
 } from '../../redux/slices/admin';
 import {
+  buildBookingPayoutItems,
   calcBookingPayWithHourPrice,
   calcBookingTeacherHours,
   calcTeacherPayTotalWithHourPrice,
@@ -119,10 +120,17 @@ function getBookingDateLabel(booking) {
 
 function bookingIdsWithPayout(payouts) {
   const ids = new Set();
-  (payouts || []).forEach((payout) => {
+  const payoutList = Array.isArray(payouts) ? payouts : payouts?.content || [];
+
+  payoutList.forEach((payout) => {
     (payout.bookings || []).forEach((booking) => {
       if (booking?.id != null) {
         ids.add(booking.id);
+      }
+    });
+    (payout.bookingIds || []).forEach((bookingId) => {
+      if (bookingId != null) {
+        ids.add(bookingId);
       }
     });
   });
@@ -217,6 +225,17 @@ export default function AdminPayouts() {
       .filter(([, total]) => total > 0)
       .map(([currency, total]) => ({ currency, total }));
   }, [selectedBookings]);
+
+  const hourPricesConfigured = hasHourPricesConfigured(hourPrices);
+
+  const hasSuggestedPayable = totalSuggestedByCurrency.length > 0;
+
+  const payoutsToCreate = useMemo(
+    () => buildBookingPayoutItems(selectedBookings, hourPrices, paidBookingIds),
+    [selectedBookings, hourPrices, paidBookingIds]
+  );
+
+  const canRegisterPayout = payoutsToCreate.length > 0;
 
   const uniqueSelectedHours = useMemo(
     () => calcUniqueTeacherHours(selectedBookings),
@@ -338,18 +357,10 @@ export default function AdminPayouts() {
       setSnackbar({ open: true, message: t('adminPayouts.selectBookings'), severity: 'warning' });
       return;
     }
-    if (!hourPricesConfigured) {
+    if (!hourPricesConfigured && !hasSuggestedPayable) {
       setSnackbar({ open: true, message: t('adminPayouts.setHourPrices'), severity: 'warning' });
       return;
     }
-
-    const payoutsToCreate = selectedBookings
-      .filter((booking) => !paidBookingIds.has(booking.id))
-      .map((booking) => ({
-        bookingId: booking.id,
-        amount: calcBookingPayWithHourPrice(booking, hourPrices),
-      }))
-      .filter((payout) => payout.amount > 0);
 
     if (!payoutsToCreate.length) {
       setSnackbar({ open: true, message: t('adminPayouts.noPayoutsToCreate'), severity: 'warning' });
@@ -369,7 +380,9 @@ export default function AdminPayouts() {
 
       setSnackbar({
         open: true,
-        message: t('adminPayouts.successBatch', { count: created?.length || payoutsToCreate.length }),
+        message: t('adminPayouts.successBatch', {
+          count: created?.length || payoutsToCreate.length,
+        }),
         severity: 'success',
       });
       setSelectedBookingIds([]);
@@ -389,8 +402,6 @@ export default function AdminPayouts() {
       setSubmitting(false);
     }
   };
-
-  const hourPricesConfigured = hasHourPricesConfigured(hourPrices);
 
   return (
     <Page title={t('adminPayouts.title')}>
@@ -698,13 +709,43 @@ export default function AdminPayouts() {
                     fullWidth
                     multiline
                     minRows={2}
+                    helperText={t('adminPayouts.noteHelper')}
                   />
 
-                  <Typography variant="body2" color="text.secondary">
-                    {t('adminPayouts.perBookingPayoutHint', {
-                      count: selectedBookings.filter((b) => !paidBookingIds.has(b.id)).length,
-                    })}
-                  </Typography>
+                  {payoutsToCreate.length > 0 && (
+                    <Box
+                      sx={{
+                        p: 2,
+                        borderRadius: 1,
+                        bgcolor: 'background.neutral',
+                      }}
+                    >
+                      <Typography variant="subtitle2" sx={{ mb: 1 }}>
+                        {t('adminPayouts.pendingPayoutsTitle', {
+                          count: payoutsToCreate.length,
+                        })}
+                      </Typography>
+                      <Stack spacing={0.75}>
+                        {payoutsToCreate.map((payout) => (
+                          <Typography key={payout.bookingId} variant="body2">
+                            {t('adminPayouts.pendingPayoutRow', {
+                              id: payout.bookingId,
+                              amount: formatCurrencyAmount(payout.amount, payout.currency),
+                              source:
+                                payout.source === 'suggested'
+                                  ? t('adminPayouts.sourceSuggested')
+                                  : t('adminPayouts.sourceHourPrice'),
+                            })}
+                          </Typography>
+                        ))}
+                      </Stack>
+                      <Typography variant="caption" color="text.secondary" sx={{ mt: 1, display: 'block' }}>
+                        {t('adminPayouts.perBookingPayoutHint', {
+                          count: payoutsToCreate.length,
+                        })}
+                      </Typography>
+                    </Box>
+                  )}
 
                   <Stack direction="row" spacing={2} alignItems="center">
                     <Button variant="outlined" component="label">
@@ -726,7 +767,7 @@ export default function AdminPayouts() {
                     variant="contained"
                     loading={submitting || isLoading}
                     onClick={handleSubmit}
-                    disabled={!selectedBookingIds.length || !hourPricesConfigured}
+                    disabled={!canRegisterPayout}
                   >
                     {t('adminPayouts.submit')}
                   </LoadingButton>

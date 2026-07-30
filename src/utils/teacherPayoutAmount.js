@@ -115,6 +115,61 @@ export function calcBookingPayWithHourPrice(booking, hourPrices) {
   return calcBookingTeacherHours(booking) * rate;
 }
 
+export function getSuggestedTeacherPayoutAmount(booking) {
+  const raw = booking?.suggestedTeacherPayoutAmount;
+  if (raw == null || raw === '') {
+    return 0;
+  }
+  const suggested = typeof raw === 'number' ? raw : Number(String(raw).replace(',', '.'));
+  if (!Number.isFinite(suggested) || suggested <= 0) {
+    return 0;
+  }
+  return suggested;
+}
+
+/**
+ * Prefer suggested teacher payout when set; otherwise hours × hour price.
+ */
+export function calcBookingPayoutAmount(booking, hourPrices) {
+  const suggested = getSuggestedTeacherPayoutAmount(booking);
+  if (suggested > 0) {
+    return suggested;
+  }
+  return calcBookingPayWithHourPrice(booking, hourPrices);
+}
+
+export function buildBookingPayoutItems(bookings, hourPrices, paidBookingIds) {
+  const paid = paidBookingIds instanceof Set ? paidBookingIds : new Set(paidBookingIds || []);
+
+  return (bookings || [])
+    .filter((booking) => booking?.id != null && !paid.has(booking.id))
+    .map((booking) => {
+      const suggested = getSuggestedTeacherPayoutAmount(booking);
+      if (suggested > 0) {
+        return {
+          bookingId: booking.id,
+          amount: suggested,
+          source: 'suggested',
+          currency:
+            booking?.suggestedTeacherPayoutCurrency || booking?.currency || 'ARS',
+        };
+      }
+
+      const hourPriceAmount = calcBookingPayWithHourPrice(booking, hourPrices);
+      if (hourPriceAmount > 0) {
+        return {
+          bookingId: booking.id,
+          amount: hourPriceAmount,
+          source: 'hourPrice',
+          currency: 'ARS',
+        };
+      }
+
+      return null;
+    })
+    .filter(Boolean);
+}
+
 export function calcTeacherPayTotalWithHourPrice(bookings, hourPrices) {
   if (!bookings?.length) {
     return 0;

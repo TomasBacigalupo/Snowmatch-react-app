@@ -1228,14 +1228,25 @@ export function markPayoutAsPaid(payoutId) {
   };
 }
 
+function normalizePayoutsList(payload) {
+  if (Array.isArray(payload)) {
+    return payload;
+  }
+  if (Array.isArray(payload?.content)) {
+    return payload.content;
+  }
+  return [];
+}
+
 // Get all payouts
 export function getAllPayouts(page = 0, pageSize = 1000) {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.get(`/api/payouts/?page=${page}&pageSize=${pageSize}`);
-      dispatch(slice.actions.getAllPayoutsSuccess(response.data));
-      return response.data;
+      const payouts = normalizePayoutsList(response.data);
+      dispatch(slice.actions.getAllPayoutsSuccess(payouts));
+      return payouts;
     } catch (error) {
       dispatch(slice.actions.hasError(error));
       throw error;
@@ -1243,40 +1254,45 @@ export function getAllPayouts(page = 0, pageSize = 1000) {
   };
 }
 
+async function uploadPayoutReceipt(bookingId, file) {
+  const presignedResponse = await axios.get(`/api/payouts/preSignedUrlPayout/${bookingId}`);
+  const presignedUrl = presignedResponse.data;
+
+  const uploadResponse = await fetch(presignedUrl, {
+    method: 'PUT',
+    body: file,
+    headers: {
+      'Content-Type': file.type,
+    },
+  });
+
+  if (!uploadResponse.ok) {
+    throw new Error('Failed to upload payout receipt to S3');
+  }
+
+  return typeof presignedUrl === 'string' ? presignedUrl.split('?')[0] : null;
+}
+
 export function createMultiBookingPayout({ teacherId, payouts, note, file }) {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      let invoiceUrl = null;
-
-      if (file && payouts?.length) {
-        const presignedResponse = await axios.get(
-          `/api/payouts/preSignedUrlPayout/${payouts[0].bookingId}`
-        );
-        const presignedUrl = presignedResponse.data;
-
-        const uploadResponse = await fetch(presignedUrl, {
-          method: 'PUT',
-          body: file,
-          headers: {
-            'Content-Type': file.type,
-          },
-        });
-
-        if (!uploadResponse.ok) {
-          throw new Error('Failed to upload payout receipt to S3');
-        }
-
-        invoiceUrl = presignedUrl?.split('?')[0];
+      if (!payouts?.length) {
+        throw new Error('No payouts to create');
       }
 
+      const sharedNote = note?.trim() ? note.trim() : null;
       const created = [];
+
+      // One payout per booking with that booking's amount; same note on each.
       for (const payout of payouts) {
+        const invoiceUrl = file ? await uploadPayoutReceipt(payout.bookingId, file) : null;
+
         const payoutDto = {
           userId: teacherId,
           bookingIds: [payout.bookingId],
           amount: payout.amount,
-          note: note || null,
+          note: sharedNote,
           ...(invoiceUrl ? { invoiceUrl } : {}),
         };
 

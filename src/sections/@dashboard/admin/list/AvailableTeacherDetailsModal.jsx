@@ -15,15 +15,47 @@ import { useTranslation } from 'react-i18next';
 import Iconify from 'src/components/Iconify';
 import { formatAvailabilityWindowLabel } from 'src/utils/adminTodayBookings';
 
+const PHONE_ATTRIBUTE_KEYS = [
+  'countryCode',
+  'cellphone',
+  'phone',
+  'phoneNumber',
+  'mobile',
+  'mobilePhone',
+  'telephone',
+  'whatsapp',
+  'whatsappNumber',
+];
+
 function getTeacherFullName(teacher) {
   return `${teacher?.name || ''} ${teacher?.lastname || teacher?.lastName || ''}`.trim();
 }
 
+function getPhoneAttributes(teacher) {
+  if (!teacher) return [];
+  return PHONE_ATTRIBUTE_KEYS.map((key) => {
+    const value = teacher[key];
+    if (value == null || String(value).trim() === '') return null;
+    return { key, value: String(value).trim() };
+  }).filter(Boolean);
+}
+
 function getWhatsAppNumber(teacher) {
   const countryCode = String(teacher?.countryCode || '').replace(/\D/g, '');
-  const cellphone = String(teacher?.cellphone || '').replace(/\D/g, '');
-  if (!cellphone) return '';
-  return `${countryCode}${cellphone}`;
+  const candidates = [
+    teacher?.cellphone,
+    teacher?.whatsappNumber,
+    teacher?.whatsapp,
+    teacher?.phoneNumber,
+    teacher?.phone,
+    teacher?.mobilePhone,
+    teacher?.mobile,
+    teacher?.telephone,
+  ];
+  const number = candidates.map((value) => String(value || '').replace(/\D/g, '')).find(Boolean) || '';
+  if (!number) return '';
+  if (countryCode && number.startsWith(countryCode)) return number;
+  return `${countryCode}${number}`;
 }
 
 function getSourceLabels(teacher, t) {
@@ -46,9 +78,7 @@ AvailableTeacherDetailsModal.propTypes = {
 export default function AvailableTeacherDetailsModal({ open, onClose, teacher }) {
   const { t } = useTranslation();
   const fullName = getTeacherFullName(teacher) || teacher?.email || '—';
-  const phoneDisplay = teacher?.cellphone
-    ? `${teacher?.countryCode ? `${teacher.countryCode} ` : ''}${teacher.cellphone}`.trim()
-    : '';
+  const phoneAttributes = getPhoneAttributes(teacher);
   const whatsappNumber = getWhatsAppNumber(teacher);
   const sourceLabels = getSourceLabels(teacher, t);
   const sports = teacher?.sports || teacher?.disciplines || [];
@@ -159,10 +189,12 @@ export default function AvailableTeacherDetailsModal({ open, onClose, teacher })
                     {t('adminToday.teacherModal.email', { email: teacher.email })}
                   </Typography>
                 ) : null}
-                {phoneDisplay ? (
-                  <Typography variant="body2">
-                    {t('adminToday.teacherModal.phone', { phone: phoneDisplay })}
-                  </Typography>
+                {phoneAttributes.length > 0 ? (
+                  phoneAttributes.map(({ key, value }) => (
+                    <Typography key={key} variant="body2">
+                      {t(`adminToday.teacherModal.phoneAttrs.${key}`, { value })}
+                    </Typography>
+                  ))
                 ) : (
                   <Typography variant="body2" color="text.secondary">
                     {t('adminToday.teacherModal.noPhone')}

@@ -1171,7 +1171,17 @@
             "languages": "Idiomas",
             "contact": "Contacto",
             "email": "Email: {{email}}",
-            "phone": "Tel: {{phone}}",
+            "phoneAttrs": {
+                "countryCode": "Código de país: {{value}}",
+                "cellphone": "Celular: {{value}}",
+                "phone": "Teléfono: {{value}}",
+                "phoneNumber": "Número de teléfono: {{value}}",
+                "mobile": "Móvil: {{value}}",
+                "mobilePhone": "Teléfono móvil: {{value}}",
+                "telephone": "Teléfono: {{value}}",
+                "whatsapp": "WhatsApp: {{value}}",
+                "whatsappNumber": "Número de WhatsApp: {{value}}"
+            },
             "noPhone": "Sin teléfono cargado",
             "close": "Cerrar",
             "whatsapp": "WhatsApp",

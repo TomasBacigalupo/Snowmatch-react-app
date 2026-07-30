@@ -1416,7 +1416,17 @@
             "languages": "Idiomas",
             "contact": "Contato",
             "email": "Email: {{email}}",
-            "phone": "Tel: {{phone}}",
+            "phoneAttrs": {
+                "countryCode": "Código do país: {{value}}",
+                "cellphone": "Celular: {{value}}",
+                "phone": "Telefone: {{value}}",
+                "phoneNumber": "Número de telefone: {{value}}",
+                "mobile": "Móvel: {{value}}",
+                "mobilePhone": "Telefone móvel: {{value}}",
+                "telephone": "Telefone: {{value}}",
+                "whatsapp": "WhatsApp: {{value}}",
+                "whatsappNumber": "Número de WhatsApp: {{value}}"
+            },
             "noPhone": "Sem telefone cadastrado",
             "close": "Fechar",
             "whatsapp": "WhatsApp",

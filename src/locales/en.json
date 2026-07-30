@@ -979,7 +979,17 @@
       "languages": "Languages",
       "contact": "Contact",
       "email": "Email: {{email}}",
-      "phone": "Phone: {{phone}}",
+      "phoneAttrs": {
+        "countryCode": "Country code: {{value}}",
+        "cellphone": "Cellphone: {{value}}",
+        "phone": "Phone: {{value}}",
+        "phoneNumber": "Phone number: {{value}}",
+        "mobile": "Mobile: {{value}}",
+        "mobilePhone": "Mobile phone: {{value}}",
+        "telephone": "Telephone: {{value}}",
+        "whatsapp": "WhatsApp: {{value}}",
+        "whatsappNumber": "WhatsApp number: {{value}}"
+      },
       "noPhone": "No phone number on file",
       "close": "Close",
       "whatsapp": "WhatsApp",

@@ -1320,6 +1320,11 @@
             "studentId": "ID Estudiante",
             "moreFilters": "Más filtros",
             "searchBookingPlaceholder": "Buscar por cliente o ID de reserva…",
+            "searchTeacherLabel": "Buscar instructor por nombre",
+            "searchTeacherPlaceholder": "Escribí nombre o apellido (o ID)",
+            "noTeachersFound": "No se encontraron instructores",
+            "typeToSearchTeachers": "Escribí para buscar instructores",
+            "teachersLoadError": "No se pudieron cargar los instructores. Intentá de nuevo.",
             "months": {
                 "06": "Junio",
                 "07": "Julio",

@@ -1,7 +1,18 @@
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Stack, InputAdornment, TextField, MenuItem, Chip, Collapse, Button } from '@mui/material';
+import {
+  Stack,
+  InputAdornment,
+  TextField,
+  MenuItem,
+  Chip,
+  Collapse,
+  Button,
+  Autocomplete,
+  CircularProgress,
+  Typography,
+} from '@mui/material';
 import { ADMIN_BOOKING_RESORT_FILTER_OPTIONS } from 'src/utils/adminBookingResortOptions';
 import { TEACHER_QUICK_CHIPS } from 'src/utils/teacherQuickChips';
 // components
@@ -15,6 +26,15 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 const MONTH_OPTION_VALUES = ['06', '07', '08', '09', '10'];
 
 const BOOKING_FILTER_YEAR_RANGE = 8;
+
+/** Display label for teacher Autocomplete options (name + optional ID). */
+function getTeacherOptionLabel(option) {
+  if (option == null) return '';
+  if (typeof option === 'string') return option;
+  const name = `${option?.name || ''} ${option?.lastname || ''}`.trim();
+  if (name) return option?.id != null ? `${name} (ID: ${option.id})` : name;
+  return option?.id != null ? String(option.id) : '';
+}
 
 AdminTableToolbar.propTypes = {
   filterName: PropTypes.string,
@@ -46,6 +66,14 @@ AdminTableToolbar.propTypes = {
   hideMoreFilters: PropTypes.bool,
   /** When set, resort filter is fixed to this value and the selector is disabled. */
   lockResort: PropTypes.string,
+  /** Teacher options for name search Autocomplete (bookings toolbar). */
+  teacherOptions: PropTypes.array,
+  selectedTeacher: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
+  onTeacherSearch: PropTypes.func,
+  onTeacherSelect: PropTypes.func,
+  teachersLoading: PropTypes.bool,
+  teachersSearchError: PropTypes.bool,
+  teacherSearchInput: PropTypes.string,
 };
 
 export default function AdminTableToolbar({
@@ -85,11 +113,28 @@ export default function AdminTableToolbar({
   showResort = true,
   showSortBy = false,
   lockResort = null,
-  onFilterDate = null
+  onFilterDate = null,
+  teacherOptions = [],
+  selectedTeacher = null,
+  onTeacherSearch = null,
+  onTeacherSelect = null,
+  teachersLoading = false,
+  teachersSearchError = false,
+  teacherSearchInput = '',
 }) {
   const { t } = useTranslation();
   const [moreFiltersOpen, setMoreFiltersOpen] = useState(false);
   const bookingYearOptions = Array.from({ length: BOOKING_FILTER_YEAR_RANGE }, (_, i) => new Date().getFullYear() - i);
+
+  // Prefer Autocomplete name search on bookings; fall back to plain Teacher ID elsewhere.
+  const showTeacherNameSearch =
+    bookings && showTeacherId && !hideInstructorFilters && typeof onTeacherSelect === 'function';
+
+  const teacherNoOptionsText = teachersSearchError
+    ? t('adminBookings.filters.teachersLoadError')
+    : teacherSearchInput?.trim()
+      ? t('adminBookings.filters.noTeachersFound')
+      : t('adminBookings.filters.typeToSearchTeachers');
 
   return (
     <Stack spacing={2}>
@@ -362,14 +407,76 @@ export default function AdminTableToolbar({
           </TextField>
         )}
 
-        {showTeacherId && !hideInstructorFilters && <TextField
-          fullWidth
-          label={bookings ? t('adminBookings.filters.teacherId') : 'Teacher ID'}
-          value={filterTeacherId}
-          onChange={onFilterTeacherId}
-          type="text"
-          sx={{ maxWidth: { sm: 240 } }}
-        />}
+        {showTeacherNameSearch && (
+          <Autocomplete
+            fullWidth
+            freeSolo
+            clearOnBlur={false}
+            options={teacherOptions || []}
+            value={selectedTeacher}
+            loading={teachersLoading}
+            onChange={onTeacherSelect}
+            onInputChange={(_event, newInputValue, reason) => {
+              // Ignore resets so selecting an option does not re-trigger a name search.
+              if (reason === 'reset') return;
+              onTeacherSearch?.(newInputValue);
+            }}
+            getOptionLabel={getTeacherOptionLabel}
+            isOptionEqualToValue={(option, value) => {
+              if (option == null || value == null) return false;
+              if (typeof option === 'string' || typeof value === 'string') {
+                return String(option) === String(value);
+              }
+              return String(option?.id) === String(value?.id);
+            }}
+            filterOptions={(x) => x}
+            noOptionsText={teacherNoOptionsText}
+            renderOption={(props, option) => (
+              <li {...props} key={option?.id ?? getTeacherOptionLabel(option)}>
+                <Stack spacing={0.25}>
+                  <Typography variant="body2">
+                    {`${option?.name || ''} ${option?.lastname || ''}`.trim() || getTeacherOptionLabel(option)}
+                  </Typography>
+                  {option?.id != null && (
+                    <Typography variant="caption" color="text.secondary">
+                      {`ID: ${option.id}`}
+                    </Typography>
+                  )}
+                </Stack>
+              </li>
+            )}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label={t('adminBookings.filters.searchTeacherLabel')}
+                placeholder={t('adminBookings.filters.searchTeacherPlaceholder')}
+                error={Boolean(teachersSearchError)}
+                helperText={teachersSearchError ? t('adminBookings.filters.teachersLoadError') : undefined}
+                InputProps={{
+                  ...params.InputProps,
+                  endAdornment: (
+                    <>
+                      {teachersLoading ? <CircularProgress color="inherit" size={18} /> : null}
+                      {params.InputProps.endAdornment}
+                    </>
+                  ),
+                }}
+              />
+            )}
+            sx={{ maxWidth: { sm: 280 }, minWidth: { sm: 220 } }}
+          />
+        )}
+
+        {showTeacherId && !hideInstructorFilters && !showTeacherNameSearch && (
+          <TextField
+            fullWidth
+            label={bookings ? t('adminBookings.filters.teacherId') : 'Teacher ID'}
+            value={filterTeacherId}
+            onChange={onFilterTeacherId}
+            type="text"
+            sx={{ maxWidth: { sm: 240 } }}
+          />
+        )}
 
         {showStudentId && <TextField
           fullWidth
@@ -428,7 +535,9 @@ export default function AdminTableToolbar({
                       key={teacher.value}
                       label={teacher.name}
                       onClick={() => onFilterTeacherId(teacher.value)}
-                      color={filterTeacherId === teacher.value ? 'primary' : 'default'}
+                      color={
+                        String(filterTeacherId) === String(teacher.value) ? 'primary' : 'default'
+                      }
                     />
                   ))}
                 </Stack>

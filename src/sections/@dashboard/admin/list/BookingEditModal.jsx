@@ -16,6 +16,7 @@ import {
   Typography,
   Box,
   IconButton,
+  Collapse,
 } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -24,13 +25,15 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import { useDispatch } from 'react-redux';
 import { editAdminBooking, updateAdminBookingEventSchedule } from 'src/redux/slices/admin';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useSnackbar } from 'notistack';
 import { useTranslation } from 'react-i18next';
 import { format, parseISO } from 'date-fns';
+import Iconify from 'src/components/Iconify';
 import {
   buildEventListForBookingPut,
   buildEventScheduleUpdates,
+  calcTeacherHoursFromDateTimes,
   createEmptyDateTimeRow,
   eventListToDateTimes,
   LESSON_TIME_VALUES,
@@ -39,6 +42,10 @@ import {
   getBookingRosterClients,
   isGroupLessonBooking,
 } from 'src/utils/adminBookingParticipants';
+import {
+  calcSuggestedPayoutBreakdown,
+  HOURLY_PAYOUT_CAP_ARS,
+} from 'src/utils/teacherPayoutAmount';
 import AdminAgencySelect from '../AdminAgencySelect';
 
 const RESORT_OPTIONS = [
@@ -80,6 +87,34 @@ function parseOptionalEntityId(raw) {
   return Number.isNaN(parsed) || parsed <= 0 ? null : parsed;
 }
 
+function formatArsAmount(value) {
+  if (value == null || !Number.isFinite(value)) return '—';
+  return new Intl.NumberFormat('es-AR', {
+    style: 'currency',
+    currency: 'ARS',
+    maximumFractionDigits: 2,
+  }).format(value);
+}
+
+function PayoutBreakdownRow({ label, value, emphasize }) {
+  return (
+    <Stack direction="row" justifyContent="space-between" spacing={2}>
+      <Typography variant="body2" color={emphasize ? 'text.primary' : 'text.secondary'}>
+        {label}
+      </Typography>
+      <Typography variant="body2" fontWeight={emphasize ? 600 : 400}>
+        {value}
+      </Typography>
+    </Stack>
+  );
+}
+
+PayoutBreakdownRow.propTypes = {
+  label: PropTypes.string,
+  value: PropTypes.string,
+  emphasize: PropTypes.bool,
+};
+
 BookingEditModal.propTypes = {
   open: PropTypes.bool,
   onClose: PropTypes.func,
@@ -100,7 +135,37 @@ export default function BookingEditModal({ open, onClose, booking, onSave }) {
   const [isGroupLesson, setIsGroupLesson] = useState(() => isGroupLessonBooking(booking));
   const [clientLevel, setClientLevel] = useState(() => resolveEditableClient(booking)?.level || '');
   const [agencyId, setAgencyId] = useState(() => booking?.agencyId ?? booking?.agency?.id ?? null);
+  const [currency, setCurrency] = useState(() => booking?.currency || 'ARS');
+  const [price, setPrice] = useState(() => booking?.price ?? '');
+  const [bookingPaymentMethod, setBookingPaymentMethod] = useState(
+    () => booking?.bookingPaymentMethod || ''
+  );
+  const [suggestedTeacherPayoutAmount, setSuggestedTeacherPayoutAmount] = useState(
+    () => booking?.suggestedTeacherPayoutAmount ?? ''
+  );
+  const [suggestedTeacherPayoutCurrency, setSuggestedTeacherPayoutCurrency] = useState(
+    () => booking?.suggestedTeacherPayoutCurrency || 'ARS'
+  );
+  const [payoutCalculatorOpen, setPayoutCalculatorOpen] = useState(false);
   const editableClient = resolveEditableClient(booking);
+
+  const teacherHours = useMemo(() => calcTeacherHoursFromDateTimes(dateTimes), [dateTimes]);
+
+  const payoutBreakdown = useMemo(
+    () =>
+      calcSuggestedPayoutBreakdown({
+        price,
+        currency,
+        paymentMethod: bookingPaymentMethod,
+        hours: teacherHours,
+      }),
+    [price, currency, bookingPaymentMethod, teacherHours]
+  );
+
+  const handleApplySuggestedPayout = () => {
+    setSuggestedTeacherPayoutAmount(payoutBreakdown.suggested);
+    setSuggestedTeacherPayoutCurrency('ARS');
+  };
 
   useEffect(() => {
     if (open && booking) {
@@ -111,6 +176,12 @@ export default function BookingEditModal({ open, onClose, booking, onSave }) {
       setIsGroupLesson(isGroupLessonBooking(booking));
       setClientLevel(resolveEditableClient(booking)?.level || '');
       setAgencyId(booking?.agencyId ?? booking?.agency?.id ?? null);
+      setCurrency(booking?.currency || 'ARS');
+      setPrice(booking?.price ?? '');
+      setBookingPaymentMethod(booking?.bookingPaymentMethod || '');
+      setSuggestedTeacherPayoutAmount(booking?.suggestedTeacherPayoutAmount ?? '');
+      setSuggestedTeacherPayoutCurrency(booking?.suggestedTeacherPayoutCurrency || 'ARS');
+      setPayoutCalculatorOpen(false);
     }
   }, [open, booking]);
 
@@ -156,10 +227,10 @@ export default function BookingEditModal({ open, onClose, booking, onSave }) {
       userComment: formData.get('userComment'),
       internalComment: formData.get('internalComment'),
       paymentStatus: formData.get('paymentStatus'),
-      bookingPaymentMethod: formData.get('bookingPaymentMethod'),
+      bookingPaymentMethod,
       adults: parseInt(formData.get('adults'), 10) || 0,
       children: parseInt(formData.get('children'), 10) || 0,
-      price: parseFloat(formData.get('price')) || 0,
+      price: parseFloat(price) || 0,
       includesLaunch: formData.get('includesLaunch') === 'on',
       includesEquipments: formData.get('includesEquipments') === 'on',
       showPriceToTeacher: formData.get('showPriceToTeacher') === 'on',
@@ -188,14 +259,13 @@ export default function BookingEditModal({ open, onClose, booking, onSave }) {
           }
         : {}),
       agencyId: agencyId ?? 0,
-      currency: formData.get('currency') || booking?.currency || 'ARS',
+      currency: currency || booking?.currency || 'ARS',
       suggestedTeacherPayoutAmount: (() => {
-        const raw = formData.get('suggestedTeacherPayoutAmount');
-        if (raw === '' || raw == null) return null;
-        const parsed = Number(raw);
+        if (suggestedTeacherPayoutAmount === '' || suggestedTeacherPayoutAmount == null) return null;
+        const parsed = Number(suggestedTeacherPayoutAmount);
         return Number.isNaN(parsed) ? null : parsed;
       })(),
-      suggestedTeacherPayoutCurrency: formData.get('suggestedTeacherPayoutCurrency') || null,
+      suggestedTeacherPayoutCurrency: suggestedTeacherPayoutCurrency || null,
     };
 
     try {
@@ -286,7 +356,8 @@ export default function BookingEditModal({ open, onClose, booking, onSave }) {
                 <Select
                   name="currency"
                   label={t('adminBookings.editModal.currency')}
-                  defaultValue={booking?.currency || 'ARS'}
+                  value={currency}
+                  onChange={(e) => setCurrency(e.target.value)}
                 >
                   <MenuItem value="ARS">ARS</MenuItem>
                   <MenuItem value="USD">USD</MenuItem>
@@ -423,7 +494,8 @@ export default function BookingEditModal({ open, onClose, booking, onSave }) {
                 <Select
                   name="bookingPaymentMethod"
                   label={t('adminBookings.editModal.paymentMethod')}
-                  defaultValue={booking?.bookingPaymentMethod || ''}
+                  value={bookingPaymentMethod}
+                  onChange={(e) => setBookingPaymentMethod(e.target.value)}
                 >
                   {PAYMENT_METHOD_VALUES.map((value) => (
                     <MenuItem key={value} value={value}>
@@ -551,7 +623,8 @@ export default function BookingEditModal({ open, onClose, booking, onSave }) {
                 label={t('adminBookings.editModal.price')}
                 name="price"
                 type="number"
-                defaultValue={booking?.price}
+                value={price}
+                onChange={(e) => setPrice(e.target.value)}
                 InputProps={{
                   startAdornment: <span style={{ marginRight: 8 }}>$</span>,
                   inputProps: {
@@ -577,7 +650,8 @@ export default function BookingEditModal({ open, onClose, booking, onSave }) {
                 label={t('adminBookings.editModal.suggestedTeacherPayoutAmount')}
                 name="suggestedTeacherPayoutAmount"
                 type="number"
-                defaultValue={booking?.suggestedTeacherPayoutAmount ?? ''}
+                value={suggestedTeacherPayoutAmount}
+                onChange={(e) => setSuggestedTeacherPayoutAmount(e.target.value)}
                 InputProps={{
                   inputProps: {
                     min: 0,
@@ -592,7 +666,8 @@ export default function BookingEditModal({ open, onClose, booking, onSave }) {
                 <Select
                   name="suggestedTeacherPayoutCurrency"
                   label={t('adminBookings.editModal.suggestedTeacherPayoutCurrency')}
-                  defaultValue={booking?.suggestedTeacherPayoutCurrency || 'ARS'}
+                  value={suggestedTeacherPayoutCurrency}
+                  onChange={(e) => setSuggestedTeacherPayoutCurrency(e.target.value)}
                   displayEmpty
                 >
                   <MenuItem value="">
@@ -604,6 +679,104 @@ export default function BookingEditModal({ open, onClose, booking, onSave }) {
                 </Select>
               </FormControl>
             </Stack>
+
+            <Box>
+              <Button
+                color="inherit"
+                size="small"
+                onClick={() => setPayoutCalculatorOpen((open) => !open)}
+                endIcon={
+                  <Iconify
+                    icon={payoutCalculatorOpen ? 'eva:chevron-up-fill' : 'eva:chevron-down-fill'}
+                    sx={{ width: 20, height: 20 }}
+                  />
+                }
+                sx={{ px: 0, typography: 'body2' }}
+              >
+                {t('adminBookings.editModal.suggestedPayoutCalculator.toggle')}
+              </Button>
+              <Collapse in={payoutCalculatorOpen}>
+                <Stack
+                  spacing={1}
+                  sx={{
+                    mt: 1,
+                    p: 2,
+                    borderRadius: 1,
+                    bgcolor: 'background.neutral',
+                  }}
+                >
+                  <PayoutBreakdownRow
+                    label={t('adminBookings.editModal.suggestedPayoutCalculator.teacherHours')}
+                    value={t('adminBookings.editModal.suggestedPayoutCalculator.hoursValue', {
+                      hours: payoutBreakdown.hours,
+                    })}
+                  />
+
+                  {payoutBreakdown.currencyConverted && (
+                    <PayoutBreakdownRow
+                      label={t('adminBookings.editModal.suggestedPayoutCalculator.priceInArs', {
+                        rate: payoutBreakdown.usdToArsRate,
+                      })}
+                      value={formatArsAmount(payoutBreakdown.priceArs)}
+                    />
+                  )}
+
+                  {!payoutBreakdown.currencyConverted && (
+                    <PayoutBreakdownRow
+                      label={t('adminBookings.editModal.suggestedPayoutCalculator.priceInArsLabel')}
+                      value={formatArsAmount(payoutBreakdown.priceArs)}
+                    />
+                  )}
+
+                  {payoutBreakdown.isCash ? (
+                    <PayoutBreakdownRow
+                      label={t('adminBookings.editModal.suggestedPayoutCalculator.cashShare')}
+                      value={formatArsAmount(payoutBreakdown.uncappedSuggested)}
+                    />
+                  ) : (
+                    <>
+                      <PayoutBreakdownRow
+                        label={t('adminBookings.editModal.suggestedPayoutCalculator.netOfIva')}
+                        value={formatArsAmount(payoutBreakdown.netOfIva)}
+                      />
+                      <PayoutBreakdownRow
+                        label={t('adminBookings.editModal.suggestedPayoutCalculator.ingresosBrutos')}
+                        value={formatArsAmount(payoutBreakdown.ingresosBrutos)}
+                      />
+                      <PayoutBreakdownRow
+                        label={t('adminBookings.editModal.suggestedPayoutCalculator.nonCashShare')}
+                        value={formatArsAmount(payoutBreakdown.uncappedSuggested)}
+                      />
+                    </>
+                  )}
+
+                  {payoutBreakdown.hours > 0 && (
+                    <PayoutBreakdownRow
+                      label={t('adminBookings.editModal.suggestedPayoutCalculator.hourlyCap', {
+                        cap: HOURLY_PAYOUT_CAP_ARS,
+                      })}
+                      value={formatArsAmount(payoutBreakdown.cap)}
+                    />
+                  )}
+
+                  <PayoutBreakdownRow
+                    label={t('adminBookings.editModal.suggestedPayoutCalculator.suggested')}
+                    value={formatArsAmount(payoutBreakdown.suggested)}
+                    emphasize
+                  />
+
+                  <Button
+                    variant="outlined"
+                    size="small"
+                    onClick={handleApplySuggestedPayout}
+                    disabled={!payoutBreakdown.suggested}
+                    sx={{ alignSelf: 'flex-start', mt: 0.5 }}
+                  >
+                    {t('adminBookings.editModal.suggestedPayoutCalculator.apply')}
+                  </Button>
+                </Stack>
+              </Collapse>
+            </Box>
 
             <Stack
               spacing={2}

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import {
   Alert,
   Button,
+  Chip,
   Dialog,
   DialogActions,
   DialogContent,
@@ -17,12 +18,25 @@ import { useDispatch } from 'src/redux/store';
 import { createAdminStudent } from 'src/redux/slices/admin';
 import { countries } from 'src/_mock';
 
-const DEFAULT_FORM = {
-  name: '',
-  email: '',
-  countryCode: '54',
-  cellphone: '',
-};
+const QUICK_COUNTRIES = [
+  { code: 'AR', label: 'Argentina', phone: '54' },
+  { code: 'BR', label: 'Brasil', phone: '55' },
+  { code: 'ES', label: 'España', phone: '34' },
+];
+
+function randomDefaultEmail() {
+  const n = Math.floor(Math.random() * 100000);
+  return `bacigalupotomas+${n}@gmail.com`;
+}
+
+function createDefaultForm(name = '') {
+  return {
+    name,
+    email: randomDefaultEmail(),
+    countryCode: '54',
+    cellphone: '',
+  };
+}
 
 function parseApiError(error) {
   if (error?.messages?.entry?.length) {
@@ -44,19 +58,23 @@ function splitFullName(fullName) {
 export default function CreateStudentModal({ open, onClose, onCreated, initialName = '' }) {
   const dispatch = useDispatch();
   const { t } = useTranslation();
-  const [form, setForm] = useState({ ...DEFAULT_FORM, name: initialName });
+  const [form, setForm] = useState(() => createDefaultForm(initialName));
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
 
   useEffect(() => {
     if (open) {
-      setForm({ ...DEFAULT_FORM, name: initialName });
+      setForm(createDefaultForm(initialName));
       setError('');
     }
   }, [open, initialName]);
 
   const handleChange = (field) => (event) => {
     setForm((prev) => ({ ...prev, [field]: event.target.value }));
+  };
+
+  const handleQuickCountry = (phone) => {
+    setForm((prev) => ({ ...prev, countryCode: phone }));
   };
 
   const handleSubmit = async () => {
@@ -128,26 +146,50 @@ export default function CreateStudentModal({ open, onClose, onCreated, initialNa
             value={form.email}
             onChange={handleChange('email')}
           />
-          <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
-            <TextField
-              select
-              fullWidth
-              label={t('adminBookings.createStudent.countryCode')}
-              value={form.countryCode}
-              onChange={handleChange('countryCode')}
-            >
-              {countries.map((option) => (
-                <MenuItem key={option.code} value={option.phone}>
-                  {option.label} (+{option.phone})
-                </MenuItem>
-              ))}
-            </TextField>
-            <TextField
-              fullWidth
-              label={t('adminBookings.createStudent.phone')}
-              value={form.cellphone}
-              onChange={handleChange('cellphone')}
-            />
+          <Stack spacing={1}>
+            <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
+              {QUICK_COUNTRIES.map((country) => {
+                const selected = form.countryCode === country.phone;
+                return (
+                  <Chip
+                    key={country.code}
+                    label={`${country.label} (+${country.phone})`}
+                    variant="outlined"
+                    onClick={() => handleQuickCountry(country.phone)}
+                    sx={{
+                      borderColor: 'common.black',
+                      color: selected ? 'common.white' : 'common.black',
+                      bgcolor: selected ? 'common.black' : 'transparent',
+                      '&:hover': {
+                        bgcolor: selected ? 'grey.800' : 'grey.100',
+                        borderColor: 'common.black',
+                      },
+                    }}
+                  />
+                );
+              })}
+            </Stack>
+            <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
+              <TextField
+                select
+                fullWidth
+                label={t('adminBookings.createStudent.countryCode')}
+                value={form.countryCode}
+                onChange={handleChange('countryCode')}
+              >
+                {countries.map((option) => (
+                  <MenuItem key={option.code} value={option.phone}>
+                    {option.label} (+{option.phone})
+                  </MenuItem>
+                ))}
+              </TextField>
+              <TextField
+                fullWidth
+                label={t('adminBookings.createStudent.phone')}
+                value={form.cellphone}
+                onChange={handleChange('cellphone')}
+              />
+            </Stack>
           </Stack>
         </Stack>
       </DialogContent>

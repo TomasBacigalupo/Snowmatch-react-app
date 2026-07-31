@@ -1,13 +1,100 @@
+import { DEFAULT_USD_TO_ARS_RATE } from './adminTodayBookings';
+import {
+  calcTeacherHoursFromLessonTime,
+  inferLessonTimeFromEvent,
+} from './adminBookingEvents';
 import { getTeacherLevelPriceKey } from './teacherHourPricePresets';
 
-function calcEventHours(event) {
-  const start = new Date(event.start);
-  const end = new Date(event.end);
-  const eventHours = (end - start) / (1000 * 60 * 60);
-  if (eventHours === 4) {
-    return 3;
+export const HOURLY_PAYOUT_CAP_ARS = 80000;
+
+const IVA_RATE = 1.21;
+const IIBB_RATE = 0.04;
+const NON_CASH_PAYOUT_SHARE = 0.8;
+const CASH_PAYOUT_SHARE = 0.5;
+
+function roundMoney(value) {
+  return Math.round(value * 100) / 100;
+}
+
+/**
+ * Suggested instructor payout from booking price, currency, payment method, and teacher hours.
+ * Always returns amounts in ARS (USD prices are converted at usdToArsRate).
+ */
+export function calcSuggestedPayoutBreakdown({
+  price,
+  currency = 'ARS',
+  paymentMethod,
+  hours = 0,
+  usdToArsRate = DEFAULT_USD_TO_ARS_RATE,
+}) {
+  const teacherHours = Number(hours) || 0;
+  const isCash = paymentMethod === 'CASH';
+  const rate = Number(usdToArsRate) > 0 ? Number(usdToArsRate) : DEFAULT_USD_TO_ARS_RATE;
+  const empty = {
+    priceArs: 0,
+    netOfIva: null,
+    ingresosBrutos: null,
+    uncappedSuggested: 0,
+    cap: roundMoney(teacherHours * HOURLY_PAYOUT_CAP_ARS),
+    suggested: 0,
+    isCash,
+    hours: teacherHours,
+    currencyConverted: currency === 'USD',
+    usdToArsRate: rate,
+  };
+
+  const numericPrice = Number(price);
+  if (!Number.isFinite(numericPrice) || numericPrice <= 0) {
+    return empty;
   }
-  return Math.min(eventHours, 6);
+
+  const priceArs = roundMoney(currency === 'USD' ? numericPrice * rate : numericPrice);
+
+  let uncappedSuggested;
+  let netOfIva = null;
+  let ingresosBrutos = null;
+
+  if (isCash) {
+    uncappedSuggested = roundMoney(priceArs * CASH_PAYOUT_SHARE);
+  } else {
+    netOfIva = roundMoney(priceArs / IVA_RATE);
+    ingresosBrutos = roundMoney(netOfIva * IIBB_RATE);
+    uncappedSuggested = roundMoney((netOfIva - ingresosBrutos) * NON_CASH_PAYOUT_SHARE);
+  }
+
+  const cap = roundMoney(teacherHours * HOURLY_PAYOUT_CAP_ARS);
+  const suggested = roundMoney(
+    teacherHours > 0 ? Math.min(uncappedSuggested, cap) : uncappedSuggested
+  );
+
+  return {
+    priceArs,
+    netOfIva,
+    ingresosBrutos,
+    uncappedSuggested,
+    cap,
+    suggested,
+    isCash,
+    hours: teacherHours,
+    currencyConverted: currency === 'USD',
+    usdToArsRate: rate,
+  };
+}
+
+function calcEventHours(event) {
+  const start = new Date(event?.start);
+  const end = new Date(event?.end);
+  const diffMs = end - start;
+
+  if (Number.isFinite(diffMs) && diffMs > 0) {
+    const eventHours = diffMs / (1000 * 60 * 60);
+    if (Math.abs(eventHours - 4) < 0.01) {
+      return 3;
+    }
+    return Math.min(eventHours, 6);
+  }
+
+  return calcTeacherHoursFromLessonTime(inferLessonTimeFromEvent(event));
 }
 
 function getHourlyRate(teacherLevel, bookingType) {

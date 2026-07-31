@@ -128,6 +128,27 @@ export function buildStartEndFromDateAndLessonTime(date, lessonTime) {
   };
 }
 
+/** Teacher billable hours from a lesson slot (4h calendar block → 3h). */
+export function calcTeacherHoursFromLessonTime(lessonTime, fallback = 'ALL_DAY') {
+  const normalized = normalizeLessonTime(lessonTime, fallback);
+  const slot = LESSON_SLOTS[normalized] || LESSON_SLOTS.ALL_DAY;
+  const startMinutes = slot.start[0] * 60 + slot.start[1];
+  const endMinutes = slot.end[0] * 60 + slot.end[1];
+  const eventHours = (endMinutes - startMinutes) / 60;
+
+  if (Math.abs(eventHours - 4) < 0.01) {
+    return 3;
+  }
+  return Math.min(eventHours, 6);
+}
+
+/** Sum teacher hours from edit-modal date/time rows. */
+export function calcTeacherHoursFromDateTimes(dateTimes) {
+  return (dateTimes || [])
+    .filter((row) => row?.date)
+    .reduce((total, row) => total + calcTeacherHoursFromLessonTime(row.time), 0);
+}
+
 export function createEmptyDateTimeRow() {
   return { id: null, date: '', time: 'ALL_DAY', price: '' };
 }

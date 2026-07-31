@@ -530,16 +530,19 @@ export default function AdminTableToolbar({
                     alignItems: 'center',
                   }}
                 >
-                  {TEACHER_QUICK_CHIPS.map((teacher) => (
-                    <Chip
-                      key={teacher.value}
-                      label={teacher.name}
-                      onClick={() => onFilterTeacherId(teacher.value)}
-                      color={
-                        String(filterTeacherId) === String(teacher.value) ? 'primary' : 'default'
-                      }
-                    />
-                  ))}
+                  {TEACHER_QUICK_CHIPS.map((teacher) => {
+                    const isSelected = String(filterTeacherId) === String(teacher.value);
+                    return (
+                      <Chip
+                        key={teacher.value}
+                        label={teacher.name}
+                        // Re-clicking the active chip clears the teacher filter.
+                        onClick={() => onFilterTeacherId(isSelected ? '' : teacher.value)}
+                        onDelete={isSelected ? () => onFilterTeacherId('') : undefined}
+                        color={isSelected ? 'primary' : 'default'}
+                      />
+                    );
+                  })}
                 </Stack>
               )}
             </Stack>

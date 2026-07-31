@@ -540,6 +540,36 @@ export default function AdminTableToolbar({
                         onClick={() => onFilterTeacherId(isSelected ? '' : teacher.value)}
                         onDelete={isSelected ? () => onFilterTeacherId('') : undefined}
                         color={isSelected ? 'primary' : 'default'}
+                        // Keep label + delete X readable on primary hover (theme hover was dark-on-dark).
+                        sx={
+                          isSelected
+                            ? {
+                                color: 'primary.contrastText',
+                                '& .MuiChip-label': {
+                                  color: 'primary.contrastText',
+                                },
+                                '& .MuiChip-deleteIcon': {
+                                  color: 'common.white',
+                                  opacity: 0.9,
+                                  '&:hover': {
+                                    color: 'common.white',
+                                    opacity: 1,
+                                  },
+                                },
+                                '&:hover': {
+                                  backgroundColor: 'primary.dark',
+                                  color: 'primary.contrastText',
+                                  '& .MuiChip-label': {
+                                    color: 'primary.contrastText',
+                                  },
+                                  '& .MuiChip-deleteIcon': {
+                                    color: 'common.white',
+                                    opacity: 1,
+                                  },
+                                },
+                              }
+                            : undefined
+                        }
                       />
                     );
                   })}

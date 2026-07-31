@@ -91,6 +91,15 @@ function teacherOptionFromId(id, teachersList = []) {
   return { id, name: '', lastname: '' };
 }
 
+/** Display label for the top teacher Autocomplete (must match toolbar getOptionLabel). */
+function getTeacherFilterLabel(teacher) {
+  if (!teacher) return '';
+  if (typeof teacher === 'string') return teacher;
+  const name = `${teacher.name || ''} ${teacher.lastname || ''}`.trim();
+  if (name) return teacher.id != null ? `${name} (ID: ${teacher.id})` : name;
+  return teacher.id != null ? String(teacher.id) : '';
+}
+
 const ROLE_OPTIONS = [
   'PENDING', 'ACCEPTED', 'DECLINED'
 ];
@@ -474,8 +483,10 @@ export function AdminBookingsPage({ bookingListKind, pageTitle, heading }) {
     const value = event?.target?.value ?? event;
     const normalized = value === '' || value == null ? '' : value;
     setFilterTeacherId(normalized);
-    // Keep Autocomplete in sync when quick chips (or legacy ID handlers) set the filter.
-    setSelectedTeacher(teacherOptionFromId(normalized, reduxTeachers));
+    // Keep Autocomplete value + input text in sync when quick chips select or clear.
+    const nextTeacher = teacherOptionFromId(normalized, reduxTeachers);
+    setSelectedTeacher(nextTeacher);
+    setTeacherSearchInput(nextTeacher ? getTeacherFilterLabel(nextTeacher) : '');
     setPage(0);
     dispatchBookings({ teacherId: normalized });
   };
@@ -497,7 +508,9 @@ export function AdminBookingsPage({ bookingListKind, pageTitle, heading }) {
       if (!/^\d+$/.test(trimmed)) {
         return;
       }
-      setSelectedTeacher(teacherOptionFromId(trimmed, reduxTeachers));
+      const nextTeacher = teacherOptionFromId(trimmed, reduxTeachers);
+      setSelectedTeacher(nextTeacher);
+      setTeacherSearchInput(getTeacherFilterLabel(nextTeacher));
       setFilterTeacherId(trimmed);
       setPage(0);
       dispatchBookings({ teacherId: trimmed });
@@ -505,6 +518,7 @@ export function AdminBookingsPage({ bookingListKind, pageTitle, heading }) {
     }
 
     setSelectedTeacher(value);
+    setTeacherSearchInput(getTeacherFilterLabel(value));
     const teacherId = value?.id ?? '';
     setFilterTeacherId(teacherId);
     setPage(0);
@@ -519,6 +533,13 @@ export function AdminBookingsPage({ bookingListKind, pageTitle, heading }) {
   useEffect(() => {
     const query = teacherSearchInput?.trim() ?? '';
     if (!query) {
+      setIsSearchingTeachers(false);
+      setTeachersSearchError(false);
+      return undefined;
+    }
+
+    // Skip API search when the input is only the selected teacher's display label (chip/select sync).
+    if (selectedTeacher && getTeacherFilterLabel(selectedTeacher) === query) {
       setIsSearchingTeachers(false);
       setTeachersSearchError(false);
       return undefined;
@@ -553,7 +574,7 @@ export function AdminBookingsPage({ bookingListKind, pageTitle, heading }) {
       cancelled = true;
       clearTimeout(timer);
     };
-  }, [teacherSearchInput, dispatch, isResortAdmin]);
+  }, [teacherSearchInput, selectedTeacher, dispatch, isResortAdmin]);
 
   // Keep the selected teacher visible in Autocomplete even after a new search replaces options.
   const teacherAutocompleteOptions = useMemo(() => {

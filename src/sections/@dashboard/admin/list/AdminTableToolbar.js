@@ -414,10 +414,12 @@ export default function AdminTableToolbar({
             clearOnBlur={false}
             options={teacherOptions || []}
             value={selectedTeacher}
+            inputValue={teacherSearchInput}
             loading={teachersLoading}
             onChange={onTeacherSelect}
             onInputChange={(_event, newInputValue, reason) => {
               // Ignore resets so selecting an option does not re-trigger a name search.
+              // Parent syncs inputValue on select/clear (including chip clear).
               if (reason === 'reset') return;
               onTeacherSearch?.(newInputValue);
             }}

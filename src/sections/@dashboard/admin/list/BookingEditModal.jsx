@@ -24,7 +24,7 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import { useDispatch } from 'react-redux';
-import { editAdminBooking, updateAdminBookingEventSchedule } from 'src/redux/slices/admin';
+import { editAdminBooking } from 'src/redux/slices/admin';
 import { useEffect, useMemo, useState } from 'react';
 import { useSnackbar } from 'notistack';
 import { useTranslation } from 'react-i18next';
@@ -32,7 +32,6 @@ import { format, parseISO } from 'date-fns';
 import Iconify from 'src/components/Iconify';
 import {
   buildEventListForBookingPut,
-  buildEventScheduleUpdates,
   calcTeacherHoursFromDateTimes,
   createEmptyDateTimeRow,
   eventListToDateTimes,
@@ -220,7 +219,6 @@ export default function BookingEditModal({ open, onClose, booking, onSave }) {
     const resolvedGroupLessonResort = isGroupLesson
       ? booking?.groupLessonResort || resort || booking?.resort || null
       : null;
-    const scheduleUpdates = buildEventScheduleUpdates(dateTimes);
     const eventList = buildEventListForBookingPut(dateTimes, type, booking?.eventList);
     const updatedBooking = {
       id: booking.id,
@@ -269,41 +267,14 @@ export default function BookingEditModal({ open, onClose, booking, onSave }) {
     };
 
     try {
+      // Backend reconciles eventList (create/update/delete) in the same booking PUT.
       const saved = await dispatch(editAdminBooking(booking.id, updatedBooking));
 
-      if (teacherId && scheduleUpdates.length > 0) {
-        await Promise.all(
-          scheduleUpdates.map((schedule) =>
-            dispatch(
-              updateAdminBookingEventSchedule(
-                teacherId,
-                schedule.id,
-                {
-                  start: schedule.start,
-                  end: schedule.end,
-                  allDay: schedule.allDay,
-                },
-                { studentId }
-              )
-            )
-          )
-        );
-      }
-
       enqueueSnackbar(t('adminBookings.editModal.updateSuccess'), { variant: 'success' });
-      const nextEventList = (scheduleUpdates.length > 0
-        ? scheduleUpdates.map((schedule) => {
-            const existing = booking?.eventList?.find((event) => event.id === schedule.id) || {};
-            return {
-              ...existing,
-              start: schedule.start,
-              end: schedule.end,
-              allDay: schedule.allDay,
-              lessonTime: schedule.lessonTime,
-            };
-          })
-        : booking?.eventList || []
-      ).map((event) => {
+
+      // Prefer authoritative eventList from the PUT response so deleted dates stay gone after refresh.
+      const responseEventList = Array.isArray(saved?.eventList) ? saved.eventList : eventList;
+      const nextEventList = responseEventList.map((event) => {
         if (!clientId || !clientLevel || !Array.isArray(event?.clients)) return event;
         return {
           ...event,

@@ -2,10 +2,12 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
+import { PDFDownloadLink } from '@react-pdf/renderer';
 import {
   Box,
   Button,
   Card,
+  Checkbox,
   Chip,
   CircularProgress,
   Container,
@@ -34,6 +36,7 @@ import { PATH_DASHBOARD } from '../../routes/paths';
 import { getAgency, clearAgency, clearAgenciesError } from '../../redux/slices/agency';
 import { getBookings } from '../../redux/slices/admin';
 import AdminBookingTableCard from '../../sections/@dashboard/admin/list/AdminBookingTableCard';
+import AgencyPaymentPDF from '../../sections/@dashboard/admin/agency/AgencyPaymentPDF';
 import BookingDetailsDrawer from '../../sections/@dashboard/admin/list/BookingDetailsDrawer';
 import GearBookingDetailsDrawer from '../../sections/@dashboard/admin/list/GearBookingDetailsDrawer';
 import { fCurrency, fNumber } from '../../utils/formatNumber';
@@ -102,6 +105,32 @@ function formatDateRange(eventList) {
   return `${fmt(start)} – ${fmt(end)}`;
 }
 
+function formatBookingAmount(amount, currency = 'ARS') {
+  return new Intl.NumberFormat('es-AR', {
+    style: 'currency',
+    currency,
+    minimumFractionDigits: 0,
+  }).format(amount || 0);
+}
+
+function sumBookingsByCurrency(bookings) {
+  const totals = {};
+  bookings.forEach((booking) => {
+    const currency = booking.currency || 'ARS';
+    totals[currency] = (totals[currency] || 0) + (Number(booking.price) || 0);
+  });
+  return Object.entries(totals);
+}
+
+function buildAgencyPaymentFilename(agencyName) {
+  const safeName = (agencyName || 'agencia')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '');
+  const date = new Date().toISOString().slice(0, 10);
+  return `cobro-agencia-${safeName}-${date}.pdf`;
+}
+
 function KpiCard({ title, value, icon, color }) {
   const theme = useTheme();
   return (
@@ -150,6 +179,7 @@ export default function AdminAgencyDetail() {
   const [bookingKind, setBookingKind] = useState('lesson');
   const [selectedBooking, setSelectedBooking] = useState(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [selectedBookingIds, setSelectedBookingIds] = useState([]);
 
   const loadBookings = useCallback(() => {
     if (!agencyId) return;
@@ -181,6 +211,10 @@ export default function AdminAgencyDetail() {
   useEffect(() => {
     loadBookings();
   }, [loadBookings]);
+
+  useEffect(() => {
+    setSelectedBookingIds([]);
+  }, [agencyId, month, year, state, bookingKind]);
 
   useEffect(() => {
     if (agenciesError) {
@@ -236,6 +270,32 @@ export default function AdminAgencyDetail() {
       byMonth,
     };
   }, [filteredBookings]);
+
+  const selectedBookings = useMemo(
+    () => filteredBookings.filter((booking) => selectedBookingIds.includes(booking.id)),
+    [filteredBookings, selectedBookingIds]
+  );
+
+  const selectedTotals = useMemo(
+    () => sumBookingsByCurrency(selectedBookings),
+    [selectedBookings]
+  );
+
+  const toggleBooking = (bookingId, e) => {
+    e?.stopPropagation?.();
+    setSelectedBookingIds((prev) =>
+      prev.includes(bookingId) ? prev.filter((id) => id !== bookingId) : [...prev, bookingId]
+    );
+  };
+
+  const toggleAll = (e) => {
+    e?.stopPropagation?.();
+    if (selectedBookingIds.length === filteredBookings.length) {
+      setSelectedBookingIds([]);
+    } else {
+      setSelectedBookingIds(filteredBookings.map((booking) => booking.id));
+    }
+  };
 
   const handleOpenBooking = (booking) => {
     setSelectedBooking(booking);
@@ -459,7 +519,7 @@ export default function AdminAgencyDetail() {
             )}
 
             <Card>
-              <Box sx={{ px: 2.5, py: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Box sx={{ px: 2.5, py: 2, display: 'flex', alignItems: 'center', gap: 1, flexWrap: 'wrap' }}>
                 <Typography variant="h6">Reservas</Typography>
                 {isLoadingBookings && <CircularProgress size={18} />}
                 <Typography variant="body2" color="text.secondary" sx={{ ml: 'auto' }}>
@@ -467,12 +527,84 @@ export default function AdminAgencyDetail() {
                 </Typography>
               </Box>
 
+              {selectedBookingIds.length > 0 && (
+                <Box
+                  sx={{
+                    px: 2.5,
+                    py: 1.5,
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 2,
+                    flexWrap: 'wrap',
+                    bgcolor: 'action.selected',
+                    borderTop: (theme) => `1px solid ${theme.palette.divider}`,
+                    borderBottom: (theme) => `1px solid ${theme.palette.divider}`,
+                  }}
+                >
+                  <Typography variant="subtitle2">
+                    {t('adminAgencyDetail.selectedCount', { count: selectedBookingIds.length })}
+                  </Typography>
+                  <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
+                    {selectedTotals.map(([currency, total]) => (
+                      <Chip
+                        key={currency}
+                        size="small"
+                        color="primary"
+                        variant="outlined"
+                        label={`${t('adminAgencyDetail.selectedTotal')}: ${formatBookingAmount(total, currency)}`}
+                      />
+                    ))}
+                  </Stack>
+                  <Box sx={{ ml: { sm: 'auto' } }}>
+                    <PDFDownloadLink
+                      key={`agency-payment-pdf-${selectedBookingIds.join('-')}`}
+                      document={
+                        <AgencyPaymentPDF agency={agency} bookings={selectedBookings} issueDate={new Date()} />
+                      }
+                      fileName={buildAgencyPaymentFilename(agency.name)}
+                      style={{ textDecoration: 'none' }}
+                    >
+                      {({ loading }) => (
+                        <Button
+                          variant="contained"
+                          size="small"
+                          disabled={loading || selectedBookings.length === 0}
+                          startIcon={
+                            loading ? (
+                              <CircularProgress size={16} color="inherit" />
+                            ) : (
+                              <Iconify icon="eva:download-fill" />
+                            )
+                          }
+                        >
+                          {t('adminAgencyDetail.downloadPdf')}
+                        </Button>
+                      )}
+                    </PDFDownloadLink>
+                  </Box>
+                </Box>
+              )}
+
               {/* Desktop table */}
               <Box sx={{ display: { xs: 'none', md: 'block' } }}>
                 <TableContainer>
                   <Table size="small">
                     <TableHead>
                       <TableRow>
+                        <TableCell padding="checkbox">
+                          <Checkbox
+                            indeterminate={
+                              selectedBookingIds.length > 0 &&
+                              selectedBookingIds.length < filteredBookings.length
+                            }
+                            checked={
+                              filteredBookings.length > 0 &&
+                              selectedBookingIds.length === filteredBookings.length
+                            }
+                            onChange={toggleAll}
+                            onClick={(e) => e.stopPropagation()}
+                          />
+                        </TableCell>
                         <TableCell>ID</TableCell>
                         <TableCell>Fechas</TableCell>
                         <TableCell>Cliente</TableCell>
@@ -486,7 +618,7 @@ export default function AdminAgencyDetail() {
                     <TableBody>
                       {isLoadingBookings && filteredBookings.length === 0 ? (
                         <TableRow>
-                          <TableCell colSpan={8}>
+                          <TableCell colSpan={9}>
                             <Typography variant="body2" color="text.secondary">
                               Cargando reservas…
                             </Typography>
@@ -494,7 +626,7 @@ export default function AdminAgencyDetail() {
                         </TableRow>
                       ) : filteredBookings.length === 0 ? (
                         <TableRow>
-                          <TableCell colSpan={8}>
+                          <TableCell colSpan={9}>
                             <Typography variant="body2" color="text.secondary">
                               No hay reservas para esta agencia con los filtros seleccionados.
                             </Typography>
@@ -514,6 +646,12 @@ export default function AdminAgencyDetail() {
                               sx={{ cursor: 'pointer' }}
                               onClick={() => handleOpenBooking(row)}
                             >
+                              <TableCell padding="checkbox" onClick={(e) => e.stopPropagation()}>
+                                <Checkbox
+                                  checked={selectedBookingIds.includes(row.id)}
+                                  onChange={(e) => toggleBooking(row.id, e)}
+                                />
+                              </TableCell>
                               <TableCell>#{row.id}</TableCell>
                               <TableCell>{formatDateRange(row.eventList)}</TableCell>
                               <TableCell>{getBookingCustomerLabel(row)}</TableCell>
@@ -546,10 +684,7 @@ export default function AdminAgencyDetail() {
                                 </Label>
                               </TableCell>
                               <TableCell align="right">
-                                {new Intl.NumberFormat('es-AR', {
-                                  style: 'currency',
-                                  currency: row.currency || 'ARS',
-                                }).format(row.price || 0)}
+                                {formatBookingAmount(row.price, row.currency || 'ARS')}
                               </TableCell>
                             </TableRow>
                           );
@@ -576,9 +711,23 @@ export default function AdminAgencyDetail() {
                       <Box
                         key={booking.id}
                         onClick={() => handleOpenBooking(booking)}
-                        sx={{ cursor: 'pointer', '&:hover': { opacity: 0.92 } }}
+                        sx={{
+                          cursor: 'pointer',
+                          display: 'flex',
+                          alignItems: 'flex-start',
+                          gap: 1,
+                          '&:hover': { opacity: 0.92 },
+                        }}
                       >
-                        <AdminBookingTableCard row={booking} compact />
+                        <Checkbox
+                          checked={selectedBookingIds.includes(booking.id)}
+                          onChange={(e) => toggleBooking(booking.id, e)}
+                          onClick={(e) => e.stopPropagation()}
+                          sx={{ mt: 0.5 }}
+                        />
+                        <Box sx={{ flexGrow: 1, minWidth: 0 }}>
+                          <AdminBookingTableCard row={booking} compact />
+                        </Box>
                       </Box>
                     ))}
                   </Stack>

@@ -3,6 +3,7 @@
  */
 
 export const ADMIN_BOOKING_RESORT_FILTER_OPTIONS = [
+  { value: '', labelKey: 'adminFinancial.allResorts' },
   { value: 'CERRO_CATEDRAL', label: 'Cerro Catedral' },
   { value: 'CHAPELCO', label: 'Chapelco' },
   { value: 'CERRO_BAYO', label: 'Cerro Bayo' },

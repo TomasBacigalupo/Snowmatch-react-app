@@ -182,6 +182,7 @@ export const PATH_DASHBOARD = {
     bookings: path(ROOTS_DASHBOARD, '/admin/bookings'),
     bookingsEquipos: path(ROOTS_DASHBOARD, '/admin/bookings/equipos'),
     financial: path(ROOTS_DASHBOARD, '/admin/financial'),
+    financialDetail: (category) => path(ROOTS_DASHBOARD, `/admin/financial/${category}`),
     payouts: path(ROOTS_DASHBOARD, '/admin/payouts'),
     rental: path(ROOTS_DASHBOARD, '/admin/rental'),
     rentalProviders: path(ROOTS_DASHBOARD, '/admin/rental-providers'),

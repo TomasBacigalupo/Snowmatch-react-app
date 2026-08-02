@@ -48,8 +48,8 @@ export default function FinancialFiltersBar({ dateRange, onDateRangeChange, reso
           sx={{ minWidth: { md: 220 } }}
         >
           {ADMIN_BOOKING_RESORT_FILTER_OPTIONS.map((option) => (
-            <MenuItem key={option.value} value={option.value}>
-              {option.label}
+            <MenuItem key={option.value || 'all'} value={option.value}>
+              {option.labelKey ? t(option.labelKey) : option.label}
             </MenuItem>
           ))}
         </TextField>

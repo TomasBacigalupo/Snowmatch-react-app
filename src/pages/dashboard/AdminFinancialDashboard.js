@@ -7,24 +7,36 @@ import useSettings from '../../hooks/useSettings';
 import Page from '../../components/Page';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
 import FinancialFiltersBar from '../../sections/@dashboard/admin/financial/FinancialFiltersBar';
-import FinancialHourRatesBar from '../../sections/@dashboard/admin/financial/FinancialHourRatesBar';
+import TeacherLevelHourRatesBar from '../../sections/@dashboard/admin/financial/TeacherLevelHourRatesBar';
 import FinancialKPICards from '../../sections/@dashboard/admin/financial/FinancialKPICards';
 import HoursByLevelTable from '../../sections/@dashboard/admin/financial/HoursByLevelTable';
+import AgencyDebtTable from '../../sections/@dashboard/admin/financial/AgencyDebtTable';
+import MissingSuggestedAlert from '../../sections/@dashboard/admin/financial/MissingSuggestedAlert';
 import { getFinancialSummary } from '../../redux/slices/admin';
+import { calcPendingMemberPayoutFromHoursByLevel } from '../../utils/teacherPayoutAmount';
 import {
-  DEFAULT_TEACHER_HOUR_PRICES,
+  buildDefaultLevelHourPrices,
   formatDateParam,
   getDefaultMonthRange,
 } from '../../utils/teacherHourPricePresets';
 
+const SCHOOL_BUSINESS_ID = 13;
+
 const emptySummary = {
   paidBookingsTotal: 0,
   paidBookingsCount: 0,
+  unpaidBookingsTotal: 0,
+  unpaidBookingsCount: 0,
   completedPayoutsTotal: 0,
   completedPayoutsCount: 0,
-  pendingAssignedHours: 0,
-  pendingReferredHours: 0,
+  pendingNonMemberSuggestedTotal: 0,
+  pendingNonMemberSuggestedCount: 0,
+  pendingMemberBookingCount: 0,
+  missingSuggestedCount: 0,
+  missingSuggestedBookings: [],
+  pendingMemberHoursByLevel: [],
   hoursByLevel: [],
+  agencyDebts: [],
 };
 
 export default function AdminFinancialDashboard() {
@@ -35,15 +47,14 @@ export default function AdminFinancialDashboard() {
 
   const [dateRange, setDateRange] = useState(() => getDefaultMonthRange());
   const [resort, setResort] = useState('CERRO_CATEDRAL');
-  const [assignedHourPrice, setAssignedHourPrice] = useState(DEFAULT_TEACHER_HOUR_PRICES.assigned);
-  const [referredHourPrice, setReferredHourPrice] = useState(DEFAULT_TEACHER_HOUR_PRICES.referred);
+  const [levelPrices, setLevelPrices] = useState(() => buildDefaultLevelHourPrices());
   const [error, setError] = useState(null);
 
   const summary = financialSummary || emptySummary;
 
   useEffect(() => {
     const [from, to] = dateRange || [];
-    if (!from || !to || !resort) {
+    if (!from || !to) {
       return;
     }
     setError(null);
@@ -52,26 +63,68 @@ export default function AdminFinancialDashboard() {
         from: formatDateParam(from),
         to: formatDateParam(to),
         resort,
+        businessId: SCHOOL_BUSINESS_ID,
       })
     ).catch((err) => {
       setError(err?.message || t('adminFinancial.loadError'));
     });
   }, [dateRange, resort, dispatch, t]);
 
-  const pendingPayoutsTotal = useMemo(() => {
-    const assignedRate = Number(assignedHourPrice) || 0;
-    const referredRate = Number(referredHourPrice) || 0;
-    return (
-      (summary.pendingAssignedHours || 0) * assignedRate +
-      (summary.pendingReferredHours || 0) * referredRate
-    );
-  }, [summary.pendingAssignedHours, summary.pendingReferredHours, assignedHourPrice, referredHourPrice]);
+  const handleLevelPriceChange = (levelKey, field, value) => {
+    setLevelPrices((prev) => ({
+      ...prev,
+      [levelKey]: {
+        ...prev[levelKey],
+        [field]: value,
+      },
+    }));
+  };
+
+  const pendingMemberPayoutTotal = useMemo(
+    () =>
+      calcPendingMemberPayoutFromHoursByLevel(
+        summary.pendingMemberHoursByLevel,
+        levelPrices
+      ),
+    [summary.pendingMemberHoursByLevel, levelPrices]
+  );
+
+  const pendingPayoutsTotal = useMemo(
+    () => pendingMemberPayoutTotal + (summary.pendingNonMemberSuggestedTotal || 0),
+    [pendingMemberPayoutTotal, summary.pendingNonMemberSuggestedTotal]
+  );
+
+  const pendingPayoutsCount = useMemo(
+    () =>
+      (summary.pendingMemberBookingCount || 0) +
+      (summary.pendingNonMemberSuggestedCount || 0) +
+      (summary.missingSuggestedCount || 0),
+    [
+      summary.pendingMemberBookingCount,
+      summary.pendingNonMemberSuggestedCount,
+      summary.missingSuggestedCount,
+    ]
+  );
 
   const kpis = {
     paidBookingsTotal: summary.paidBookingsTotal || 0,
+    paidBookingsCount: summary.paidBookingsCount || 0,
+    unpaidBookingsTotal: summary.unpaidBookingsTotal || 0,
+    unpaidBookingsCount: summary.unpaidBookingsCount || 0,
     completedPayoutsTotal: summary.completedPayoutsTotal || 0,
+    completedPayoutsCount: summary.completedPayoutsCount || 0,
     pendingPayoutsTotal,
+    pendingPayoutsCount,
   };
+
+  const filterQuery = useMemo(() => {
+    const [from, to] = dateRange || [];
+    const params = new URLSearchParams();
+    if (from) params.set('from', formatDateParam(from));
+    if (to) params.set('to', formatDateParam(to));
+    if (resort) params.set('resort', resort);
+    return params.toString();
+  }, [dateRange, resort]);
 
   return (
     <Page title={t('adminFinancial.pageTitle')}>
@@ -96,15 +149,25 @@ export default function AdminFinancialDashboard() {
           </Card>
 
           <Card sx={{ p: 3 }}>
-            <FinancialHourRatesBar
-              assignedHourPrice={assignedHourPrice}
-              referredHourPrice={referredHourPrice}
-              onAssignedChange={setAssignedHourPrice}
-              onReferredChange={setReferredHourPrice}
+            <TeacherLevelHourRatesBar
+              levelPrices={levelPrices}
+              onLevelPriceChange={handleLevelPriceChange}
             />
           </Card>
 
-          <FinancialKPICards kpis={kpis} loading={isLoading} />
+          <MissingSuggestedAlert
+            count={summary.missingSuggestedCount}
+            bookings={summary.missingSuggestedBookings}
+          />
+
+          <FinancialKPICards
+            kpis={kpis}
+            loading={isLoading}
+            filterQuery={filterQuery}
+            getDetailPath={(category) => PATH_DASHBOARD.admin.financialDetail(category)}
+          />
+
+          <AgencyDebtTable rows={summary.agencyDebts} loading={isLoading} />
 
           <HoursByLevelTable rows={summary.hoursByLevel} loading={isLoading} />
         </Stack>

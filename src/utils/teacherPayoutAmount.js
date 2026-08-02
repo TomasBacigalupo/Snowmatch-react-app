@@ -294,6 +294,28 @@ export function calcTeacherPayTotalWithLevelPrices(bookings, levelPrices) {
   );
 }
 
+/** Sum member pending payout from hours-by-level rows and editable level rates. */
+export function calcPendingMemberPayoutFromHoursByLevel(rows, levelPrices) {
+  return (rows || []).reduce((total, row) => {
+    const level = Number(row?.level);
+    if (!Number.isFinite(level)) {
+      return total;
+    }
+    const levelKey = level >= 3 ? '3+' : String(level);
+    const prices = levelPrices?.[levelKey];
+    if (!prices) {
+      return total;
+    }
+    const assignedRate = parseFloat(prices.assigned) || 0;
+    const referredRate = parseFloat(prices.referred) || 0;
+    return (
+      total +
+      (row.assignedHours || 0) * assignedRate +
+      (row.requiredHours || 0) * referredRate
+    );
+  }, 0);
+}
+
 export function hasHourPricesConfigured(hourPrices) {
   const assigned = parseFloat(hourPrices?.assigned);
   const referred = parseFloat(hourPrices?.referred);

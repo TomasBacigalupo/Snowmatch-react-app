@@ -50,12 +50,21 @@ const initialState = {
   financialSummary: {
     paidBookingsTotal: 0,
     paidBookingsCount: 0,
+    unpaidBookingsTotal: 0,
+    unpaidBookingsCount: 0,
     completedPayoutsTotal: 0,
     completedPayoutsCount: 0,
-    pendingAssignedHours: 0,
-    pendingReferredHours: 0,
+    pendingNonMemberSuggestedTotal: 0,
+    pendingNonMemberSuggestedCount: 0,
+    pendingMemberBookingCount: 0,
+    missingSuggestedCount: 0,
+    missingSuggestedBookings: [],
+    pendingMemberHoursByLevel: [],
     hoursByLevel: [],
+    agencyDebts: [],
   },
+  financialBookings: [],
+  isLoadingFinancialBookings: false,
   resortStats: null,
   isLoadingResortStats: false,
   memberLessonStats: [],
@@ -241,6 +250,20 @@ const slice = createSlice({
     getFinancialSummarySuccess(state, action) {
       state.isLoading = false;
       state.financialSummary = action.payload;
+    },
+
+    getFinancialBookingsStart(state) {
+      state.isLoadingFinancialBookings = true;
+    },
+
+    getFinancialBookingsSuccess(state, action) {
+      state.isLoadingFinancialBookings = false;
+      state.financialBookings = action.payload;
+    },
+
+    getFinancialBookingsError(state) {
+      state.isLoadingFinancialBookings = false;
+      state.financialBookings = [];
     },
 
         // MARK PAYOUT AS PAID
@@ -1120,7 +1143,7 @@ export function editPayout(payoutId, payoutData) {
 }
 
 // Financial Dashboard Actions
-export function getFinancialSummary({ from, to, resort }) {
+export function getFinancialSummary({ from, to, resort, businessId }) {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
@@ -1128,22 +1151,57 @@ export function getFinancialSummary({ from, to, resort }) {
       if (from) params.append('from', from);
       if (to) params.append('to', to);
       if (resort) params.append('resort', resort);
+      if (businessId != null) params.append('businessId', String(businessId));
 
       const response = await axios.get(`/api/admin/financial/summary?${params.toString()}`);
       const data = response.data || {};
       const financialSummary = {
         paidBookingsTotal: data.paidBookingsTotal || 0,
         paidBookingsCount: data.paidBookingsCount || 0,
+        unpaidBookingsTotal: data.unpaidBookingsTotal || 0,
+        unpaidBookingsCount: data.unpaidBookingsCount || 0,
         completedPayoutsTotal: data.completedPayoutsTotal || 0,
         completedPayoutsCount: data.completedPayoutsCount || 0,
-        pendingAssignedHours: data.pendingAssignedHours || 0,
-        pendingReferredHours: data.pendingReferredHours || 0,
+        pendingNonMemberSuggestedTotal: data.pendingNonMemberSuggestedTotal || 0,
+        pendingNonMemberSuggestedCount: data.pendingNonMemberSuggestedCount || 0,
+        pendingMemberBookingCount: data.pendingMemberBookingCount || 0,
+        missingSuggestedCount: data.missingSuggestedCount || 0,
+        missingSuggestedBookings: Array.isArray(data.missingSuggestedBookings)
+          ? data.missingSuggestedBookings
+          : [],
+        pendingMemberHoursByLevel: Array.isArray(data.pendingMemberHoursByLevel)
+          ? data.pendingMemberHoursByLevel
+          : [],
         hoursByLevel: Array.isArray(data.hoursByLevel) ? data.hoursByLevel : [],
+        agencyDebts: Array.isArray(data.agencyDebts) ? data.agencyDebts : [],
       };
 
       dispatch(slice.actions.getFinancialSummarySuccess(financialSummary));
       return { payload: financialSummary };
     } catch (error) {
+      dispatch(slice.actions.hasError(error));
+      throw error;
+    }
+  };
+}
+
+export function getFinancialBookings({ from, to, resort, businessId, category }) {
+  return async () => {
+    dispatch(slice.actions.getFinancialBookingsStart());
+    try {
+      const params = new URLSearchParams();
+      if (from) params.append('from', from);
+      if (to) params.append('to', to);
+      if (resort) params.append('resort', resort);
+      if (businessId != null) params.append('businessId', String(businessId));
+      if (category) params.append('category', category);
+
+      const response = await axios.get(`/api/admin/financial/bookings?${params.toString()}`);
+      const bookings = Array.isArray(response.data) ? response.data : [];
+      dispatch(slice.actions.getFinancialBookingsSuccess(bookings));
+      return { payload: bookings };
+    } catch (error) {
+      dispatch(slice.actions.getFinancialBookingsError());
       dispatch(slice.actions.hasError(error));
       throw error;
     }

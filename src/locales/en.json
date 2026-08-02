@@ -1173,6 +1173,11 @@
       "studentId": "Student ID",
       "moreFilters": "More filters",
       "searchBookingPlaceholder": "Search by customer or booking ID…",
+      "searchTeacherLabel": "Search teacher by name",
+      "searchTeacherPlaceholder": "Type name or lastname (or ID)",
+      "noTeachersFound": "No teachers found",
+      "typeToSearchTeachers": "Type to search teachers",
+      "teachersLoadError": "Could not load teachers. Please try again.",
       "months": {
         "06": "June",
         "07": "July",

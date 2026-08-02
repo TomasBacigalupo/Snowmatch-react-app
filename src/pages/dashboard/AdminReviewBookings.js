@@ -4,6 +4,7 @@ import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { ADMIN_BOOKING_RESORT_FILTER_OPTIONS } from 'src/utils/adminBookingResortOptions';
 import { bookingMatchesCustomerSearch } from 'src/utils/adminBookingParticipants';
+import { TEACHER_QUICK_CHIPS } from 'src/utils/teacherQuickChips';
 // @mui
 import {
   Box,
@@ -48,8 +49,22 @@ import { TableEmptyRows, TableHeadCustom, TableNoData, TableSelectedActions } fr
 // sections
 import { AdminTableToolbar, AdminTableRow } from '../../sections/@dashboard/admin/list';
 //cosas de fede
-import { useDispatch, useSelector } from '../../redux/store';
-import { getTeachers, openModal, closeModal, getBooking, getBookings, getResortAdminBookings, getBookingIntents, getResortAdminBookingIntents, openEditBookingModal, deleteBooking, openDeleteModal, closeDeleteModal } from '../../redux/slices/admin'
+import { useDispatch, useSelector, store } from '../../redux/store';
+import {
+  getTeachers,
+  getResortAdminTeachers,
+  openModal,
+  closeModal,
+  getBooking,
+  getBookings,
+  getResortAdminBookings,
+  getBookingIntents,
+  getResortAdminBookingIntents,
+  openEditBookingModal,
+  deleteBooking,
+  openDeleteModal,
+  closeDeleteModal,
+} from '../../redux/slices/admin';
 import { DialogAnimate } from '../../components/animate';
 import DeclineForm from '../../sections/@dashboard/admin/DeclineForm';
 import AdminTableCard from 'src/sections/@dashboard/admin/list/AdminTableCard';
@@ -66,6 +81,24 @@ import { normalizeBookingIntent } from 'src/utils/normalizeBookingIntent';
 
 // ---------------------------------------------------------------------
 
+/** Build a minimal teacher option so Autocomplete can show chip/ID selections. */
+function teacherOptionFromId(id, teachersList = []) {
+  if (id === '' || id == null) return null;
+  const found = (teachersList || []).find((t) => String(t?.id) === String(id));
+  if (found) return found;
+  const chip = TEACHER_QUICK_CHIPS.find((t) => String(t.value) === String(id));
+  if (chip) return { id: chip.value, name: chip.name, lastname: '' };
+  return { id, name: '', lastname: '' };
+}
+
+/** Display label for the top teacher Autocomplete (must match toolbar getOptionLabel). */
+function getTeacherFilterLabel(teacher) {
+  if (!teacher) return '';
+  if (typeof teacher === 'string') return teacher;
+  const name = `${teacher.name || ''} ${teacher.lastname || ''}`.trim();
+  if (name) return teacher.id != null ? `${name} (ID: ${teacher.id})` : name;
+  return teacher.id != null ? String(teacher.id) : '';
+}
 
 const ROLE_OPTIONS = [
   'PENDING', 'ACCEPTED', 'DECLINED'
@@ -255,6 +288,11 @@ export function AdminBookingsPage({ bookingListKind, pageTitle, heading }) {
   const [filterStudentId, setFilterStudentId] = useState('');
   const [teachers, setTeachers] = useState([]);
   const [students, setStudents] = useState([]);
+  /** Selected teacher for Autocomplete (name search → ID → bookings filter). */
+  const [selectedTeacher, setSelectedTeacher] = useState(null);
+  const [teacherSearchInput, setTeacherSearchInput] = useState('');
+  const [isSearchingTeachers, setIsSearchingTeachers] = useState(false);
+  const [teachersSearchError, setTeachersSearchError] = useState(false);
   const [filterResort, setFilterResort] = useState(() =>
     bookingListKind === 'lesson' ? (lockedResort || 'CERRO_CATEDRAL') : (lockedResort || '')
   );
@@ -375,12 +413,6 @@ export function AdminBookingsPage({ bookingListKind, pageTitle, heading }) {
     dispatchBookings({ resort: event.target.value });
   };
 
-  const handleFilterTeacherId = (event) => {
-    const value = event?.target?.value ?? event;
-    setFilterTeacherId(value);
-    dispatchBookings({ teacherId: value });
-  };
-
   const handleFilterStudentId = (event) => {
     const value = event.target.value;
     setFilterStudentId(value);
@@ -435,7 +467,122 @@ export function AdminBookingsPage({ bookingListKind, pageTitle, heading }) {
 
   const dispatch = useDispatch();
 
-  const { teachers: reduxTeachers, isOpenModal, isOpenEditBookingModal, isOpenDeleteModal, selectedEmail, selectedBookingId, bookings, bookingIntents, isLoadingBookings } = useSelector((state) => state.admin);
+  const {
+    teachers: reduxTeachers,
+    isOpenModal,
+    isOpenEditBookingModal,
+    isOpenDeleteModal,
+    selectedEmail,
+    selectedBookingId,
+    bookings,
+    bookingIntents,
+    isLoadingBookings,
+  } = useSelector((state) => state.admin);
+
+  const handleFilterTeacherId = (event) => {
+    const value = event?.target?.value ?? event;
+    const normalized = value === '' || value == null ? '' : value;
+    setFilterTeacherId(normalized);
+    // Keep Autocomplete value + input text in sync when quick chips select or clear.
+    const nextTeacher = teacherOptionFromId(normalized, reduxTeachers);
+    setSelectedTeacher(nextTeacher);
+    setTeacherSearchInput(nextTeacher ? getTeacherFilterLabel(nextTeacher) : '');
+    setPage(0);
+    dispatchBookings({ teacherId: normalized });
+  };
+
+  /** Autocomplete selection: resolve teacher object or freeSolo ID string → bookings filter. */
+  const handleTeacherSelect = (_event, value) => {
+    if (value == null || value === '') {
+      setSelectedTeacher(null);
+      setFilterTeacherId('');
+      setTeacherSearchInput('');
+      setPage(0);
+      dispatchBookings({ teacherId: '' });
+      return;
+    }
+
+    if (typeof value === 'string') {
+      const trimmed = value.trim();
+      // freeSolo: only treat pure numeric input as a teacher ID (name must be selected from options).
+      if (!/^\d+$/.test(trimmed)) {
+        return;
+      }
+      const nextTeacher = teacherOptionFromId(trimmed, reduxTeachers);
+      setSelectedTeacher(nextTeacher);
+      setTeacherSearchInput(getTeacherFilterLabel(nextTeacher));
+      setFilterTeacherId(trimmed);
+      setPage(0);
+      dispatchBookings({ teacherId: trimmed });
+      return;
+    }
+
+    setSelectedTeacher(value);
+    setTeacherSearchInput(getTeacherFilterLabel(value));
+    const teacherId = value?.id ?? '';
+    setFilterTeacherId(teacherId);
+    setPage(0);
+    dispatchBookings({ teacherId });
+  };
+
+  const handleTeacherSearchInput = (newInputValue) => {
+    setTeacherSearchInput(newInputValue ?? '');
+  };
+
+  // Debounced teacher name search → options for Autocomplete (then select ID → bookings filter).
+  useEffect(() => {
+    const query = teacherSearchInput?.trim() ?? '';
+    if (!query) {
+      setIsSearchingTeachers(false);
+      setTeachersSearchError(false);
+      return undefined;
+    }
+
+    // Skip API search when the input is only the selected teacher's display label (chip/select sync).
+    if (selectedTeacher && getTeacherFilterLabel(selectedTeacher) === query) {
+      setIsSearchingTeachers(false);
+      setTeachersSearchError(false);
+      return undefined;
+    }
+
+    let cancelled = false;
+    setIsSearchingTeachers(true);
+    setTeachersSearchError(false);
+    const timer = setTimeout(() => {
+      const errorBefore = store.getState().admin.error;
+      const searchAction = isResortAdmin
+        ? getResortAdminTeachers(0, 'TEACHER', query, 0)
+        : getTeachers(0, 'TEACHER', query, 0);
+      Promise.resolve(dispatch(searchAction))
+        .then(() => {
+          if (cancelled) return;
+          // Thunks map HTTP failures into admin.error instead of rejecting.
+          const errorAfter = store.getState().admin.error;
+          if (errorAfter && errorAfter !== errorBefore) {
+            setTeachersSearchError(true);
+          }
+        })
+        .catch(() => {
+          if (!cancelled) setTeachersSearchError(true);
+        })
+        .finally(() => {
+          if (!cancelled) setIsSearchingTeachers(false);
+        });
+    }, 400);
+
+    return () => {
+      cancelled = true;
+      clearTimeout(timer);
+    };
+  }, [teacherSearchInput, selectedTeacher, dispatch, isResortAdmin]);
+
+  // Keep the selected teacher visible in Autocomplete even after a new search replaces options.
+  const teacherAutocompleteOptions = useMemo(() => {
+    const options = reduxTeachers || [];
+    if (!selectedTeacher?.id) return options;
+    const alreadyPresent = options.some((t) => String(t?.id) === String(selectedTeacher.id));
+    return alreadyPresent ? options : [selectedTeacher, ...options];
+  }, [reduxTeachers, selectedTeacher]);
 
   // When resort is active, we loaded all records and paginate client-side.
   const pagedBookings = useMemo(() => {
@@ -460,14 +607,6 @@ export function AdminBookingsPage({ bookingListKind, pageTitle, heading }) {
     setTableData(reduxTeachers ?? [])
     setPage(newPage)
   }
-
-  const handleTeacherInputChange = (event, newValue) => {
-    dispatch(getTeachers(0, "TEACHER", newValue, 0));
-  };
-
-  const handleStudentInputChange = (event, newValue) => {
-    dispatch(getTeachers(0, "STUDENT", newValue, 0));
-  };
 
   const handleChangeRowsPerPage = (event) => {
     const newSize = Number(event.target.value);
@@ -650,6 +789,13 @@ export function AdminBookingsPage({ bookingListKind, pageTitle, heading }) {
           onFilterStudentId={handleFilterStudentId}
           onFilterResort={handleFilterResort}
           onFilterDate={handleFilterDate}
+          teacherOptions={teacherAutocompleteOptions}
+          selectedTeacher={selectedTeacher}
+          onTeacherSearch={handleTeacherSearchInput}
+          onTeacherSelect={handleTeacherSelect}
+          teachersLoading={isSearchingTeachers}
+          teachersSearchError={teachersSearchError}
+          teacherSearchInput={teacherSearchInput}
           bookings
           hideInstructorFilters={bookingListKind === 'gear'}
           hideMoreFilters={isResortAdmin}

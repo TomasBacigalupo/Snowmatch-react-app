@@ -81,6 +81,26 @@ export function calcSuggestedPayoutBreakdown({
   };
 }
 
+/**
+ * Suggested instructor payout from billable hours × assigned/referred hour price
+ * (same formula as Finanzas → Pagos when no suggested amount is set).
+ */
+export function calcSuggestedPayoutByHourPrice({ hours = 0, bookingType, hourPrices }) {
+  const teacherHours = Number(hours) || 0;
+  const isReferred = bookingType === 'REFERRED';
+  const rawRate = isReferred ? hourPrices?.referred : hourPrices?.assigned;
+  const rate = parseFloat(rawRate);
+  const validRate = Number.isFinite(rate) && rate > 0 ? rate : 0;
+  const suggested = roundMoney(teacherHours > 0 && validRate > 0 ? teacherHours * validRate : 0);
+
+  return {
+    hours: teacherHours,
+    rate: validRate,
+    isReferred,
+    suggested,
+  };
+}
+
 function calcEventHours(event) {
   const start = new Date(event?.start);
   const end = new Date(event?.end);

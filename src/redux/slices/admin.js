@@ -1527,3 +1527,16 @@ export function createAdminStudent({ email, name, lastname, countryCode, cellpho
     }
   };
 }
+
+/** Sends app_signup_invite WhatsApp template to a new student (admin only). */
+export function sendAppSignupInvite({ userId, countryCode, cellphone, name }) {
+  return async () => {
+    const response = await axios.post('/api/admin/whatsapp/app-signup-invite', {
+      userId,
+      countryCode,
+      cellphone,
+      name,
+    });
+    return response.data;
+  };
+}

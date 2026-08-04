@@ -15,8 +15,9 @@ import {
 import { LoadingButton } from '@mui/lab';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'src/redux/store';
-import { createAdminStudent } from 'src/redux/slices/admin';
+import { createAdminStudent, sendAppSignupInvite } from 'src/redux/slices/admin';
 import { countries } from 'src/_mock';
+import { useSnackbar } from 'notistack';
 
 const QUICK_COUNTRIES = [
   { code: 'AR', label: 'Argentina', phone: '54' },
@@ -57,6 +58,7 @@ function splitFullName(fullName) {
 
 export default function CreateStudentModal({ open, onClose, onCreated, initialName = '' }) {
   const dispatch = useDispatch();
+  const { enqueueSnackbar } = useSnackbar();
   const { t } = useTranslation();
   const [form, setForm] = useState(() => createDefaultForm(initialName));
   const [submitting, setSubmitting] = useState(false);
@@ -106,6 +108,21 @@ export default function CreateStudentModal({ open, onClose, onCreated, initialNa
           cellphone: form.cellphone.trim(),
         })
       );
+
+      try {
+        await dispatch(
+          sendAppSignupInvite({
+            userId: created.id,
+            countryCode: form.countryCode,
+            cellphone: form.cellphone.trim(),
+            name: firstName,
+          })
+        );
+        enqueueSnackbar(t('adminBookings.createStudent.whatsAppInviteSent'), { variant: 'success' });
+      } catch (inviteErr) {
+        enqueueSnackbar(t('adminBookings.createStudent.whatsAppInviteFailed'), { variant: 'warning' });
+      }
+
       onCreated(created);
       onClose();
     } catch (err) {

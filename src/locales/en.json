@@ -1506,7 +1506,9 @@
       "validationName": "Name must be at least 3 characters",
       "validationEmail": "Email is required",
       "validationPhone": "Phone is required",
-      "createError": "Could not create customer. Please try again."
+      "createError": "Could not create customer. Please try again.",
+      "whatsAppInviteSent": "WhatsApp invite sent",
+      "whatsAppInviteFailed": "Customer created, but WhatsApp invite could not be sent"
     },
     "rental": {
       "sectionTitle": "Equipment / rental",

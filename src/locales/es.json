@@ -1698,7 +1698,9 @@
             "validationName": "El nombre debe tener al menos 3 caracteres",
             "validationEmail": "El email es obligatorio",
             "validationPhone": "El teléfono es obligatorio",
-            "createError": "No se pudo crear el cliente. Intentá de nuevo."
+            "createError": "No se pudo crear el cliente. Intentá de nuevo.",
+            "whatsAppInviteSent": "Invitación por WhatsApp enviada",
+            "whatsAppInviteFailed": "Cliente creado, pero no se pudo enviar la invitación por WhatsApp"
         },
         "rental": {
             "sectionTitle": "Equipo / alquiler",

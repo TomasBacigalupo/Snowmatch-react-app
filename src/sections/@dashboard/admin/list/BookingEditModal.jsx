@@ -17,6 +17,9 @@ import {
   Box,
   IconButton,
   Collapse,
+  Chip,
+  ToggleButton,
+  ToggleButtonGroup,
 } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -43,9 +46,28 @@ import {
 } from 'src/utils/adminBookingParticipants';
 import {
   calcSuggestedPayoutBreakdown,
+  calcSuggestedPayoutByHourPrice,
   HOURLY_PAYOUT_CAP_ARS,
 } from 'src/utils/teacherPayoutAmount';
+import {
+  DEFAULT_TEACHER_HOUR_PRICES,
+  getTeacherLevelPriceKey,
+  LEVEL_HOUR_PRICE_PRESETS,
+} from 'src/utils/teacherHourPricePresets';
 import AdminAgencySelect from '../AdminAgencySelect';
+
+/** Seed assigned/referred rates from the booking teacher level when known. */
+function resolveHourPricesFromTeacherLevel(teacherLevel) {
+  const key = getTeacherLevelPriceKey(teacherLevel);
+  const preset = LEVEL_HOUR_PRICE_PRESETS.find((item) => String(item.level) === key);
+  if (!preset) {
+    return { ...DEFAULT_TEACHER_HOUR_PRICES };
+  }
+  return {
+    assigned: String(preset.assigned),
+    referred: String(preset.referred),
+  };
+}
 
 const RESORT_OPTIONS = [
   {
@@ -146,6 +168,10 @@ export default function BookingEditModal({ open, onClose, booking, onSave }) {
     () => booking?.suggestedTeacherPayoutCurrency || 'ARS'
   );
   const [payoutCalculatorOpen, setPayoutCalculatorOpen] = useState(false);
+  const [payoutCalcMethod, setPayoutCalcMethod] = useState('price');
+  const initialHourPrices = resolveHourPricesFromTeacherLevel(booking?.teacher?.level);
+  const [assignedHourPrice, setAssignedHourPrice] = useState(() => initialHourPrices.assigned);
+  const [referredHourPrice, setReferredHourPrice] = useState(() => initialHourPrices.referred);
   const editableClient = resolveEditableClient(booking);
 
   const teacherHours = useMemo(() => calcTeacherHoursFromDateTimes(dateTimes), [dateTimes]);
@@ -161,9 +187,35 @@ export default function BookingEditModal({ open, onClose, booking, onSave }) {
     [price, currency, bookingPaymentMethod, teacherHours]
   );
 
+  const levelPayoutBreakdown = useMemo(
+    () =>
+      calcSuggestedPayoutByHourPrice({
+        hours: teacherHours,
+        bookingType,
+        hourPrices: { assigned: assignedHourPrice, referred: referredHourPrice },
+      }),
+    [teacherHours, bookingType, assignedHourPrice, referredHourPrice]
+  );
+
   const handleApplySuggestedPayout = () => {
     setSuggestedTeacherPayoutAmount(payoutBreakdown.suggested);
     setSuggestedTeacherPayoutCurrency('ARS');
+  };
+
+  const handleApplyLevelSuggestedPayout = () => {
+    setSuggestedTeacherPayoutAmount(levelPayoutBreakdown.suggested);
+    setSuggestedTeacherPayoutCurrency('ARS');
+  };
+
+  const handlePayoutCalcMethodChange = (_event, nextMethod) => {
+    if (nextMethod != null) {
+      setPayoutCalcMethod(nextMethod);
+    }
+  };
+
+  const handleLevelPresetClick = (preset) => {
+    setAssignedHourPrice(String(preset.assigned));
+    setReferredHourPrice(String(preset.referred));
   };
 
   useEffect(() => {
@@ -181,6 +233,10 @@ export default function BookingEditModal({ open, onClose, booking, onSave }) {
       setSuggestedTeacherPayoutAmount(booking?.suggestedTeacherPayoutAmount ?? '');
       setSuggestedTeacherPayoutCurrency(booking?.suggestedTeacherPayoutCurrency || 'ARS');
       setPayoutCalculatorOpen(false);
+      setPayoutCalcMethod('price');
+      const hourPrices = resolveHourPricesFromTeacherLevel(booking?.teacher?.level);
+      setAssignedHourPrice(hourPrices.assigned);
+      setReferredHourPrice(hourPrices.referred);
     }
   }, [open, booking]);
 
@@ -668,7 +724,7 @@ export default function BookingEditModal({ open, onClose, booking, onSave }) {
               </Button>
               <Collapse in={payoutCalculatorOpen}>
                 <Stack
-                  spacing={1}
+                  spacing={1.5}
                   sx={{
                     mt: 1,
                     p: 2,
@@ -676,75 +732,185 @@ export default function BookingEditModal({ open, onClose, booking, onSave }) {
                     bgcolor: 'background.neutral',
                   }}
                 >
-                  <PayoutBreakdownRow
-                    label={t('adminBookings.editModal.suggestedPayoutCalculator.teacherHours')}
-                    value={t('adminBookings.editModal.suggestedPayoutCalculator.hoursValue', {
-                      hours: payoutBreakdown.hours,
-                    })}
-                  />
+                  <ToggleButtonGroup
+                    exclusive
+                    size="small"
+                    value={payoutCalcMethod}
+                    onChange={handlePayoutCalcMethodChange}
+                    aria-label={t('adminBookings.editModal.suggestedPayoutCalculator.methodLabel')}
+                  >
+                    <ToggleButton value="price">
+                      {t('adminBookings.editModal.suggestedPayoutCalculator.byPrice')}
+                    </ToggleButton>
+                    <ToggleButton value="level">
+                      {t('adminBookings.editModal.suggestedPayoutCalculator.byLevel')}
+                    </ToggleButton>
+                  </ToggleButtonGroup>
 
-                  {payoutBreakdown.currencyConverted && (
-                    <PayoutBreakdownRow
-                      label={t('adminBookings.editModal.suggestedPayoutCalculator.priceInArs', {
-                        rate: payoutBreakdown.usdToArsRate,
-                      })}
-                      value={formatArsAmount(payoutBreakdown.priceArs)}
-                    />
-                  )}
-
-                  {!payoutBreakdown.currencyConverted && (
-                    <PayoutBreakdownRow
-                      label={t('adminBookings.editModal.suggestedPayoutCalculator.priceInArsLabel')}
-                      value={formatArsAmount(payoutBreakdown.priceArs)}
-                    />
-                  )}
-
-                  {payoutBreakdown.isCash ? (
-                    <PayoutBreakdownRow
-                      label={t('adminBookings.editModal.suggestedPayoutCalculator.cashShare')}
-                      value={formatArsAmount(payoutBreakdown.uncappedSuggested)}
-                    />
-                  ) : (
+                  {payoutCalcMethod === 'price' ? (
                     <>
                       <PayoutBreakdownRow
-                        label={t('adminBookings.editModal.suggestedPayoutCalculator.netOfIva')}
-                        value={formatArsAmount(payoutBreakdown.netOfIva)}
+                        label={t('adminBookings.editModal.suggestedPayoutCalculator.teacherHours')}
+                        value={t('adminBookings.editModal.suggestedPayoutCalculator.hoursValue', {
+                          hours: payoutBreakdown.hours,
+                        })}
+                      />
+
+                      {payoutBreakdown.currencyConverted && (
+                        <PayoutBreakdownRow
+                          label={t('adminBookings.editModal.suggestedPayoutCalculator.priceInArs', {
+                            rate: payoutBreakdown.usdToArsRate,
+                          })}
+                          value={formatArsAmount(payoutBreakdown.priceArs)}
+                        />
+                      )}
+
+                      {!payoutBreakdown.currencyConverted && (
+                        <PayoutBreakdownRow
+                          label={t('adminBookings.editModal.suggestedPayoutCalculator.priceInArsLabel')}
+                          value={formatArsAmount(payoutBreakdown.priceArs)}
+                        />
+                      )}
+
+                      {payoutBreakdown.isCash ? (
+                        <PayoutBreakdownRow
+                          label={t('adminBookings.editModal.suggestedPayoutCalculator.cashShare')}
+                          value={formatArsAmount(payoutBreakdown.uncappedSuggested)}
+                        />
+                      ) : (
+                        <>
+                          <PayoutBreakdownRow
+                            label={t('adminBookings.editModal.suggestedPayoutCalculator.netOfIva')}
+                            value={formatArsAmount(payoutBreakdown.netOfIva)}
+                          />
+                          <PayoutBreakdownRow
+                            label={t('adminBookings.editModal.suggestedPayoutCalculator.ingresosBrutos')}
+                            value={formatArsAmount(payoutBreakdown.ingresosBrutos)}
+                          />
+                          <PayoutBreakdownRow
+                            label={t('adminBookings.editModal.suggestedPayoutCalculator.nonCashShare')}
+                            value={formatArsAmount(payoutBreakdown.uncappedSuggested)}
+                          />
+                        </>
+                      )}
+
+                      {payoutBreakdown.hours > 0 && (
+                        <PayoutBreakdownRow
+                          label={t('adminBookings.editModal.suggestedPayoutCalculator.hourlyCap', {
+                            cap: HOURLY_PAYOUT_CAP_ARS,
+                          })}
+                          value={formatArsAmount(payoutBreakdown.cap)}
+                        />
+                      )}
+
+                      <PayoutBreakdownRow
+                        label={t('adminBookings.editModal.suggestedPayoutCalculator.suggested')}
+                        value={formatArsAmount(payoutBreakdown.suggested)}
+                        emphasize
+                      />
+
+                      <Button
+                        variant="outlined"
+                        size="small"
+                        onClick={handleApplySuggestedPayout}
+                        disabled={!payoutBreakdown.suggested}
+                        sx={{ alignSelf: 'flex-start', mt: 0.5 }}
+                      >
+                        {t('adminBookings.editModal.suggestedPayoutCalculator.apply')}
+                      </Button>
+                    </>
+                  ) : (
+                    <>
+                      <Stack spacing={1}>
+                        <Typography variant="caption" color="text.secondary">
+                          {t('adminBookings.editModal.suggestedPayoutCalculator.levelPricePresets')}
+                        </Typography>
+                        <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
+                          {LEVEL_HOUR_PRICE_PRESETS.map((preset) => {
+                            const selected =
+                              String(assignedHourPrice) === String(preset.assigned) &&
+                              String(referredHourPrice) === String(preset.referred);
+                            return (
+                              <Chip
+                                key={String(preset.level)}
+                                clickable
+                                color={selected ? 'primary' : 'default'}
+                                variant={selected ? 'filled' : 'outlined'}
+                                label={t(
+                                  'adminBookings.editModal.suggestedPayoutCalculator.levelPricePresetChip',
+                                  {
+                                    level: preset.level,
+                                    assigned: formatArsAmount(preset.assigned),
+                                    referred: formatArsAmount(preset.referred),
+                                  }
+                                )}
+                                onClick={() => handleLevelPresetClick(preset)}
+                              />
+                            );
+                          })}
+                        </Stack>
+                      </Stack>
+
+                      <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
+                        <TextField
+                          size="small"
+                          type="number"
+                          fullWidth
+                          label={t(
+                            'adminBookings.editModal.suggestedPayoutCalculator.assignedHourPriceLabel'
+                          )}
+                          value={assignedHourPrice}
+                          onChange={(e) => setAssignedHourPrice(e.target.value)}
+                          inputProps={{ min: 0, step: 500 }}
+                        />
+                        <TextField
+                          size="small"
+                          type="number"
+                          fullWidth
+                          label={t(
+                            'adminBookings.editModal.suggestedPayoutCalculator.referredHourPriceLabel'
+                          )}
+                          value={referredHourPrice}
+                          onChange={(e) => setReferredHourPrice(e.target.value)}
+                          inputProps={{ min: 0, step: 500 }}
+                        />
+                      </Stack>
+
+                      <Typography variant="caption" color="text.secondary">
+                        {t('adminBookings.editModal.suggestedPayoutCalculator.hourPriceHelper')}
+                      </Typography>
+
+                      <PayoutBreakdownRow
+                        label={t('adminBookings.editModal.suggestedPayoutCalculator.teacherHours')}
+                        value={t('adminBookings.editModal.suggestedPayoutCalculator.hoursValue', {
+                          hours: levelPayoutBreakdown.hours,
+                        })}
                       />
                       <PayoutBreakdownRow
-                        label={t('adminBookings.editModal.suggestedPayoutCalculator.ingresosBrutos')}
-                        value={formatArsAmount(payoutBreakdown.ingresosBrutos)}
+                        label={t(
+                          levelPayoutBreakdown.isReferred
+                            ? 'adminBookings.editModal.suggestedPayoutCalculator.referredRate'
+                            : 'adminBookings.editModal.suggestedPayoutCalculator.assignedRate'
+                        )}
+                        value={formatArsAmount(levelPayoutBreakdown.rate)}
                       />
                       <PayoutBreakdownRow
-                        label={t('adminBookings.editModal.suggestedPayoutCalculator.nonCashShare')}
-                        value={formatArsAmount(payoutBreakdown.uncappedSuggested)}
+                        label={t('adminBookings.editModal.suggestedPayoutCalculator.suggested')}
+                        value={formatArsAmount(levelPayoutBreakdown.suggested)}
+                        emphasize
                       />
+
+                      <Button
+                        variant="outlined"
+                        size="small"
+                        onClick={handleApplyLevelSuggestedPayout}
+                        disabled={!levelPayoutBreakdown.suggested}
+                        sx={{ alignSelf: 'flex-start', mt: 0.5 }}
+                      >
+                        {t('adminBookings.editModal.suggestedPayoutCalculator.apply')}
+                      </Button>
                     </>
                   )}
-
-                  {payoutBreakdown.hours > 0 && (
-                    <PayoutBreakdownRow
-                      label={t('adminBookings.editModal.suggestedPayoutCalculator.hourlyCap', {
-                        cap: HOURLY_PAYOUT_CAP_ARS,
-                      })}
-                      value={formatArsAmount(payoutBreakdown.cap)}
-                    />
-                  )}
-
-                  <PayoutBreakdownRow
-                    label={t('adminBookings.editModal.suggestedPayoutCalculator.suggested')}
-                    value={formatArsAmount(payoutBreakdown.suggested)}
-                    emphasize
-                  />
-
-                  <Button
-                    variant="outlined"
-                    size="small"
-                    onClick={handleApplySuggestedPayout}
-                    disabled={!payoutBreakdown.suggested}
-                    sx={{ alignSelf: 'flex-start', mt: 0.5 }}
-                  >
-                    {t('adminBookings.editModal.suggestedPayoutCalculator.apply')}
-                  </Button>
                 </Stack>
               </Collapse>
             </Box>

@@ -21,6 +21,35 @@ const GEAR_HIDDEN_KEYS = new Set([
     'totalChildren',
 ]);
 
+function sumRevenueByCurrency(bookings) {
+    const totals = {};
+    (bookings || []).forEach((booking) => {
+        const currency = booking?.currency || 'ARS';
+        totals[currency] = (totals[currency] || 0) + (Number(booking?.price) || 0);
+    });
+    return Object.entries(totals).sort(([a], [b]) => {
+        if (a === 'ARS') return -1;
+        if (b === 'ARS') return 1;
+        return a.localeCompare(b);
+    });
+}
+
+function formatCurrencyAmount(amount, currency = 'ARS') {
+    try {
+        return new Intl.NumberFormat('es-AR', {
+            style: 'currency',
+            currency,
+            minimumFractionDigits: 0,
+        }).format(amount || 0);
+    } catch {
+        return new Intl.NumberFormat('es-AR', {
+            style: 'currency',
+            currency: 'ARS',
+            minimumFractionDigits: 0,
+        }).format(amount || 0);
+    }
+}
+
 BookingSummary.propTypes = {
     bookings: PropTypes.array,
     /** When true (admin /bookings/equipos), hide class-hour and capacity stats that do not apply to gear-only bookings. */
@@ -43,94 +72,99 @@ export default function BookingSummary({ bookings, isGearBookings = false }) {
         }));
     };
 
-    const stats = {
-        total: bookings?.length || 0,
-        assignedHours: getUniqueHoursFromBookings(bookings, {
-            bookingType: 'ASSIGNED',
-            eventType: 'CLASS',
-        }),
-        requiredHours: getUniqueHoursFromBookings(bookings, {
-            bookingType: 'REFERRED',
-            eventType: 'REFERRED',
-        }),
-        totalRevenue: bookings?.reduce((sum, booking) => sum + (booking.price || 0), 0) || 0,
-        totalHours: getUniqueHoursFromBookings(bookings),
-        totalAdults: bookings?.reduce((sum, booking) => sum + (booking.adults || 0), 0) || 0,
-        totalChildren: bookings?.reduce((sum, booking) => sum + (booking.children || 0), 0) || 0,
-        totalTeacherPayments: calcTeacherPayTotalWithLevelPrices(bookings, levelPrices),
-    };
+    const revenueByCurrency = useMemo(() => {
+        const totals = sumRevenueByCurrency(bookings);
+        return totals.length ? totals : [['ARS', 0]];
+    }, [bookings]);
 
-    const formatPrice = (price) => {
-        return new Intl.NumberFormat('es-AR', {
-            style: 'currency',
-            currency: 'ARS'
-        }).format(price);
-    };
+    const SUMMARY = useMemo(() => {
+        const formatPrice = (price) =>
+            new Intl.NumberFormat('es-AR', {
+                style: 'currency',
+                currency: 'ARS',
+            }).format(price);
 
-    const formatHours = (hours) => {
-        return `${Math.round(hours)}h`;
-    };
+        const formatHours = (hours) => `${Math.round(hours)}h`;
 
-    const SUMMARY = useMemo(() => [
-        {
-            key: 'totalBookings',
-            title: t('adminBookings.summary.totalBookings'),
-            total: stats.total,
-            icon: 'eva:file-text-fill',
-            color: theme.palette.primary.main,
-        },
-        {
-            key: 'assignedHours',
-            title: t('adminBookings.summary.assignedHours'),
-            total: formatHours(stats.assignedHours),
-            icon: 'eva:clock-fill',
-            color: theme.palette.warning.main,
-        },
-        {
-            key: 'requiredHours',
-            title: t('adminBookings.summary.requiredHours'),
-            total: formatHours(stats.requiredHours),
-            icon: 'eva:calendar-fill',
-            color: theme.palette.success.main,
-        },
-        {
-            key: 'totalHours',
-            title: t('adminBookings.summary.totalHours'),
-            total: formatHours(stats.totalHours),
-            icon: 'eva:time-fill',
-            color: theme.palette.info.main,
-        },
-        {
-            key: 'totalRevenue',
-            title: t('adminBookings.summary.totalRevenue'),
-            total: formatPrice(stats.totalRevenue),
+        const stats = {
+            total: bookings?.length || 0,
+            assignedHours: getUniqueHoursFromBookings(bookings, {
+                bookingType: 'ASSIGNED',
+                eventType: 'CLASS',
+            }),
+            requiredHours: getUniqueHoursFromBookings(bookings, {
+                bookingType: 'REFERRED',
+                eventType: 'REFERRED',
+            }),
+            totalHours: getUniqueHoursFromBookings(bookings),
+            totalAdults: bookings?.reduce((sum, booking) => sum + (booking.adults || 0), 0) || 0,
+            totalChildren: bookings?.reduce((sum, booking) => sum + (booking.children || 0), 0) || 0,
+            totalTeacherPayments: calcTeacherPayTotalWithLevelPrices(bookings, levelPrices),
+        };
+
+        const revenueCards = revenueByCurrency.map(([currency, amount]) => ({
+            key: `totalRevenue-${currency}`,
+            title: `${t('adminBookings.summary.totalRevenue')} ${currency}`,
+            total: formatCurrencyAmount(amount, currency),
             icon: 'eva:trending-up-fill',
             color: theme.palette.info.main,
             isRevenue: true,
-        },
-        {
-            key: 'totalPayments',
-            title: t('adminBookings.summary.totalPayments'),
-            total: formatPrice(stats.totalTeacherPayments),
-            icon: 'eva:credit-card-fill',
-            color: theme.palette.error.main,
-            isRevenue: true,
-        },
-        {
-            key: 'totalAdults',
-            title: t('adminBookings.summary.totalAdults'),
-            total: stats.totalAdults,
-            icon: 'eva:people-fill',
-            color: theme.palette.success.dark,
-        },
-        {
-            key: 'totalChildren',
-            title: t('adminBookings.summary.totalChildren'),
-            total: stats.totalChildren,
-            icon: 'eva:person-fill',
-            color: theme.palette.warning.dark,
-        },
-    ], [t, theme, stats]);
+        }));
+
+        return [
+            {
+                key: 'totalBookings',
+                title: t('adminBookings.summary.totalBookings'),
+                total: stats.total,
+                icon: 'eva:file-text-fill',
+                color: theme.palette.primary.main,
+            },
+            {
+                key: 'assignedHours',
+                title: t('adminBookings.summary.assignedHours'),
+                total: formatHours(stats.assignedHours),
+                icon: 'eva:clock-fill',
+                color: theme.palette.warning.main,
+            },
+            {
+                key: 'requiredHours',
+                title: t('adminBookings.summary.requiredHours'),
+                total: formatHours(stats.requiredHours),
+                icon: 'eva:calendar-fill',
+                color: theme.palette.success.main,
+            },
+            {
+                key: 'totalHours',
+                title: t('adminBookings.summary.totalHours'),
+                total: formatHours(stats.totalHours),
+                icon: 'eva:time-fill',
+                color: theme.palette.info.main,
+            },
+            ...revenueCards,
+            {
+                key: 'totalPayments',
+                title: t('adminBookings.summary.totalPayments'),
+                total: formatPrice(stats.totalTeacherPayments),
+                icon: 'eva:credit-card-fill',
+                color: theme.palette.error.main,
+                isRevenue: true,
+            },
+            {
+                key: 'totalAdults',
+                title: t('adminBookings.summary.totalAdults'),
+                total: stats.totalAdults,
+                icon: 'eva:people-fill',
+                color: theme.palette.success.dark,
+            },
+            {
+                key: 'totalChildren',
+                title: t('adminBookings.summary.totalChildren'),
+                total: stats.totalChildren,
+                icon: 'eva:person-fill',
+                color: theme.palette.warning.dark,
+            },
+        ];
+    }, [t, theme, bookings, levelPrices, revenueByCurrency]);
 
     const summaryItems = isGearBookings
         ? SUMMARY.filter((item) => !GEAR_HIDDEN_KEYS.has(item.key))

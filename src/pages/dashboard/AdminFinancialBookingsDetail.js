@@ -194,6 +194,7 @@ export default function AdminFinancialBookingsDetail() {
                         <TableCell>{t('adminFinancial.detail.colId')}</TableCell>
                         <TableCell>{t('adminFinancial.detail.colDates')}</TableCell>
                         <TableCell>{t('adminFinancial.detail.colCustomer')}</TableCell>
+                        <TableCell>{t('adminFinancial.detail.colAgency')}</TableCell>
                         <TableCell>{t('adminFinancial.detail.colTeacher')}</TableCell>
                         <TableCell>{t('adminFinancial.detail.colResort')}</TableCell>
                         <TableCell>{t('adminFinancial.detail.colPayment')}</TableCell>
@@ -206,7 +207,7 @@ export default function AdminFinancialBookingsDetail() {
                     <TableBody>
                       {isLoadingFinancialBookings && (!financialBookings || financialBookings.length === 0) ? (
                         <TableRow>
-                          <TableCell colSpan={showPayoutColumn ? 8 : 7}>
+                          <TableCell colSpan={showPayoutColumn ? 9 : 8}>
                             <Typography variant="body2" color="text.secondary">
                               {t('adminFinancial.detail.loading')}
                             </Typography>
@@ -214,7 +215,7 @@ export default function AdminFinancialBookingsDetail() {
                         </TableRow>
                       ) : financialBookings?.length === 0 ? (
                         <TableRow>
-                          <TableCell colSpan={showPayoutColumn ? 8 : 7}>
+                          <TableCell colSpan={showPayoutColumn ? 9 : 8}>
                             <Typography variant="body2" color="text.secondary">
                               {t('adminFinancial.detail.empty')}
                             </Typography>
@@ -237,6 +238,7 @@ export default function AdminFinancialBookingsDetail() {
                               <TableCell>#{row.id}</TableCell>
                               <TableCell>{formatDateRange(row.eventList)}</TableCell>
                               <TableCell>{getBookingCustomerLabel(row)}</TableCell>
+                              <TableCell>{row.agency?.name || '—'}</TableCell>
                               <TableCell>{teacherName || '—'}</TableCell>
                               <TableCell>
                                 {formatAdminBookingResortLabel(row.resort, t) || row.resort || '—'}

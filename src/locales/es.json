@@ -1305,6 +1305,7 @@
             "colId": "ID",
             "colDates": "Fechas",
             "colCustomer": "Cliente",
+            "colAgency": "Agencia",
             "colTeacher": "Instructor",
             "colResort": "Centro",
             "colPayment": "Pago",

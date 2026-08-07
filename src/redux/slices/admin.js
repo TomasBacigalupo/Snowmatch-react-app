@@ -1540,3 +1540,16 @@ export function sendAppSignupInvite({ userId, countryCode, cellphone, name }) {
     return response.data;
   };
 }
+
+/** Sends admin_new_booking_notification WhatsApp template to the booking student (admin only). */
+export function sendAdminNewBookingPhoneNotification({ bookingId, userId, countryCode, cellphone }) {
+  return async () => {
+    const response = await axios.post('/api/admin/whatsapp/new-booking-phone-notification', {
+      bookingId,
+      userId,
+      countryCode,
+      cellphone,
+    });
+    return response.data;
+  };
+}

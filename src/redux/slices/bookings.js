@@ -6,6 +6,7 @@ import axios from '../../utils/axios';
 import { dispatch } from '../store';
 import { start } from 'nprogress';
 import dayjs from 'dayjs';
+import { sendAdminNewBookingPhoneNotification } from './admin';
 
 function appendSuggestedTeacherPayout(payload, amount, currency) {
     const parsed = amount === '' || amount == null ? null : Number(amount);
@@ -697,8 +698,18 @@ export function createAdminBooking(
                 }
             }
             const response = await axios.post(`/api/bookings/business?businessId=13`, payload);
+            const created = response.data;
+            // Booking succeeds even if the WhatsApp template fails.
+            if (created?.id) {
+                try {
+                    await dispatch(sendAdminNewBookingPhoneNotification({ bookingId: created.id }));
+                } catch (notifyErr) {
+                    // eslint-disable-next-line no-console
+                    console.warn('admin_new_booking_notification failed', notifyErr);
+                }
+            }
             dispatch(slice.actions.createBookingSuccess());
-            return response.data;
+            return created;
         } catch (error) {
             dispatch(slice.actions.hasError(error));
             throw error;

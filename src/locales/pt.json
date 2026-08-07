@@ -1550,6 +1550,7 @@
             "colId": "ID",
             "colDates": "Datas",
             "colCustomer": "Cliente",
+            "colAgency": "Agência",
             "colTeacher": "Instrutor",
             "colResort": "Estação",
             "colPayment": "Pagamento",

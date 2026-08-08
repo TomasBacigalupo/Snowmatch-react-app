@@ -992,6 +992,7 @@
       },
       "noPhone": "No phone number on file",
       "close": "Close",
+      "viewDetails": "See details",
       "whatsapp": "WhatsApp",
       "whatsappGreeting": "Hello {{name}}, "
     }

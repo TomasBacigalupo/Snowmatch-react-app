@@ -41,12 +41,14 @@ import useAuth from '../../hooks/useAuth';
 import { PATH_DASHBOARD } from '../../routes/paths';
 import { useDispatch, useSelector } from '../../redux/store';
 import { getAdminBusinessMembers } from '../../redux/slices/business';
+import { getTeacher } from '../../redux/slices/admin';
 import AdminBookingTableRow from '../../sections/@dashboard/admin/list/AdminBookingTableRow';
 import AdminBookingTableCard from '../../sections/@dashboard/admin/list/AdminBookingTableCard';
 import AdminBookingIntentTableRow from '../../sections/@dashboard/admin/list/AdminBookingIntentTableRow';
 import BookingDetailsDrawer from '../../sections/@dashboard/admin/list/BookingDetailsDrawer';
 import GearBookingDetailsDrawer from '../../sections/@dashboard/admin/list/GearBookingDetailsDrawer';
 import AvailableTeacherDetailsModal from '../../sections/@dashboard/admin/list/AvailableTeacherDetailsModal';
+import TeacherDetailsDrawer from '../../sections/@dashboard/admin/list/TeacherDetailsDrawer';
 import BookingModal from '../../sections/@dashboard/admin/BookingModal';
 import GearBookingModal from '../../sections/@dashboard/admin/GearBookingModal';
 import {
@@ -138,14 +140,18 @@ function TodayAvailableTeachersSection({
   dayLabel,
   t,
 }) {
+  const dispatch = useDispatch();
   const [searchQuery, setSearchQuery] = useState('');
   const [showAll, setShowAll] = useState(false);
   const [selectedTeacher, setSelectedTeacher] = useState(null);
+  const [fullTeacher, setFullTeacher] = useState(null);
+  const [detailsLoading, setDetailsLoading] = useState(false);
 
   useEffect(() => {
     setSearchQuery('');
     setShowAll(false);
     setSelectedTeacher(null);
+    setFullTeacher(null);
   }, [dayLabel]);
 
   const handleSearchChange = useCallback((event) => {
@@ -163,6 +169,22 @@ function TodayAvailableTeachersSection({
 
   const handleCloseTeacher = useCallback(() => {
     setSelectedTeacher(null);
+  }, []);
+
+  const handleViewFullDetails = useCallback(async (teacher) => {
+    if (!teacher?.id) return;
+    setDetailsLoading(true);
+    try {
+      const detailed = await dispatch(getTeacher(teacher.id));
+      setFullTeacher(detailed || teacher);
+      setSelectedTeacher(null);
+    } finally {
+      setDetailsLoading(false);
+    }
+  }, [dispatch]);
+
+  const handleCloseFullTeacher = useCallback(() => {
+    setFullTeacher(null);
   }, []);
 
   const filteredTeachers = useMemo(() => {
@@ -323,6 +345,14 @@ function TodayAvailableTeachersSection({
         open={Boolean(selectedTeacher)}
         onClose={handleCloseTeacher}
         teacher={selectedTeacher}
+        onViewDetails={handleViewFullDetails}
+        detailsLoading={detailsLoading}
+      />
+
+      <TeacherDetailsDrawer
+        open={Boolean(fullTeacher)}
+        onClose={handleCloseFullTeacher}
+        teacher={fullTeacher}
       />
     </Card>
   );

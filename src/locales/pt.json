@@ -1429,6 +1429,7 @@
             },
             "noPhone": "Sem telefone cadastrado",
             "close": "Fechar",
+            "viewDetails": "Ver detalhes",
             "whatsapp": "WhatsApp",
             "whatsappGreeting": "Olá {{name}}, "
         }

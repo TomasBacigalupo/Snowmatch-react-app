@@ -11,6 +11,7 @@ import {
   Stack,
   Typography,
 } from '@mui/material';
+import { LoadingButton } from '@mui/lab';
 import { useTranslation } from 'react-i18next';
 import Iconify from 'src/components/Iconify';
 import { formatAvailabilityWindowLabel } from 'src/utils/adminTodayBookings';
@@ -73,9 +74,17 @@ AvailableTeacherDetailsModal.propTypes = {
   open: PropTypes.bool,
   onClose: PropTypes.func,
   teacher: PropTypes.object,
+  onViewDetails: PropTypes.func,
+  detailsLoading: PropTypes.bool,
 };
 
-export default function AvailableTeacherDetailsModal({ open, onClose, teacher }) {
+export default function AvailableTeacherDetailsModal({
+  open,
+  onClose,
+  teacher,
+  onViewDetails,
+  detailsLoading = false,
+}) {
   const { t } = useTranslation();
   const fullName = getTeacherFullName(teacher) || teacher?.email || '—';
   const phoneAttributes = getPhoneAttributes(teacher);
@@ -210,6 +219,16 @@ export default function AvailableTeacherDetailsModal({ open, onClose, teacher })
         <Button variant="outlined" onClick={onClose}>
           {t('adminToday.teacherModal.close')}
         </Button>
+        {onViewDetails && teacher?.id != null && (
+          <LoadingButton
+            variant="outlined"
+            loading={detailsLoading}
+            onClick={() => onViewDetails(teacher)}
+            startIcon={<Iconify icon="eva:person-outline" />}
+          >
+            {t('adminToday.teacherModal.viewDetails')}
+          </LoadingButton>
+        )}
         <Button
           variant="contained"
           color="success"

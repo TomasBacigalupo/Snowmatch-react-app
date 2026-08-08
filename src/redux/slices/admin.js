@@ -702,8 +702,10 @@ export function getTeacher(id) {
     try {
       const response = await axios.get('/api/admin/users/' + id);
       dispatch(slice.actions.getTeacherSuccess(response.data));
+      return response.data;
     } catch (error) {
       dispatch(slice.actions.hasError(error));
+      return null;
     }
   };
 }

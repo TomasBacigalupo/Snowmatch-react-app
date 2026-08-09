@@ -32,7 +32,9 @@ import {
 import BookingRentalFieldsSection from './BookingRentalFieldsSection';
 import CreateStudentModal from './CreateStudentModal';
 import AdminAgencySelect from './AdminAgencySelect';
+import BroadcastTeacherMultiSelect from './BroadcastTeacherMultiSelect';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import { broadcastBookingIntent } from 'src/redux/slices/admin';
 
 const DEFAULT_RENTAL = {
     itemId: '',
@@ -94,6 +96,8 @@ const BookingModal = ({ isOpen, onClose, refreshBookings, filterTeacherId, filte
     const [submitting, setSubmitting] = useState(false);
     const [createStudentOpen, setCreateStudentOpen] = useState(false);
     const [rentalPrefillSource, setRentalPrefillSource] = useState('');
+    // Optional broadcast candidates when no single teacher is assigned.
+    const [broadcastTeacherIds, setBroadcastTeacherIds] = useState([]);
 
     const { teachers } = useSelector((state) => state.admin);
     const { intentSuccess, error } = useSelector((state) => state.bookings);
@@ -132,6 +136,7 @@ const BookingModal = ({ isOpen, onClose, refreshBookings, filterTeacherId, filte
         setStudentId(null);
         setStudentOptions([]);
         setRentalPrefillSource('');
+        setBroadcastTeacherIds([]);
     }, []);
 
     const applyRentalFromStudent = useCallback(async (student) => {
@@ -384,33 +389,98 @@ const BookingModal = ({ isOpen, onClose, refreshBookings, filterTeacherId, filte
             return;
         }
 
-        dispatch(createAdminBookingIntent(
-            selectedStudentId ?? null,
-            formData.comment,
-            Number(formData.children),
-            Number(formData.adults),
-            events,
-            totalPrice,
-            formData.bookingType,
-            formData.includesLaunch,
-            formData.includesEquipment,
-            formData.paymentStatus,
-            formData.paymentMethod,
-            formData.internalComment,
-            formData.resort,
-            isGroupLessonProduct ? null : (selectedTeacherId ?? null),
-            formData.groupLessonOffer?.id ?? null,
-            formData.groupLessonOffer?.resort ?? null,
-            formData.agencyId,
-            formData.currency,
-            formData.suggestedTeacherPayoutAmount,
-            formData.suggestedTeacherPayoutCurrency));
+        // Optional broadcast requires a student (claim converts intent → booking).
+        if (broadcastTeacherIds.length > 0 && !selectedStudentId) {
+            enqueueSnackbar(
+                t('adminBookings.broadcast.studentRequired', {
+                    defaultValue: 'Select a student before broadcasting to teachers.',
+                }),
+                { variant: 'warning' }
+            );
+            return;
+        }
+
+        const shouldBroadcast = broadcastTeacherIds.length > 0 && !selectedTeacherId;
+
+        setSubmitting(true);
+        try {
+            const createdIntent = await dispatch(
+                createAdminBookingIntent(
+                    selectedStudentId ?? null,
+                    formData.comment,
+                    Number(formData.children),
+                    Number(formData.adults),
+                    events,
+                    totalPrice,
+                    formData.bookingType,
+                    formData.includesLaunch,
+                    formData.includesEquipment,
+                    formData.paymentStatus,
+                    formData.paymentMethod,
+                    formData.internalComment,
+                    formData.resort,
+                    isGroupLessonProduct ? null : (selectedTeacherId ?? null),
+                    formData.groupLessonOffer?.id ?? null,
+                    formData.groupLessonOffer?.resort ?? null,
+                    formData.agencyId,
+                    formData.currency,
+                    formData.suggestedTeacherPayoutAmount,
+                    formData.suggestedTeacherPayoutCurrency,
+                    shouldBroadcast ? { skipSuccess: true } : undefined
+                )
+            );
+
+            if (!createdIntent?.id) {
+                enqueueSnackbar(
+                    t('adminBookings.broadcast.createIntentFailed', {
+                        defaultValue: 'Could not create the pending booking. Please try again.',
+                    }),
+                    { variant: 'error' }
+                );
+                return;
+            }
+
+            if (shouldBroadcast) {
+                try {
+                    await dispatch(broadcastBookingIntent(createdIntent.id, broadcastTeacherIds));
+                    enqueueSnackbar(
+                        t('adminBookings.broadcast.success', {
+                            defaultValue: 'Pending booking created and broadcast to teachers.',
+                        }),
+                        { variant: 'success' }
+                    );
+                    resetForm();
+                    onClose();
+                    if (typeof refreshBookings === 'function') {
+                        refreshBookings();
+                    }
+                } catch {
+                    enqueueSnackbar(
+                        t('adminBookings.broadcast.intentCreatedBroadcastFailed', {
+                            id: createdIntent.id,
+                            defaultValue:
+                                'Pending booking #I-{{id}} was created, but broadcast failed. You can retry from the list.',
+                        }),
+                        { variant: 'error' }
+                    );
+                    resetForm();
+                    onClose();
+                    if (typeof refreshBookings === 'function') {
+                        refreshBookings();
+                    }
+                }
+            }
+            // Without broadcast, createAdminBookingIntent dispatches intentSuccess and the existing effect closes the modal.
+        } finally {
+            setSubmitting(false);
+        }
     };
 
     const handleGroupLessonOfferChange = (offer) => {
         // Group class products stay unassigned until an instructor is chosen on convert.
         if (offer) {
             setTeacherId(null);
+            setBroadcastTeacherIds([]);
         }
         setFormData((prev) => {
             const next = {
@@ -1023,8 +1093,8 @@ const BookingModal = ({ isOpen, onClose, refreshBookings, filterTeacherId, filte
                         <Chip 
                             label="Grupal" 
                             onClick={() => {
-                                console.log('Grupal chip clicked, setting teacherId to 1117');
                                 setTeacherId(1117);
+                                setBroadcastTeacherIds([]);
                                 setFormData((prevData) => ({
                                     ...prevData,
                                     teacher: { id: 1117, name: 'Grupal', lastname: '' } || null,
@@ -1036,8 +1106,8 @@ const BookingModal = ({ isOpen, onClose, refreshBookings, filterTeacherId, filte
                         <Chip 
                             label="Escuelita" 
                             onClick={() => {
-                                console.log('Escuelita chip clicked, setting teacherId to 1118');
                                 setTeacherId(1118);
+                                setBroadcastTeacherIds([]);
                                 setFormData((prevData) => ({
                                     ...prevData,
                                     teacher: { id: 1118, name: 'Escuelita', lastname: '' } || null,
@@ -1088,13 +1158,12 @@ const BookingModal = ({ isOpen, onClose, refreshBookings, filterTeacherId, filte
                         <Box 
                             key={teacher.id} 
                             onClick={(e) => {
-                                console.log('Teacher clicked:', teacher.id, 'Shift key:', e.shiftKey);
                                 if (e.shiftKey) {
                                     const linkTo = PATH_DASHBOARD.eCommerce.viewTeacher(teacher.id);
                                     window.open(linkTo, '_blank');
                                 } else {
-                                    console.log('Setting teacherId to:', teacher.id);
                                     setTeacherId(teacher.id);
+                                    setBroadcastTeacherIds([]);
                                     setFormData((prevData) => ({
                                         ...prevData,
                                         teacher: teacher || null,
@@ -1122,6 +1191,28 @@ const BookingModal = ({ isOpen, onClose, refreshBookings, filterTeacherId, filte
                         </Box>
                     ))}
                 </Box>
+
+                {!resolvedTeacherId ? (
+                    <Box sx={{ mb: 2 }}>
+                        <BroadcastTeacherMultiSelect
+                            resort={formData.resort}
+                            selectedIds={broadcastTeacherIds}
+                            onChange={setBroadcastTeacherIds}
+                            disabled={submitting}
+                            helperText={
+                                !resolvedStudentId
+                                    ? t('adminBookings.broadcast.studentRequiredHint', {
+                                          defaultValue:
+                                              'A student is required to broadcast. Without candidates, this stays a pending booking as usual.',
+                                      })
+                                    : t('adminBookings.broadcast.helper', {
+                                          defaultValue:
+                                              'Optionally notify several instructors. The first to claim gets the booking. Leave empty to only save a pending booking.',
+                                      })
+                            }
+                        />
+                    </Box>
+                ) : null}
             </DialogContent>
             <DialogActions>
                 <Button onClick={onClose}>Cancel</Button>

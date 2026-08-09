@@ -634,6 +634,21 @@ export function convertBookingIntent(intentId, teacherId, onDone, studentUserId,
   };
 }
 
+/** POST /api/admin/booking-intents/{id}/broadcast — offer OPEN intent to candidate teachers. */
+export function broadcastBookingIntent(intentId, teacherIds) {
+  return async () => {
+    try {
+      const response = await axios.post(`/api/admin/booking-intents/${intentId}/broadcast`, {
+        teacherIds: (teacherIds || []).map((id) => Number(id)),
+      });
+      return response.data;
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+      throw error;
+    }
+  };
+}
+
 export function cancelBookingIntent(intentId, onDone) {
   return async () => {
     try {

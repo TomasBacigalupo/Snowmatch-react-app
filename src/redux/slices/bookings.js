@@ -756,7 +756,7 @@ export function updateAdminBookingRentalReservation(reservationId, rentalPayload
     };
 }
 
-export function createAdminBookingIntent(studentId, message, children, adults, events, totalPrice, bookingType, includesLaunch, includesEquipment, paymentStatus, paymentMethod, internalComment, resort, calendarTeacherId, groupLessonConfigId, groupLessonResort, agencyId, currency, suggestedTeacherPayoutAmount, suggestedTeacherPayoutCurrency) {
+export function createAdminBookingIntent(studentId, message, children, adults, events, totalPrice, bookingType, includesLaunch, includesEquipment, paymentStatus, paymentMethod, internalComment, resort, calendarTeacherId, groupLessonConfigId, groupLessonResort, agencyId, currency, suggestedTeacherPayoutAmount, suggestedTeacherPayoutCurrency, options) {
     return async () => {
         dispatch(slice.actions.startLoading());
         try {
@@ -832,10 +832,15 @@ export function createAdminBookingIntent(studentId, message, children, adults, e
                 payload.agencyId = Number(agencyId);
             }
             appendSuggestedTeacherPayout(payload, suggestedTeacherPayoutAmount, suggestedTeacherPayoutCurrency);
-            await axios.post(`/api/admin/booking-intents?businessId=13`, payload);
-            dispatch(slice.actions.createIntentSuccess());
+            const response = await axios.post(`/api/admin/booking-intents?businessId=13`, payload);
+            // skipSuccess: caller handles UI (e.g. broadcast follow-up) without closing via intentSuccess.
+            if (!options?.skipSuccess) {
+                dispatch(slice.actions.createIntentSuccess());
+            }
+            return response.data;
         } catch (error) {
             dispatch(slice.actions.hasError(error));
+            return null;
         }
     };
 }

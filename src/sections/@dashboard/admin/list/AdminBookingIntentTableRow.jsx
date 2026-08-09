@@ -16,17 +16,21 @@ import {
   Autocomplete,
   FormControl,
   Tooltip,
+  Alert,
+  Chip,
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { useDispatch } from 'src/redux/store';
 import { useSelector } from 'react-redux';
-import { convertBookingIntent, cancelBookingIntent, getTeachers } from 'src/redux/slices/admin';
+import { convertBookingIntent, cancelBookingIntent, getTeachers, broadcastBookingIntent } from 'src/redux/slices/admin';
 import axios from 'src/utils/axios';
 import Label from '../../../../components/Label';
 import BookingDetailsDrawer from './BookingDetailsDrawer';
+import BroadcastTeacherMultiSelect from '../BroadcastTeacherMultiSelect';
 import { normalizeBookingIntent } from 'src/utils/normalizeBookingIntent';
 import { formatAdminBookingResortLabel } from '../../../../utils/adminBookingResortOptions';
 import { getBookingCustomerLabel, isGroupLessonBooking, getGroupLessonOfferLabel } from '../../../../utils/adminBookingParticipants';
+import { useSnackbar } from 'notistack';
 
 AdminBookingIntentTableRow.propTypes = {
   row: PropTypes.object.isRequired,
@@ -68,9 +72,12 @@ export default function AdminBookingIntentTableRow({ row, onRefreshIntents }) {
   const theme = useTheme();
   const { t } = useTranslation();
   const dispatch = useDispatch();
+  const { enqueueSnackbar } = useSnackbar();
   const { teachers } = useSelector((state) => state.admin);
   /** 'teacher' | 'student' | null */
   const [assignMode, setAssignMode] = useState(null);
+  const [broadcastOpen, setBroadcastOpen] = useState(false);
+  const [broadcastTeacherIds, setBroadcastTeacherIds] = useState([]);
   const [openDrawer, setOpenDrawer] = useState(false);
   const [selectedTeacher, setSelectedTeacher] = useState(null);
   const [selectedStudent, setSelectedStudent] = useState(null);
@@ -93,11 +100,14 @@ export default function AdminBookingIntentTableRow({ row, onRefreshIntents }) {
     paymentStatus,
     includesLaunch,
     includesEquipments,
+    broadcastPending,
   } = row;
   const isGroupLesson = isGroupLessonBooking(row);
   const groupOfferLabel = getGroupLessonOfferLabel(row);
   const hasTeacher = teacher?.id != null;
   const needsStudentForConvert = !student || student.id == null;
+  const canBroadcast =
+    Boolean(student?.id) && Array.isArray(lines) && lines.length > 0;
   const needsAssignStudentOnly = hasTeacher && needsStudentForConvert;
   const customerLabel = getBookingCustomerLabel(row);
   const studentId = student?.id;
@@ -296,6 +306,38 @@ export default function AdminBookingIntentTableRow({ row, onRefreshIntents }) {
     }
   };
 
+  const handleCloseBroadcast = () => {
+    setBroadcastOpen(false);
+    setBroadcastTeacherIds([]);
+  };
+
+  const handleBroadcast = async () => {
+    if (!canBroadcast || broadcastTeacherIds.length === 0) {
+      return;
+    }
+    setSubmitting(true);
+    try {
+      await dispatch(broadcastBookingIntent(id, broadcastTeacherIds));
+      enqueueSnackbar(
+        t('adminBookings.broadcast.successOnly', {
+          defaultValue: 'Broadcast sent to selected teachers.',
+        }),
+        { variant: 'success' }
+      );
+      handleCloseBroadcast();
+      if (onRefreshIntents) await onRefreshIntents();
+    } catch {
+      enqueueSnackbar(
+        t('adminBookings.broadcast.error', {
+          defaultValue: 'Could not broadcast this pending booking. Please try again.',
+        }),
+        { variant: 'error' }
+      );
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
   const handleRowClick = (event) => {
     if (event.target.closest('button') || event.target.closest('.MuiButton-root')) {
       return;
@@ -335,6 +377,14 @@ export default function AdminBookingIntentTableRow({ row, onRefreshIntents }) {
               {groupOfferLabel ? ` · ${groupOfferLabel}` : ''}
             </Typography>
           )}
+          {broadcastPending ? (
+            <Chip
+              size="small"
+              color="info"
+              label={t('adminBookings.broadcast.pendingBadge', { defaultValue: 'Broadcast pending' })}
+              sx={{ mt: 0.5 }}
+            />
+          ) : null}
         </TableCell>
 
         <TableCell align="left">
@@ -446,6 +496,16 @@ export default function AdminBookingIntentTableRow({ row, onRefreshIntents }) {
                 {t('adminBookings.intent.assignInstructor')}
               </Button>
             )}
+            {canBroadcast ? (
+              <Button
+                size="small"
+                variant="outlined"
+                onClick={() => setBroadcastOpen(true)}
+                disabled={submitting}
+              >
+                {t('adminBookings.broadcast.action', { defaultValue: 'Broadcast' })}
+              </Button>
+            ) : null}
             <Button size="small" color="error" onClick={handleCancelIntent} disabled={submitting}>
               {t('adminBookings.intent.cancel')}
             </Button>
@@ -630,6 +690,37 @@ export default function AdminBookingIntentTableRow({ row, onRefreshIntents }) {
             disabled={confirmDisabled}
           >
             {t('adminBookings.intent.confirm')}
+          </LoadingButton>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog open={broadcastOpen} onClose={handleCloseBroadcast} maxWidth="sm" fullWidth>
+        <DialogTitle>
+          {t('adminBookings.broadcast.dialogTitle', { defaultValue: 'Broadcast pending booking' })}
+        </DialogTitle>
+        <DialogContent>
+          <Alert severity="info" sx={{ mt: 1, mb: 2 }}>
+            {t('adminBookings.broadcast.dialogHelper', {
+              defaultValue:
+                'Selected instructors will be notified. The first to claim is assigned and this pending booking becomes a confirmed booking.',
+            })}
+          </Alert>
+          <BroadcastTeacherMultiSelect
+            resort={resort || row.groupLessonResort || ''}
+            selectedIds={broadcastTeacherIds}
+            onChange={setBroadcastTeacherIds}
+            disabled={submitting}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseBroadcast}>{t('adminBookings.intent.close')}</Button>
+          <LoadingButton
+            loading={submitting}
+            variant="contained"
+            onClick={handleBroadcast}
+            disabled={broadcastTeacherIds.length === 0}
+          >
+            {t('adminBookings.broadcast.confirm', { defaultValue: 'Send broadcast' })}
           </LoadingButton>
         </DialogActions>
       </Dialog>

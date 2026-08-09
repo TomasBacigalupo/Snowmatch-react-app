@@ -1461,6 +1461,26 @@
             "groupSlotNone": "Crear nuevo / unir por horario",
             "groupLessonBadge": "Clase grupal"
         },
+        "broadcast": {
+            "title": "Difundir a instructores (opcional)",
+            "searchLabel": "Buscar instructores",
+            "searchError": "No se pudieron cargar instructores. Probá de nuevo.",
+            "empty": "No se encontraron instructores. Probá con otro nombre o centro.",
+            "selectedCount": "{{count}} instructor(es) seleccionado(s)",
+            "studentRequired": "Seleccioná un estudiante antes de difundir a instructores.",
+            "studentRequiredHint": "Se necesita un estudiante para difundir. Sin candidatos, se guarda como pendiente como siempre.",
+            "helper": "Opcionalmente notificá a varios instructores. El primero en reclamar obtiene la reserva. Dejá vacío para solo guardar la pendiente.",
+            "success": "Reserva pendiente creada y difundida a instructores.",
+            "successOnly": "Difusión enviada a los instructores seleccionados.",
+            "intentCreatedBroadcastFailed": "La pendiente #I-{{id}} se creó, pero falló la difusión. Podés reintentar desde la lista.",
+            "createIntentFailed": "No se pudo crear la reserva pendiente. Probá de nuevo.",
+            "error": "No se pudo difundir esta reserva pendiente. Probá de nuevo.",
+            "action": "Difundir",
+            "pendingBadge": "Difusión pendiente",
+            "dialogTitle": "Difundir reserva pendiente",
+            "dialogHelper": "Se notificará a los instructores seleccionados. El primero en reclamar queda asignado y la pendiente pasa a reserva confirmada.",
+            "confirm": "Enviar difusión"
+        },
         "summary": {
             "totalBookings": "Total Reservas",
             "assignedHours": "Horas Asignadas",

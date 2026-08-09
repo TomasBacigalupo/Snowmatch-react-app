@@ -1269,6 +1269,26 @@
       "groupSlotNone": "Create new / auto-match by time",
       "groupLessonBadge": "Group lesson"
     },
+    "broadcast": {
+      "title": "Broadcast to teachers (optional)",
+      "searchLabel": "Search instructors",
+      "searchError": "Could not load instructors. Try again.",
+      "empty": "No instructors found. Try another name or resort.",
+      "selectedCount": "{{count}} instructor(s) selected",
+      "studentRequired": "Select a student before broadcasting to teachers.",
+      "studentRequiredHint": "A student is required to broadcast. Without candidates, this stays a pending booking as usual.",
+      "helper": "Optionally notify several instructors. The first to claim gets the booking. Leave empty to only save a pending booking.",
+      "success": "Pending booking created and broadcast to teachers.",
+      "successOnly": "Broadcast sent to selected teachers.",
+      "intentCreatedBroadcastFailed": "Pending booking #I-{{id}} was created, but broadcast failed. You can retry from the list.",
+      "createIntentFailed": "Could not create the pending booking. Please try again.",
+      "error": "Could not broadcast this pending booking. Please try again.",
+      "action": "Broadcast",
+      "pendingBadge": "Broadcast pending",
+      "dialogTitle": "Broadcast pending booking",
+      "dialogHelper": "Selected instructors will be notified. The first to claim is assigned and this pending booking becomes a confirmed booking.",
+      "confirm": "Send broadcast"
+    },
     "summary": {
       "totalBookings": "Total Bookings",
       "assignedHours": "Assigned Hours",

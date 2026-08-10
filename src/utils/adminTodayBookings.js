@@ -255,6 +255,146 @@ export function consolidateGananciasInArs(byCurrency, usdToArsRate = DEFAULT_USD
   };
 }
 
+function amountToArs(amount, currency, usdToArsRate) {
+  const rate = Number(usdToArsRate) > 0 ? Number(usdToArsRate) : DEFAULT_USD_TO_ARS_RATE;
+  return currency === 'USD' ? amount * rate : amount;
+}
+
+function getTeacherGananciasKey(teacher) {
+  return teacher?.id != null ? String(teacher.id) : 'unassigned';
+}
+
+function getTeacherGananciasName(teacher, unassignedLabel) {
+  if (!teacher) return unassignedLabel;
+  const fullName = `${teacher.name || ''} ${teacher.lastname || ''}`.trim();
+  return fullName || unassignedLabel;
+}
+
+function emptyTeacherGananciasBucket(teacherKey, teacher, teacherName) {
+  return {
+    teacherKey,
+    teacher,
+    teacherName,
+    dayGrossByCurrency: {},
+    dayTeacherByCurrency: {},
+    payinParts: [],
+    lessonCount: 0,
+  };
+}
+
+/**
+ * Per-teacher day-share payin / payout / lesson count from today's bookings.
+ * Gross earnings = payin − payout (no tax). Lesson count only counts lesson bookings.
+ */
+export function calcAdminTodayGananciasByTeacher(
+  lessonBookings,
+  gearBookings,
+  { unassignedLabel = '—' } = {}
+) {
+  const levelPrices = buildDefaultLevelHourPrices();
+  const byTeacherMap = new Map();
+
+  const ensureTeacher = (teacher) => {
+    const teacherKey = getTeacherGananciasKey(teacher);
+    if (!byTeacherMap.has(teacherKey)) {
+      byTeacherMap.set(
+        teacherKey,
+        emptyTeacherGananciasBucket(
+          teacherKey,
+          teacher || null,
+          getTeacherGananciasName(teacher, unassignedLabel)
+        )
+      );
+    }
+    return byTeacherMap.get(teacherKey);
+  };
+
+  const addBooking = (booking, isLesson) => {
+    const group = ensureTeacher(booking?.teacher);
+    const days = getBookingDayCount(booking);
+    const dayGross = (booking?.price || 0) / days;
+    const priceCurrency = getBookingCurrency(booking);
+
+    group.dayGrossByCurrency[priceCurrency] =
+      (group.dayGrossByCurrency[priceCurrency] || 0) + dayGross;
+    if (dayGross !== 0) {
+      group.payinParts.push({ amount: dayGross, currency: priceCurrency });
+    }
+
+    const teacherShare = getBookingDayTeacherShare(booking, levelPrices);
+    group.dayTeacherByCurrency[teacherShare.currency] =
+      (group.dayTeacherByCurrency[teacherShare.currency] || 0) + teacherShare.amount;
+
+    if (isLesson) {
+      group.lessonCount += 1;
+    }
+  };
+
+  (lessonBookings ?? []).forEach((booking) => addBooking(booking, true));
+  (gearBookings ?? []).forEach((booking) => addBooking(booking, false));
+
+  const byTeacher = [...byTeacherMap.values()]
+    .filter(
+      (row) =>
+        row.lessonCount > 0 ||
+        Object.values(row.dayGrossByCurrency).some((v) => v !== 0) ||
+        Object.values(row.dayTeacherByCurrency).some((v) => v !== 0)
+    )
+    .sort((a, b) => {
+      if (a.teacherKey === 'unassigned') return 1;
+      if (b.teacherKey === 'unassigned') return -1;
+      return a.teacherName.localeCompare(b.teacherName, undefined, { sensitivity: 'base' });
+    });
+
+  return { byTeacher };
+}
+
+/** Consolidate per-teacher raw currency buckets into ARS payin / payout / earnings. */
+export function consolidateTeacherGananciasInArs(byTeacher, usdToArsRate = DEFAULT_USD_TO_ARS_RATE) {
+  const rate = Number(usdToArsRate) > 0 ? Number(usdToArsRate) : DEFAULT_USD_TO_ARS_RATE;
+
+  const rows = (byTeacher || []).map((row) => {
+    let payin = 0;
+    let payout = 0;
+
+    Object.entries(row.dayGrossByCurrency || {}).forEach(([currency, amount]) => {
+      payin += amountToArs(amount, currency, rate);
+    });
+    Object.entries(row.dayTeacherByCurrency || {}).forEach(([currency, amount]) => {
+      payout += amountToArs(amount, currency, rate);
+    });
+
+    const payinPartsArs = (row.payinParts || []).map((part) =>
+      amountToArs(part.amount, part.currency, rate)
+    );
+
+    return {
+      teacherKey: row.teacherKey,
+      teacherName: row.teacherName,
+      lessonCount: row.lessonCount || 0,
+      payin,
+      payout,
+      earnings: payin - payout,
+      payinPartsArs: payinPartsArs.length > 1 ? payinPartsArs : null,
+    };
+  });
+
+  const totals = rows.reduce(
+    (acc, row) => {
+      acc.payin += row.payin;
+      acc.payout += row.payout;
+      acc.earnings += row.earnings;
+      acc.lessonCount += row.lessonCount;
+      return acc;
+    },
+    { payin: 0, payout: 0, earnings: 0, lessonCount: 0 }
+  );
+
+  const maxEarnings = rows.reduce((max, row) => Math.max(max, row.earnings), 0);
+
+  return { byTeacher: rows, totals, maxEarnings };
+}
+
 export { DEFAULT_USD_TO_ARS_RATE };
 
 export function getBusyTeacherIds(lessonBookings) {

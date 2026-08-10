@@ -12,6 +12,7 @@ import {
   Collapse,
   Container,
   InputAdornment,
+  LinearProgress,
   Skeleton,
   IconButton,
   Stack,
@@ -53,7 +54,9 @@ import BookingModal from '../../sections/@dashboard/admin/BookingModal';
 import GearBookingModal from '../../sections/@dashboard/admin/GearBookingModal';
 import {
   calcAdminTodayGanancias,
+  calcAdminTodayGananciasByTeacher,
   consolidateGananciasInArs,
+  consolidateTeacherGananciasInArs,
   countTodayParticipants,
   DEFAULT_USD_TO_ARS_RATE,
   fetchAdminBookingsForToday,
@@ -370,7 +373,16 @@ function formatGananciasAmount(value, currency = 'ARS') {
   }
 }
 
-function TodayGananciasSection({ loading, gananciasByCurrency, usdToArsRate, onUsdToArsRateChange, dayLabel, t }) {
+function TodayGananciasSection({
+  loading,
+  gananciasByCurrency,
+  teacherGanancias,
+  usdToArsRate,
+  onUsdToArsRateChange,
+  dayLabel,
+  t,
+}) {
+  const theme = useTheme();
   const rows = gananciasByCurrency?.length
     ? gananciasByCurrency
     : [{ currency: 'ARS', dayGross: 0, dayTeacher: 0, dayTax: 0, net: 0 }];
@@ -380,6 +392,49 @@ function TodayGananciasSection({ loading, gananciasByCurrency, usdToArsRate, onU
     () => consolidateGananciasInArs(rows, usdToArsRate),
     [rows, usdToArsRate]
   );
+
+  const teacherBreakdown = useMemo(
+    () => consolidateTeacherGananciasInArs(teacherGanancias?.byTeacher, usdToArsRate),
+    [teacherGanancias, usdToArsRate]
+  );
+
+  const { byTeacher: teacherRows, totals: teacherTotals, maxEarnings } = teacherBreakdown;
+  const marginPct =
+    teacherTotals.payin > 0 ? (teacherTotals.earnings / teacherTotals.payin) * 100 : 0;
+
+  const summaryCards = [
+    {
+      key: 'payin',
+      label: t('adminToday.ganancias.totalPayin'),
+      value: formatGananciasAmount(teacherTotals.payin, 'ARS'),
+      icon: 'eva:credit-card-fill',
+      color: theme.palette.success.main,
+    },
+    {
+      key: 'payout',
+      label: t('adminToday.ganancias.totalPayout'),
+      value: formatGananciasAmount(teacherTotals.payout, 'ARS'),
+      icon: 'eva:person-fill',
+      color: theme.palette.error.main,
+    },
+    {
+      key: 'earnings',
+      label: t('adminToday.ganancias.grossProfit'),
+      value: formatGananciasAmount(teacherTotals.earnings, 'ARS'),
+      icon: 'eva:trending-up-fill',
+      color: theme.palette.info.main,
+    },
+    {
+      key: 'margin',
+      label: t('adminToday.ganancias.marginOnPayin'),
+      value: `${marginPct.toLocaleString('es-AR', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      })}%`,
+      icon: 'eva:pie-chart-fill',
+      color: theme.palette.secondary.main,
+    },
+  ];
 
   const renderAmountCell = (value, currency, emphasize = false) => {
     if (loading) {
@@ -412,6 +467,52 @@ function TodayGananciasSection({ loading, gananciasByCurrency, usdToArsRate, onU
       <TableCell align="right">{renderAmountCell(row.net, formatCurrency, emphasizeNet)}</TableCell>
     </TableRow>
   );
+
+  const renderPayinCell = (row) => {
+    if (loading) {
+      return <Skeleton width={100} sx={{ mx: 'auto' }} />;
+    }
+    return (
+      <Stack spacing={0.25} alignItems="center">
+        <Typography variant="body2">{formatGananciasAmount(row.payin, 'ARS')}</Typography>
+        {row.payinPartsArs?.length > 1 && (
+          <Typography variant="caption" color="text.secondary">
+            (
+            {row.payinPartsArs.map((part) => formatGananciasAmount(part, 'ARS')).join(' + ')}
+            )
+          </Typography>
+        )}
+      </Stack>
+    );
+  };
+
+  const renderEarningsCell = (row) => {
+    if (loading) {
+      return <Skeleton width={120} sx={{ mx: 'auto' }} />;
+    }
+    const barValue = maxEarnings > 0 ? Math.max(0, (row.earnings / maxEarnings) * 100) : 0;
+    return (
+      <Stack direction="row" spacing={1.5} alignItems="center" justifyContent="flex-end">
+        <Typography variant="subtitle2" color="success.main" sx={{ whiteSpace: 'nowrap' }}>
+          {formatGananciasAmount(row.earnings, 'ARS')}
+        </Typography>
+        <LinearProgress
+          variant="determinate"
+          value={barValue}
+          sx={{
+            width: 72,
+            height: 8,
+            borderRadius: 1,
+            bgcolor: 'success.lighter',
+            '& .MuiLinearProgress-bar': {
+              borderRadius: 1,
+              bgcolor: 'success.main',
+            },
+          }}
+        />
+      </Stack>
+    );
+  };
 
   return (
     <Card sx={{ mt: 3, mb: 3, p: 3 }}>
@@ -455,6 +556,139 @@ function TodayGananciasSection({ loading, gananciasByCurrency, usdToArsRate, onU
                 label: t('adminToday.ganancias.consolidatedArs'),
                 formatCurrency: 'ARS',
               })}
+          </TableBody>
+        </Table>
+      </TableContainer>
+
+      <Typography variant="subtitle1" sx={{ mt: 4, mb: 2 }}>
+        {t('adminToday.ganancias.teacherDetailTitle')}
+      </Typography>
+
+      <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} sx={{ mb: 3, flexWrap: 'wrap' }}>
+        {summaryCards.map((card) => (
+          <Card
+            key={card.key}
+            variant="outlined"
+            sx={{
+              p: 2.5,
+              minWidth: { xs: '100%', sm: 180 },
+              flex: 1,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+            }}
+          >
+            <Box sx={{ flexGrow: 1, minWidth: 0 }}>
+              <Typography
+                variant="caption"
+                color="text.secondary"
+                sx={{ mb: 0.5, display: 'block', textTransform: 'uppercase', letterSpacing: 0.4 }}
+              >
+                {card.label}
+              </Typography>
+              <Typography variant="h5" sx={{ color: card.color, fontWeight: 'bold' }} noWrap>
+                {loading ? <Skeleton width={90} /> : card.value}
+              </Typography>
+            </Box>
+            <Box
+              sx={{
+                width: 48,
+                height: 48,
+                ml: 1,
+                flexShrink: 0,
+                borderRadius: '50%',
+                backgroundColor: `${card.color}15`,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <Iconify icon={card.icon} sx={{ width: 24, height: 24, color: card.color }} />
+            </Box>
+          </Card>
+        ))}
+      </Stack>
+
+      <TableContainer>
+        <Table size="small">
+          <TableHead>
+            <TableRow>
+              <TableCell>{t('adminToday.ganancias.colTeacher')}</TableCell>
+              <TableCell align="center">{t('adminToday.ganancias.colPayin')}</TableCell>
+              <TableCell align="right">{t('adminToday.ganancias.colPayout')}</TableCell>
+              <TableCell align="right">{t('adminToday.ganancias.colEarnings')}</TableCell>
+              <TableCell align="right">{t('adminToday.ganancias.colLessons')}</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {loading &&
+              Array.from({ length: 4 }).map((_, index) => (
+                <TableRow key={`teacher-ganancias-skeleton-${index}`}>
+                  <TableCell>
+                    <Skeleton width={100} />
+                  </TableCell>
+                  <TableCell align="center">
+                    <Skeleton width={80} sx={{ mx: 'auto' }} />
+                  </TableCell>
+                  <TableCell align="right">
+                    <Skeleton width={80} sx={{ ml: 'auto' }} />
+                  </TableCell>
+                  <TableCell align="right">
+                    <Skeleton width={120} sx={{ ml: 'auto' }} />
+                  </TableCell>
+                  <TableCell align="right">
+                    <Skeleton width={32} sx={{ ml: 'auto' }} />
+                  </TableCell>
+                </TableRow>
+              ))}
+            {!loading && teacherRows.length === 0 && (
+              <TableRow>
+                <TableCell colSpan={5}>
+                  <Typography variant="body2" color="text.secondary">
+                    {t('adminToday.ganancias.teacherDetailEmpty')}
+                  </Typography>
+                </TableCell>
+              </TableRow>
+            )}
+            {!loading &&
+              teacherRows.map((row) => (
+                <TableRow key={row.teacherKey} hover>
+                  <TableCell>
+                    <Typography variant="subtitle2">{row.teacherName}</Typography>
+                  </TableCell>
+                  <TableCell align="center">{renderPayinCell(row)}</TableCell>
+                  <TableCell align="right">{formatGananciasAmount(row.payout, 'ARS')}</TableCell>
+                  <TableCell align="right">{renderEarningsCell(row)}</TableCell>
+                  <TableCell align="right">{row.lessonCount}</TableCell>
+                </TableRow>
+              ))}
+            {!loading && teacherRows.length > 0 && (
+              <TableRow
+                sx={{
+                  bgcolor: (muiTheme) =>
+                    muiTheme.palette.mode === 'light' ? 'primary.lighter' : 'action.selected',
+                  '& td': { fontWeight: 700 },
+                }}
+              >
+                <TableCell>
+                  <Typography variant="subtitle2" sx={{ fontWeight: 700 }}>
+                    {t('adminToday.ganancias.totalRow')}
+                  </Typography>
+                </TableCell>
+                <TableCell align="center">
+                  {formatGananciasAmount(teacherTotals.payin, 'ARS')}
+                </TableCell>
+                <TableCell align="right">
+                  {formatGananciasAmount(teacherTotals.payout, 'ARS')}
+                </TableCell>
+                <TableCell align="right">
+                  <Typography variant="subtitle2" color="success.main" sx={{ fontWeight: 700 }}>
+                    {formatGananciasAmount(teacherTotals.earnings, 'ARS')}
+                  </Typography>
+                </TableCell>
+                <TableCell align="right">{teacherTotals.lessonCount}</TableCell>
+              </TableRow>
+            )}
           </TableBody>
         </Table>
       </TableContainer>
@@ -1122,6 +1356,16 @@ const participantCount = countTodayParticipants(lessonBookings, gearBookings);
     [showGanancias, lessonBookings, gearBookings]
   );
 
+  const teacherGanancias = useMemo(
+    () =>
+      showGanancias
+        ? calcAdminTodayGananciasByTeacher(lessonBookings, gearBookings, {
+            unassignedLabel: t('adminBookings.intent.unassigned'),
+          })
+        : null,
+    [showGanancias, lessonBookings, gearBookings, t]
+  );
+
   const availableTeachers = useMemo(
     () => mergeAvailableTeachers(schoolAvailableMembers, dayAvailableTeachers),
     [schoolAvailableMembers, dayAvailableTeachers]
@@ -1233,6 +1477,7 @@ const participantCount = countTodayParticipants(lessonBookings, gearBookings);
           <TodayGananciasSection
             loading={loading}
             gananciasByCurrency={ganancias?.byCurrency}
+            teacherGanancias={teacherGanancias}
             usdToArsRate={usdToArsRate}
             onUsdToArsRateChange={setUsdToArsRate}
             dayLabel={dayLabel}

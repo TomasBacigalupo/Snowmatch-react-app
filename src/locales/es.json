@@ -1597,6 +1597,7 @@
             "payoutNumber": "Payout #{{id}}",
             "transferredAmount": "Monto transferido: {{amount}}",
             "date": "Fecha: {{date}}",
+            "payoutNote": "Nota: {{note}}",
             "viewReceipt": "Ver Comprobante",
             "edit": "Editar",
             "payoutMissing": "Aún no se ha registrado el payout para esta reserva",

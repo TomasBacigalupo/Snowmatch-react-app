@@ -1405,6 +1405,7 @@
       "payoutNumber": "Payout #{{id}}",
       "transferredAmount": "Transferred amount: {{amount}}",
       "date": "Date: {{date}}",
+      "payoutNote": "Note: {{note}}",
       "viewReceipt": "View receipt",
       "edit": "Edit",
       "payoutMissing": "No payout has been registered for this booking yet",

@@ -765,12 +765,32 @@ const mapEventsResponse = (data) =>
     };
   });
 
+async function fetchUserEventsPages(basePath, id, pageSize = 500, pages = 2) {
+  const responses = await Promise.all(
+    Array.from({ length: pages }, (_, i) =>
+      axios.get(`${basePath}/${id}/event?page=${i + 1}&size=${pageSize}`)
+    )
+  );
+  const byId = new Map();
+  for (const response of responses) {
+    const list = Array.isArray(response.data) ? response.data : [];
+    for (const event of list) {
+      if (event?.id != null) {
+        byId.set(event.id, event);
+      } else {
+        byId.set(`${byId.size}-${event?.start}-${event?.title}`, event);
+      }
+    }
+  }
+  return mapEventsResponse([...byId.values()]);
+}
+
 export function getEventsByUserId(id) {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`/api/admin/user/${id}/event?page=1&size=300`);
-      dispatch(slice.actions.getEventsSuccess(mapEventsResponse(response.data)));
+      const events = await fetchUserEventsPages('/api/admin/user', id);
+      dispatch(slice.actions.getEventsSuccess(events));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }
@@ -781,8 +801,8 @@ export function getResortAdminEventsByUserId(id) {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`/api/resort-admin/user/${id}/event?page=1&size=300`);
-      dispatch(slice.actions.getEventsSuccess(mapEventsResponse(response.data)));
+      const events = await fetchUserEventsPages('/api/resort-admin/user', id);
+      dispatch(slice.actions.getEventsSuccess(events));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }

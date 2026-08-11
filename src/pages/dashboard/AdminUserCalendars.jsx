@@ -69,7 +69,11 @@ import {
 
 const getTeacherLabel = (teacher) => {
   if (!teacher) return '';
-  return `${teacher.name || ''} ${teacher.lastname || ''}`.trim();
+  if (typeof teacher === 'string') return teacher;
+  const name = `${teacher.name || ''} ${teacher.lastname || ''}`.trim();
+  if (name && teacher.email) return `${name} (${teacher.email})`;
+  if (name) return name;
+  return teacher.email || '';
 };
 
 const selectedEventSelector = (state) => {
@@ -395,7 +399,9 @@ export default function AdminUserCalendars() {
   };
 
   const handleDatesSet = useCallback((dateInfo) => {
-    setDate(dateInfo.start);
+    // currentStart is the month/period in view; start is the first visible cell
+    // (often a spillover day from the previous month).
+    setDate(dateInfo.view.currentStart);
     setVisibleRange({ start: dateInfo.start, end: dateInfo.end });
   }, []);
 

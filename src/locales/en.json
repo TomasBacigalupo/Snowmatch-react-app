@@ -1253,6 +1253,50 @@
       "groupLessonProduct": "Group lesson product (optional)",
       "groupLessonProductHelper": "Creates a pending booking awaiting instructor assignment (no instructor until converted)."
     },
+    "agencyBooking": {
+      "createBookingTitle": "Create Booking",
+      "openButton": "Complete agency booking",
+      "title": "Agency booking",
+      "steps": {
+        "agency": "Agency",
+        "dateTime": "Date & time",
+        "product": "Product"
+      },
+      "agencyRequiredHint": "An agency is required for this flow.",
+      "date": "Date",
+      "lessonTime": "Lesson time",
+      "morning2hs": "Morning (2hs)",
+      "afternoon2hs": "Afternoon (2hs)",
+      "selectProduct": "Select product",
+      "persons": "Total persons",
+      "personsHelper": "Group class, max {{max}} people.",
+      "pricePreview": "Price preview",
+      "previewPersons": "Persons: {{count}}",
+      "previewList": "List total: ${{amount}}",
+      "previewGear": "Gear (${{amount}} deducted)",
+      "previewAgency": "Agency price: ${{amount}}",
+      "cancel": "Cancel",
+      "back": "Back",
+      "next": "Next",
+      "complete": "Apply to booking",
+      "applied": "Agency booking details applied to the form.",
+      "validation": {
+        "agency": "Select an agency.",
+        "date": "Select a date.",
+        "lessonTime": "Select morning or afternoon (2hs).",
+        "product": "Select a product.",
+        "persons": "Enter total persons between 1 and {{max}}."
+      },
+      "products": {
+        "bautismo": "Baptism Ski/Snowboard — group class + equipment",
+        "exclusiva1": "Exclusive 1 pax — 2hs class + equipment",
+        "exclusiva2": "Exclusive 2 pax — 2hs class + equipment",
+        "exclusiva3": "Exclusive 3 pax — 2hs class + equipment",
+        "semi4": "Semi-exclusive 4 pax — 2hs class + equipment",
+        "semi5": "Semi-exclusive 5 pax — 2hs class + equipment",
+        "semi6": "Semi-exclusive 6 pax — 2hs class + equipment"
+      }
+    },
     "intent": {
       "unassigned": "Unassigned",
       "openStatus": "Open",

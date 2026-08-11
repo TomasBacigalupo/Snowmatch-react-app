@@ -1685,6 +1685,50 @@
             "groupLessonProduct": "Produto de aula em grupo (opcional)",
             "groupLessonProductHelper": "Cria uma reserva pendente de atribuição de instrutor (sem instrutor até converter)."
         },
+        "agencyBooking": {
+            "createBookingTitle": "Criar reserva",
+            "openButton": "Carga completa de agência",
+            "title": "Reserva de agência",
+            "steps": {
+                "agency": "Agência",
+                "dateTime": "Data e horário",
+                "product": "Produto"
+            },
+            "agencyRequiredHint": "Uma agência é obrigatória neste fluxo.",
+            "date": "Data",
+            "lessonTime": "Horário da aula",
+            "morning2hs": "Manhã (2hs)",
+            "afternoon2hs": "Tarde (2hs)",
+            "selectProduct": "Selecionar produto",
+            "persons": "Total de pessoas",
+            "personsHelper": "Aula em grupo, máximo {{max}} pessoas.",
+            "pricePreview": "Prévia do preço",
+            "previewPersons": "Pessoas: {{count}}",
+            "previewList": "Total lista: ${{amount}}",
+            "previewGear": "Equipamentos (${{amount}} descontados)",
+            "previewAgency": "Preço agência: ${{amount}}",
+            "cancel": "Cancelar",
+            "back": "Voltar",
+            "next": "Próximo",
+            "complete": "Aplicar à reserva",
+            "applied": "Detalhes da agência aplicados ao formulário.",
+            "validation": {
+                "agency": "Selecione uma agência.",
+                "date": "Selecione uma data.",
+                "lessonTime": "Selecione manhã ou tarde (2hs).",
+                "product": "Selecione um produto.",
+                "persons": "Informe o total de pessoas entre 1 e {{max}}."
+            },
+            "products": {
+                "bautismo": "Batismo Ski/Snowboard — aula em grupo + equipamentos",
+                "exclusiva1": "Exclusiva 1 pax — aula 2hs + equipamentos",
+                "exclusiva2": "Exclusiva 2 pax — aula 2hs + equipamentos",
+                "exclusiva3": "Exclusiva 3 pax — aula 2hs + equipamentos",
+                "semi4": "Semi exclusiva 4 pax — aula 2hs + equipamentos",
+                "semi5": "Semi exclusiva 5 pax — aula 2hs + equipamentos",
+                "semi6": "Semi exclusiva 6 pax — aula 2hs + equipamentos"
+            }
+        },
         "intent": {
             "unassigned": "Não atribuído",
             "openStatus": "Aberta",

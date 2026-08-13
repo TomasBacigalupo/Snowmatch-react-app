@@ -512,6 +512,9 @@ export default function Router() {
                 { path: 'agencies', element: <AdminAgencies /> },
                 { path: 'agencies/:id', element: <AdminAgencyDetail /> },
                 { path: 'group-lesson-resorts', element: <AdminGroupLessonResorts /> },
+                { path: 'clinics', element: <AdminClinics /> },
+                { path: 'clinics/:id', element: <AdminClinicDetail /> },
+                { path: 'clinic-interests', element: <AdminClinicInterests /> },
                 { path: 'resort-admins', element: <AdminResortAdmins /> },
                 { path: 'school-member-lessons', element: <AdminSchoolMemberLessons /> },
                 { path: 'school-members', element: <AdminSchoolMembers /> },
@@ -704,6 +707,9 @@ const AdminResortDashboard = Loadable(lazy(() => import('../pages/dashboard/Admi
 const AdminToday = Loadable(lazy(() => import('../pages/dashboard/AdminToday')));
 const AdminRental = Loadable(lazy(() => import('../pages/dashboard/AdminRental')));
 const AdminGroupLessonResorts = Loadable(lazy(() => import('../pages/dashboard/AdminGroupLessonResorts')));
+const AdminClinics = Loadable(lazy(() => import('../pages/dashboard/AdminClinics')));
+const AdminClinicDetail = Loadable(lazy(() => import('../pages/dashboard/AdminClinicDetail')));
+const AdminClinicInterests = Loadable(lazy(() => import('../pages/dashboard/AdminClinicInterests')));
 const AdminResortAdmins = Loadable(lazy(() => import('../pages/dashboard/AdminResortAdmins')));
 const AdminSchoolMemberLessons = Loadable(lazy(() => import('../pages/dashboard/AdminSchoolMemberLessons')));
 const AdminSchoolMembers = Loadable(lazy(() => import('../pages/dashboard/AdminSchoolMembers')));

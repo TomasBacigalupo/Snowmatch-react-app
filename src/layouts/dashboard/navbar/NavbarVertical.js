@@ -110,6 +110,7 @@ const ADMIN_NAV_ITEMS = [
     children: [
       { title: 'rental products', path: PATH_DASHBOARD.admin.rental },
       { title: 'group lessons by resort', path: PATH_DASHBOARD.admin.groupLessonResorts },
+      { title: 'clinics', path: PATH_DASHBOARD.admin.clinics },
     ],
   },
   {

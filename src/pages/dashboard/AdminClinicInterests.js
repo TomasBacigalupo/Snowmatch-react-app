@@ -46,6 +46,9 @@ import { searchStudentsForAdminBooking } from '../../redux/slices/admin';
 import { GROUP_LESSON_RESORT_OPTIONS } from '../../utils/groupLessonResortOptions';
 import CreateStudentModal from '../../sections/@dashboard/admin/CreateStudentModal';
 import ClinicInterestDetailsDrawer from '../../sections/@dashboard/admin/list/ClinicInterestDetailsDrawer';
+import ClinicInterestStats, {
+  interestMatchesStatsFilter,
+} from '../../sections/@dashboard/admin/list/ClinicInterestStats';
 
 const SPORT_OPTIONS = [
   { value: 'SKI', label: 'Ski' },
@@ -71,6 +74,12 @@ const TAG_LABELS = {
 };
 
 const tagLabel = (tag) => TAG_LABELS[tag] || String(tag).replaceAll('_', ' ');
+
+const tagChipColor = (tag) => {
+  if (tag === 'NOT_CONTACTED') return 'error';
+  if (tag === 'POSSIBLE_STUDENT') return 'success';
+  return 'default';
+};
 
 /** Builds a WhatsApp-ready number (digits only) with country code, without double-prefixing. */
 const buildWhatsAppPhone = (countryCode, phone) => {
@@ -108,6 +117,7 @@ export default function AdminClinicInterests() {
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [selectedInterestId, setSelectedInterestId] = useState(null);
+  const [statsFilter, setStatsFilter] = useState(null);
   const [whatsAppModal, setWhatsAppModal] = useState({
     open: false,
     clientName: '',
@@ -124,6 +134,11 @@ export default function AdminClinicInterests() {
     if (studentOptions.some((s) => s?.id === selectedStudent.id)) return studentOptions;
     return [selectedStudent, ...studentOptions];
   }, [selectedStudent, studentOptions]);
+
+  const filteredInterests = useMemo(
+    () => (interests || []).filter((row) => interestMatchesStatsFilter(row, statsFilter)),
+    [interests, statsFilter]
+  );
 
   const levelLabel = useCallback(
     (level) => (level ? t(`adminBookings.editModal.clientLevelOptions.${level}`, level) : '—'),
@@ -291,7 +306,18 @@ export default function AdminClinicInterests() {
           }
         />
 
+        <ClinicInterestStats
+          interests={interests}
+          filter={statsFilter}
+          onFilterChange={setStatsFilter}
+        />
+
         <Card>
+          {statsFilter && (
+            <Typography variant="body2" color="text.secondary" sx={{ px: 2, pt: 2 }}>
+              Showing {filteredInterests.length} of {interests.length}
+            </Typography>
+          )}
           <TableContainer>
             <Table>
               <TableHead>
@@ -310,7 +336,7 @@ export default function AdminClinicInterests() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {interests.map((row) => (
+                {filteredInterests.map((row) => (
                   <TableRow
                     key={row.id}
                     hover
@@ -329,7 +355,13 @@ export default function AdminClinicInterests() {
                     <TableCell>
                       <Stack direction="row" spacing={0.5} flexWrap="wrap" useFlexGap>
                         {(row.tags || []).map((tag) => (
-                          <Chip key={tag} label={tagLabel(tag)} size="small" />
+                          <Chip
+                            key={tag}
+                            label={tagLabel(tag)}
+                            size="small"
+                            color={tagChipColor(tag)}
+                            variant={tagChipColor(tag) === 'default' ? 'outlined' : 'filled'}
+                          />
                         ))}
                         {(!row.tags || row.tags.length === 0) && '—'}
                       </Stack>
@@ -351,11 +383,13 @@ export default function AdminClinicInterests() {
                     </TableCell>
                   </TableRow>
                 ))}
-                {interests.length === 0 && (
+                {filteredInterests.length === 0 && (
                   <TableRow>
                     <TableCell colSpan={9}>
                       <Typography color="text.secondary" align="center" sx={{ py: 3 }}>
-                        No open interests
+                        {interests.length === 0
+                          ? 'No open interests'
+                          : 'No interests match this filter'}
                       </Typography>
                     </TableCell>
                   </TableRow>
@@ -474,7 +508,14 @@ export default function AdminClinicInterests() {
                 getOptionLabel={tagLabel}
                 renderTags={(value, getTagProps) =>
                   value.map((option, index) => (
-                    <Chip {...getTagProps({ index })} key={option} label={tagLabel(option)} size="small" />
+                    <Chip
+                      {...getTagProps({ index })}
+                      key={option}
+                      label={tagLabel(option)}
+                      size="small"
+                      color={tagChipColor(option)}
+                      variant={tagChipColor(option) === 'default' ? 'outlined' : 'filled'}
+                    />
                   ))
                 }
                 renderInput={(params) => <TextField {...params} label="Tags" placeholder="Select tags" />}

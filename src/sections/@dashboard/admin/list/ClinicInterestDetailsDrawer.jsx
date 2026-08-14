@@ -47,6 +47,12 @@ const TAG_LABELS = {
 
 const tagLabel = (tag) => TAG_LABELS[tag] || String(tag).replaceAll('_', ' ');
 
+const tagChipColor = (tag) => {
+  if (tag === 'NOT_CONTACTED') return 'error';
+  if (tag === 'POSSIBLE_STUDENT') return 'success';
+  return 'default';
+};
+
 ClinicInterestDetailsDrawer.propTypes = {
   open: PropTypes.bool,
   onClose: PropTypes.func,
@@ -279,7 +285,14 @@ export default function ClinicInterestDetailsDrawer({ open, onClose, interestId 
               disabled={interest.status !== 'OPEN'}
               renderTags={(value, getTagProps) =>
                 value.map((option, index) => (
-                  <Chip {...getTagProps({ index })} key={option} label={tagLabel(option)} size="small" />
+                  <Chip
+                    {...getTagProps({ index })}
+                    key={option}
+                    label={tagLabel(option)}
+                    size="small"
+                    color={tagChipColor(option)}
+                    variant={tagChipColor(option) === 'default' ? 'outlined' : 'filled'}
+                  />
                 ))
               }
               renderInput={(params) => <TextField {...params} label="Tags" placeholder="Select tags" />}

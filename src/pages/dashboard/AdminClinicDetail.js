@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import {
   Alert,
   Box,
@@ -43,6 +44,7 @@ export default function AdminClinicDetail() {
   const { id } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const { currentClinic, enrollments, matchingInterests } = useSelector((state) => state.clinics);
   const [enrollUserId, setEnrollUserId] = useState('');
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
@@ -88,6 +90,9 @@ export default function AdminClinicDetail() {
   };
 
   const clinic = currentClinic;
+
+  const levelLabel = (level) =>
+    level ? t(`adminBookings.editModal.clientLevelOptions.${level}`, level) : '—';
 
   return (
     <Page title="Clinic detail">
@@ -147,6 +152,7 @@ export default function AdminClinicDetail() {
                     <TableCell>User</TableCell>
                     <TableCell>Email</TableCell>
                     <TableCell>Phone</TableCell>
+                    <TableCell>Level</TableCell>
                     <TableCell>Date range</TableCell>
                     <TableCell align="right">Action</TableCell>
                   </TableRow>
@@ -157,6 +163,7 @@ export default function AdminClinicDetail() {
                       <TableCell>{row.userName}</TableCell>
                       <TableCell>{row.userEmail}</TableCell>
                       <TableCell>{row.userPhone}</TableCell>
+                      <TableCell>{levelLabel(row.studentLevel)}</TableCell>
                       <TableCell>
                         {row.fromDate} – {row.toDate}
                       </TableCell>

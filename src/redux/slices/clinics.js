@@ -137,6 +137,30 @@ export const createClinicInterest = createAsyncThunk(
   }
 );
 
+export const fetchClinicInterestById = createAsyncThunk(
+  'clinics/fetchInterestById',
+  async (id, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(`/api/admin/clinic-interests/${id}`);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(typeof error === 'string' ? error : error?.message || 'Error loading clinic interest');
+    }
+  }
+);
+
+export const updateClinicInterest = createAsyncThunk(
+  'clinics/updateInterest',
+  async ({ id, ...payload }, { rejectWithValue }) => {
+    try {
+      const response = await axios.put(`/api/admin/clinic-interests/${id}`, payload);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(typeof error === 'string' ? error : error?.message || 'Error updating interest');
+    }
+  }
+);
+
 const slice = createSlice({
   name: 'clinics',
   initialState,
@@ -209,6 +233,12 @@ const slice = createSlice({
         if (action.payload?.id != null) {
           state.interests.unshift(action.payload);
         }
+      })
+      .addCase(updateClinicInterest.fulfilled, (state, action) => {
+        const updated = action.payload;
+        if (updated?.id == null) return;
+        const idx = state.interests.findIndex((x) => x.id === updated.id);
+        if (idx >= 0) state.interests[idx] = updated;
       });
   },
 });

@@ -7,12 +7,14 @@ import {
   Box,
   Button,
   Card,
+  Chip,
   Container,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
   FormControl,
+  IconButton,
   InputLabel,
   MenuItem,
   Select,
@@ -36,12 +38,14 @@ import { useTranslation } from 'react-i18next';
 import { useSnackbar } from 'notistack';
 import Page from '../../components/Page';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
+import Iconify from '../../components/Iconify';
 import { PATH_DASHBOARD } from '../../routes/paths';
 import useSettings from '../../hooks/useSettings';
 import { fetchClinicInterests, createClinicInterest } from '../../redux/slices/clinics';
 import { searchStudentsForAdminBooking } from '../../redux/slices/admin';
 import { GROUP_LESSON_RESORT_OPTIONS } from '../../utils/groupLessonResortOptions';
 import CreateStudentModal from '../../sections/@dashboard/admin/CreateStudentModal';
+import ClinicInterestDetailsDrawer from '../../sections/@dashboard/admin/list/ClinicInterestDetailsDrawer';
 
 const SPORT_OPTIONS = [
   { value: 'SKI', label: 'Ski' },
@@ -50,6 +54,33 @@ const SPORT_OPTIONS = [
 
 const STUDENT_LEVEL_VALUES = ['BEGINNER', 'INTERMEDIATE', 'ADVANCED', 'EXPERT'];
 
+const TAG_OPTIONS = [
+  'NOT_CONTACTED',
+  'DATES_DEFINED',
+  'DATES_NOT_DEFINED',
+  'NOT_INTERESTED',
+  'POSSIBLE_STUDENT',
+];
+
+const TAG_LABELS = {
+  NOT_CONTACTED: 'Not contacted',
+  DATES_DEFINED: 'Dates defined',
+  DATES_NOT_DEFINED: 'Dates not defined',
+  NOT_INTERESTED: 'Not interested',
+  POSSIBLE_STUDENT: 'Possible student',
+};
+
+const tagLabel = (tag) => TAG_LABELS[tag] || String(tag).replaceAll('_', ' ');
+
+/** Builds a WhatsApp-ready number (digits only) with country code, without double-prefixing. */
+const buildWhatsAppPhone = (countryCode, phone) => {
+  const codeDigits = String(countryCode || '').replace(/\D/g, '');
+  const phoneDigits = String(phone || '').replace(/\D/g, '');
+  if (!phoneDigits) return codeDigits;
+  if (codeDigits && phoneDigits.startsWith(codeDigits)) return phoneDigits;
+  return `${codeDigits}${phoneDigits}`;
+};
+
 const emptyInterestForm = {
   sport: 'SKI',
   resort: '',
@@ -57,6 +88,7 @@ const emptyInterestForm = {
   toDate: '',
   notes: '',
   studentLevel: '',
+  tags: ['NOT_CONTACTED'],
 };
 
 export default function AdminClinicInterests() {
@@ -74,6 +106,13 @@ export default function AdminClinicInterests() {
   const [studentOptions, setStudentOptions] = useState([]);
   const [dateRange, setDateRange] = useState([null, null]);
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [selectedInterestId, setSelectedInterestId] = useState(null);
+  const [whatsAppModal, setWhatsAppModal] = useState({
+    open: false,
+    clientName: '',
+    phone: '',
+  });
   const searchTimeoutRef = useRef(null);
 
   useEffect(() => {
@@ -110,6 +149,7 @@ export default function AdminClinicInterests() {
           toDate: form.toDate,
           notes: form.notes || null,
           studentLevel: form.studentLevel,
+          tags: form.tags || [],
         })
       ).unwrap();
       setDialogOpen(false);
@@ -195,6 +235,38 @@ export default function AdminClinicInterests() {
     }));
   };
 
+  const handleRowClick = (row) => {
+    setSelectedInterestId(row.id);
+    setDrawerOpen(true);
+  };
+
+  const handleCloseDrawer = () => {
+    setDrawerOpen(false);
+    setSelectedInterestId(null);
+  };
+
+  const handleOpenWhatsAppModal = (event, row) => {
+    event.stopPropagation();
+    setWhatsAppModal({
+      open: true,
+      clientName: row.userName || '',
+      phone: buildWhatsAppPhone(row.userCountryCode, row.userPhone),
+    });
+  };
+
+  const handleCloseWhatsAppModal = () => {
+    setWhatsAppModal({ open: false, clientName: '', phone: '' });
+  };
+
+  const handleOpenWhatsAppConversation = () => {
+    const digits = String(whatsAppModal.phone || '').replace(/\D/g, '');
+    if (!digits) return;
+    const name = whatsAppModal.clientName || '';
+    const message = t('adminBookings.whatsappGreeting', { name });
+    window.open(`https://wa.me/${digits}?text=${encodeURIComponent(message)}`, '_blank');
+    handleCloseWhatsAppModal();
+  };
+
   const canSave =
     selectedStudent?.id &&
     form.resort &&
@@ -225,33 +297,63 @@ export default function AdminClinicInterests() {
               <TableHead>
                 <TableRow>
                   <TableCell>User</TableCell>
-                  <TableCell>Email</TableCell>
                   <TableCell>Phone</TableCell>
                   <TableCell>Sport</TableCell>
                   <TableCell>Resort</TableCell>
                   <TableCell>Level</TableCell>
+                  <TableCell>Tags</TableCell>
                   <TableCell>Date range</TableCell>
                   <TableCell>Status</TableCell>
+                  <TableCell align="center" sx={{ width: 72 }}>
+                    WhatsApp
+                  </TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {interests.map((row) => (
-                  <TableRow key={row.id}>
+                  <TableRow
+                    key={row.id}
+                    hover
+                    onClick={() => handleRowClick(row)}
+                    sx={{ cursor: 'pointer' }}
+                  >
                     <TableCell>{row.userName}</TableCell>
-                    <TableCell>{row.userEmail}</TableCell>
-                    <TableCell>{row.userPhone}</TableCell>
+                    <TableCell>
+                      {row.userPhone
+                        ? `${row.userCountryCode ? `+${String(row.userCountryCode).replace(/^\+/, '')} ` : ''}${row.userPhone}`
+                        : '—'}
+                    </TableCell>
                     <TableCell>{row.sport}</TableCell>
                     <TableCell>{row.resortDisplayName || row.resort}</TableCell>
                     <TableCell>{levelLabel(row.studentLevel)}</TableCell>
                     <TableCell>
+                      <Stack direction="row" spacing={0.5} flexWrap="wrap" useFlexGap>
+                        {(row.tags || []).map((tag) => (
+                          <Chip key={tag} label={tagLabel(tag)} size="small" />
+                        ))}
+                        {(!row.tags || row.tags.length === 0) && '—'}
+                      </Stack>
+                    </TableCell>
+                    <TableCell>
                       {row.fromDate} – {row.toDate}
                     </TableCell>
                     <TableCell>{row.status}</TableCell>
+                    <TableCell align="center" onClick={(e) => e.stopPropagation()}>
+                      <IconButton
+                        size="small"
+                        color="success"
+                        onClick={(e) => handleOpenWhatsAppModal(e, row)}
+                        title="WhatsApp"
+                        aria-label={`WhatsApp ${row.userName || ''}`}
+                      >
+                        <Iconify icon="mdi:whatsapp" width={22} height={22} />
+                      </IconButton>
+                    </TableCell>
                   </TableRow>
                 ))}
                 {interests.length === 0 && (
                   <TableRow>
-                    <TableCell colSpan={8}>
+                    <TableCell colSpan={9}>
                       <Typography color="text.secondary" align="center" sx={{ py: 3 }}>
                         No open interests
                       </Typography>
@@ -364,6 +466,20 @@ export default function AdminClinicInterests() {
                 </Select>
               </FormControl>
 
+              <Autocomplete
+                multiple
+                options={TAG_OPTIONS}
+                value={form.tags}
+                onChange={(_e, value) => setForm((prev) => ({ ...prev, tags: value }))}
+                getOptionLabel={tagLabel}
+                renderTags={(value, getTagProps) =>
+                  value.map((option, index) => (
+                    <Chip {...getTagProps({ index })} key={option} label={tagLabel(option)} size="small" />
+                  ))
+                }
+                renderInput={(params) => <TextField {...params} label="Tags" placeholder="Select tags" />}
+              />
+
               <LocalizationProvider dateAdapter={AdapterDateFns}>
                 <DateRangePicker
                   localeText={{ start: 'From', end: 'To' }}
@@ -397,6 +513,46 @@ export default function AdminClinicInterests() {
           onCreated={handleStudentCreated}
           initialName={studentSearch}
         />
+
+        <ClinicInterestDetailsDrawer
+          open={drawerOpen}
+          onClose={handleCloseDrawer}
+          interestId={selectedInterestId}
+        />
+
+        <Dialog open={whatsAppModal.open} onClose={handleCloseWhatsAppModal} maxWidth="xs" fullWidth>
+          <DialogTitle>WhatsApp</DialogTitle>
+          <DialogContent>
+            <Stack spacing={2} sx={{ mt: 1 }}>
+              <Typography variant="body2" color="text.secondary">
+                Client: <strong>{whatsAppModal.clientName || '—'}</strong>
+              </Typography>
+              <TextField
+                label="Phone number"
+                value={whatsAppModal.phone}
+                onChange={(e) =>
+                  setWhatsAppModal((prev) => ({ ...prev, phone: e.target.value }))
+                }
+                placeholder="e.g. 5492944123456"
+                helperText="Country code is included. Digits only are used when opening WhatsApp."
+                fullWidth
+                autoFocus
+              />
+            </Stack>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCloseWhatsAppModal}>Cancel</Button>
+            <Button
+              variant="contained"
+              color="success"
+              startIcon={<Iconify icon="mdi:whatsapp" />}
+              onClick={handleOpenWhatsAppConversation}
+              disabled={!String(whatsAppModal.phone || '').replace(/\D/g, '')}
+            >
+              Open WhatsApp
+            </Button>
+          </DialogActions>
+        </Dialog>
 
         <Snackbar open={snackbar.open} autoHideDuration={4000} onClose={() => setSnackbar({ ...snackbar, open: false })}>
           <Alert severity={snackbar.severity}>{snackbar.message}</Alert>

@@ -56,17 +56,17 @@ const STATUS_OPTIONS = [
 const emptyForm = {
   id: null,
   sport: 'SKI',
-  resort: '',
+  resort: 'CERRO_CATEDRAL',
   startDate: '',
   endDate: '',
   title: '',
   description: '',
   price: '',
   currency: 'ARS',
-  maxStudents: '',
+  maxStudents: '5',
   startTime: '',
   endTime: '',
-  status: 'DRAFT',
+  status: 'OPEN',
 };
 
 export default function AdminClinics() {
@@ -260,8 +260,24 @@ export default function AdminClinics() {
                 <TextField label="End date" type="date" value={form.endDate} onChange={(e) => setForm({ ...form, endDate: e.target.value })} InputLabelProps={{ shrink: true }} fullWidth required />
               </Stack>
               <Stack direction="row" spacing={2}>
-                <TextField label="Start time" placeholder="09:00" value={form.startTime} onChange={(e) => setForm({ ...form, startTime: e.target.value })} fullWidth />
-                <TextField label="End time" placeholder="12:00" value={form.endTime} onChange={(e) => setForm({ ...form, endTime: e.target.value })} fullWidth />
+                <TextField
+                  label="Start time"
+                  type="time"
+                  value={form.startTime}
+                  onChange={(e) => setForm({ ...form, startTime: e.target.value })}
+                  InputLabelProps={{ shrink: true }}
+                  inputProps={{ step: 300 }}
+                  fullWidth
+                />
+                <TextField
+                  label="End time"
+                  type="time"
+                  value={form.endTime}
+                  onChange={(e) => setForm({ ...form, endTime: e.target.value })}
+                  InputLabelProps={{ shrink: true }}
+                  inputProps={{ step: 300 }}
+                  fullWidth
+                />
               </Stack>
               <Stack direction="row" spacing={2}>
                 <TextField label="Price" type="number" value={form.price} onChange={(e) => setForm({ ...form, price: e.target.value })} fullWidth required />

@@ -25,6 +25,9 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import { useTranslation } from 'react-i18next';
+import { useSnackbar } from 'notistack';
 import Page from '../../components/Page';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
 import { PATH_DASHBOARD } from '../../routes/paths';
@@ -51,9 +54,12 @@ export default function AdminClinicInterests() {
   const { themeStretch } = useSettings();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { t } = useTranslation();
+  const { enqueueSnackbar } = useSnackbar();
   const { interests } = useSelector((state) => state.clinics);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [createStudentOpen, setCreateStudentOpen] = useState(false);
+  const [createdStudentLabel, setCreatedStudentLabel] = useState('');
   const [form, setForm] = useState(emptyInterestForm);
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
 
@@ -75,6 +81,7 @@ export default function AdminClinicInterests() {
       ).unwrap();
       setDialogOpen(false);
       setForm(emptyInterestForm);
+      setCreatedStudentLabel('');
       dispatch(fetchClinicInterests());
       setSnackbar({ open: true, message: 'Interest saved', severity: 'success' });
     } catch (e) {
@@ -84,9 +91,11 @@ export default function AdminClinicInterests() {
 
   const handleStudentCreated = (student) => {
     if (student?.id) {
+      const label = [student.name, student.lastname].filter(Boolean).join(' ').trim() || student.email || '';
       setForm((prev) => ({ ...prev, userId: String(student.id) }));
+      setCreatedStudentLabel(label);
       setCreateStudentOpen(false);
-      setDialogOpen(true);
+      enqueueSnackbar(t('adminBookings.createStudent.success'), { variant: 'success' });
     }
   };
 
@@ -101,14 +110,9 @@ export default function AdminClinicInterests() {
             { name: 'Interests' },
           ]}
           action={
-            <Stack direction="row" spacing={1}>
-              <Button variant="outlined" onClick={() => setCreateStudentOpen(true)}>
-                Create student
-              </Button>
-              <Button variant="contained" onClick={() => setDialogOpen(true)}>
-                Add interest
-              </Button>
-            </Stack>
+            <Button variant="contained" onClick={() => setDialogOpen(true)}>
+              Add interest
+            </Button>
           }
         />
 
@@ -158,17 +162,39 @@ export default function AdminClinicInterests() {
           <Button onClick={() => navigate(PATH_DASHBOARD.admin.clinics)}>Back to clinics</Button>
         </Stack>
 
-        <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)} maxWidth="sm" fullWidth>
+        <Dialog
+          open={dialogOpen}
+          onClose={() => {
+            setDialogOpen(false);
+            setCreatedStudentLabel('');
+          }}
+          maxWidth="sm"
+          fullWidth
+        >
           <DialogTitle>Add clinic interest</DialogTitle>
           <DialogContent>
             <Stack spacing={2} sx={{ mt: 1 }}>
-              <TextField
-                label="User ID"
-                value={form.userId}
-                onChange={(e) => setForm({ ...form, userId: e.target.value })}
-                fullWidth
-                required
-              />
+              <Stack direction="row" spacing={1} alignItems="flex-start">
+                <TextField
+                  label="User ID"
+                  value={form.userId}
+                  onChange={(e) => {
+                    setForm({ ...form, userId: e.target.value });
+                    setCreatedStudentLabel('');
+                  }}
+                  fullWidth
+                  required
+                  helperText={createdStudentLabel || undefined}
+                />
+                <Button
+                  variant="outlined"
+                  onClick={() => setCreateStudentOpen(true)}
+                  sx={{ minWidth: 44, px: 1, mt: 0.5 }}
+                  title={t('adminBookings.createStudent.openButton')}
+                >
+                  <PersonAddIcon />
+                </Button>
+              </Stack>
               <FormControl fullWidth>
                 <InputLabel>Sport</InputLabel>
                 <Select label="Sport" value={form.sport} onChange={(e) => setForm({ ...form, sport: e.target.value })}>

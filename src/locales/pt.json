@@ -1420,6 +1420,9 @@
         "timeWindowAllDay": "Dia inteiro",
         "timeWindowMorning": "Manhã",
         "timeWindowAfternoon": "Tarde",
+        "blockedMorning": "Bloqueado AM",
+        "blockedAfternoon": "Bloqueado PM",
+        "blockedAllDay": "Bloqueado o dia todo",
         "teacherModal": {
             "roleAndLevel": "Função e nível",
             "role": "Função: {{role}}",

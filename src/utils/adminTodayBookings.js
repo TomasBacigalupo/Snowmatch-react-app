@@ -1,5 +1,7 @@
 import axios from './axios';
 import { ADMIN_BOOKING_RESORT_FILTER_OPTIONS } from './adminBookingResortOptions';
+import { inferLessonTimeFromEvent } from './adminBookingEvents';
+import { isBlockedEvent } from './calendarEventStats';
 import { buildDefaultLevelHourPrices } from './teacherHourPricePresets';
 import { calcBookingPayWithLevelPrices } from './teacherPayoutAmount';
 
@@ -528,6 +530,80 @@ export function formatAvailabilityWindowLabel(entry, t) {
 
 function padDayMonth(value) {
   return String(value).padStart(2, '0');
+}
+
+function localDateKey(value) {
+  if (!value) return null;
+  const date = value instanceof Date ? value : new Date(value);
+  if (Number.isNaN(date.getTime())) return null;
+  return `${date.getFullYear()}-${padDayMonth(date.getMonth() + 1)}-${padDayMonth(date.getDate())}`;
+}
+
+function normalizeEventsListResponse(data) {
+  if (Array.isArray(data)) return data;
+  if (Array.isArray(data?.content)) return data.content;
+  if (Array.isArray(data?.data)) return data.data;
+  return [];
+}
+
+function mapLessonTimeToBlockedWindow(lessonTime) {
+  if (lessonTime === 'ALL_DAY') return 'ALL_DAY';
+  if (lessonTime === 'MORNING' || lessonTime === 'MORNING_2_HS') return 'MORNING';
+  if (lessonTime === 'AFTERNOON' || lessonTime === 'AFTERNOON_2_HS') return 'AFTERNOON';
+  return null;
+}
+
+/**
+ * Fetch a member's calendar events for a single calendar day (month-scoped API + local filter).
+ */
+export async function fetchMemberEventsForDay(memberId, targetDate = new Date()) {
+  if (memberId == null) return [];
+
+  const date = targetDate instanceof Date ? targetDate : new Date(targetDate);
+  if (Number.isNaN(date.getTime())) return [];
+
+  const month = date.getMonth() + 1;
+  const dayKey = localDateKey(date);
+  const response = await axios.get(
+    `/api/events/byUser/${memberId}?page=1&size=300&month=${month}`
+  );
+  const events = normalizeEventsListResponse(response.data);
+
+  return events.filter((event) => {
+    if (event?.eventType === 'DOFF') return false;
+    const eventDay = localDateKey(event?.start);
+    return eventDay != null && eventDay === dayKey;
+  });
+}
+
+/**
+ * From a day's events, return stable blocked windows:
+ * ['ALL_DAY'] | ['MORNING'] | ['AFTERNOON'] | ['MORNING','AFTERNOON']
+ */
+export function getBlockedWindowsForDay(events) {
+  const windows = new Set();
+
+  (events ?? []).forEach((event) => {
+    if (!isBlockedEvent(event)) return;
+    const window = mapLessonTimeToBlockedWindow(inferLessonTimeFromEvent(event));
+    if (window) windows.add(window);
+  });
+
+  if (windows.has('ALL_DAY')) {
+    return ['ALL_DAY'];
+  }
+
+  const result = [];
+  if (windows.has('MORNING')) result.push('MORNING');
+  if (windows.has('AFTERNOON')) result.push('AFTERNOON');
+  return result;
+}
+
+export function formatBlockedWindowLabel(window, t) {
+  if (window === 'ALL_DAY') return t('adminToday.blockedAllDay');
+  if (window === 'MORNING') return t('adminToday.blockedMorning');
+  if (window === 'AFTERNOON') return t('adminToday.blockedAfternoon');
+  return null;
 }
 
 export function formatCompactBookingDateRange(eventList) {

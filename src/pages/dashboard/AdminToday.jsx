@@ -64,6 +64,9 @@ import {
   fetchTeachersAvailableOnDay,
   filterAvailableSchoolMembers,
   formatAvailabilityWindowLabel,
+  formatBlockedWindowLabel,
+  fetchMemberEventsForDay,
+  getBlockedWindowsForDay,
   mergeAvailableTeachers,
 } from '../../utils/adminTodayBookings';
 import { fNumber } from '../../utils/formatNumber';
@@ -135,12 +138,112 @@ function getAvailableTeacherSourceLabels(member, t) {
   return labels;
 }
 
+function AvailableTeacherChip({ member, selectedDate, t, onOpen }) {
+  const isSchoolMember = member?.sources?.includes('school');
+  const [blocksLoading, setBlocksLoading] = useState(isSchoolMember);
+  const [blockWindows, setBlockWindows] = useState([]);
+
+  useEffect(() => {
+    if (!isSchoolMember || member?.id == null || !selectedDate) {
+      setBlocksLoading(false);
+      setBlockWindows([]);
+      return undefined;
+    }
+
+    let cancelled = false;
+    setBlocksLoading(true);
+    setBlockWindows([]);
+
+    (async () => {
+      try {
+        const events = await fetchMemberEventsForDay(member.id, selectedDate);
+        if (cancelled) return;
+        setBlockWindows(getBlockedWindowsForDay(events));
+      } catch {
+        if (!cancelled) setBlockWindows([]);
+      } finally {
+        if (!cancelled) setBlocksLoading(false);
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [isSchoolMember, member?.id, selectedDate]);
+
+  const sourceLabels = getAvailableTeacherSourceLabels(member, t);
+  const blockLabels = blockWindows
+    .map((window) => ({ key: window, label: formatBlockedWindowLabel(window, t) }))
+    .filter((item) => item.label);
+
+  return (
+    <Chip
+      clickable
+      onClick={() => onOpen(member)}
+      avatar={
+        <Avatar alt={getAvailableTeacherLabel(member)} src={member.imageLink || undefined}>
+          {(member.name || member.email || '?').charAt(0).toUpperCase()}
+        </Avatar>
+      }
+      label={
+        <Box sx={{ py: 0.25 }}>
+          <Typography variant="body2" component="span" sx={{ display: 'block' }}>
+            {getAvailableTeacherLabel(member)}
+          </Typography>
+          {(sourceLabels.length > 0 || blocksLoading || blockLabels.length > 0) && (
+            <Stack direction="row" spacing={0.5} flexWrap="wrap" useFlexGap sx={{ mt: 0.25 }}>
+              {sourceLabels.map(({ key, label }) => (
+                <Chip
+                  key={`${member.id}-${key}-${label}`}
+                  size="small"
+                  variant="outlined"
+                  color={key === 'school' ? 'info' : 'default'}
+                  label={label}
+                  sx={{ height: 20, fontSize: '0.7rem' }}
+                />
+              ))}
+              {blocksLoading && (
+                <Skeleton
+                  variant="rounded"
+                  width={56}
+                  height={20}
+                  sx={{ borderRadius: 1 }}
+                />
+              )}
+              {!blocksLoading &&
+                blockLabels.map(({ key, label }) => (
+                  <Chip
+                    key={`${member.id}-block-${key}`}
+                    size="small"
+                    variant="outlined"
+                    color="warning"
+                    label={label}
+                    sx={{ height: 20, fontSize: '0.7rem' }}
+                  />
+                ))}
+            </Stack>
+          )}
+        </Box>
+      }
+      variant="outlined"
+      sx={{
+        maxWidth: '100%',
+        height: 'auto',
+        py: 0.5,
+        alignItems: 'flex-start',
+        cursor: 'pointer',
+      }}
+    />
+  );
+}
+
 function TodayAvailableTeachersSection({
   loading,
   members,
   availableTeachers,
   dayAvailableError,
   dayLabel,
+  selectedDate,
   t,
 }) {
   const dispatch = useDispatch();
@@ -283,51 +386,15 @@ function TodayAvailableTeachersSection({
       ) : (
         <>
           <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
-            {visibleTeachers.map((member) => {
-              const sourceLabels = getAvailableTeacherSourceLabels(member, t);
-              return (
-                <Chip
-                  key={member.id}
-                  clickable
-                  onClick={() => handleOpenTeacher(member)}
-                  avatar={
-                    <Avatar alt={getAvailableTeacherLabel(member)} src={member.imageLink || undefined}>
-                      {(member.name || member.email || '?').charAt(0).toUpperCase()}
-                    </Avatar>
-                  }
-                  label={
-                    <Box sx={{ py: 0.25 }}>
-                      <Typography variant="body2" component="span" sx={{ display: 'block' }}>
-                        {getAvailableTeacherLabel(member)}
-                      </Typography>
-                      {sourceLabels.length > 0 && (
-                        <Stack direction="row" spacing={0.5} flexWrap="wrap" useFlexGap sx={{ mt: 0.25 }}>
-                          {sourceLabels.map(({ key, label }) => (
-                            <Chip
-                              key={`${member.id}-${key}-${label}`}
-                              size="small"
-                              variant="outlined"
-                              // Soft info tint so School is identifiable without a heavy filled chip
-                              color={key === 'school' ? 'info' : 'default'}
-                              label={label}
-                              sx={{ height: 20, fontSize: '0.7rem' }}
-                            />
-                          ))}
-                        </Stack>
-                      )}
-                    </Box>
-                  }
-                  variant="outlined"
-                  sx={{
-                    maxWidth: '100%',
-                    height: 'auto',
-                    py: 0.5,
-                    alignItems: 'flex-start',
-                    cursor: 'pointer',
-                  }}
-                />
-              );
-            })}
+            {visibleTeachers.map((member) => (
+              <AvailableTeacherChip
+                key={member.id}
+                member={member}
+                selectedDate={selectedDate}
+                t={t}
+                onOpen={handleOpenTeacher}
+              />
+            ))}
           </Stack>
 
           {hasHiddenTeachers && (
@@ -1460,6 +1527,7 @@ const participantCount = countTodayParticipants(lessonBookings, gearBookings);
           availableTeachers={availableTeachers}
           dayAvailableError={dayAvailableError}
           dayLabel={dayLabel}
+          selectedDate={selectedDate}
           t={t}
         />
 

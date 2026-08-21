@@ -21,6 +21,7 @@ import { Navigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import Page from '../../components/Page';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
+import LoadingScreen from '../../components/LoadingScreen';
 import { DialogAnimate } from '../../components/animate';
 import { FormProvider } from '../../components/hook-form';
 import useSettings from '../../hooks/useSettings';
@@ -123,7 +124,7 @@ function applyFilter(teachers, sortBy, filters) {
 export default function AdminSchoolMembers() {
   const { t } = useTranslation();
   const { themeStretch } = useSettings();
-  const { isAdmin } = useAuth();
+  const { isAdmin, isInitialized } = useAuth();
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
   const [tab, setTab] = useState('members');
@@ -180,7 +181,7 @@ export default function AdminSchoolMembers() {
     !values.resort;
 
   useEffect(() => {
-    if (!isAdmin) return undefined;
+    if (!isInitialized || !isAdmin) return undefined;
 
     dispatch(setManagedBusinessId(SCHOOL_BUSINESS_ID));
     dispatch(getAdminBusinessMembers(SCHOOL_BUSINESS_ID));
@@ -189,7 +190,7 @@ export default function AdminSchoolMembers() {
     return () => {
       dispatch(setManagedBusinessId(null));
     };
-  }, [dispatch, isAdmin]);
+  }, [dispatch, isAdmin, isInitialized]);
 
   // Subscribe to form changes instead of depending on watch()'s new object every render,
   // which re-dispatched filterTeachers in a loop and made the add-teacher modal blink.
@@ -213,6 +214,10 @@ export default function AdminSchoolMembers() {
     () => (teacherSearchResults || []).filter((teacher) => !memberIds.has(teacher.id)),
     [teacherSearchResults, memberIds]
   );
+
+  if (!isInitialized) {
+    return <LoadingScreen isDashboard />;
+  }
 
   if (!isAdmin) {
     return <Navigate to="/access-denied" replace />;

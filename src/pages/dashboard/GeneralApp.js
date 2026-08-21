@@ -13,7 +13,8 @@ import {
   AppWidgetSummary,
   AppCurrentDownload,
   UpcomingEvents,
-  BookedHoursChart
+  BookedHoursChart,
+  MemberLessonHoursChart,
 } from '../../sections/@dashboard/general/app';
 import { useDispatch, useSelector } from 'src/redux/store';
 import { useEffect, useState } from 'react';
@@ -33,7 +34,7 @@ import SnowCheckLeftDrawer from 'src/sections/@dashboard/general/SnowCheckLeftDr
 
 export default function GeneralApp() {
 
-  const { user, isAuthorized } = useAuth();
+  const { user, isAuthorized, isAdmin } = useAuth();
   const theme = useTheme();
   const { themeStretch } = useSettings();
   const dispatch = useDispatch();
@@ -54,13 +55,14 @@ export default function GeneralApp() {
 
 
   useEffect(() => {
+    if (isAdmin) return;
     dispatch(getTotalClasses())
     dispatch(getEvents())
     dispatch(getConversations())
     dispatch(getCommentedCount())
     dispatch(getTotalHours())
     user && dispatch(getBookings('ACCEPTED'))
-  }, [])
+  }, [isAdmin, user])
 
   useEffect(() => {
     let incomeChartData = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
@@ -107,6 +109,20 @@ export default function GeneralApp() {
 
   if (!isAuthorized) {
     return <></>
+  }
+
+  if (isAdmin) {
+    return (
+      <Page title="General: App">
+        <Container maxWidth={themeStretch ? false : 'xl'}>
+          <Grid container spacing={3}>
+            <Grid item xs={12} md={8} lg={7}>
+              <MemberLessonHoursChart />
+            </Grid>
+          </Grid>
+        </Container>
+      </Page>
+    );
   }
 
   return (

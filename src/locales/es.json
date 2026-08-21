@@ -1329,7 +1329,13 @@
             "colResort": "Centro",
             "colPayment": "Pago",
             "colPayout": "Payout",
-            "colPrice": "Precio"
+            "colPrice": "Precio",
+            "filterAgency": "Agencia",
+            "filterTeacher": "Profesor",
+            "filterClient": "Cliente",
+            "filterAll": "Todos",
+            "filterNoAgency": "Sin agencia",
+            "emptyFiltered": "Ninguna reserva coincide con los filtros seleccionados."
         },
         "hoursByLevelTitle": "Horas por nivel de ski",
         "hoursByLevelSubtitle": "Horas asignadas (ASSIGNED) y requeridas (REFERRED) por nivel de profesor para el centro seleccionado.",
@@ -2085,7 +2091,16 @@
         "Accepted": "Aceptadas",
         "thanLastMonth": "respecto mes anterior",
         "totalBookedHours": "Horas reservadas",
-        "totalRatedVideos": "Videos calificados"
+        "totalRatedVideos": "Videos calificados",
+        "memberLessonHours": {
+            "title": "Total de horas de clase",
+            "subtitle": "Total temporada {{total}} h · Asignadas {{assigned}} h · Referidas {{required}} h",
+            "chartCategory": "Temporada actual",
+            "total": "Total",
+            "assigned": "Horas asignadas",
+            "required": "Horas referidas",
+            "viewDetails": "Ver detalle"
+        }
     },
     "teacherDetails": {
         "h1": "Clases de {{discipline}} con {{name}} en {{resort}}",

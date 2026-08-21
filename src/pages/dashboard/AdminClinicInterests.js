@@ -49,6 +49,7 @@ import ClinicInterestDetailsDrawer from '../../sections/@dashboard/admin/list/Cl
 import ClinicInterestStats, {
   interestMatchesStatsFilter,
 } from '../../sections/@dashboard/admin/list/ClinicInterestStats';
+import { buildWhatsAppPhone } from '../../utils/whatsappPhone';
 
 const SPORT_OPTIONS = [
   { value: 'SKI', label: 'Ski' },
@@ -79,15 +80,6 @@ const tagChipColor = (tag) => {
   if (tag === 'NOT_CONTACTED') return 'error';
   if (tag === 'POSSIBLE_STUDENT') return 'success';
   return 'default';
-};
-
-/** Builds a WhatsApp-ready number (digits only) with country code, without double-prefixing. */
-const buildWhatsAppPhone = (countryCode, phone) => {
-  const codeDigits = String(countryCode || '').replace(/\D/g, '');
-  const phoneDigits = String(phone || '').replace(/\D/g, '');
-  if (!phoneDigits) return codeDigits;
-  if (codeDigits && phoneDigits.startsWith(codeDigits)) return phoneDigits;
-  return `${codeDigits}${phoneDigits}`;
 };
 
 const emptyInterestForm = {

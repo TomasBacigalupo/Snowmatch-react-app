@@ -1574,7 +1574,13 @@
             "colResort": "Estação",
             "colPayment": "Pagamento",
             "colPayout": "Payout",
-            "colPrice": "Preço"
+            "colPrice": "Preço",
+            "filterAgency": "Agência",
+            "filterTeacher": "Professor",
+            "filterClient": "Cliente",
+            "filterAll": "Todos",
+            "filterNoAgency": "Sem agência",
+            "emptyFiltered": "Nenhuma reserva corresponde aos filtros selecionados."
         },
         "hoursByLevelTitle": "Horas por nível de ski",
         "hoursByLevelSubtitle": "Horas atribuídas (ASSIGNED) e requeridas (REFERRED) por nível do professor para a estação selecionada.",
@@ -2253,7 +2259,16 @@
         "noScheduledEvents": "Não tem eventos agendados",
         "welcomeBack": "Bem-vindo, ",
         "lookingBestTeacher": "¿Você esta procurando ao melhor PRO para seu cliente?",
-        "topClients": "Ranking de Clientes"
+        "topClients": "Ranking de Clientes",
+        "memberLessonHours": {
+            "title": "Total de horas de aula",
+            "subtitle": "Total temporada {{total}} h · Atribuídas {{assigned}} h · Referidas {{required}} h",
+            "chartCategory": "Temporada atual",
+            "total": "Total",
+            "assigned": "Horas atribuídas",
+            "required": "Horas referidas",
+            "viewDetails": "Ver detalhes"
+        }
     },
     "teacherDetails": {
         "title": "Detalhes PRO",

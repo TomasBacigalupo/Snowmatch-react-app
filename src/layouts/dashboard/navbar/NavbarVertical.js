@@ -83,6 +83,7 @@ const ICONS = {
 };
 
 const ADMIN_NAV_ITEMS = [
+  { title: 'overview', path: PATH_DASHBOARD.general.app, icon: ICONS.dashboard },
   { title: 'today', path: PATH_DASHBOARD.admin.today, icon: ICONS.dashboard },
   {
     title: 'usuarios',

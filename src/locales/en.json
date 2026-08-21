@@ -1137,7 +1137,13 @@
       "colResort": "Resort",
       "colPayment": "Payment",
       "colPayout": "Payout",
-      "colPrice": "Price"
+      "colPrice": "Price",
+      "filterAgency": "Agency",
+      "filterTeacher": "Teacher",
+      "filterClient": "Client",
+      "filterAll": "All",
+      "filterNoAgency": "No agency",
+      "emptyFiltered": "No bookings match the selected filters."
     },
     "hoursByLevelTitle": "Hours by ski level",
     "hoursByLevelSubtitle": "Assigned (ASSIGNED) and required (REFERRED) hours by teacher level for the selected resort.",
@@ -1867,7 +1873,18 @@
     "Cancel": "Rejected",
     "Pending": "Pending",
     "Accepted": "Accepted",
-    "thanLastMonth": "than last month"
+    "thanLastMonth": "than last month",
+    "totalBookedHours": "Booked hours",
+    "totalRatedVideos": "Rated videos",
+    "memberLessonHours": {
+      "title": "Total lesson hours",
+      "subtitle": "Season total {{total}} h · Assigned {{assigned}} h · Required {{required}} h",
+      "chartCategory": "Current season",
+      "total": "Total",
+      "assigned": "Assigned hours",
+      "required": "Required hours",
+      "viewDetails": "View details"
+    }
   },
   "teacherDetails": {
     "title": "PRO Details",

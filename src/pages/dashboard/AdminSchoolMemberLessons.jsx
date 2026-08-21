@@ -32,6 +32,7 @@ import { Navigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import Page from '../../components/Page';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
+import LoadingScreen from '../../components/LoadingScreen';
 import { BaseOptionChart } from '../../components/chart';
 import useSettings from '../../hooks/useSettings';
 import useAuth from '../../hooks/useAuth';
@@ -159,7 +160,7 @@ function LessonTotalsChart({ assigned, required, labels }) {
 export default function AdminSchoolMemberLessons() {
   const { t } = useTranslation();
   const { themeStretch } = useSettings();
-  const { isAdmin } = useAuth();
+  const { isAdmin, isInitialized } = useAuth();
   const dispatch = useDispatch();
   const { memberLessonStats, isLoadingMemberLessonStats, error } = useSelector((state) => state.admin);
 
@@ -230,9 +231,13 @@ export default function AdminSchoolMemberLessons() {
   };
 
   useEffect(() => {
-    if (!isAdmin || !from || !to) return;
+    if (!isInitialized || !isAdmin || !from || !to) return;
     dispatch(getSchoolMemberLessonStats(from, to, SCHOOL_BUSINESS_ID));
-  }, [dispatch, from, isAdmin, to]);
+  }, [dispatch, from, isAdmin, isInitialized, to]);
+
+  if (!isInitialized) {
+    return <LoadingScreen isDashboard />;
+  }
 
   if (!isAdmin) {
     return <Navigate to="/access-denied" replace />;

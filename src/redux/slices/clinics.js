@@ -83,6 +83,24 @@ export const fetchMatchingInterests = createAsyncThunk(
   }
 );
 
+export const notifyMatchingInterests = createAsyncThunk(
+  'clinics/notifyMatchingInterests',
+  async ({ clinicId, userId, email, whatsapp } = {}, { rejectWithValue }) => {
+    try {
+      const body = {};
+      if (userId != null) body.userId = userId;
+      if (email != null) body.email = email;
+      if (whatsapp != null) body.whatsapp = whatsapp;
+      const response = await axios.post(`/api/admin/clinics/${clinicId}/notify-matching-interests`, body);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(
+        typeof error === 'string' ? error : error?.message || 'Error notifying matching interests'
+      );
+    }
+  }
+);
+
 export const enrollUserInClinic = createAsyncThunk(
   'clinics/enrollUser',
   async ({ clinicId, userId }, { rejectWithValue }) => {

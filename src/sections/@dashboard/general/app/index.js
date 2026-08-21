@@ -10,3 +10,4 @@ export { default as AppCurrentDownload } from './AppCurrentDownload';
 export { default as AppTopInstalledCountries } from './AppTopInstalledCountries';
 export { default as UpcomingEvents } from './UpcomingEvents';
 export { default as BookedHoursChart } from './BookedHoursChart';
+export { default as MemberLessonHoursChart } from './MemberLessonHoursChart';

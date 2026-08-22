@@ -64,9 +64,8 @@ import {
   fetchTeachersAvailableOnDay,
   filterAvailableSchoolMembers,
   formatAvailabilityWindowLabel,
-  formatBlockedWindowLabel,
   fetchMemberEventsForDay,
-  getBlockedWindowsForDay,
+  getDayEventChips,
   mergeAvailableTeachers,
 } from '../../utils/adminTodayBookings';
 import { fNumber } from '../../utils/formatNumber';
@@ -141,26 +140,26 @@ function getAvailableTeacherSourceLabels(member, t) {
 function AvailableTeacherChip({ member, selectedDate, t, onOpen }) {
   const isSchoolMember = member?.sources?.includes('school');
   const [blocksLoading, setBlocksLoading] = useState(isSchoolMember);
-  const [blockWindows, setBlockWindows] = useState([]);
+  const [dayEventChips, setDayEventChips] = useState([]);
 
   useEffect(() => {
     if (!isSchoolMember || member?.id == null || !selectedDate) {
       setBlocksLoading(false);
-      setBlockWindows([]);
+      setDayEventChips([]);
       return undefined;
     }
 
     let cancelled = false;
     setBlocksLoading(true);
-    setBlockWindows([]);
+    setDayEventChips([]);
 
     (async () => {
       try {
         const events = await fetchMemberEventsForDay(member.id, selectedDate);
         if (cancelled) return;
-        setBlockWindows(getBlockedWindowsForDay(events));
+        setDayEventChips(getDayEventChips(events, t));
       } catch {
-        if (!cancelled) setBlockWindows([]);
+        if (!cancelled) setDayEventChips([]);
       } finally {
         if (!cancelled) setBlocksLoading(false);
       }
@@ -169,12 +168,9 @@ function AvailableTeacherChip({ member, selectedDate, t, onOpen }) {
     return () => {
       cancelled = true;
     };
-  }, [isSchoolMember, member?.id, selectedDate]);
+  }, [isSchoolMember, member?.id, selectedDate, t]);
 
   const sourceLabels = getAvailableTeacherSourceLabels(member, t);
-  const blockLabels = blockWindows
-    .map((window) => ({ key: window, label: formatBlockedWindowLabel(window, t) }))
-    .filter((item) => item.label);
 
   return (
     <Chip
@@ -190,7 +186,7 @@ function AvailableTeacherChip({ member, selectedDate, t, onOpen }) {
           <Typography variant="body2" component="span" sx={{ display: 'block' }}>
             {getAvailableTeacherLabel(member)}
           </Typography>
-          {(sourceLabels.length > 0 || blocksLoading || blockLabels.length > 0) && (
+          {(sourceLabels.length > 0 || blocksLoading || dayEventChips.length > 0) && (
             <Stack direction="row" spacing={0.5} flexWrap="wrap" useFlexGap sx={{ mt: 0.25 }}>
               {sourceLabels.map(({ key, label }) => (
                 <Chip
@@ -211,12 +207,12 @@ function AvailableTeacherChip({ member, selectedDate, t, onOpen }) {
                 />
               )}
               {!blocksLoading &&
-                blockLabels.map(({ key, label }) => (
+                dayEventChips.map(({ key, label, color }) => (
                   <Chip
-                    key={`${member.id}-block-${key}`}
+                    key={`${member.id}-${key}`}
                     size="small"
                     variant="outlined"
-                    color="warning"
+                    color={color === 'warning' ? 'warning' : 'default'}
                     label={label}
                     sx={{ height: 20, fontSize: '0.7rem' }}
                   />

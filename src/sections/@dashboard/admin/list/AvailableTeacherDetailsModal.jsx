@@ -224,6 +224,7 @@ export default function AvailableTeacherDetailsModal({
                   teacherId={teacher.id}
                   active={open}
                   initialDate={selectedDate}
+                  initialView="dayGridMonth"
                   height={420}
                 />
               </Box>

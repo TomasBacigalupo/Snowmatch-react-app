@@ -1423,6 +1423,7 @@
         "blockedMorning": "Bloqueado AM",
         "blockedAfternoon": "Bloqueado PM",
         "blockedAllDay": "Bloqueado o dia todo",
+        "dayEventFallback": "Evento",
         "teacherModal": {
             "roleAndLevel": "Função e nível",
             "role": "Função: {{role}}",

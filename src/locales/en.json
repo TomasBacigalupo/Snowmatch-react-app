@@ -986,6 +986,7 @@
     "blockedMorning": "Blocked AM",
     "blockedAfternoon": "Blocked PM",
     "blockedAllDay": "Blocked all day",
+    "dayEventFallback": "Event",
     "teacherModal": {
       "roleAndLevel": "Role and level",
       "role": "Role: {{role}}",

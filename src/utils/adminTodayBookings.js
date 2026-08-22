@@ -539,6 +539,25 @@ function localDateKey(value) {
   return `${date.getFullYear()}-${padDayMonth(date.getMonth() + 1)}-${padDayMonth(date.getDate())}`;
 }
 
+/**
+ * Match the calendar slice wall-clock adjustment so UTC-stored local times
+ * (e.g. midnight Z for an all-day block) land on the intended calendar day.
+ */
+function calendarWallDateKey(value) {
+  if (!value) return null;
+  const dateStart = value instanceof Date ? value : new Date(value);
+  if (Number.isNaN(dateStart.getTime())) return null;
+  const adjusted = new Date(dateStart.getTime() + dateStart.getTimezoneOffset() * 60000);
+  return localDateKey(adjusted);
+}
+
+function eventMatchesDay(event, dayKey) {
+  if (!dayKey) return false;
+  const rawKey = localDateKey(event?.start);
+  if (rawKey === dayKey) return true;
+  return calendarWallDateKey(event?.start) === dayKey;
+}
+
 function normalizeEventsListResponse(data) {
   if (Array.isArray(data)) return data;
   if (Array.isArray(data?.content)) return data.content;
@@ -551,6 +570,41 @@ function mapLessonTimeToBlockedWindow(lessonTime) {
   if (lessonTime === 'MORNING' || lessonTime === 'MORNING_2_HS') return 'MORNING';
   if (lessonTime === 'AFTERNOON' || lessonTime === 'AFTERNOON_2_HS') return 'AFTERNOON';
   return null;
+}
+
+function adjustEventForCalendarDisplay(event) {
+  if (!event?.start) return event;
+  const dateStart = new Date(event.start);
+  const dateEnd = new Date(event.end || event.start);
+  if (Number.isNaN(dateStart.getTime()) || Number.isNaN(dateEnd.getTime())) return event;
+  const utcOffset = dateStart.getTimezoneOffset() * 60000;
+  return {
+    ...event,
+    start: new Date(dateStart.getTime() + utcOffset),
+    end: new Date(dateEnd.getTime() + utcOffset),
+  };
+}
+
+/**
+ * Fetch a member's calendar events for a month (same API the today chips use).
+ */
+export async function fetchMemberEventsForMonth(memberId, targetDate = new Date()) {
+  if (memberId == null) return [];
+
+  const date = targetDate instanceof Date ? targetDate : new Date(targetDate);
+  if (Number.isNaN(date.getTime())) return [];
+
+  const month = date.getMonth() + 1;
+  const response = await axios.get(
+    `/api/events/byUser/${memberId}?page=1&size=300&month=${month}`
+  );
+  return normalizeEventsListResponse(response.data)
+    .filter((event) => {
+      const eventType = String(event?.eventType || '').toUpperCase();
+      if (eventType === 'DOFF' && !isBlockedEvent(event)) return false;
+      return true;
+    })
+    .map(adjustEventForCalendarDisplay);
 }
 
 /**
@@ -569,11 +623,15 @@ export async function fetchMemberEventsForDay(memberId, targetDate = new Date())
   );
   const events = normalizeEventsListResponse(response.data);
 
-  return events.filter((event) => {
-    if (event?.eventType === 'DOFF') return false;
-    const eventDay = localDateKey(event?.start);
-    return eventDay != null && eventDay === dayKey;
+  const filtered = events.filter((event) => {
+    const eventType = String(event?.eventType || '').toUpperCase();
+    // Instructor blocks/days-off are stored as DOFF + title "Blocked".
+    // Only skip non-block DOFF noise; keep blocked DOFF for day chips.
+    if (eventType === 'DOFF' && !isBlockedEvent(event)) return false;
+    return eventMatchesDay(event, dayKey);
   });
+
+  return filtered;
 }
 
 /**
@@ -604,6 +662,48 @@ export function formatBlockedWindowLabel(window, t) {
   if (window === 'MORNING') return t('adminToday.blockedMorning');
   if (window === 'AFTERNOON') return t('adminToday.blockedAfternoon');
   return null;
+}
+
+/**
+ * Build chip labels for every event on the day (blocks + classes + other).
+ */
+export function getDayEventChips(events, t) {
+  return (events ?? []).map((event, index) => {
+    const id = event?.id != null ? event.id : `${event?.start || 'x'}-${index}`;
+    const blocked = isBlockedEvent(event);
+    const window = mapLessonTimeToBlockedWindow(inferLessonTimeFromEvent(event));
+
+    if (blocked) {
+      return {
+        key: `block-${id}`,
+        label: formatBlockedWindowLabel(window, t) || t('adminToday.blockedAllDay'),
+        color: 'warning',
+        isBlocked: true,
+        eventId: event?.id,
+        title: event?.title,
+        eventType: event?.eventType,
+      };
+    }
+
+    const title =
+      String(event?.title || '').trim() ||
+      String(event?.eventType || '').trim() ||
+      t('adminToday.dayEventFallback');
+    let label = title;
+    if (window === 'MORNING') label = `${title} · ${t('adminToday.timeWindowMorning')}`;
+    else if (window === 'AFTERNOON') label = `${title} · ${t('adminToday.timeWindowAfternoon')}`;
+    else if (window === 'ALL_DAY') label = `${title} · ${t('adminToday.timeWindowAllDay')}`;
+
+    return {
+      key: `event-${id}`,
+      label,
+      color: 'default',
+      isBlocked: false,
+      eventId: event?.id,
+      title: event?.title,
+      eventType: event?.eventType,
+    };
+  });
 }
 
 export function formatCompactBookingDateRange(eventList) {

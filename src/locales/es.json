@@ -1178,6 +1178,7 @@
         "blockedMorning": "Bloqueado AM",
         "blockedAfternoon": "Bloqueado PM",
         "blockedAllDay": "Bloqueado todo el día",
+        "dayEventFallback": "Evento",
         "teacherModal": {
             "roleAndLevel": "Rol y nivel",
             "role": "Rol: {{role}}",

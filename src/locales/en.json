@@ -1007,6 +1007,7 @@
         "whatsappNumber": "WhatsApp number: {{value}}"
       },
       "noPhone": "No phone number on file",
+      "calendar": "Calendar",
       "close": "Close",
       "viewDetails": "See details",
       "whatsapp": "WhatsApp",
@@ -1072,7 +1073,19 @@
     "setHourPrices": "Set hour prices, or select bookings with a suggested payout amount.",
     "noPayoutsToCreate": "No pending bookings with a payable amount were selected.",
     "perBookingPayoutHint": "Creates one payout per booking. Suggested amount when set; otherwise hours × hour price. The same note is applied to all {{count}} payout(s).",
-    "error": "Could not register payout."
+    "error": "Could not register payout.",
+    "ganancias": {
+      "title": "Earnings analysis",
+      "priceTotalArs": "Total booking price (ARS)",
+      "priceTotalUsd": "Total booking price (USD)",
+      "currency": "Currency",
+      "total": "Total",
+      "teacher": "Teacher pay",
+      "tax": "Tax (30%)",
+      "net": "Net",
+      "usdRate": "USD → ARS",
+      "consolidatedArs": "Total ARS"
+    }
   },
   "adminAgencyDetail": {
     "selectedCount": "{{count}} booking(s) selected",

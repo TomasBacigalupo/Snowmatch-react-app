@@ -417,6 +417,7 @@ function TodayAvailableTeachersSection({
         teacher={selectedTeacher}
         onViewDetails={handleViewFullDetails}
         detailsLoading={detailsLoading}
+        selectedDate={selectedDate}
       />
 
       <TeacherDetailsDrawer

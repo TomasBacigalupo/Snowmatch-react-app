@@ -15,6 +15,7 @@ import { LoadingButton } from '@mui/lab';
 import { useTranslation } from 'react-i18next';
 import Iconify from 'src/components/Iconify';
 import { formatAvailabilityWindowLabel } from 'src/utils/adminTodayBookings';
+import TeacherAgendaCalendar from './TeacherAgendaCalendar';
 
 const PHONE_ATTRIBUTE_KEYS = [
   'countryCode',
@@ -76,6 +77,7 @@ AvailableTeacherDetailsModal.propTypes = {
   teacher: PropTypes.object,
   onViewDetails: PropTypes.func,
   detailsLoading: PropTypes.bool,
+  selectedDate: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.object, PropTypes.string]),
 };
 
 export default function AvailableTeacherDetailsModal({
@@ -84,6 +86,7 @@ export default function AvailableTeacherDetailsModal({
   teacher,
   onViewDetails,
   detailsLoading = false,
+  selectedDate,
 }) {
   const { t } = useTranslation();
   const fullName = getTeacherFullName(teacher) || teacher?.email || '—';
@@ -100,7 +103,7 @@ export default function AvailableTeacherDetailsModal({
   };
 
   return (
-    <Dialog open={open} onClose={onClose} fullWidth maxWidth="xs">
+    <Dialog open={open} onClose={onClose} fullWidth maxWidth="md">
       <DialogTitle>
         <Stack direction="row" spacing={1.5} alignItems="center">
           <Avatar alt={fullName} src={teacher?.imageLink || undefined} sx={{ width: 48, height: 48 }}>
@@ -119,7 +122,7 @@ export default function AvailableTeacherDetailsModal({
         </Stack>
       </DialogTitle>
 
-      <DialogContent>
+      <DialogContent sx={{ maxHeight: '75vh', overflowY: 'auto' }}>
         {teacher && (
           <Stack spacing={2} sx={{ pt: 1 }}>
             {(teacher.level != null && teacher.level !== '') || teacher.role ? (
@@ -211,6 +214,20 @@ export default function AvailableTeacherDetailsModal({
                 )}
               </Stack>
             </Box>
+
+            {teacher.id != null && (
+              <Box>
+                <Typography variant="subtitle2" gutterBottom>
+                  {t('adminToday.teacherModal.calendar')}
+                </Typography>
+                <TeacherAgendaCalendar
+                  teacherId={teacher.id}
+                  active={open}
+                  initialDate={selectedDate}
+                  height={420}
+                />
+              </Box>
+            )}
           </Stack>
         )}
       </DialogContent>

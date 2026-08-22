@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import {
   Alert,
@@ -45,11 +46,16 @@ import {
   buildBookingPayoutItems,
   calcBookingPayWithHourPrice,
   calcBookingTeacherHours,
+  calcSelectedBookingsGanancias,
   calcTeacherPayTotalWithHourPrice,
   calcUniqueHoursByType,
   calcUniqueTeacherHours,
   hasHourPricesConfigured,
 } from '../../utils/teacherPayoutAmount';
+import {
+  consolidateGananciasInArs,
+  DEFAULT_USD_TO_ARS_RATE,
+} from '../../utils/adminTodayBookings';
 import {
   LEVEL_HOUR_PRICE_PRESETS,
   bookingInDateRange,
@@ -142,6 +148,8 @@ export default function AdminPayouts() {
   const theme = useTheme();
   const dispatch = useDispatch();
   const { t } = useTranslation();
+  const [searchParams] = useSearchParams();
+  const showGanancias = searchParams.get('ganancias') === 'true';
   const { teachers, bookings, payouts, isLoadingBookings, isLoading } = useSelector(
     (state) => state.admin
   );
@@ -160,6 +168,7 @@ export default function AdminPayouts() {
   const [loadingDrawerBooking, setLoadingDrawerBooking] = useState(false);
   const [dateRange, setDateRange] = useState(() => getDefaultMonthRange());
   const [payoutStatusFilter, setPayoutStatusFilter] = useState('all');
+  const [usdToArsRate, setUsdToArsRate] = useState(DEFAULT_USD_TO_ARS_RATE);
 
   const paidBookingIds = useMemo(() => bookingIdsWithPayout(payouts), [payouts]);
 
@@ -245,6 +254,27 @@ export default function AdminPayouts() {
   const uniqueHoursByType = useMemo(
     () => calcUniqueHoursByType(selectedBookings),
     [selectedBookings]
+  );
+
+  const selectedGanancias = useMemo(() => {
+    if (!showGanancias || !selectedBookings.length) {
+      return null;
+    }
+    return calcSelectedBookingsGanancias(selectedBookings, hourPrices);
+  }, [showGanancias, selectedBookings, hourPrices]);
+
+  const gananciasRows = useMemo(() => {
+    if (selectedGanancias?.byCurrency?.length) {
+      return selectedGanancias.byCurrency;
+    }
+    return [{ currency: 'ARS', dayGross: 0, dayTax: 0, dayTeacher: 0, net: 0 }];
+  }, [selectedGanancias]);
+
+  const gananciasHasUsd = gananciasRows.some((row) => row.currency === 'USD');
+
+  const consolidatedGananciasArs = useMemo(
+    () => consolidateGananciasInArs(gananciasRows, usdToArsRate),
+    [gananciasRows, usdToArsRate]
   );
 
   const loadPayouts = useCallback(() => {
@@ -677,6 +707,116 @@ export default function AdminPayouts() {
                       })}
                     </Typography>
                   </Box>
+
+                  {showGanancias && selectedGanancias && (
+                    <Box
+                      sx={{
+                        p: 2,
+                        borderRadius: 1,
+                        bgcolor: 'background.neutral',
+                      }}
+                    >
+                      <Stack
+                        direction={{ xs: 'column', sm: 'row' }}
+                        spacing={2}
+                        alignItems={{ xs: 'stretch', sm: 'center' }}
+                        justifyContent="space-between"
+                        sx={{ mb: 2 }}
+                      >
+                        <Typography variant="subtitle1">
+                          {t('adminPayouts.ganancias.title')}
+                        </Typography>
+                        {gananciasHasUsd && (
+                          <TextField
+                            label={t('adminPayouts.ganancias.usdRate')}
+                            type="number"
+                            size="small"
+                            value={usdToArsRate}
+                            onChange={(event) => setUsdToArsRate(event.target.value)}
+                            inputProps={{ min: 0, step: 1 }}
+                            sx={{ width: { xs: '100%', sm: 220 } }}
+                          />
+                        )}
+                      </Stack>
+
+                      <Stack spacing={0.5} sx={{ mb: 2 }}>
+                        <Typography variant="body2">
+                          {t('adminPayouts.ganancias.priceTotalArs')}:{' '}
+                          {formatCurrencyAmount(selectedGanancias.priceTotals.ARS, 'ARS')}
+                        </Typography>
+                        <Typography variant="body2">
+                          {t('adminPayouts.ganancias.priceTotalUsd')}:{' '}
+                          {formatCurrencyAmount(selectedGanancias.priceTotals.USD, 'USD')}
+                        </Typography>
+                      </Stack>
+
+                      <TableContainer>
+                        <Table size="small">
+                          <TableHead>
+                            <TableRow>
+                              <TableCell>{t('adminPayouts.ganancias.currency')}</TableCell>
+                              <TableCell align="right">
+                                {t('adminPayouts.ganancias.total')}
+                              </TableCell>
+                              <TableCell align="right">
+                                {t('adminPayouts.ganancias.teacher')}
+                              </TableCell>
+                              <TableCell align="right">
+                                {t('adminPayouts.ganancias.tax')}
+                              </TableCell>
+                              <TableCell align="right">
+                                {t('adminPayouts.ganancias.net')}
+                              </TableCell>
+                            </TableRow>
+                          </TableHead>
+                          <TableBody>
+                            {gananciasRows.map((row) => (
+                              <TableRow key={row.currency}>
+                                <TableCell>
+                                  <Typography variant="subtitle2">{row.currency}</Typography>
+                                </TableCell>
+                                <TableCell align="right">
+                                  {formatCurrencyAmount(row.dayGross, row.currency)}
+                                </TableCell>
+                                <TableCell align="right">
+                                  {formatCurrencyAmount(row.dayTeacher, row.currency)}
+                                </TableCell>
+                                <TableCell align="right">
+                                  {formatCurrencyAmount(row.dayTax, row.currency)}
+                                </TableCell>
+                                <TableCell align="right">
+                                  {formatCurrencyAmount(row.net, row.currency)}
+                                </TableCell>
+                              </TableRow>
+                            ))}
+                            {gananciasHasUsd && (
+                              <TableRow>
+                                <TableCell>
+                                  <Typography variant="subtitle2" sx={{ fontWeight: 700 }}>
+                                    {t('adminPayouts.ganancias.consolidatedArs')}
+                                  </Typography>
+                                </TableCell>
+                                <TableCell align="right">
+                                  {formatCurrencyAmount(consolidatedGananciasArs.dayGross, 'ARS')}
+                                </TableCell>
+                                <TableCell align="right">
+                                  {formatCurrencyAmount(consolidatedGananciasArs.dayTeacher, 'ARS')}
+                                </TableCell>
+                                <TableCell align="right">
+                                  {formatCurrencyAmount(consolidatedGananciasArs.dayTax, 'ARS')}
+                                </TableCell>
+                                <TableCell align="right">
+                                  <Typography variant="subtitle2" color="success.main">
+                                    {formatCurrencyAmount(consolidatedGananciasArs.net, 'ARS')}
+                                  </Typography>
+                                </TableCell>
+                              </TableRow>
+                            )}
+                          </TableBody>
+                        </Table>
+                      </TableContainer>
+                    </Box>
+                  )}
 
                   <Box
                     sx={{

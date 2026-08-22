@@ -1199,6 +1199,7 @@
                 "whatsappNumber": "Número de WhatsApp: {{value}}"
             },
             "noPhone": "Sin teléfono cargado",
+            "calendar": "Calendario",
             "close": "Cerrar",
             "viewDetails": "Ver detalles",
             "whatsapp": "WhatsApp",
@@ -1264,7 +1265,19 @@
         "setHourPrices": "Definí precios por hora, o seleccioná reservas con monto sugerido a pagar.",
         "noPayoutsToCreate": "No hay reservas pendientes con monto a pagar seleccionadas.",
         "perBookingPayoutHint": "Se crea un pago por cada reserva. Usa el monto sugerido si existe; si no, horas × precio por hora. La misma nota se aplica a los {{count}} pago(s).",
-        "error": "No se pudo registrar el pago."
+        "error": "No se pudo registrar el pago.",
+        "ganancias": {
+            "title": "Análisis de ganancias",
+            "priceTotalArs": "Total precio reservas (ARS)",
+            "priceTotalUsd": "Total precio reservas (USD)",
+            "currency": "Moneda",
+            "total": "Total",
+            "teacher": "Pago instructor",
+            "tax": "Impuesto (30%)",
+            "net": "Neto",
+            "usdRate": "USD → ARS",
+            "consolidatedArs": "Total ARS"
+        }
     },
     "adminAgencyDetail": {
         "selectedCount": "{{count}} reserva(s) seleccionada(s)",

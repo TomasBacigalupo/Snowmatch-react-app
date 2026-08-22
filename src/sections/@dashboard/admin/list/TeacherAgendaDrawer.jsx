@@ -1,11 +1,5 @@
 import PropTypes from 'prop-types';
-import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import FullCalendar from '@fullcalendar/react';
-import listPlugin from '@fullcalendar/list';
-import dayGridPlugin from '@fullcalendar/daygrid';
-import timeGridPlugin from '@fullcalendar/timegrid';
-import interactionPlugin from '@fullcalendar/interaction';
 import {
   Box,
   Chip,
@@ -15,10 +9,7 @@ import {
   Typography,
 } from '@mui/material';
 import Iconify from 'src/components/Iconify';
-import { SkeletonCalendar } from 'src/components/skeleton';
-import { useDispatch, useSelector } from 'src/redux/store';
-import { getEventsByUserId } from 'src/redux/slices/calendar';
-import { CalendarStyle, CalendarToolbar } from 'src/sections/@dashboard/calendar';
+import TeacherAgendaCalendar from './TeacherAgendaCalendar';
 
 TeacherAgendaDrawer.propTypes = {
   open: PropTypes.bool,
@@ -28,55 +19,6 @@ TeacherAgendaDrawer.propTypes = {
 
 export default function TeacherAgendaDrawer({ open, onClose, teacher }) {
   const { t } = useTranslation();
-  const dispatch = useDispatch();
-  const calendarRef = useRef(null);
-  const [date, setDate] = useState(new Date());
-  const [view, setView] = useState('listWeek');
-
-  const { events, isLoading } = useSelector((state) => state.calendar);
-  const teacherId = teacher?.id;
-
-  useEffect(() => {
-    if (open && teacherId) {
-      dispatch(getEventsByUserId(teacherId));
-    }
-  }, [dispatch, open, teacherId]);
-
-  const handleClickToday = () => {
-    const calendarEl = calendarRef.current;
-    if (calendarEl) {
-      const calendarApi = calendarEl.getApi();
-      calendarApi.today();
-      setDate(calendarApi.getDate());
-    }
-  };
-
-  const handleChangeView = (newView) => {
-    const calendarEl = calendarRef.current;
-    if (calendarEl) {
-      const calendarApi = calendarEl.getApi();
-      calendarApi.changeView(newView);
-      setView(newView);
-    }
-  };
-
-  const handleClickDatePrev = () => {
-    const calendarEl = calendarRef.current;
-    if (calendarEl) {
-      const calendarApi = calendarEl.getApi();
-      calendarApi.prev();
-      setDate(calendarApi.getDate());
-    }
-  };
-
-  const handleClickDateNext = () => {
-    const calendarEl = calendarRef.current;
-    if (calendarEl) {
-      const calendarApi = calendarEl.getApi();
-      calendarApi.next();
-      setDate(calendarApi.getDate());
-    }
-  };
 
   if (!teacher) return null;
 
@@ -124,36 +66,7 @@ export default function TeacherAgendaDrawer({ open, onClose, teacher }) {
         </Stack>
 
         <Box sx={{ flexGrow: 1, minHeight: 0 }}>
-          <CalendarStyle>
-            <CalendarToolbar
-              date={date}
-              view={view}
-              onNextDate={handleClickDateNext}
-              onPrevDate={handleClickDatePrev}
-              onToday={handleClickToday}
-              onChangeView={handleChangeView}
-            />
-            {isLoading ? (
-              <SkeletonCalendar height={560} />
-            ) : (
-              <FullCalendar
-                weekends
-                editable={false}
-                selectable={false}
-                events={events}
-                ref={calendarRef}
-                rerenderDelay={10}
-                initialDate={date}
-                initialView={view}
-                dayMaxEventRows={4}
-                eventDisplay="block"
-                headerToolbar={false}
-                height={560}
-                noEventsText={t('adminSchoolMemberLessons.drawer.noEvents')}
-                plugins={[listPlugin, dayGridPlugin, timeGridPlugin, interactionPlugin]}
-              />
-            )}
-          </CalendarStyle>
+          <TeacherAgendaCalendar teacherId={teacher.id} active={open} />
         </Box>
       </Box>
     </Drawer>

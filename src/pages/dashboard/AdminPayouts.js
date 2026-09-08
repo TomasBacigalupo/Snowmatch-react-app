@@ -38,6 +38,7 @@ import BookingDetailsDrawer from '../../sections/@dashboard/admin/list/BookingDe
 import {
   createMultiBookingPayout,
   fetchAdminBookingById,
+  fetchTeacherPayoutDetails,
   getAllPayouts,
   getBookings,
   getTeachers,
@@ -169,6 +170,9 @@ export default function AdminPayouts() {
   const [dateRange, setDateRange] = useState(() => getDefaultMonthRange());
   const [payoutStatusFilter, setPayoutStatusFilter] = useState('all');
   const [usdToArsRate, setUsdToArsRate] = useState(DEFAULT_USD_TO_ARS_RATE);
+  const [teacherPayoutDetails, setTeacherPayoutDetails] = useState([]);
+  const [loadingPayoutDetails, setLoadingPayoutDetails] = useState(false);
+  const [payoutDetailsError, setPayoutDetailsError] = useState(null);
 
   const paidBookingIds = useMemo(() => bookingIdsWithPayout(payouts), [payouts]);
 
@@ -286,7 +290,7 @@ export default function AdminPayouts() {
     loadPayouts();
   }, [dispatch, loadPayouts]);
 
-  const handleTeacherChange = (_, teacher) => {
+  const handleTeacherChange = async (_, teacher) => {
     setSelectedTeacher(teacher);
     setSelectedBookingIds([]);
     setAssignedHourPrice('');
@@ -295,12 +299,26 @@ export default function AdminPayouts() {
     setFile(null);
     setDrawerOpen(false);
     setDrawerBooking(null);
+    setTeacherPayoutDetails([]);
+    setPayoutDetailsError(null);
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
 
     if (teacher?.id) {
       dispatch(getBookings(teacher.id));
+      setLoadingPayoutDetails(true);
+      try {
+        const details = await dispatch(fetchTeacherPayoutDetails(teacher.id));
+        setTeacherPayoutDetails(details || []);
+      } catch (error) {
+        setTeacherPayoutDetails([]);
+        setPayoutDetailsError(error?.message || t('adminPayouts.payoutDetailsLoadError'));
+      } finally {
+        setLoadingPayoutDetails(false);
+      }
+    } else {
+      setLoadingPayoutDetails(false);
     }
   };
 
@@ -467,6 +485,66 @@ export default function AdminPayouts() {
 
               {selectedTeacher && (
                 <>
+                  <Box
+                    sx={{
+                      p: 2,
+                      borderRadius: 1,
+                      bgcolor: 'background.neutral',
+                      border: (themeSx) => `1px solid ${themeSx.palette.divider}`,
+                    }}
+                  >
+                    <Stack spacing={1.5}>
+                      <Typography variant="subtitle2">
+                        {t('adminPayouts.payoutDetailsTitle')}
+                      </Typography>
+                      {loadingPayoutDetails ? (
+                        <Stack direction="row" spacing={1} alignItems="center">
+                          <CircularProgress size={18} />
+                          <Typography variant="body2" color="text.secondary">
+                            {t('adminPayouts.payoutDetailsLoading')}
+                          </Typography>
+                        </Stack>
+                      ) : null}
+                      {!loadingPayoutDetails && payoutDetailsError ? (
+                        <Alert severity="warning">{payoutDetailsError}</Alert>
+                      ) : null}
+                      {!loadingPayoutDetails && !payoutDetailsError && teacherPayoutDetails.length === 0 ? (
+                        <Typography variant="body2" color="text.secondary">
+                          {t('adminPayouts.payoutDetailsEmpty')}
+                        </Typography>
+                      ) : null}
+                      {!loadingPayoutDetails &&
+                        teacherPayoutDetails.map((detail) => (
+                          <Stack
+                            key={detail.id}
+                            direction={{ xs: 'column', sm: 'row' }}
+                            spacing={1}
+                            alignItems={{ sm: 'center' }}
+                            justifyContent="space-between"
+                          >
+                            <Stack spacing={0.25}>
+                              <Stack direction="row" spacing={1} alignItems="center">
+                                <Typography variant="body2" fontWeight={600}>
+                                  {t('adminPayouts.payoutDetailsBankAccount')}
+                                </Typography>
+                                {detail.isDefault ? (
+                                  <Chip
+                                    size="small"
+                                    label={t('adminPayouts.payoutDetailsDefault')}
+                                    color="primary"
+                                    variant="outlined"
+                                  />
+                                ) : null}
+                              </Stack>
+                              <Typography variant="body2" color="text.secondary">
+                                {t('adminPayouts.payoutDetailsAlias')}: {detail.alias || '—'}
+                              </Typography>
+                            </Stack>
+                          </Stack>
+                        ))}
+                    </Stack>
+                  </Box>
+
                   <Stack
                     direction={{ xs: 'column', md: 'row' }}
                     spacing={2}

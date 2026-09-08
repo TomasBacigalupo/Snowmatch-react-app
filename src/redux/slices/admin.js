@@ -838,6 +838,13 @@ export function fetchAdminBookingById(bookingId) {
   };
 }
 
+export function fetchTeacherPayoutDetails(userId) {
+  return async () => {
+    const response = await axios.get(`/api/admin/users/${userId}/payout-details`);
+    return Array.isArray(response.data) ? response.data : [];
+  };
+}
+
 /** Roster a platform student onto this booking's teacher calendar event and create a participant booking. */
 export function rosterStudentOntoBooking(bookingId, userId, eventId) {
   return async () => {

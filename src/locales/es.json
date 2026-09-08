@@ -1267,6 +1267,13 @@
         "noPayoutsToCreate": "No hay reservas pendientes con monto a pagar seleccionadas.",
         "perBookingPayoutHint": "Se crea un pago por cada reserva. Usa el monto sugerido si existe; si no, horas × precio por hora. La misma nota se aplica a los {{count}} pago(s).",
         "error": "No se pudo registrar el pago.",
+        "payoutDetailsTitle": "Datos de cobro",
+        "payoutDetailsLoading": "Cargando datos de cobro…",
+        "payoutDetailsEmpty": "Este instructor todavía no cargó un alias bancario.",
+        "payoutDetailsLoadError": "No se pudieron cargar los datos de cobro.",
+        "payoutDetailsBankAccount": "Cuenta bancaria",
+        "payoutDetailsAlias": "Alias",
+        "payoutDetailsDefault": "Predeterminado",
         "ganancias": {
             "title": "Análisis de ganancias",
             "priceTotalArs": "Total precio reservas (ARS)",

@@ -1075,6 +1075,13 @@
     "noPayoutsToCreate": "No pending bookings with a payable amount were selected.",
     "perBookingPayoutHint": "Creates one payout per booking. Suggested amount when set; otherwise hours × hour price. The same note is applied to all {{count}} payout(s).",
     "error": "Could not register payout.",
+    "payoutDetailsTitle": "Payout details",
+    "payoutDetailsLoading": "Loading payout details…",
+    "payoutDetailsEmpty": "This instructor has not set a bank alias yet.",
+    "payoutDetailsLoadError": "Could not load payout details.",
+    "payoutDetailsBankAccount": "Bank account",
+    "payoutDetailsAlias": "Alias",
+    "payoutDetailsDefault": "Default",
     "ganancias": {
       "title": "Earnings analysis",
       "priceTotalArs": "Total booking price (ARS)",

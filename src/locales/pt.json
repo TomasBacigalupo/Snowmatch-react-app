@@ -1512,6 +1512,13 @@
         "noPayoutsToCreate": "Nenhuma reserva pendente com valor a pagar foi selecionada.",
         "perBookingPayoutHint": "Cria um pagamento por reserva. Usa o valor sugerido quando existir; senão, horas × preço por hora. A mesma nota vale para os {{count}} pagamento(s).",
         "error": "Não foi possível registrar o pagamento.",
+        "payoutDetailsTitle": "Dados de recebimento",
+        "payoutDetailsLoading": "Carregando dados de recebimento…",
+        "payoutDetailsEmpty": "Este instrutor ainda não cadastrou um alias bancário.",
+        "payoutDetailsLoadError": "Não foi possível carregar os dados de recebimento.",
+        "payoutDetailsBankAccount": "Conta bancária",
+        "payoutDetailsAlias": "Alias",
+        "payoutDetailsDefault": "Padrão",
         "ganancias": {
             "title": "Análise de ganhos",
             "priceTotalArs": "Total preço reservas (ARS)",

@@ -2288,7 +2288,18 @@
             "total": "Total",
             "assigned": "Horas atribuídas",
             "required": "Horas referidas",
-            "viewDetails": "Ver detalhes"
+            "viewDetails": "Ver detalhes",
+            "year": "Ano",
+            "resort": "Resort",
+            "teachersTitle": "Professores com reservas",
+            "emptyTeachers": "Nenhum professor da escola tem reservas para este ano e resort.",
+            "columns": {
+                "teacher": "Professor",
+                "level": "Nível",
+                "assigned": "Atribuídas",
+                "required": "Referidas",
+                "total": "Total"
+            }
         }
     },
     "teacherDetails": {

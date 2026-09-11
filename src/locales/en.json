@@ -1904,7 +1904,18 @@
       "total": "Total",
       "assigned": "Assigned hours",
       "required": "Required hours",
-      "viewDetails": "View details"
+      "viewDetails": "View details",
+      "year": "Year",
+      "resort": "Resort",
+      "teachersTitle": "Teachers with bookings",
+      "emptyTeachers": "No school teachers have bookings for this year and resort.",
+      "columns": {
+        "teacher": "Teacher",
+        "level": "Level",
+        "assigned": "Assigned",
+        "required": "Required",
+        "total": "Total"
+      }
     }
   },
   "teacherDetails": {

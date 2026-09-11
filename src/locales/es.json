@@ -2120,7 +2120,18 @@
             "total": "Total",
             "assigned": "Horas asignadas",
             "required": "Horas referidas",
-            "viewDetails": "Ver detalle"
+            "viewDetails": "Ver detalle",
+            "year": "Año",
+            "resort": "Centro",
+            "teachersTitle": "Profesores con reservas",
+            "emptyTeachers": "No hay profesores de la escuela con reservas para este año y centro.",
+            "columns": {
+                "teacher": "Profesor",
+                "level": "Nivel",
+                "assigned": "Asignadas",
+                "required": "Referidas",
+                "total": "Total"
+            }
         }
     },
     "teacherDetails": {

@@ -116,7 +116,7 @@ export default function GeneralApp() {
       <Page title="General: App">
         <Container maxWidth={themeStretch ? false : 'xl'}>
           <Grid container spacing={3}>
-            <Grid item xs={12} md={8} lg={7}>
+            <Grid item xs={12}>
               <MemberLessonHoursChart />
             </Grid>
           </Grid>

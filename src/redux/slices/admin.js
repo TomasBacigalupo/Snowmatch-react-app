@@ -1462,11 +1462,14 @@ export function getResortAdmins(page = 1) {
   };
 }
 
-export function getSchoolMemberLessonStats(from, to, businessId = 13) {
+export function getSchoolMemberLessonStats(from, to, businessId = 13, resort = '') {
   return async () => {
     dispatch(slice.actions.startLoadingMemberLessonStats());
     try {
       const params = new URLSearchParams({ from, to });
+      if (resort) {
+        params.set('resort', resort);
+      }
       const response = await axios.get(
         `/api/admin/business/${businessId}/lesson-stats/members?${params.toString()}`
       );

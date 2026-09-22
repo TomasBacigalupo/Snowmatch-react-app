@@ -12,6 +12,7 @@ export const ADMIN_BOOKING_RESORT_FILTER_OPTIONS = [
   { value: 'LAGO_HERMOSO', label: 'Lago Hermoso' },
   { value: 'LAS_LEÑAS', label: 'Las Leñas' },
   { value: 'CERRO_PERITO_MORENO', label: 'Cerro Perito Moreno' },
+  { value: 'EL_COLORADO', label: 'El Colorado' },
 ];
 
 /** Filter bar + admin create booking modal (adds Chile resorts available in the modal). */
@@ -19,7 +20,6 @@ export const ADMIN_BOOKING_RESORT_OPTIONS = [
   ...ADMIN_BOOKING_RESORT_FILTER_OPTIONS,
   { value: 'PORTILLO', label: 'Portillo' },
   { value: 'LA_PARVA', label: 'La Parva' },
-  { value: 'EL_COLORADO', label: 'El Colorado' },
 ];
 
 /**

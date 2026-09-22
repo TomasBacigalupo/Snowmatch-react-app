@@ -19,6 +19,7 @@ export const ADMIN_BOOKING_RESORT_OPTIONS = [
   ...ADMIN_BOOKING_RESORT_FILTER_OPTIONS,
   { value: 'PORTILLO', label: 'Portillo' },
   { value: 'LA_PARVA', label: 'La Parva' },
+  { value: 'EL_COLORADO', label: 'El Colorado' },
 ];
 
 /**

@@ -30,7 +30,9 @@ import {
   Tab,
   Collapse,
   Skeleton,
+  Stack,
 } from '@mui/material';
+import { useSnackbar } from 'notistack';
 import Hidden from 'src/components/LegacyHidden';
 
 // routes
@@ -58,6 +60,7 @@ import {
   getBooking,
   getBookings,
   getResortAdminBookings,
+  fetchAllBookingsForExport,
   getBookingIntents,
   getResortAdminBookingIntents,
   openEditBookingModal,
@@ -78,6 +81,12 @@ import useAuth from 'src/hooks/useAuth';
 import BookingDetailsDrawer from 'src/sections/@dashboard/admin/list/BookingDetailsDrawer';
 import GearBookingDetailsDrawer from 'src/sections/@dashboard/admin/list/GearBookingDetailsDrawer';
 import { normalizeBookingIntent } from 'src/utils/normalizeBookingIntent';
+import { buildGearBookingsCsv, downloadCsv } from 'src/utils/exportGearBookingsCsv';
+import {
+  bookingMatchesRentalDateRange,
+  fetchRentalLinesForBookings,
+  yearsInDateRange,
+} from 'src/utils/gearRentalDateRange';
 
 // ---------------------------------------------------------------------
 
@@ -187,10 +196,41 @@ function compareAdminBookings(rowA, rowB, orderBy, order) {
   }
 }
 
+function applyBookingListFilters(
+  rows,
+  { filterResort, filterYear, filterName, order, orderBy, skipYearFilter = false }
+) {
+  let result = rows ?? [];
+  if (filterResort) {
+    const resortLabel = ADMIN_BOOKING_RESORT_FILTER_OPTIONS.find((o) => o.value === filterResort)?.label;
+    result = result.filter(
+      (row) => row.resort === (resortLabel ?? filterResort) || row.resort === filterResort
+    );
+    if (filterYear && !skipYearFilter) {
+      result = result.filter(
+        (row) =>
+          Array.isArray(row.eventList) &&
+          row.eventList.some((e) => new Date(e.start).getFullYear() === filterYear)
+      );
+    }
+  }
+  if (filterName?.trim()) {
+    result = result.filter((row) => bookingMatchesCustomerSearch(row, filterName));
+  }
+  const stabilized = result.map((el, index) => [el, index]);
+  stabilized.sort((a, b) => {
+    const ord = compareAdminBookings(a[0], b[0], orderBy, order);
+    if (ord !== 0) return ord;
+    return a[1] - b[1];
+  });
+  return stabilized.map((el) => el[0]);
+}
+
 // ----------------------------------------------------------------------
 
 export function AdminBookingsPage({ bookingListKind, pageTitle, heading }) {
   const { t } = useTranslation();
+  const { enqueueSnackbar } = useSnackbar();
 
   const tableHead = useMemo(
     () => [
@@ -306,6 +346,16 @@ export function AdminBookingsPage({ bookingListKind, pageTitle, heading }) {
   const [selectedBooking, setSelectedBooking] = useState(null);
   const [selectedIntent, setSelectedIntent] = useState(null);
   const [hasLoadedBookings, setHasLoadedBookings] = useState(false);
+  const [isExporting, setIsExporting] = useState(false);
+  const [filterRentalDateRange, setFilterRentalDateRange] = useState([null, null]);
+  const [rentalRangeRows, setRentalRangeRows] = useState(null);
+  const [rentalLinesByBookingId, setRentalLinesByBookingId] = useState(() => new Map());
+  const [isLoadingRentalLines, setIsLoadingRentalLines] = useState(false);
+
+  const isRentalDateRangeActive =
+    bookingListKind === 'gear' &&
+    Boolean(filterRentalDateRange?.[0] && filterRentalDateRange?.[1]);
+
   const handleFilterName = (filterName) => {
     setFilterName(filterName);
     setPage(0);
@@ -416,7 +466,21 @@ export function AdminBookingsPage({ bookingListKind, pageTitle, heading }) {
   const handleFilterStudentId = (event) => {
     const value = event.target.value;
     setFilterStudentId(value);
-    dispatchBookings({ studentId: value });
+    if (!isRentalDateRangeActive) {
+      dispatchBookings({ studentId: value });
+    }
+  };
+
+  const handleFilterRentalDateRange = (value) => {
+    const next = value ?? [null, null];
+    setFilterRentalDateRange(next);
+    setPage(0);
+    if (!(next[0] && next[1])) {
+      setRentalRangeRows(null);
+      setRentalLinesByBookingId(new Map());
+      setIsLoadingRentalLines(false);
+      dispatchBookings({ page: 0 });
+    }
   };
 
   const handleDeleteRows = (selected) => {
@@ -438,28 +502,93 @@ export function AdminBookingsPage({ bookingListKind, pageTitle, heading }) {
   }
 
   const displayBookings = useMemo(() => {
-    let rows = tableData ?? [];
-    if (filterResort) {
-      const resortLabel = ADMIN_BOOKING_RESORT_FILTER_OPTIONS.find((o) => o.value === filterResort)?.label;
-      rows = rows.filter((row) => row.resort === (resortLabel ?? filterResort) || row.resort === filterResort);
-      // API year filter keys on booking creation date, not lesson date — filter by event year client-side
-      if (filterYear) {
-        rows = rows.filter((row) =>
-          Array.isArray(row.eventList) && row.eventList.some((e) => new Date(e.start).getFullYear() === filterYear)
-        );
-      }
-    }
-    if (filterName?.trim()) {
-      rows = rows.filter((row) => bookingMatchesCustomerSearch(row, filterName));
-    }
-    const stabilized = rows.map((el, index) => [el, index]);
-    stabilized.sort((a, b) => {
-      const ord = compareAdminBookings(a[0], b[0], orderBy, order);
-      if (ord !== 0) return ord;
-      return a[1] - b[1];
+    const sourceRows = isRentalDateRangeActive && rentalRangeRows != null ? rentalRangeRows : tableData;
+    const base = applyBookingListFilters(sourceRows, {
+      filterResort,
+      filterYear,
+      filterName,
+      order,
+      orderBy,
+      skipYearFilter: isRentalDateRangeActive,
     });
-    return stabilized.map((el) => el[0]);
-  }, [tableData, filterName, filterResort, filterYear, order, orderBy]);
+    if (!isRentalDateRangeActive) return base;
+    const [rangeStart, rangeEnd] = filterRentalDateRange;
+    return base.filter((row) =>
+      bookingMatchesRentalDateRange(
+        rentalLinesByBookingId.get(row.id) || [],
+        rangeStart,
+        rangeEnd
+      )
+    );
+  }, [
+    tableData,
+    rentalRangeRows,
+    filterName,
+    filterResort,
+    filterYear,
+    order,
+    orderBy,
+    isRentalDateRangeActive,
+    filterRentalDateRange,
+    rentalLinesByBookingId,
+  ]);
+
+  const handleExportGearCsv = async () => {
+    setIsExporting(true);
+    try {
+      let rows;
+      let linesMap = rentalLinesByBookingId;
+
+      if (isRentalDateRangeActive) {
+        rows = displayBookings;
+      } else if (filterResort) {
+        rows = displayBookings;
+      } else {
+        const dayArg = filterDate ? new Date(filterDate).getDate() : undefined;
+        const fetched = await fetchAllBookingsForExport({
+          isResortAdmin,
+          teacherId: '',
+          studentId: filterStudentId,
+          month: filterMonth,
+          day: dayArg,
+          bookingKind: 'gear',
+          year: filterYear,
+        });
+        rows = applyBookingListFilters(fetched, {
+          filterResort,
+          filterYear,
+          filterName,
+          order,
+          orderBy,
+        });
+      }
+
+      if (!rows.length) {
+        enqueueSnackbar(t('adminBookings.exportCsvEmpty'), { variant: 'warning' });
+        return;
+      }
+
+      const missingIds = rows
+        .map((r) => r.id)
+        .filter((id) => id != null && !linesMap.has(id));
+      if (missingIds.length) {
+        const fetchedLines = await fetchRentalLinesForBookings(missingIds);
+        linesMap = new Map([...linesMap, ...fetchedLines]);
+        setRentalLinesByBookingId(linesMap);
+      }
+
+      const csv = buildGearBookingsCsv(rows, linesMap, { t });
+      const dateStr = new Date().toISOString().split('T')[0];
+      downloadCsv(`gear-reservations-${dateStr}.csv`, csv);
+      enqueueSnackbar(t('adminBookings.exportCsvSuccess', { count: rows.length }), {
+        variant: 'success',
+      });
+    } catch {
+      enqueueSnackbar(t('adminBookings.exportCsvError'), { variant: 'error' });
+    } finally {
+      setIsExporting(false);
+    }
+  };
 
   const denseHeight = dense ? 52 : 72;
 
@@ -584,12 +713,12 @@ export function AdminBookingsPage({ bookingListKind, pageTitle, heading }) {
     return alreadyPresent ? options : [selectedTeacher, ...options];
   }, [reduxTeachers, selectedTeacher]);
 
-  // When resort is active, we loaded all records and paginate client-side.
+  // When resort or rental date range is active, we loaded all records and paginate client-side.
   const pagedBookings = useMemo(() => {
-    if (!filterResort) return displayBookings;
+    if (!filterResort && !isRentalDateRangeActive) return displayBookings;
     const start = page * rowsPerPage;
     return displayBookings.slice(start, start + rowsPerPage);
-  }, [displayBookings, filterResort, page, rowsPerPage]);
+  }, [displayBookings, filterResort, isRentalDateRangeActive, page, rowsPerPage]);
 
   const displayRows = activeListTab === 0 ? pagedBookings : (bookingIntents ?? []);
 
@@ -599,7 +728,7 @@ export function AdminBookingsPage({ bookingListKind, pageTitle, heading }) {
 
   const onChangePage2 = async (event, newPage) => {
     setPage(newPage);
-    if (!filterResort) dispatchBookings({ page: newPage });
+    if (!filterResort && !isRentalDateRangeActive) dispatchBookings({ page: newPage });
   };
 
   const onChangePage3 = (event, newPage) => {
@@ -611,7 +740,7 @@ export function AdminBookingsPage({ bookingListKind, pageTitle, heading }) {
   const handleChangeRowsPerPage = (event) => {
     const newSize = Number(event.target.value);
     onChangeRowsPerPage(event);
-    if (!filterResort) dispatchBookings({ rowsPerPage: newSize, page: 0 });
+    if (!filterResort && !isRentalDateRangeActive) dispatchBookings({ rowsPerPage: newSize, page: 0 });
   };
 
   useEffect(() => {
@@ -637,9 +766,74 @@ export function AdminBookingsPage({ bookingListKind, pageTitle, heading }) {
   }, [bookingListKind, activeListTab]);
 
   useEffect(() => {
-    if (user) dispatchBookings();
+    if (user && !isRentalDateRangeActive) dispatchBookings();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user, page, rowsPerPage, bookingListKind]);
+  }, [user, page, rowsPerPage, bookingListKind, isRentalDateRangeActive]);
+
+  useEffect(() => {
+    if (!isRentalDateRangeActive) return undefined;
+
+    let cancelled = false;
+    const [rangeStart, rangeEnd] = filterRentalDateRange;
+
+    (async () => {
+      setIsLoadingRentalLines(true);
+      try {
+        const years = yearsInDateRange(rangeStart, rangeEnd);
+        const byId = new Map();
+        await Promise.all(
+          years.map(async (year) => {
+            const rows = await fetchAllBookingsForExport({
+              isResortAdmin,
+              teacherId: '',
+              studentId: filterStudentId,
+              month: '',
+              bookingKind: 'gear',
+              year,
+            });
+            (rows || []).forEach((row) => {
+              if (row?.id != null) byId.set(row.id, row);
+            });
+          })
+        );
+        if (cancelled) return;
+
+        const bookingsList = Array.from(byId.values());
+        setRentalRangeRows(bookingsList);
+
+        // Prefetch lines for resort-scoped candidates (name search stays client-side).
+        const candidates = applyBookingListFilters(bookingsList, {
+          filterResort,
+          filterYear: null,
+          filterName: '',
+          order: 'desc',
+          orderBy: 'id',
+          skipYearFilter: true,
+        });
+        const linesMap = await fetchRentalLinesForBookings(candidates.map((b) => b.id));
+        if (cancelled) return;
+        setRentalLinesByBookingId(linesMap);
+      } catch {
+        if (!cancelled) {
+          setRentalRangeRows([]);
+          setRentalLinesByBookingId(new Map());
+        }
+      } finally {
+        if (!cancelled) setIsLoadingRentalLines(false);
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    isRentalDateRangeActive,
+    filterRentalDateRange,
+    filterStudentId,
+    isResortAdmin,
+    filterResort,
+  ]);
 
   useEffect(() => {
     setPage(0);
@@ -718,7 +912,10 @@ export function AdminBookingsPage({ bookingListKind, pageTitle, heading }) {
   const tableHeadLabel = bookingListKind === 'gear' ? tableHeadGear : tableHead;
 
   const activeTableHead = activeListTab === 0 ? tableHeadLabel : tableHeadIntent;
-  const showTableSkeleton = isLoadingBookings || (Boolean(user) && !hasLoadedBookings);
+  const showTableSkeleton =
+    isLoadingBookings ||
+    isLoadingRentalLines ||
+    (Boolean(user) && !hasLoadedBookings && !isRentalDateRangeActive);
 
   const renderTableSkeleton = () =>
     Array.from({ length: Math.min(rowsPerPage, 10) }).map((_, index) => (
@@ -742,7 +939,36 @@ export function AdminBookingsPage({ bookingListKind, pageTitle, heading }) {
         <HeaderBreadcrumbs
           heading={heading}
           action={
-            !isResortAdmin && (bookingListKind === 'lesson' || bookingListKind === 'gear') ? (
+            bookingListKind === 'gear' ? (
+              <Stack direction="row" spacing={1}>
+                <Button
+                  variant="outlined"
+                  startIcon={<Iconify icon="eva:download-fill" />}
+                  onClick={handleExportGearCsv}
+                  disabled={isExporting || isLoadingBookings || isLoadingRentalLines}
+                >
+                  {t('adminBookings.exportCsv')}
+                </Button>
+                {!isResortAdmin && (
+                  <Button
+                    variant="contained"
+                    startIcon={<Iconify icon="eva:plus-fill" />}
+                    onClick={() => setIsOpen(true)}
+                    sx={{
+                      px: 3,
+                      py: 1.5,
+                      borderRadius: 1,
+                      boxShadow: (theme) => theme.customShadows?.primary,
+                      '&:hover': {
+                        boxShadow: (theme) => theme.customShadows?.primaryHover,
+                      },
+                    }}
+                  >
+                    {t('adminBookings.newGearBooking')}
+                  </Button>
+                )}
+              </Stack>
+            ) : !isResortAdmin && bookingListKind === 'lesson' ? (
               <Button
                 variant="contained"
                 startIcon={<Iconify icon="eva:plus-fill" />}
@@ -757,9 +983,7 @@ export function AdminBookingsPage({ bookingListKind, pageTitle, heading }) {
                   },
                 }}
               >
-                {bookingListKind === 'gear'
-                  ? t('adminBookings.newGearBooking')
-                  : t('adminBookings.newBooking')}
+                {t('adminBookings.newBooking')}
               </Button>
             ) : undefined
           }
@@ -789,6 +1013,9 @@ export function AdminBookingsPage({ bookingListKind, pageTitle, heading }) {
           onFilterStudentId={handleFilterStudentId}
           onFilterResort={handleFilterResort}
           onFilterDate={handleFilterDate}
+          showRentalDateRange={bookingListKind === 'gear'}
+          filterRentalDateRange={filterRentalDateRange}
+          onFilterRentalDateRange={handleFilterRentalDateRange}
           teacherOptions={teacherAutocompleteOptions}
           selectedTeacher={selectedTeacher}
           onTeacherSearch={handleTeacherSearchInput}
@@ -1042,7 +1269,7 @@ export function AdminBookingsPage({ bookingListKind, pageTitle, heading }) {
             <TablePagination
               rowsPerPageOptions={[5, 10, 25, 50, 100, 200, 500, 1000, 2000, 5000, 10000, 20000, 50000, 100000]}
               component="div"
-              count={filterResort ? displayBookings.length : -1}
+              count={filterResort || isRentalDateRangeActive ? displayBookings.length : -1}
               rowsPerPage={rowsPerPage}
               page={page}
               onPageChange={onChangePage2}

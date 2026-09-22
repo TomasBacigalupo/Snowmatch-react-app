@@ -26,14 +26,13 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { BaseOptionChart } from '../../../../components/chart';
 import { useDispatch, useSelector } from '../../../../redux/store';
-import { getSchoolMemberLessonStats } from '../../../../redux/slices/admin';
+import { getTeacherLessonStats } from '../../../../redux/slices/admin';
 import { PATH_DASHBOARD } from '../../../../routes/paths';
 import {
   ADMIN_BOOKING_RESORT_FILTER_OPTIONS,
   formatAdminBookingResortLabel,
 } from '../../../../utils/adminBookingResortOptions';
 
-const SCHOOL_BUSINESS_ID = 13;
 const DEFAULT_YEAR = 2026;
 const DEFAULT_RESORT = 'CERRO_CATEDRAL';
 
@@ -90,7 +89,7 @@ export default function MemberLessonHoursChart() {
 
   useEffect(() => {
     if (!from || !to) return;
-    dispatch(getSchoolMemberLessonStats(from, to, SCHOOL_BUSINESS_ID, resort));
+    dispatch(getTeacherLessonStats(from, to, resort));
   }, [dispatch, from, to, resort]);
 
   const teachersWithBookings = useMemo(

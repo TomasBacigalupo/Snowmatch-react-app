@@ -1182,6 +1182,13 @@
     "dense": "Dense",
     "newBooking": "New Booking",
     "newGearBooking": "New equipment booking",
+    "exportCsv": "Download CSV",
+    "exportCsvSuccess": "Exported {{count}} reservations",
+    "exportCsvError": "Could not export reservations",
+    "exportCsvEmpty": "No reservations to export",
+    "exportCsvCustomerId": "Customer ID",
+    "exportCsvType": "Type",
+    "exportCsvCurrency": "Currency",
     "gearCreateSuccess": "Equipment booking created successfully.",
     "gearCreatePartialFailure": "Booking #{{id}} was created, but a rental item failed. Review the booking manually.",
     "gearCreate": {
@@ -1225,6 +1232,9 @@
       "noTeachersFound": "No teachers found",
       "typeToSearchTeachers": "Type to search teachers",
       "teachersLoadError": "Could not load teachers. Please try again.",
+      "rentalDateRange": "Rental period",
+      "rentalDateRangeStart": "From",
+      "rentalDateRangeEnd": "To",
       "months": {
         "06": "June",
         "07": "July",
@@ -1233,6 +1243,7 @@
         "10": "October"
       }
     },
+    "rentalLinesLoading": "Loading rental dates…",
     "table": {
       "id": "ID",
       "student": "Customer",
@@ -1250,6 +1261,8 @@
       "state": "Status",
       "center": "Center",
       "notes": "Notes",
+      "rentalStart": "Rental start",
+      "rentalEnd": "Rental end",
       "actions": "Actions"
     },
     "menu": {
@@ -1743,7 +1756,8 @@
     "LAS_LEÑAS": "Las Leñas",
     "CERRO_PERITO_MORENO": "Cerro Perito Moreno",
     "PORTILLO": "Portillo",
-    "LA_PARVA": "La Parva"
+    "LA_PARVA": "La Parva",
+    "EL_COLORADO": "El Colorado"
   },
   "calendar": {
     "name": "Calendar",
@@ -1908,7 +1922,7 @@
       "year": "Year",
       "resort": "Resort",
       "teachersTitle": "Teachers with bookings",
-      "emptyTeachers": "No school teachers have bookings for this year and resort.",
+      "emptyTeachers": "No teachers have bookings for this year and resort.",
       "columns": {
         "teacher": "Teacher",
         "level": "Level",

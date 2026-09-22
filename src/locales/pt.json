@@ -1619,6 +1619,13 @@
         "dense": "Compacto",
         "newBooking": "Nova Reserva",
         "newGearBooking": "Nova reserva de equipamentos",
+        "exportCsv": "Baixar CSV",
+        "exportCsvSuccess": "{{count}} reservas exportadas",
+        "exportCsvError": "Não foi possível exportar as reservas",
+        "exportCsvEmpty": "Nenhuma reserva para exportar",
+        "exportCsvCustomerId": "ID do cliente",
+        "exportCsvType": "Tipo",
+        "exportCsvCurrency": "Moeda",
         "gearCreateSuccess": "Reserva de equipamentos criada com sucesso.",
         "gearCreatePartialFailure": "Reserva #{{id}} criada, mas um item de aluguel falhou. Revise a reserva manualmente.",
         "gearCreate": {
@@ -1657,6 +1664,9 @@
             "studentId": "ID Estudante",
             "moreFilters": "Mais filtros",
             "searchBookingPlaceholder": "Buscar por cliente ou ID da reserva…",
+            "rentalDateRange": "Período de aluguel",
+            "rentalDateRangeStart": "De",
+            "rentalDateRangeEnd": "Até",
             "months": {
                 "06": "Junho",
                 "07": "Julho",
@@ -1665,6 +1675,7 @@
                 "10": "Outubro"
             }
         },
+        "rentalLinesLoading": "Carregando datas de aluguel…",
         "table": {
             "id": "ID",
             "student": "Cliente",
@@ -1682,6 +1693,8 @@
             "state": "Status",
             "center": "Centro",
             "notes": "Notas",
+            "rentalStart": "Início do aluguel",
+            "rentalEnd": "Fim do aluguel",
             "actions": "Ações"
         },
         "menu": {
@@ -2155,7 +2168,8 @@
         "LAS_LEÑAS": "Las Leñas",
         "CERRO_PERITO_MORENO": "Cerro Perito Moreno",
         "PORTILLO": "Portillo",
-        "LA_PARVA": "La Parva"
+        "LA_PARVA": "La Parva",
+        "EL_COLORADO": "El Colorado"
     },
     "calendar": {
         "openLessonDetails": "Ver detalhes completos da aula",
@@ -2292,7 +2306,7 @@
             "year": "Ano",
             "resort": "Resort",
             "teachersTitle": "Professores com reservas",
-            "emptyTeachers": "Nenhum professor da escola tem reservas para este ano e resort.",
+            "emptyTeachers": "Nenhum professor tem reservas para este ano e resort.",
             "columns": {
                 "teacher": "Professor",
                 "level": "Nível",

@@ -363,3 +363,83 @@ export function calcTeacherPayTotal(bookings) {
 
   return bookings.reduce((total, booking) => total + calcBookingTeacherPay(booking), 0);
 }
+
+function getBookingPayoutCurrency(booking) {
+  return booking?.currency || 'ARS';
+}
+
+function getBookingTeacherShareForGanancias(booking, hourPrices) {
+  const suggested = getSuggestedTeacherPayoutAmount(booking);
+  if (suggested > 0) {
+    const currency = (
+      booking?.suggestedTeacherPayoutCurrency ||
+      booking?.currency ||
+      'ARS'
+    ).toUpperCase();
+    return {
+      amount: suggested,
+      currency: currency === 'USD' ? 'USD' : 'ARS',
+    };
+  }
+  return {
+    amount: calcBookingPayWithHourPrice(booking, hourPrices),
+    currency: 'ARS',
+  };
+}
+
+function sortGananciasCurrencies(a, b) {
+  if (a.currency === 'ARS') return -1;
+  if (b.currency === 'ARS') return 1;
+  return a.currency.localeCompare(b.currency);
+}
+
+/**
+ * Full-booking earnings for selected payouts bookings (not day-share).
+ * Teacher cost prefers suggested payout; otherwise hours × hour price.
+ * Returns byCurrency rows compatible with consolidateGananciasInArs.
+ */
+export function calcSelectedBookingsGanancias(bookings, hourPrices) {
+  const byCurrencyMap = new Map();
+
+  const ensureBucket = (currency) => {
+    const key = currency || 'ARS';
+    if (!byCurrencyMap.has(key)) {
+      byCurrencyMap.set(key, { dayGross: 0, dayTeacher: 0 });
+    }
+    return byCurrencyMap.get(key);
+  };
+
+  (bookings || []).forEach((booking) => {
+    const priceCurrency = getBookingPayoutCurrency(booking);
+    const priceBucket = ensureBucket(priceCurrency);
+    priceBucket.dayGross += Number(booking?.price) || 0;
+
+    const teacherShare = getBookingTeacherShareForGanancias(booking, hourPrices);
+    const teacherBucket = ensureBucket(teacherShare.currency);
+    teacherBucket.dayTeacher += teacherShare.amount;
+  });
+
+  const byCurrency = [...byCurrencyMap.entries()]
+    .map(([currency, bucket]) => {
+      const dayTax = bucket.dayGross * 0.3;
+      const net = bucket.dayGross * 0.7 - bucket.dayTeacher;
+      return {
+        currency,
+        dayGross: bucket.dayGross,
+        dayTax,
+        dayTeacher: bucket.dayTeacher,
+        net,
+      };
+    })
+    .filter((row) => row.dayGross !== 0 || row.dayTeacher !== 0 || row.net !== 0)
+    .sort(sortGananciasCurrencies);
+
+  const priceTotals = { ARS: 0, USD: 0 };
+  (bookings || []).forEach((booking) => {
+    const currency = getBookingPayoutCurrency(booking);
+    const key = currency === 'USD' ? 'USD' : 'ARS';
+    priceTotals[key] += Number(booking?.price) || 0;
+  });
+
+  return { byCurrency, priceTotals };
+}

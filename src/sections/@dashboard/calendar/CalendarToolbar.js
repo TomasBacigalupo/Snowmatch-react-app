@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import { Stack, Button, Tooltip, Typography, IconButton, ToggleButton } from '@mui/material';
 // utils
+import { format } from 'date-fns';
 import { fDate } from '../../../utils/formatTime';
 // hooks
 import useResponsive from '../../../hooks/useResponsive';
@@ -17,6 +18,13 @@ const VIEW_OPTIONS = [
   { value: 'timeGridDay', label: 'Day', icon: 'ic:round-view-day' },
   { value: 'listWeek', label: 'Agenda', icon: 'ic:round-view-agenda' },
 ];
+
+const formatToolbarDate = (date, view) => {
+  if (view === 'dayGridMonth') {
+    return format(date, 'MMMM yyyy');
+  }
+  return fDate(date);
+};
 
 const RootStyle = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -67,7 +75,7 @@ export default function CalendarToolbar({ date, view, onToday, onNextDate, onPre
           <Iconify icon="eva:arrow-ios-back-fill" width={20} height={20} />
         </IconButton>
 
-        <Typography variant="h5">{fDate(date)}</Typography>
+        <Typography variant="h5">{formatToolbarDate(date, view)}</Typography>
 
         <IconButton onClick={onNextDate}>
           <Iconify icon="eva:arrow-ios-forward-fill" width={20} height={20} />

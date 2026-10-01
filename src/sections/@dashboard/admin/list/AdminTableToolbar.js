@@ -12,12 +12,14 @@ import {
   Autocomplete,
   CircularProgress,
   Typography,
+  Box,
 } from '@mui/material';
 import { ADMIN_BOOKING_RESORT_FILTER_OPTIONS } from 'src/utils/adminBookingResortOptions';
 import { TEACHER_QUICK_CHIPS } from 'src/utils/teacherQuickChips';
 // components
 import Iconify from '../../../../components/Iconify';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 
@@ -74,6 +76,10 @@ AdminTableToolbar.propTypes = {
   teachersLoading: PropTypes.bool,
   teachersSearchError: PropTypes.bool,
   teacherSearchInput: PropTypes.string,
+  /** Gear bookings: show rental period DateRangePicker. */
+  showRentalDateRange: PropTypes.bool,
+  filterRentalDateRange: PropTypes.array,
+  onFilterRentalDateRange: PropTypes.func,
 };
 
 export default function AdminTableToolbar({
@@ -121,6 +127,9 @@ export default function AdminTableToolbar({
   teachersLoading = false,
   teachersSearchError = false,
   teacherSearchInput = '',
+  showRentalDateRange = false,
+  filterRentalDateRange = [null, null],
+  onFilterRentalDateRange = null,
 }) {
   const { t } = useTranslation();
   const [moreFiltersOpen, setMoreFiltersOpen] = useState(false);
@@ -165,7 +174,24 @@ export default function AdminTableToolbar({
               }}
             />
           </LocalizationProvider>
+        )}
 
+        {showRentalDateRange && onFilterRentalDateRange && (
+          <Box sx={{ flex: { sm: '1 1 320px' }, minWidth: { sm: 280 }, maxWidth: { md: 420 } }}>
+            <LocalizationProvider dateAdapter={AdapterDateFns}>
+              <DateRangePicker
+                localeText={{
+                  start: t('adminBookings.filters.rentalDateRangeStart'),
+                  end: t('adminBookings.filters.rentalDateRangeEnd'),
+                }}
+                value={filterRentalDateRange ?? [null, null]}
+                onChange={onFilterRentalDateRange}
+                slotProps={{
+                  textField: { fullWidth: true, size: 'small' },
+                }}
+              />
+            </LocalizationProvider>
+          </Box>
         )}
         {!bookings && showRole && (
           <>

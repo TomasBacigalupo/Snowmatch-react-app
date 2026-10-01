@@ -2,10 +2,10 @@ import numeral from 'numeral';
 
 // ----------------------------------------------------------------------
 
-export function fCurrency(number) {
+export function fCurrency(number, currency = 'ARS') {
   return number?.toLocaleString('es-ar', {
     style: 'currency',
-    currency: 'ARS',
+    currency: currency || 'ARS',
     minimumFractionDigits: 0
   })
 }

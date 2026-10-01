@@ -4,6 +4,7 @@ import sum from 'lodash/sum';
 import uniqBy from 'lodash/uniqBy';
 // utils
 import axios from '../../utils/axios';
+import { normalizeAdminBookingListResponse } from '../../utils/adminTodayBookings';
 //
 import { dispatch } from '../store';
 
@@ -50,8 +51,12 @@ const initialState = {
   financialSummary: {
     paidBookingsTotal: 0,
     paidBookingsCount: 0,
+    paidBookingsTotalUsd: 0,
+    paidBookingsCountUsd: 0,
     unpaidBookingsTotal: 0,
     unpaidBookingsCount: 0,
+    unpaidBookingsTotalUsd: 0,
+    unpaidBookingsCountUsd: 0,
     completedPayoutsTotal: 0,
     completedPayoutsCount: 0,
     pendingNonMemberSuggestedTotal: 0,
@@ -528,6 +533,68 @@ export function broadcastLesson(body) {
   };
 }
 
+function buildBookingsFilterParams({
+  teacherId,
+  studentId,
+  month,
+  page,
+  size,
+  resort,
+  day,
+  bookingKind,
+  year,
+  state,
+  agencyId,
+}) {
+  const params = new URLSearchParams();
+  if (page != null && page !== '') params.append('page', page);
+  if (teacherId) params.append('teacherId', teacherId);
+  if (studentId) params.append('studentId', studentId);
+  if (month) params.append('month', month);
+  if (resort) params.append('resort', resort);
+  if (day) params.append('day', day);
+  if (bookingKind) params.append('bookingKind', bookingKind);
+  if (year != null && year !== '') params.append('year', year);
+  if (state && String(state).toLowerCase() !== 'all') params.append('state', state);
+  if (agencyId) params.append('agencyId', agencyId);
+  params.append('size', size);
+  return params;
+}
+
+/** Fetch all matching bookings without updating Redux (for CSV export). */
+export async function fetchAllBookingsForExport(
+  {
+    isResortAdmin = false,
+    teacherId,
+    studentId,
+    month,
+    day,
+    bookingKind,
+    year,
+    state,
+    agencyId,
+  } = {}
+) {
+  const params = buildBookingsFilterParams({
+    teacherId,
+    studentId,
+    month,
+    page: 0,
+    size: 100000,
+    resort: '',
+    day,
+    bookingKind,
+    year,
+    state,
+    agencyId,
+  });
+  const url = isResortAdmin
+    ? `/api/resort-admin/bookings/filter?${params.toString()}`
+    : `/api/admin/bookings/filter?${params.toString()}`;
+  const response = await axios.get(url);
+  return normalizeAdminBookingListResponse(response.data);
+}
+
 export function getBookings(teacherId, studentId, month, page, size = 100000, resort, day, bookingKind, year, state, agencyId) {
   return async () => {
     dispatch(slice.actions.startLoadingBookings());
@@ -831,6 +898,13 @@ export function fetchAdminBookingById(bookingId) {
       dispatch(slice.actions.hasError(error));
       throw error;
     }
+  };
+}
+
+export function fetchTeacherPayoutDetails(userId) {
+  return async () => {
+    const response = await axios.get(`/api/admin/users/${userId}/payout-details`);
+    return Array.isArray(response.data) ? response.data : [];
   };
 }
 
@@ -1175,8 +1249,12 @@ export function getFinancialSummary({ from, to, resort, businessId }) {
       const financialSummary = {
         paidBookingsTotal: data.paidBookingsTotal || 0,
         paidBookingsCount: data.paidBookingsCount || 0,
+        paidBookingsTotalUsd: data.paidBookingsTotalUsd || 0,
+        paidBookingsCountUsd: data.paidBookingsCountUsd || 0,
         unpaidBookingsTotal: data.unpaidBookingsTotal || 0,
         unpaidBookingsCount: data.unpaidBookingsCount || 0,
+        unpaidBookingsTotalUsd: data.unpaidBookingsTotalUsd || 0,
+        unpaidBookingsCountUsd: data.unpaidBookingsCountUsd || 0,
         completedPayoutsTotal: data.completedPayoutsTotal || 0,
         completedPayoutsCount: data.completedPayoutsCount || 0,
         pendingNonMemberSuggestedTotal: data.pendingNonMemberSuggestedTotal || 0,
@@ -1447,14 +1525,35 @@ export function getResortAdmins(page = 1) {
   };
 }
 
-export function getSchoolMemberLessonStats(from, to, businessId = 13) {
+export function getSchoolMemberLessonStats(from, to, businessId = 13, resort = '') {
   return async () => {
     dispatch(slice.actions.startLoadingMemberLessonStats());
     try {
       const params = new URLSearchParams({ from, to });
+      if (resort) {
+        params.set('resort', resort);
+      }
       const response = await axios.get(
         `/api/admin/business/${businessId}/lesson-stats/members?${params.toString()}`
       );
+      dispatch(slice.actions.getMemberLessonStatsSuccess(response.data));
+      return response.data;
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+      throw error;
+    }
+  };
+}
+
+export function getTeacherLessonStats(from, to, resort = '') {
+  return async () => {
+    dispatch(slice.actions.startLoadingMemberLessonStats());
+    try {
+      const params = new URLSearchParams({ from, to });
+      if (resort) {
+        params.set('resort', resort);
+      }
+      const response = await axios.get(`/api/admin/lesson-stats/teachers?${params.toString()}`);
       dispatch(slice.actions.getMemberLessonStatsSuccess(response.data));
       return response.data;
     } catch (error) {

@@ -1,5 +1,7 @@
 import axios from './axios';
 import { ADMIN_BOOKING_RESORT_FILTER_OPTIONS } from './adminBookingResortOptions';
+import { inferLessonTimeFromEvent } from './adminBookingEvents';
+import { isBlockedEvent } from './calendarEventStats';
 import { buildDefaultLevelHourPrices } from './teacherHourPricePresets';
 import { calcBookingPayWithLevelPrices } from './teacherPayoutAmount';
 
@@ -255,6 +257,146 @@ export function consolidateGananciasInArs(byCurrency, usdToArsRate = DEFAULT_USD
   };
 }
 
+function amountToArs(amount, currency, usdToArsRate) {
+  const rate = Number(usdToArsRate) > 0 ? Number(usdToArsRate) : DEFAULT_USD_TO_ARS_RATE;
+  return currency === 'USD' ? amount * rate : amount;
+}
+
+function getTeacherGananciasKey(teacher) {
+  return teacher?.id != null ? String(teacher.id) : 'unassigned';
+}
+
+function getTeacherGananciasName(teacher, unassignedLabel) {
+  if (!teacher) return unassignedLabel;
+  const fullName = `${teacher.name || ''} ${teacher.lastname || ''}`.trim();
+  return fullName || unassignedLabel;
+}
+
+function emptyTeacherGananciasBucket(teacherKey, teacher, teacherName) {
+  return {
+    teacherKey,
+    teacher,
+    teacherName,
+    dayGrossByCurrency: {},
+    dayTeacherByCurrency: {},
+    payinParts: [],
+    lessonCount: 0,
+  };
+}
+
+/**
+ * Per-teacher day-share payin / payout / lesson count from today's bookings.
+ * Gross earnings = payin − payout (no tax). Lesson count only counts lesson bookings.
+ */
+export function calcAdminTodayGananciasByTeacher(
+  lessonBookings,
+  gearBookings,
+  { unassignedLabel = '—' } = {}
+) {
+  const levelPrices = buildDefaultLevelHourPrices();
+  const byTeacherMap = new Map();
+
+  const ensureTeacher = (teacher) => {
+    const teacherKey = getTeacherGananciasKey(teacher);
+    if (!byTeacherMap.has(teacherKey)) {
+      byTeacherMap.set(
+        teacherKey,
+        emptyTeacherGananciasBucket(
+          teacherKey,
+          teacher || null,
+          getTeacherGananciasName(teacher, unassignedLabel)
+        )
+      );
+    }
+    return byTeacherMap.get(teacherKey);
+  };
+
+  const addBooking = (booking, isLesson) => {
+    const group = ensureTeacher(booking?.teacher);
+    const days = getBookingDayCount(booking);
+    const dayGross = (booking?.price || 0) / days;
+    const priceCurrency = getBookingCurrency(booking);
+
+    group.dayGrossByCurrency[priceCurrency] =
+      (group.dayGrossByCurrency[priceCurrency] || 0) + dayGross;
+    if (dayGross !== 0) {
+      group.payinParts.push({ amount: dayGross, currency: priceCurrency });
+    }
+
+    const teacherShare = getBookingDayTeacherShare(booking, levelPrices);
+    group.dayTeacherByCurrency[teacherShare.currency] =
+      (group.dayTeacherByCurrency[teacherShare.currency] || 0) + teacherShare.amount;
+
+    if (isLesson) {
+      group.lessonCount += 1;
+    }
+  };
+
+  (lessonBookings ?? []).forEach((booking) => addBooking(booking, true));
+  (gearBookings ?? []).forEach((booking) => addBooking(booking, false));
+
+  const byTeacher = [...byTeacherMap.values()]
+    .filter(
+      (row) =>
+        row.lessonCount > 0 ||
+        Object.values(row.dayGrossByCurrency).some((v) => v !== 0) ||
+        Object.values(row.dayTeacherByCurrency).some((v) => v !== 0)
+    )
+    .sort((a, b) => {
+      if (a.teacherKey === 'unassigned') return 1;
+      if (b.teacherKey === 'unassigned') return -1;
+      return a.teacherName.localeCompare(b.teacherName, undefined, { sensitivity: 'base' });
+    });
+
+  return { byTeacher };
+}
+
+/** Consolidate per-teacher raw currency buckets into ARS payin / payout / earnings. */
+export function consolidateTeacherGananciasInArs(byTeacher, usdToArsRate = DEFAULT_USD_TO_ARS_RATE) {
+  const rate = Number(usdToArsRate) > 0 ? Number(usdToArsRate) : DEFAULT_USD_TO_ARS_RATE;
+
+  const rows = (byTeacher || []).map((row) => {
+    let payin = 0;
+    let payout = 0;
+
+    Object.entries(row.dayGrossByCurrency || {}).forEach(([currency, amount]) => {
+      payin += amountToArs(amount, currency, rate);
+    });
+    Object.entries(row.dayTeacherByCurrency || {}).forEach(([currency, amount]) => {
+      payout += amountToArs(amount, currency, rate);
+    });
+
+    const payinPartsArs = (row.payinParts || []).map((part) =>
+      amountToArs(part.amount, part.currency, rate)
+    );
+
+    return {
+      teacherKey: row.teacherKey,
+      teacherName: row.teacherName,
+      lessonCount: row.lessonCount || 0,
+      payin,
+      payout,
+      earnings: payin - payout,
+      payinPartsArs: payinPartsArs.length > 1 ? payinPartsArs : null,
+    };
+  });
+
+  const totals = rows.reduce(
+    (acc, row) => {
+      acc.payin += row.payin;
+      acc.payout += row.payout;
+      acc.earnings += row.earnings;
+      acc.lessonCount += row.lessonCount;
+      return acc;
+    },
+    { payin: 0, payout: 0, earnings: 0, lessonCount: 0 }
+  );
+
+  const maxEarnings = rows.reduce((max, row) => Math.max(max, row.earnings), 0);
+
+  return { byTeacher: rows, totals, maxEarnings };
+}
+
 export { DEFAULT_USD_TO_ARS_RATE };
 
 export function getBusyTeacherIds(lessonBookings) {
@@ -388,6 +530,180 @@ export function formatAvailabilityWindowLabel(entry, t) {
 
 function padDayMonth(value) {
   return String(value).padStart(2, '0');
+}
+
+function localDateKey(value) {
+  if (!value) return null;
+  const date = value instanceof Date ? value : new Date(value);
+  if (Number.isNaN(date.getTime())) return null;
+  return `${date.getFullYear()}-${padDayMonth(date.getMonth() + 1)}-${padDayMonth(date.getDate())}`;
+}
+
+/**
+ * Match the calendar slice wall-clock adjustment so UTC-stored local times
+ * (e.g. midnight Z for an all-day block) land on the intended calendar day.
+ */
+function calendarWallDateKey(value) {
+  if (!value) return null;
+  const dateStart = value instanceof Date ? value : new Date(value);
+  if (Number.isNaN(dateStart.getTime())) return null;
+  const adjusted = new Date(dateStart.getTime() + dateStart.getTimezoneOffset() * 60000);
+  return localDateKey(adjusted);
+}
+
+function eventMatchesDay(event, dayKey) {
+  if (!dayKey) return false;
+  const rawKey = localDateKey(event?.start);
+  if (rawKey === dayKey) return true;
+  return calendarWallDateKey(event?.start) === dayKey;
+}
+
+function normalizeEventsListResponse(data) {
+  if (Array.isArray(data)) return data;
+  if (Array.isArray(data?.content)) return data.content;
+  if (Array.isArray(data?.data)) return data.data;
+  return [];
+}
+
+function mapLessonTimeToBlockedWindow(lessonTime) {
+  if (lessonTime === 'ALL_DAY') return 'ALL_DAY';
+  if (lessonTime === 'MORNING' || lessonTime === 'MORNING_2_HS') return 'MORNING';
+  if (lessonTime === 'AFTERNOON' || lessonTime === 'AFTERNOON_2_HS') return 'AFTERNOON';
+  return null;
+}
+
+function adjustEventForCalendarDisplay(event) {
+  if (!event?.start) return event;
+  const dateStart = new Date(event.start);
+  const dateEnd = new Date(event.end || event.start);
+  if (Number.isNaN(dateStart.getTime()) || Number.isNaN(dateEnd.getTime())) return event;
+  const utcOffset = dateStart.getTimezoneOffset() * 60000;
+  return {
+    ...event,
+    start: new Date(dateStart.getTime() + utcOffset),
+    end: new Date(dateEnd.getTime() + utcOffset),
+  };
+}
+
+/**
+ * Fetch a member's calendar events for a month (same API the today chips use).
+ */
+export async function fetchMemberEventsForMonth(memberId, targetDate = new Date()) {
+  if (memberId == null) return [];
+
+  const date = targetDate instanceof Date ? targetDate : new Date(targetDate);
+  if (Number.isNaN(date.getTime())) return [];
+
+  const month = date.getMonth() + 1;
+  const response = await axios.get(
+    `/api/events/byUser/${memberId}?page=1&size=300&month=${month}`
+  );
+  return normalizeEventsListResponse(response.data)
+    .filter((event) => {
+      const eventType = String(event?.eventType || '').toUpperCase();
+      if (eventType === 'DOFF' && !isBlockedEvent(event)) return false;
+      return true;
+    })
+    .map(adjustEventForCalendarDisplay);
+}
+
+/**
+ * Fetch a member's calendar events for a single calendar day (month-scoped API + local filter).
+ */
+export async function fetchMemberEventsForDay(memberId, targetDate = new Date()) {
+  if (memberId == null) return [];
+
+  const date = targetDate instanceof Date ? targetDate : new Date(targetDate);
+  if (Number.isNaN(date.getTime())) return [];
+
+  const month = date.getMonth() + 1;
+  const dayKey = localDateKey(date);
+  const response = await axios.get(
+    `/api/events/byUser/${memberId}?page=1&size=300&month=${month}`
+  );
+  const events = normalizeEventsListResponse(response.data);
+
+  const filtered = events.filter((event) => {
+    const eventType = String(event?.eventType || '').toUpperCase();
+    // Instructor blocks/days-off are stored as DOFF + title "Blocked".
+    // Only skip non-block DOFF noise; keep blocked DOFF for day chips.
+    if (eventType === 'DOFF' && !isBlockedEvent(event)) return false;
+    return eventMatchesDay(event, dayKey);
+  });
+
+  return filtered;
+}
+
+/**
+ * From a day's events, return stable blocked windows:
+ * ['ALL_DAY'] | ['MORNING'] | ['AFTERNOON'] | ['MORNING','AFTERNOON']
+ */
+export function getBlockedWindowsForDay(events) {
+  const windows = new Set();
+
+  (events ?? []).forEach((event) => {
+    if (!isBlockedEvent(event)) return;
+    const window = mapLessonTimeToBlockedWindow(inferLessonTimeFromEvent(event));
+    if (window) windows.add(window);
+  });
+
+  if (windows.has('ALL_DAY')) {
+    return ['ALL_DAY'];
+  }
+
+  const result = [];
+  if (windows.has('MORNING')) result.push('MORNING');
+  if (windows.has('AFTERNOON')) result.push('AFTERNOON');
+  return result;
+}
+
+export function formatBlockedWindowLabel(window, t) {
+  if (window === 'ALL_DAY') return t('adminToday.blockedAllDay');
+  if (window === 'MORNING') return t('adminToday.blockedMorning');
+  if (window === 'AFTERNOON') return t('adminToday.blockedAfternoon');
+  return null;
+}
+
+/**
+ * Build chip labels for every event on the day (blocks + classes + other).
+ */
+export function getDayEventChips(events, t) {
+  return (events ?? []).map((event, index) => {
+    const id = event?.id != null ? event.id : `${event?.start || 'x'}-${index}`;
+    const blocked = isBlockedEvent(event);
+    const window = mapLessonTimeToBlockedWindow(inferLessonTimeFromEvent(event));
+
+    if (blocked) {
+      return {
+        key: `block-${id}`,
+        label: formatBlockedWindowLabel(window, t) || t('adminToday.blockedAllDay'),
+        color: 'warning',
+        isBlocked: true,
+        eventId: event?.id,
+        title: event?.title,
+        eventType: event?.eventType,
+      };
+    }
+
+    const title =
+      String(event?.title || '').trim() ||
+      String(event?.eventType || '').trim() ||
+      t('adminToday.dayEventFallback');
+    let label = title;
+    if (window === 'MORNING') label = `${title} · ${t('adminToday.timeWindowMorning')}`;
+    else if (window === 'AFTERNOON') label = `${title} · ${t('adminToday.timeWindowAfternoon')}`;
+    else if (window === 'ALL_DAY') label = `${title} · ${t('adminToday.timeWindowAllDay')}`;
+
+    return {
+      key: `event-${id}`,
+      label,
+      color: 'default',
+      isBlocked: false,
+      eventId: event?.id,
+      title: event?.title,
+      eventType: event?.eventType,
+    };
+  });
 }
 
 export function formatCompactBookingDateRange(eventList) {

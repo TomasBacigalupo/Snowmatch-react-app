@@ -1160,6 +1160,13 @@ export default function BookingDetailsDrawer({
                                 })}
                               </Typography>
                             )}
+                            {payout.note && (
+                              <Typography variant="body2" color="text.secondary">
+                                {t('adminBookings.drawer.payoutNote', {
+                                  note: payout.note,
+                                })}
+                              </Typography>
+                            )}
                             {payout.status && (
                               <Label
                                 variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
@@ -1224,6 +1231,13 @@ export default function BookingDetailsDrawer({
                           <Typography variant="body2" color="text.secondary">
                             {t('adminBookings.drawer.date', {
                               date: formatDate(booking.teacherPayout.transferDate),
+                            })}
+                          </Typography>
+                        )}
+                        {booking.teacherPayout.note && (
+                          <Typography variant="body2" color="text.secondary">
+                            {t('adminBookings.drawer.payoutNote', {
+                              note: booking.teacherPayout.note,
                             })}
                           </Typography>
                         )}

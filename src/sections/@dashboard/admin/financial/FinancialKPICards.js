@@ -12,6 +12,8 @@ const KPI_CARDS = [
     titleKey: 'adminFinancial.kpiPaidBookings',
     tooltipKey: 'adminFinancial.kpiPaidBookingsTooltip',
     countKey: 'paidBookingsCount',
+    usdKey: 'paidBookingsTotalUsd',
+    usdCountKey: 'paidBookingsCountUsd',
     icon: 'eva:trending-up-fill',
     color: 'success',
     key: 'paidBookingsTotal',
@@ -21,6 +23,8 @@ const KPI_CARDS = [
     titleKey: 'adminFinancial.kpiUnpaidBookings',
     tooltipKey: 'adminFinancial.kpiUnpaidBookingsTooltip',
     countKey: 'unpaidBookingsCount',
+    usdKey: 'unpaidBookingsTotalUsd',
+    usdCountKey: 'unpaidBookingsCountUsd',
     icon: 'eva:alert-circle-fill',
     color: 'error',
     key: 'unpaidBookingsTotal',
@@ -76,6 +80,8 @@ export default function FinancialKPICards({
     <Stack direction={{ xs: 'column', sm: 'row' }} spacing={3} sx={{ flexWrap: 'wrap' }}>
       {KPI_CARDS.map((card) => {
         const count = kpis[card.countKey];
+        const usdTotal = card.usdKey ? kpis[card.usdKey] || 0 : 0;
+        const usdCount = card.usdCountKey ? kpis[card.usdCountKey] : null;
         const detailPath = getDetailPath?.(card.category);
         const cardSx = {
           p: 3,
@@ -119,11 +125,29 @@ export default function FinancialKPICards({
                 variant="h4"
                 sx={{ color: getCardColor(card.color), fontWeight: 'bold' }}
               >
-                {loading ? <Skeleton width={80} /> : fCurrency(kpis[card.key] || 0)}
+                {loading ? <Skeleton width={80} /> : fCurrency(kpis[card.key] || 0, 'ARS')}
               </Typography>
               {!loading && count != null && (
-                <Typography variant="caption" color="text.secondary">
-                  {t('adminFinancial.kpiCountLabel', { count })}
+                <Typography variant="caption" color="text.secondary" display="block">
+                  {t(
+                    card.usdKey
+                      ? 'adminFinancial.kpiCountLabelArs'
+                      : 'adminFinancial.kpiCountLabel',
+                    { count }
+                  )}
+                </Typography>
+              )}
+              {!loading && card.usdKey && (
+                <Typography
+                  variant="subtitle1"
+                  sx={{ color: getCardColor(card.color), fontWeight: 600, mt: 1 }}
+                >
+                  {fCurrency(usdTotal, 'USD')}
+                </Typography>
+              )}
+              {!loading && card.usdKey && usdCount != null && (
+                <Typography variant="caption" color="text.secondary" display="block">
+                  {t('adminFinancial.kpiCountLabelUsd', { count: usdCount })}
                 </Typography>
               )}
             </Box>

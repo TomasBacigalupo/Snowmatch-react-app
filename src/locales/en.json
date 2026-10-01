@@ -701,6 +701,7 @@
     "finanzas": "Finance",
     "usuarios": "Users",
     "group lessons by resort": "Group lessons by resort",
+    "clinics": "Clinics",
     "rental products": "Rental products",
     "rental providers": "Rental providers",
     "agencies": "Agencies",
@@ -947,7 +948,19 @@
       "tax": "Tax (30%)",
       "net": "Net",
       "usdRate": "USD → ARS",
-      "consolidatedArs": "Total ARS"
+      "consolidatedArs": "Total ARS",
+      "teacherDetailTitle": "Detail by teacher",
+      "teacherDetailEmpty": "No teacher earnings for this day.",
+      "totalPayin": "Total collected",
+      "totalPayout": "Total paid to teachers",
+      "grossProfit": "Gross profit",
+      "marginOnPayin": "Margin on collected",
+      "colTeacher": "Teacher",
+      "colPayin": "Collected for lessons",
+      "colPayout": "Teacher pay",
+      "colEarnings": "Earnings",
+      "colLessons": "Number of lessons",
+      "totalRow": "TOTAL"
     },
     "intentsSection": "Unassigned bookings {{day}}",
     "intentsEmpty": "No unassigned bookings for {{day}}.",
@@ -970,6 +983,10 @@
     "timeWindowAllDay": "All day",
     "timeWindowMorning": "Morning",
     "timeWindowAfternoon": "Afternoon",
+    "blockedMorning": "Blocked AM",
+    "blockedAfternoon": "Blocked PM",
+    "blockedAllDay": "Blocked all day",
+    "dayEventFallback": "Event",
     "teacherModal": {
       "roleAndLevel": "Role and level",
       "role": "Role: {{role}}",
@@ -991,6 +1008,7 @@
         "whatsappNumber": "WhatsApp number: {{value}}"
       },
       "noPhone": "No phone number on file",
+      "calendar": "Calendar",
       "close": "Close",
       "viewDetails": "See details",
       "whatsapp": "WhatsApp",
@@ -1056,7 +1074,26 @@
     "setHourPrices": "Set hour prices, or select bookings with a suggested payout amount.",
     "noPayoutsToCreate": "No pending bookings with a payable amount were selected.",
     "perBookingPayoutHint": "Creates one payout per booking. Suggested amount when set; otherwise hours × hour price. The same note is applied to all {{count}} payout(s).",
-    "error": "Could not register payout."
+    "error": "Could not register payout.",
+    "payoutDetailsTitle": "Payout details",
+    "payoutDetailsLoading": "Loading payout details…",
+    "payoutDetailsEmpty": "This instructor has not set a bank alias yet.",
+    "payoutDetailsLoadError": "Could not load payout details.",
+    "payoutDetailsBankAccount": "Bank account",
+    "payoutDetailsAlias": "Alias",
+    "payoutDetailsDefault": "Default",
+    "ganancias": {
+      "title": "Earnings analysis",
+      "priceTotalArs": "Total booking price (ARS)",
+      "priceTotalUsd": "Total booking price (USD)",
+      "currency": "Currency",
+      "total": "Total",
+      "teacher": "Teacher pay",
+      "tax": "Tax (30%)",
+      "net": "Net",
+      "usdRate": "USD → ARS",
+      "consolidatedArs": "Total ARS"
+    }
   },
   "adminAgencyDetail": {
     "selectedCount": "{{count}} booking(s) selected",
@@ -1076,14 +1113,16 @@
     "paymentSettingsTitle": "Teacher payment rates",
     "paymentSettingsHint": "Defaults to teacher level presets. Change rates to recalculate pending payouts.",
     "kpiPaidBookings": "Paid bookings",
-    "kpiPaidBookingsTooltip": "Sum of booking prices with payment status PAID in the selected range",
+    "kpiPaidBookingsTooltip": "Booking prices with payment status PAID, split by ARS and USD (not converted)",
     "kpiUnpaidBookings": "Unpaid bookings",
-    "kpiUnpaidBookingsTooltip": "Sum of booking prices with payment status UNPAID or unset (shown as Pending) in the selected range",
+    "kpiUnpaidBookingsTooltip": "Booking prices with payment status UNPAID or unset (Pending), split by ARS and USD (not converted)",
     "kpiCompletedPayouts": "Payouts completed",
     "kpiCompletedPayoutsTooltip": "Sum of payout amounts for bookings in the selected range and resort",
     "kpiPendingPayouts": "Pending payouts",
     "kpiPendingPayoutsTooltip": "Member teachers: hours × level rates. Independent teachers: suggested payout amounts.",
     "kpiCountLabel": "{{count}} bookings",
+    "kpiCountLabelArs": "{{count}} ARS bookings",
+    "kpiCountLabelUsd": "{{count}} USD bookings",
     "missingSuggestedTitle": "{{count}} independent bookings need a suggested payout",
     "missingSuggestedDescription": "Set a suggested payout on each booking before creating the teacher payout.",
     "missingSuggestedItem": "Booking #{{bookingId}} — {{teacherName}}",
@@ -1119,7 +1158,13 @@
       "colResort": "Resort",
       "colPayment": "Payment",
       "colPayout": "Payout",
-      "colPrice": "Price"
+      "colPrice": "Price",
+      "filterAgency": "Agency",
+      "filterTeacher": "Teacher",
+      "filterClient": "Client",
+      "filterAll": "All",
+      "filterNoAgency": "No agency",
+      "emptyFiltered": "No bookings match the selected filters."
     },
     "hoursByLevelTitle": "Hours by ski level",
     "hoursByLevelSubtitle": "Assigned (ASSIGNED) and required (REFERRED) hours by teacher level for the selected resort.",
@@ -1137,6 +1182,13 @@
     "dense": "Dense",
     "newBooking": "New Booking",
     "newGearBooking": "New equipment booking",
+    "exportCsv": "Download CSV",
+    "exportCsvSuccess": "Exported {{count}} reservations",
+    "exportCsvError": "Could not export reservations",
+    "exportCsvEmpty": "No reservations to export",
+    "exportCsvCustomerId": "Customer ID",
+    "exportCsvType": "Type",
+    "exportCsvCurrency": "Currency",
     "gearCreateSuccess": "Equipment booking created successfully.",
     "gearCreatePartialFailure": "Booking #{{id}} was created, but a rental item failed. Review the booking manually.",
     "gearCreate": {
@@ -1180,6 +1232,9 @@
       "noTeachersFound": "No teachers found",
       "typeToSearchTeachers": "Type to search teachers",
       "teachersLoadError": "Could not load teachers. Please try again.",
+      "rentalDateRange": "Rental period",
+      "rentalDateRangeStart": "From",
+      "rentalDateRangeEnd": "To",
       "months": {
         "06": "June",
         "07": "July",
@@ -1188,6 +1243,7 @@
         "10": "October"
       }
     },
+    "rentalLinesLoading": "Loading rental dates…",
     "table": {
       "id": "ID",
       "student": "Customer",
@@ -1205,6 +1261,8 @@
       "state": "Status",
       "center": "Center",
       "notes": "Notes",
+      "rentalStart": "Rental start",
+      "rentalEnd": "Rental end",
       "actions": "Actions"
     },
     "menu": {
@@ -1240,6 +1298,50 @@
     "createModal": {
       "groupLessonProduct": "Group lesson product (optional)",
       "groupLessonProductHelper": "Creates a pending booking awaiting instructor assignment (no instructor until converted)."
+    },
+    "agencyBooking": {
+      "createBookingTitle": "Create Booking",
+      "openButton": "Complete agency booking",
+      "title": "Agency booking",
+      "steps": {
+        "agency": "Agency",
+        "dateTime": "Date & time",
+        "product": "Product"
+      },
+      "agencyRequiredHint": "An agency is required for this flow.",
+      "date": "Date",
+      "lessonTime": "Lesson time",
+      "morning2hs": "Morning (2hs)",
+      "afternoon2hs": "Afternoon (2hs)",
+      "selectProduct": "Select product",
+      "persons": "Total persons",
+      "personsHelper": "Group class, max {{max}} people.",
+      "pricePreview": "Price preview",
+      "previewPersons": "Persons: {{count}}",
+      "previewList": "List total: ${{amount}}",
+      "previewGear": "Gear (${{amount}} deducted)",
+      "previewAgency": "Agency price: ${{amount}}",
+      "cancel": "Cancel",
+      "back": "Back",
+      "next": "Next",
+      "complete": "Apply to booking",
+      "applied": "Agency booking details applied to the form.",
+      "validation": {
+        "agency": "Select an agency.",
+        "date": "Select a date.",
+        "lessonTime": "Select morning or afternoon (2hs).",
+        "product": "Select a product.",
+        "persons": "Enter total persons between 1 and {{max}}."
+      },
+      "products": {
+        "bautismo": "Baptism Ski/Snowboard — group class + equipment",
+        "exclusiva1": "Exclusive 1 pax — 2hs class + equipment",
+        "exclusiva2": "Exclusive 2 pax — 2hs class + equipment",
+        "exclusiva3": "Exclusive 3 pax — 2hs class + equipment",
+        "semi4": "Semi-exclusive 4 pax — 2hs class + equipment",
+        "semi5": "Semi-exclusive 5 pax — 2hs class + equipment",
+        "semi6": "Semi-exclusive 6 pax — 2hs class + equipment"
+      }
     },
     "intent": {
       "unassigned": "Unassigned",
@@ -1349,6 +1451,7 @@
       "payoutNumber": "Payout #{{id}}",
       "transferredAmount": "Transferred amount: {{amount}}",
       "date": "Date: {{date}}",
+      "payoutNote": "Note: {{note}}",
       "viewReceipt": "View receipt",
       "edit": "Edit",
       "payoutMissing": "No payout has been registered for this booking yet",
@@ -1653,7 +1756,8 @@
     "LAS_LEÑAS": "Las Leñas",
     "CERRO_PERITO_MORENO": "Cerro Perito Moreno",
     "PORTILLO": "Portillo",
-    "LA_PARVA": "La Parva"
+    "LA_PARVA": "La Parva",
+    "EL_COLORADO": "El Colorado"
   },
   "calendar": {
     "name": "Calendar",
@@ -1804,7 +1908,29 @@
     "Cancel": "Rejected",
     "Pending": "Pending",
     "Accepted": "Accepted",
-    "thanLastMonth": "than last month"
+    "thanLastMonth": "than last month",
+    "totalBookedHours": "Booked hours",
+    "totalRatedVideos": "Rated videos",
+    "memberLessonHours": {
+      "title": "Total lesson hours",
+      "subtitle": "Season total {{total}} h · Assigned {{assigned}} h · Required {{required}} h",
+      "chartCategory": "Current season",
+      "total": "Total",
+      "assigned": "Assigned hours",
+      "required": "Required hours",
+      "viewDetails": "View details",
+      "year": "Year",
+      "resort": "Resort",
+      "teachersTitle": "Teachers with bookings",
+      "emptyTeachers": "No teachers have bookings for this year and resort.",
+      "columns": {
+        "teacher": "Teacher",
+        "level": "Level",
+        "assigned": "Assigned",
+        "required": "Required",
+        "total": "Total"
+      }
+    }
   },
   "teacherDetails": {
     "title": "PRO Details",

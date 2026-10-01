@@ -32,6 +32,7 @@ import {
 import BookingRentalFieldsSection from './BookingRentalFieldsSection';
 import CreateStudentModal from './CreateStudentModal';
 import AdminAgencySelect from './AdminAgencySelect';
+import AgencyBookingStepperModal from './AgencyBookingStepperModal';
 import BroadcastTeacherMultiSelect from './BroadcastTeacherMultiSelect';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import { broadcastBookingIntent } from 'src/redux/slices/admin';
@@ -98,6 +99,7 @@ const BookingModal = ({ isOpen, onClose, refreshBookings, filterTeacherId, filte
     const [rentalPrefillSource, setRentalPrefillSource] = useState('');
     // Optional broadcast candidates when no single teacher is assigned.
     const [broadcastTeacherIds, setBroadcastTeacherIds] = useState([]);
+    const [agencyStepperOpen, setAgencyStepperOpen] = useState(false);
 
     const { teachers } = useSelector((state) => state.admin);
     const { intentSuccess, error } = useSelector((state) => state.bookings);
@@ -518,6 +520,48 @@ const BookingModal = ({ isOpen, onClose, refreshBookings, filterTeacherId, filte
         }));
     }, []);
 
+    const handleAgencyBookingApply = useCallback((payload) => {
+        const {
+            agencyId,
+            date,
+            lessonTime,
+            persons,
+            agencyPrice,
+            internalComment,
+        } = payload;
+
+        let parsedDate = null;
+        try {
+            parsedDate = parseISO(date);
+        } catch (e) {
+            parsedDate = null;
+        }
+
+        setDateRange({
+            startDate: parsedDate,
+            endDate: parsedDate,
+        });
+        setFormData((prev) => ({
+            ...prev,
+            agencyId,
+            adults: persons,
+            children: 0,
+            paymentStatus: 'UNPAID',
+            paymentMethod: 'TRANSFER',
+            currency: 'ARS',
+            includesEquipment: false,
+            internalComment: (internalComment || '').slice(0, 255),
+            dateTimes: [
+                {
+                    date,
+                    time: lessonTime,
+                    price: String(agencyPrice),
+                },
+            ],
+        }));
+        enqueueSnackbar(t('adminBookings.agencyBooking.applied'), { variant: 'success' });
+    }, [enqueueSnackbar, t]);
+
     const handleTeacherInputChange = (event, newValue) => {
         dispatch(
             getFilteredTeachersForAdminBooking({
@@ -614,7 +658,18 @@ const BookingModal = ({ isOpen, onClose, refreshBookings, filterTeacherId, filte
             maxWidth="md" 
             fullWidth
         >
-            <DialogTitle>Create Booking</DialogTitle>
+            <DialogTitle>
+                <Stack direction="row" alignItems="center" justifyContent="space-between" spacing={2}>
+                    <span>{t('adminBookings.agencyBooking.createBookingTitle', { defaultValue: 'Create Booking' })}</span>
+                    <Button
+                        size="small"
+                        variant="outlined"
+                        onClick={() => setAgencyStepperOpen(true)}
+                    >
+                        {t('adminBookings.agencyBooking.openButton')}
+                    </Button>
+                </Stack>
+            </DialogTitle>
             <DialogContent>
                 <Typography variant="h6" sx={{ mb: 2 }}>Estudiante</Typography>
                 <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
@@ -1229,6 +1284,11 @@ const BookingModal = ({ isOpen, onClose, refreshBookings, filterTeacherId, filte
                 onClose={() => setCreateStudentOpen(false)}
                 onCreated={handleStudentCreated}
                 initialName={formData.studentSearch}
+            />
+            <AgencyBookingStepperModal
+                open={agencyStepperOpen}
+                onClose={() => setAgencyStepperOpen(false)}
+                onApply={handleAgencyBookingApply}
             />
         </Dialog>
     );

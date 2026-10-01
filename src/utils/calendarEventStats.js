@@ -11,11 +11,20 @@ export const isBlockedEvent = (event) => {
   const title = String(event.title ?? '').trim().toLowerCase();
   const description = String(event.description ?? '').toLowerCase();
   const eventType = String(event.eventType ?? '').toUpperCase();
+  const textColor = String(event.textColor ?? '').trim().toUpperCase();
+  const isRedBlockColor = textColor === '#FF0000' || textColor === '#F44336';
+  const isLessonType =
+    eventType === 'CLASS' || eventType === 'REFERRED' || eventType === 'APP' || eventType === 'PRODUCT';
+
   return (
     title === 'blocked' ||
+    title.includes('block') ||
+    title.includes('bloquead') ||
     eventType === 'BLOCK' ||
     eventType === 'BLOCKED' ||
-    description.includes('bloqueado')
+    description.includes('bloqueado') ||
+    // Calendar UI treats solid red (no lesson type) as instructor blocks
+    (isRedBlockColor && !isLessonType)
   );
 };
 

@@ -880,6 +880,7 @@
         "finanzas": "Finanzas",
         "usuarios": "Usuarios",
         "group lessons by resort": "Clases",
+        "clinics": "Clínicas",
         "rental products": "Equipos",
         "rental providers": "Proveedores de rental",
         "agencies": "Agencias",
@@ -1139,7 +1140,19 @@
             "tax": "Impuestos (30%)",
             "net": "Neto",
             "usdRate": "USD → ARS",
-            "consolidatedArs": "Total ARS"
+            "consolidatedArs": "Total ARS",
+            "teacherDetailTitle": "Detalle por profesor",
+            "teacherDetailEmpty": "No hay ganancias por profesor para este día.",
+            "totalPayin": "Total cobrado",
+            "totalPayout": "Total pagado a profes",
+            "grossProfit": "Ganancia bruta",
+            "marginOnPayin": "Margen sobre lo cobrado",
+            "colTeacher": "Profe",
+            "colPayin": "Cobrado por clases",
+            "colPayout": "Pago a profe",
+            "colEarnings": "Ganancia",
+            "colLessons": "Cantidad de clases",
+            "totalRow": "TOTAL"
         },
         "intentsSection": "Reservas sin asignar {{day}}",
         "intentsEmpty": "No hay reservas sin asignar para {{day}}.",
@@ -1162,6 +1175,10 @@
         "timeWindowAllDay": "Todo el día",
         "timeWindowMorning": "Mañana",
         "timeWindowAfternoon": "Tarde",
+        "blockedMorning": "Bloqueado AM",
+        "blockedAfternoon": "Bloqueado PM",
+        "blockedAllDay": "Bloqueado todo el día",
+        "dayEventFallback": "Evento",
         "teacherModal": {
             "roleAndLevel": "Rol y nivel",
             "role": "Rol: {{role}}",
@@ -1183,6 +1200,7 @@
                 "whatsappNumber": "Número de WhatsApp: {{value}}"
             },
             "noPhone": "Sin teléfono cargado",
+            "calendar": "Calendario",
             "close": "Cerrar",
             "viewDetails": "Ver detalles",
             "whatsapp": "WhatsApp",
@@ -1248,7 +1266,26 @@
         "setHourPrices": "Definí precios por hora, o seleccioná reservas con monto sugerido a pagar.",
         "noPayoutsToCreate": "No hay reservas pendientes con monto a pagar seleccionadas.",
         "perBookingPayoutHint": "Se crea un pago por cada reserva. Usa el monto sugerido si existe; si no, horas × precio por hora. La misma nota se aplica a los {{count}} pago(s).",
-        "error": "No se pudo registrar el pago."
+        "error": "No se pudo registrar el pago.",
+        "payoutDetailsTitle": "Datos de cobro",
+        "payoutDetailsLoading": "Cargando datos de cobro…",
+        "payoutDetailsEmpty": "Este instructor todavía no cargó un alias bancario.",
+        "payoutDetailsLoadError": "No se pudieron cargar los datos de cobro.",
+        "payoutDetailsBankAccount": "Cuenta bancaria",
+        "payoutDetailsAlias": "Alias",
+        "payoutDetailsDefault": "Predeterminado",
+        "ganancias": {
+            "title": "Análisis de ganancias",
+            "priceTotalArs": "Total precio reservas (ARS)",
+            "priceTotalUsd": "Total precio reservas (USD)",
+            "currency": "Moneda",
+            "total": "Total",
+            "teacher": "Pago instructor",
+            "tax": "Impuesto (30%)",
+            "net": "Neto",
+            "usdRate": "USD → ARS",
+            "consolidatedArs": "Total ARS"
+        }
     },
     "adminAgencyDetail": {
         "selectedCount": "{{count}} reserva(s) seleccionada(s)",
@@ -1268,14 +1305,16 @@
         "paymentSettingsTitle": "Tarifas de pago a profesores",
         "paymentSettingsHint": "Por defecto usa los presets por nivel de profesor. Cambiá las tarifas para recalcular los pagos pendientes.",
         "kpiPaidBookings": "Reservas pagadas",
-        "kpiPaidBookingsTooltip": "Suma de precios de reservas con estado de pago PAID en el rango seleccionado",
+        "kpiPaidBookingsTooltip": "Precios de reservas con estado PAID, separados en ARS y USD (sin convertir)",
         "kpiUnpaidBookings": "Reservas impagas",
-        "kpiUnpaidBookingsTooltip": "Suma de precios de reservas con estado UNPAID o sin definir (se muestra como Pendiente) en el rango seleccionado",
+        "kpiUnpaidBookingsTooltip": "Precios de reservas con estado UNPAID o sin definir (Pendiente), separados en ARS y USD (sin convertir)",
         "kpiCompletedPayouts": "Payouts realizados",
         "kpiCompletedPayoutsTooltip": "Suma de montos de payouts de las reservas del rango y centro seleccionados",
         "kpiPendingPayouts": "Payouts pendientes",
         "kpiPendingPayoutsTooltip": "Profesores de escuela: horas × tarifas por nivel. Independientes: monto sugerido de payout.",
         "kpiCountLabel": "{{count}} reservas",
+        "kpiCountLabelArs": "{{count}} reservas ARS",
+        "kpiCountLabelUsd": "{{count}} reservas USD",
         "missingSuggestedTitle": "{{count}} reservas de independientes necesitan un payout sugerido",
         "missingSuggestedDescription": "Configurá el payout sugerido en cada reserva antes de crear el payout al profesor.",
         "missingSuggestedItem": "Reserva #{{bookingId}} — {{teacherName}}",
@@ -1311,7 +1350,13 @@
             "colResort": "Centro",
             "colPayment": "Pago",
             "colPayout": "Payout",
-            "colPrice": "Precio"
+            "colPrice": "Precio",
+            "filterAgency": "Agencia",
+            "filterTeacher": "Profesor",
+            "filterClient": "Cliente",
+            "filterAll": "Todos",
+            "filterNoAgency": "Sin agencia",
+            "emptyFiltered": "Ninguna reserva coincide con los filtros seleccionados."
         },
         "hoursByLevelTitle": "Horas por nivel de ski",
         "hoursByLevelSubtitle": "Horas asignadas (ASSIGNED) y requeridas (REFERRED) por nivel de profesor para el centro seleccionado.",
@@ -1329,6 +1374,13 @@
         "dense": "Compacto",
         "newBooking": "Nueva Reserva",
         "newGearBooking": "Nueva reserva de equipos",
+        "exportCsv": "Descargar CSV",
+        "exportCsvSuccess": "Se exportaron {{count}} reservas",
+        "exportCsvError": "No se pudieron exportar las reservas",
+        "exportCsvEmpty": "No hay reservas para exportar",
+        "exportCsvCustomerId": "ID de cliente",
+        "exportCsvType": "Tipo",
+        "exportCsvCurrency": "Moneda",
         "gearCreateSuccess": "Reserva de equipos creada correctamente.",
         "gearCreatePartialFailure": "Reserva #{{id}} creada, pero falló un ítem de alquiler. Revisá la reserva manualmente.",
         "gearCreate": {
@@ -1372,6 +1424,9 @@
             "noTeachersFound": "No se encontraron instructores",
             "typeToSearchTeachers": "Escribí para buscar instructores",
             "teachersLoadError": "No se pudieron cargar los instructores. Intentá de nuevo.",
+            "rentalDateRange": "Período de alquiler",
+            "rentalDateRangeStart": "Desde",
+            "rentalDateRangeEnd": "Hasta",
             "months": {
                 "06": "Junio",
                 "07": "Julio",
@@ -1380,6 +1435,7 @@
                 "10": "Octubre"
             }
         },
+        "rentalLinesLoading": "Cargando fechas de alquiler…",
         "table": {
             "id": "ID",
             "student": "Cliente",
@@ -1397,6 +1453,8 @@
             "state": "Estado",
             "center": "Centro",
             "notes": "Notas",
+            "rentalStart": "Inicio alquiler",
+            "rentalEnd": "Fin alquiler",
             "actions": "Acciones"
         },
         "menu": {
@@ -1432,6 +1490,50 @@
         "createModal": {
             "groupLessonProduct": "Producto de clase grupal (opcional)",
             "groupLessonProductHelper": "Crea una reserva pendiente de asignar instructor (sin instructor hasta convertirla)."
+        },
+        "agencyBooking": {
+            "createBookingTitle": "Crear reserva",
+            "openButton": "Carga agencia completa",
+            "title": "Reserva de agencia",
+            "steps": {
+                "agency": "Agencia",
+                "dateTime": "Fecha y horario",
+                "product": "Producto"
+            },
+            "agencyRequiredHint": "Se requiere una agencia para este flujo.",
+            "date": "Fecha",
+            "lessonTime": "Horario de clase",
+            "morning2hs": "Mañana (2hs)",
+            "afternoon2hs": "Tarde (2hs)",
+            "selectProduct": "Seleccionar producto",
+            "persons": "Total de personas",
+            "personsHelper": "Clase grupal, máximo {{max}} personas.",
+            "pricePreview": "Vista previa del precio",
+            "previewPersons": "Personas: {{count}}",
+            "previewList": "Total lista: ${{amount}}",
+            "previewGear": "Equipos (${{amount}} descontados)",
+            "previewAgency": "Precio agencia: ${{amount}}",
+            "cancel": "Cancelar",
+            "back": "Atrás",
+            "next": "Siguiente",
+            "complete": "Aplicar a la reserva",
+            "applied": "Detalles de agencia aplicados al formulario.",
+            "validation": {
+                "agency": "Seleccioná una agencia.",
+                "date": "Seleccioná una fecha.",
+                "lessonTime": "Seleccioná mañana o tarde (2hs).",
+                "product": "Seleccioná un producto.",
+                "persons": "Ingresá el total de personas entre 1 y {{max}}."
+            },
+            "products": {
+                "bautismo": "Bautismo Ski/Snowboard — clase grupal + equipos",
+                "exclusiva1": "Exclusiva 1 pax — clase 2hs + equipos",
+                "exclusiva2": "Exclusiva 2 pax — clase 2hs + equipos",
+                "exclusiva3": "Exclusiva 3 pax — clase 2hs + equipos",
+                "semi4": "Semi exclusiva 4 pax — clase 2hs + equipos",
+                "semi5": "Semi exclusiva 5 pax — clase 2hs + equipos",
+                "semi6": "Semi exclusiva 6 pax — clase 2hs + equipos"
+            }
         },
         "intent": {
             "unassigned": "Sin asignar",
@@ -1541,6 +1643,7 @@
             "payoutNumber": "Payout #{{id}}",
             "transferredAmount": "Monto transferido: {{amount}}",
             "date": "Fecha: {{date}}",
+            "payoutNote": "Nota: {{note}}",
             "viewReceipt": "Ver Comprobante",
             "edit": "Editar",
             "payoutMissing": "Aún no se ha registrado el payout para esta reserva",
@@ -1845,7 +1948,8 @@
         "LAS_LEÑAS": "Las Leñas",
         "CERRO_PERITO_MORENO": "Cerro Perito Moreno",
         "PORTILLO": "Portillo",
-        "LA_PARVA": "La Parva"
+        "LA_PARVA": "La Parva",
+        "EL_COLORADO": "El Colorado"
     },
     "calendar": {
         "name": "Calendario",
@@ -2022,7 +2126,27 @@
         "Accepted": "Aceptadas",
         "thanLastMonth": "respecto mes anterior",
         "totalBookedHours": "Horas reservadas",
-        "totalRatedVideos": "Videos calificados"
+        "totalRatedVideos": "Videos calificados",
+        "memberLessonHours": {
+            "title": "Total de horas de clase",
+            "subtitle": "Total temporada {{total}} h · Asignadas {{assigned}} h · Referidas {{required}} h",
+            "chartCategory": "Temporada actual",
+            "total": "Total",
+            "assigned": "Horas asignadas",
+            "required": "Horas referidas",
+            "viewDetails": "Ver detalle",
+            "year": "Año",
+            "resort": "Centro",
+            "teachersTitle": "Profesores con reservas",
+            "emptyTeachers": "No hay profesores con reservas para este año y centro.",
+            "columns": {
+                "teacher": "Profesor",
+                "level": "Nivel",
+                "assigned": "Asignadas",
+                "required": "Referidas",
+                "total": "Total"
+            }
+        }
     },
     "teacherDetails": {
         "h1": "Clases de {{discipline}} con {{name}} en {{resort}}",

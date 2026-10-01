@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
+import { PATH_EL_COLORADO_DECK } from '../routes/paths';
 import {
   Dialog,
   DialogTitle,
@@ -36,8 +37,8 @@ export default function LegalDisclaimerModal() {
   const [open, setOpen] = useState(false);
   const [neverShow, setNeverShow] = useState(false);
 
-  // Don't show on index route
-  const isIndexRoute = location.pathname === '/';
+  // Don't show on the marketing home or the standalone partnership deck.
+  const isIndexRoute = location.pathname === '/' || location.pathname === PATH_EL_COLORADO_DECK;
 
   useEffect(() => {
     if (isIndexRoute) {

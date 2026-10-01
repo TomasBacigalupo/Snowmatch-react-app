@@ -12,6 +12,7 @@ import AuthGuard from '../guards/AuthGuard';
 // import RoleBasedGuard from '../guards/RoleBasedGuard';
 // config
 import { PATH_AFTER_LOGIN } from '../config';
+import { PATH_EL_COLORADO_DECK } from './paths';
 // components
 import LoadingScreen from '../components/LoadingScreen';
 import DeepLinkHandler from '../components/DeepLinkHandler';
@@ -51,6 +52,7 @@ const Loadable = (Component) => (props) => {
   );
 };
 
+const ElColoradoDeck = Loadable(lazy(() => import('../pages/ElColoradoDeck')));
 const AdminRentalProviders = Loadable(lazy(() => import('../pages/dashboard/AdminRentalProviders')));
 const AdminAgencies = Loadable(lazy(() => import('../pages/dashboard/AdminAgencies')));
 const AdminAgencyDetail = Loadable(lazy(() => import('../pages/dashboard/AdminAgencyDetail')));
@@ -62,6 +64,10 @@ export default function Router() {
     <>
       <DeepLinkHandler />
       {useRoutes([
+        {
+          path: PATH_EL_COLORADO_DECK,
+          element: <ElColoradoDeck />,
+        },
         {
           path: '/:lng/search/:resort',
           element: <PlainLayout />,

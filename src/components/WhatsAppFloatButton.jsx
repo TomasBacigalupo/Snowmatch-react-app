@@ -1,16 +1,23 @@
+import { useLocation } from 'react-router-dom';
 import { Box, Button, Fab, Tooltip } from '@mui/material';
 import SupportAgentOutlinedIcon from '@mui/icons-material/SupportAgentOutlined';
 import Iconify from './Iconify';
 import useAuth from '../hooks/useAuth';
 import useLocales from '../hooks/useLocales';
+import { PATH_EL_COLORADO_DECK } from '../routes/paths';
 import { SNOWMATCH_BOOKING_WHATSAPP_PHONE } from '../utils/snowmatchWhatsApp';
 
 const WHATSAPP_URL = `https://wa.me/${SNOWMATCH_BOOKING_WHATSAPP_PHONE}`;
 const SUPPORT_URL = 'https://blog.snowmatch.pro/soporte/';
 
 export default function WhatsAppFloatButton() {
+  const { pathname } = useLocation();
   const { isResortAdmin, isAuthenticated } = useAuth();
   const { translate } = useLocales();
+
+  if (pathname === PATH_EL_COLORADO_DECK) {
+    return null;
+  }
 
   const floatPositionSx = {
     position: 'fixed',

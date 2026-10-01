@@ -1,0 +1,1193 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Snowmatch × El Colorado — Temporada 2027</title>
+  <meta name="description" content="Propuesta de partnership para digitalizar la escuela y el rental de El Colorado en la temporada 2027.">
+  <link rel="icon" href="/favicon/favicon-32x32.png">
+  <style>
+    /* 1em inside a slide equals 1% of the 16:9 frame width, so type and space scale together. */
+    @font-face {
+      font-family: "CircularStd";
+      src: url("/fonts/CircularStd-Book.otf") format("opentype");
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    @font-face {
+      font-family: "CircularStd";
+      src: url("/fonts/CircularStd-Medium.otf") format("opentype");
+      font-weight: 500;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    @font-face {
+      font-family: "CircularStd";
+      src: url("/fonts/CircularStd-Bold.otf") format("opentype");
+      font-weight: 700;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    :root {
+      --ink: #161a17;
+      --paper: #f3f0e8;
+      --muted: #5e675f;
+      --body: #2a312c;
+      --line: rgba(22, 26, 23, 0.16);
+      --blue: #0a5fbf;
+      --dark: #121614;
+      --snow: #f7f4ee;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      background: #0c0e0d;
+      color: var(--ink);
+      font-family: "CircularStd", "Helvetica Neue", Helvetica, Arial, sans-serif;
+      font-weight: 400;
+    }
+
+    ::selection {
+      background: var(--blue);
+      color: #fff;
+    }
+
+    .deck {
+      height: 100vh;
+      overflow-y: auto;
+      scroll-snap-type: y mandatory;
+      scroll-behavior: smooth;
+      scrollbar-width: none;
+    }
+
+    .deck::-webkit-scrollbar {
+      display: none;
+    }
+
+    .slide {
+      height: 100vh;
+      scroll-snap-align: start;
+      scroll-snap-stop: always;
+      display: grid;
+      place-items: center;
+      background: var(--paper);
+    }
+
+    .slide-dark {
+      background: var(--dark);
+    }
+
+    .frame {
+      width: min(100vw, calc(100vh * 16 / 9));
+      height: min(100vh, calc(100vw * 9 / 16));
+      font-size: calc(min(100vw, calc(100vh * 16 / 9)) / 100);
+      position: relative;
+      overflow: hidden;
+      background: var(--paper);
+      color: var(--ink);
+    }
+
+    .sheet {
+      height: 100%;
+      padding: 2.55em 4.4em 2.35em;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex: 0 0 auto;
+    }
+
+    .logo {
+      height: 1.22em;
+      width: auto;
+      display: block;
+    }
+
+    .num {
+      margin: 0;
+      font-size: 0.72em;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      color: var(--muted);
+    }
+
+    h1,
+    h2,
+    p,
+    blockquote,
+    figure {
+      margin: 0;
+    }
+
+    .sheet h1 {
+      margin-top: 1.05em;
+      max-width: 15em;
+      font-size: 3.22em;
+      font-weight: 500;
+      letter-spacing: -0.034em;
+      line-height: 0.98;
+    }
+
+    .kicker {
+      margin: 0;
+      font-size: 0.72em;
+      font-weight: 500;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .kicker-strong {
+      color: var(--ink);
+    }
+
+    /* Cover — type panel on the left, full-height photograph on the right. */
+    .cover {
+      display: grid;
+      grid-template-columns: 38.5em 1fr;
+      height: 100%;
+      background: var(--dark);
+      color: var(--snow);
+    }
+
+    .cover-copy {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 3em 3.1em 2.7em 3.3em;
+    }
+
+    .cover-logo {
+      align-self: flex-start;
+      height: 1.7em;
+      width: auto;
+      max-width: none;
+      object-fit: contain;
+    }
+
+    .partners {
+      display: flex;
+      align-items: center;
+      gap: 0.75em;
+      margin: 0 0 0.85em;
+      font-size: 0.84em;
+      font-weight: 500;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    .partners-times {
+      letter-spacing: 0;
+      opacity: 0.62;
+    }
+
+    .cover h1 {
+      max-width: 8.2em;
+      font-size: 2.72em;
+      font-weight: 500;
+      letter-spacing: -0.034em;
+      line-height: 1.02;
+    }
+
+    .season {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 1.7em;
+      padding-top: 0.95em;
+      border-top: 1px solid rgba(247, 244, 238, 0.28);
+      font-size: 0.74em;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    .cover-photo {
+      background-image: url("/assets/bariloche.jpg");
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-position: 18% 46%;
+    }
+
+    /* Opportunity */
+    .opportunity {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 3em;
+      align-items: center;
+      flex: 1;
+      min-height: 0;
+    }
+
+    .hero-num {
+      font-size: 12.2em;
+      font-weight: 700;
+      line-height: 0.76;
+      letter-spacing: -0.065em;
+      color: var(--ink);
+    }
+
+    .hero-caption {
+      margin-top: 0.45em;
+      max-width: 12em;
+      font-size: 1.28em;
+      font-weight: 500;
+      line-height: 1.22;
+      letter-spacing: -0.02em;
+    }
+
+    .lead p {
+      max-width: 28em;
+      font-size: 1.05em;
+      line-height: 1.42;
+      color: var(--body);
+    }
+
+    .lead p + p {
+      margin-top: 0.75em;
+    }
+
+    .compare {
+      display: grid;
+      gap: 0.72em;
+      padding-top: 1.05em;
+      border-top: 1px solid var(--line);
+    }
+
+    .compare-row {
+      display: grid;
+      grid-template-columns: 4.8em 1fr;
+      gap: 0.8em;
+      align-items: baseline;
+    }
+
+    .chain {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .chain li {
+      display: flex;
+      align-items: center;
+      font-size: 1.12em;
+      font-weight: 500;
+      letter-spacing: -0.015em;
+    }
+
+    .chain li:not(:last-child)::after {
+      content: "→";
+      margin: 0 0.48em;
+      color: var(--muted);
+      font-weight: 400;
+    }
+
+    .is-friction {
+      color: var(--muted);
+    }
+
+    .is-shift {
+      color: var(--blue);
+    }
+
+    .objective {
+      margin-top: 0.95em;
+      padding-top: 0.85em;
+      border-top: 1px solid var(--line);
+      max-width: 40em;
+      font-size: 1.22em;
+      font-weight: 500;
+      line-height: 1.28;
+      letter-spacing: -0.02em;
+    }
+
+    /* Experience */
+    .journey {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 1.35em;
+      padding: 0.72em 0;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .journey span {
+      font-size: 0.72em;
+      font-weight: 500;
+      letter-spacing: 0.11em;
+      text-transform: uppercase;
+    }
+
+    .journey i {
+      color: var(--blue);
+      font-style: normal;
+      font-size: 0.85em;
+    }
+
+    .voices {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      margin-top: 1.55em;
+    }
+
+    .voice {
+      padding-right: 1.7em;
+    }
+
+    .voice + .voice {
+      padding-left: 1.7em;
+      border-left: 1px solid var(--line);
+    }
+
+    .voice h2 {
+      margin-bottom: 0.7em;
+      font-size: 0.78em;
+      font-weight: 500;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    .voice p {
+      max-width: 22em;
+      font-size: 1.02em;
+      line-height: 1.42;
+      color: var(--body);
+    }
+
+    .principle {
+      align-self: flex-start;
+      margin-top: auto;
+      padding-top: 0.72em;
+      border-top: 1px solid var(--line);
+      max-width: 15.5em;
+      font-size: 2.15em;
+      font-weight: 500;
+      line-height: 1.08;
+      letter-spacing: -0.032em;
+    }
+
+    /* Model */
+    .sheet-model {
+      padding: 0;
+      background: var(--paper);
+    }
+
+    .sheet-main {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      min-height: 0;
+      padding: 2.55em 4.4em 1.15em;
+    }
+
+    .channels {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      flex: 1;
+      min-height: 0;
+      margin-top: 1.15em;
+    }
+
+    .channel {
+      display: flex;
+      flex-direction: column;
+      padding-right: 2.3em;
+    }
+
+    .channel + .channel {
+      padding-right: 0;
+      padding-left: 2.3em;
+      border-left: 1px solid var(--line);
+    }
+
+    .channel-index {
+      color: var(--blue);
+    }
+
+    .channel h2 {
+      margin-top: 0.4em;
+      max-width: 9em;
+      font-size: 1.85em;
+      font-weight: 500;
+      letter-spacing: -0.03em;
+      line-height: 1.02;
+    }
+
+    .path {
+      margin: 1em 0 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .path li {
+      font-size: 1.08em;
+      font-weight: 500;
+      letter-spacing: -0.015em;
+      line-height: 1.2;
+    }
+
+    .path li + li::before {
+      content: "↓";
+      display: block;
+      margin: 0.32em 0;
+      color: var(--muted);
+      font-size: 0.78em;
+      font-weight: 400;
+      line-height: 1;
+    }
+
+    .model-type {
+      margin-top: auto;
+      padding-top: 0.8em;
+      border-top: 1px solid var(--line);
+    }
+
+    .model-type strong {
+      display: block;
+      margin-top: 0.28em;
+      color: var(--ink);
+      font-size: 1.12em;
+      font-weight: 500;
+      letter-spacing: -0.02em;
+      text-transform: none;
+    }
+
+    .zero {
+      display: grid;
+      grid-template-columns: 1.35fr 0.9fr;
+      gap: 2em;
+      align-items: center;
+      padding: 1.35em 4.4em 1.4em;
+      background: var(--dark);
+      color: var(--snow);
+    }
+
+    .zero-pair {
+      display: flex;
+      gap: 2.6em;
+    }
+
+    .zero-pair p {
+      margin: 0;
+    }
+
+    .zero-pair b {
+      display: block;
+      font-size: 3.55em;
+      font-weight: 500;
+      letter-spacing: -0.05em;
+      line-height: 0.82;
+    }
+
+    .zero-pair span {
+      display: block;
+      max-width: 13em;
+      margin-top: 0.4em;
+      color: rgba(247, 244, 238, 0.72);
+      font-size: 0.9em;
+      line-height: 1.25;
+    }
+
+    .zero-note {
+      max-width: 24em;
+      color: rgba(247, 244, 238, 0.86);
+      font-size: 1.02em;
+      line-height: 1.4;
+    }
+
+    /* Today */
+    .today {
+      display: grid;
+      grid-template-columns: 32em 1fr;
+      gap: 2.4em;
+      flex: 1;
+      min-height: 0;
+      margin-top: 1.2em;
+    }
+
+    .mountains {
+      margin: 0.45em 0 1.15em;
+      padding: 0;
+      list-style: none;
+    }
+
+    .mountains li {
+      font-size: 1.48em;
+      font-weight: 500;
+      letter-spacing: -0.03em;
+      line-height: 1.28;
+    }
+
+    .countries {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.15em 1.2em;
+      margin: 0.45em 0 0;
+      padding: 0;
+      list-style: none;
+      font-size: 1.02em;
+      font-weight: 500;
+      line-height: 1.4;
+      letter-spacing: -0.015em;
+    }
+
+    .scope-note {
+      max-width: 28em;
+      margin: 0.35em 0 0;
+      color: var(--muted);
+      font-size: 0.72em;
+      line-height: 1.35;
+    }
+
+    .footprint {
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+    }
+
+    .phone {
+      position: absolute;
+      left: 75%;
+      top: 50%;
+      z-index: 1;
+      margin: 0;
+      transform: translate(-50%, -50%);
+    }
+
+    /* iPhone 17 Pro front: aluminum unibody, 450×920 frame, 402×874 screen. */
+    .phone-device {
+      position: relative;
+      width: 15.8em;
+      aspect-ratio: 450 / 920;
+      border-radius: 2.55em;
+      background: #d5d6d8;
+      box-shadow:
+        inset 0 0 0 0.07em #f7f7f8,
+        inset 0 0 0 0.14em #a4a5a8,
+        0 1.3em 2.6em rgba(22, 26, 23, 0.16);
+    }
+
+    .phone-btn {
+      position: absolute;
+      width: 0.14em;
+      background: #b7b8bb;
+      border-radius: 0.08em;
+    }
+
+    .phone-btn-action {
+      left: -0.14em;
+      top: 15.5%;
+      height: 5.2%;
+    }
+
+    .phone-btn-volume {
+      left: -0.14em;
+      top: 23%;
+      height: 12.4%;
+    }
+
+    .phone-btn-side {
+      right: -0.14em;
+      top: 19.5%;
+      height: 8.6%;
+    }
+
+    .phone-btn-camera {
+      right: -0.14em;
+      top: 32.5%;
+      height: 6.4%;
+      background: #9ea0a3;
+    }
+
+    .phone-screen {
+      position: absolute;
+      top: 2.5%;
+      left: 5.33%;
+      width: 89.33%;
+      height: 95%;
+      overflow: hidden;
+      border-radius: 1.85em;
+      background: #fff;
+    }
+
+    .phone-screen img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center center;
+    }
+
+    .phone-island {
+      position: absolute;
+      top: 1.35%;
+      left: 50%;
+      width: 24%;
+      height: 3.15%;
+      border-radius: 2em;
+      background: #111214;
+      transform: translateX(-50%);
+    }
+
+    .phone figcaption {
+      margin-top: 0.75em;
+      color: var(--muted);
+      font-size: 0.78em;
+      line-height: 1.35;
+      text-align: center;
+    }
+
+    .today {
+      z-index: 1;
+    }
+
+    .atlas {
+      position: absolute;
+      left: 4.4em;
+      bottom: 3.5em;
+      width: 37em;
+      z-index: 0;
+    }
+
+    .atlas img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    .atlas-key {
+      display: flex;
+      gap: 1.4em;
+      margin: 0.2em 0 0;
+      color: var(--muted);
+      font-size: 0.68em;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .key-ops,
+    .key-presence {
+      display: inline-block;
+      width: 0.55em;
+      height: 0.55em;
+      margin-right: 0.45em;
+      border-radius: 50%;
+      vertical-align: 0.05em;
+    }
+
+    .key-ops {
+      background: #0a5fbf;
+    }
+
+    .key-presence {
+      background: #161a17;
+    }
+
+    /* Close */
+    .deck-sub {
+      margin-top: 0.7em;
+      font-size: 0.92em;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .phases {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 2.2em;
+      margin-top: 1.25em;
+    }
+
+    .phase h2 {
+      margin: 0.35em 0 0.45em;
+      font-size: 0.92em;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .phase ul {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .phase li {
+      color: var(--body);
+      font-size: 1em;
+      line-height: 1.48;
+    }
+
+    .assurances {
+      display: grid;
+      grid-template-columns: 1.15fr 1fr 1.15fr;
+      margin-top: 1.15em;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .assurances p {
+      margin: 0;
+      padding: 0.72em 1em 0.72em 0;
+      font-size: 0.74em;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      line-height: 1.3;
+      text-transform: uppercase;
+    }
+
+    .assurances p + p {
+      padding-left: 1em;
+      border-left: 1px solid var(--line);
+    }
+
+    .finale {
+      margin-top: auto;
+      padding-top: 0.15em;
+    }
+
+    .promise {
+      max-width: 17em;
+      font-size: 2.42em;
+      font-weight: 500;
+      letter-spacing: -0.032em;
+      line-height: 1.06;
+    }
+
+    .finale-meta {
+      display: grid;
+      grid-template-columns: 1.25fr 0.85fr;
+      gap: 2.4em;
+      align-items: start;
+      margin-top: 0.95em;
+      padding-top: 0.9em;
+      border-top: 1px solid var(--line);
+    }
+
+    .meeting {
+      max-width: 26em;
+      margin-top: 0.4em;
+      font-size: 1.08em;
+      font-weight: 500;
+      line-height: 1.35;
+      letter-spacing: -0.015em;
+    }
+
+    .sign {
+      display: flex;
+      align-items: flex-start;
+      justify-content: flex-end;
+      gap: 0.95em;
+    }
+
+    .sign-logo {
+      height: 1.15em;
+      width: auto;
+      margin-top: 0.18em;
+    }
+
+    .sign-name {
+      font-size: 1.08em;
+      font-weight: 500;
+      letter-spacing: -0.015em;
+    }
+
+    .sign-role,
+    .sign a {
+      color: var(--muted);
+      font-size: 0.9em;
+      line-height: 1.45;
+      text-decoration: none;
+    }
+
+    .sign a:hover,
+    .sign a:focus-visible {
+      color: var(--ink);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .deck {
+        scroll-behavior: auto;
+      }
+    }
+
+    @page {
+      size: 338.66mm 190.5mm;
+      margin: 0;
+    }
+
+    @media print {
+      html,
+      body {
+        background: #fff;
+      }
+
+      .deck {
+        height: auto;
+        overflow: visible;
+        scroll-snap-type: none;
+      }
+
+      .slide,
+      .slide-dark {
+        display: block;
+        width: 338.66mm;
+        height: 190.5mm;
+        page-break-after: always;
+        break-after: page;
+        background: #fff;
+      }
+
+      .frame {
+        width: 338.66mm;
+        height: 190.5mm;
+        font-size: 3.3866mm;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="deck" id="deck">
+    <section class="slide slide-dark" aria-label="Diapositiva 1 de 6. Portada">
+      <article class="frame cover">
+        <div class="cover-copy">
+          <img class="cover-logo" src="/decks/el-colorado-2027/assets/wordmark-white.png" alt="Snowmatch">
+          <div class="cover-main">
+            <p class="partners">
+              <span>Snowmatch</span>
+              <span class="partners-times" aria-hidden="true">×</span>
+              <span>El Colorado</span>
+            </p>
+            <h1>Digitalizando la experiencia de escuela y rental</h1>
+            <p class="season">
+              <span>Temporada 2027</span>
+              <span>01</span>
+            </p>
+          </div>
+        </div>
+        <div class="cover-photo" role="img" aria-label="Esquiador en pendiente, con cordillera y lago al fondo"></div>
+      </article>
+    </section>
+
+    <section class="slide" aria-label="Diapositiva 2 de 6. La oportunidad">
+      <article class="frame sheet">
+        <header class="top">
+          <img class="logo" src="/decks/el-colorado-2027/assets/wordmark-blue.png" alt="Snowmatch">
+          <p class="num">02</p>
+        </header>
+        <h1>La demanda ya está.</h1>
+        <div class="opportunity">
+          <div>
+            <p class="hero-num">+20</p>
+            <p class="hero-caption">solicitudes de clases privadas en El Colorado durante 2026</p>
+          </div>
+          <div class="lead">
+            <p>Sin integración oficial con El Colorado y sin campañas específicas para el centro, Snowmatch recibió más de 20 solicitudes de clases privadas durante la temporada 2026.</p>
+            <p>Estas solicitudes fueron coordinadas con instructores de la escuela, trabajando en contacto con Christian durante la temporada.</p>
+          </div>
+        </div>
+        <div class="compare">
+          <div class="compare-row">
+            <p class="kicker">Hoy</p>
+            <ol class="chain">
+              <li>Cliente</li>
+              <li>Snowmatch</li>
+              <li class="is-friction">Coordinación manual</li>
+              <li>Escuela</li>
+              <li>Instructor</li>
+            </ol>
+          </div>
+          <div class="compare-row">
+            <p class="kicker kicker-strong">2027</p>
+            <ol class="chain">
+              <li>Cliente</li>
+              <li>Snowmatch</li>
+              <li class="is-shift">Reserva + pago online</li>
+              <li>Instructor</li>
+              <li>Clase</li>
+              <li>Calificación</li>
+            </ol>
+          </div>
+        </div>
+        <p class="objective">El objetivo para 2027 es transformar una demanda que ya existe en un canal de venta digital, escalable y medible.</p>
+      </article>
+    </section>
+
+    <section class="slide" aria-label="Diapositiva 3 de 6. La experiencia">
+      <article class="frame sheet">
+        <header class="top">
+          <img class="logo" src="/decks/el-colorado-2027/assets/wordmark-blue.png" alt="Snowmatch">
+          <p class="num">03</p>
+        </header>
+        <h1>Todo el recorrido del cliente, en un solo lugar.</h1>
+        <div class="journey" aria-label="Recorrido del cliente">
+          <span>Descubrir</span>
+          <i aria-hidden="true">→</i>
+          <span>Elegir</span>
+          <i aria-hidden="true">→</i>
+          <span>Reservar</span>
+          <i aria-hidden="true">→</i>
+          <span>Pagar</span>
+          <i aria-hidden="true">→</i>
+          <span>Coordinar</span>
+          <i aria-hidden="true">→</i>
+          <span>Esquiar</span>
+          <i aria-hidden="true">→</i>
+          <span>Calificar</span>
+        </div>
+        <div class="voices">
+          <section class="voice">
+            <h2>Cliente</h2>
+            <p>Descubre y compara instructores, consulta disponibilidad, reserva clases privadas o grupales, alquila equipo, paga online y se comunica con su instructor.</p>
+          </section>
+          <section class="voice">
+            <h2>Escuela</h2>
+            <p>Controla instructores, productos, precios, disponibilidad, reservas, pagos y comunicación desde una única plataforma.</p>
+          </section>
+          <section class="voice">
+            <h2>Instructor</h2>
+            <p>Recibe sus clases, administra disponibilidad y puede coordinar directamente con el cliente dentro de un entorno supervisado por la escuela.</p>
+          </section>
+        </div>
+        <p class="principle">Snowmatch se adapta a la operación de El Colorado, no al revés.</p>
+      </article>
+    </section>
+
+    <section class="slide" aria-label="Diapositiva 4 de 6. Modelo comercial">
+      <article class="frame sheet sheet-model">
+        <div class="sheet-main">
+          <header class="top">
+            <img class="logo" src="/decks/el-colorado-2027/assets/wordmark-blue.png" alt="Snowmatch">
+            <p class="num">04</p>
+          </header>
+          <h1>Un modelo alineado con el crecimiento.</h1>
+          <div class="channels">
+            <section class="channel">
+              <p class="kicker channel-index">01</p>
+              <h2>Demanda generada por Snowmatch</h2>
+              <ol class="path">
+                <li>Snowmatch atrae al cliente</li>
+                <li>El cliente descubre El Colorado</li>
+                <li>Reserva y paga</li>
+                <li>El Colorado recibe una nueva venta</li>
+              </ol>
+              <p class="model-type kicker">
+                Modelo comercial
+                <strong>Variable por transacción</strong>
+              </p>
+            </section>
+            <section class="channel">
+              <p class="kicker channel-index">02</p>
+              <h2>Demanda propia de El Colorado</h2>
+              <ol class="path">
+                <li>Web / redes / QR / canales propios</li>
+                <li>Snowmatch gestiona la experiencia digital</li>
+                <li>Reserva + pago + operación</li>
+                <li>Escuela / instructor</li>
+              </ol>
+              <p class="model-type kicker">
+                Modelo comercial
+                <strong>Fee tecnológico por transacción</strong>
+              </p>
+            </section>
+          </div>
+        </div>
+        <footer class="zero">
+          <div class="zero-pair">
+            <p>
+              <b>$0</b>
+              <span>implementación inicial</span>
+            </p>
+            <p>
+              <b>$0</b>
+              <span>fee mensual durante el piloto 2027</span>
+            </p>
+          </div>
+          <p class="zero-note">Snowmatch participa cuando existe una transacción. El Colorado puede digitalizar su operación sin asumir una estructura de costos fijos inicial.</p>
+        </footer>
+      </article>
+    </section>
+
+    <section class="slide" aria-label="Diapositiva 5 de 6. Snowmatch hoy">
+      <article class="frame sheet">
+        <header class="top">
+          <img class="logo" src="/decks/el-colorado-2027/assets/wordmark-blue.png" alt="Snowmatch">
+          <p class="num">05</p>
+        </header>
+        <h1>Una plataforma que ya está operando en montaña.</h1>
+        <div class="today">
+          <div class="footprint">
+            <section>
+              <p class="kicker">Operación en Argentina</p>
+              <ul class="mountains">
+                <li>Cerro Catedral</li>
+                <li>Cerro Bayo</li>
+                <li>Cerro Lago Hermoso</li>
+              </ul>
+            </section>
+            <section>
+              <p class="kicker">Presencia de instructores</p>
+              <ul class="countries">
+                <li>Argentina</li>
+                <li>Chile</li>
+                <li>Estados Unidos</li>
+                <li>Italia</li>
+                <li>Suiza</li>
+                <li>Andorra</li>
+                <li>Francia</li>
+              </ul>
+            </section>
+          </div>
+          <figure class="phone">
+            <div class="phone-device">
+              <span class="phone-btn phone-btn-action" aria-hidden="true"></span>
+              <span class="phone-btn phone-btn-volume" aria-hidden="true"></span>
+              <span class="phone-btn phone-btn-side" aria-hidden="true"></span>
+              <span class="phone-btn phone-btn-camera" aria-hidden="true"></span>
+              <div class="phone-screen">
+                <img
+                  src="/decks/el-colorado-2027/assets/expo-app.jpg"
+                  alt="Aplicación Snowmatch en iPhone 17 Pro: instructores y rental en Cerro Catedral"
+                >
+                <span class="phone-island" aria-hidden="true"></span>
+              </div>
+            </div>
+          </figure>
+        </div>
+        <div class="atlas">
+          <img src="/decks/el-colorado-2027/assets/world-map.svg" alt="Mapa: operación en la Patagonia argentina y presencia de instructores en Chile, Estados Unidos, Francia, Suiza, Italia y Andorra">
+          <p class="atlas-key">
+            <span><i class="key-ops" aria-hidden="true"></i>Operación en Argentina</span>
+            <span><i class="key-presence" aria-hidden="true"></i>Presencia de instructores</span>
+          </p>
+          <p class="scope-note">No implica una alianza formal con cada centro.</p>
+        </div>
+      </article>
+    </section>
+
+    <section class="slide" aria-label="Diapositiva 6 de 6. Piloto 2027">
+      <article class="frame sheet">
+        <header class="top">
+          <img class="logo" src="/decks/el-colorado-2027/assets/wordmark-blue.png" alt="Snowmatch">
+          <p class="num">06</p>
+        </header>
+        <h1>Empezar simple. Medir. Escalar.</h1>
+        <p class="deck-sub">Piloto temporada 2027</p>
+        <div class="phases">
+          <section class="phase">
+            <p class="kicker channel-index">01</p>
+            <h2>Configuración</h2>
+            <ul>
+              <li>Escuela</li>
+              <li>Instructores</li>
+              <li>Productos</li>
+              <li>Precios</li>
+              <li>Disponibilidad</li>
+              <li>Rental</li>
+            </ul>
+          </section>
+          <section class="phase">
+            <p class="kicker channel-index">02</p>
+            <h2>Lanzamiento</h2>
+            <ul>
+              <li>Venta online</li>
+              <li>Reservas</li>
+              <li>Pagos</li>
+              <li>Asignación</li>
+              <li>Comunicación</li>
+            </ul>
+          </section>
+          <section class="phase">
+            <p class="kicker channel-index">03</p>
+            <h2>Medición</h2>
+            <ul>
+              <li>Reservas</li>
+              <li>Revenue</li>
+              <li>Conversión</li>
+              <li>Ticket promedio</li>
+              <li>Rental attach rate</li>
+              <li>Utilización de instructores</li>
+              <li>Satisfacción del cliente</li>
+            </ul>
+          </section>
+        </div>
+        <div class="assurances">
+          <p>Sin costo de implementación</p>
+          <p>Sin fee mensual inicial</p>
+          <p>Modelo basado en transacciones</p>
+        </div>
+        <div class="finale">
+          <p class="promise">Que reservar una clase en El Colorado sea tan fácil como reservar un hotel o un vuelo.</p>
+          <div class="finale-meta">
+            <div>
+              <p class="kicker kicker-strong">Próximo paso</p>
+              <p class="meeting">Reunión a fines de octubre para revisar operación, modelo comercial e implementación 2027.</p>
+            </div>
+            <div class="sign">
+              <img class="sign-logo" src="/decks/el-colorado-2027/assets/wordmark-blue.png" alt="">
+              <div>
+                <p class="sign-name">Tomás Bacigalupo</p>
+                <p class="sign-role">Founder &amp; CEO · Snowmatch</p>
+                <p class="sign-role"><a href="mailto:office@snowmatch.pro">office@snowmatch.pro</a></p>
+                <p class="sign-role">snowmatch.com</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+    </section>
+  </main>
+  <script>
+    (function () {
+      var deck = document.getElementById("deck");
+      var slides = Array.prototype.slice.call(deck.querySelectorAll(".slide"));
+
+      function currentIndex() {
+        return Math.round(deck.scrollTop / deck.clientHeight);
+      }
+
+      function goTo(index) {
+        var next = Math.max(0, Math.min(slides.length - 1, index));
+        slides[next].scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+
+      document.addEventListener("keydown", function (event) {
+        var key = event.key;
+        if (key === "ArrowDown" || key === "ArrowRight" || key === "PageDown" || key === " ") {
+          event.preventDefault();
+          goTo(currentIndex() + 1);
+        } else if (key === "ArrowUp" || key === "ArrowLeft" || key === "PageUp") {
+          event.preventDefault();
+          goTo(currentIndex() - 1);
+        } else if (key === "Home") {
+          event.preventDefault();
+          goTo(0);
+        } else if (key === "End") {
+          event.preventDefault();
+          goTo(slides.length - 1);
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
